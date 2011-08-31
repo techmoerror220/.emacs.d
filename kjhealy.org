@@ -363,7 +363,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
   
   (add-to-list 'org-export-latex-classes
                '("memarticle"
-                 "\\documentclass[11pt,oneside,article]{memoir}\n\input{vc} % vc package"
+                 "\\documentclass[11pt,oneside,article]{memoir}\n\\input{vc} % vc package"
                   ("\\section{%s}" . "\\section*{%s}")
                   ("\\subsection{%s}" . "\\subsection*{%s}")
                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -372,8 +372,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
   
   (add-to-list 'org-export-latex-classes
                '("membook"
-                 "\\documentclass[11pt,oneside]{memoir}\n\input{vc} % vc package"
-                 ("\\part{%s}" . "\\part*{%s}")
+                 "\\documentclass[11pt,oneside]{memoir}\n\\input{vc} % vc package"
                  ("\\chapter{%s}" . "\\chapter*{%s}")
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
