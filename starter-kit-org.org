@@ -80,10 +80,10 @@ Speed commands enable single-letter commands in Org-mode files when
 the point is at the beginning of a headline, or at the beginning of a
 code block.
 
-See the `=org-speed-commands-default=' variable for a list of the keys
+See the =org-speed-commands-default= variable for a list of the keys
 and commands enabled at the beginning of headlines.  All code blocks
 are available at the beginning of a code block, the following key
-sequence =C-c C-v h= (bound to `=org-babel-describe-bindings=') will
+sequence =C-c C-v h= (bound to =org-babel-describe-bindings=) will
 display a list of the code blocks commands and their related keys.
 
 #+begin_src emacs-lisp
@@ -93,8 +93,8 @@ display a list of the code blocks commands and their related keys.
 ** Code blocks
 This activates a number of widely used languages, you are encouraged
 to activate more languages using the customize interface for the
-`=org-babel-load-languages=' variable, or with an elisp form like the
-one below.  The customize interface of `=org-babel-load-languages='
+=org-babel-load-languages= variable, or with an elisp form like the
+one below.  The customize interface of =org-babel-load-languages=
 contains an up to date list of the currently supported languages.
 #+begin_src emacs-lisp
   (org-babel-do-load-languages

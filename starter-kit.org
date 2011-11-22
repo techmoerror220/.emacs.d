@@ -207,7 +207,7 @@ Some additional miscellaneous configuration and getting started
 suggestions
 - First off see the [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Customization.html#Customization][Customization]] node in the Emacs manual.  Available
   online or through the =info= command (run with =C-h i=).
-- =grep='ing through the =starter-kit-*= files in this directory can
+- =grep=-ing through the =starter-kit-*= files in this directory can
   provide useful examples for how to do things like install major
   modes, define keybindings, etc..
 - read the following [[http://www.gnu.org/software/emacs/elisp/html_node/Key-Binding-Conventions.html][Key-Binding-Conventions]] before defining too many

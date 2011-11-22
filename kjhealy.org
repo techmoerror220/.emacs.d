@@ -540,7 +540,8 @@ Create =html= files form the =org= sources, to help with documentation. To set u
                    href=\"http://kieranhealy.org/stylesheets/screen.css\"
                    type=\"text/css\"/>")))
   
-    (setq org-export-html-style-extra "")    
+    (setq org-export-html-style-extra "") 
+    (setq org-export-html-postamble nil)
   
 #+end_src
 
