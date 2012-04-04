@@ -15,6 +15,16 @@ The following packages should always be installed
                                      'js2-mode
                                      'css-mode
                                      'yasnippet-bundle
+                                     'autopair
+                                     'cdlatex
+                                     'browse-kill-ring
+                                     'haskell-mode
+                                     'magit
+                                     'mac-key-mode
+                                     'maxframe
+                                     'typopunct
+                                     'python
+                                     'smooth-scroll
                                      'gist
                                      'paredit
                                      'auctex
