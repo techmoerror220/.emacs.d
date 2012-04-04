@@ -24,6 +24,7 @@ The following packages should always be installed
                                      'maxframe
                                      'typopunct
                                      'python
+                                     'redo+
                                      'smooth-scroll
                                      'gist
                                      'paredit
