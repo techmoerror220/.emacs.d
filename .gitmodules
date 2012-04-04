@@ -10,3 +10,6 @@
 [submodule "src/ebib"]
 	path = src/ebib
 	url = http://repo.or.cz/r/ebib.git
+[submodule "src/ess"]
+	path = src/ess
+	url = https://github.com/emacs-ess/ESS.git
