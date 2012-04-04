@@ -565,7 +565,9 @@ Create =html= files form the =org= sources, to help with documentation. To set u
   ;; compile it if the .el file is newer 
   (byte-recompile-directory "~/.emacs.d/src/auto-complete")
   (byte-recompile-directory "~/.emacs.d/src/auto-complete/dict/ess")
+  (require 'auto-complete)
   (require 'auto-complete-config)
+  (global-auto-complete-mode t)
   (add-to-list 'ac-dictionary-directories "~/.emacs.d/src/auto-complete/dict")
   (setq ac-modes (append ac-modes '(org-mode))) 
   (ac-config-default)
@@ -575,8 +577,9 @@ Create =html= files form the =org= sources, to help with documentation. To set u
   (ac-flyspell-workaround)
   (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
   (setq ac-auto-show-menu 0.8)
-  ;; consistent  with zenburnish theme
+  ;; 
   (set-face-background 'ac-candidate-face "#366060")
+  (set-face-foreground 'ac-selection-face "#1f1f1f")
   (set-face-background 'ac-selection-face "#8cd0d3")
   (set-face-foreground 'ac-selection-face "#1f1f1f")
   

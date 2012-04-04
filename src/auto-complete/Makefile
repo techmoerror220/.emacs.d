@@ -2,10 +2,10 @@ VERSION=`perl -ne 'print $$1 if /;; Version: (.*)/' auto-complete.el`
 PACKAGE=auto-complete-${VERSION}
 
 byte-compile:
-	/Applications/Emacs.app/Contents/MacOS/Emacs -Q -L . -batch -f batch-byte-compile *.el
+	emacs -Q -L . -batch -f batch-byte-compile *.el
 
 install:
-	/Applications/Emacs.app/Contents/MacOS/Emacs -Q -L . -batch -l etc/install ${DIR}
+	emacs -Q -L . -batch -l etc/install ${DIR}
 
 clean:
 	rm -f *.elc
