@@ -25,7 +25,6 @@ The following packages should always be installed
                                      'typopunct
                                      'python
                                      'redo+
-                                     'smooth-scroll
                                      'gist
                                      'paredit
                                      'auctex
