@@ -140,13 +140,27 @@ When your frame (i.e., the main Emacs window) is split into different parts (e.g
   (global-set-key (kbd "S-C-<up>") 'enlarge-window)  
 #+end_src
 
+*** Use Option as Meta key
+#+source: mackeys1
+#+begin_src emacs-lisp
+(require 'redo+) 
+(setq mac-command-modifier 'alt mac-option-modifier 'meta)
+(global-set-key [(alt a)] 'mark-whole-buffer)
+(global-set-key [(alt v)] 'yank)
+(global-set-key [(alt c)] 'kill-ring-save)
+(global-set-key [(alt x)] 'kill-region)
+(global-set-key [(alt s)] 'save-buffer)
+(global-set-key [(alt f)] 'isearch-forward)
+(global-set-key [(alt g)] 'isearch-repeat-forward)
+(global-set-key [(alt z)] 'undo)
+
+#+end_src
+
 *** Mac Key mode
     Used with Mitsuharu Yamamoto's carbon-patched Emacs, which turns
     off support for default mac bindings. Turned off by default.
 #+srcname: mac-keys
 #+begin_src emacs-lisp :tangle no
-   (setq mac-command-modifier 'alt mac-option-modifier 'meta)
-   (require 'redo+)
    (require 'mac-key-mode)
    (mac-key-mode 1)
    (add-hook 'mac-key-mode-hook
