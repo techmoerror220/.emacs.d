@@ -544,7 +544,7 @@ Create =html= files form the =org= sources, to help with documentation. To set u
   (setq org-publish-project-alist
          '(("org"
             :base-directory "~/.emacs.d/"
-            :publishing-directory "~/Documents/websites/kjhhome/esk/"
+            :publishing-directory "~/Documents/websites/esk/"
             :auto-sitemap t
             :sitemap-filename "index.org"
             :sitemap-title "Emacs Starter Kit for the Social Sciences: Documentation"
