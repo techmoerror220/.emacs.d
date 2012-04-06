@@ -3,29 +3,23 @@
 #+OPTIONS: H:2 num:nil toc:t
 #+STARTUP: oddeven
 
-#+begin_quote 
-Emacs outshines all other editing software in approximately the same
-way that the noonday sun does the stars. It is not just bigger and
-brighter; it simply makes everything else vanish.
-
--- Neal Stephenson, "In the Beginning was the Command Line"
-#+end_quote
-
 * Introduction
   :PROPERTIES:
   :CUSTOM_ID: introduction
   :END:
 
-The Emacs Starter Kit for the Social Sciences is maintained by
-[[http://kieranhealy.org][Kieran Healy]]. The original version was
-written by [[http://github.com/technomancy/emacs-starter-kit/tree][Phil Hagelberg]]. This version is more directly descended
-from [[http://eschulte.github.com/emacs-starter-kit/][Eric Schulte's]] excellent org-mode implementation.
+The Emacs Starter Kit for the Social Sciences is maintained by [[http://kieranhealy.org][Kieran
+Healy]]. The original version was written by [[http://github.com/technomancy/emacs-starter-kit/tree][Phil Hagelberg]]. This
+version is more directly descended from [[http://eschulte.github.com/emacs-starter-kit/][Eric Schulte's]] excellent
+org-mode implementation. It is designed specifically for [[http://emacsformacosx.com/builds][GNU Emacs 24
+on Mac OS X]]. It may well work on Windows, but I don't promise that. It
+is not compatible with [[http://aquamacs.org][Aquamacs]].
 
-The goal of this kit is to provide a saner set of defaults than you
-get normally with Emacs. It's intended for beginners, but provides a
-good elisp initialization structure for all levels of users. This
-particular version of the kit includes settings useful for researchers
-in the social sciences.
+The goal of this kit is to provide a more useful set of defaults than
+you get normally with Emacs. It's intended for beginners, but provides
+a good set of defaults for all levels of users. This particular
+version of the kit includes settings and packages that are
+particularly useful for researchers in the social sciences.
 
 The main advantage of this Emacs Starter Kit are
 - better default settings
@@ -54,56 +48,60 @@ The [[http://emacswiki.org][Emacs Wiki]] is also very handy.
 Installation instructions for the social-science version of the kit
 can also be found at [[http://kjhealy.github.com/emacs-starter-kit/]]
 
-0.   - Install Mac OS X's suite of Developer Tools. These came with your
-     Mac on an install DVD of their own. Alternatively, [[http://developer.apple.com/technologies/xcode.html][download the
-     most recent version]] from Apple directly.
-
+1. - Install Mac OS X's suite of Developer Tools. These came with your
+   Mac on an install DVD of their own. Alternatively, [[http://developer.apple.com/downloads][download the
+   most recent version]] from Apple directly. You can choose either the
+   full Xcode installation or the (much smaller) command-line tools
+   for Xcode.
    - Install Git. Either compile it from source if you know what
-     you're doing or [[http://code.google.com/p/git-osx-installer/downloads/list?can%3D3][install it directly]]. 
-
+     you're doing or [[http://code.google.com/p/git-osx-installer/downloads/list?can%3D3][install it directly]].
+   - Install [[http://www.tug.org/mactex/2011/][TeX]]. 
    - Note your user name or the name of your computer. If you don't
      know either, open the Terminal.app and do one or both of =whoami=
      or =hostname=. You will need to know your login name to activate
      the final customization file properly. You can use the system
      name as well (or instead) but it's optional.
-
-1. Install Emacs (version 23 is preferred) Use your package manager if you
-   have one.  Otherwise, Mac users should get it [[http://emacsformacosx.com/][from here]], or
-   install it directly from [[http://savannah.gnu.org/projects/emacs/][from source]] following the instructions in
-   =nextstep/INSTALL=.  Windows users can get it [[http://ftp.gnu.org/gnu/emacs/windows/emacs-22.3-bin-i386.zip][from GNU]].
+   - Install Emacs (version 24 is required) Use your package manager
+     if you have one.  Otherwise, Mac users should get it [[http://emacsformacosx.com/][from here]],
+     or install it directly from [[http://savannah.gnu.org/projects/emacs/][from source]] following the
+     instructions in =nextstep/INSTALL=. Be sure to download a version
+     of Emacs 24, which is currently in pretest release but very
+     stable---[[http://emacsformacosx.com/emacs-builds/Emacs-pretest-24.0.95-universal-10.6.8.dmg][here is a link to the most recent pretest for OS X]].
+     Windows users can get it [[http://ftp.gnu.org/gnu/emacs/windows/emacs-22.3-bin-i386.zip][from GNU]].
+   - If they're already present, back up your =.emacs= file and backup 
+     your =~/.emacs.d/= directory somewhere else. Delete the =.emacs=
+     file and reove the =~/.emacs.d/= directory. (See below for details
+     on where to put any existing customizations you wish to keep.) Move
+     the resulting directory to =~/.emacs.d=.
 2. Checkout a version of the starter kit using git -- if you're new to
    git checkout this [[http://www.kernel.org/pub/software/scm/git/docs/gittutorial.html][git-tutorial]], also we'd highly recommend that you
    try out [[http://zagadka.vm.bytemark.co.uk/magit/magit.html][magit]] the Emacs mode for git interaction which comes
    bundled in the starter kit.
    #+begin_src sh
-     git clone http://github.com/kjhealy/emacs-starter-kit.git
+     git clone http://github.com/kjhealy/emacs-starter-kit.git ~/.emacs.d
    #+end_src
-3. If they're already present, back up your =.emacs= and =~/.emacs.d/=
-   directory. Then delete the =.emacs= file. (See below for details on
-   where to put any customizations you wish to add yourself.) Move the
-   resulting directory to =~/.emacs.d=.
-4. Install the Org-mode [[http://www.kernel.org/pub/software/scm/git/docs/user-manual.html#submodules][submodules]] with the following
+3. Pull in some [[http://www.kernel.org/pub/software/scm/git/docs/user-manual.html#submodules][submodules]] with the following
    #+begin_src sh
    cd ~/.emacs.d/
    git submodule init
    git submodule update
    #+end_src
-5. build Org-mode
+4. build Org-mode
    #+begin_src sh
    cd ~/.emacs.d/src/org/
+   git checkout master
    make
    #+end_src
-6. Finally, change the name of the starter kit's =kjhealy.org= to that
+5. Finally, change the name of the starter kit's =kjhealy.org= to that
    of =<USERNAME>.org= or =<SYSTEMNAME>.org=, based on the information
    you noted above with the =whoami= and =hostname= commands. These
    files are where you can add in any of your own existing or future
    customizations without breaking the starter kit's overall setup.
 
-7. Launch Emacs!
+6. Launch Emacs!
 
 After setup you may need to restart Emacs a couple of times while it
-downloads packages from [[* Emacs Lisp Package Archive][ELPA]] -- errors parsing html from
-=*tromey.com:80*= can generally be safely ignored.
+downloads and installs packages from [[* Emacs Lisp Package Archive][ELPA]].
 
 If you are missing some autoloads after an update (should manifest
 itself as "void function: foobar" errors) try M-x regen-autoloads.
@@ -133,14 +131,10 @@ get loaded. Additional customization embedded in this file provides
 what I consider to be better defaults, both for different programming
 languages and for built-in Emacs features like bindings or registers.
 
-Files that are pending submission to [[* Emacs Lisp Package Archive][ELPA]] are bundled with the starter
-kit under the directory [[file:elpa-to-submit/][elpa-to-submit/]]. The understanding is that
-these are bundled just because nobody's gotten around to turning them
-into packages, and the bundling of them is temporary. For these
-libraries, autoloads will be generated and kept in the [[file:loaddefs.el][loaddefs.el]]
-file. This allows them to be loaded on demand rather than at startup.
-Additionally any emacs-lisp packages located under the [[file:src/][src/]] directory
-will be added to the load-path.
+The Starter Kit makes use of Emacs 24's new package system to install
+a number of additional packages. These are stored in
+=~/.emacs.d/elpa=. Some useful packages are not available through the
+package manager yet. These are stored in =~/.emacs.d/src/=.
 
 There are also a few files that are meant for code that doesn't belong
 in the Starter Kit, they are described below in [[* customization][Customization]].
@@ -197,11 +191,10 @@ general starter-kit updates without conflict.
      many useful Emacs lisp libraries, you are bound to find more that
      you will want to install.  The easiest way to install new
      libraries is through the Emacs Lisp Package Archive (see [[* elpa][ELPA]]).
-     When a library is not available through ELPA you can grab it's
+     When a library is not available through ELPA you can grab its
      source and place it directly in the =src= directory.  Any
      packages found there will automatically be added to your
-     load-path when Emacs starts up, and are guaranteed not to
-     conflict with future starter-kit updates.
+     load-path when Emacs starts up.
      
 Some additional miscellaneous configuration and getting started
 suggestions
@@ -223,19 +216,7 @@ suggestions
 
 Libraries from [[http://tromey.com/elpa][ELPA]] are preferred when available since dependencies
 are handled automatically, and the burden to update them is removed
-from the user. In the long term, ideally everything would be installed
-via ELPA, and only [[file:package.el][package.el]] would need to be distributed with the
-starter kit. (Or better yet, [[file:package.el][package.el]] would come with Emacs...) See
-[[* Starter Kit
- ELPA][Starter Kit ELPA]] for a list of libraries that are pending submission
-to ELPA. Packages get installed in the [[file:elpa/][elpa/]] directory.
-
-There's no vendor/ directory in the starter kit because if an external
-library is useful enough to be bundled with the starter kit, it should
-be useful enough to submit to ELPA so that everyone can use it, not
-just users of the starter kit.  However any packages included in the
-[[file:src][src/]] directory will be added to the load-path, for tracking bleeding
-edge packages.
+from the user. 
 
 Sometimes packages are removed from the Starter Kit as they get added
 to ELPA itself. This has occasionally caused problems with certain
@@ -351,7 +332,7 @@ aspell workaround in [[file:starter-kit-aspell.org][starter-kit-aspell]]
 #+end_src
 
 *** ELPA (Emacs Lisp Package Manager)
-Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager
+Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager.
 
 #+srcname: starter-kit-elpa
 #+begin_src emacs-lisp 
