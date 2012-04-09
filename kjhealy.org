@@ -32,24 +32,43 @@ Turn on the recent file menu.
 #+end_src
 
 *** Color Theme and Line Highlighting
-The Starter Kit uses Ethan Schoonover's /Solarized/ color theme. You can easily switch between light and dark versions of the theme. Some other useful themes are included in the =src/color-theme-themes/= directory of the kit. 
+The Starter Kit uses Ethan Schoonover's /Solarized/ color theme. Load it with =M-x load-theme solarized-dark= or =M-x load-theme solarized-light=. You can also try loading the =zenburn-theme= or =tango-2= themes. 
 
 #+srcname: local-settings
-#+begin_src emacs-lisp
-  ;; Color Theme from vendor directory
-  (require 'color-theme-solarized)
-  (load-file "~/.emacs.d/src/color-theme-themes/color-theme-tangosoft.el")
-  (if window-system
-      (color-theme-solarized 'dark)
-    ;; or if you prefer ...
-    ;; (color-theme-solarized 'light)
-    (color-theme-tangosoft) ;; Emacs started in tty
-      )
-  
-  ;; Define a shortcut to switch between dark and light versions of solarized
-  (global-set-key (kbd "C-c l") 'color-theme-solarized)
-  
+#+begin_src emacs-lisp :tangle no
+    
+  (custom-theme-set-faces 'solarized-dark          
+       ;; ido
+      `(ido-incomplete-regexp ((t (:foreground ,base01))))
+      `(ido-subdir ((t (:foreground ,cyan))))
+      `(ido-first-match ((t (:foreground ,yellow))))
+      `(ido-only-match ((t (:foreground ,green))))
+    
+      ;; latex
+      `(font-latex-sectioning-0-face ((t (:foreground ,blue :height 4))))
+      `(font-latex-sectioning-1-face ((t (:foreground ,blue  :height 2.5))))
+      `(font-latex-sectioning-2-face ((t (:foreground ,yellow :height 1.5))))
+      `(font-latex-sectioning-3-face ((t (:foreground ,green :height 1.2))))
+      `(font-latex-sectioning-4-face ((t (:foreground ,orange :height 1.0))))
+      `(font-latex-bold ((t (:inherit bold))))
+    
+      ;; org
+      `(org-hide ((t (:foreground ,base03))))
+      `(org-todo ((t (:foreground ,red :bold t))))
+      `(org-done ((t (:foreground ,green :bold t))))
+      `(org-level-1 ((t (:foreground ,blue :height 1.5))))
+      `(org-level-2 ((t (:foreground ,yellow  :height 1.2))))
+      `(org-level-3 ((t (:foreground ,orange :height 1.1))))
+      `(org-level-4 ((t (:foreground ,green :height 1.1))))
+      `(org-level-5 ((t (:height 1.1))))
+    
+      ;; show-paren
+      `(show-paren-match-face ((t (:background ,cyan :foreground ,base3))))
+      `(show-paren-match-face ((t (:background ,cyan :foreground ,base3))))
+  ) 
 #+end_src
+
+
 
 *** Run Emacs in Full Screen
   I find it very useful to run Emacs in full-screen mode. There is no

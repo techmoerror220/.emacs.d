@@ -32,7 +32,10 @@ The following packages will be downloaded and installed.
                                      'highline
                                      'textmate
                                      'smex
-'yaml-mode
+                                     'solarized-theme
+                                     'tango-2-theme
+                                     'yaml-mode
+                                     'zenburn-theme
                                      )
     "Libraries that should be installed by default.")
 #+end_src

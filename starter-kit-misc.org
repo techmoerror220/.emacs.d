@@ -7,30 +7,18 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 Things that don't fit anywhere else.
 
 ** Color Themes
-The [[http://www.nongnu.org/color-theme/][Color Themes]] package provides support for changing, saving,
-sharing Emacs color themes.  To view and apply color themes available
-on your system run =M-x color-theme-select=.  See the color theme
-website and EmacsWiki pages for more information.
-- http://www.nongnu.org/color-theme/
-- http://www.emacswiki.org/emacs/ColorTheme
+Emacs 24 introduces a streamlined theming system that replaces an
+older, messier one. If this doesn't work first time, load it manually
+with =M-x load-theme solarized-dark=.
 
-This following loads color-theme so that it is available by default.
+#+source: colors
 #+begin_src emacs-lisp
-  (add-to-list 'load-path
-               (expand-file-name "color-theme"
-                                 (expand-file-name "src" dotfiles-dir)))
-  (require 'color-theme)
-  (eval-after-load "color-theme"
-    '(progn
-       (color-theme-initialize)))
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
+  (setq custom-safe-themes t)
+  (load-theme 'solarized-dark t)
 #+end_src
 
-Once you've selected a preferred color theme it can be installed by
-adding its function to your initialization.  For example
-#+begin_src emacs-lisp :tangle no
-  (color-theme-railscasts)
-#+end_src
-will load the =railscasts= color theme when Emacs starts.
+
 
 ** Window system stuff
 
@@ -53,7 +41,7 @@ will load the =railscasts= color theme when Emacs starts.
         font-lock-verbose nil
         inhibit-startup-message t
         transient-mark-mode t
-        color-theme-is-global t
+      ;;  color-theme-is-global t
         delete-by-moving-to-trash t
         shift-select-mode nil
         truncate-partial-width-windows nil
