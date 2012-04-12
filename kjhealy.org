@@ -20,7 +20,7 @@ You will also need to change the values for the location of bibtex
  available on your system. Change the references as appropriate or
  simply comment out the lines.
 
-** Miscellaneous Settings and starter-kit overrides
+** Local Miscellaneous Settings
 *** Recent File Menu
 Turn on the recent file menu. 
 
@@ -35,39 +35,24 @@ Turn on the recent file menu.
 The Starter Kit uses Ethan Schoonover's /Solarized/ color theme. Load it with =M-x load-theme solarized-dark= or =M-x load-theme solarized-light=. You can also try loading the =zenburn-theme= or =tango-2= themes. 
 
 #+srcname: local-settings
-#+begin_src emacs-lisp :tangle no
-    
-  (custom-theme-set-faces 'solarized-dark          
-       ;; ido
-      `(ido-incomplete-regexp ((t (:foreground ,base01))))
-      `(ido-subdir ((t (:foreground ,cyan))))
-      `(ido-first-match ((t (:foreground ,yellow))))
-      `(ido-only-match ((t (:foreground ,green))))
-    
-      ;; latex
-      `(font-latex-sectioning-0-face ((t (:foreground ,blue :height 4))))
-      `(font-latex-sectioning-1-face ((t (:foreground ,blue  :height 2.5))))
-      `(font-latex-sectioning-2-face ((t (:foreground ,yellow :height 1.5))))
-      `(font-latex-sectioning-3-face ((t (:foreground ,green :height 1.2))))
-      `(font-latex-sectioning-4-face ((t (:foreground ,orange :height 1.0))))
-      `(font-latex-bold ((t (:inherit bold))))
-    
-      ;; org
-      `(org-hide ((t (:foreground ,base03))))
-      `(org-todo ((t (:foreground ,red :bold t))))
-      `(org-done ((t (:foreground ,green :bold t))))
-      `(org-level-1 ((t (:foreground ,blue :height 1.5))))
-      `(org-level-2 ((t (:foreground ,yellow  :height 1.2))))
-      `(org-level-3 ((t (:foreground ,orange :height 1.1))))
-      `(org-level-4 ((t (:foreground ,green :height 1.1))))
-      `(org-level-5 ((t (:height 1.1))))
-    
-      ;; show-paren
-      `(show-paren-match-face ((t (:background ,cyan :foreground ,base3))))
-      `(show-paren-match-face ((t (:background ,cyan :foreground ,base3))))
-  ) 
+#+begin_src emacs-lisp
+  (add-hook 'latex-mode-hook 
+            (lambda ()
+              (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground "#b58900")
+              (set-face-attribute 'font-latex-sectioning-0-face nil :height 3)
+              (set-face-attribute 'font-latex-sectioning-1-face nil :height 2)
+              (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5)
+              (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2)
+              (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)))
+  
+   (add-hook 'org-mode-hook 
+             (lambda ()
+               (set-face-attribute 'org-level-1 nil :height 1.5)
+               (set-face-attribute 'org-level-2 nil :height 1.2)
+               (set-face-attribute 'org-level-3 nil :height 1.1)
+               (set-face-attribute 'org-level-4 nil :height 1.1)
+               (set-face-attribute 'org-level-5 nil :height 1.1)))
 #+end_src
-
 
 
 *** Run Emacs in Full Screen
