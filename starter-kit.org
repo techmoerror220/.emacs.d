@@ -103,9 +103,6 @@ can also be found at [[http://kjhealy.github.com/emacs-starter-kit/]]
 After setup you may need to restart Emacs a couple of times while it
 downloads and installs packages from [[* Emacs Lisp Package Archive][ELPA]].
 
-If you are missing some autoloads after an update (should manifest
-itself as "void function: foobar" errors) try M-x regen-autoloads.
-
 Once everything starts up cleanly, if you wish you can do =M-x
 starter-kit-compile= to byte-compile the starter kit files (for
 slightly faster loading).
