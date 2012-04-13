@@ -164,16 +164,6 @@ Key Bindings.
   (global-set-key (kbd "C-x g") 'magit-status)
 #+end_src
 
-** This is a little hacky since VC doesn't support git add internally
-#+begin_src emacs-lisp 
-(eval-after-load 'vc
-  (define-key vc-prefix-map "i" '(lambda () (interactive)
-                                   (if (not (eq 'Git (vc-backend buffer-file-name)))
-                                       (vc-register)
-                                     (shell-command (format "git add %s" buffer-file-name))
-                                     (message "Staged changes.")))))
-#+end_src
-
 ** Activate occur easily inside isearch
 #+begin_src emacs-lisp 
 (define-key isearch-mode-map (kbd "C-o")

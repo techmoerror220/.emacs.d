@@ -18,9 +18,7 @@ with =M-x load-theme solarized-dark=.
   (load-theme 'solarized-dark t)
 #+end_src
 
-
-
-** Window system stuff
+** Window system 
 
 #+srcname: starter-kit-window-view-stuff
 #+begin_src emacs-lisp 
@@ -78,7 +76,7 @@ Set this to whatever browser you use e.g...
 (auto-compression-mode t)
 #+end_src
 
-** Enable syntax highlighting for older Emacsen that have it off
+** Enable syntax highlighting 
 #+begin_src emacs-lisp
 (global-font-lock-mode t)
 #+end_src
