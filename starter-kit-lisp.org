@@ -47,7 +47,7 @@ Support for editing list dialects including [[* Emacs Lisp][Emacs Lisp]], [[* Sc
 
 #+begin_src emacs-lisp
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'emacs-lisp-mode-hook 'run-coding-hook)
+(add-hook 'emacs-lisp-mode-hook 'run-starter-kit-coding-hook)
 (add-hook 'emacs-lisp-mode-hook 'esk-remove-elc-on-save)
 ;; (add-hook 'emacs-lisp-mode-hook 'idle-highlight)
 (add-hook 'emacs-lisp-mode-hook 'turn-on-paredit)
@@ -67,7 +67,7 @@ Support for editing list dialects including [[* Emacs Lisp][Emacs Lisp]], [[* Sc
 ** Clojure
 
 #+begin_src emacs-lisp
-(add-hook 'clojure-mode-hook 'run-coding-hook)
+(add-hook 'clojure-mode-hook 'run-starter-kit-coding-hook)
 ;; (add-hook 'clojure-mode-hook 'idle-highlight)
 
 (font-lock-add-keywords 'clojure-mode
@@ -176,7 +176,7 @@ idea to extend this feature beyond simply the =fn= function.
 ** Scheme
 
 #+begin_src emacs-lisp
-(add-hook 'scheme-mode-hook 'run-coding-hook)
+(add-hook 'scheme-mode-hook 'run-starter-kit-coding-hook)
 ;; (add-hook 'scheme-mode-hook 'idle-highlight)
 (font-lock-add-keywords 'scheme-mode
 			'(("(\\|)" . 'esk-paren-face)))
@@ -185,7 +185,7 @@ idea to extend this feature beyond simply the =fn= function.
 ** Common Lisp
 
 #+begin_src emacs-lisp
-(add-hook 'lisp-mode-hook 'run-coding-hook)
+(add-hook 'lisp-mode-hook 'run-starter-kit-coding-hook)
 ;; (add-hook 'lisp-mode-hook 'idle-highlight)
 (add-hook 'lisp-mode-hook 'turn-on-paredit)
 (font-lock-add-keywords 'lisp-mode

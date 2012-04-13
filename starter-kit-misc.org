@@ -6,6 +6,16 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 * Starter Kit Misc
 Things that don't fit anywhere else.
 
+** Check Dependencies
+
+Determine whether required packages are installed. If not, use ELPA to
+install them. Other dependencies are provided by Emacs 24.
+#+begin_src emacs-lisp
+  (dolist (package '(magit))
+    (unless (package-installed-p package)
+      (package-install package)))
+#+end_src
+
 ** Color Themes
 Emacs 24 introduces a streamlined theming system that replaces an
 older, messier one. If this doesn't work first time, load it manually
@@ -116,7 +126,7 @@ ido-mode is like magic pixie dust!
           ido-max-prospects 10))
 #+end_src
 
-** Other
+** Other, spell checking, tabs, imenu and a coding hook
 #+begin_src emacs-lisp 
   (set-default 'indent-tabs-mode nil)
   (set-default 'indicate-empty-lines t)
@@ -125,12 +135,26 @@ ido-mode is like magic pixie dust!
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
   (add-hook 'text-mode-hook 'turn-on-flyspell)
   
-  (defvar coding-hook nil
+  (defvar starter-kit-coding-hook nil
     "Hook that gets run on activation of any programming mode.")
   
   (defalias 'yes-or-no-p 'y-or-n-p)
-  (random t) ;; Seed the random-number generator
+  ;; Seed the random-number generator
+  (random t)
 #+end_src
+
+*** functions for prettier source code
+#+begin_src emacs-lisp
+(defun starter-kit-pretty-lambdas ()
+  (font-lock-add-keywords
+   nil `(("(\\(lambda\\>\\)"
+          (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                    ,(make-char 'greek-iso8859-7 107))
+                    nil))))))
+#+end_src
+
+
+
 
 *** possible issues/resolutions with flyspell
 Most of the solution came from [[http://www.emacswiki.org/emacs/FlySpell][EmacsWiki-FlySpell]].  Here is one
