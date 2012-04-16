@@ -21,18 +21,10 @@ You will also need to change the values for the location of bibtex
  simply comment out the lines.
 
 ** Local Miscellaneous Settings
-*** Recent File Menu
-Turn on the recent file menu. 
-
-#+srcname: local-loadpath
-#+begin_src emacs-lisp
-    ;; recent file menu
-    (require 'recentf)
-    (recentf-mode 1)
-#+end_src
-
 *** Color Theme and Line Highlighting
-The Starter Kit uses Ethan Schoonover's /Solarized/ color theme. Load it with =M-x load-theme solarized-dark= or =M-x load-theme solarized-light=. You can also try loading the =zenburn-theme= or =tango-2= themes. 
+The theme package is loaded in =starter-kit-misc.org=. The settings
+here adjust the height of some headings in Org and LaTeX mode, as well
+as turning off the sans-serif heading style that AucTeX defaults to.
 
 #+srcname: local-settings
 #+begin_src emacs-lisp
@@ -53,7 +45,6 @@ The Starter Kit uses Ethan Schoonover's /Solarized/ color theme. Load it with =M
                (set-face-attribute 'org-level-4 nil :height 1.1)
                (set-face-attribute 'org-level-5 nil :height 1.1)))
 #+end_src
-
 
 *** Run Emacs in Full Screen
   I find it very useful to run Emacs in full-screen mode. There is no
@@ -123,43 +114,7 @@ Internal to emacs; also seems not to work on OS X.
                                          'fullboth)))))
   (global-set-key (kbd "C-c f") 'toggle-fullscreen)  
 #+end_src
-
-*** Windmove
-    Tweak to Windmove setup. Without this, you keep getting elisp
-    errors when you try to wrap around.
-#+srcname: local-windmove
-#+begin_src emacs-lisp
-(setq windmove-wrap-around t)
-#+end_src
-
-*** Resizing inside the frame
-When your frame (i.e., the main Emacs window) is split into different parts (e.g. using =C-x 2= or =C-x 3=) we sometimes want to resize these parts dynamically. This defines =Shift-C-[arrow keys]= so you can do this. 
- 
-#+srcname: resize-splits
-#+begin_src emacs-lisp
-  ;; resizing 'windows' (i.e., inside the frame)
-  (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
-  (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
-  (global-set-key (kbd "S-C-<down>") 'shrink-window)
-  (global-set-key (kbd "S-C-<up>") 'enlarge-window)  
-#+end_src
-
-*** Use Option as Meta key
-#+source: mackeys1
-#+begin_src emacs-lisp
-(require 'redo+) 
-(setq mac-command-modifier 'alt mac-option-modifier 'meta)
-(global-set-key [(alt a)] 'mark-whole-buffer)
-(global-set-key [(alt v)] 'yank)
-(global-set-key [(alt c)] 'kill-ring-save)
-(global-set-key [(alt x)] 'kill-region)
-(global-set-key [(alt s)] 'save-buffer)
-(global-set-key [(alt f)] 'isearch-forward)
-(global-set-key [(alt g)] 'isearch-repeat-forward)
-(global-set-key [(alt z)] 'undo)
-
-#+end_src
-
+    
 *** Mac Key mode
     Used with Mitsuharu Yamamoto's carbon-patched Emacs, which turns
     off support for default mac bindings. Turned off by default.
@@ -238,8 +193,10 @@ Tell RefTeX where the bibliography files are.
 #+end_src
 
 *** Local vc commands
-    Run the vc shellscript before running xelatex with C-c c (instead of
-    C-c C-c for regular compile).
+    Run the vc shellscript before running xelatex with C-c c (instead
+    of C-c C-c for regular compile). This assumes you're using the VC
+    LaTeX package, have vc in your path, and have vc-awk in the
+    directory you're working in.
 
 #+srcname: vc-command
 #+begin_src emacs-lisp
@@ -563,16 +520,6 @@ Create =html= files form the =org= sources, to help with documentation. To set u
   
 #+end_src
 
-** Minimal mode
-   A nice clutter-free appearance with a reduced-size modeline, no
-   scroll bars, and no fringe indicators. Useful in conjunction with running Emacs full-screen. 
-
-#+source: minimal-mode
-#+begin_src emacs-lisp
-  (require 'minimal)
-  (global-set-key (kbd "C-c s") 'minimal-mode)
-#+end_src
-
 ** Auto-complete mode
    Powerful autocompletion; experimentally added. Will pop-up
    autocomplete suggestions as you type; hit =TAB= to complete, or
@@ -614,7 +561,7 @@ Sometimes useful for getting help on R or Emacs.
 #+end_src
 
 ** Final Custom elements
-Some local tweaks. 
+Some last tweaks. 
 
 #+srcname: final-custom
 #+begin_src emacs-lisp

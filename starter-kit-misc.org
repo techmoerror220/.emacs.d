@@ -18,8 +18,11 @@ install them. Other dependencies are provided by Emacs 24.
 
 ** Color Themes
 Emacs 24 introduces a streamlined theming system that replaces an
-older, messier one. If this doesn't work first time, load it manually
-with =M-x load-theme solarized-dark=.
+older, messier one. The Starter Kit uses Ethan Schoonover's
+/Solarized/ color theme. Load it with =M-x load-theme solarized-dark=
+or =M-x load-theme solarized-light=. You can also try loading the
+=zenburn-theme= or =tango-2= themes. If this doesn't work first time,
+load it manually with =M-x load-theme solarized-dark=.
 
 #+source: colors
 #+begin_src emacs-lisp
@@ -100,7 +103,6 @@ If launching Emacs as in windowing system, show the menu. If launching in a tty/
       (menu-bar-mode -1)
       )
 #+end_src
-
 
 ** Save a list of recent files visited.
 #+begin_emacs-lisp 
