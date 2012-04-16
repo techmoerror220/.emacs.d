@@ -2,23 +2,31 @@
 #+OPTIONS: toc:nil num:nil ^:nil
 
 * Starter Kit kjhealy
-/You must change the name of this file/ to the value of the Emacs
- variable =user-login-name= OR =system-name=, so that it will be
- picked up by =init.el= when Emacs starts up, and be loaded
+This file contains very local customizations---ones that in some cases
+you will not be able to just drop in and use because, e.g., they
+involve references to particular files on my own machine. It's
+included here as an example.
+
+To use it yourself, /you must change the name of this file to match
+ your own user name or system name/. Those are the values of the Emacs
+ variables =user-login-name= or =system-name=, so that it will be
+ picked up by =init.el= when Emacs starts up, and get loaded
  properly. To find the current value of these variables on your
- system, do =C-h-v system-name [RET]= and =C-h-v user-login-name
- [RET]=. For example, on my system =user-login-name= is 'kjhealy', so
- this file is named =kjhealy.org=, and when Emacs starts up with the
- starter kit it creates the file =kjhealy.el=.
+ system, launch emacs and do =C-h-v system-name [RET]= or =C-h-v
+ user-login-name [RET]=. For example, on my system =user-login-name=
+ is 'kjhealy', so this file is named =kjhealy.org=, and when Emacs
+ starts up with the starter kit it creates the file =kjhealy.el=.
  
 You will also need to change the values for the location of bibtex
  databases, pandoc and orgmode-mobile specified below, and some other
  settings. *Search for 'kjhealy' in this file* to find the paths that
- need to be updated. Change them as needed or comment them out if you
- don't use these features. Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode XeLaTeX Export
- Settings]] section below has references to fonts that you may not have
- available on your system. Change the references as appropriate or
- simply comment out the lines.
+ need to be updated. Change them as needed or delete them if you don't
+ need these features. 
+
+Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode XeLaTeX Export Settings]] section below has
+ references to fonts that you may not have available on your
+ system. Change the references as appropriate, or comment out or
+ delete the lines.
 
 ** Local Miscellaneous Settings
 *** Color Theme and Line Highlighting
