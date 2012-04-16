@@ -5,13 +5,14 @@
 This file contains very local customizations---ones that in some cases
 you will not be able to just drop in and use because, e.g., they
 involve references to particular files on my own machine. It's
-included here as an example.
+included here for completeness, and as and example of the kind of
+things you might put in your own user-specific file.
 
-To use it yourself, /you must change the name of this file to match
- your own user name or system name/. Those are the values of the Emacs
- variables =user-login-name= or =system-name=, so that it will be
- picked up by =init.el= when Emacs starts up, and get loaded
- properly. To find the current value of these variables on your
+To use the customizations here yourself, /you must change the name of
+ this file to match your own user name or system name/. Those are the
+ values of the Emacs variables =user-login-name= or =system-name=, so
+ that it will be picked up by =init.el= when Emacs starts up, and get
+ loaded properly. To find the current value of these variables on your
  system, launch emacs and do =C-h-v system-name [RET]= or =C-h-v
  user-login-name [RET]=. For example, on my system =user-login-name=
  is 'kjhealy', so this file is named =kjhealy.org=, and when Emacs
