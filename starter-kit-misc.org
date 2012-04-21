@@ -61,6 +61,7 @@ load it manually with =M-x load-theme solarized-dark=.
                                     indentation space-after-tab)
         whitespace-line-column 100
         ediff-window-setup-function 'ediff-setup-windows-plain
+        ediff-split-window-function 'split-window-horizontally
         oddmuse-directory (concat dotfiles-dir "oddmuse")
         xterm-mouse-mode t
         save-place-file (concat dotfiles-dir "places"))
