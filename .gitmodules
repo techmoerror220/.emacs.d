@@ -4,9 +4,6 @@
 [submodule "snippets/text-mode/org-mode"]
 	path = snippets/text-mode/org-mode
 	url = http://github.com/eschulte/yasnippet-org-mode.git
-[submodule "src/org"]
-	path = src/org
-	url = git://orgmode.org/org-mode.git
 [submodule "src/ebib"]
 	path = src/ebib
 	url = http://repo.or.cz/r/ebib.git
