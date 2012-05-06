@@ -86,19 +86,15 @@ can also be found at [[http://kjhealy.github.com/emacs-starter-kit/]]
    git submodule init
    git submodule update
    #+end_src
-4. build Org-mode
-   #+begin_src sh
-   cd ~/.emacs.d/src/org/
-   git checkout master
-   make
-   #+end_src
-5. Finally, change the name of the starter kit's =kjhealy.org= to that
+4. Finally, change the name of the starter kit's =kjhealy.org= to that
    of =<USERNAME>.org= or =<SYSTEMNAME>.org=, based on the information
    you noted above with the =whoami= and =hostname= commands. These
    files are where you can add in any of your own existing or future
-   customizations without breaking the starter kit's overall setup.
-
-6. Launch Emacs!
+   customizations without breaking the starter kit's overall
+   setup. See the =kjhealy.org= file for more information on further
+   changes you need to make within that file, e.g., so that it points
+   to your LaTeX =.bib= files properly, etc.
+5. Launch Emacs!
 
 After setup you may need to restart Emacs a couple of times while it
 downloads and installs packages from [[* Emacs Lisp Package Archive][ELPA]].
