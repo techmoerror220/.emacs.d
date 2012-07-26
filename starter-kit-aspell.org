@@ -9,7 +9,7 @@ flyspell doesn't start properly. Putting this customization in
 <username>.org initiates it too late. 
 
 - This file is loaded by a special line added to [[file:starter-kit.org][starter-kit.org]]. 
-- NB: Flyspell is sometimes very slow on Emacs 23. 
+
 
 ** Specify aspell
 #+begin_src emacs-lisp
