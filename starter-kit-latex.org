@@ -90,7 +90,6 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
           (local-set-key "\C-cb" 'ebib-insert-bibtex-key)))
 #+end_src
 
-
 ** Configure AucTeX 
 *** Use pdfLaTeX
     - Take this out to compile to DVI, instead.
@@ -134,9 +133,18 @@ Allow AucTeX to use biber as well as/instead of bibtex.
   
   (eval-after-load "tex"
     '(add-to-list 'TeX-command-list '("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber"))
+    )    
+
+#+end_src
+
+*** Use latexmk for compilation by default
+
+#+srcname: latemkdefault
+#+begin_src emacs-lisp
+  (eval-after-load "tex"
+    '(add-to-list 'TeX-command-list '("Latexmk" "latexmk -pdf %s" TeX-run-TeX nil t :help "Run Latexmk on file"))
     )
-  
-  
+(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "Latexmk")))  
 #+end_src
 
 *** Set a Path to Executables (optional)
