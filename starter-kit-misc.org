@@ -67,7 +67,7 @@ load it manually with =M-x load-theme solarized-light=.
         save-place-file (concat dotfiles-dir "places"))
 #+end_src
 
-** Nxhtml -- utilities for we development
+** Nxhtml -- utilities for web development
 [[http://ourcomments.org/Emacs/nXhtml/doc/nxhtml.html][Nxhtml]] is a large package of utilities for web development and for
 embedding multiple major modes in a single buffer.
 
