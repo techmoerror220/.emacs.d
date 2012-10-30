@@ -18,7 +18,7 @@ flyspell doesn't start properly. Putting this customization in
       ispell-dictionary-alist
       (let ((default '("[A-Za-z]" "[^A-Za-z]" "[']" nil
                        ("-B" "-d" "english" "--dict-dir"
-                        "/Library/Application Support/cocoAspell/aspell6-en-6.0-0")
+                        "~/Library/Application Support/cocoAspell/aspell6-en-7.1-0")
                        nil iso-8859-1)))
         `((nil ,@default)
           ("english" ,@default))))
