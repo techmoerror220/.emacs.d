@@ -346,6 +346,7 @@ Sometimes very useful (but we don't use the core cua keys.)
   (require 'minimal)
   (global-set-key (kbd "C-c s") 'minimal-mode)
 #+end_src
+
 ** Closing
 #+begin_src emacs-lisp 
 (provide 'starter-kit-bindings)
