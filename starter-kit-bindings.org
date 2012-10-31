@@ -7,11 +7,6 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 Key Bindings.
 
-** You know, like Readline.
-#+begin_src emacs-lisp 
-(global-set-key (kbd "C-M-h") 'backward-kill-word)
-#+end_src
-
 ** Align your code in a pretty way.
 #+begin_src emacs-lisp 
 (global-set-key (kbd "C-x \\") 'align-regexp)
@@ -20,11 +15,6 @@ Key Bindings.
 ** Completion that uses many different methods to find options.
 #+begin_src emacs-lisp 
 (global-set-key (kbd "M-/") 'hippie-expand)
-#+end_src
-
-** Perform general cleanup.
-#+begin_src emacs-lisp 
-(global-set-key (kbd "C-c n") 'cleanup-buffer)
 #+end_src
 
 ** Turn on the menu bar for exploring new modes
@@ -44,11 +34,6 @@ Key Bindings.
 (global-set-key (kbd "\C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
-#+end_src
-
-** Jump to a definition in the current file. (This is awesome.)
-#+begin_src emacs-lisp 
-(global-set-key (kbd "C-x C-i") 'ido-imenu)
 #+end_src
 
 ** File finding
@@ -123,7 +108,7 @@ When windows get out of order, you can rotate them.
 
 ** Indentation help
 #+begin_src emacs-lisp 
-(global-set-key (kbd "C-x ^") 'join-line)
+(global-set-key (kbd "C-x a") 'join-line)
 #+end_src
 
 ** Mark text between parentheses (a sexp) for selection
@@ -230,13 +215,9 @@ Use a little bit of Mac keys, but not all of them.
     (let ((case-fold-search isearch-case-fold-search))
       (occur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
 #+end_src
-** Org-mode
-Two global binding for Org-mode (see [[file:starter-kit-org.org][starter-kit-org]])
 
-The [[http://orgmode.org/manual/Agenda-Views.html#Agenda-Views][Org-mode agenda]] is good to have close at hand
-#+begin_src emacs-lisp
-(define-key global-map "\C-ca" 'org-agenda)
-#+end_src
+** Org-mode
+A global binding for Org-mode (see [[file:starter-kit-org.org][starter-kit-org]])
 
 Org-mode supports [[http://orgmode.org/manual/Hyperlinks.html#Hyperlinks][links]], this command allows you to store links
 globally for later insertion into an Org-mode buffer.  See
