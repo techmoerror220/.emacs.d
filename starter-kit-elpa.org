@@ -18,7 +18,6 @@ The following packages will be downloaded and installed.
                                      'autopair
                                      'cdlatex
                                      'browse-kill-ring
-                                     'haskell-mode
                                      'magit
                                      'mac-key-mode
                                      'maxframe
