@@ -9,33 +9,36 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 The following packages will be downloaded and installed.
 
 #+begin_src emacs-lisp
-  (defvar starter-kit-packages (list 'idle-highlight
-                                     'ruby-mode
-                                     'inf-ruby
-                                     'js2-mode
-                                     'css-mode
-                                     'yasnippet-bundle
-                                     'autopair
-                                     'cdlatex
-                                     'browse-kill-ring
-                                     'magit
-                                     'mac-key-mode
-                                     'maxframe
-                                     'typopunct
-                                     'python
-                                     'redo+
-                                     'gist
-                                     'paredit
-                                     'auctex
-                                     'markdown-mode
-                                     'highline
-                                     'textmate
-                                     'smex
-                                     'solarized-theme
-                                     'tango-2-theme
-                                     'yaml-mode
-                                     'zenburn-theme
-                                     )
+  (defvar starter-kit-packages (list 
+                                'auctex
+                                'autopair
+                                'browse-kill-ring
+                                'cdlatex
+                                'css-mode
+                                'expand-region
+                                'gist
+                                'highline
+                                'idle-highlight
+                                'inf-ruby
+                                'js2-mode
+                                'mac-key-mode
+                                'magit
+                                'markdown-mode
+                                'maxframe
+                                'multiple-cursors
+                                'paredit
+                                'python
+                                'redo+
+                                'ruby-mode
+                                'smex
+                                'solarized-theme
+                                'tango-2-theme
+                                'textmate
+                                'typopunct
+                                'yaml-mode
+                                'yasnippet-bundle
+                                'zenburn-theme
+                                )
     "Libraries that should be installed by default.")
 #+end_src
 

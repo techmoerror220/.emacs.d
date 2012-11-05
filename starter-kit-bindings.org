@@ -7,6 +7,12 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 Key Bindings.
 
+** Map fn to Hyper
+#+source: fn-to-hyper
+#+begin_src emacs-lisp
+  (setq mac-function-modifier 'hyper)
+#+end_src
+
 ** Align your code in a pretty way.
 #+begin_src emacs-lisp 
 (global-set-key (kbd "C-x \\") 'align-regexp)
@@ -337,10 +343,46 @@ Sometimes very useful (but we don't use the core cua keys.)
   
 #+end_src
 
+** Expand Region
+   Expand selected region by semantic units. Just keep pressing the key until it selects what you want.
+#+source: expand-region
+#+begin_src emacs-lisp
+    (require 'expand-region)
+    (global-set-key (kbd "C-=") 'er/expand-region)  
+#+end_src
+
+** Multiple Cursors
+   Use multiple cursors for search, replace, and text-cleaning tasks. For a demonstration, see http://emacsrocks.com/e13.html
+#+source: multiple-cursors
+#+begin_src emacs-lisp
+  (require 'multiple-cursors)
+  ;; When you have an active region that spans multiple lines, the following will add a cursor to each line:
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  
+  (global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
+  (global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
+  
+  ;; When you want to add multiple cursors not based on continuous lines, but based on keywords in the buffer, use:
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+  
+  ;; Rectangular region mode
+  (global-set-key (kbd "H-SPC") 'set-rectangular-region-anchor)
+  
+  ;; Mark more like this
+  (global-set-key (kbd "H-a") 'mc/mark-all-like-this)
+  (global-set-key (kbd "H-p") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "H-n") 'mc/mark-next-like-this)
+  (global-set-key (kbd "H-S-n") 'mc/mark-more-like-this-extended)
+  (global-set-key (kbd "H-S-a") 'mc/mark-all-in-region)
+#+end_src
+
+First mark the word, then add more cursors. To get out of multiple-cursors-mode, press <return> or C-g. The latter will first disable multiple regions before disabling multiple cursors. If you want to insert a newline in multiple-cursors-mode, use C-j.
+
 ** Minimal mode
    A nice clutter-free appearance with a reduced-size modeline, no
-   scroll bars, and no fringe indicators. Useful in conjunction with running Emacs full-screen. 
-
+   scroll bars, and no fringe indicators. Useful in conjunction with running Emacs full-screen.
 #+source: minimal-mode
 #+begin_src emacs-lisp
   (require 'minimal)

@@ -305,7 +305,7 @@ since they are likely to be used in every session
        (lambda (file)
          (when (string= "org" (file-name-extension file))
            (let ((el-file (concat (file-name-sans-extension file) ".el")))
-             (when (or arg
+             (when (or args
                        (not (and (file-exists-p el-file)
                                  (> (age file) (age el-file)))))
                (org-babel-tangle-file file el-file "emacs-lisp")
