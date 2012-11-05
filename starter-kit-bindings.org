@@ -11,6 +11,31 @@ Key Bindings.
 #+source: fn-to-hyper
 #+begin_src emacs-lisp
   (setq mac-function-modifier 'hyper)
+  ;; fix page-up and page-down keys
+  
+  (defun sfp-page-down (&optional arg)
+    (interactive "^P")
+    (setq this-command 'next-line)
+    (next-line
+     (- (window-text-height)
+        next-screen-context-lines)))
+  (put 'sfp-page-down 'isearch-scroll t)
+  (put 'sfp-page-down 'CUA 'move)
+  
+  (defun sfp-page-up (&optional arg)
+    (interactive "^P")
+    (setq this-command 'previous-line)
+    (previous-line
+     (- (window-text-height)
+        next-screen-context-lines)))
+  (put 'sfp-page-up 'isearch-scroll t)
+  (put 'sfp-page-up 'CUA 'move)
+  
+  (global-set-key [(H down)] 'scroll-up)
+  (global-set-key [(H up)]   'scroll-down) 
+  (require 'scroll-lock)
+  (setq scroll-preserve-screen-position t)
+  
 #+end_src
 
 ** Align your code in a pretty way.
