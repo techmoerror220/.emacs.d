@@ -230,11 +230,8 @@ Tell RefTeX where the bibliography files are.
 #+end_src
 
 ** Local Pandoc Support 
- Make Emacs see where pandoc is installed. (Emacs can't access the bash
- $PATH directly.)
 #+src-name: pandoc_mode
-#+begin_src emacs-lisp :tangle no
- (setenv "PATH" (concat "/Users/kjhealy/.cabal/bin:" (getenv "PATH")))
+#+begin_src emacs-lisp 
  (load "pandoc-mode")
  (add-hook 'markdown-mode-hook 'turn-on-pandoc)
  (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
