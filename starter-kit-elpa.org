@@ -15,6 +15,7 @@ The following packages will be downloaded and installed.
                                 'browse-kill-ring
                                 'cdlatex
                                 'css-mode
+                                'exec-path-from-shell
                                 'expand-region
                                 'gist
                                 'highline
@@ -76,8 +77,16 @@ On your first run, this should pull in all the base packages.
   (starter-kit-elpa-install))
 #+end_src
 
+Make sure the PATH variable is set properly. (Uses exec-path-from-shell package.)
+#+source: fix-path
+#+begin_src emacs-lisp
+  (when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+#+end_src
+
+
 Workaround for an ELPA bug that people are reporting but I've been
 unable to reproduce:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (autoload 'paredit-mode "paredit")
 #+end_src
