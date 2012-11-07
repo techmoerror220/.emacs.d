@@ -161,6 +161,14 @@ In dired mode, visit all marked files using. Bound to the "F" key.
          (mapc 'find-file fn-list)))))
 #+end_src
 
+*** Stripe Dired buffers
+#+name: stripe-dired
+#+begin_src emacs-lisp
+(require 'stripe-buffer)
+(add-hook 'org-mode-hook 'org-table-stripes-enable)
+(add-hook 'dired-mode-hook 'stripe-listify-buffer)  
+#+end_src
+
 ** Local LaTeX settings
 *** In-text Smart Quotes (XeLaTeX only)
     Redefine TeX-open-quote and TeX-close-quote to be smart quotes by default. Below, in the local org-mode settings, we'll also map the relevant function to a key we can use in org-mode, too. If you don't use XeLaTeX for processing all your =.tex= files, you should disable this option.

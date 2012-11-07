@@ -149,7 +149,6 @@ Don't ask for confirmation on every =C-c C-c= code-block compile.
   (setq org-confirm-babel-evaluate nil)
 #+end_src
 
-
 ** Ensure the Latest Org-mode manual is in the info directory
 By placing the =doc/= directory in Org-mode at the front of the
 =Info-directory-list= we can be sure that the latest version of the
@@ -167,3 +166,9 @@ Org-mode manual is available to the =info= command (bound to =C-h i=).
 #+end_src
 
 
+** Nice Bulleted Lists
+#+name: org-bullets
+#+begin_src emacs-lisp
+  (require 'org-bullets)
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+end_src
