@@ -82,22 +82,27 @@ a lambda doesn't already exist in the list.
 
 #+srcname: starter-kit-hook-functions
 #+begin_src emacs-lisp 
-(defun local-column-number-mode ()
-  (make-local-variable 'column-number-mode)
-  (column-number-mode t))
-
-(defun local-comment-auto-fill ()
-  (set (make-local-variable 'comment-auto-fill-only-comments) t)
-  (auto-fill-mode t))
-
-(defun turn-on-hl-line-mode ()
-  (if window-system (hl-line-mode t)))
-
-(defun turn-on-save-place-mode ()
-  (setq save-place t))
-
-(defun turn-on-whitespace ()
-  (whitespace-mode t))
+  (defun local-column-number-mode ()
+    (make-local-variable 'column-number-mode)
+    (column-number-mode t))
+  
+  (defun local-comment-auto-fill ()
+    (set (make-local-variable 'comment-auto-fill-only-comments) t)
+    (auto-fill-mode t))
+  
+  (defun turn-on-idle-highlight-mode ()
+    (idle-highlight t))
+  
+  (defun turn-on-hl-line-mode ()
+        (require 'hl-line+)
+        (toggle-hl-line-when-idle 1)
+        (global-hl-line-mode nil))
+      
+  (defun turn-on-save-place-mode ()
+    (setq save-place t))
+  
+  (defun turn-on-whitespace ()
+    (whitespace-mode t))
 #+end_src
 
 #+srcname: starter-kit-add-local-column-number-mode
@@ -119,6 +124,12 @@ a lambda doesn't already exist in the list.
 #+begin_src emacs-lisp
 (add-hook 'starter-kit-coding-hook 'starter-kit-pretty-lambdas)
 #+end_src
+
+#+srcname: starter-kit-add-idle-highlight-mode
+#+begin_src emacs-lisp :tangle no
+(add-hook 'starter-kit-coding-hook 'turn-on-idle-highlight-mode)
+#+end_src
+
   
 #+srcname: starter-kit-run-starter-kit-coding-hook
 #+begin_src emacs-lisp 

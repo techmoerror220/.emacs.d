@@ -30,7 +30,7 @@ Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode X
  delete the lines.
 
 ** Local Miscellaneous Settings
-*** Color Theme and Line Highlighting
+*** Color Theme Tweaks
 The theme package is loaded in =starter-kit-misc.org=. The settings
 here adjust the height of some headings in Org and LaTeX mode, as well
 as turning off the sans-serif heading style that AucTeX defaults to.
@@ -96,7 +96,7 @@ Fullscreen toggle using maxframe.el.
 #+end_src
 
 **** Option 4
-For use with Yamamoto Mitsuharu's Carbon-patched Emacs 23. (This is
+For use with Yamamoto Mitsuharu's Carbon-patched Emacs. (This is
     what I use, but it requires you compile a custom Emacs.)
 
 #+source: fullscreen-4

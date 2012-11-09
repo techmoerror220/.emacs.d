@@ -14,6 +14,11 @@ This file provides settings for ESS and R.
 #+begin_src emacs-lisp
  (require 'ess-site)
 #+end_src
+** Coding Hooks
+#+source: ide-ess
+#+begin_src emacs-lisp
+  (add-hook 'ess-mode-hook 'run-starter-kit-coding-hook)
+#+end_src
 
 ** Define Rnw-mode and make LaTeX aware of it. 
 #+srcname: misc-r

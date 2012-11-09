@@ -18,7 +18,7 @@ The following packages will be downloaded and installed.
                                 'exec-path-from-shell
                                 'expand-region
                                 'gist
-                                'highline
+                                'hl-line+
                                 'idle-highlight
                                 'inf-ruby
                                 'js2-mode
@@ -31,6 +31,7 @@ The following packages will be downloaded and installed.
                                 'python
                                 'redo+
                                 'ruby-mode
+                                's
                                 'smex
                                 'solarized-theme
                                 'tango-2-theme
