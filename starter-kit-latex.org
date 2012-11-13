@@ -141,10 +141,14 @@ Allow AucTeX to use biber as well as/instead of bibtex.
 
 #+srcname: latemkdefault
 #+begin_src emacs-lisp
-  (eval-after-load "tex"
-    '(add-to-list 'TeX-command-list '("Latexmk" "latexmk -pdf %s" TeX-run-TeX nil t :help "Run Latexmk on file"))
-    )
-(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "Latexmk")))  
+    (eval-after-load "tex"
+      '(add-to-list 'TeX-command-list '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
+      )
+    (eval-after-load "tex"
+      '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
+      )
+
+  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))  
 #+end_src
 
 *** Set a Path to Executables (optional)
