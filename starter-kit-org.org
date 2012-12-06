@@ -168,7 +168,7 @@ Org-mode manual is available to the =info= command (bound to =C-h i=).
 
 ** Nice Bulleted Lists
 #+name: org-bullets
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (require 'org-bullets)
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+end_src
