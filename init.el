@@ -57,6 +57,7 @@
 
 ;; Load up Org Mode and Babel
 ;; load up the main file
+(require 'org)
 (org-babel-load-file (expand-file-name "starter-kit.org" dotfiles-dir))
 
 ;;; init.el ends here
