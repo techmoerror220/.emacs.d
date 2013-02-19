@@ -38,7 +38,7 @@ The following packages will be downloaded and installed.
                                 'textmate
                                 'typopunct
                                 'yaml-mode
-                                'yasnippet-bundle
+                                'yasnippet
                                 'zenburn-theme
                                 )
     "Libraries that should be installed by default.")

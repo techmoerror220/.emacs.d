@@ -423,17 +423,16 @@ inspired by TextMate's templating syntax.
 - see the [[http://yasnippet.googlecode.com/svn/trunk/doc/index.html][intro and tutorial]]
 
 load the yasnippet bundle
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (add-to-list 'load-path
                (expand-file-name  "yasnippet"
                                   (expand-file-name "src"
                                                     dotfiles-dir)))
   (require 'yasnippet)
-  (yas/initialize)
 #+end_src
 
 load the snippets defined in the =./snippets/= directory
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (yas/load-directory (expand-file-name "snippets" dotfiles-dir))
 #+end_src
 
