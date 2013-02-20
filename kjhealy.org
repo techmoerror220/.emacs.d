@@ -261,9 +261,9 @@ Tell RefTeX where the bibliography files are.
 ** Local Pandoc Support 
 #+src-name: pandoc_mode
 #+begin_src emacs-lisp 
- (load "pandoc-mode")
- (add-hook 'markdown-mode-hook 'turn-on-pandoc)
- (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
+  (load "pandoc-mode")
+  (add-hook 'markdown-mode-hook 'turn-on-pandoc)
+  (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
 #+end_src
 
 ** Local iBuffer Settings
