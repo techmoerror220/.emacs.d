@@ -332,7 +332,6 @@ Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager.
   (require 'package)
   (setq package-archives
         '(("gnu"         . "http://elpa.gnu.org/packages/")
-          ("original"    . "http://tromey.com/elpa/")
           ("org"         . "http://orgmode.org/elpa/")
           ("marmalade"   . "http://marmalade-repo.org/packages/")))
   (package-initialize)
