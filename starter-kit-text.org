@@ -4,7 +4,7 @@
 This is part of the [[file:starter-kit.org][Emacs Starter Kit]]. 
 
 This file provides settings for text-editing modes and formats, including
-Mardown and Pandoc, as well as spellchecking and line-wrapping.
+Markdown and Pandoc, as well as spellchecking and line-wrapping.
 
 * Text Management and Appearance
 ** Word-count
