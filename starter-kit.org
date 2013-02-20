@@ -417,27 +417,15 @@ turn off these sections if you don't plan on using the related mode or
 language.
 
 *** Starter kit yasnippet
-[[http://code.google.com/p/yasnippet/][yasnippet]] is yet another snippet expansion system for Emacs.  It is
-inspired by TextMate's templating syntax.
-- watch the [[http://www.youtube.com/watch?v=vOj7btx3ATg][video on YouTube]]
-- see the [[http://yasnippet.googlecode.com/svn/trunk/doc/index.html][intro and tutorial]]
+Located in [[file:starter-kit-yasnippet.org][starter-kit-yasnippet]].
 
-load the yasnippet bundle
-#+begin_src emacs-lisp :tangle no
-  (add-to-list 'load-path
-               (expand-file-name  "yasnippet"
-                                  (expand-file-name "src"
-                                                    dotfiles-dir)))
-  (require 'yasnippet)
-#+end_src
+#+begin_src emacs-lisp 
+  (starter-kit-load "starter-kit-yasnippet.org")    
+#+end_src 
 
-load the snippets defined in the =./snippets/= directory
-#+begin_src emacs-lisp :tangle no
-  (yas/load-directory (expand-file-name "snippets" dotfiles-dir))
-#+end_src
 
 *** Starter kit Org-mode
-Located in [[file:starter-kit-org.org][starter-kit-org]]
+Located in [[file:starter-kit-org.org][starter-kit-org]].
 
 #+begin_src emacs-lisp
 (starter-kit-load "starter-kit-org.org")

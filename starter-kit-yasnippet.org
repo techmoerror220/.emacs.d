@@ -1,19 +1,47 @@
+* Starter kit yasnippet and autocomplete
 
+Yasnippet is a snippet expansion system for Emacs. It uses short phrases and the tab key to trigger the insertion of frequently-used snippets of code or text in your document. Autocomplete mode has dynamic suggestions for completetion of text in a buffer. Here we set them up to work properly together. 
 
-
-* Starter kit yasnippet
-[[http://code.google.com/p/yasnippet/][yasnippet]] is yet another snippet expansion system for Emacs.  It is
-inspired by TextMate's templating syntax.
-- watch the [[http://www.youtube.com/watch?v=vOj7btx3ATg][video on YouTube]]
-- see the [[http://yasnippet.googlecode.com/svn/trunk/doc/index.html][intro and tutorial]]
-
-load the yasnippet bundle
-#+begin_src emacs-lisp
-  (add-to-list 'load-path (expand-file-name elisp-source-dir "yasnippet"))
+** Load the yasnippet bundle
+#+begin_src emacs-lisp :tangle yes
+  (add-to-list 'load-path
+                 (expand-file-name  "yasnippet"
+                                    (expand-file-name "elpa"
+                                                      dotfiles-dir)))
   (require 'yasnippet)
+;;  (yas/set-ac-modes)
+;;  (yas/enable-emacs-lisp-paren-hack)
+  (yas-global-mode 1)
 #+end_src
 
-load the snippets defined in the =./snippets/= directory
-#+begin_src emacs-lisp
+Load the snippets defined in the package's =./snippets/= directory, and local snippets from the =./local-snippets/= directory. 
+
+#+begin_src emacs-lisp :tangle yes
   (yas/load-directory (expand-file-name "snippets" dotfiles-dir))
+  (yas/load-directory (expand-file-name "local-snippets" dotfiles-dir))
+ 
 #+end_src
+
+** Load autocomplete
+#+begin_src emacs-lisp 
+  (require 'auto-complete)
+  (require 'auto-complete-config)
+  (global-auto-complete-mode t)
+  (add-to-list 'ac-dictionary-directories (expand-file-name "auto-complete" dotfiles-dir))
+  (add-to-list 'ac-dictionary-directories "~/.emacs.d/local-autocomplete")
+  (setq ac-modes (append ac-modes '(org-mode))) 
+  (ac-config-default)
+  (define-key ac-complete-mode-map [tab] 'ac-expand)
+  (require 'ac-R) ;; in ~/.emacs.d/local-autocomplete
+  (setq ac-auto-start 4)
+  (ac-flyspell-workaround)
+  (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
+  (setq ac-auto-show-menu 0.8)
+  ;; 
+  (set-face-background 'ac-candidate-face "#366060")
+  (set-face-foreground 'ac-selection-face "#1f1f1f")
+  (set-face-background 'ac-selection-face "#8cd0d3")
+  (set-face-foreground 'ac-selection-face "#1f1f1f")
+  
+  
+#+end_src 

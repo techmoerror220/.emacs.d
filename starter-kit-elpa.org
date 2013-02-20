@@ -10,6 +10,7 @@ The following packages will be downloaded and installed.
 
 #+begin_src emacs-lisp
   (defvar starter-kit-packages (list 
+                                'auto-complete
                                 'autopair
                                 'browse-kill-ring
                                 'cdlatex
@@ -37,6 +38,7 @@ The following packages will be downloaded and installed.
                                 'typopunct
                                 'yaml-mode
                                 'yasnippet
+                                'r-autoyas
                                 'zenburn-theme
                                 'auctex
                                 'ess
