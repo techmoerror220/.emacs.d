@@ -59,19 +59,18 @@ as turning off the sans-serif heading style that AucTeX defaults to.
   I find it very useful to run Emacs in full-screen mode. There is no
     completely satisfactory way to accomplish this on Mac OS X. What
     works depends on the flavor of emacs you are using,
-    unfortunately. Choose as appropriate from the following options:
+    unfortunately. Choose as appropriate from the following options. Enable one of them by changing the value of =:tangle= to =yes=. 
 
 **** Option 1
-Require maxframe package to conveniently maxmimize the window. Doesn't work with Emacs 23 on Mac.
+Just maximize the frame. Not true fullscreen
 
 #+srcname: fullscreen-1
 #+begin_src emacs-lisp :tangle no
-  (require 'maxframe)
-  (global-set-key (kbd "C-c m") 'x-maximize-frame)  
+  (global-set-key (kbd "C-c m") 'maximize-frame)  
 #+end_src
 
 **** Option 2
-Fullscreen toggle -- Only works with the (now slightly out-of-date)
+Fullscreen toggle -- Only works with the (out-of-date)
 patched emacs build at =git://github.com/typester/emacs.git=.
 
 #+source: fullscreen-2
@@ -97,7 +96,7 @@ Fullscreen toggle using maxframe.el.
 
 **** Option 4
 For use with Yamamoto Mitsuharu's Carbon-patched Emacs. (This is
-    what I use, but it requires you compile a custom Emacs.)
+    what I use, but it requires you compile a custom version of Emacs provided by Mitsuharu.)
 
 #+source: fullscreen-4
 #+begin_src emacs-lisp
@@ -109,21 +108,6 @@ For use with Yamamoto Mitsuharu's Carbon-patched Emacs. (This is
     (add-hook 'after-make-frame-functions 'fullscreen)
 #+end_src
 
-**** Option 5  
-Internal to emacs; also seems not to work on OS X.
-#+source: fullscreen-5
-#+begin_src emacs-lisp :tangle no
- (defun toggle-fullscreen (&optional f)
-    (interactive)
-    (let ((current-value (frame-parameter nil 'fullscreen)))
-         (set-frame-parameter nil 'fullscreen
-                              (if (equal 'fullboth current-value)
-                                  (if (boundp 'old-fullscreen) old-fullscreen nil)
-                                  (progn (setq old-fullscreen current-value)
-                                         'fullboth)))))
-  (global-set-key (kbd "C-c f") 'toggle-fullscreen)  
-#+end_src
-    
 *** Mac Key mode
     Used with Mitsuharu Yamamoto's carbon-patched Emacs, which turns
     off support for default mac bindings. Turned off by default.
@@ -182,23 +166,29 @@ In dired mode, visit all marked files using. Bound to the "F" key.
 *** SyncTeX, PDF mode, Skim
 Set up AUCTeX to work with the Skim PDF viewer.
 
-#+srcname: local-loadpath
+#+srcname: sync
 #+begin_src emacs-lisp
-   ;; Synctex with Skim
-   ;;(add-hook 'TeX-mode-hook
-   ;;(lambda ()
-   ;;(add-to-list 'TeX-output-view-style
-   ;;'("^pdf$" "."
-   ;; "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b")))
-   ;; )
-
-   ;; Make emacs aware of multi-file projects
-   ;; (setq-default TeX-master nil)
-
-   ;; Auto-raise Emacs on activation (from Skim, usually)
-   (defun raise-emacs-on-aqua()
-   (shell-command "osascript -e 'tell application \"Emacs\" to activate' &"))
-   (add-hook 'server-switch-hook 'raise-emacs-on-aqua)
+    ;; Synctex with Skim
+    (add-hook 'TeX-mode-hook
+    (lambda ()
+    (add-to-list 'TeX-output-view-style
+    '("^pdf$" "."
+     "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b")))
+     )
+    
+  (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+  (setq TeX-view-program-list
+       '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+  
+  (server-start); start emacs in server mode so that skim can talk to it
+    
+    ;; Make emacs aware of multi-file projects
+    ;; (setq-default TeX-master nil)
+    
+    ;; Auto-raise Emacs on activation (from Skim, usually)
+    (defun raise-emacs-on-aqua()
+    (shell-command "osascript -e 'tell application \"Emacs\" to activate' &"))
+    (add-hook 'server-switch-hook 'raise-emacs-on-aqua)
 #+end_src
 
 *** Local RefTeX Settings
@@ -259,10 +249,12 @@ Tell RefTeX where the bibliography files are.
 #+end_src
 
 ** Local Pandoc Support 
+A pandoc menu for markdown and tex files. 
 #+src-name: pandoc_mode
 #+begin_src emacs-lisp 
   (load "pandoc-mode")
   (add-hook 'markdown-mode-hook 'turn-on-pandoc)
+  (add-hook 'TeX-mode-hook 'turn-on-pandoc)
   (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
 #+end_src
 
@@ -401,13 +393,13 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
                        pdflatex, or xelatex as appropriate, using latexmk."
       (let ((texcmd)))
       ;; default command: pdflatex 
-      (setq texcmd "latexmk -pdflatex='pdflatex --shell-escape' -pdf %f")        
+      (setq texcmd "latexmk -pdflatex='pdflatex -synctex=1 --shell-escape --' -pdf %f")        
       ;; pdflatex -> .pdf
       (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
-          (setq texcmd "latexmk -pdflatex='pdflatex --shell-escape' -pdf %f"))
+          (setq texcmd "latexmk -pdflatex='pdflatex -synctex=1 --shell-escape' -pdf %f"))
       ;; xelatex -> .pdf
       (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-          (setq texcmd "latexmk -pdflatex='xelatex --shell-escape' -pdf %f"))
+          (setq texcmd "latexmk -pdflatex='xelatex -syntex=1 --shell-escape' -pdf %f"))
       ;; LaTeX compilation command
       (setq org-latex-to-pdf-process (list texcmd)))
     
@@ -591,8 +583,8 @@ Some last tweaks.
   ;; If there is more than one, they won't work right.
   '(LaTeX-XeTeX-command "xelatex -synctex=1")
   '(TeX-engine (quote xetex))
-  '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
-  '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
+  ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
+  ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
   '(show-paren-mode t)
   '(blink-cursor-mode nil)
   '(text-mode-hook (quote (text-mode-hook-identify)))
