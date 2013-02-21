@@ -12,8 +12,7 @@ The Emacs Starter Kit for the Social Sciences is maintained by [[http://kieranhe
 Healy]]. The original version was written by [[http://github.com/technomancy/emacs-starter-kit/tree][Phil Hagelberg]]. This
 version is more directly descended from [[http://eschulte.github.com/emacs-starter-kit/][Eric Schulte's]] excellent
 org-mode implementation. It is designed specifically for [[http://emacsformacosx.com/builds][GNU Emacs 24
-on Mac OS X]]. It may well work on Windows, but I don't promise that. It
-is not compatible with [[http://aquamacs.org][Aquamacs]].
+on Mac OS X]]. 
 
 The goal of this kit is to provide a more useful set of defaults than
 you get normally with Emacs. It's intended for beginners, but provides
@@ -23,13 +22,12 @@ particularly useful for researchers in the social sciences.
 
 The main advantage of this Emacs Starter Kit are
 - better default settings
-- inclusion of many useful libraries
+- inclusion of many useful libraries and packages 
 - "literate" customization embedded in Org-mode files
-- an organizational directory structure
+- an organized directory structure
 - git provides for version control, backup, and sharing
 
-The latest version is at
-[[http://kjhealy.github.com/emacs-starter-kit/]]. 
+Source code for the latest version is at [[http://kjhealy.github.com/emacs-starter-kit/]]. 
 
 ** Learning
    :PROPERTIES:
@@ -39,72 +37,76 @@ The latest version is at
 This won't teach you Emacs, but it'll make it easier to get
 comfortable. To access the tutorial, press control-h followed by t.
 
-The [[http://emacswiki.org][Emacs Wiki]] is also very handy.
-
 ** Installation
    :PROPERTIES:
    :CUSTOM_ID: installation
    :END:
 Installation instructions for the social-science version of the kit
-can also be found at [[http://kjhealy.github.com/emacs-starter-kit/]]
+can be found at [[http://kieranhealy.org/resources/eamcs-starter-kit.html/]].
 
-1. - Install Mac OS X's suite of Developer Tools. These came with your
-   Mac on an install DVD of their own. Alternatively, [[http://developer.apple.com/downloads][download the
-   most recent version]] from Apple directly. You can choose either the
-   full Xcode installation or the (much smaller) command-line tools
-   for Xcode.
-   - Install Git. Either compile it from source if you know what
-     you're doing or [[http://code.google.com/p/git-osx-installer/downloads/list?can%3D3][install it directly]].
-   - Install [[http://www.tug.org/mactex/2011/][TeX]]. 
-   - Note your user name or the name of your computer. If you don't
-     know either, open the Terminal.app and do one or both of =whoami=
-     or =hostname=. You will need to know your login name to activate
-     the final customization file properly. You can use the system
-     name as well (or instead) but it's optional.
-   - Install Emacs (version 24 is required) Use your package manager
-     if you have one.  Otherwise, Mac users should get it [[http://emacsformacosx.com/][from here]],
-     or install it directly from [[http://savannah.gnu.org/projects/emacs/][from source]] following the
-     instructions in =nextstep/INSTALL=. Be sure to download a version
-     of Emacs 24, which is currently in pretest release but very
-     stable---[[http://emacsformacosx.com/emacs-builds/Emacs-pretest-24.0.95-universal-10.6.8.dmg][here is a link to the most recent pretest for OS X]].
-     Windows users can get it [[http://ftp.gnu.org/gnu/emacs/windows/emacs-22.3-bin-i386.zip][from GNU]].
-   - If they're already present, back up your =.emacs= file and backup 
-     your =~/.emacs.d/= directory somewhere else. Delete the =.emacs=
-     file and reove the =~/.emacs.d/= directory. (See below for details
-     on where to put any existing customizations you wish to keep.) Move
-     the resulting directory to =~/.emacs.d=.
-2. Checkout a version of the starter kit using git -- if you're new to
-   git checkout this [[http://www.kernel.org/pub/software/scm/git/docs/gittutorial.html][git-tutorial]], also we'd highly recommend that you
-   try out [[http://zagadka.vm.bytemark.co.uk/magit/magit.html][magit]] the Emacs mode for git interaction which comes
-   bundled in the starter kit.
-   #+begin_src sh
-     git clone http://github.com/kjhealy/emacs-starter-kit.git ~/.emacs.d
-   #+end_src
-3. Pull in some [[http://www.kernel.org/pub/software/scm/git/docs/user-manual.html#submodules][submodules]] with the following
-   #+begin_src sh
-   cd ~/.emacs.d/
-   git submodule init
-   git submodule update
-   #+end_src
-4. Finally, change the name of the starter kit's =kjhealy.org= to that
-   of =<USERNAME>.org= or =<SYSTEMNAME>.org=, based on the information
-   you noted above with the =whoami= and =hostname= commands. These
-   files are where you can add in any of your own existing or future
-   customizations without breaking the starter kit's overall
-   setup. See the =kjhealy.org= file for more information on further
-   changes you need to make within that file, e.g., so that it points
-   to your LaTeX =.bib= files properly, etc.
-5. Launch Emacs!
+*** Before you Begin
+If you have used Emacs before and already have a =.emacs= file or =.emacs.d= directory, back them up and then delete them. See below for details on how to add customizations to the kit.
 
-After setup you may need to restart Emacs a couple of times while it
-downloads and installs packages from [[* Emacs Lisp Package Archive][ELPA]].
+*** Getting the Starter Kit
+You have two choices. 
 
-Once everything starts up cleanly, if you wish you can do =M-x
-starter-kit-compile= to byte-compile the starter kit files (for
-slightly faster loading).
+/Option A/. [[https://github.com/kjhealy/emacs-starter-kit/archive/master.zip][Download]] a =.zip= file of the kit. 
 
-If you want to keep your regular ~/.emacs.d in place and just launch a
-single instance using the starter kit, try the following invocation:
+/Option B/. If you want to keep up with changes to the kit, you should clone the source code using git rather than simply copying a static version of it. In general I think you should be using version control on your plain-text documents anyway, so I recommend this option. The most straightforward way to get the tools you need is to *install Xcode*. Xcode is what software developers use to write Mac and iOS applications. As such it comes with a bunch of things we are not so interested in, but it makes it easy to install the tools we do need. It's available for free [[https://developer.apple.com/xcode/][via the Mac App Store]]. Once downloaded, launch Xcode, go to Xcode &#62; Preferences &#62; Downloads and install the *Command Line Tools for Xcode*. At that point you can quit Xcode and never use it again. Alternatively, go to [[https://developer.apple.com][Apple's Developer Site]], login with your Apple ID and download the Command Line Tools for Xcode package by itself, without the Xcode application. 
+
+*** Prerequisites
+
+*0.1 Get Emacs*.  The starter kit requires Emacs 24, and preferably the most recent released version. [[http://emacsformacosx.com][Download Emacs here]]. Alternatively, if you know what you're doing you may [[http://www.gnu.org/software/emacs/#Obtaining][compile it yourself]]. 
+
+
+*0.2 Install a Modern TeX Distribution and the Skim PDF reader*. If you are using OS X, [[http://tug.org/mactex/][download MacTeX]]  and install it. The kit is set up to use the [[skim-app.sourceforge.net/][Skim PDF reader]] to display PDF files created from =.tex= files. You can use other readers, but will need to modify the setup in the =starter-kit-latex.org= file.
+
+
+*0.3 Install R and Pandoc*. These are not strictly required for the installation to work, and you can skip this step if you like. But you will probably be using them anyway, if you're not already. If you're doing statistical work you will probably want to use R or Stata. R is free and you can [[http://www.r-project.org][download it here]]. Pandoc is a very useful utility that lets you convert easily between many different forms of plain-text markup (such as Markdown, HTML, LaTeX, and others). [[johnmacfarlane.net/pandoc/][Get Pandoc here]].
+
+*0.4 Note your user name* or the name of your computer. If you don't know either, open the Terminal application and do
+
+#+begin_src sh
+ whoami
+#+end_src
+
+for your user name and
+
+#+begin_src sh
+ hostname
+#+end_src
+
+for the system name. You will need to know your login name to activate the final customization file properly. You can use the system name as well (or instead).
+
+*** Setup
+
+*1.* If you downloaded a =.zip= file of the kit, you must uncompress it, move the resulting folder to the top level of your home director and rename it =.emacs.d=. Assuming the downloaded zip file is in your =~/Downloads= folder, open a Terminal window and do this:
+
+#+begin_src sh
+ cd ~/Downloads
+ unzip emacs-starter-kit-master.zip
+ mv emacs-starter-kit-master ~/.emacs.d
+#+end_src
+
+Alternatively, if you are using git (the preferred method), then clone the starter kit from github. Open a Terminal window and do this:
+
+#+begin_src sh
+ git clone git://github.com/kjhealy/emacs-starter-kit ~/.emacs.d
+#+end_src
+
+*2.* Inside the file =kjhealy.org=, change the paths to any BibTeX databases as described at the top of that file.
+
+
+*3.* Rename the starter kit's =kjhealy.org= file to that of =%your-username%.org= or =%your-systemname%.org=, based on the information you noted in 0.4 above. This is where you can add in any of your own further customizations to Emacs.
+
+
+*4.* Launch Emacs.
+
+When you first start Emacs after installing the starter-kit, it will try to contact several package repositories, so make sure you have an internet connection. The kit will download packages mainly from the official [[http://http://elpa.gnu.org][GNU ELPA Repository]] and the [[Marmalade Repo]]. Each package will be fetched, compiled by Emacs, and stored in the =~/.emacs.d= directory. In practice I've found that this process is prone to hiccups as packages are fetched from the servers, so please be patient with it. If it doesn't get everything first time around, quit and relaunch Emacs, and it will try again. If the problem persists---especially if you get a message saying "The package 'auctex' is not available for installation"---you can manually install packages as follows. Open Emacs, do =M-x list-packages= and in the resulting buffer search or scroll down the list to, e.g., auctex, mark it for installation by pressing =i= and then install it (or them) by hitting =x=. With the packages in place, restart Emacs and the starter kit will finish setting itself up. Unfortunately, I can't control these intermittent installation errors. They seem to have something to do with the way Emacs talks to the GNU ELPA package server.
+
+*5.* (Optional.) Once Emacs is up and running, do =M-x starter-kit-compile= to byte-compile the starter-kit's files, for slightly faster loading.
+
+If you want to keep your regular =~/.emacs.d= in place and just launch a single instance using the starter kit, try the following invocation:
 
 #+begin_src sh
   emacs -q -l ~/src/emacs-starter-kit/init.el
@@ -207,44 +209,14 @@ suggestions
    :CUSTOM_ID: elpa
    :END:
 
-Libraries from [[http://tromey.com/elpa][ELPA]] are preferred when available since dependencies
+Libraries from [[http://elpa.gnu.org/packages/][ELPA]] or the [[http://marmalade-repo.org/][Marmalade Repo]] are preferred when available since dependencies
 are handled automatically, and the burden to update them is removed
 from the user. 
 
 Sometimes packages are removed from the Starter Kit as they get added
 to ELPA itself. This has occasionally caused problems with certain
 packages. If you run into problems with such a package, try removing
-everything from inside the elpa/ directory and invoking M-x
-starter-kit-elpa-install in a fresh instance.
-
-** Contributing
-   :PROPERTIES:
-   :CUSTOM_ID: contributing
-   :END:
-
-If you know your way around Emacs, please try out the starter kit as a
-replacement for your regular dotfiles for a while. If there's anything
-you just can't live without, add it or let me know so I can add
-it. Take a look at what happens in [[file:init.el][init.el]] to get started.
-
-Also: see the [[* Tasks][Tasks section]] in this document. Helping submit new
-libraries to ELPA is the easiest way to help out. There are two ways
-you can do this: either take new libraries and make them ready for
-ELPA, dropping them in the elpa-to-submit directory or take files that
-are already in elpa-to-submit, ensuring all their dependencies are
-correctly loaded into ELPA, and sending them to the ELPA
-maintainer. There are details at http://tromey.com/elpa/upload.html
-for how ELPA submission works. Grep the project for TODO for other
-things.
-
-Files are licensed under the same license as Emacs unless otherwise
-specified. See the file COPYING for details.
-
-The latest version is at http://github.com/technomancy/emacs-starter-kit/
-
-On Unix, =/home/$USER/.emacs.d=, on windows =Documents and
-Settings/%your user name%/Application Data=
-
+everything from inside the elpa/ directory and invoking =M-x starter-kit-elpa-install= in a fresh instance.
 
 * Implementation
   :PROPERTIES:
