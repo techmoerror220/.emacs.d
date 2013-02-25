@@ -278,6 +278,21 @@ Rgrep is infinitely useful in multi-file projects.
   (define-key global-map "\C-x\C-r" 'rgrep)
 #+end_src
 
+** Interface with Ack
+Ack is "better than grep" and written in Perl. 
+
+#+source: ack
+#+begin_src emacs-lisp
+  (require 'ack-and-a-half)
+  ;; Create shorter aliases
+  (defalias 'ack 'ack-and-a-half)
+  (defalias 'ack-same 'ack-and-a-half-same)
+  (defalias 'ack-find-file 'ack-and-a-half-find-file)
+  (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
+  (define-key global-map "\C-x\C-a" 'ack) 
+#+end_src
+
+
 ** Winner mode
     Remember the previous window configurations and jump back to them
     as needed (as when, e.g., some other mode messes with your working
