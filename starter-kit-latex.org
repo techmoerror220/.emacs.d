@@ -17,6 +17,13 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
   (load "preview.el" nil t t)
 #+end_src
 
+*** Prettify Math in Buffers
+#+source: latex-pretty-symbols 
+#+begin_src emacs-lisp
+  (require 'latex-pretty-symbols)
+#+end_src
+
+
 *** Load RefTeX
 #+srcname: reftex-support
 #+begin_src emacs-lisp 
