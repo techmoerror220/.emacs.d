@@ -14,7 +14,7 @@ The following packages will be downloaded and installed.
                                 'auto-complete
                                 'autopair
                                 'browse-kill-ring
-                                'cdlatex
+                                ;; 'cdlatex
                                 'css-mode
                                 'exec-path-from-shell
                                 'expand-region
