@@ -196,21 +196,29 @@ When windows get out of order, you can rotate them.
 #+end_src
     
 ** Use Option as Meta key
+
+#+source: option-is-meta
+#+begin_src emacs-lisp 
+  (setq mac-option-modifier 'meta)    
+#+end_src
+
+** Use Command-Z as undo
 Use a little bit of Mac keys, but not all of them.
 #+source: mackeys1
-#+begin_src emacs-lisp
-(require 'redo+) 
-(setq mac-command-modifier 'alt mac-option-modifier 'meta)
-(global-set-key [(alt a)] 'mark-whole-buffer)
-(global-set-key [(alt v)] 'yank)
-(global-set-key [(alt c)] 'kill-ring-save)
-(global-set-key [(alt x)] 'kill-region)
-(global-set-key [(alt s)] 'save-buffer)
-(global-set-key [(alt f)] 'isearch-forward)
-(global-set-key [(alt g)] 'isearch-repeat-forward)
-(global-set-key [(alt z)] 'undo)
-
+#+begin_src emacs-lisp 
+  (global-set-key [(meta z)] 'undo)
+  ;; (require 'redo+) 
+  ;;(global-set-key [(alt a)] 'mark-whole-buffer)
+  ;;(global-set-key [(alt v)] 'yank)
+  ;; (global-set-key [(alt c)] 'kill-ring-save)
+  ;;(global-set-key [(alt x)] 'kill-region)
+  ;;(global-set-key [(alt s)] 'save-buffer)
+  ;;(global-set-key [(alt f)] 'isearch-forward)
+  ;;(global-set-key [(alt g)] 'isearch-repeat-forward)
+  ;; (global-set-key [(alt z)] 'undo)
+    
 #+end_src
+
 
 ** Fetch the contents at a URL, display it raw.
 #+begin_src emacs-lisp 

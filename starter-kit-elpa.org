@@ -18,12 +18,12 @@ The following packages will be downloaded and installed.
                                 'css-mode
                                 'exec-path-from-shell
                                 'expand-region
-                                'gist
+                                ;; 'gist
                                 'hl-line+
-                                'idle-highlight
+                                ;; 'idle-highlight
                                 'inf-ruby
                                 'latex-pretty-symbols
-                                'mac-key-mode
+                                ;; 'mac-key-mode
                                 'magit
                                 'markdown-mode
                                 'maxframe
