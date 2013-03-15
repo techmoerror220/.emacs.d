@@ -129,7 +129,7 @@ ido-mode is like magic pixie dust!
           ido-max-prospects 10))
 #+end_src
 
-** Other, spell checking, tabs, imenu and a coding hook
+** Other, tabs, imenu and a coding hook
 #+begin_src emacs-lisp 
   (set-default 'indent-tabs-mode nil)
   (set-default 'indicate-empty-lines t)
@@ -158,31 +158,6 @@ ido-mode is like magic pixie dust!
 
 
 
-
-*** possible issues/resolutions with flyspell
-Most of the solution came from [[http://www.emacswiki.org/emacs/FlySpell][EmacsWiki-FlySpell]].  Here is one
-possible fix.
-
-**** Emacs set path to aspell
-it's possible aspell isn't in your path
-#+begin_src emacs-lisp
-   (setq exec-path (append exec-path '("/opt/local/bin")))
-#+end_src
-
-**** Emacs specify spelling program
-- This didn't work at first, possibly because cocoAspell was
-  building its dictionary.  Now it seems to work fine.
-#+begin_src emacs-lisp 
-  (setq ispell-program-name "aspell"
-        ispell-dictionary "english"
-        ispell-dictionary-alist
-        (let ((default '("[A-Za-z]" "[^A-Za-z]" "[']" nil
-                         ("-B" "-d" "english" "--dict-dir"
-                          "/Library/Application Support/cocoAspell/aspell6-en-6.0-0")
-                         nil iso-8859-1)))
-          `((nil ,@default)
-            ("english" ,@default))))
-#+end_src
 
 ** Hippie expand: at times perhaps too hip
 #+begin_src emacs-lisp

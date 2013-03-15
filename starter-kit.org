@@ -290,7 +290,7 @@ since they are likely to be used in every session
                (list (concat dotfiles-dir user-login-name) dotfiles-dir))))))
 #+end_src
 
-*** Starter Kit aspell
+*** Starter Kit aspell (Spell checking with flyspell)
 aspell workaround in [[file:starter-kit-aspell.org][starter-kit-aspell]]
 #+begin_src emacs-lisp
   (starter-kit-load "starter-kit-aspell.org")
