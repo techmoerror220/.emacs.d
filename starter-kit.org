@@ -268,7 +268,7 @@ since they are likely to be used in every session
   (defun starter-kit-compile (&optional arg)
     "Tangle and Byte compile all starter-kit files."
     (interactive "P")
-    (flet ((age (file)
+    (cl-flet ((age (file)
                 (float-time
                  (time-subtract (current-time)
                                 (nth 5 (or (file-attributes (file-truename file))
