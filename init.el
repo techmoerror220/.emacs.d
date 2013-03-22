@@ -14,6 +14,9 @@
                                  "org" (expand-file-name
                                         "src" dotfiles-dir))))
 
+;; Common Lisp compatability
+(require 'cl-lib)
+
 ;; Package Locations
 (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
     (let* ((my-lisp-dir "~/.emacs.d/")
