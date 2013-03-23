@@ -16,25 +16,12 @@ supplied by the Python distribution itself.
 (add-to-list 'interpreter-mode-alist '("python" . python-mode))
 #+end_src
 
-** Facilitate the use of IPython
-#+begin_src emacs-lisp
-(defun python-use-ipython (cmd args)
-  (setq ipython-command cmd)
-  (setq py-python-command-args args)
-  (require 'ipython)
-  (setq ipython-completion-command-string
-        "print(';'.join(__IP.Completer.all_completions('%s')))\n"))
-#+end_src
+** Jedi documentation browser and auto-completion
+If you use the Jedi auto-completion method, change the =:tangle= flag below to =yes=. It's turned off by default because this is a plugin to a documentation system you have to install separately. See [[https://github.com/davidhalter/jedi][The Jedi Homepage]] for details.
 
-In your personal configuration, add something like this to use IPython:
+#+source: jedi-plugin
 #+begin_src emacs-lisp :tangle no
-(python-use-ipython "/usr/local/bin/ipython" '("-colors" "LightBG" "-nobanner"))
+  (setq jedi:setup-keys t)
+  (add-hook 'python-mode-hook 'jedi:setup)  
 #+end_src
 
-** Use Cython mode
-#+begin_src emacs-lisp
-(require 'cython-mode)
-(add-to-list 'auto-mode-alist '("\\.pyx\\'" . cython-mode))
-(add-to-list 'auto-mode-alist '("\\.pxd\\'" . cython-mode))
-(add-to-list 'auto-mode-alist '("\\.pxi\\'" . cython-mode))
-#+end_src

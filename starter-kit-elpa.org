@@ -30,7 +30,8 @@ The following packages will be downloaded and installed.
                                 'multiple-cursors
                                 'pandoc-mode
                                 'paredit
-                                'python
+                                'python-mode
+                                'jedi
                                 'redo+
                                 'ruby-mode
                                 's
