@@ -91,11 +91,11 @@ This file provides settings for ESS and R.
 #+end_src
 
 ** R-autoyas
-   Function completion. 
-#+begin_src emacs_lisp
+   Function completion. Conflicts with autocomplete.
+#+begin_src emacs_lisp :tangle no
   (require 'r-autoyas)
   (add hook 'ess-mode-hook 'r-autoyas-ess-activate)
-#end_src
+#+end_src
 ** R-object tooltips
 Taken from http://blogisticreflections.wordpress.com/2009/10/01/r-object-tooltips-in-ess/
 #+begin_quote 
