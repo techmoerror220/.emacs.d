@@ -24,6 +24,9 @@
       (setq load-path (cons my-lisp-dir load-path))
       (normal-top-level-add-subdirs-to-load-path)))
 
+ (server-start); start emacs in server mode
+
+
 ;; Font-face setup. Check the availability of a some default fonts, in
 ;; order of preference. The first of these alternatives to be found is
 ;; set as the default font, together with base size and fg/bg

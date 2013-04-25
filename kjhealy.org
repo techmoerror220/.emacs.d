@@ -179,9 +179,7 @@ Set up AUCTeX to work with the Skim PDF viewer.
   (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
   (setq TeX-view-program-list
        '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
-  
-  (server-start); start emacs in server mode so that skim can talk to it
-    
+     
     ;; Make emacs aware of multi-file projects
     ;; (setq-default TeX-master nil)
     
