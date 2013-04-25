@@ -346,28 +346,28 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 
 #+source: orgmode-xelatex-export
 #+begin_src emacs-lisp
-    (require 'org-latex)   
+  
     ;; Choose either listings or minted for exporting source code blocks.
     ;; Using minted (as here) requires pygments be installed. To use the
     ;; default listings package instead, use
-    ;; (setq org-export-latex-listings t)
+    ;; (setq org-latex-listings t)
     ;; and change references to "minted" below to "listings"
-    (setq org-export-latex-listings 'minted)
+    (setq org-latex-listings 'minted)
     
     ;; default settings for minted code blocks
-    (setq org-export-latex-minted-options
+    (setq org-latex-minted-options
           '(;("frame" "single")
             ("bgcolor" "bg") ; bg will need to be defined in the preamble of your document. It's defined in org-preamble-pdflatex.sty and org-preamble-xelatex.sty below.
             ("fontsize" "\\small")
             ))
   ;; turn off the default toc behavior; deal with it properly in headers to files.
-  (defun org-export-latex-no-toc (depth)  
+  (defun org-latex-no-toc (depth)  
       (when depth
         (format "%% Org-mode is exporting headings to %s levels.\n"
                 depth)))
-  (setq org-export-latex-format-toc-function 'org-export-latex-no-toc)
+  (setq org-latex-format-toc-function 'org-latex-no-toc)
   
-    (add-to-list 'org-export-latex-classes
+  (add-to-list 'org-latex-classes
                  '("memarticle"
                    "\\documentclass[11pt,oneside,article]{memoir}\n\\input{vc} % vc package"
                     ("\\section{%s}" . "\\section*{%s}")
@@ -376,7 +376,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
     
-    (add-to-list 'org-export-latex-classes
+    (add-to-list 'org-latex-classes
                  '("membook"
                    "\\documentclass[11pt,oneside]{memoir}\n\\input{vc} % vc package"
                    ("\\chapter{%s}" . "\\chapter*{%s}")
@@ -399,12 +399,10 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
       (if (string-match "LATEX_CMD: xelatex" (buffer-string))
           (setq texcmd "latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
       ;; LaTeX compilation command
-      (setq org-latex-to-pdf-process (list texcmd)))
-    
-    (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-cmd)
-    
+      (setq org-latex-pdf-process (list texcmd)))
+       
     ;; Default packages included in /every/ tex file, latex, pdflatex or xelatex
-    (setq org-export-latex-packages-alist
+    (setq org-latex-packages-alist
           '(("" "graphicx" t)
             ("" "longtable" nil)
             ("" "float" )))
@@ -413,15 +411,18 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
     (defun my-auto-tex-parameters ()
       "Automatically select the tex packages to include. See https://github.com/kjhealy/latex-custom-kjh for the support files included here."
       ;; default packages for ordinary latex or pdflatex export
-      (setq org-export-latex-default-packages-alist
+      (setq org-latex-default-packages-alist
             '(("AUTO" "inputenc" t)
               ("minted,minion" "org-preamble-pdflatex" t)))        
       ;; Packages to include when xelatex is used
       (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-          (setq org-export-latex-default-packages-alist
+          (setq org-latex-default-packages-alist
                 '(("minted" "org-preamble-xelatex" t) ))))
+
+  (add-hook 'org-export-before-processing-hook 'my-auto-tex-cmd)
     
-    (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-parameters)      
+  (add-hook 'org-export-before-parsing-hook 'my-auto-tex-parameters)  
+  
 #+end_src
 
 *** ebib and citation settings
@@ -540,8 +541,8 @@ Create =html= files form the =org= sources, to help with documentation. To set u
                    href=\"http://kieranhealy.org/stylesheets/screen.css\"
                    type=\"text/css\"/>")))
   
-    (setq org-export-html-style-extra "") 
-    (setq org-export-html-postamble nil)
+    (setq org-html-style-extra "") 
+  (setq org-html-postamble nil)
   
 #+end_src
 
