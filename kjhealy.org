@@ -339,10 +339,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 #+end_src
 
 *** XeLaTeX and pdfLaTeX Export Settings
-   Configure org-mode to export directly to PDF using pdflatex or
-   xelatex, compiling the bibliography as it goes, with my preferred
-   setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your
-   preferences and local configuration.
+   Configure org-mode to export directly to PDF using  xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
 
 #+source: orgmode-xelatex-export
 #+begin_src emacs-lisp
@@ -354,13 +351,11 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
     ;; and change references to "minted" below to "listings"
     (setq org-latex-listings 'minted)
     
-    ;; default settings for minted code blocks
-    ;; (add-to-list 'org-latex-packages-alist '("" "minted"))
-     
-   
+    ;; default settings for minted code blocks.
+    ;; bg will need to be defined in the preamble of your document. It's defined in  org-preamble-xelatex.sty below.
     (setq org-latex-minted-options
           '(;("frame" "single")
-            ("bgcolor" "bg") ; bg will need to be defined in the preamble of your document. It's defined in  org-preamble-xelatex.sty below.
+            ("bgcolor" "bg") 
             ("fontsize" "\\small")
             ))
     
@@ -371,6 +366,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
                 depth)))
   (setq org-latex-format-toc-function 'org-latex-no-toc)
   
+  ;; note the insertion of the \input statement for the vc information 
   (add-to-list 'org-latex-classes
                  '("memarticle"
                    "\\documentclass[11pt,oneside,article]{memoir}\n\\input{vc} % vc package"
@@ -388,10 +384,12 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
                    ("\\subsection{%s}" . "\\subsection*{%s}")
                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
    
-  ;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience
+  ;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience.
+  ;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
   (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
   
-  ;; Default packages included in the tex file. As before, org-preamble-xelatex is part of /latex-custom-kjh
+  ;; Default packages included in the tex file. As before, org-preamble-xelatex is part of latex-custom-kjh.
+  ;; There's org-preamble-pdflatex as well, if you wish to use that instead.
   (setq org-latex-default-packages-alist nil)     
   (setq org-latex-packages-alist
           '(("minted" "org-preamble-xelatex" t)
