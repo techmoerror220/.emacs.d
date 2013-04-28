@@ -355,14 +355,18 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
     (setq org-latex-listings 'minted)
     
     ;; default settings for minted code blocks
+    ;; (add-to-list 'org-latex-packages-alist '("" "minted"))
+     
+   
     (setq org-latex-minted-options
           '(;("frame" "single")
-            ("bgcolor" "bg") ; bg will need to be defined in the preamble of your document. It's defined in org-preamble-pdflatex.sty and org-preamble-xelatex.sty below.
+            ("bgcolor" "bg") ; bg will need to be defined in the preamble of your document. It's defined in  org-preamble-xelatex.sty below.
             ("fontsize" "\\small")
             ))
+    
   ;; turn off the default toc behavior; deal with it properly in headers to files.
   (defun org-latex-no-toc (depth)  
-      (when depth
+    (when depth
         (format "%% Org-mode is exporting headings to %s levels.\n"
                 depth)))
   (setq org-latex-format-toc-function 'org-latex-no-toc)
@@ -375,54 +379,25 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-    
-    (add-to-list 'org-latex-classes
+  
+  (add-to-list 'org-latex-classes
                  '("membook"
                    "\\documentclass[11pt,oneside]{memoir}\n\\input{vc} % vc package"
                    ("\\chapter{%s}" . "\\chapter*{%s}")
                    ("\\section{%s}" . "\\section*{%s}")
                    ("\\subsection{%s}" . "\\subsection*{%s}")
                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-    
-    ;; Originally taken from Bruno Tavernier: http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
-    ;; but adapted to use latexmk 4.22 or higher.  
-    (defun my-auto-tex-cmd ()
-      "When exporting from .org with latex, automatically run latex,
-                       pdflatex, or xelatex as appropriate, using latexmk."
-      (let ((texcmd)))
-      ;; default command: pdflatex 
-      (setq texcmd "latexmk -pdflatex='pdflatex -synctex=1 --shell-escape --' -pdf %f")        
-      ;; pdflatex -> .pdf
-      (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
-          (setq texcmd "latexmk -pdflatex='pdflatex -synctex=1 --shell-escape' -pdf %f"))
-      ;; xelatex -> .pdf
-      (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-          (setq texcmd "latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
-      ;; LaTeX compilation command
-      (setq org-latex-pdf-process (list texcmd)))
-       
-    ;; Default packages included in /every/ tex file, latex, pdflatex or xelatex
-    (setq org-latex-packages-alist
-          '(("" "graphicx" t)
-            ("" "longtable" nil)
-            ("" "float" )))
-    
-    ;; Custom packages
-    (defun my-auto-tex-parameters ()
-      "Automatically select the tex packages to include. See https://github.com/kjhealy/latex-custom-kjh for the support files included here."
-      ;; default packages for ordinary latex or pdflatex export
-      (setq org-latex-default-packages-alist
-            '(("AUTO" "inputenc" t)
-              ("minted,minion" "org-preamble-pdflatex" t)))        
-      ;; Packages to include when xelatex is used
-      (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-          (setq org-latex-default-packages-alist
-                '(("minted" "org-preamble-xelatex" t) ))))
-
-  (add-hook 'org-export-before-processing-hook 'my-auto-tex-cmd)
-    
-  (add-hook 'org-export-before-parsing-hook 'my-auto-tex-parameters)  
+   
+  ;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience
+  (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
   
+  ;; Default packages included in the tex file. As before, org-preamble-xelatex is part of /latex-custom-kjh
+  (setq org-latex-default-packages-alist nil)     
+  (setq org-latex-packages-alist
+          '(("minted" "org-preamble-xelatex" t)
+            ("" "graphicx" t)
+            ("" "longtable" nil)
+            ("" "float" ))) 
 #+end_src
 
 *** ebib and citation settings

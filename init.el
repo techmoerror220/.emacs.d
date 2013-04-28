@@ -7,8 +7,10 @@
 
 ;; setq dotfiles-dir (file-name-directory (or (buffer-file-name) load-file-name)))
 (setq dotfiles-dir (file-name-directory (or load-file-name (buffer-file-name))))
-
-
+(add-to-list 'load-path dotfiles-dir)
+(setq autoload-file (concat dotfiles-dir "loaddefs.el"))
+(setq package-user-dir (concat dotfiles-dir "elpa"))
+(setq custom-file (concat dotfiles-dir "custom.el"))
 (add-to-list 'load-path (expand-file-name
                          "lisp" (expand-file-name
                                  "org" (expand-file-name
