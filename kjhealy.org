@@ -505,16 +505,16 @@ Create =html= files form the =org= sources, to help with documentation. To set u
          '(("org"
             :base-directory "~/.emacs.d/"
             :publishing-directory "~/Documents/websites/esk/"
-            :auto-sitemap t
+            :publishing-function org-html-publish-to-html
+            :auto-sitemap t            
             :sitemap-filename "index.org"
             :sitemap-title "Emacs Starter Kit for the Social Sciences: Documentation"
             :section-numbers t
-            :table-of-contents nil
-            :style "<link rel=\"stylesheet\"
-                   href=\"http://kieranhealy.org/stylesheets/screen.css\"
-                   type=\"text/css\"/>")))
+            :table-of-contents t
+            :html-head "<link rel=\"stylesheet\"
+                   href=\"http://kieranhealy.org/css/org.css\"
+                   type=\"text/css\"/>"            )))
   
-    (setq org-html-style-extra "") 
   (setq org-html-postamble nil)
   
 #+end_src
