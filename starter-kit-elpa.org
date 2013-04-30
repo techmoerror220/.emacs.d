@@ -31,6 +31,7 @@ The following packages will be downloaded and installed.
                                 'pandoc-mode
                                 'paredit
                                 'python-mode
+                                'ipython
                                 'jedi
                                 'redo+
                                 'ruby-mode
