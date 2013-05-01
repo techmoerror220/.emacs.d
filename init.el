@@ -48,12 +48,16 @@
  ((eq window-system nil) nil)
  ((font-existsp "PragmataPro")
   (set-face-attribute 'default nil :height 121 :font "PragmataPro"))
+  ((font-existsp "Source Code Pro")
+  (set-face-attribute 'default nil :height 121 :font "Source Code Pro"))
  ((font-existsp "Menlo")
   (set-face-attribute 'default nil :height 121 :font "Menlo"))
  ((font-existsp "Consolas")
   (set-face-attribute 'default nil :height 121 :font "Consolas"))
  ((font-existsp "Inconsolata")
   (set-face-attribute 'default nil :height 121 :font "Inconsolata"))
+   ((font-existsp "Envy Code R")
+  (set-face-attribute 'default nil :height 121 :font "Envy Code R"))
  )
 
 ;; Load up Org Mode and Babel
