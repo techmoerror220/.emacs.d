@@ -147,24 +147,23 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
     'skeleton-pair-insert-maybe))
 #+end_src
 
-
 ** Markdown 
 Markdown mode support. 
 
 #+srcname: markdown-mode
 #+begin_src emacs-lisp
-   (autoload 'markdown-mode "markdown-mode.el"
-   "Major mode for editing Markdown files" t)
-   (setq auto-mode-alist
-   (cons '("\\.Markdown" . markdown-mode) auto-mode-alist)
-   )
-   (setq auto-mode-alist
-   (cons '("\\.MarkDown" . markdown-mode) auto-mode-alist)
-   )
-   (setq auto-mode-alist
-   (cons '("\\.markdown" . markdown-mode) auto-mode-alist)
-   )
-   (setq auto-mode-alist
-   (cons '("\\.md" . markdown-mode) auto-mode-alist)
-   )
+
+(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.Markdown" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.MarkDown" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md" . markdown-mode))
+#+end_src
+** Polymode (Experimental) 
+Polymode is an emacs package that offers support for multiple major modes inside a single emacs buffer. The idea is to be able to easily combine, e.g., R and Markdown in an .Rmd file---much like Snw or Rnw files, but in a more generic and generalizable way. Right now we just use it for .Rmd files.
+
+#+source: load-polymode
+#+begin_src emacs-lisp
+  (require 'poly-R)
+  (require 'poly-markdown)
 #+end_src

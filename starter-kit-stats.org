@@ -25,6 +25,7 @@ This file provides settings for ESS and R.
 #+begin_src emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.Rnw\\'" . Rnw-mode))
 (add-to-list 'auto-mode-alist '("\\.Snw\\'" . Rnw-mode))
+(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . Rnw-mode))
 
 ;; Make TeX and RefTex aware of Snw and Rnw files
 (setq reftex-file-extensions
@@ -44,6 +45,12 @@ This file provides settings for ESS and R.
 	    (setq TeX-command-default "Sweave")))
 
 
+#+end_src
+
+** Use Knitr to process Sweave documents
+#+source: knitr-swv
+#+begin_src emacs-lisp
+  (setq ess-swv-processor "'knitr")
 #+end_src
  
 ** Make shift-enter to a lot in ESS.
