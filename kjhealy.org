@@ -30,6 +30,15 @@ Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode X
  delete the lines.
 
 ** Local Miscellaneous Settings
+*** Powerline
+A nicer modeline. 
+
+#+source: powerline-load
+#+begin_src emacs-lisp
+  (require 'powerline)
+  (powerline-default-theme)
+#+end_src
+
 *** Color Theme Tweaks
 The theme package is loaded in =starter-kit-misc.org=. The settings
 here adjust the height of some headings in Org and LaTeX mode, as well
