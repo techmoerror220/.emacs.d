@@ -107,14 +107,23 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
     ("verbatim\\*?"        . "\\\\end[ \t\n]*{[ \t\n]*verbatim\\*?[ \t\n]*}"))))
 #+end_src
 
-** AutoPair Mode
-    TextMate-like autopairing of quotes and parentheses. Trying out
-    instead of Skeleton Mode. 
-#+srcname: autopair
+** Smart Parentheses
+Smart parentheses using [[https://github.com/Fuco1/smartparens][smartparens]] minor mode. Smartparens provides a lot of nice functionality around balanced pairs of parentheses or other delimiters. More information is available from [[https://github.com/Fuco1/smartparens/wiki#wiki-what-is-this-package-about?][its Wiki]].
+#+srcname: starter-kit-match-parens
 #+begin_src emacs-lisp 
-  (require 'autopair)
-  (autopair-global-mode) ;; enable autopair in all buffers 
-  (setq autopair-autowrap t)
+  (smartparens-global-mode 1)
+  (require 'smartparens-config)
+  
+  (defadvice cua-delete-region (around smartparens-org-dwim-fix-active-region activate)
+  "Fix the smartparens/org-cua-dwim interaction."
+  (if (interactive-p)
+      (if (region-active-p)
+          ad-do-it
+        (if (eq major-mode 'org-mode)
+            (org-delete-backward-char (or (ad-get-arg 0) 1))
+          (delete-backward-char (or (ad-get-arg 0) 1))))
+    ad-do-it))
+  
 #+end_src
 
 ** Skeleton mode

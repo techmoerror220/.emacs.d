@@ -30,15 +30,6 @@ Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode X
  delete the lines.
 
 ** Local Miscellaneous Settings
-*** Powerline
-A nicer modeline. 
-
-#+source: powerline-load
-#+begin_src emacs-lisp
-  (require 'powerline)
-  (powerline-default-theme)
-#+end_src
-
 *** Color Theme Tweaks
 The theme package is loaded in =starter-kit-misc.org=. The settings
 here adjust the height of some headings in Org and LaTeX mode, as well
@@ -210,21 +201,6 @@ Tell RefTeX where the bibliography files are.
     ;; Default bibliography
     (setq reftex-default-bibliography
     '("/Users/kjhealy/Documents/bibs/socbib.bib"))
-
-
-    ;; CDLaTex minor mode: tab-trigger environments, paired paren
-    ;; insertion, etc
-    ;; (autoload 'cdlatex-mode "cdlatex" "CDLaTeX Mode" t)
-    ;; (autoload 'turn-on-cdlatex "cdlatex" "CDLaTeX Mode" nil)
-    ;; (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)   ; with AUCTeX LaTeX
-    ;;                                         ; mode
-
-    ;; set which characters are autopaired // Doesn't work. Set in custom, below.
-    ;; (add-hook 'cdlatex-mode-hook
-    ;;   (function (lambda ()
-    ;;               (setq cdlatex-paired-parens
-    ;;                     '("$[{("))
-    ;;             )))
 #+end_src
 
 *** Local vc commands
@@ -566,7 +542,6 @@ Some last tweaks.
   '(TeX-engine (quote xetex))
   ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
   ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
-  '(show-paren-mode t)
   '(blink-cursor-mode nil)
   '(text-mode-hook (quote (text-mode-hook-identify)))
   )

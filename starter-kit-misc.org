@@ -110,12 +110,6 @@ If launching Emacs as in windowing system, show the menu. If launching in a tty/
 (recentf-mode 1)
 #+end_emacs-lisp
 
-** Highlight matching parentheses when the point is on them.
-#+srcname: starter-kit-match-parens
-#+begin_src emacs-lisp 
-(show-paren-mode 1)
-#+end_src
-
 ** ido mode
 ido-mode is like magic pixie dust!
 #+srcname: starter-kit-loves-ido-mode
@@ -157,7 +151,14 @@ ido-mode is like magic pixie dust!
 #+end_src
 
 
+** Powerline provides a nicer modeline
+A nicer modeline. 
+#+source: powerline-load
+#+begin_src emacs-lisp
+  (require 'powerline)
+  (powerline-default-theme)
 
+#+end_src
 
 ** Hippie expand: at times perhaps too hip
 #+begin_src emacs-lisp

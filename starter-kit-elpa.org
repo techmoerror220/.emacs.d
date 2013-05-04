@@ -12,7 +12,6 @@ The following packages will be downloaded and installed.
   (defvar starter-kit-packages (list 
                                 'ack-and-a-half
                                 'auto-complete
-                                'autopair
                                 'browse-kill-ring
                                 ;; 'cdlatex
                                 'css-mode
@@ -29,14 +28,13 @@ The following packages will be downloaded and installed.
                                 'maxframe
                                 'multiple-cursors
                                 'pandoc-mode
-                                'paredit
                                 'powerline
                                 'python-mode
                                 'ipython
                                 'jedi
                                 'redo+
                                 'ruby-mode
-                                's
+                                'smartparens 
                                 'smex
                                 'solarized-theme
                                 'tango-2-theme
