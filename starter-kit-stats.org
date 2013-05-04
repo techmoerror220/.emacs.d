@@ -175,6 +175,8 @@ cacheSweave() library, which uses a different driver. So we need a
 separate command for that. The following solution comes from [[http://blog.nguyenvq.com/2009/05/14/editingadding-on-to-sweave-features-in-ess/][Vinh
 Nguyen]] and allows for cacheSweave() compilation with M-n w. 
 
+Note that unless you really need Sweave (.e.g, because you're writing R vignettes) then you can use Knitr instead, which includes its own caching support. 
+
 #+source: ess-cacheSweave
 #+begin_src emacs-lisp :tangle no
 

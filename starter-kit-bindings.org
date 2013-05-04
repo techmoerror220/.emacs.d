@@ -83,7 +83,6 @@ Key Bindings.
 
 #+end_src
 
-
 ** File finding
 #+begin_src emacs-lisp 
 (global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
@@ -236,7 +235,6 @@ Use a little bit of Mac keys, but not all of them.
     
 #+end_src
 
-
 ** Fetch the contents at a URL, display it raw.
 #+begin_src emacs-lisp 
 (global-set-key (kbd "C-x h") 'view-url)
@@ -316,7 +314,6 @@ Ack is "better than grep" and written in Perl.
   (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
   (define-key global-map "\C-x\C-a" 'ack) 
 #+end_src
-
 
 ** Winner mode
     Remember the previous window configurations and jump back to them
