@@ -23,7 +23,6 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
   (require 'latex-pretty-symbols)
 #+end_src
 
-
 *** Load RefTeX
 #+srcname: reftex-support
 #+begin_src emacs-lisp 
