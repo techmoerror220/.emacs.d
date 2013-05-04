@@ -12,9 +12,10 @@ Org Mode can be used as a very simple folding outliner or as a complex
 GTD system or tool for reproducible research and literate programming.
 
 For more information on org-mode check out [[http://orgmode.org/worg/][worg]], a large Org-mode wiki
-which is also *implemented using* Org-mode and [[http://git-scm.com/][git]].
+which is also implemented using Org-mode and [[http://git-scm.com/][git]].
 
 ** Exporter Settings and Helpful Packages
+HTML and LaTeX exporters are shown by default. We add the Markdown exporter to the menu.
 #+begin_src emacs-lisp
 
 ;; Markdown exporter
@@ -71,23 +72,6 @@ Make yasnippet work properly with org-mode.
               ))
 #+end_src
 
-** Load up the Library of Babel
-The library of babel contains makes many useful functions available
-for use by code blocks in *any* emacs file.  See the actual
-[[file:src/org/contrib/babel/library-of-babel.org][library-of-babel.org]] file for information on the functions, and see
-[[http://orgmode.org/worg/org-contrib/babel/intro.php#library-of-babel][worg:library-of-babel]] for more usage information.
-#+begin_src emacs-lisp
-  (org-babel-lob-ingest
-   (expand-file-name
-    "library-of-babel.org"
-    (expand-file-name
-     "babel"
-     (expand-file-name
-      "contrib"
-      (expand-file-name
-       "org"
-       (expand-file-name "src" dotfiles-dir))))))
-#+end_src
 ** Speed keys
 Speed commands enable single-letter commands in Org-mode files when
 the point is at the beginning of a headline, or at the beginning of a
@@ -177,7 +161,6 @@ Org-mode manual is available to the =info= command (bound to =C-h i=).
                 (expand-file-name "src" dotfiles-dir)))
               Info-directory-list))
 #+end_src
-
 
 ** Nice Bulleted Lists
 #+name: org-bullets
