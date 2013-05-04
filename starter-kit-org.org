@@ -114,14 +114,6 @@ The next block makes org-babel aware that a lower-case 'r' in a =src= block head
                  '("r" . ess-mode))
 #+end_src
 
-
-
-You are encouraged to add the following to your personal configuration
-although it is not added by default as a security precaution.
-#+begin_src emacs-lisp :tangle no
-  (setq org-confirm-babel-evaluate nil)
-#+end_src
-
 ** Code block fontification
    :PROPERTIES:
    :CUSTOM_ID: code-block-fontification
