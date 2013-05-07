@@ -40,6 +40,7 @@ The following packages will be downloaded and installed.
                                 'tango-2-theme
                                 'textmate
                                 'typopunct
+                                'visual-regexp
                                 'yaml-mode
                                 'yasnippet
                                 'zenburn-theme

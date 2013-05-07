@@ -59,28 +59,18 @@ Key Bindings.
 (define-key global-map (kbd "C--") 'text-scale-decrease)
 #+end_src
 
-** Use regex searches by default.
+** Use Regex searches by default, and use Visual Regexp to construct them.
+Building regular expressions in Emacs is kind of a pain.  The visual-regexp pacakge is a very convenient way to dynamically build regular expressions for searching and replacing. You enter a minibuffer that lets you type the regexp and the prospective matches to the expression you type are highlighted in the main buffer. =M-x vr/replace= gives you global replacement and =M-x vr/query-replace= lets you decide to replace per match. Visual regexp replace is bound to =C-c r= and visual =query-replace-regexp= to =C-c q=. 
+
 #+begin_src emacs-lisp 
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "\C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
-#+end_src
 
-** Convenience Function to search for regexps build with re-builder
-   Re-Builder (=M-x regexp-builder=) is a very convenient way to dynamically build regular expressions for searching and replacing. You enter a minibuffer that lets you type the regexp and the prospective matches to the expression you type are highlighted in the main buffer. In the re-builder minibuffer, =C-c C-w= copies the current expression to the kill-ring (clipboard) and =C-c C-q= quits. The expression is copied as a string, which is useful if you're writing lisp but it will not work if you copy it in to =C-M-%= or =query-replace-regexp=. But usually this is exactly what I want to do---take the expression I've built in re-buider and immediately use it to search and replace in a buffer. With the function below, you can do this. After you've built the expression and copied it wtih =C-c C-w=, quit re-bulder and do =M-x reb-query-replace=. 
-
-#+source: rexep-copy
-#+begin_src emacs-lisp
-  (defun reb-query-replace (to-string)
-      "Replace current RE from point with `query-replace-regexp'."
-      (interactive
-       (progn (barf-if-buffer-read-only)
-              (list (query-replace-read-to (reb-target-binding reb-regexp)
-                                           "Query replace"  t))))
-      (with-current-buffer reb-target-buffer
-        (query-replace-regexp (reb-target-binding reb-regexp) to-string)))
-
+(require 'visual-regexp)
+(global-set-key (kbd "C-c r") 'vr/replace)
+(global-set-key (kbd "C-c q") 'vr/query-replace)
 #+end_src
 
 ** File finding
@@ -90,7 +80,6 @@ Key Bindings.
 (global-set-key (kbd "C-x f") 'recentf-ido-find-file)
 (global-set-key (kbd "C-x C-p") 'find-file-at-point)
 (global-set-key (kbd "C-c y") 'bury-buffer)
-(global-set-key (kbd "C-c r") 'revert-buffer)
 (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 #+end_src
