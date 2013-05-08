@@ -63,14 +63,14 @@ Key Bindings.
 Building regular expressions in Emacs is kind of a pain.  The visual-regexp pacakge is a very convenient way to dynamically build regular expressions for searching and replacing. You enter a minibuffer that lets you type the regexp and the prospective matches to the expression you type are highlighted in the main buffer. =M-x vr/replace= gives you global replacement and =M-x vr/query-replace= lets you decide to replace per match. Visual regexp replace is bound to =C-c r= and visual =query-replace-regexp= to =C-c q=. 
 
 #+begin_src emacs-lisp 
-(global-set-key (kbd "C-s") 'isearch-forward-regexp)
-(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s") 'isearch-forward)
-(global-set-key (kbd "C-M-r") 'isearch-backward)
-
-(require 'visual-regexp)
-(global-set-key (kbd "C-c r") 'vr/replace)
-(global-set-key (kbd "C-c q") 'vr/query-replace)
+  (global-set-key (kbd "C-s") 'isearch-forward-regexp)
+  (global-set-key (kbd "\C-r") 'isearch-backward-regexp)
+  (global-set-key (kbd "C-M-s") 'isearch-forward)
+  (global-set-key (kbd "C-M-r") 'isearch-backward)
+  
+  (require 'visual-regexp)
+  (define-key global-map (kbd "C-c r") 'vr/replace)
+  (define-key global-map (kbd "C-c q") 'vr/query-replace)
 #+end_src
 
 ** File finding

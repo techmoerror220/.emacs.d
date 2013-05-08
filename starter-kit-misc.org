@@ -18,17 +18,18 @@ install them. Other dependencies are provided by Emacs 24.
 
 ** Color Themes
 Emacs 24 introduces a streamlined theming system that replaces an
-older, messier one. The Starter Kit uses Ethan Schoonover's
-/Solarized/ color theme. Load it with =M-x load-theme solarized-dark=
-or =M-x load-theme solarized-light=. You can also try loading the
-=zenburn= or =tango-2= themes. If this doesn't work first time,
-load it manually with, e.g., =M-x load-theme solarized-light=. 
+older, messier one. The Starter Kit comes with Ethan Schoonover's
+/Solarized/ color theme and the /Zenburn/ theme, in versions
+maintained by Bozhidar Batsov. Load it with =M-x load-theme
+solarized-dark= or =M-x load-theme solarized-light=. You can also try
+loading the =zenburn= or =tango-2= themes. If this doesn't work first
+time, load it manually with, e.g., =M-x load-theme solarized-light=.
 
 #+source: colors
 #+begin_src emacs-lisp
   (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
   (setq custom-safe-themes t)
-  (load-theme 'solarized-light t)
+  (load-theme 'zenburn t)
 #+end_src
 
 ** Window system 

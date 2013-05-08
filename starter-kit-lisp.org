@@ -24,8 +24,9 @@ Support for editing list dialects including [[* Emacs Lisp][Emacs Lisp]], [[* Sc
    back, =C-M-u= up, =C-M-d= down)
 
 #+begin_src emacs-lisp
-(defun turn-on-paredit ()
-  (paredit-mode +1))
+  (require 'paredit)
+  (defun turn-on-paredit ()
+    (paredit-mode +1))
 #+end_src
 
   : ;; (eval-after-load 'paredit
@@ -177,7 +178,7 @@ idea to extend this feature beyond simply the =fn= function.
 
 #+begin_src emacs-lisp
 (add-hook 'scheme-mode-hook 'run-starter-kit-coding-hook)
-;; (add-hook 'scheme-mode-hook 'idle-highlight)
+(add-hook 'scheme-mode-hook 'idle-highlight)
 (font-lock-add-keywords 'scheme-mode
 			'(("(\\|)" . 'esk-paren-face)))
 #+end_src
@@ -186,7 +187,7 @@ idea to extend this feature beyond simply the =fn= function.
 
 #+begin_src emacs-lisp
 (add-hook 'lisp-mode-hook 'run-starter-kit-coding-hook)
-;; (add-hook 'lisp-mode-hook 'idle-highlight)
+(add-hook 'lisp-mode-hook 'idle-highlight)
 (add-hook 'lisp-mode-hook 'turn-on-paredit)
 (font-lock-add-keywords 'lisp-mode
 			'(("(\\|)" . 'esk-paren-face)))
