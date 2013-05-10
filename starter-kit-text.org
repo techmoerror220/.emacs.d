@@ -107,43 +107,78 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
     ("verbatim\\*?"        . "\\\\end[ \t\n]*{[ \t\n]*verbatim\\*?[ \t\n]*}"))))
 #+end_src
 
-** Smart Parentheses
-Smart parentheses using [[https://github.com/Fuco1/smartparens][smartparens]] minor mode. Smartparens provides a lot of nice functionality around balanced pairs of parentheses or other delimiters. More information is available from [[https://github.com/Fuco1/smartparens/wiki#wiki-what-is-this-package-about?][its Wiki]].
-#+srcname: starter-kit-match-parens
+** AutoPair Mode
+    TextMate-like autopairing of quotes and parentheses. Trying out
+    instead of Skeleton Mode. 
+#+srcname: autopair
 #+begin_src emacs-lisp 
-  (smartparens-global-mode 1)
-  (require 'smartparens-config)
-  (setq sp-highlight-pair-overlay nil) ;; Don't highlight inside every paren.
-
-  (defadvice cua-delete-region (around smartparens-org-dwim-fix-active-region activate)
-  "Fix the smartparens/org-cua-dwim interaction."
-  (if (interactive-p)
-      (if (region-active-p)
-          ad-do-it
-        (if (eq major-mode 'org-mode)
-            (org-delete-backward-char (or (ad-get-arg 0) 1))
-          (delete-backward-char (or (ad-get-arg 0) 1))))
-    ad-do-it))
-  
+  (require 'autopair)
+  (autopair-global-mode) ;; enable autopair in all buffers 
+  (setq autopair-autowrap t)
 #+end_src
+
+** Skeleton mode
+   Turned off by default. Enable skeleton mode in ESS for paired insertion
+#+srcname: skeleton-mode
+#+begin_src emacs-lisp :tangle no
+    (require 'skeleton)
+    (setq skeleton-pair t)
+    (defvar my-skeleton-pair-alist
+    '((?\) . ?\()
+    (?\] . ?\[)
+    (?} . ?{)
+    (?" . ?")))
+    
+    (defun my-skeleton-pair-end (arg)
+    "Skip the char if it is an ending, otherwise insert it."
+    (interactive "*p")
+    (let ((char last-command-char))
+    (if (and (assq char my-skeleton-pair-alist)
+    (eq char (following-char)))
+    (forward-char)
+    (self-insert-command (prefix-numeric-value arg)))))
+
+    (dolist (pair my-skeleton-pair-alist)
+    (global-set-key (char-to-string (first pair))
+    'my-skeleton-pair-end)
+    ;; If the char for begin and end is the same,
+    ;; use the original skeleton
+    (global-set-key (char-to-string (rest pair))
+    'skeleton-pair-insert-maybe))
+#+end_src
+
 
 ** Markdown 
 Markdown mode support. 
 
 #+srcname: markdown-mode
 #+begin_src emacs-lisp
+   (autoload 'markdown-mode "markdown-mode.el"
+   "Major mode for editing Markdown files" t)
+   (setq auto-mode-alist
+   (cons '("\\.Markdown" . markdown-mode) auto-mode-alist)
+   )
+   (setq auto-mode-alist
+   (cons '("\\.MarkDown" . markdown-mode) auto-mode-alist)
+   )
+   (setq auto-mode-alist
+   (cons '("\\.markdown" . markdown-mode) auto-mode-alist)
+   )
+   (setq auto-mode-alist
+   (cons '("\\.md" . markdown-mode) auto-mode-alist)
+   )
 
-(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
-(add-to-list 'auto-mode-alist '("\\.Markdown" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.MarkDown" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.markdown" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.md" . markdown-mode))
-#+end_src
-** Polymode (Experimental) 
-Polymode is an emacs package that offers support for multiple major modes inside a single emacs buffer. The idea is to be able to easily combine, e.g., R and Markdown in an .Rmd file---much like Snw or Rnw files, but in a more generic and generalizable way. Right now we just use it for .Rmd files.
+;; This function will open Marked.app and monitor the current markdown document
+;; for anything changes.  In other words, it will live reload and convert the
+;; markdown documment
+(defun markdown-preview-file ()
+  "run Marked on the current file and revert the buffer"
+  (interactive)
+  (shell-command
+   (format "open -a /Applications/Marked.app %s"
+           (shell-quote-argument (buffer-file-name))))
+  )
+(global-set-key "\C-cp" 'markdown-preview-file) 
 
-#+source: load-polymode
-#+begin_src emacs-lisp
-  (require 'poly-R)
-  (require 'poly-markdown)
+
 #+end_src
