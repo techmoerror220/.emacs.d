@@ -111,7 +111,7 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
    Smart autopairing of quotes and parentheses. 
 #+srcname: smartparens
 #+begin_src emacs-lisp 
-  (smart-parens-global-mode 1)
+  (smartparens-global-mode 1)
   (require 'smartparens-config)
 #+end_src
 
