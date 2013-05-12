@@ -225,19 +225,4 @@ Note that unless you really need Sweave (.e.g, because you're writing R vignette
 
 #+end_src
 
-** ESS Tracebug: A debugger for your R code
-This is an emacs package for interactive debugging and error tracing
-in ESS. More details on [[http://code.google.com/p/ess-tracebug/][the ess-tracebug project]] can be found on its
-[[http://code.google.com/p/ess-tracebug/][Google Code page]].
 
-#+source: ess-tracebug
-#+begin_src emacs-lisp
-  (require 'ess-tracebug)
-  (add-hook 'ess-post-run-hook 'ess-tracebug t)
-  (define-key ess-mode-map "\M-]" 'next-error)
-  (define-key ess-mode-map "\M-[" 'previous-error)
-  (define-key inferior-ess-mode-map "\M-]" 'next-error-no-select)
-  (define-key inferior-ess-mode-map "\M-[" 'previous-error-no-select)
-  (define-key compilation-minor-mode-map [(?n)] 'next-error-no-select)
-  (define-key compilation-minor-mode-map [(?p)] 'previous-error-no-select)
-#+end_src
