@@ -1,7 +1,8 @@
 ;;; polymode.el --- support for multiple major modes
 ;; Author: Vitalie Spinu
 
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (require 'cl))
 (require 'font-lock)
 (require 'eieio)
 (require 'color)
@@ -111,7 +112,6 @@ Return, how many chucks actually jumped over."
   (interactive "p")
   (polymode-next-chunk (- N)))
   
-
 (defun polymode-next-chunk-same-type (&optional N)
   "Go to next COUNT chunk.
 Return, how many chucks actually jumped over."
@@ -241,7 +241,6 @@ the current innermost span."
           (goto-char (max 1 (1- (nth 1 *span*)))) ;; enter previous chunk
         (goto-char (nth 2 *span*))))));))
 
-
 (defun pm/narrow-to-span (&optional span)
   "Narrow to current chunk."
   (interactive)
@@ -261,7 +260,15 @@ the current innermost span."
 (defvar pm--fontify-region-original nil
   "Fontification function normally used by the buffer's major mode.
 Used internaly to cahce font-lock-fontify-region-function.  Buffer local.")
-(make-variable-buffer-local 'multi-fontify-region-original)
+(make-variable-buffer-local 'pm--fontify-region-original)
+
+(defvar pm--indent-line-function-original nil
+  "Used internally toprotect buffer's `indent-line-function'.")
+(make-variable-buffer-local 'pm--indent-line-function-original)
+
+(defvar pm--syntax-begin-function-original nil)
+(make-variable-buffer-local 'pm--syntax-begin-function-original)
+
 
 (defun pm/fontify-region (beg end &optional verbose)
   "Polymode font-lock fontification function.
@@ -272,24 +279,19 @@ A fontification mechanism should call
 `font-lock-fontify-region-function' (`jit-lock-function' does
 that). If it does not, the fontification will probably be screwed
 in polymode buffers."
-  (let* ((modified (buffer-modified-p))
-         (buffer-undo-list t)
-	 (inhibit-read-only t)
+  (let* ((buffer-undo-list t)
 	 (inhibit-point-motion-hooks t)
-	 (inhibit-modification-hooks t)
          (font-lock-dont-widen t)
-         (buff (current-buffer))
-	 deactivate-mark)
-    ;; (with-silent-modifications
-    (font-lock-unfontify-region beg end)
-    (save-excursion
-      (save-window-excursion
-        (pm/map-over-spans
-         (lambda ()
-           (when (and font-lock-mode font-lock-keywords)
-               (let ((sbeg (nth 1 *span*))
-                     (send (nth 2 *span*)))
-                 (pm--adjust-chunk-overlay sbeg send buff) ;; set in original buffer!
+         (buff (current-buffer)))
+    (with-silent-modifications
+      (font-lock-unfontify-region beg end)
+      (save-excursion
+        (save-window-excursion
+          (pm/map-over-spans
+           (lambda ()
+             (let ((sbeg (nth 1 *span*))
+                   (send (nth 2 *span*)))
+               (when (and font-lock-mode font-lock-keywords)
                  (when parse-sexp-lookup-properties
                    (pm--comment-region 1 sbeg))
                  (unwind-protect 
@@ -301,11 +303,25 @@ in polymode buffers."
                        (funcall pm--fontify-region-original
                                 (max sbeg beg) (min send end) verbose))
                    (when parse-sexp-lookup-properties
-                     (pm--uncomment-region 1 sbeg))))))
-           beg end)))
-    (put-text-property beg end 'fontified t)
-    (unless modified
-      (restore-buffer-modified-p nil))))
+                     (pm--uncomment-region 1 sbeg))
+                   ))
+               (pm--adjust-chunk-face sbeg send (pm/get-adj-face pm/submode))
+               ;; might be needed by external applications like flyspell
+               (put-text-property sbeg send 'inner-submode
+                                  (object-of-class-p pm/submode 'pm-inner-submode))
+               (put-text-property beg end 'fontified t)))
+           beg end)
+          ;; needed to avoid moving last fontified buffer to second place
+          (bury-buffer))))))
+
+(defun pm/syntax-begin-function ()
+  (goto-char
+   (max (cadr (pm/get-innermost-span))
+        (if pm--syntax-begin-function-original
+            (save-excursion
+              (funcall pm--syntax-begin-function-original)
+              (point))
+          (point-min)))))
 
 
 ;;; INTERNALS
@@ -322,14 +338,13 @@ warnign."
 (defun pm--restore-ignore ()
   (setq pm--ignore-post-command-hook nil))
 
-(defvar polymode-highlight-chunks t)
-
+;; This function is for debug convenience only in order to avoid limited debug
+;; context in polymode-select-buffer
 (defun pm--sel-buf ()
   (unless pm--ignore-post-command-hook
     (let ((*span* (pm/get-innermost-span))
           (pm--can-move-overlays t))
-      (pm/select-buffer (car (last *span*)) *span*)
-      (pm--adjust-chunk-overlay (nth 1 *span*) (nth 2 *span*)))))
+      (pm/select-buffer (car (last *span*)) *span*))))
 
 (defun polymode-select-buffer ()
   "Select the appropriate (indirect) buffer corresponding to point's context.
@@ -346,26 +361,42 @@ This funciton is placed in local post-command hook."
                           (- prop) ;; darken
                         prop)))
 
-(defun pm--adjust-chunk-overlay (beg end &optional buffer)
-  ;; super duper internal function
-  ;; should be used only after pm/select-buffer
-  (when (eq pm/type 'body)
-    (let ((background (oref pm/submode :background))) ;; in Current buffer !!
-      (with-current-buffer (or buffer (current-buffer))
-        (when background
-          (let* ((OS (overlays-in  beg end))
-                 (o (some (lambda (o) (and (overlay-get o 'polymode) o))
-                          OS)))
-            (if o
-                (move-overlay o  beg end )
-              (let ((o (make-overlay beg end nil nil t))
-                    (face (or (and (numberp background)
-                                   (cons 'background-color
-                                         (pm--lighten-background background)))
-                              background)))
-                (overlay-put o 'polymode 'polymode-major-mode)
-                (overlay-put o 'face face)
-                (overlay-put o 'evaporate t)))))))))
+(defun pm--adjust-chunk-face (beg end face)
+  ;; propertize 'face of the region by adding chunk specific configuration
+  (interactive "r")
+  (when face
+    (with-current-buffer (current-buffer)
+      (let ((face (or (and (numberp face)
+                           (cons 'background-color
+                                 (pm--lighten-background face)))
+                      face))
+            (pchange nil))
+        (while (not (eq pchange end))
+          (setq pchange (next-single-property-change beg 'face nil end))
+          (put-text-property beg pchange 'face
+                             `(,face ,@(get-text-property beg 'face)))
+          (setq beg pchange))))))
+
+;; (defun pm--adjust-chunk-overlay (beg end &optional buffer)
+;;   ;; super duper internal function
+;;   ;; should be used only after pm/select-buffer
+;;   (when (eq pm/type 'body)
+;;     (let ((background (oref pm/submode :background))) ;; in Current buffer !!
+;;       (with-current-buffer (or buffer (current-buffer))
+;;         (when background
+;;           (let* ((OS (overlays-in  beg end))
+;;                  (o (some (lambda (o) (and (overlay-get o 'polymode) o))
+;;                           OS)))
+;;             (if o
+;;                 (move-overlay o  beg end )
+;;               (let ((o (make-overlay beg end nil nil t))
+;;                     (face (or (and (numberp background)
+;;                                    (cons 'background-color
+;;                                          (pm--lighten-background background)))
+;;                               background)))
+;;                 (overlay-put o 'polymode 'polymode-major-mode)
+;;                 (overlay-put o 'face face)
+;;                 (overlay-put o 'evaporate t)))))))))
 
 (defun pm--adjust-visual-line-mode (new-vlm)
   (when (not (eq visual-line-mode vlm))
@@ -405,14 +436,16 @@ This funciton is placed in local post-command hook."
       (goto-char point)
       ;; Avoid the display jumping around.
       (when visible
-        (set-window-start (get-buffer-window buffer t) window-start))
-      )))
+        (set-window-start (get-buffer-window buffer t) window-start)))))
 
+(defun pm--transfer-vars-from-base ()
+  (let ((bb (pm/base-buffer)))
+    (dolist (var '(buffer-file-name))
+      (set var (buffer-local-value var bb)))))
 
 (defun pm--setup-buffer (&optional buffer)
-  ;; general buffer setup, should work for indirect and base buffers alike
-  ;; assumes pm/config and pm/submode is already in place
-  ;; return buffer
+  ;; General buffer setup, should work for indirect and base buffers
+  ;; alike. Assumes pm/config and pm/submode is already in place. Return buffer.
   (let ((buff (or buffer (current-buffer))))
     (with-current-buffer buff
       ;; Don't let parse-partial-sexp get fooled by syntax outside
@@ -427,7 +460,12 @@ This funciton is placed in local post-command hook."
         (setq pm--fontify-region-original
               font-lock-fontify-region-function)
         (set (make-local-variable 'font-lock-fontify-region-function)
-             #'pm/fontify-region))
+             #'pm/fontify-region)
+        (setq pm--syntax-begin-function-original
+              (or syntax-begin-function ;; Emacs > 23.3
+                  font-lock-beginning-of-syntax-function))
+        (set (make-local-variable 'syntax-begin-function)
+             #'pm/syntax-begin-function))
 
       (set (make-local-variable 'polymode-mode) t)
 
@@ -436,15 +474,8 @@ This funciton is placed in local post-command hook."
       ;; handle indentation.
       (when (and indent-line-function ; not that it should ever be nil...
                  (oref pm/submode :protect-indent-line-function))
-        (set (make-local-variable 'indent-line-function)
-             `(lambda ()
-                (let ((span (pm/get-innermost-span)))
-                  (unwind-protect
-                      (save-restriction
-                        (pm--comment-region  1 (nth 1 span))
-                        (pm/narrow-to-span span)
-                        (,indent-line-function))
-                    (pm--uncomment-region 1 (nth 1 span)))))))
+        (setq pm--indent-line-function-original indent-line-function)
+        (set (make-local-variable 'indent-line-function) 'pm/indent-line))
 
       ;; Kill the base buffer along with the indirect one; careful not
       ;; to infloop.
@@ -494,8 +525,10 @@ Return newlly created buffer."
            (file (buffer-file-name))
            (base-name (buffer-name))
            (jit-lock-mode nil)
-           (coding buffer-file-coding-system)
-           (tbf (get-buffer-create "*pm-tmp*")))
+           (coding buffer-file-coding-system))
+
+      ;; (dbg (current-buffer) file)
+      ;; (backtrace)
 
       (with-current-buffer new-buffer
         (let ((polymode-mode t)) ;;major-modes might check it
@@ -610,7 +643,6 @@ Return newlly created buffer."
     (let ((elapsed  (time-to-seconds (time-subtract (current-time) start))))
       (message "elapsed: %s  per-char: %s" elapsed (/ elapsed count)))))
 
-
 (defun pm--comment-region (beg end)
   ;; mark as syntactic comment
   (when (> end 1)
@@ -626,8 +658,7 @@ Return newlly created buffer."
           (add-text-properties (1- end) end
                                (list 'syntax-table (cons 12 ch-end)
                                      'rear-nonsticky t
-                                     'polymode-comment 'end))
-          )))))
+                                     'polymode-comment 'end)))))))
 
 (defun pm--uncomment-region (beg end)
   ;; remove all syntax-table properties. Should not cause any problem as it is
@@ -639,7 +670,6 @@ Return newlly created buffer."
         ;; (remove-text-properties beg (1+ beg) props)
         ;; (remove-text-properties end (1- end) props)
         ))))
-
 
 (defmacro define-polymode (mode config &optional keymap &rest body)
   "Define a new polymode MODE.
@@ -772,6 +802,14 @@ BODY contains code to execute each time the mode is enabled. It
              ,(format "Keymap for %s." pretty-name)))
 
        (add-minor-mode ',mode ',lighter ,(or keymap-sym keymap)))))
+
+
+
+;;; COMPATIBILITY
+
+(defun pm--flyspel-dont-highlight-in-submodes (beg end poss)
+  (or (get-text-property beg 'inner-submode)
+      (get-text-property beg 'inner-submode)))
 
 
 ;;; FONT-LOCK

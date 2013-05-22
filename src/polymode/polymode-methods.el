@@ -24,7 +24,7 @@ Current buffer is setup as the base buffer.")
                   (eq polymode-major-mode base-mode))
         (let ((polymode-mode t)) ;;major-modes might check it 
           (funcall base-mode)))
-      ;; fixme:maybe: inconsistencies?
+      ;; fixme: maybe: inconsistencies?
       ;; 1)  not calling pm/install-buffer on base-buffer
       ;; But, we are not creating/installing a new buffer here .. so it is a
       ;; different thing .. and is probably ok
@@ -34,9 +34,10 @@ Current buffer is setup as the base buffer.")
       (setq pm/config config)
       (setq pm/submode submode)
       (setq pm/type 'base)
-      ;; if base-mode is nil 
-      (pm--setup-buffer)
-    )))
+      ;; base specific config and setup
+      (add-hook 'flyspell-incorrect-hook 'pm--flyspel-dont-highlight-in-submodes nil t)
+      ;; general setup
+      (pm--setup-buffer))))
   
                           
 (defmethod pm/initialize ((config pm-config-one))
@@ -79,20 +80,9 @@ For this method to work correctly, SUBMODE's class should define
       (setq buff (pm/get-buffer submode type)))
     (pm--select-buffer buff)))
 
-;; (pm--select-buffer (pm/get-buffer submode (car span))))
-
-;; (defmethod pm/select-buffer ((submode pm-inner-submode) span)
-;;   "Select the buffer associated with SUBMODE.
-;; Install a new indirect buffer if it is not already installed.
-
-;; For this method to work correctly, SUBMODE's class should define
-;; `pm/install-buffer' and `pm/get-buffer' methods."
-;;   (let* ((type (car span))
-;;          (buff (pm/get-buffer submode type)))
-;;     (unless (buffer-live-p buff)
-;;       (pm/install-buffer submode type)
-;;       (setq buff (pm/get-buffer submode type)))
-;;     (pm--select-buffer buff)))
+(defmethod pm/select-buffer ((submode pm-inner-submode) span)
+  (call-next-method)
+  (pm--transfer-vars-from-base))
 
 (defun pm-get-mode-symbol-from-name (str)
   "Default mode function guesser.
@@ -129,7 +119,6 @@ return an error."
       (pm/select-buffer submode span))))
 
 
-
 (defgeneric pm/install-buffer (submode &optional type)
   "Ask SUBMODE to install an indirect buffer corresponding to
 span TYPE. Should return newly installed/retrieved buffer.")
@@ -138,7 +127,7 @@ span TYPE. Should return newly installed/retrieved buffer.")
   "Independently on the TYPE call `pm/create-indirect-buffer'
 create and install a new buffer in slot :buffer of SUBMODE."
   (oset submode :buffer
-        (pm--submode-create-buffer-maybe submode type)))
+        (pm--create-submode-buffer-maybe submode type)))
 
 (defmethod pm/install-buffer ((submode pm-inner-submode) type)
   "Depending of the TYPE install an indirect buffer into
@@ -157,6 +146,19 @@ slot :buffer of SUBMODE. Create this buffer if does not exist."
              (pm--setup-buffer)
              (funcall (oref pm/config :minor-mode-name))
              buff)))))
+
+(defgeneric pm/get-adj-face (submode &optional type))
+(defmethod pm/get-adj-face ((submode pm-submode) &optional type)
+  (oref submode :adj-face))
+(defmethod pm/get-adj-face ((submode pm-inner-submode) &optional type)
+  (setq type (or type pm/type))
+  (cond ((eq type 'head)
+         (oref submode :head-adj-face))
+        ((eq type 'tail)
+         (if (eq 'head (oref pm/submode :tail-adj-face))
+             (oref pm/submode :head-adj-face)
+           (oref pm/submode :tail-adj-face)))
+        (t (oref pm/submode :adj-face))))
 
 (defgeneric pm/get-span (submode &optional pos)
   "Ask a submode for the span at point.
@@ -204,7 +206,6 @@ point."
         (setcar (last span) (oref config :base-submode)))
       span))
 
-
 (defmethod pm/get-span ((config pm-config-multi-auto) &optional pos)
   (let ((span-other (call-next-method))
         (proto (symbol-value (oref config :auto-submode-name))))
@@ -215,9 +216,8 @@ point."
           (if (and span-other
                    (> (cadr span-other) (cadr span)))
               span-other
-            (append span (list config))))
+            (append span (list config)))) ;fixme: this returns config as last object
       span-other)))
-
 
 (defmethod pm/get-span ((submode pm-inner-submode) &optional pos)
   "Return a list of the form (TYPE POS-START POS-END SELF).
@@ -346,7 +346,73 @@ tail -  tail span"
                 (functionp tail-matcher))
            (pm--span-at-point-fun-fun head-matcher tail-matcher))
           (t (error "head and tail matchers should be either regexp strings or functions")))))
-       
+
+
+
+;;; INDENT-LINE
+
+(defgeneric pm/indent-line (&optional submode span)
+  "Indent current line.
+Protect and call original indentation function associated with
+the submode.")
+
+(defun pm--indent-line (span)
+  ;; istr is auto-indent string
+  (unwind-protect
+      (save-restriction
+          (pm--comment-region  1 (nth 1 span))
+          (pm/narrow-to-span span)
+          (funcall pm--indent-line-function-original))
+      (pm--uncomment-region 1 (nth 1 span))))
+
+(defmethod pm/indent-line ()
+  (let ((span (pm/get-innermost-span)))
+    (pm/indent-line (car (last span)) span)))
+
+(defmethod pm/indent-line ((submode pm-submode) &optional span)
+  (pm--indent-line span))
+  
+(defmethod pm/indent-line ((submode pm-inner-submode) &optional span)
+  "Indent line in inner submodes.
+When point is at the beginning of head or tail, use parent chunk
+to indent."
+  ;; sloppy work,
+  ;; assumes multiline chunks and single-line head/tail
+  ;; assumes current buffer is the correct buffer
+  (let ((pos (point))
+        shift delta)
+    (cond ((or (eq 'head (car span))
+               (eq 'tail (car span)))
+            ;; use parent's indentation function
+           (back-to-indentation)
+           (setq delta (- pos (point)))
+           (backward-char)
+           (let ((parent-span (pm/get-innermost-span)))
+             (pm/select-buffer (car (last parent-span)) parent-span)
+             (forward-char)
+             (pm--indent-line parent-span)
+             (when (eq 'tail (car span))
+               (setq shift (pm--get-head-shift parent-span))
+               (indent-to (+ shift (- (point) (point-at-bol))))))
+           (if (> delta 0)
+               (goto-char (+ (point) delta))))
+           (t
+            (setq shift (pm--get-head-shift span))
+            (pm--indent-line span)
+            (setq delta (- (point) (point-at-bol)))
+            (beginning-of-line)
+            (indent-to shift)
+            (goto-char (+ (point) delta))))))
+
+(defmethod pm/indent-line ((submode pm-config-multi-auto) &optional span)
+  (pm/select-buffer submode span)
+  (pm/indent-line pm/submode span))
+
+(defun pm--get-head-shift (span)
+  (save-excursion
+    (goto-char (cadr span))
+    (back-to-indentation)
+    (- (point) (point-at-bol))))
                      
 ;; (defun pm--test-ff ()
 ;;   (interactive)

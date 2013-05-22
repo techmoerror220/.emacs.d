@@ -1,3 +1,4 @@
+
 ;;; ROOT CLASS
 (defclass polymode (eieio-instance-inheritor) ()
   "Root polymode class.")
@@ -76,17 +77,15 @@ submode. For example noweb.")
   "Configuration for a polymode that allows multiple submodes
 that are known in advance. For a variaty of web-modes.")
 
-
-
 (defclass pm-config-multi-auto (pm-config-multi)
   ((auto-submode-name
     :initarg :auto-submode-name
     :type symbol
     :custom symbol
     :documentation
-    "Symbol of auto submode. At run time this object is cloned
-     and placed in :auto-submodes with coresponding :mode slot
-     initialized at run time.")
+    "Name of auto-submode (a symbol). At run time this object is
+     cloned and placed in :auto-submodes with coresponding :mode
+     slot initialized at run time.")
    (auto-submodes
     :initarg :auto-submodes
     :type list
@@ -99,7 +98,6 @@ that are known in advance. For a variaty of web-modes.")
 are not known in advance. For example org-mode, markdown.")
 
 
-
 ;;; SUBMODE
 (defclass pm-submode (polymode)
   ((mode
@@ -110,7 +108,7 @@ are not known in advance. For example org-mode, markdown.")
    (protect-indent-line-function
     :initarg :protect-indent-line-function
     :type boolean
-    :initform nil
+    :initform t
     :custom boolean
     :documentation
     "Whether to modify local `indent-line-function' by narrowing
@@ -125,14 +123,17 @@ are not known in advance. For example org-mode, markdown.")
     :initarg :buffer
     :type (or null buffer)
     :initform nil)
-   (background
-    :initarg :background
-    :type (or null number face)
-    :custom (or null number face)
+   (adj-face
+    :initarg :adj-face
+    :type (or number face list)
+    :custom (or number face list)
     :initform nil
     :documentation
-    "Background configuration of the inner submode chunks. If nil
-    no highlighting occurs. If a face, use that face. If a
+    "Fontification adjustments face of the chunks. It is appended
+    to face specification of the body of the chunk and should be
+    either, nil, number, face or a list.
+
+    If nil no highlighting occurs. If a face, use that face. If a
     number, it is a percentage by which to lighten/darken the
     background. If positive it used to lighten background on dark
     themes and darken on light thems. If < 0, darken in dark
@@ -143,71 +144,64 @@ of the base submodes (aka host submodes associated with the base
 buffer).")
 
 (defclass pm-inner-submode (pm-submode)
-  ((background
-    :initform 3)
+  ((adj-face
+    :initform 2)
    (head-mode
     :initarg :head-mode
     :type symbol
     :initform 'fundamental-mode
     :custom symbol
-    :documentation "Chunks' header mode. If set to
-              'body, the head is considered part of the chunk
-              body. If set to 'base, head is considered part of
-              the including base mode.")
+    :documentation
+    "Chunks' header mode. If set to 'body, the head is considered
+    part of the chunk body. If set to 'base, head is considered
+    part of the including base mode.")
    (head-buffer
     :initarg :head-buffer
     :type (or null buffer)
     :initform nil
     :documentation
-    "This buffer is set automatically to :buffer
-if :head-mode is 'body, and to base-buffer if :head-mode is
-'base")
+    "This buffer is set automatically to :buffer if :head-mode is
+    'body, and to base-buffer if :head-mode is 'base")
    (tail-mode
     :initarg :tail-mode
     :type symbol
     :initform nil
     :custom symbol
     :documentation
-    "If nil, it is the same as :HEAD-MODE. Otherwise,
-the same rules as for the :head-mode apply.")
+    "If nil, it is the same as :HEAD-MODE. Otherwise, the same
+    rules as for the :head-mode apply.")
    (tail-buffer
     :initarg :tail-buffer
-    :type (or null buffer)
-    :initform nil)
+    :initform nil
+    :type (or null buffer))
    (head-reg
     :initarg :head-reg
-    :type (or string symbol)
     :initform ""
+    :type (or string symbol)
     :custom (or string symbol)
     :documentation "Regexp for the chunk start (aka head)")
    (tail-reg
     :initarg :tail-reg
-    :type (or string symbol)
     :initform ""
+    :type (or string symbol)
     :custom (or string symbol)
     :documentation "Regexp for chunk end (aka tail)")
-   (extensions
-    :initarg :extensions
-    :type list
-    :custom list
+   (head-adj-face
+    :initarg :head-adj-face
+    :initform font-lock-type-face
+    :type (or null number face list)
+    :custom (or null number face list)
     :documentation
-    "List of file extensions the submode should be activated in.")
-   (font-lock-keywords
-    :initarg :font-lock-keywords
-    :type (or list symbol)
-    :initform nil)
-   (font-lock-matcher
-    :initarg :font-lock-matcher
-    :type (or list symbol)
-    :initform nil)
-   (font-lock-syntactic-matcher
-    :initarg :font-lock-syntactic-matcher
-    :type (or list symbol)
-    :initform nil)
-   (font-lock-literal-matcher
-    :initarg :font-lock-literal-matcher
-    :type (or list symbol)
-    :initform nil))
+    "Can be a number, list or face.")
+   (tail-adj-face
+    :initarg :tail-adj-face
+    :initform nil
+    :type (or null number face list)
+    :custom (or null number face list)
+    :documentation
+    "Can be a number, list or face. If nil, take the
+configuration from :head-adj-face."))
+  
   "Representation of an inner (aka child) submode in a buffer.")
 
 (defclass pm-inner-submode-auto (pm-inner-submode)
