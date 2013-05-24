@@ -22,14 +22,13 @@ older, messier one. The Starter Kit comes with Ethan Schoonover's
 /Solarized/ color theme and the /Zenburn/ theme, in versions
 maintained by Bozhidar Batsov. Load it with =M-x load-theme
 solarized-dark= or =M-x load-theme solarized-light=. You can also try
-loading the =zenburn= or =tango-2= themes. If this doesn't work first
-time, load it manually with, e.g., =M-x load-theme solarized-light=.
+loading the =zenburn= and =anti-zenburn= themes. 
 
 #+source: colors
 #+begin_src emacs-lisp
   (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
   (setq custom-safe-themes t)
-  (load-theme 'zenburn t)
+  (load-theme 'anti-zenburn t)
 #+end_src
 
 ** Window system 

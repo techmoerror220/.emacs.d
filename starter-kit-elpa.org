@@ -11,6 +11,7 @@ The following packages will be downloaded and installed.
 #+begin_src emacs-lisp
   (defvar starter-kit-packages (list 
                                 'ack-and-a-half
+                                'anti-zenburn
                                 'auto-complete
                                 'browse-kill-ring
                                 ;; 'cdlatex
