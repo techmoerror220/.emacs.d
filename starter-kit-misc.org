@@ -28,7 +28,7 @@ loading the =zenburn= and =anti-zenburn= themes.
 #+begin_src emacs-lisp
   (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
   (setq custom-safe-themes t)
-  (load-theme 'anti-zenburn t)
+  (load-theme 'zenburn t)
 #+end_src
 
 ** Window system 
