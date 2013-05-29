@@ -98,7 +98,6 @@ This file provides settings for ESS and R.
   (require 'ess-site)
 #+end_src
 
-** R-object tooltips
 Taken from http://blogisticreflections.wordpress.com/2009/10/01/r-object-tooltips-in-ess/
 #+begin_quote 
  I have defined a function, ess-R-object-tooltip, that when
