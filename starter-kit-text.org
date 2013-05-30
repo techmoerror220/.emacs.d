@@ -145,5 +145,5 @@ Markdown mode support.
      (format "open -a /Applications/Marked.app %s"
              (shell-quote-argument (buffer-file-name))))
     )  
-  (global-set-key "\C-cp" 'markdown-preview-file) 
+  (global-set-key "\C-co" 'markdown-preview-file) 
 #+end_src
