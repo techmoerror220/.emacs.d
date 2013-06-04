@@ -308,6 +308,24 @@ Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager.
           ("melpa"   . "http://melpa.milkbox.net/packages/")
           ("marmalade" . "http://marmalade-repo.org/packages/")))
 
+;;; Add support to package.el for pre-filtering available packages
+(defvar package-filter-function nil
+  "Optional predicate function used to internally filter packages used by package.el.
+
+The function is called with the arguments PACKAGE VERSION ARCHIVE, where
+PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
+ARCHIVE is the string name of the package archive.")
+
+(defadvice package--add-to-archive-contents
+  (around filter-packages (package archive) activate)
+  "Add filtering of available packages using `package-filter-function', if non-nil."
+  (when (or (null package-filter-function)
+            (funcall package-filter-function
+                     (car package)
+                     (package-desc-vers (cdr package))
+                     archive))
+    ad-do-it))
+
 (defvar melpa-exclude-packages
   '(slime)
   "Don't install Melpa versions of these packages.")
