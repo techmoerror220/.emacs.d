@@ -156,3 +156,8 @@ Note that unless you really need Sweave (.e.g, because you're writing R vignette
 #+end_src
 
 
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Stats loaded.")
+#+end_src

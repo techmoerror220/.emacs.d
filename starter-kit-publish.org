@@ -48,3 +48,8 @@ the documentation for the Starter Kit to html.
     (copy-file (expand-file-name "starter-kit.html" (expand-file-name "doc" this-dir))
                (expand-file-name "index.html" (expand-file-name "doc" this-dir)) t))
 #+end_src
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Publish loaded.")
+#+end_src

@@ -147,3 +147,8 @@ Markdown mode support.
     )  
   (global-set-key "\C-co" 'markdown-preview-file) 
 #+end_src
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Text loaded.")
+#+end_src

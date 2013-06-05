@@ -561,3 +561,8 @@ Some last tweaks.
    
    
    
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit User File loaded.")
+#+end_src

@@ -187,3 +187,8 @@ A nicer modeline.
 #+end_src
 
 
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Misc loaded.")
+#+end_src

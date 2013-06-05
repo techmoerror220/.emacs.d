@@ -39,3 +39,8 @@ supplied by the Python distribution itself.
     (add-to-list 'auto-mode-alist '("\\.pxd\\'" . cython-mode))
     (add-to-list 'auto-mode-alist '("\\.pxi\\'" . cython-mode)))
 #+end_src
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Python loaded.")
+#+end_src

@@ -36,3 +36,8 @@ Load the snippets defined in the package's =./snippets/= directory, and local sn
   (define-key ac-completing-map (kbd "C-c h") 'ac-quick-help)  
     
 #+end_src 
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Yasnippet loaded.")
+#+end_src

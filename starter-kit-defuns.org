@@ -222,3 +222,8 @@ Useful when a large block of text is required (e.g. for testing)
           "culpa qui officia deserunt mollit anim id est laborum."))
 #+end_src
 
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Defuns loaded.")
+#+end_src

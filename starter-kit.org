@@ -608,3 +608,8 @@ uses), the problem most likely resides in your local setup.
 [2] The emacs starter kit uses [[http://orgmode.org/worg/org-contrib/babel/][org-babel]] to load embedded elisp code
 directly from [[http://orgmode.org/][Org Mode]] documents.
 
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit main file loaded.")
+#+end_src

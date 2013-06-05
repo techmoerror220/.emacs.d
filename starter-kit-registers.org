@@ -17,3 +17,8 @@ You should add registers here for the files you edit most often.
                (?r (file . ,(concat dotfiles-dir "starter-kit-registers.org")))))
     (set-register (car r) (cadr r)))
 #+end_src
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Registers loaded.")
+#+end_src

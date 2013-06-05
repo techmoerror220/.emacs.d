@@ -25,3 +25,8 @@ flyspell doesn't start properly. Putting this customization in
 (setq ispell-personal-dictionary "~/.aspell.en.pws")
 (setq flyspell-issue-message-flag nil)
 #+end_src
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Aspell loaded.")
+#+end_src

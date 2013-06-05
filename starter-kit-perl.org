@@ -18,3 +18,8 @@ Helpers for the [[http://www.perl.org/][Perl]] programming language.
 (add-to-list 'auto-mode-alist '("\\.pod$" . pod-mode))
 (add-to-list 'auto-mode-alist '("\\.tt$" . tt-mode))
 #+end_src
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Perl loaded.")
+#+end_src

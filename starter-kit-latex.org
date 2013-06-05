@@ -213,3 +213,8 @@ We use this (rather than the underscore character) for compatibilty with Pandoc.
   (add-to-list 'org-babel-noweb-error-langs "latex")
 #+end_src
 
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit LaTeX loaded.")
+#+end_src

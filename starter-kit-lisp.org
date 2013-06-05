@@ -175,3 +175,8 @@ idea to extend this feature beyond simply the =fn= function.
 (font-lock-add-keywords 'lisp-mode
 			'(("(\\|)" . 'esk-paren-face)))
 #+end_src
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Lisp loaded.")
+#+end_src

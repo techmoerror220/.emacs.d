@@ -41,3 +41,8 @@ Java-script Helpers
     (insert (pp json-object))
     (goto-char (point-min))))
 #+end_src
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit JS loaded.")
+#+end_src

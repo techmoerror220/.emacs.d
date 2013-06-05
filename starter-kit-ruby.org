@@ -119,3 +119,8 @@ See [[http://rinari.rubyforge.org/][rinari.rubyforge]] for more information on r
 (setq rinari-major-modes
       (list 'dired-mode 'ruby-mode 'css-mode 'yaml-mode 'javascript-mode))
 #+end_src
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Ruby loaded.")
+#+end_src
