@@ -67,7 +67,7 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
 #+end_src
 
 ** Spelling
-    Use cocoAspell instead of ispell. Turned off here because it loads
+    Use aspell instead of ispell. Turned off here because it loads
     too late. I had to put it in [[file:starter-kit-aspell.org][starter-kit-aspell.org]].
 #+srcname: spelling-mode
 #+begin_src emacs-lisp :tangle no
@@ -75,8 +75,7 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
       ispell-dictionary "english"
       ispell-dictionary-alist
       (let ((default '("[A-Za-z]" "[^A-Za-z]" "[']" nil
-                       ("-B" "-d" "english" "--dict-dir"
-                        "/Library/Application Support/cocoAspell/aspell6-en-6.0-0")
+                       ("-B" "-d" "english")
                        nil iso-8859-1)))
         `((nil ,@default)
           ("english" ,@default))))
