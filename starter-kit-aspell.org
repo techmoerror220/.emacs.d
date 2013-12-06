@@ -4,7 +4,7 @@
 This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 * Starter Kit aspell
-Hackish file to accommodate having cocoaAspell installed on your Mac. Otherwise
+Hackish file to accommodate having aspell installed on your Mac. Otherwise
 flyspell doesn't start properly. Putting this customization in
 <username>.org initiates it too late. 
 
