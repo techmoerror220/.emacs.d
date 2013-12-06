@@ -12,12 +12,13 @@ flyspell doesn't start properly. Putting this customization in
 
 ** Specify aspell
 #+begin_src emacs-lisp
+(require 'flyspell)
+(setq flyspell-issue-message-flg nil)
 (setq ispell-program-name "aspell"
       ispell-dictionary "english"
       ispell-dictionary-alist
       (let ((default '("[A-Za-z]" "[^A-Za-z]" "[']" nil
-                       ("-B" "-d" "english" "--dict-dir"
-                        "~/Library/Application Support/cocoAspell/aspell6-en-7.1-0")
+                       ("-B" "-d" "english")
                        nil iso-8859-1)))
         `((nil ,@default)
           ("english" ,@default))))
