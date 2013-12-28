@@ -528,8 +528,8 @@ Some last tweaks.
 
 #+srcname: final-custom
 #+begin_src emacs-lisp
-  ;; Line-spacing tweak (Optimized for PragmataPro)
-  (setq-default line-spacing 5)
+  ;; Line-spacing tweak 
+  (setq-default line-spacing 1)
   
   ;; minimize fringe
   (setq-default indicate-empty-lines nil)
