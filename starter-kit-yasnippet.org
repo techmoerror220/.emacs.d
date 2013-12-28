@@ -23,16 +23,16 @@ Load the snippets defined in the package's =./snippets/= directory, and local sn
 
 ** Load autocomplete
 #+begin_src emacs-lisp 
-    (require 'auto-complete)
-    (require 'auto-complete-config)
-    (global-auto-complete-mode t)
-    (add-to-list 'ac-dictionary-directories (expand-file-name "auto-complete" dotfiles-dir))
-    (setq ac-modes (append ac-modes '(org-mode))) 
-    (ac-config-default)
-    (define-key ac-complete-mode-map [tab] 'ac-expand)
-    (setq ac-auto-start 4)
-    (ac-flyspell-workaround)
-    (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
+  (require 'auto-complete)
+  (require 'auto-complete-config)
+  (global-auto-complete-mode t)
+  (add-to-list 'ac-dictionary-directories (expand-file-name "auto-complete" dotfiles-dir))
+  (setq ac-modes (append ac-modes '(org-mode))) 
+  (ac-config-default)
+  (define-key ac-complete-mode-map [tab] 'ac-expand)
+  (setq ac-auto-start 4)
+  (ac-flyspell-workaround)
+  (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
   (define-key ac-completing-map (kbd "C-c h") 'ac-quick-help)  
     
 #+end_src 
