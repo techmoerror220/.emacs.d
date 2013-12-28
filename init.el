@@ -47,7 +47,7 @@
 (cond
  ((eq window-system nil) nil)
  ((font-existsp "PragmataPro")
-  (set-face-attribute 'default nil :height 121 :font "PragmataPro"))
+  (set-face-attribute 'default nil :height 111 :font "PragmataPro"))
   ((font-existsp "Source Code Pro")
   (set-face-attribute 'default nil :height 121 :font "Source Code Pro"))
  ((font-existsp "Menlo")
