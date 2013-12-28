@@ -1,5 +1,22 @@
+;;; HOW IT WORKS
+;; poly-XXX-mode function (as created by define-polymode) clones at run-time and
+;; calls pm/initialize on pm/config which is dispatched accordingly to the type
+;; of pm/config, then runs poly-XXX-mode-hook.
+;;
+;; pm/initialize in turn, assigns the config object to local pm/config and
+;; initialize base-mode by running the actual base-mode function, cloning and
+;; setting pm/submode (held in :base-submode-name slot of pm/config), setting
+;; pm/type to 'base, running pm/config's :init-functions. Finally pm/initialize runs
+;; pm--setup-buffer which is common for all buffers.
+;;
+;; pm--setup-buffer sets font-lock, and other workarounds.
+;;
+;; Instalation and initialization of submodes (indirect buffers) is done by
+;; pm/install-buffer generic, which is called dynamically in pm/select-buffer
+;; generic on first need (usually by font-lock).
 
-;;;; INTERFACE
+
+;;; INITIALIZATION
 (defgeneric pm/initialize (config)
   "Initialize current buffer with CONFIG.
 
@@ -13,7 +30,7 @@ Current buffer is setup as the base buffer.")
 (defmethod pm/initialize ((config pm-config))
   ;; fixme: reinstalation leads to infloop of pm--fontify-region-original and others ... 
   ;; On startup with local auto vars emacs reinstals the mode twice .. waf?
-  ;; For time baing never reinstall twice
+  ;; Temporary fix: don't install twice
   (unless pm/config
     (let* ((submode (clone (symbol-value (oref config :base-submode-name))
                            :buffer (current-buffer)))
@@ -34,18 +51,33 @@ Current buffer is setup as the base buffer.")
       (setq pm/config config)
       (setq pm/submode submode)
       (setq pm/type 'base)
-      ;; base specific config and setup
       (add-hook 'flyspell-incorrect-hook 'pm--flyspel-dont-highlight-in-submodes nil t)
-      ;; general setup
-      (pm--setup-buffer))))
+      (prog1 (pm--setup-buffer) ; general setup for base and submode buffers
+        (let ((PI pm/config) IFs)
+          ;; aggregate and run hooks; parents first
+          (while PI
+            (setq IFs (append (and (slot-boundp PI :init-functions) ; don't cascade
+                                   (oref PI :init-functions))
+                              IFs)
+                  PI (and (slot-boundp PI :parent-instance)
+                          (oref PI :parent-instance))))
+          (run-hooks 'IFs))))))
   
-                          
 (defmethod pm/initialize ((config pm-config-one))
   (call-next-method)
   (eval `(oset config :inner-submodes
                (list (clone ,(oref config :inner-submode-name))))))
 
+(defmethod pm/initialize ((config pm-config-multi))
+  (call-next-method)
+  (oset config :inner-submodes
+        (mapcar (lambda (sub-name)
+                  (clone (symbol-value sub-name)))
+                (oref config :inner-submode-names))))
 
+
+
+;;; BUFFERS
 (defgeneric pm/get-buffer (submode &optional span-type)
   "Get the indirect buffer associated with SUBMODE and
 SPAN-TYPE. Should return nil if buffer has not yet been
@@ -147,19 +179,23 @@ slot :buffer of SUBMODE. Create this buffer if does not exist."
              (funcall (oref pm/config :minor-mode-name))
              buff)))))
 
-(defgeneric pm/get-adj-face (submode &optional type))
-(defmethod pm/get-adj-face ((submode pm-submode) &optional type)
-  (oref submode :adj-face))
-(defmethod pm/get-adj-face ((submode pm-inner-submode) &optional type)
+
+;;; FACES
+(defgeneric pm/get-adjust-face (submode &optional type))
+(defmethod pm/get-adjust-face ((submode pm-submode) &optional type)
+  (oref submode :adjust-face))
+(defmethod pm/get-adjust-face ((submode pm-inner-submode) &optional type)
   (setq type (or type pm/type))
   (cond ((eq type 'head)
-         (oref submode :head-adj-face))
+         (oref submode :head-adjust-face))
         ((eq type 'tail)
-         (if (eq 'head (oref pm/submode :tail-adj-face))
-             (oref pm/submode :head-adj-face)
-           (oref pm/submode :tail-adj-face)))
-        (t (oref pm/submode :adj-face))))
+         (if (eq 'head (oref pm/submode :tail-adjust-face))
+             (oref pm/submode :head-adjust-face)
+           (oref pm/submode :tail-adjust-face)))
+        (t (oref pm/submode :adjust-face))))
 
+
+;;; SPAN MANIPULATION
 (defgeneric pm/get-span (submode &optional pos)
   "Ask a submode for the span at point.
 Return a list of three elements (TYPE BEG END OBJECT) where TYPE
@@ -180,31 +216,50 @@ Should return nil if there is no SUBMODE specific span around POS.")
 Return a cons (submode . span), for which START is closest to
 POS (and before it); i.e. the innermost span.  POS defaults to
 point."
-    ;; fixme: base should be last, to take advantage of the submodes computation
-    (let ((smodes (cons (oref config :base-submode) 
-                        (oref config :inner-submodes)))
-          (start (point-min))
-          (end (point-max))
-          (pos (or pos (point)))
-          span val)
-      (save-restriction
-        (widen)
+    (save-restriction
+      (widen)
+      ;; fixme: base should be last, to take advantage of the submodes computation
+      (let* ((smodes (cons (oref config :base-submode)
+                           (oref config :inner-submodes)))
+             (start (point-min))
+             (end (point-max))
+             (pos (or pos (point)))
+             (span (list nil start end nil))
+             val)
+        ;; (save-restriction
+        ;;   (widen)
+
         (dolist (sm smodes)
           (setq val (pm/get-span sm pos))
-          (if (and val (>= (nth 1 val) start))
-              (setq span val
-                    start (nth 1 val)
-                    end (nth 2 val)))))
-      (unless (and (<= start end) (<= pos end) (>= pos start))
-        (error "Bad polymode selection: %s, %s"
-               (list start end) pos))
-      ;; fixme: why is this here?
-      ;; (if (= start end)
-      ;;     (setq end (1+ end)))
-      (when (and span
-                 (null (car span))) ; submodes can compute the base span by returning nil
-        (setcar (last span) (oref config :base-submode)))
-      span))
+          (when (and val
+                     (or (> (nth 1 val) start)
+                         (< (nth 2 val) end)))
+            (if (or (car val)
+                    (null span))
+                (setq span val
+                      start (nth 1 val)
+                      end (nth 2 val))
+              ;; nil car means outer submode (usually base). And it can be an
+              ;; intersection of spans returned by 2 different neighbour inner
+              ;; submodes. See rapport mode for an example
+              (setq start (max (nth 1 val)
+                               (nth 1 span))
+                    end (min (nth 2 val)
+                             (nth 2 span)))
+              (setcar (cdr span) start)
+              (setcar (cddr span) end)
+              )))
+        ;; )
+        (unless (and (<= start end) (<= pos end) (>= pos start))
+          (error "Bad polymode selection: %s, %s"
+                 (list start end) pos))
+        (when (null (car span)) ; submodes can compute the base span by returning nil
+          (setcar (last span) (oref config :base-submode)))
+        span)))
+
+;; No need for this one so far. Basic method iterates through :inner-submodes
+;; anyhow.
+;; (defmethod pm/get-span ((config pm-config-multi) &optional pos))
 
 (defmethod pm/get-span ((config pm-config-multi-auto) &optional pos)
   (let ((span-other (call-next-method))
@@ -214,8 +269,15 @@ point."
                                        (oref proto :tail-reg)
                                        pos)))
           (if (and span-other
-                   (> (cadr span-other) (cadr span)))
-              span-other
+                   (or (> (nth 1 span-other) (nth 1 span))
+                       (< (nth 2 span-other) (nth 2 span))))
+              ;; treat intersections with the base mode
+              (if (car span-other)
+                  span-other ;not base
+                ;; at this stage, car span should better be nil; no explicit check here.
+                (setcar (cdr span-other) (max (nth 1 span-other) (nth 1 span)))
+                (setcar (cddr span-other) (min (nth 2 span-other) (nth 2 span)))
+                span-other)
             (append span (list config)))) ;fixme: this returns config as last object
       span-other)))
 
@@ -366,6 +428,7 @@ the submode.")
       (pm--uncomment-region 1 (nth 1 span))))
 
 (defmethod pm/indent-line ()
+  "Indent line dispatcher"
   (let ((span (pm/get-innermost-span)))
     (pm/indent-line (car (last span)) span)))
 
@@ -376,14 +439,14 @@ the submode.")
   "Indent line in inner submodes.
 When point is at the beginning of head or tail, use parent chunk
 to indent."
-  ;; sloppy work,
-  ;; assumes multiline chunks and single-line head/tail
-  ;; assumes current buffer is the correct buffer
+  ;; sloppy work:
+  ;; Assumes multiline chunks and single-line head/tail.
+  ;; Assumes current buffer is the correct buffer.
   (let ((pos (point))
         shift delta)
     (cond ((or (eq 'head (car span))
                (eq 'tail (car span)))
-            ;; use parent's indentation function
+            ;; use parent's indentation function in head and tail
            (back-to-indentation)
            (setq delta (- pos (point)))
            (backward-char)
@@ -399,11 +462,14 @@ to indent."
            (t
             (setq shift (pm--get-head-shift span))
             (pm--indent-line span)
+            (when (= (current-column) 0)
+              (setq shift (+ shift (oref submode :indent-offset))))
             (setq delta (- (point) (point-at-bol)))
             (beginning-of-line)
             (indent-to shift)
             (goto-char (+ (point) delta))))))
 
+;; fixme: This one is nowhere used?
 (defmethod pm/indent-line ((submode pm-config-multi-auto) &optional span)
   (pm/select-buffer submode span)
   (pm/indent-line pm/submode span))
