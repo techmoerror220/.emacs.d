@@ -27,6 +27,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 #+srcname: reftex-support
 #+begin_src emacs-lisp 
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
+  (add-hook 'pandoc-mode-hook 'turn-on-reftex)  ; with Pandoc mode
   (autoload 'reftex-mode     "reftex" "RefTeX Minor Mode" t)
   (autoload 'turn-on-reftex  "reftex" "RefTeX Minor Mode" nil)
   (autoload 'reftex-citation "reftex-cite" "Make citation" nil)
@@ -52,7 +53,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
   
   (add-hook 'org-mode-hook 'org-mode-reftex-setup)
   
-  ;; RefTeX formats for biblatex (not natbib)
+  ;; RefTeX formats for biblatex (not natbib), and for pandoc
   (setq reftex-cite-format
         '(
           (?\C-m . "\\cite[]{%l}")
@@ -61,6 +62,8 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
           (?p . "\\parencite{%l}")
           (?f . "\\footcite[][]{%l}")
           (?F . "\\fullcite[]{%l}")
+          (?P . "[@%l]")
+          (?T . "@%l [p. ]")
           (?x . "[]{%l}")
           (?X . "{%l}")
           ))
