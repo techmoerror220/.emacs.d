@@ -284,7 +284,7 @@ It's to the point now where I almost can't use git without magit.
 ** Interface with Ag ("The Silver Searcher")
 
 [[https://github.com/ggreer/the_silver_searcher][The Silver Searcher]] is a very fast, smart code search tool, similar to
-ack. Install it via homebrew.
+ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://github.com/Wilfred/ag.el/#agel][described here]].
 
 #+source: ag
 #+begin_src emacs-lisp 
