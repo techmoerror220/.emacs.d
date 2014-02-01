@@ -11,7 +11,7 @@ The following packages will be downloaded and installed.
 #+begin_src emacs-lisp
   (defvar starter-kit-packages (list 
                                 'ace-jump-mode
-                                'ack-and-a-half
+                                'ag
                                 'anti-zenburn-theme
                                 'auto-complete
                                 'browse-kill-ring

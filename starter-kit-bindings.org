@@ -281,27 +281,16 @@ It's to the point now where I almost can't use git without magit.
 #+resname:
 : magit-status
 
-** Rgrep
-Rgrep is infinitely useful in multi-file projects.
+** Interface with Ag ("The Silver Searcher")
 
-(see [[elisp:(describe-function 'rgrep)]])
+[[https://github.com/ggreer/the_silver_searcher][The Silver Searcher]] is a very fast, smart code search tool, similar to
+ack. Install it via homebrew.
 
-#+begin_src emacs-lisp
-  (define-key global-map "\C-x\C-r" 'rgrep)
-#+end_src
-
-** Interface with Ack
-Ack is "better than grep" and written in Perl. 
-
-#+source: ack
-#+begin_src emacs-lisp
-  (require 'ack-and-a-half)
-  ;; Create shorter aliases
-  (defalias 'ack 'ack-and-a-half)
-  (defalias 'ack-same 'ack-and-a-half-same)
-  (defalias 'ack-find-file 'ack-and-a-half-find-file)
-  (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
-  (define-key global-map "\C-x\C-a" 'ack) 
+#+source: ag
+#+begin_src emacs-lisp 
+  (require 'ag)
+  (define-key global-map "\C-x\C-a" 'ag) 
+  (define-key global-map "\C-x\C-r" 'ag-regexp)
 #+end_src
 
 ** Winner mode
