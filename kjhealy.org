@@ -2,7 +2,7 @@
 #+OPTIONS: toc:nil num:nil ^:nil
 
 * Starter Kit kjhealy
-This file contains very local customizations---ones that in some cases
+This file contains local customizations---ones that in some cases
 you will not be able to just drop in and use because, e.g., they
 involve references to particular files on my own machine. It's
 included here for completeness, and as and example of the kind of
@@ -69,16 +69,7 @@ Just maximize the frame. Not true fullscreen
   (global-set-key (kbd "C-c m") 'maximize-frame)  
 #+end_src
 
-**** Option 2
-Fullscreen toggle -- Only works with the (out-of-date)
-patched emacs build at =git://github.com/typester/emacs.git=.
-
-#+source: fullscreen-2
-#+begin_src emacs-lisp :tangle no
-  (global-set-key (kbd "C-c m") 'ns-toggle-fullscreen)
-#+end_src
-
-**** Option 3  
+**** Option 2  
 Fullscreen toggle using maxframe.el. 
 #+source: fullscreen-3
 #+begin_src emacs-lisp :tangle no
@@ -94,7 +85,7 @@ Fullscreen toggle using maxframe.el.
  (global-set-key (kbd "C-c f") 'my-toggle-fullscreen)    
 #+end_src
 
-**** Option 4
+**** Option 3
 For use with Yamamoto Mitsuharu's Carbon-patched Emacs. (This is
     what I use, but it requires you compile a custom version of Emacs provided by Mitsuharu.)
 
@@ -164,7 +155,6 @@ Quickly move to spots in the buffer.
   
 #+end_src
   
-
 ** Local LaTeX settings
 *** In-text Smart Quotes (XeLaTeX only)
     Redefine TeX-open-quote and TeX-close-quote to be smart quotes by default. Below, in the local org-mode settings, we'll also map the relevant function to a key we can use in org-mode, too. If you don't use XeLaTeX for processing all your =.tex= files, you should disable this option.

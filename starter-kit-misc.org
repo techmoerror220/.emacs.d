@@ -6,16 +6,6 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 * Starter Kit Misc
 Things that don't fit anywhere else.
 
-** Check Dependencies
-
-Determine whether required packages are installed. If not, use ELPA to
-install them. Other dependencies are provided by Emacs 24.
-#+begin_src emacs-lisp
-  (dolist (package '(magit))
-    (unless (package-installed-p package)
-      (package-install package)))
-#+end_src
-
 ** Color Themes
 Emacs 24 introduces a streamlined theming system that replaces an
 older, messier one. The Starter Kit comes with Ethan Schoonover's
@@ -66,13 +56,6 @@ loading the =zenburn= and =anti-zenburn= themes.
         xterm-mouse-mode t
         save-place-file (concat dotfiles-dir "places"))
 #+end_src
-
-** Nxhtml -- utilities for web development
-[[http://ourcomments.org/Emacs/nXhtml/doc/nxhtml.html][Nxhtml]] is a large package of utilities for web development and for
-embedding multiple major modes in a single buffer.
-
-Nxhtml is not installed in this version of the starter-kit by default,
-for information on installing nxhtml see [[http://www.emacswiki.org/emacs/NxhtmlMode][EmacsWiki-Nxhtml]].
 
 ** Set browser
 Set this to whatever browser you use e.g...
