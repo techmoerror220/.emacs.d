@@ -10,13 +10,17 @@ The following packages will be downloaded and installed.
 
 #+begin_src emacs-lisp
   (defvar starter-kit-packages (list 
-                                'ace-jump-mode
+                                'ace-jump-mode                                
                                 'ag
                                 'anti-zenburn-theme
                                 'auto-complete
+                                'ac-emmet
+                                'ac-etags
+                                'ac-ispell
                                 'browse-kill-ring
                                 ;; 'cdlatex
                                 'css-mode
+                                'emmet-mode
                                 'exec-path-from-shell
                                 'expand-region
                                 ;; 'gist
