@@ -34,6 +34,7 @@ The following packages will be downloaded and installed.
                                 'maxframe
                                 'multiple-cursors
                                 'pandoc-mode
+                                'polymode
                                 'powerline
                                 'python-mode
                                 'ipython
