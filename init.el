@@ -19,6 +19,10 @@
 ;; Common Lisp compatability
 (require 'cl-lib)
 
+;; Temporary workaround for eshell bug in 24.3.1
+;; http://zpcat.blogspot.com/2013/08/configure-eshell-mode-after-upgrade.html
+(require 'esh-mode)
+
 ;; Package Locations
 (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
     (let* ((my-lisp-dir "~/.emacs.d/")
