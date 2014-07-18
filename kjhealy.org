@@ -532,17 +532,17 @@ Some last tweaks.
 #+begin_src emacs-lisp
   ;; Line-spacing tweak 
   (setq-default line-spacing 1)
-  
+
   ;; minimize fringe
   (setq-default indicate-empty-lines nil)
-  
+
   ;; Add keybindings for commenting regions of text
   (global-set-key (kbd "C-c ;") 'comment-or-uncomment-region)
   (global-set-key (kbd "M-'") 'comment-or-uncomment-region)
-  
+
   ;; Base dir
   (cd "~/")
-  
+
   ;; custom variables kludge. Why can't I get these to work via setq?
   (custom-set-variables
   ;; custom-set-variables was added by Custom.
