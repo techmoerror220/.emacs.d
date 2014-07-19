@@ -250,6 +250,14 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
 #+begin_src emacs-lisp
   (require 'poly-R)
   (require 'poly-markdown)
+  ;;; polymode + markdown
+  (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
+
+  ;;; polymode + R
+  (add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
+  (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
+  (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
+
 #+end_src
 
 ** Local iBuffer Settings
