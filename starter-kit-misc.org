@@ -65,7 +65,6 @@ Thin window dividers and no scroll bars. Toggle with `C-c C-s`.
   (minimal-mode)
 #+end_src
 
-
 ** Set browser
 Set this to whatever browser you use e.g...
 : ;; (setq browse-url-browser-function 'browse-url-firefox)
@@ -101,6 +100,16 @@ If launching Emacs as in windowing system, show the menu. If launching in a tty/
 #+begin_emacs-lisp 
 (recentf-mode 1)
 #+end_emacs-lisp
+** Save place last visited in buffer
+
+#+srcname: starter-kit-saveplace
+#+begin_src emacs-lisp
+
+  (require 'saveplace)
+  (setq-default save-place t)
+
+#+end_src
+
 
 ** ido mode
 ido-mode is like magic pixie dust!

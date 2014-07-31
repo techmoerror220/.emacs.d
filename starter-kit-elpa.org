@@ -41,7 +41,6 @@ The following packages will be downloaded and installed.
                                 'jedi
                                 'redo+
                                 'ruby-mode
-                                'saveplace
                                 'smartparens 
                                 'smex
                                 'solarized-theme
