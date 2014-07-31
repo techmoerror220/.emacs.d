@@ -17,8 +17,8 @@ The following packages will be downloaded and installed.
                                 'ac-emmet
                                 'ac-etags
                                 'ac-ispell
+                                'org-ac
                                 'browse-kill-ring
-                                ;; 'cdlatex
                                 'css-mode
                                 'emmet-mode
                                 'exec-path-from-shell
@@ -41,6 +41,7 @@ The following packages will be downloaded and installed.
                                 'jedi
                                 'redo+
                                 'ruby-mode
+                                'saveplace
                                 'smartparens 
                                 'smex
                                 'solarized-theme
@@ -49,7 +50,7 @@ The following packages will be downloaded and installed.
                                 'typopunct
                                 'visual-regexp
                                 'yaml-mode
-                                'yasnippet
+                                ;;'yasnippet
                                 'zenburn-theme
                                 'auctex
                                 'ess

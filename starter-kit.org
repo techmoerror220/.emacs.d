@@ -420,7 +420,7 @@ language.
 Located in [[file:starter-kit-yasnippet.org][starter-kit-yasnippet]].
 
 #+begin_src emacs-lisp 
-  (starter-kit-load "starter-kit-yasnippet.org")    
+;;  (starter-kit-load "starter-kit-yasnippet.org")    
 #+end_src 
 
 
