@@ -1,6 +1,6 @@
-* Starter kit yasnippet and autocomplete
+* Starter kit yasnippet
 
-Yasnippet is a snippet expansion system for Emacs. It uses short phrases and the tab key to trigger the insertion of frequently-used snippets of code or text in your document. Autocomplete mode has dynamic suggestions for completetion of text in a buffer. Here we set them up to work properly together. 
+Yasnippet is a snippet expansion system for Emacs. It uses short phrases and the tab key to trigger the insertion of frequently-used snippets of code or text in your document. 
 
 ** Load the yasnippet bundle
 #+begin_src emacs-lisp :tangle yes
@@ -21,7 +21,7 @@ Load the snippets defined in the package's =./snippets/= directory, and local sn
  
 #+end_src
 
-** Load autocomplete
+** Load Autocomplete
 #+begin_src emacs-lisp 
   (require 'auto-complete)
   (require 'auto-complete-config)
@@ -34,10 +34,9 @@ Load the snippets defined in the package's =./snippets/= directory, and local sn
   (ac-flyspell-workaround)
   (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
   (define-key ac-completing-map (kbd "C-c h") 'ac-quick-help)  
-    
 #+end_src 
 
 #+source: message-line
 #+begin_src emacs-lisp
-  (message "Starter Kit Yasnippet loaded.")
+  (message "Starter Kit Completion loaded.")
 #+end_src

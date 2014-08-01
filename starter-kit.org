@@ -411,18 +411,18 @@ Registers for jumping to commonly used files in [[file:starter-kit-registers.org
 (starter-kit-load "starter-kit-registers.org")
 #+end_src
 
+*** Starter kit completion and snippets
+Located in [[file:starter-kit-completion.org][starter-kit-completion]].
+
+#+begin_src emacs-lisp 
+  (starter-kit-load "starter-kit-completion.org")    
+#+end_src 
+
+
 ** Language/Mode Specific Files
 These sections pertain to specific languages or modes.  Feel free to
 turn off these sections if you don't plan on using the related mode or
 language.
-
-*** Starter kit yasnippet
-Located in [[file:starter-kit-yasnippet.org][starter-kit-yasnippet]].
-
-#+begin_src emacs-lisp 
-;;  (starter-kit-load "starter-kit-yasnippet.org")    
-#+end_src 
-
 
 *** Starter kit Org-mode
 Located in [[file:starter-kit-org.org][starter-kit-org]].

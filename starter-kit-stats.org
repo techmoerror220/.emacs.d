@@ -12,7 +12,6 @@ This file provides settings for ESS and R.
 ** Load ESS 
 #+src-name: ess-mode
 #+begin_src emacs-lisp
-  (require 'auto-complete)
   (require 'ess-site)
 #+end_src
 ** Coding Hooks
