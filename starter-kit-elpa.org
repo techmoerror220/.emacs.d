@@ -10,17 +10,22 @@ The following packages will be downloaded and installed.
 
 #+begin_src emacs-lisp
   (defvar starter-kit-packages (list 
-                                'ack-and-a-half
+                                'ace-jump-mode                                
+                                'ag
+                                'anti-zenburn-theme
                                 'auto-complete
-                                'autopair
+                                'ac-emmet
+                                'ac-etags
+                                'ac-ispell
+                                'org-ac
                                 'browse-kill-ring
-                                ;; 'cdlatex
                                 'css-mode
+                                'emmet-mode
                                 'exec-path-from-shell
                                 'expand-region
                                 ;; 'gist
                                 'hl-line+
-                                ;; 'idle-highlight
+                                'idle-highlight-mode
                                 'inf-ruby
                                 'latex-pretty-symbols
                                 ;; 'mac-key-mode
@@ -29,20 +34,23 @@ The following packages will be downloaded and installed.
                                 'maxframe
                                 'multiple-cursors
                                 'pandoc-mode
-                                'paredit
+                                'polymode
+                                ;;'pos-tip
+                                'powerline
                                 'python-mode
                                 'ipython
                                 'jedi
                                 'redo+
                                 'ruby-mode
-                                's
+                                'smartparens 
                                 'smex
                                 'solarized-theme
                                 'tango-2-theme
                                 'textmate
                                 'typopunct
+                                'visual-regexp
                                 'yaml-mode
-                                'yasnippet
+                                ;;'yasnippet
                                 'zenburn-theme
                                 'auctex
                                 'ess
@@ -86,15 +94,12 @@ On your first run, this should pull in all the base packages.
 #+end_src
 
 Make sure the PATH variable is set properly. (Uses exec-path-from-shell package.)
-#+source: fix-path
+#+source: fix-path 
 #+begin_src emacs-lisp
   (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 #+end_src
-
-
-Workaround for an ELPA bug that people are reporting but I've been
-unable to reproduce:
-#+begin_src emacs-lisp :tangle no
-(autoload 'paredit-mode "paredit")
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit ELPA loaded.")
 #+end_src

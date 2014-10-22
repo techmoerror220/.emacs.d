@@ -7,7 +7,20 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 Support for the Python programming language.
 
+** Check Dependencies
+
+Determine whether required packages are installed. If not, use ELPA to
+install them.
+#+begin_src emacs-lisp
+  (dolist (package '(python-mode ipython))
+    (unless (package-installed-p package)
+      (package-install package)))
+#+end_src
+
 ** Use Python's python-mode.el instead of Emacs' python.el
+   :PROPERTIES:
+   :CUSTOM_ID: python
+   :END:
 Replace the Python mode that comes with Emacs by the Python mode
 supplied by the Python distribution itself.
 #+begin_src emacs-lisp
@@ -32,12 +45,18 @@ supplied by the Python distribution itself.
     
 #+end_src
 
-** Jedi documentation browser and auto-completion
-If you use the Jedi auto-completion method, change the =:tangle= flag below to =yes=. It's turned off by default because this is a plugin to a documentation system you have to install separately. See [[https://github.com/davidhalter/jedi][The Jedi Homepage]] for details.
-
-#+source: jedi-plugin
-#+begin_src emacs-lisp :tangle no
-  (setq jedi:setup-keys t)
-  (add-hook 'python-mode-hook 'jedi:setup)  
+** Use Cython mode
+   :PROPERTIES:
+   :CUSTOM_ID: cython
+   :END:
+#+begin_src emacs-lisp
+  (when (require 'cython-mode nil 'no-error)
+    (add-to-list 'auto-mode-alist '("\\.pyx\\'" . cython-mode))
+    (add-to-list 'auto-mode-alist '("\\.pxd\\'" . cython-mode))
+    (add-to-list 'auto-mode-alist '("\\.pxi\\'" . cython-mode)))
 #+end_src
 
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Python loaded.")
+#+end_src

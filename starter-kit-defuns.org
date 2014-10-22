@@ -91,12 +91,12 @@ a lambda doesn't already exist in the list.
     (auto-fill-mode t))
   
   (defun turn-on-idle-highlight-mode ()
-    (idle-highlight t))
+    (idle-highlight-mode t))
   
   (defun turn-on-hl-line-mode ()
-        (require 'hl-line+)
-        (toggle-hl-line-when-idle 1)
-        (global-hl-line-mode nil))
+    (require 'hl-line+)
+    (global-hl-line-mode nil)
+    (toggle-hl-line-when-idle 1))
       
   (defun turn-on-save-place-mode ()
     (setq save-place t))
@@ -115,14 +115,14 @@ a lambda doesn't already exist in the list.
 (add-hook 'starter-kit-coding-hook 'local-comment-auto-fill)
 #+end_src
 
-#+srcname: starter-kit-add-hl-line-mode
-#+begin_src emacs-lisp :tangle no
-(add-hook 'starter-kit-coding-hook 'turn-on-hl-line-mode)
-#+end_src
-
 #+srcname: starter-kit-add-pretty-lambdas
 #+begin_src emacs-lisp
 (add-hook 'starter-kit-coding-hook 'starter-kit-pretty-lambdas)
+#+end_src
+
+#+srcname: starter-kit-add-hl-line-mode
+#+begin_src emacs-lisp :tangle no
+(add-hook 'starter-kit-coding-hook 'turn-on-hl-line-mode)
 #+end_src
 
 #+srcname: starter-kit-add-idle-highlight-mode
@@ -222,3 +222,8 @@ Useful when a large block of text is required (e.g. for testing)
           "culpa qui officia deserunt mollit anim id est laborum."))
 #+end_src
 
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Defuns loaded.")
+#+end_src

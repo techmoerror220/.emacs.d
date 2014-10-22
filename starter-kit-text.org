@@ -7,28 +7,6 @@ This file provides settings for text-editing modes and formats, including
 Markdown and Pandoc, as well as spellchecking and line-wrapping.
 
 * Text Management and Appearance
-** Word-count
-    Live word count in status bar, via wc. Unfortunately there seems
-    to be a bug -- it interacts badly with the smooth scrolling: when
-    you get to the bottom of the buffer it wraps the pointer up to the
-    middle of the screen without moving the text with it, so you end
-    up typing inside the text that's already there. As a result, it is
-    turned off and has been replaced with a simpler version instead,
-    which gives you a straight count via M-x wc.
-
-#+srcname: word-count
-#+begin_src emacs-lisp
-    ;; (autoload 'word-count-mode "word-count"
-    ;; "Minor mode to count words." t nil)
-    ;; (dolist (hook '(org-mode-hook
-    ;; markdown-mode-hook
-    ;; TeX-mode-hook
-    ;; text-mode-hook))
-    ;; (add-hook hook (lambda () (word-count-mode 1))))
-
-    (require 'wc)
-#+end_src 
-
 ** Line wrapping and position
     Sane line wrapping and scrolling for long documents and
     papers. Plus a function for removing any hard-returns in a
@@ -67,7 +45,7 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
 #+end_src
 
 ** Spelling
-    Use cocoAspell instead of ispell. Turned off here because it loads
+    Use aspell instead of ispell. Turned off here because it loads
     too late. I had to put it in [[file:starter-kit-aspell.org][starter-kit-aspell.org]].
 #+srcname: spelling-mode
 #+begin_src emacs-lisp :tangle no
@@ -75,8 +53,7 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
       ispell-dictionary "english"
       ispell-dictionary-alist
       (let ((default '("[A-Za-z]" "[^A-Za-z]" "[']" nil
-                       ("-B" "-d" "english" "--dict-dir"
-                        "/Library/Application Support/cocoAspell/aspell6-en-6.0-0")
+                       ("-B" "-d" "english")
                        nil iso-8859-1)))
         `((nil ,@default)
           ("english" ,@default))))
@@ -107,64 +84,48 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
     ("verbatim\\*?"        . "\\\\end[ \t\n]*{[ \t\n]*verbatim\\*?[ \t\n]*}"))))
 #+end_src
 
-** AutoPair Mode
-    TextMate-like autopairing of quotes and parentheses. Trying out
-    instead of Skeleton Mode. 
-#+srcname: autopair
+** Smartparens Mode
+   Smart autopairing of quotes and parentheses. 
+#+srcname: smartparens
 #+begin_src emacs-lisp 
-  (require 'autopair)
-  (autopair-global-mode) ;; enable autopair in all buffers 
-  (setq autopair-autowrap t)
+  (smartparens-global-mode 1)
+  (require 'smartparens-config)
 #+end_src
-
-** Skeleton mode
-   Turned off by default. Enable skeleton mode in ESS for paired insertion
-#+srcname: skeleton-mode
-#+begin_src emacs-lisp :tangle no
-    (require 'skeleton)
-    (setq skeleton-pair t)
-    (defvar my-skeleton-pair-alist
-    '((?\) . ?\()
-    (?\] . ?\[)
-    (?} . ?{)
-    (?" . ?")))
-    
-    (defun my-skeleton-pair-end (arg)
-    "Skip the char if it is an ending, otherwise insert it."
-    (interactive "*p")
-    (let ((char last-command-char))
-    (if (and (assq char my-skeleton-pair-alist)
-    (eq char (following-char)))
-    (forward-char)
-    (self-insert-command (prefix-numeric-value arg)))))
-
-    (dolist (pair my-skeleton-pair-alist)
-    (global-set-key (char-to-string (first pair))
-    'my-skeleton-pair-end)
-    ;; If the char for begin and end is the same,
-    ;; use the original skeleton
-    (global-set-key (char-to-string (rest pair))
-    'skeleton-pair-insert-maybe))
-#+end_src
-
 
 ** Markdown 
 Markdown mode support. 
 
 #+srcname: markdown-mode
 #+begin_src emacs-lisp
-   (autoload 'markdown-mode "markdown-mode.el"
-   "Major mode for editing Markdown files" t)
-   (setq auto-mode-alist
-   (cons '("\\.Markdown" . markdown-mode) auto-mode-alist)
-   )
-   (setq auto-mode-alist
-   (cons '("\\.MarkDown" . markdown-mode) auto-mode-alist)
-   )
-   (setq auto-mode-alist
-   (cons '("\\.markdown" . markdown-mode) auto-mode-alist)
-   )
-   (setq auto-mode-alist
-   (cons '("\\.md" . markdown-mode) auto-mode-alist)
-   )
+     (autoload 'markdown-mode "markdown-mode.el"
+     "Major mode for editing Markdown files" t)
+     (setq auto-mode-alist
+     (cons '("\\.Markdown" . markdown-mode) auto-mode-alist)
+     )
+     (setq auto-mode-alist
+     (cons '("\\.MarkDown" . markdown-mode) auto-mode-alist)
+     )
+     (setq auto-mode-alist
+     (cons '("\\.markdown" . markdown-mode) auto-mode-alist)
+     )
+     (setq auto-mode-alist
+     (cons '("\\.md" . markdown-mode) auto-mode-alist)
+     )
+  
+  ;; This function will open Marked.app and monitor the current markdown document
+  ;; for anything changes.  In other words, it will live reload and convert the
+  ;; markdown documment
+  (defun markdown-preview-file ()
+    "run Marked on the current file and revert the buffer"
+    (interactive)
+    (shell-command
+     (format "open -a /Applications/Marked.app %s"
+             (shell-quote-argument (buffer-file-name))))
+    )  
+  (global-set-key "\C-co" 'markdown-preview-file) 
+#+end_src
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Text loaded.")
 #+end_src

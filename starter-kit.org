@@ -226,19 +226,6 @@ This section contains all code implementing the Emacs Starter Kit.
 
 ** Starter kit basics
 
-*** Load path etc.
-
-#+srcname: starter-kit-load-paths
-#+begin_src emacs-lisp 
-  (setq dotfiles-dir (file-name-directory
-                      (or load-file-name (buffer-file-name))))
-  
-  (add-to-list 'load-path dotfiles-dir)
-  (setq autoload-file (concat dotfiles-dir "loaddefs.el"))
-  (setq package-user-dir (concat dotfiles-dir "elpa"))
-  (setq custom-file (concat dotfiles-dir "custom.el"))
-#+end_src
-
 *** Ubiquitous Packages
 
 These should be loaded on startup rather than autoloaded on demand
@@ -303,10 +290,12 @@ Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager.
 #+begin_src emacs-lisp 
   (require 'package)
   (setq package-archives
-        '(("gnu"         . "http://elpa.gnu.org/packages/")
+            '(
           ("org"         . "http://orgmode.org/elpa/")
+              ("gnu"         . "http://elpa.gnu.org/packages/")
           ("melpa"   . "http://melpa.milkbox.net/packages/")
           ("marmalade" . "http://marmalade-repo.org/packages/")))
+  
 
 ;;; Add support to package.el for pre-filtering available packages
 (defvar package-filter-function nil
@@ -316,10 +305,15 @@ The function is called with the arguments PACKAGE VERSION ARCHIVE, where
 PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 ARCHIVE is the string name of the package archive.")
 
+  
 (defadvice package--add-to-archive-contents
+  
   (around filter-packages (package archive) activate)
+  
   "Add filtering of available packages using `package-filter-function', if non-nil."
+  
   (when (or (null package-filter-function)
+  
 (funcall package-filter-function
 	 (car package)
 	 (funcall (if (fboundp 'package-desc-version)
@@ -330,7 +324,7 @@ ARCHIVE is the string name of the package archive.")
     ad-do-it))
 
 (defvar melpa-exclude-packages
-  '(slime)
+      '(slime magit)
   "Don't install Melpa versions of these packages.")
 
 ;; Don't take Melpa versions of certain packages
@@ -417,18 +411,18 @@ Registers for jumping to commonly used files in [[file:starter-kit-registers.org
 (starter-kit-load "starter-kit-registers.org")
 #+end_src
 
+*** Starter kit completion and snippets
+Located in [[file:starter-kit-completion.org][starter-kit-completion]].
+
+#+begin_src emacs-lisp 
+  (starter-kit-load "starter-kit-completion.org")    
+#+end_src 
+
+
 ** Language/Mode Specific Files
 These sections pertain to specific languages or modes.  Feel free to
 turn off these sections if you don't plan on using the related mode or
 language.
-
-*** Starter kit yasnippet
-Located in [[file:starter-kit-yasnippet.org][starter-kit-yasnippet]].
-
-#+begin_src emacs-lisp 
-  (starter-kit-load "starter-kit-yasnippet.org")    
-#+end_src 
-
 
 *** Starter kit Org-mode
 Located in [[file:starter-kit-org.org][starter-kit-org]].
@@ -622,3 +616,8 @@ uses), the problem most likely resides in your local setup.
 [2] The emacs starter kit uses [[http://orgmode.org/worg/org-contrib/babel/][org-babel]] to load embedded elisp code
 directly from [[http://orgmode.org/][Org Mode]] documents.
 
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit main file loaded.")
+#+end_src

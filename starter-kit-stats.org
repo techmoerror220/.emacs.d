@@ -8,23 +8,25 @@ This file provides settings for ESS and R.
 * R and ESS
    Load ESS: Emacs Speaks Statistics, and several further tweaks for
  R. 
-
+ 
 ** Load ESS 
 #+src-name: ess-mode
 #+begin_src emacs-lisp
- (require 'ess-site)
+  (require 'ess-site)
 #+end_src
 ** Coding Hooks
 #+source: ide-ess
 #+begin_src emacs-lisp
   (add-hook 'ess-mode-hook 'run-starter-kit-coding-hook)
+  (add-hook 'ess-R-post-run-hook 'smartparens-mode)
 #+end_src
 
 ** Define Rnw-mode and make LaTeX aware of it. 
 #+srcname: misc-r
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (add-to-list 'auto-mode-alist '("\\.Rnw\\'" . Rnw-mode))
 (add-to-list 'auto-mode-alist '("\\.Snw\\'" . Rnw-mode))
+(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . Rnw-mode))
 
 ;; Make TeX and RefTex aware of Snw and Rnw files
 (setq reftex-file-extensions
@@ -44,6 +46,12 @@ This file provides settings for ESS and R.
 	    (setq TeX-command-default "Sweave")))
 
 
+#+end_src
+
+** Use Knitr to process Sweave documents
+#+source: knitr-swv
+#+begin_src emacs-lisp
+  (setq ess-swv-processor "'knitr")
 #+end_src
  
 ** Make shift-enter to a lot in ESS.
@@ -90,144 +98,11 @@ This file provides settings for ESS and R.
   (require 'ess-site)
 #+end_src
 
-** R-autoyas
-   Function completion. Conflicts with autocomplete.
-#+begin_src emacs_lisp :tangle no
-  (require 'r-autoyas)
-  (add hook 'ess-mode-hook 'r-autoyas-ess-activate)
-#+end_src
-** R-object tooltips
-Taken from http://blogisticreflections.wordpress.com/2009/10/01/r-object-tooltips-in-ess/
-#+begin_quote 
- I have defined a function, ess-R-object-tooltip, that when
- invoked, will return a tooltip with some information about
- the object at point.  The information returned is
- determined by which R function is called.  This is controlled
- by an alist, called ess-R-object-tooltip-alist.  The default is
- given below.  The keys are the classes of R object that will
- use the associated function.  For example, when the function
- is called while point is on a factor object, a table of that
- factor will be shown in the tooltip.  The objects must of course
- exist in the associated inferior R process for this to work.
- The special key "other" in the alist defines which function
- to call when the class is not mached in the alist.  By default,
- the str function is called, which is actually a fairly useful
- default for data.frame and function objects.
-#+end_quote
+** Uniquify Buffer Names
+This is useful for when you have buffers with many similar names, as when there are various open files from different folders named =analysis.R= or similar. 
 
-
-#+srcname: r-object-tooltips
+#+source: uniquify
 #+begin_src emacs-lisp
-;; the alist
-(setq ess-R-object-tooltip-alist
-      '((numeric    . "summary")
-        (factor     . "table")
-        (integer    . "summary")
-        (lm         . "summary")
-        (other      . "str")))
-
-(defun ess-R-object-tooltip ()
-  "Get info for object at point, and display it in a tooltip."
-  (interactive)
-  (let ((objname (current-word))
-        (curbuf (current-buffer))
-        (tmpbuf (get-buffer-create "**ess-R-object-tooltip**")))
-    (if objname
-        (progn
-          (ess-command (concat "class(" objname ")\n")  tmpbuf )
-          (set-buffer tmpbuf)
-          (let ((bs (buffer-string)))
-            (if (not(string-match "\(object .* not found\)\|unexpected" bs))
-                (let* ((objcls (buffer-substring
-                                (+ 2 (string-match "\".*\"" bs))
-                                (- (point-max) 2)))
-                       (myfun (cdr(assoc-string objcls
-                                                ess-R-object-tooltip-alist))))
-                  (progn
-                    (if (eq myfun nil)
-                        (setq myfun
-                              (cdr(assoc-string "other"
-                                                ess-R-object-tooltip-alist))))
-                    (ess-command (concat myfun "(" objname ")\n") tmpbuf)
-                    (let ((bs (buffer-string)))
-                      (progn
-                        (set-buffer curbuf)
-                        (tooltip-show-at-point bs 0 30)))))))))
-    (kill-buffer tmpbuf)))
-
-;; default key map
-(define-key ess-mode-map "\C-c\C-g" 'ess-R-object-tooltip)
-(provide 'ess-R-object-tooltip)
-#+end_src
-
-** Make ESS support cacheSweave() library in R
-ESS comes with support for Sweave, e.g.,: M-n s M-n P from the Rnw
-file. But we also want to be able to conveniently use the
-cacheSweave() library, which uses a different driver. So we need a
-separate command for that. The following solution comes from [[http://blog.nguyenvq.com/2009/05/14/editingadding-on-to-sweave-features-in-ess/][Vinh
-Nguyen]] and allows for cacheSweave() compilation with M-n w. 
-
-#+source: ess-cacheSweave
-#+begin_src emacs-lisp :tangle no
-
-  
-(defun ess-swv-run-in-R2 (cmd &optional choose-process)
-  "Run \\[cmd] on the current .Rnw file.  Utility function not called by user."
-  (let* ((rnw-buf (current-buffer)))
-    (if choose-process ;; previous behavior
-    (ess-force-buffer-current "R process to load into: ")
-      ;; else
-      (update-ess-process-name-list)
-      (cond ((= 0 (length ess-process-name-list))
-         (message "no ESS processes running; starting R")
-         (sit-for 1); so the user notices before the next msgs/prompt
-         (R)
-         (set-buffer rnw-buf)
-         )
-        ((not (string= "R" (ess-make-buffer-current))); e.g. Splus, need R
-         (ess-force-buffer-current "R process to load into: "))
-       ))
-
-    (save-excursion
-      (ess-execute (format "require(tools)")) ;; Make sure tools is loaded.
-      (basic-save-buffer); do not Sweave/Stangle old version of file !
-      (let* ((sprocess (get-ess-process ess-current-process-name))
-         (sbuffer (process-buffer sprocess))
-         (rnw-file (buffer-file-name))
-         (Rnw-dir (file-name-directory rnw-file))
-         (Sw-cmd
-          (format
-           "local({..od <- getwd(); setwd(%S); %s(%S, cacheSweaveDriver()); setwd(..od) })"
-           Rnw-dir cmd rnw-file))
-         )
-    (message "%s()ing %S" cmd rnw-file)
-    (ess-execute Sw-cmd 'buffer nil nil)
-    (switch-to-buffer rnw-buf)
-    (ess-show-buffer (buffer-name sbuffer) nil)))))
-
-
-(defun ess-swv-weave2 ()
-   "Run Sweave on the current .Rnw file."
-   (interactive)
-   (ess-swv-run-in-R2 "Sweave"))
-
-(define-key noweb-minor-mode-map "\M-nw" 'ess-swv-weave2)
-
-#+end_src
-
-** ESS Tracebug: A debugger for your R code
-This is an emacs package for interactive debugging and error tracing
-in ESS. More details on [[http://code.google.com/p/ess-tracebug/][the ess-tracebug project]] can be found on its
-[[http://code.google.com/p/ess-tracebug/][Google Code page]].
-
-#+source: ess-tracebug
-#+begin_src emacs-lisp
-  (require 'ess-tracebug)
-  (add-hook 'ess-post-run-hook 'ess-tracebug t)
-  (define-key ess-mode-map "\M-]" 'next-error)
-  (define-key ess-mode-map "\M-[" 'previous-error)
-  (define-key inferior-ess-mode-map "\M-]" 'next-error-no-select)
-  (define-key inferior-ess-mode-map "\M-[" 'previous-error-no-select)
-  (define-key compilation-minor-mode-map [(?n)] 'next-error-no-select)
-  (define-key compilation-minor-mode-map [(?p)] 'previous-error-no-select)
+  (require 'uniquify)
+  (setq uniquify-buffer-name-style 'post-forward-angle-brackets)  
 #+end_src

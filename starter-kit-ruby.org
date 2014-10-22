@@ -8,15 +8,15 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 Support for the [[http://www.ruby-lang.org/en/][Ruby]] dynamic, open-source programming language.
 
 #+begin_src emacs-lisp
-(eval-after-load 'ruby-mode
-  '(progn
-     ;; work around possible elpa bug
-     (ignore-errors (require 'ruby-compilation))
-     (setq ruby-use-encoding-map nil)
-     (add-hook 'ruby-mode-hook 'inf-ruby-keys)
-     (define-key ruby-mode-map (kbd "RET") 'reindent-then-newline-and-indent)
-     (define-key ruby-mode-map (kbd "C-M-h") 'backward-kill-word)
-     (define-key ruby-mode-map (kbd "C-c l") "lambda")))
+  (eval-after-load 'ruby-mode
+    '(progn
+       ;; work around possible elpa bug
+       (ignore-errors (require 'ruby-compilation))
+       (setq ruby-use-encoding-map nil)
+       (add-hook 'ruby-mode-hook 'inf-ruby-keys)
+       (define-key ruby-mode-map (kbd "RET") 'reindent-then-newline-and-indent)
+       (define-key ruby-mode-map (kbd "C-M-h") 'backward-kill-word)
+       (define-key ruby-mode-map (kbd "C-c l") "lambda")))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -75,9 +75,9 @@ Clear the compilation buffer between test runs.
 (add-hook 'ruby-mode-hook 'run-starter-kit-coding-hook)
 #+end_src
 
-#+begin_emacs-lisp
-;; (add-hook 'ruby-mode-hook 'idle-highlight)
-#+end_emacs-lisp
+#+begin_src emacs-lisp
+  (add-hook 'ruby-mode-hook 'idle-highlight)
+#+end_src
 
 ** Flymake
 
@@ -117,6 +117,10 @@ See [[http://rinari.rubyforge.org/][rinari.rubyforge]] for more information on r
 
 #+begin_src emacs-lisp
 (setq rinari-major-modes
-      (list 'mumamo-after-change-major-mode-hook 'dired-mode-hook 'ruby-mode-hook
-	    'css-mode-hook 'yaml-mode-hook 'javascript-mode-hook))
+      (list 'dired-mode 'ruby-mode 'css-mode 'yaml-mode 'javascript-mode))
+#+end_src
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Ruby loaded.")
 #+end_src

@@ -59,41 +59,29 @@ Key Bindings.
 (define-key global-map (kbd "C--") 'text-scale-decrease)
 #+end_src
 
-** Use regex searches by default.
+** Use Regex searches by default, and use Visual Regexp to construct them.
+Building regular expressions in Emacs is kind of a pain.  The visual-regexp pacakge is a very convenient way to dynamically build regular expressions for searching and replacing. You enter a minibuffer that lets you type the regexp and the prospective matches to the expression you type are highlighted in the main buffer. =M-x vr/replace= gives you global replacement and =M-x vr/query-replace= lets you decide to replace per match. Visual regexp replace is bound to =C-c r= and visual =query-replace-regexp= to =C-c q=. 
+
 #+begin_src emacs-lisp 
-(global-set-key (kbd "C-s") 'isearch-forward-regexp)
-(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s") 'isearch-forward)
-(global-set-key (kbd "C-M-r") 'isearch-backward)
+  (global-set-key (kbd "C-s") 'isearch-forward-regexp)
+  (global-set-key (kbd "\C-r") 'isearch-backward-regexp)
+  (global-set-key (kbd "C-M-s") 'isearch-forward)
+  (global-set-key (kbd "C-M-r") 'isearch-backward)
+  
+  (require 'visual-regexp)
+  (define-key global-map (kbd "C-c r") 'vr/replace)
+  (define-key global-map (kbd "C-c q") 'vr/query-replace)
 #+end_src
-
-** Convenience Function to search for regexps build with re-builder
-   Re-Builder (=M-x regexp-builder=) is a very convenient way to dynamically build regular expressions for searching and replacing. You enter a minibuffer that lets you type the regexp and the prospective matches to the expression you type are highlighted in the main buffer. In the re-builder minibuffer, =C-c C-w= copies the current expression to the kill-ring (clipboard) and =C-c C-q= quits. The expression is copied as a string, which is useful if you're writing lisp but it will not work if you copy it in to =C-M-%= or =query-replace-regexp=. But usually this is exactly what I want to do---take the expression I've built in re-buider and immediately use it to search and replace in a buffer. With the function below, you can do this. After you've built the expression and copied it wtih =C-c C-w=, quit re-bulder and do =M-x reb-query-replace=. 
-
-#+source: rexep-copy
-#+begin_src emacs-lisp
-  (defun reb-query-replace (to-string)
-      "Replace current RE from point with `query-replace-regexp'."
-      (interactive
-       (progn (barf-if-buffer-read-only)
-              (list (query-replace-read-to (reb-target-binding reb-regexp)
-                                           "Query replace"  t))))
-      (with-current-buffer reb-target-buffer
-        (query-replace-regexp (reb-target-binding reb-regexp) to-string)))
-
-#+end_src
-
 
 ** File finding
 #+begin_src emacs-lisp 
-(global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
-(global-set-key (kbd "C-x C-M-f") 'find-file-in-project)
-(global-set-key (kbd "C-x f") 'recentf-ido-find-file)
-(global-set-key (kbd "C-x C-p") 'find-file-at-point)
-(global-set-key (kbd "C-c y") 'bury-buffer)
-(global-set-key (kbd "C-c r") 'revert-buffer)
-(global-set-key (kbd "M-`") 'file-cache-minibuffer-complete)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
+  (global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
+  (global-set-key (kbd "C-x C-p") 'find-file-at-point)
+  (global-set-key (kbd "C-c y") 'bury-buffer)
+  (global-set-key (kbd "C-c r") 'revert-buffer)
+  (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (global-set-key (kbd "C-x f") 'recentf-ido-find-file)  
 #+end_src
 
 ** Browse the Kill Ring
@@ -236,7 +224,6 @@ Use a little bit of Mac keys, but not all of them.
     
 #+end_src
 
-
 ** Fetch the contents at a URL, display it raw.
 #+begin_src emacs-lisp 
 (global-set-key (kbd "C-x h") 'view-url)
@@ -281,42 +268,17 @@ globally for later insertion into an Org-mode buffer.  See
 #+begin_src emacs-lisp
 (define-key global-map "\C-cl" 'org-store-link)
 #+end_src
-** Magit
-It's to the point now where I almost can't use git without magit.
-- [[http://zagadka.vm.bytemark.co.uk/magit/][Homepage]]
-- [[http://zagadka.vm.bytemark.co.uk/magit/magit.html][Manual]]
-- [[http://groups.google.com/group/magit/][Mailing list]]
-#+begin_src emacs-lisp
-  (require 'magit)
-  (define-key global-map "\M-\C-g" 'magit-status)
+** Interface with Ag ("The Silver Searcher")
+
+[[https://github.com/ggreer/the_silver_searcher][The Silver Searcher]] is a very fast, smart code search tool, similar to
+ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://github.com/Wilfred/ag.el/#agel][described here]].
+
+#+source: ag
+#+begin_src emacs-lisp 
+  (require 'ag)
+  (define-key global-map "\C-x\C-a" 'ag) 
+  (define-key global-map "\C-x\C-r" 'ag-regexp)
 #+end_src
-
-#+resname:
-: magit-status
-
-** Rgrep
-Rgrep is infinitely useful in multi-file projects.
-
-(see [[elisp:(describe-function 'rgrep)]])
-
-#+begin_src emacs-lisp
-  (define-key global-map "\C-x\C-r" 'rgrep)
-#+end_src
-
-** Interface with Ack
-Ack is "better than grep" and written in Perl. 
-
-#+source: ack
-#+begin_src emacs-lisp
-  (require 'ack-and-a-half)
-  ;; Create shorter aliases
-  (defalias 'ack 'ack-and-a-half)
-  (defalias 'ack-same 'ack-and-a-half-same)
-  (defalias 'ack-find-file 'ack-and-a-half-find-file)
-  (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
-  (define-key global-map "\C-x\C-a" 'ack) 
-#+end_src
-
 
 ** Winner mode
     Remember the previous window configurations and jump back to them
@@ -450,6 +412,7 @@ First mark the word, then add more cursors. To get out of multiple-cursors-mode,
    scroll bars, and no fringe indicators. Useful in conjunction with running Emacs full-screen.
 #+source: minimal-mode
 #+begin_src emacs-lisp
+  (set-fringe-mode '(1 . 1))
   (require 'minimal)
   (global-set-key (kbd "C-c s") 'minimal-mode)
 #+end_src
@@ -458,5 +421,10 @@ First mark the word, then add more cursors. To get out of multiple-cursors-mode,
 #+begin_src emacs-lisp 
 (provide 'starter-kit-bindings)
 ;;; starter-kit-bindings.el ends here
+#+end_src
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Bindings loaded.")
 #+end_src
   
