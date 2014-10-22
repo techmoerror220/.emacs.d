@@ -11,7 +11,7 @@
 The Emacs Starter Kit for the Social Sciences is maintained by [[http://kieranhealy.org][Kieran
 Healy]]. The original version was written by [[http://github.com/technomancy/emacs-starter-kit/tree][Phil Hagelberg]]. This
 version is more directly descended from [[http://eschulte.github.com/emacs-starter-kit/][Eric Schulte's]] excellent
-org-mode implementation. It is designed specifically for [[http://emacsformacosx.com/builds][GNU Emacs 24
+org-mode implementation. It is designed specifically for [[http://emacsformacosx.com/builds][GNU Emacs 24.4
 on Mac OS X]]. 
 
 The goal of this kit is to provide a more useful set of defaults than
@@ -56,7 +56,7 @@ You have two choices.
 
 *** Prerequisites
 
-*0.1 Get Emacs*.  The starter kit requires Emacs 24, and preferably the most recent released version. [[http://emacsformacosx.com][Download Emacs here]]. Alternatively, if you know what you're doing you may [[http://www.gnu.org/software/emacs/#Obtaining][compile it yourself]]. 
+*0.1 Get Emacs*.  The starter kit requires at least Emacs 24.4 (released October 2014), and preferably the most recent released version. [[http://emacsformacosx.com][Download Emacs here]]. Alternatively, if you know what you're doing you may [[http://www.gnu.org/software/emacs/#Obtaining][compile it yourself]]. 
 
 
 *0.2 Install a Modern TeX Distribution and the Skim PDF reader*. If you are using OS X, [[http://tug.org/mactex/][download MacTeX]]  and install it. The kit is set up to use the [[skim-app.sourceforge.net/][Skim PDF reader]] to display PDF files created from =.tex= files. You can use other readers, but will need to modify the setup in the =starter-kit-latex.org= file.
