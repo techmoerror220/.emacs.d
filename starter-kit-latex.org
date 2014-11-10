@@ -6,17 +6,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 * Starter Kit LaTeX
   Support for editing LaTeX.
 
-** Load Packages
-*** Load AucTeX
-#+begin_src emacs-lisp
-  (load "auctex.el" nil t t)
-#+end_src
-
-*** Load Preview LaTeX
-#+begin_src emacs-lisp
-  (load "preview.el" nil t t)
-#+end_src
-
+** Load Support Packages
 *** Prettify Math in Buffers
 #+source: latex-pretty-symbols 
 #+begin_src emacs-lisp
