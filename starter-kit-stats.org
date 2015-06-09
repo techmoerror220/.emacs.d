@@ -106,3 +106,14 @@ This is useful for when you have buffers with many similar names, as when there 
   (require 'uniquify)
   (setq uniquify-buffer-name-style 'post-forward-angle-brackets)  
 #+end_src
+** lintr and flycheck
+[[https://github.com/jimhester/lintr][lintr]] checks your R code for style and syntax errors. It's an R library that integrates with [[http://www.flycheck.org][flycheck]]. You must install lintr from R. Flycheck can also check code in many other languages. You will need to install linters for them separately as well. See the flycheck documentation for details.
+
+#+source: lintr
+#+begin_src emacs-lisp
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+    (add-hook 'ess-mode-hook
+              (lambda () (flycheck-mode t)))
+
+#+end_src
+
