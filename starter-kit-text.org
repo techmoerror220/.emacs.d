@@ -97,7 +97,7 @@ Markdown mode support.
 
 #+srcname: markdown-mode
 #+begin_src emacs-lisp
-     (autoload 'markdown-mode "markdown-mode.el"
+     (autoload 'markdown-mode "markdown-mode"
      "Major mode for editing Markdown files" t)
      (setq auto-mode-alist
      (cons '("\\.Markdown" . markdown-mode) auto-mode-alist)
@@ -111,7 +111,7 @@ Markdown mode support.
      (setq auto-mode-alist
      (cons '("\\.md" . markdown-mode) auto-mode-alist)
      )
-  
+
   ;; This function will open Marked.app and monitor the current markdown document
   ;; for anything changes.  In other words, it will live reload and convert the
   ;; markdown documment
@@ -123,6 +123,10 @@ Markdown mode support.
              (shell-quote-argument (buffer-file-name))))
     )  
   (global-set-key "\C-co" 'markdown-preview-file) 
+
+ (add-hook 'markdown-mode-hook 'latex-unicode-simplified)
+
+
 #+end_src
 
 #+source: message-line
