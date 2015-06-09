@@ -9,6 +9,7 @@ Yasnippet is a snippet expansion system for Emacs. It uses short phrases and the
                                     (expand-file-name "elpa"
                                                       dotfiles-dir)))
   (require 'yasnippet)
+  (require 'stan-mode)
 ;;  (yas/set-ac-modes)
 ;;  (yas/enable-emacs-lisp-paren-hack)
   (yas/global-mode 1)
