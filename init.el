@@ -49,8 +49,10 @@
 ;; Set default font. First one found is selected.
 (cond
  ((eq window-system nil) nil)
+ ;; ((font-existsp "Input Mono Compressed")
+ ;;  (set-face-attribute 'default nil :height 131 :font "Input Mono Compressed"))
  ((font-existsp "PragmataPro")
-  (set-face-attribute 'default nil :height 111 :font "PragmataPro"))
+  (set-face-attribute 'default nil :height 131 :font "PragmataPro"))
   ((font-existsp "Source Code Pro")
   (set-face-attribute 'default nil :height 121 :font "Source Code Pro"))
  ((font-existsp "Menlo")
@@ -61,7 +63,18 @@
   (set-face-attribute 'default nil :height 121 :font "Inconsolata"))
    ((font-existsp "Envy Code R")
   (set-face-attribute 'default nil :height 121 :font "Envy Code R"))
- )
+   )
+
+
+;; Line-spacing tweak
+;; Set this to a different number depending on taste and the fonr
+;; selected. The value can be a integer or decimal number.
+;; if integer: it means pixels, added below each line.
+;; if float (e.g 0.02): a scaling factor relative to current window's default line height.
+;; if nil: add no extra spacing.
+
+(setq-default line-spacing 0.06) ;; tuned for Pragmata Pro
+
 
 ;; Load up Org Mode and Babel
 ;; load up the main file
