@@ -42,7 +42,7 @@ The following packages will be downloaded and installed.
                                 'ipython
                                 'jedi
                                 'redo+
-                                'ruby-mode
+                                ;; 'ruby-mode
                                 'smartparens 
                                 'smex
                                 'solarized-theme
