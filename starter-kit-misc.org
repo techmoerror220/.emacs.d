@@ -111,16 +111,19 @@ If launching Emacs as in windowing system, show the menu. If launching in a tty/
 #+end_src
 
 
-** ido mode
+** ido mode and flx-ido
 ido-mode is like magic pixie dust!
 #+srcname: starter-kit-loves-ido-mode
 #+begin_src emacs-lisp 
   (when (> emacs-major-version 21)
+    (require 'flx-ido) 
     (ido-mode t)
+    (ido-everywhere 1)
     (setq ido-enable-prefix nil
           ido-enable-flex-matching t
           ido-create-new-buffer 'always
           ido-use-filename-at-point nil
+          ido-use-faces nil
           ido-max-prospects 10))
 #+end_src
 

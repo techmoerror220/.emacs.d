@@ -49,8 +49,8 @@
 ;; Set default font. First one found is selected.
 (cond
  ((eq window-system nil) nil)
- ;; ((font-existsp "Input Mono Compressed")
- ;;  (set-face-attribute 'default nil :height 131 :font "Input Mono Compressed"))
+ ((font-existsp "Input Mono Compressed")
+  (set-face-attribute 'default nil :height 131 :font "Input Mono Compressed"))
  ((font-existsp "PragmataPro")
   (set-face-attribute 'default nil :height 131 :font "PragmataPro"))
   ((font-existsp "Source Code Pro")
@@ -83,4 +83,9 @@
 (require 'org)
 (org-babel-load-file (expand-file-name "starter-kit.org" dotfiles-dir))
 
+;;; Higher garbage collection threshold
+(setq gc-cons-threshold 20000000)
+
 ;;; init.el ends here
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
