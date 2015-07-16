@@ -49,27 +49,10 @@ Load the snippets defined in the package's =./snippets/= directory, and local sn
 
 #+end_src
 
-
-** Autocomplete
-We're using company mode instead (see next section), but here's a working auto-complete setup.
-#+begin_src emacs-lisp :tangle no
-  (require 'auto-complete)
-  (require 'auto-complete-config)
-  (global-auto-complete-mode t)
-  (add-to-list 'ac-dictionary-directories (expand-file-name "auto-complete" dotfiles-dir))
-  (setq ac-modes (append ac-modes '(org-mode))) 
-  (ac-config-default)
-  (define-key ac-complete-mode-map [tab] 'ac-expand)
-  (setq ac-auto-start 4)
-  (ac-flyspell-workaround)
-  (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
-  (define-key ac-completing-map (kbd "C-c h") 'ac-quick-help)  
-  (add-hook 'html-mode-hook 'ac-html-enable)
-
-#+end_src 
-
 ** Company Mode
-Alternative auto-completion, preferable to Autocomplete. We use the `:with` keyword to include dabbrev in every backend, which gives us completion from everything that's in the buffer (and other open buffers).
+Auto-completion of text and code. 
+
+We use the `:with` keyword to include dabbrev in every backend, which gives us completion from everything that's in the buffer (and other open buffers).
 
 #+source: company-mode
 #+begin_src emacs-lisp
@@ -82,8 +65,6 @@ Alternative auto-completion, preferable to Autocomplete. We use the `:with` keyw
   (add-to-list 'company-backends '(company-R-objects :with company-dabbrev))
   (add-to-list 'company-backends '(company-R-args :with company-dabbrev))
   (add-to-list 'company-backends '(company-files :with company-dabbrev))
-
-  ;; (company-quickhelp-mode 1)
 
   (setq company-idle-delay 0.1)
   (setq company-minimum-prefix-length 4)
@@ -104,9 +85,29 @@ Alternative auto-completion, preferable to Autocomplete. We use the `:with` keyw
   (global-company-mode t)
 #+end_src
 
+** Autocomplete
+We use company mode, as initiated above, but here's a working auto-complete setup as an alternative. Don't use company mode and autocomplete together. To switch from company-mode to autocomplete, move the `tangle: no` from the `begin_src` line below up to the corresponding line in the `company-mode` section above. Then open the `starter-kit-elpa.org` file, uncomment the `autocomplete` and `ac-` extensions there, and restart Emacs.
+
+#+source:  autocomplete
+#+begin_src emacs-lisp :tangle no
+  (require 'auto-complete)
+  (require 'auto-complete-config)
+  (global-auto-complete-mode t)
+  (add-to-list 'ac-dictionary-directories (expand-file-name "auto-complete" dotfiles-dir))
+  (setq ac-modes (append ac-modes '(org-mode))) 
+  (ac-config-default)
+  (define-key ac-complete-mode-map [tab] 'ac-expand)
+  (setq ac-auto-start 4)
+  (ac-flyspell-workaround)
+  (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
+  (define-key ac-completing-map (kbd "C-c h") 'ac-quick-help)  
+  (add-hook 'html-mode-hook 'ac-html-enable)
+
+#+end_src 
 
 
 #+source: message-line
 #+begin_src emacs-lisp
   (message "Starter Kit Completion loaded.")
 #+end_src
+
