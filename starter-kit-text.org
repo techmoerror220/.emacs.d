@@ -104,34 +104,37 @@ Markdown mode support.
 
 #+srcname: markdown-mode
 #+begin_src emacs-lisp
-     (autoload 'markdown-mode "markdown-mode"
-     "Major mode for editing Markdown files" t)
-     (setq auto-mode-alist
-     (cons '("\\.Markdown" . markdown-mode) auto-mode-alist)
-     )
-     (setq auto-mode-alist
-     (cons '("\\.MarkDown" . markdown-mode) auto-mode-alist)
-     )
-     (setq auto-mode-alist
-     (cons '("\\.markdown" . markdown-mode) auto-mode-alist)
-     )
-     (setq auto-mode-alist
-     (cons '("\\.md" . markdown-mode) auto-mode-alist)
-     )
+      (autoload 'markdown-mode "markdown-mode"
+      "Major mode for editing Markdown files" t)
+      (setq auto-mode-alist
+      (cons '("\\.Markdown" . markdown-mode) auto-mode-alist)
+      )
+      (setq auto-mode-alist
+      (cons '("\\.MarkDown" . markdown-mode) auto-mode-alist)
+      )
+      (setq auto-mode-alist
+      (cons '("\\.markdown" . markdown-mode) auto-mode-alist)
+      )
+      (setq auto-mode-alist
+      (cons '("\\.md" . markdown-mode) auto-mode-alist)
+      )
+      (setq auto-mode-alist
+      (cons '("README\\.md" . gfm-mode) auto-mode-alist)
+      )
 
-  ;; This function will open Marked.app and monitor the current markdown document
-  ;; for anything changes.  In other words, it will live reload and convert the
-  ;; markdown documment
-  (defun markdown-preview-file ()
-    "run Marked on the current file and revert the buffer"
-    (interactive)
-    (shell-command
-     (format "open -a /Applications/Marked\\ 2.app %s"
-             (shell-quote-argument (buffer-file-name))))
-    )  
-  (global-set-key "\C-co" 'markdown-preview-file) 
+   ;; This function will open Marked.app and monitor the current markdown document
+   ;; for anything changes.  In other words, it will live reload and convert the
+   ;; markdown documment
+   (defun markdown-preview-file ()
+     "run Marked on the current file and revert the buffer"
+     (interactive)
+     (shell-command
+      (format "open -a /Applications/Marked\\ 2.app %s"
+              (shell-quote-argument (buffer-file-name))))
+     )  
+   (global-set-key "\C-co" 'markdown-preview-file) 
 
- (add-hook 'markdown-mode-hook 'latex-unicode-simplified)
+  (add-hook 'markdown-mode-hook 'latex-unicode-simplified)
 
 
 #+end_src
