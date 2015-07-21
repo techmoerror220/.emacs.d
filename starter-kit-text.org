@@ -143,3 +143,53 @@ Markdown mode support.
 #+begin_src emacs-lisp
   (message "Starter Kit Text loaded.")
 #+end_src
+** Deft
+Deft mode helps organize folders of text notes.
+
+#+srcname deft-mode
+#+begin_src elisp
+
+(require 'deft)
+(setq deft-extensions '("md" "org", "txt", "markdown")
+(setq deft-directory "~/Dropbox/Org"))
+(setq deft-recursive t)
+(setq deft-use-filename-as-title t)
+(setq deft-markdown-mode-title-level 2)
+(setq deft-org-mode-title-prefix t)
+(global-set-key (kbd "C-x C-g") 'deft-find-file)
+
+#+end_src
+** CSV mode
+View and edit CSV files. See [[http://centaur.maths.qmul.ac.uk/Emacs/][the CSV mode homepage]] for more details. From the readme:
+
+In CSV mode, the following commands are available:
+
+- C-c C-s (`csv-sort-fields') and C-c C-n (`csv-sort-numeric-fields')
+  respectively sort lexicographically and numerically on a
+  specified field or column.
+
+- C-c C-r (`csv-reverse-region') reverses the order.  (These
+  commands are based closely on, and use, code in `sort.el'.)
+
+- C-c C-k (`csv-kill-fields') and C-c C-y (`csv-yank-fields') kill
+  and yank fields or columns, although they do not use the normal
+  kill ring.  C-c C-k can kill more than one field at once, but
+  multiple killed fields can be yanked only as a fixed group
+  equivalent to a single field.
+
+- C-c C-a (`csv-align-fields') aligns fields into columns
+
+- C-c C-u (`csv-unalign-fields') undoes such alignment; separators
+  can be hidden within aligned records.
+
+- C-c C-t (`csv-transpose') interchanges rows and columns.  For
+  details, see the documentation for the individual commands.
+
+#+srcname csv-mode
+#+begin_src elisp
+
+(add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
+(autoload 'csv-mode "csv-mode"
+  "Major mode for editing comma-separated value files." t)
+
+#+end_src
