@@ -8,6 +8,11 @@ involve references to particular files on my own machine. It's
 included here for completeness, and as and example of the kind of
 things you might put in your own user-specific file.
 
+Some of the settings here depend on additional software that you may
+not have installed by default. E.g., the "Use GNU ls" section below
+depends on you having GNU coreutils installed. To ignore these
+sections, add `:tangle no` to any code block you don't want to use.
+
 To use the customizations here yourself, /you must change the name of
  this file to match your own user name or system name/. Those are the
  values of the Emacs variables =user-login-name= or =system-name=, so
@@ -30,6 +35,17 @@ Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode X
  delete the lines.
 
 ** Local Miscellaneous Settings
+*** Use GNU ls
+OS X ships with BSD's ls command which doesn't have all the features of GNU ls (used internally by dired). Install `coreutils` with homebrew (`brew install coreutils`) and use `gls` instead.
+
+#+source: gnu-ls
+#+begin_src emacs-lisp 
+
+(setq insert-directory-program (executable-find "gls"))
+
+#+end_src
+  
+
 *** Color Theme Tweaks
 The theme package is loaded in =starter-kit-misc.org=. The settings
 here adjust the height of some headings in Org and LaTeX mode, as well
