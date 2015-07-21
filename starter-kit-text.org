@@ -97,6 +97,7 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
 #+begin_src emacs-lisp 
   (smartparens-global-mode 1)
   (require 'smartparens-config)
+  (show-smartparens-global-mode +1)
 #+end_src
 
 ** Markdown 
