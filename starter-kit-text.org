@@ -145,14 +145,14 @@ Markdown mode support.
   (message "Starter Kit Text loaded.")
 #+end_src
 ** Deft
-Deft mode helps organize folders of text notes.
+   Deft mode helps organize folders of text notes.
 
 #+srcname deft-mode
-#+begin_src elisp
+#+begin_src emacs-lisp
 
 (require 'deft)
-(setq deft-extensions '("md" "org", "txt", "markdown")
-(setq deft-directory "~/Dropbox/Org"))
+(setq deft-extensions '("org" "md", "markdown", "Markdown", "mdown", "txt"))
+(setq deft-directory "~/Dropbox/Org")
 (setq deft-recursive t)
 (setq deft-use-filename-as-title t)
 (setq deft-markdown-mode-title-level 2)
