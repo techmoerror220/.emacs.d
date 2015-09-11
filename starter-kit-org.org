@@ -19,8 +19,8 @@ HTML and LaTeX exporters are shown by default. We add the Markdown exporter to t
 #+begin_src emacs-lisp
 
 ;; Autocomplete for orgmode
-(require 'org-ac)
-(org-ac/config-default)
+;; (require 'org-ac)
+;; (org-ac/config-default)
 
 ;; Markdown exporter
 (require 'ox-md)
@@ -38,7 +38,7 @@ HTML and LaTeX exporters are shown by default. We add the Markdown exporter to t
 ;; (if window-system (require 'org-mouse))
 #+end_src
 
-** COMMENT Org-Mode Hooks
+** Org-Mode Hooks
 Make yasnippet work properly with org-mode. 
 
 #+begin_src emacs-lisp
@@ -102,13 +102,7 @@ contains an up to date list of the currently supported languages.
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
-     (sh . t)
-     (R . t)
-     (perl . t)
-     (ruby . t)
-     (python . t)
-     (js . t)
-     (haskell . t)))
+   (shell . t)))
 #+end_src
 
 The next block makes org-babel aware that a lower-case 'r' in a =src= block header should be processed as R. 
