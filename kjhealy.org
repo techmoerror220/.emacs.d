@@ -44,7 +44,17 @@ OS X ships with BSD's ls command which doesn't have all the features of GNU ls (
 (setq insert-directory-program (executable-find "gls"))
 
 #+end_src
-  
+
+
+*** One space after period
+
+Use `M-e` for sentence-level navigation, but without having to put two spaces after a period like an animal.  
+
+#+source: periods
+#+begin_src emacs-lisp
+  (setq sentence-end-double-space nil)
+#+end_src
+
 
 *** Color Theme Tweaks
 The theme package is loaded in =starter-kit-misc.org=. The settings
