@@ -45,7 +45,6 @@ OS X ships with BSD's ls command which doesn't have all the features of GNU ls (
 
 #+end_src
 
-
 *** One space after period
 
 Use `M-e` for sentence-level navigation, but without having to put two spaces after a period like an animal.  
@@ -54,7 +53,6 @@ Use `M-e` for sentence-level navigation, but without having to put two spaces af
 #+begin_src emacs-lisp
   (setq sentence-end-double-space nil)
 #+end_src
-
 
 *** Color Theme Tweaks
 The theme package is loaded in =starter-kit-misc.org=. The settings
@@ -87,33 +85,7 @@ as turning off the sans-serif heading style that AucTeX defaults to.
     works depends on the flavor of emacs you are using,
     unfortunately. Choose as appropriate from the following options. Enable one of them by changing the value of =:tangle= to =yes=. 
 
-**** Option 1
-Just maximize the frame. Not true fullscreen
-
-#+srcname: fullscreen-1
-#+begin_src emacs-lisp :tangle no
-  (global-set-key (kbd "C-c m") 'maximize-frame)  
-#+end_src
-
-**** Option 2  
-Fullscreen toggle using maxframe.el. 
-#+source: fullscreen-3
-#+begin_src emacs-lisp :tangle no
-  
- (require 'maxframe)
- (defvar my-fullscreen-p t "Check if fullscreen is on or off")
- (defun my-toggle-fullscreen ()
- (interactive)
- (setq my-fullscreen-p (not my-fullscreen-p))
- (if my-fullscreen-p
- (restore-frame)
- (maximize-frame)))
- (global-set-key (kbd "C-c f") 'my-toggle-fullscreen)    
-#+end_src
-
-**** Option 3
-For use with Yamamoto Mitsuharu's Carbon-patched Emacs. (This is
-    what I use, but it requires you compile a custom version of Emacs provided by Mitsuharu.)
+Bind full screen to `C-c f`.
 
 #+source: fullscreen-4
 #+begin_src emacs-lisp
