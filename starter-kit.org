@@ -411,7 +411,6 @@ Located in [[file:starter-kit-completion.org][starter-kit-completion]].
   (starter-kit-load "starter-kit-completion.org")    
 #+end_src 
 
-
 ** Language/Mode Specific Files
 These sections pertain to specific languages or modes.  Feel free to
 turn off these sections if you don't plan on using the related mode or
