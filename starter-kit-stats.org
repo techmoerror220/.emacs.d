@@ -17,7 +17,7 @@ This file provides settings for ESS and R.
 ** Coding Hooks
 #+source: ide-ess
 #+begin_src emacs-lisp
-  (add-hook 'ess-mode-hook 'run-starter-kit-coding-hook)
+(add-hook 'ess-mode-hook 'run-starter-kit-coding-hook)
   (add-hook 'ess-R-post-run-hook 'smartparens-mode)
 #+end_src
 

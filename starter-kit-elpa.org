@@ -55,7 +55,6 @@ The following packages will be downloaded and installed.
                                 'smartparens 
                                 'smex
                                 'solarized-theme
-                                'stan-mode
                                 'tango-2-theme
                                 'textmate
                                 'typopunct
@@ -65,8 +64,7 @@ The following packages will be downloaded and installed.
                                 'zenburn-theme
                                 'auctex
                                 'ess
-                                'r-autoyas
-                                'stan-snippets                                                             
+                                'r-autoyas                                
                                 )
     "Libraries that should be installed by default.")
 #+end_src
