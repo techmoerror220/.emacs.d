@@ -228,6 +228,7 @@ A pandoc menu for markdown and tex files.
   (add-hook 'markdown-mode-hook 'pandoc-mode)
   (add-hook 'TeX-mode-hook 'pandoc-mode)
   (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
+  (global-set-key (kbd "C-c p") 'pandoc-main-hydra/body)
 #+end_src
 
 ** Local Polymode Support
