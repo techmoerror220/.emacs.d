@@ -9,15 +9,15 @@ Yasnippet is a snippet expansion system for Emacs. It uses short phrases and the
                                       (expand-file-name "elpa"
                                                         dotfiles-dir)))
     (require 'yasnippet)
-  ;;  (yas/set-ac-modes)
-  ;;  (yas/enable-emacs-lisp-paren-hack)
-    (yas/global-mode 1)
+  ;;  (yas-set-ac-modes)
+  ;;  (yas-enable-emacs-lisp-paren-hack)
+    (yas-global-mode 1)
 #+end_src
 
 Load the snippets defined in the package's =./snippets/= directory, and local snippets from the =./local-snippets/= directory. 
 
 #+begin_src emacs-lisp :tangle yes
-  (yas/load-directory (expand-file-name "snippets" dotfiles-dir)) 
+  (yas-load-directory (expand-file-name "snippets" dotfiles-dir)) 
 #+end_src
 
 #+begin_src emacs-lisp tangle: yes
@@ -31,14 +31,14 @@ Load the snippets defined in the package's =./snippets/= directory, and local sn
           (if (looking-at "->") t nil)))))
 
   (defun do-yas-expand ()
-    (let ((yas/fallback-behavior 'return-nil))
-      (yas/expand)))
+    (let ((yas-fallback-behavior 'return-nil))
+      (yas-expand)))
 
   (defun tab-indent-or-complete ()
     (interactive)
     (if (minibufferp)
         (minibuffer-complete)
-      (if (or (not yas/minor-mode)
+      (if (or (not yas-minor-mode)
               (null (do-yas-expand)))
           (if (check-expansion)
               (company-complete-common)
@@ -56,32 +56,53 @@ We use the `:with` keyword to include dabbrev in every backend, which gives us c
 #+source: company-mode
 #+begin_src emacs-lisp
 
-  (require 'company)
-  (add-hook 'after-init-hook 'global-company-mode)
-  (add-to-list 'company-backends '(company-css :with company-dabbrev))
-  (add-to-list 'company-backends '(company-capf :with company-dabbrev))
-  (add-to-list 'company-backends '(company-web-html :with company-dabbrev))
-  (add-to-list 'company-backends '(company-R-objects :with company-dabbrev))
-  (add-to-list 'company-backends '(company-R-args :with company-dabbrev))
-  (add-to-list 'company-backends '(company-files :with company-dabbrev))
+;;Use C-TAB to complete. We put this in eval-after-load 
+;; because otherwise some modes will try to override our settings.
+(require 'company)
+;; don't start automatically 
+(setq company-idle-delay nil)
+;; cancel if input doesn't match
+(setq company-require-match nil)
+;; complete using C-TAB
+(global-set-key (kbd "<C-tab>") 'company-complete)
+;; use C-n and C-p to cycle through completions
+;; (define-key company-mode-map (kbd "<tab>") 'company-complete)
+(define-key company-active-map (kbd "C-n") 'company-select-next)
+(define-key company-active-map (kbd "<tab>") 'company-complete-common)
+(define-key company-active-map (kbd "C-p") 'company-select-previous)
+(define-key company-active-map (kbd "<backtab>") 'company-select-previous)
+;; enable math completions
+(require 'company-math)
+;; company-mode completions for ess
+;; (require 'company-ess)
+(add-to-list 'company-backends 'company-math-symbols-unicode)
+;;(add-to-list 'company-backends 'company-math-symbols-latex)
+;; put company-capf at the beginning of the list
+(require 'company-capf)
+(setq company-backends
+      (delete-dups (cons 'company-capf company-backends)))
+;; theme
+(set-face-attribute 'company-scrollbar-bg nil
+                    :background "gray")
+(set-face-attribute 'company-scrollbar-fg nil
+                    :background "black")
+(set-face-attribute 'company-tooltip nil
+                    :foreground "black"
+                    :background "lightgray")
+(set-face-attribute 'company-tooltip-selection nil
+                    :foreground "white"
+                    :background "steelblue")
+;; ;; disable dabbrev
+;; (delete 'company-dabbrev company-backends)
+;; (delete 'company-dabbrev-code company-backends)
 
-  (setq company-idle-delay 0.1)
-  (setq company-minimum-prefix-length 4)
-  (setq company-selection-wrap-around t)
-  (setq company-quickhelp-delay 0.15)
-  (setq company-dabbrev-other-buffers t)
-  (setq company-dabbrev-downcase nil)
-  (setq company-dabbrev-minimum-length 4)
 
-  (company-auctex-init)
-  (setq company-tooltip-align-annotations t)
-    
-  (require 'company-statistics)
-  (company-statistics-mode)
+(add-hook 'after-init-hook 'global-company-mode)
 
-  (define-key company-active-map (kbd "<tab>") (lambda () (interactive) (company-complete-common-or-cycle 1)))
-  (define-key company-active-map (kbd "<backtab>") (lambda () (interactive) (company-complete-common-or-cycle -1)))
-  (global-company-mode t)
+;; completion for kill ring history
+(require 'browse-kill-ring)
+(browse-kill-ring-default-keybindings)
+
 #+end_src
 
 ** Autocomplete
