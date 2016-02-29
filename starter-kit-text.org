@@ -137,6 +137,23 @@ Markdown mode support.
 
   (add-hook 'markdown-mode-hook 'latex-unicode-simplified)
 
+;; Temporary markdown/polymode crash fix
+;; https://github.com/vspinu/polymode/issues/87
+(defun markdown-match-propertized-text (property last)
+  "Match text with PROPERTY from point to LAST.
+Restore match data previously stored in PROPERTY."
+  (let ((saved (get-text-property (point) property))
+        pos)
+    (unless saved
+      (setq pos (next-single-char-property-change (point) property nil last))
+      (setq saved (get-text-property pos property)))
+    (when saved
+      (set-match-data saved)
+      ;; Step at least one character beyond point. Otherwise
+      ;; `font-lock-fontify-keywords-region' infloops.
+      (goto-char (min (1+ (max (match-end 0) (point)))
+                      (point-max)))
+      saved)))
 
 #+end_src
 
