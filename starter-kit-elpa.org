@@ -4,7 +4,7 @@
 This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 * Starter Kit ELPA
-[[http://tromey.com/elpa/][Emacs List Package Archive]] (ELPA) or [[http://melpa.milkbox.net][MELPA]].
+[[http://elpa.gnu.org/][Emacs List Package Archive]] (ELPA) or [[http://melpa.org][MELPA]].
 
 The following packages will be downloaded and installed.
 
