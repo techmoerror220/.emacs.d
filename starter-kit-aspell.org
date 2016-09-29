@@ -29,7 +29,7 @@ flyspell doesn't start properly. Putting this customization in
 ;; More efforts to speed up flyspell
 ;; See http://www.brool.com/index.php/speeding-up-flyspell-region 
   (defadvice flyspell-region (around fast-flyspell-region)
-    (flet ( (sit-for (x) t) ) 
+    (cl-flet ( (sit-for (x) t) ) 
       ad-do-it))
   (ad-activate 'flyspell-region)
   
