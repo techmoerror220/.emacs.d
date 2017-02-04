@@ -89,7 +89,7 @@ table with org or table.el syntax. Can be called interactively
 ex. while viewing the output from MySql select."
   (interactive)
   (let ((last-line (line-number-at-pos (point-max)))
-        (in-table-regex "^[ 	]*\\([|+].+[|+]\\) *$"))
+        (in-table-regex "^[     ]*\\([|+].+[|+]\\) *$"))
     (stripe-buffer-clear-stripes)
     (save-excursion
       (goto-char (point-min))
@@ -135,7 +135,7 @@ ex. while viewing the output from MySql select."
       (progn
         (require 'hl-line+)
         (stripe-buffer-mode 1)
-        (setq cursor-type nil)
+        (setq cursor-type 1)
         (hl-line-mode 1))
       (hl-line-mode 1)))
 

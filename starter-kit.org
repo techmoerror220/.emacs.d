@@ -218,7 +218,7 @@ to ELPA itself. This has occasionally caused problems with certain
 packages. If you run into problems with such a package, try removing
 everything from inside the elpa/ directory and invoking =M-x starter-kit-elpa-install= in a fresh instance.
 
-* Implementation
+* Implementation 
   :PROPERTIES:
   :CUSTOM_ID: implementation
   :END:
@@ -234,12 +234,14 @@ since they are likely to be used in every session
 #+srcname: starter-kit-load-on-startup
 #+begin_src emacs-lisp 
   (require 'cl)
-  (require 'saveplace)
   (require 'ffap)
   (require 'uniquify)
   (require 'ansi-color)
   (require 'recentf)
 #+end_src
+
+#+RESULTS: starter-kit-load-on-startup
+: recentf
 
 *** Function for loading/compiling starter-kit-*
 #+srcname: starter-kit-load
@@ -290,10 +292,10 @@ Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager.
 #+begin_src emacs-lisp 
   (require 'package)
   (setq package-archives
-            '(
-          ("org"         . "http://orgmode.org/elpa/")
-              ("gnu"         . "http://elpa.gnu.org/packages/")
-          ("melpa"   . "https://melpa.org/packages/")))
+             '(
+              ("org"     . "http://orgmode.org/elpa/")
+              ("gnu"     . "http://elpa.gnu.org/packages/")
+              ("melpa"   . "https://melpa.org/packages/")))
   
 
 ;;; Add support to package.el for pre-filtering available packages
@@ -335,6 +337,7 @@ ARCHIVE is the string name of the package archive.")
              (not (memq package melpa-exclude-packages))))))
 
   (package-initialize)
+  (package-refresh-contents)
   (starter-kit-load "starter-kit-elpa.org")
 #+end_src
 

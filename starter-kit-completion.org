@@ -3,7 +3,11 @@
 Yasnippet is a snippet expansion system for Emacs. It uses short phrases and the tab key to trigger the insertion of frequently-used snippets of code or text in your document. 
 
 ** Load the yasnippet bundle
-#+begin_src emacs-lisp :tangle yes
+
+Load the snippets defined in the package's =./snippets/= directory, and local snippets from the =./local-snippets/= directory. 
+
+#+begin_src emacs-lisp tangle: yes
+
     (add-to-list 'load-path
                    (expand-file-name  "yasnippet"
                                       (expand-file-name "elpa"
@@ -12,15 +16,11 @@ Yasnippet is a snippet expansion system for Emacs. It uses short phrases and the
   ;;  (yas-set-ac-modes)
   ;;  (yas-enable-emacs-lisp-paren-hack)
     (yas-global-mode 1)
-#+end_src
+    (setq yas-snippet-dirs '("~/.emacs.d/mysnippets"
+                               "~/.emacs.d/snippets"
+                                  "~/.emacs.d/elpa/yasnippet-20170108.1830/snippets"))
 
-Load the snippets defined in the package's =./snippets/= directory, and local snippets from the =./local-snippets/= directory. 
-
-#+begin_src emacs-lisp :tangle yes
-  (yas-load-directory (expand-file-name "snippets" dotfiles-dir)) 
-#+end_src
-
-#+begin_src emacs-lisp tangle: yes
+;;   (yas-load-directory (expand-file-name "snippets" dotfiles-dir))  ;; original line from kieran healy
 
 (defun check-expansion ()
     (save-excursion
@@ -47,6 +47,9 @@ Load the snippets defined in the package's =./snippets/= directory, and local sn
   (global-set-key [tab] 'tab-indent-or-complete)
 
 #+end_src
+
+#+RESULTS:
+: tab-indent-or-complete
 
 ** Company Mode
 Auto-completion of text and code. 
@@ -94,6 +97,9 @@ We use the `:with` keyword to include dabbrev in every backend, which gives us c
 (browse-kill-ring-default-keybindings)
 
 #+end_src
+
+#+RESULTS: company-mode
+: yank-pop
 
 ** Autocomplete
 We use company mode, as initiated above, but here's a working auto-complete setup as an alternative. Don't use company mode and autocomplete together. To switch from company-mode to autocomplete, move the `tangle: no` from the `begin_src` line below up to the corresponding line in the `company-mode` section above. Then open the `starter-kit-elpa.org` file, uncomment the `autocomplete` and `ac-` extensions there, and restart Emacs.

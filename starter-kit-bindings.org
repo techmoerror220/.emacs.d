@@ -8,7 +8,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 Key Bindings.
 
 ** Map fn to Hyper
-#+source: fn-to-hyper
+#+source: fn-to-hyper :tangle no
 #+begin_src emacs-lisp
   (setq mac-function-modifier 'hyper)
   ;; fix page-up and page-down keys
@@ -45,7 +45,20 @@ Key Bindings.
 
 ** Completion that uses many different methods to find options.
 #+begin_src emacs-lisp 
-(global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "M-/") 'hippie-expand) ;; replace dabbrev-expand
+(setq
+ hippie-expand-try-functions-list
+ '(try-expand-dabbrev                      ;; try to expand word "dynamically", searching the current buffer.
+   try-expand-dabbrev-all-buffers          ;; try to expand word "dynamically", searching all other buffers.
+   try-expand-dabbrev-from-kill            ;; try to expand word "dynamically", searching the kill ring.
+   try-complete-file-name-partially        ;; try to complete text as a file name, as many characters as unique.
+   try-complete-file-name                  ;; try to complete text as a file name.
+   try-complete-all-abbrevs                ;; try to expand word before point accoriding to all abbrev tables.
+   try-expand-list                         ;; try to complete the current line to an entire line in the buffer.
+   try-expand-line                         ;; try to complete the current line to an entire line in the buffer.
+   try-complete-lisp-symbol-partially      ;; try to complete as an Emacs Lisp symbol, as many characters as unique.
+   try-complete-lisp-symbol)               ;; try to complete word as an Emacs Lisp symbol
+ )
 #+end_src
 
 ** Turn on the menu bar for exploring new modes
@@ -60,7 +73,7 @@ Key Bindings.
 #+end_src
 
 ** Use Regex searches by default, and use Visual Regexp to construct them.
-Building regular expressions in Emacs is kind of a pain.  The visual-regexp pacakge is a very convenient way to dynamically build regular expressions for searching and replacing. You enter a minibuffer that lets you type the regexp and the prospective matches to the expression you type are highlighted in the main buffer. =M-x vr/replace= gives you global replacement and =M-x vr/query-replace= lets you decide to replace per match. Visual regexp replace is bound to =C-c r= and visual =query-replace-regexp= to =C-c q=. 
+Building regular expressions in Emacs is kind of a pain.  The visual-regexp package is a very convenient way to dynamically build regular expressions for searching and replacing. You enter a minibuffer that lets you type the regexp and the prospective matches to the expression you type are highlighted in the main buffer. =M-x vr/replace= gives you global replacement and =M-x vr/query-replace= lets you decide to replace per match. Visual regexp replace is bound to =C-c r= and visual =query-replace-regexp= to =C-c q=. 
 
 #+begin_src emacs-lisp 
   (global-set-key (kbd "C-s") 'isearch-forward-regexp)
@@ -69,7 +82,7 @@ Building regular expressions in Emacs is kind of a pain.  The visual-regexp paca
   (global-set-key (kbd "C-M-r") 'isearch-backward)
   
   (require 'visual-regexp)
-  (define-key global-map (kbd "C-c r") 'vr/replace)
+  (define-key global-map (kbd "C-c r") 'vr/replace) ;; note from dgm: now it seems these keys are binded to opening =helm-bibtex=
   (define-key global-map (kbd "C-c q") 'vr/query-replace)
 #+end_src
 
@@ -96,14 +109,19 @@ Building regular expressions in Emacs is kind of a pain.  The visual-regexp paca
 ** Window switching.
 =C-x o= goes to the next window, Shift+direction arrow moves between frames.
 #+begin_src emacs-lisp 
-(windmove-default-keybindings) 
-(global-set-key (kbd "C-x O") (lambda () (interactive) (other-window -1))) ;; back one
-(global-set-key (kbd "C-x C-o") (lambda () (interactive) (other-window 2))) ;; forward two
-(setq windmove-wrap-around t)
+;; dgm comments this out because Shift-Arrows should work in org mode for choosing dates and because instead of windmove I will use ace-window by the great abo-abo.
+;; (windmove-default-keybindings) 
+;; (global-set-key (kbd "C-x O") (lambda () (interactive) (other-window -1))) ;; back one
+;; (global-set-key (kbd "C-x C-o") (lambda () (interactive) (other-window 2))) ;; forward two
+;; (setq windmove-wrap-around t)
 #+end_src
+
+#+RESULTS:
 
 ** Resizing Windows on the fly
 When your frame (i.e., the main Emacs window) is split into different parts (e.g. using =C-x 2= or =C-x 3=), you sometimes want to resize these parts dynamically. This defines =Shift-C-[arrow keys]= so you can do this easily. 
+
+Note from DGM: these key bindings are superseded by org mode and don't work in the way intended here. For some reason org mode takes precedence.
  
 #+srcname: resize-splits
 #+begin_src emacs-lisp
@@ -185,8 +203,8 @@ When windows get out of order, you can rotate them.
 #+begin_src emacs-lisp
   (require 'smex)
   (smex-initialize)  
-  (global-set-key (kbd "M-x") 'smex)
-  (global-set-key (kbd "C-x C-m") 'smex) ;; supersedes binding in starter-kit-bindings.org
+;;  (global-set-key (kbd "M-x") 'smex)  ;; I think this is superseded by helm now
+;;  (global-set-key (kbd "C-x C-m") 'smex) ;; supersedes binding in starter-kit-bindings.org. DGM: it's below again, so left below.
   (global-set-key (kbd "M-X") 'smex-major-mode-commands)
   (global-set-key (kbd "C-x C-M") 'smex-major-mode-commands)
   ;; This is your old M-x.
@@ -204,7 +222,7 @@ When windows get out of order, you can rotate them.
 
 #+source: option-is-meta
 #+begin_src emacs-lisp 
-  (setq mac-option-modifier 'meta)    
+;;  (setq mac-option-modifier 'meta)    
 #+end_src
 
 ** Use Command-Z as undo
@@ -230,14 +248,33 @@ Use a little bit of Mac keys, but not all of them.
 #+end_src
 
 ** Help should search more than just commands
+
 #+begin_src emacs-lisp 
 (global-set-key (kbd "C-h a") 'apropos)
 #+end_src
 
 ** Should be able to eval-and-replace anywhere.
+
+As far as I can see, KHJ gives the binding to the =eval-and-replace= function but not the function! I found it in:
+http://emacsredux.com/blog/2013/06/21/eval-and-replace/
+and I copy it below because it is awesome.
+
 #+begin_src emacs-lisp 
+(defun eval-and-replace ()
+  "Replace the preceding sexp with its value."
+  (interactive)
+  (backward-kill-sexp)
+  (condition-case nil
+      (prin1 (eval (read (current-kill 0)))
+             (current-buffer))
+    (error (message "Invalid expression")
+           (insert (current-kill 0)))))
+
 (global-set-key (kbd "C-c e") 'eval-and-replace)
 #+end_src
+
+#+RESULTS:
+: eval-and-replace
 
 ** Applications
 #+begin_src emacs-lisp 
@@ -268,7 +305,12 @@ globally for later insertion into an Org-mode buffer.  See
 #+begin_src emacs-lisp
 (define-key global-map "\C-cl" 'org-store-link)
 #+end_src
+
 ** Interface with Ag ("The Silver Searcher")
+
+The Silver Searcher is grep-like program implemented by =C=. An attempt to make something better than =ack-grep=.
+
+It searches pattern about 3–5x faster than ack-grep. It ignores file patterns from your .gitignore and .hgignore. 
 
 [[https://github.com/ggreer/the_silver_searcher][The Silver Searcher]] is a very fast, smart code search tool, similar to
 ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://github.com/Wilfred/ag.el/#agel][described here]].
@@ -278,7 +320,15 @@ ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://githu
   (require 'ag)
   (define-key global-map "\C-x\C-a" 'ag) 
   (define-key global-map "\C-x\C-r" 'ag-regexp)
+
+;; new bindings by DGM to try and use 'helm-ag
+;;  (define-key global-map "\C-x\C-a" 'helm-ag) 
+;;  (define-key global-map "\C-x\C-r" 'helm-ag-regexp)
+
 #+end_src
+
+#+RESULTS: ag
+: ag-regexp
 
 ** Winner mode
     Remember the previous window configurations and jump back to them
@@ -305,9 +355,16 @@ By default C-z is bound to "Suspend Frame", which minimizes Emacs. I find this o
 ** CUA mode for rectangle editing
 Sometimes very useful (but we don't use the core cua keys.)
 
+DGM: I don't like CUA generally though for rectangle editing it can be very handy, but I've learnt the emacs way to rectangle editing anyway so... I disable it as CUA bindings could interfere with other findings.... but wait!! below are many functions I ignored about rectangle editing!!! Plus it seems the great KHJ disables the core =cua-mode= bindings so I'll leave this running!
+
+BUT, I've added two lines: one to unset the C-return binding in CUA mode and one to set C-M-return to rectangle marking.  
+The reason is that in many data science programs, the great ista zahn binds the sending of current line to interpreter to C-return and I use this much more often than rectangle editing.
+
 #+source: cua-rectangle
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp 
   (setq cua-enable-cua-keys nil)
+  (global-unset-key (read-kbd-macro "C-<return>"))
+  (setq cua-rectangle-mark-key (kbd "C-M-<return>"))
   (cua-mode)
 
 ;; To start a rectangle, use [C-return] and extend it using the normal
@@ -369,6 +426,9 @@ Sometimes very useful (but we don't use the core cua keys.)
 ;; are lost, but can be recovered using [C-z].
   
 #+end_src
+
+#+RESULTS: cua-rectangle
+: t
 
 ** Expand Region
    Expand selected region by semantic units. Just keep pressing the key until it selects what you want.

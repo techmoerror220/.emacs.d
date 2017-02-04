@@ -10,7 +10,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 *** Prettify Math in Buffers
 #+source: latex-pretty-symbols 
 #+begin_src emacs-lisp
-  (require 'latex-pretty-symbols)
+;;  (require 'latex-pretty-symbols)
 #+end_src
 
 *** Load RefTeX
@@ -75,6 +75,9 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 #+end_src
 
+#+RESULTS: reftex-support
+: t
+
 *** Load ebib
     ebib is a bibtex database manager that works inside emacs. It can
     talk to org-mode. See [[http://ebib.sourceforge.net/][the ebib project page]] for more. When Ebib is
@@ -84,10 +87,13 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 #+begin_src emacs-lisp
   (autoload 'ebib "ebib" "Ebib, a BibTeX database manager." t)
   (setq ebib-preload-bib-files 
-        '("/Users/kjhealy/Documents/bibs/socbib.bib"))
+        '("/media/dgm/05339CA847836DBD/documents/bibs/socbib.bib"))
   (add-hook 'LaTeX-mode-hook #'(lambda ()
-          (local-set-key "\C-cb" 'ebib-insert-bibtex-key)))
+          (local-set-key "\C-c v" 'ebib-insert-bibtex-key)))
 #+end_src
+
+#+RESULTS: ebib-load
+: ebib-insert-bibtex-key
 
 ** Configure AucTeX 
 *** Automatic Parsing

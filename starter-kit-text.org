@@ -21,9 +21,14 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
     (add-hook 'visual-line-mode-hook 'my-activate-adaptive-wrap-prefix-mode))
     (global-visual-line-mode t)
 
+;;; original code by Kieran Healy
     ;;; prefer auto-fill to visual line wrap in ESS mode
-    (add-hook 'ess-mode-hook 'turn-on-auto-fill)
-    (add-hook 'inferior-ess-mode-hook 'turn-on-auto-fill) 
+        ;;    (add-hook 'ess-mode-hook 'turn-on-auto-fill)
+        ;;    (add-hook 'inferior-ess-mode-hook 'turn-on-auto-fill) 
+
+;; but for me the auto-fill mode is causing disruption in interactive stata and r sessions so I turn it off.
+        ;;    (add-hook 'ess-mode-hook 'turn-off-auto-fill)
+        ;;    (add-hook 'inferior-ess-mode-hook 'turn-off-auto-fill) 
 
     ;;; but turn off auto-fill in tex and markdown
     (add-hook 'markdown-mode-hook 'turn-off-auto-fill)

@@ -18,28 +18,28 @@ which is also implemented using Org-mode and [[http://git-scm.com/][git]].
 HTML and LaTeX exporters are shown by default. We add the Markdown exporter to the menu.
 #+begin_src emacs-lisp
 
-;; Autocomplete for orgmode
-;; (require 'org-ac)
-;; (org-ac/config-default)
+  ;; Autocomplete for orgmode
+  ;; (require 'org-ac)
+  ;; (org-ac/config-default)
 
-;; Markdown exporter
-(require 'ox-md)
+  ;; Markdown exporter
+  (require 'ox-md)
 
-(setq org-completion-use-ido t)
-;; (require 'org-special-blocks)
-;; (if window-system (require 'org-mouse))
+  (setq org-completion-use-ido t)
+  ;; (require 'org-special-blocks)
+  ;; (if window-system (require 'org-mouse))
 
-;; Compatibility with WindMove
-;; Make windmove work in org-mode:
-(add-hook 'org-shiftup-final-hook 'windmove-up)
-(add-hook 'org-shiftleft-final-hook 'windmove-left)
-(add-hook 'org-shiftdown-final-hook 'windmove-down)
-(add-hook 'org-shiftright-final-hook 'windmove-right)
-;; (if window-system (require 'org-mouse))
+  ;; Compatibility with WindMove
+  ;; Make windmove work in org-mode:
+;;  (add-hook 'org-shiftup-final-hook 'windmove-up)
+;;  (add-hook 'org-shiftleft-final-hook 'windmove-left)
+;;  (add-hook 'org-shiftdown-final-hook 'windmove-down)
+;;  (add-hook 'org-shiftright-final-hook 'windmove-right)
+  ;; (if window-system (require 'org-mouse))
 #+end_src
 
 ** Org-Mode Hooks
-Make yasnippet work properly with org-mode. 
+Make yasnippet work properly with org-mode.
 
 #+begin_src emacs-lisp
 ;;  (defun yas/org-very-safe-expand ()
@@ -98,12 +98,33 @@ to activate more languages using the customize interface for the
 =org-babel-load-languages= variable, or with an elisp form like the
 one below.  The customize interface of =org-babel-load-languages=
 contains an up to date list of the currently supported languages.
+
 #+begin_src emacs-lisp
+(require 'ess) 
+(require 'ob-stata)
+
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((emacs-lisp . t)
-   (shell . t)))
+  '((emacs-lisp . t)
+    (sh . t)
+    (R . t)
+    (perl . t)
+    (ruby . t)
+    (python . t)
+    (js . t)
+    (haskell . t)
+    (stata . t)
+    (shell . t)
+    ))
+
+
+;; I am following Ista Zahn here: don't include (stata . t) but do (require 'ob-stata) afterwards. Stil, when I do so, I get the Debugger entered--Lisp error: (void-variable inferior-STA-program-name)
+;; eval(inferior-STA-program-name) so the problem comes from =ob-stata=.
+
+
 #+end_src
+
+#+RESULTS:
 
 The next block makes org-babel aware that a lower-case 'r' in a =src= block header should be processed as R. 
 
@@ -111,7 +132,13 @@ The next block makes org-babel aware that a lower-case 'r' in a =src= block head
 #+begin_src emacs-lisp
     (add-to-list 'org-src-lang-modes
                  '("r" . ess-mode))
+
+    (add-to-list 'org-src-lang-modes
+                 '("stata" . ess-mode))
 #+end_src
+
+#+RESULTS: add-r
+: ((stata . ess-mode) (r . ess-mode) (ocaml . tuareg) (elisp . emacs-lisp) (ditaa . artist) (asymptote . asy) (dot . fundamental) (sqlite . sql) (calc . fundamental) (C . c) (cpp . c++) (C++ . c++) (screen . shell-script) (shell . sh) (bash . sh))
 
 ** Code block fontification
    :PROPERTIES:
@@ -162,3 +189,60 @@ Org-mode manual is available to the =info= command (bound to =C-h i=).
 #+begin_src emacs-lisp
   (message "Starter Kit Org loaded.")
 #+end_src
+
+** DGM customization
+
+Customizations in: http://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-keywords
+      '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
+#+END_SRC
+
+
+Customization in: http://orgmode.org/manual/Capture-templates.html
+#+BEGIN_SRC emacs-lisp
+    (setq org-capture-templates
+     '(("n" "Notes" entry (file+headline "/media/dgm/05339CA847836DBD/documents/dropbox/org/notes.org" "Notes")
+            "* Added on: %U\nDescription: %i %?\nEntry created from this heading or email: %a")
+       ("t" "Todo" entry (file+headline "/media/dgm/05339CA847836DBD/documents/dropbox/org/gtd.org" "Tasks")
+            "* TODO %?\nDescription: %i\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\nEntry added on: %T\nEntry created from this heading or email: %a")
+       ("j" "Journal" entry (file+datetree "/media/dgm/05339CA847836DBD/documents/dropbox/org/journal.org")
+            "* %?\nAdded on: %U\n  %i\n  %a")))
+#+END_SRC
+
+
+
+#+RESULTS:
+| n | Notes | entry | (file+headline /media/dgm/05339CA847836DBD/documents/dropbox/org/notes.org Notes) | * %U |
+
+
+*** Customizations from Ista Zahn: 
+Check "Note taking and outlining (Org-mode)"  https://github.com/izahn/dotemacs
+
+#+begin_src emacs-lisp
+(with-eval-after-load "org"
+  (setq org-replace-disputed-keys t)
+  (setq org-support-shift-select t)
+  (setq org-export-babel-evaluate nil)
+
+  ;; (setq org-startup-indented t)
+  ;; increase imenu depth to include third level headings
+
+  (setq org-imenu-depth 4)
+
+  ;; Update images from babel code blocks automatically
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+
+  ;; configure org-mode when opening first org-mode file
+  ;; Load additional export formats
+  (require 'ox-odt)
+  (require 'ox-md)
+;;  (require 'ox-freemind)
+  (require 'ox-bibtex)
+)
+#+end_src
+
+#+RESULTS:
+: ox-bibtex
+
+
