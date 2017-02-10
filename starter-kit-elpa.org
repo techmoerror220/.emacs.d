@@ -1,0 +1,185 @@
+#+TITLE: Starter Kit ELPA
+#+OPTIONS: toc:nil num:nil ^:nil
+
+This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
+
+* Starter Kit ELPA
+[[http://elpa.gnu.org/][Emacs List Package Archive]] (ELPA) or [[http://melpa.org][MELPA]].
+
+The following packages will be downloaded and installed.
+
+#+begin_src emacs-lisp
+    (defvar starter-kit-packages (list 
+                                  'org-plus-contrib
+                                  'org-ac
+                                  'adaptive-wrap  
+                                  'ag
+                                  'avy
+                                  'auto-complete
+                                  ;;'ac-emmet
+                                  ;;'ac-etags
+                                  ;;'ac-ispell
+                                  'browse-kill-ring
+                                  'company
+                                  'company-auctex
+                                  'company-math
+                                  'company-web
+                                  'company-statistics
+                                  'company-quickhelp
+                                  'css-mode
+                                  'csv-mode
+                                  'deft
+                                  'emmet-mode
+                                  'exec-path-from-shell
+                                  'expand-region
+                                  'flycheck
+                                  'flycheck-tip
+                                  'flx-ido
+                                  ;; 'gist
+                                  'hl-line+
+                                  'idle-highlight-mode
+                                  'inf-ruby
+                                  'latex-pretty-symbols
+                                  ;; 'mac-key-mode
+                                  ;; 'magit
+                                  'markdown-mode
+                                  'maxframe
+                                  'multiple-cursors
+                                  'pandoc-mode
+                                  'polymode
+                                  'pos-tip
+                                  'powerline
+                                  'python
+                                  'python-mode
+                                  'python-x
+                                  'elpy
+                                  'ob-ipython
+                                  'ein  ;; Emacs ipython notebook
+                                  'py-autopep8
+                                  ;; 'ipython
+                                  'jedi
+                                  'jedi-core
+                                  'live-py-mode
+                                  'redo+
+                                  ;; 'ruby-mode
+                                  'smartparens ;; includes all features of =paredit= so the latter is not needed.
+                                  'smex
+                                  'anti-zenburn-theme
+                                  'solarized-theme
+                                  'color-theme-sanityinc-tomorrow
+                                  'color-theme-sanityinc-solarized
+                                  'lenlen-theme
+                                  'color-theme-modern
+                                  'hc-zenburn-theme
+                                  'labburn-theme
+                                  'zenburn-theme
+                                  'material-theme
+                                  'tango-2-theme
+                                  'monokai-theme
+                                  'darkokai-theme
+                                  'textmate
+                                  ;; 'typopunct
+                                  'visual-regexp
+                                  'yaml-mode
+                                  'yasnippet
+                                  'zenburn-theme
+                                  'spacemacs-theme
+                                  'auctex
+                                  'ess
+                                  'r-autoyas 
+                                  'unicode-fonts                               
+                                  'volatile-highlights
+                                  'undo-tree
+                                  'rebox2
+                                  'workgroups2
+                                  'duplicate-thing
+                                  'ibuffer-vc
+                                  'dired+
+                                  'recentf-ext
+                                  'diff-hl
+                                  'clean-aindent-mode
+                                  'golden-ratio
+                                  'highlight-numbers
+                                  'highlight-symbol
+                                  'info+
+                                  'discover-my-major
+                                  'rainbow-mode
+                                  'nyan-mode
+                                  'helm
+                                  'free-keys
+                                  'helm-projectile
+                                  'helm-descbinds
+                                  'bookmark+
+                                  'spaceline
+                                  ;; 'smart-mode-line-powerline-theme                                 
+                                  ;; 'telephone-line
+                                  'ace-window
+                                  'ox-twbs
+                                  'ox-pandoc
+                                  'moe-theme
+                                  'which-key
+                                  'eval-in-repl
+                                  'ebib
+                                  'helm-bibtex
+                                  'helm-R
+                                  'iedit
+                                  'geiser
+                                  'helm-gtags
+                                  'helm-ag 
+                                  'darktooth-theme
+                                  'soothe-theme
+;;                                  'uscolors-theme
+                                  )
+      "Libraries that should be installed by default.")
+#+end_src
+
+#+begin_src emacs-lisp
+(defun starter-kit-elpa-install ()
+  "Install all starter-kit packages that aren't installed."
+  (interactive)
+  (dolist (package starter-kit-packages)
+    (unless (or (member package package-activated-list)
+                (functionp package))
+      (message "Installing %s" (symbol-name package))
+      (package-install package))))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun esk-online? ()
+  "See if we're online.
+
+Windows does not have the network-interface-list function, so we
+just have to assume it's online."
+  ;; TODO how could this work on Windows?
+  (if (and (functionp 'network-interface-list)
+           (network-interface-list))
+      (some (lambda (iface) (unless (equal "lo" (car iface))
+                         (member 'up (first (last (network-interface-info
+                                                   (car iface)))))))
+            (network-interface-list))
+    t))
+#+end_src
+
+On your first run, this should pull in all the base packages.
+#+begin_src emacs-lisp
+(when (esk-online?)
+  (unless package-archive-contents (package-refresh-contents))
+  (starter-kit-elpa-install))
+#+end_src
+
+Make sure the PATH variable is set properly. (Uses exec-path-from-shell package.)
+#+source: fix-path 
+#+begin_src emacs-lisp
+;;  (when (memq window-system '(mac ns))
+;;  (exec-path-from-shell-initialize))
+
+ (exec-path-from-shell-initialize)
+#+end_src
+
+#+RESULTS: fix-path
+: ((MANPATH . ) (PATH . /home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/local/stata:/usr/local/stata/stata-mp:/usr/local/stata/xstata-mp:/usr/bin:/home/dgm/anaconda3/bin:/home/dgm/anaconda3/bin/R:/home/dgm/anaconda3/bin/ipython3:/home/dgm/anaconda3/bin/ipython:/home/dgm/anaconda3/bin/python3.5:/home/dgm/.local/bin:/usr/local/bin:/usr/local/stata:/usr/local/stata/stata-mp:/usr/local/stata/xstata-mp:/usr/bin:/home/dgm/anaconda3/bin:/home/dgm/anaconda3/bin/R:/home/dgm/anaconda3/bin/ipython3:/home/dgm/anaconda3/bin/ipython:/home/dgm/anaconda3/bin/python3.5:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games))
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit ELPA loaded.")
+#+end_src

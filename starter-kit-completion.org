@@ -1,0 +1,129 @@
+* Starter kit yasnippet
+
+Yasnippet is a snippet expansion system for Emacs. It uses short phrases and the tab key to trigger the insertion of frequently-used snippets of code or text in your document. 
+
+** Load the yasnippet bundle
+
+Load the snippets defined in the package's =./snippets/= directory, and local snippets from the =./local-snippets/= directory. 
+
+#+begin_src emacs-lisp tangle: yes
+
+    (add-to-list 'load-path
+                   (expand-file-name  "yasnippet"
+                                      (expand-file-name "elpa"
+                                                        dotfiles-dir)))
+    (require 'yasnippet)
+  ;;  (yas-set-ac-modes)
+  ;;  (yas-enable-emacs-lisp-paren-hack)
+    (yas-global-mode 1)
+    (setq yas-snippet-dirs '("~/.emacs.d/mysnippets"
+                               "~/.emacs.d/snippets"
+                                  "~/.emacs.d/elpa/yasnippet-20170108.1830/snippets"))
+
+;;   (yas-load-directory (expand-file-name "snippets" dotfiles-dir))  ;; original line from kieran healy
+
+(defun check-expansion ()
+    (save-excursion
+      (if (looking-at "\\_>") t
+        (backward-char 1)
+        (if (looking-at "\\.") t
+          (backward-char 1)
+          (if (looking-at "->") t nil)))))
+
+  (defun do-yas-expand ()
+    (let ((yas-fallback-behavior 'return-nil))
+      (yas-expand)))
+
+  (defun tab-indent-or-complete ()
+    (interactive)
+    (if (minibufferp)
+        (minibuffer-complete)
+      (if (or (not yas-minor-mode)
+              (null (do-yas-expand)))
+          (if (check-expansion)
+              (company-complete-common)
+            (indent-for-tab-command)))))
+
+  (global-set-key [tab] 'tab-indent-or-complete)
+
+#+end_src
+
+#+RESULTS:
+: tab-indent-or-complete
+
+** Company Mode
+Auto-completion of text and code. 
+
+We use the `:with` keyword to include dabbrev in every backend, which gives us completion from everything that's in the buffer (and other open buffers).
+
+#+source: company-mode
+#+begin_src emacs-lisp
+
+;;Use C-TAB to complete. We put this in eval-after-load 
+;; because otherwise some modes will try to override our settings.
+(require 'company)
+;; set to 0 to prevent completion starting automatically 
+;; (setq company-idle-delay 0)
+;; cancel if input doesn't match
+(setq company-require-match nil)
+;; complete using C-TAB
+(global-set-key (kbd "<C-tab>") 'company-complete)
+;; use C-n and C-p to cycle through completions
+;; (define-key company-mode-map (kbd "<tab>") 'company-complete)
+(define-key company-active-map (kbd "C-n") 'company-select-next)
+(define-key company-active-map (kbd "<tab>") 'company-complete-common)
+(define-key company-active-map (kbd "C-p") 'company-select-previous)
+(define-key company-active-map (kbd "<backtab>") 'company-select-previous)
+;; enable math completions
+(require 'company-math)
+;; company-mode completions for ess
+;; (require 'company-ess)
+(add-to-list 'company-backends 'company-math-symbols-unicode)
+;;(add-to-list 'company-backends 'company-math-symbols-latex)
+;; put company-capf at the beginning of the list
+(require 'company-capf)
+(setq company-backends
+      (delete-dups (cons 'company-capf company-backends)))
+
+;; ;; disable dabbrev
+;; (delete 'company-dabbrev company-backends)
+;; (delete 'company-dabbrev-code company-backends)
+
+
+(add-hook 'after-init-hook 'global-company-mode)
+
+;; completion for kill ring history
+(require 'browse-kill-ring)
+(browse-kill-ring-default-keybindings)
+
+#+end_src
+
+#+RESULTS: company-mode
+: yank-pop
+
+** Autocomplete
+We use company mode, as initiated above, but here's a working auto-complete setup as an alternative. Don't use company mode and autocomplete together. To switch from company-mode to autocomplete, move the `tangle: no` from the `begin_src` line below up to the corresponding line in the `company-mode` section above. Then open the `starter-kit-elpa.org` file, uncomment the `autocomplete` and `ac-` extensions there, and restart Emacs.
+
+#+source:  autocomplete
+#+begin_src emacs-lisp :tangle no
+  (require 'auto-complete)
+  (require 'auto-complete-config)
+  (global-auto-complete-mode t)
+  (add-to-list 'ac-dictionary-directories (expand-file-name "auto-complete" dotfiles-dir))
+  (setq ac-modes (append ac-modes '(org-mode))) 
+  (ac-config-default)
+  (define-key ac-complete-mode-map [tab] 'ac-expand)
+  (setq ac-auto-start 4)
+  (ac-flyspell-workaround)
+  (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
+  (define-key ac-completing-map (kbd "C-c h") 'ac-quick-help)  
+  (add-hook 'html-mode-hook 'ac-html-enable)
+
+#+end_src 
+
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Completion loaded.")
+#+end_src
+

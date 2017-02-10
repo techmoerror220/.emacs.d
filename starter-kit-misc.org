@@ -1,0 +1,292 @@
+#+TITLE: Starter Kit Misc
+#+OPTIONS: toc:nil num:nil ^:nil
+
+This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
+
+* Starter Kit Misc
+Things that don't fit anywhere else.
+
+** Color Themes
+Emacs 24 introduces a streamlined theming system that replaces an
+older, messier one. The Starter Kit comes with Ethan Schoonover's
+/Solarized/ color theme and the /Zenburn/ theme, in versions
+maintained by Bozhidar Batsov. Load it with =M-x load-theme
+solarized-dark= or =M-x load-theme solarized-light=. You can also try
+loading the =zenburn= and =anti-zenburn= themes. 
+
+#+source: colors
+#+begin_src emacs-lisp
+
+;; dgm added customizations intended for modeline, following https://github.com/bbatsov/solarized-emacs
+
+;; make the modeline high contrast
+ (setq solarized-high-contrast-mode-line t)
+
+;; powerline by milkman
+(require 'powerline)
+(display-time-mode 1)
+(powerline-default-theme)
+
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
+  (setq custom-safe-themes t)
+;;  (load-theme 'zenburn t)
+  (load-theme 'solarized-dark t)
+;;  (load-theme 'solarized-light t)
+;;  (load-theme 'darktooth t)
+;;  (load-theme 'soothe t)
+
+;; from https://github.com/kuanyui/moe-theme.el
+;;    (require 'moe-theme)
+;;    (powerline-moe-theme)
+
+    ;; Show highlighted buffer-id as decoration. (Default: nil)
+;;    (setq moe-theme-highlight-buffer-id t)
+
+    ;; Resize titles (optional).
+;;    (setq moe-theme-resize-markdown-title '(1.5 1.4 1.3 1.2 1.0 1.0))
+;;    (setq moe-theme-resize-org-title '(1.5 1.4 1.3 1.2 1.1 1.0 1.0 1.0 1.0))
+;;    (setq moe-theme-resize-rst-title '(1.5 1.4 1.3 1.2 1.1 1.0))
+
+    ;; Choose a color for mode-line.(Default: blue)
+;;    (moe-theme-set-color 'orange)
+
+    ;; Finally, apply moe-theme now.
+    ;; Choose what you like, (moe-light) or (moe-dark)
+;;    (moe-dark)    
+
+;; If you use Emacs build-in show-paren-mode, I recommend set the value of show-paren-style to expression for optimized visual experience:
+
+;;    (show-paren-mode t)
+;;    (setq show-paren-style 'expression)
+
+;; trying to improve the looks of dired+ with solarized dark: http://unix.stackexchange.com/questions/20519/dired-on-dark-color-themes
+;; (add-to-list 'default-frame-alist '(background-mode . dark))
+;;  (load-theme 'spacemacs-dark t)
+;;  (load-theme 'misterioso t)
+#+end_src
+
+#+RESULTS: colors
+
+#+RESULTS:
+: t
+
+** Window system 
+
+#+srcname: starter-kit-window-view-stuff
+#+begin_src emacs-lisp 
+    (when window-system
+      (setq frame-title-format '(buffer-file-name "%f" ("%b")))
+      (tooltip-mode -1)
+      (tool-bar-mode -1)
+      (blink-cursor-mode -1))
+
+    (mouse-wheel-mode t)
+
+  ;; dgm comments this out as it is in init.el already
+  ;;  (set-language-environment 'utf-8)
+  ;;  (set-terminal-coding-system 'utf-8)
+  ;;  (set-keyboard-coding-system 'utf-8)
+  ;;
+  ;;  (setq locale-coding-system 'utf-8)
+  ;;  (set-default-coding-systems 'utf-8)
+  ;;  (set-selection-coding-system 'utf-8)
+  ;;  (prefer-coding-system 'utf-8)
+
+    (setq visible-bell t
+          echo-keystrokes 0.1
+          font-lock-maximum-decoration t
+          font-lock-verbose nil
+          inhibit-startup-message t
+          transient-mark-mode t
+        ;;  color-theme-is-global t
+          delete-by-moving-to-trash t
+          shift-select-mode nil
+          truncate-partial-width-windows nil
+          uniquify-buffer-name-style 'forward
+          whitespace-style '(trailing lines space-before-tab
+                                      indentation space-after-tab)
+          whitespace-line-column 100
+          ediff-window-setup-function 'ediff-setup-windows-plain
+          ediff-split-window-function 'split-window-horizontally
+          oddmuse-directory (concat dotfiles-dir "oddmuse")
+          xterm-mouse-mode t
+          save-place-file (concat dotfiles-dir "places"))
+#+end_src
+
+#+RESULTS: starter-kit-window-view-stuff
+: /home/dgm/.emacs.d/places
+
+** Turn on Minimal mode
+Thin window dividers and no scroll bars. Toggle with `C-c C-s`.
+
+#+source: minimal-mode-on
+#+begin_src emacs-lisp
+  (minimal-mode)
+#+end_src
+
+** Set browser
+Set this to whatever browser you use e.g...
+: ;; (setq browse-url-browser-function 'browse-url-firefox)
+: ;; (setq browse-url-browser-function 'browse-default-macosx-browser)
+: ;; (setq browse-url-browser-function 'browse-default-windows-browser)
+: ;; (setq browse-url-browser-function 'browse-default-kde)
+: ;; (setq browse-url-browser-function 'browse-default-epiphany)
+: ;; (setq browse-url-browser-function 'browse-default-w3m)
+: ;; (setq browse-url-browser-function 'browse-url-generic
+: ;;       browse-url-generic-program "~/src/conkeror/conkeror")
+
+** Transparently open compressed files
+#+begin_src emacs-lisp
+(auto-compression-mode t)
+#+end_src
+
+** Enable syntax highlighting 
+#+begin_src emacs-lisp
+;;(global-font-lock-mode t)
+#+end_src
+
+** Show Menu Bar in Window but not in tty
+If launching Emacs as in windowing system, show the menu. If launching in a tty/terminal window, don't display the menu.
+#+source: starter-kit-no-menu-in-tty
+#+begin_src emacs-lisp
+  (if window-system
+      (menu-bar-mode t)
+      (menu-bar-mode -1)
+      )
+#+end_src
+
+** Save a list of recent files visited.
+#+begin_emacs-lisp 
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+
+;; By default, Recentf saves the list of recent files on exiting Emacs (specifically, `recentf-save-list` is called on `kill-emacs-hook`). If Emacs exits abruptly for some reason the recent file list will be lost - therefore you may wish to call `recentf-save-list` periodically, e.g. every 5 minutes:
+
+(run-at-time nil (* 5 60) 'recentf-save-list)
+
+;; expand recentf
+(require 'recentf-ext)
+#+end_emacs-lisp
+
+** Save place last visited in buffer
+
+#+srcname: starter-kit-saveplace
+#+begin_src emacs-lisp
+;; Code by Kieran Healy:
+;; saveplace remembers your location in a file when saving files
+;;  (require 'saveplace)
+;;  (setq-default save-place t) for Emacs below 24.4
+;;  (toggle-save-place-globally 1) ;; in Emacs above 24.4
+
+;; My code
+;; (require 'saveplace)
+;; I comment saveplace out because in the documentation it says: "For GNU Emacs 25.1 and newer versions
+;; Note that saveplace is auto-loaded by save-place-mode. So you do not need to explicitly require it.
+
+  (save-place-mode 1)
+
+#+end_src
+
+#+RESULTS: starter-kit-saveplace
+: t
+
+#+RESULTS:
+: t
+
+   
+** ido mode and flx-ido
+ido-mode is like magic pixie dust!
+#+srcname: starter-kit-loves-ido-mode
+#+begin_src emacs-lisp 
+  (when (> emacs-major-version 21)
+    (require 'flx-ido) 
+    (ido-mode t)
+    (ido-everywhere 1)
+    (setq ido-enable-prefix nil
+          ido-enable-flex-matching t
+          ido-create-new-buffer 'always
+          ido-use-filename-at-point nil
+          ido-use-faces nil
+          ido-max-prospects 10))
+#+end_src
+
+** Other, tabs, imenu and a coding hook
+#+begin_src emacs-lisp 
+  (set-default 'indent-tabs-mode nil)
+  (set-default 'indicate-empty-lines t)
+  (set-default 'imenu-auto-rescan t)
+  
+  (add-hook 'text-mode-hook 'turn-on-auto-fill)
+  (add-hook 'text-mode-hook 'turn-on-flyspell)
+  (add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
+  (add-hook 'markdown-mode-hook 'turn-on-flyspell)
+  (add-hook 'org-mode-hook 'turn-on-flyspell)
+  
+  (defvar starter-kit-coding-hook nil
+    "Hook that gets run on activation of any programming mode.")
+  
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  ;; Seed the random-number generator
+  (random t)
+
+;; Istan Zahn uses this instea: (https://github.com/izahn/dotemacs)
+;; Use y/n instead of yes/no
+;; (fset 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
+*** functions for prettier source code
+#+begin_src emacs-lisp
+(defun starter-kit-pretty-lambdas ()
+  (font-lock-add-keywords
+   nil `(("(\\(lambda\\>\\)"
+          (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                    ,(make-char 'greek-iso8859-7 107))
+                    nil))))))
+#+end_src
+
+#+RESULTS:
+: starter-kit-pretty-lambdas
+
+** Powerline provides a nicer modeline
+A nicer modeline. 
+DGM says: yes, but I activate it elsewhere.
+#+source: powerline-load
+#+begin_src emacs-lisp
+;;  (require 'powerline)
+;;  (powerline-default-theme)
+#+end_src
+
+** Hippie expand: at times perhaps too hip
+#+begin_src emacs-lisp
+(delete 'try-expand-line hippie-expand-try-functions-list)
+(delete 'try-expand-list hippie-expand-try-functions-list)
+#+end_src
+
+** Don't clutter up directories with files~
+#+begin_src emacs-lisp
+(setq backup-directory-alist `(("." . ,(expand-file-name
+                                        (concat dotfiles-dir "backups")))))
+#+end_src
+
+** Associate modes with file extensions
+#+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
+(add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
+#+end_src
+
+** Default to unified diffs
+#+begin_src emacs-lisp
+(setq diff-switches "-u")
+#+end_src
+
+
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Misc loaded.")
+#+end_src

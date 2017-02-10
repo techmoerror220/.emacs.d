@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: eñe
+# binding: C-c n
+# --
+ñ$0

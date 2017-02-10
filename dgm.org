@@ -1,0 +1,2386 @@
+#+TITLE: Local User Customizations
+#+OPTIONS: toc:nil num:nil ^:nil
+
+* Starter Kit kjhealy
+This file contains local customizations---ones that in some cases
+you will not be able to just drop in and use because, e.g., they
+involve references to particular files on my own machine. It's
+included here for completeness, and as and example of the kind of
+things you might put in your own user-specific file.
+
+Some of the settings here depend on additional software that you may
+not have installed by default. E.g., the "Use GNU ls" section below
+depends on you having GNU coreutils installed. To ignore these
+sections, add `:tangle no` to any code block you don't want to use.
+
+To use the customizations here yourself, /you must change the name of
+ this file to match your own user name or system name/. Those are the
+ values of the Emacs variables =user-login-name= or =system-name=, so
+ that it will be picked up by =init.el= when Emacs starts up, and get
+ loaded properly. To find the current value of these variables on your
+ system, launch emacs and do =C-h-v system-name [RET]= or =C-h-v
+ user-login-name [RET]=. For example, on my system =user-login-name=
+ is 'kjhealy', so this file is named =kjhealy.org=, and when Emacs
+ starts up with the starter kit it creates the file =kjhealy.el=.
+ 
+You will also need to change the values for the location of bibtex
+ databases, pandoc and orgmode-mobile specified below, and some other
+ settings. *Search for 'kjhealy' in this file* to find the paths that
+ need to be updated. Change them as needed or delete them if you don't
+ need these features. 
+
+Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode XeLaTeX Export Settings]] section below has
+ references to fonts that you may not have available on your
+ system. Change the references as appropriate, or comment out or
+ delete the lines.
+
+** Local Miscellaneous Settings
+*** Use GNU ls
+OS X ships with BSD's ls command which doesn't have all the features of GNU ls (used internally by dired). Install `coreutils` with homebrew (`brew install coreutils`) and use `gls` instead.
+
+#+source: gnu-ls
+#+begin_src emacs-lisp 
+
+ (setq insert-directory-program (executable-find "ls"))
+
+#+end_src
+
+*** One space after period
+
+Use `M-e` for sentence-level navigation, but without having to put two spaces after a period like an animal.  
+
+#+source: periods
+#+begin_src emacs-lisp
+  (setq sentence-end-double-space nil)
+#+end_src
+
+*** Color Theme Tweaks
+The theme package is loaded in =starter-kit-misc.org=. The settings
+here adjust the height of some headings in Org and LaTeX mode, as well
+as turning off the sans-serif heading style that AucTeX defaults to.
+
+#+srcname: local-settings
+#+begin_src emacs-lisp
+  (add-hook 'latex-mode-hook 
+            (lambda ()
+              (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground "#b58900")
+              (set-face-attribute 'font-latex-sectioning-0-face nil :height 3)
+              (set-face-attribute 'font-latex-sectioning-1-face nil :height 2)
+              (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5)
+              (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2)
+              (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)))
+  
+   (add-hook 'org-mode-hook 
+             (lambda ()
+               (set-face-attribute 'org-level-1 nil :height 1.5)
+               (set-face-attribute 'org-level-2 nil :height 1.2)
+               (set-face-attribute 'org-level-3 nil :height 1.1)
+               (set-face-attribute 'org-level-4 nil :height 1.1)
+               (set-face-attribute 'org-level-5 nil :height 1.1)))
+#+end_src
+
+*** Run Emacs in Full Screen
+  I find it very useful to run Emacs in full-screen mode. There is no
+    completely satisfactory way to accomplish this on Mac OS X. What
+    works depends on the flavor of emacs you are using,
+    unfortunately. Choose as appropriate from the following options. Enable one of them by changing the value of =:tangle= to =yes=. 
+
+Bind full screen to `C-c f`.
+
+#+source: fullscreen-4
+#+begin_src emacs-lisp
+    (defun fullscreen (&optional f)
+      (interactive)
+      (set-frame-parameter f 'fullscreen
+                           (if (frame-parameter f 'fullscreen) nil 'fullboth)))
+    (global-set-key (kbd "C-c f") 'fullscreen)
+    (add-hook 'after-make-frame-functions 'fullscreen)
+#+end_src
+
+*** Mac Key mode
+    Used with Mitsuharu Yamamoto's carbon-patched Emacs, which turns
+    off support for default mac bindings. Turned off by default.
+#+srcname: mac-keys
+#+begin_src emacs-lisp :tangle no
+   (require 'mac-key-mode)
+   (mac-key-mode 1)
+   (add-hook 'mac-key-mode-hook
+       (lambda()
+         (interactive)
+         (if mac-key-mode
+             (setq mac-option-modifier 'meta)
+             (setq mac-option-modifier nil)
+             )))
+#+end_src
+
+*** Dired-x
+Dired extensions
+#+source: Dired-x
+#+begin_src emacs-lisp
+  (load "dired-x")
+#+end_src
+
+*** Dired open multiple files
+In dired mode, visit all marked files using. Bound to the "F" key. 
+#+source: dired-F
+#+begin_src emacs-lisp
+  (eval-after-load "dired"
+  '(progn
+     (define-key dired-mode-map "F" 'my-dired-find-file)
+     (defun my-dired-find-file (&optional arg)
+       "Open each of the marked files, or the file under the point, or when prefix arg, the next N files "
+       (interactive "P")
+       (let* ((fn-list (dired-get-marked-files nil arg)))
+         (mapc 'find-file fn-list)))))
+#+end_src
+
+*** Stripe Dired buffers
+#+name: stripe-dired
+#+begin_src emacs-lisp
+(require 'stripe-buffer)
+(add-hook 'org-mode-hook 'org-table-stripes-enable)
+(add-hook 'dired-mode-hook 'stripe-listify-buffer)  
+#+end_src
+
+*** Avy Mode
+From: http://oremacs.com/2016/01/23/avy-0.4.0/
+
+For example, suppose you have:
+
+(global-set-key (kbd "M-t") 'avy-goto-word-1)
+
+Here's what you can do now to a word that starts with a "w" and is select-able with "a":
+
+    To jump there: M-t w a.
+    To copy the word instead of jumping to it: M-t w na
+    To mark the word after jumping to it: M-t w ma.
+    To kill the word after jumping to it: M-t w xa.
+
+Note I have binded to C-o instead of M-t:
+
+#+name: avy-mode
+#+begin_src emacs-lisp
+
+  (define-key global-map (kbd "C-o") 'avy-goto-word-1)
+
+#+end_src
+
+** Local LaTeX settings
+*** In-text Smart Quotes (XeLaTeX only)
+    Redefine TeX-open-quote and TeX-close-quote to be smart quotes by default. Below, in the local org-mode settings, we'll also map the relevant function to a key we can use in org-mode, too. If you don't use XeLaTeX for processing all your =.tex= files, you should disable this option.
+
+#+source: smart-quotes
+#+begin_src emacs-lisp 
+  (setq TeX-open-quote "“")
+  (setq TeX-close-quote "”")
+#+end_src
+
+*** SyncTeX, PDF mode, Evince
+Set up AUCTeX to work with the Evince PDF viewer.
+
+#+srcname: sync
+#+begin_src emacs-lisp
+    ;; Synctex with Evince
+    (add-hook 'TeX-mode-hook
+    (lambda ()
+    (add-to-list 'TeX-output-view-style
+    '("^pdf$" "."
+     "/usr/bin/evince  %n %o %b")))
+     )
+    
+  (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+  (setq TeX-view-program-list
+       '(("PDF Viewer" "/usr/bin/evince -b -g %n %o %b")))
+
+    ;; Make emacs aware of multi-file projects
+    ;; (setq-default TeX-master nil)
+    
+    ;; Auto-raise Emacs on activation (from Skim, usually)
+;;    (defun raise-emacs-on-aqua()
+;;    (shell-command "osascript -e 'tell application \"Emacs\" to activate' &"))
+;;    (add-hook 'server-switch-hook 'raise-emacs-on-aqua)
+#+end_src
+
+*** Local RefTeX Settings
+Tell RefTeX where the bibliography files are. 
+
+#+srcname: local-reftex
+#+begin_src emacs-lisp    
+    ;; Make RefTex able to find my local bib files
+     (setq reftex-bibpath-environment-variables
+;;     '("/media/dgm/blue/documents/bibs"))
+     '("/home/dgm/texmf/bibtex/bib"))
+
+    ;; Default bibliography
+     (setq reftex-default-bibliography
+     '("/media/dgm/blue/documents/bibs/socbib.bib"))
+#+end_src
+
+#+RESULTS: local-reftex
+| /media/dgm/blue/documents/bibs/socbib.bib |
+
+*** Local vc commands
+    Run the vc shellscript before running xelatex with C-c c (instead
+    of C-c C-c for regular compile). This assumes you're using the VC
+    LaTeX package, have vc in your path, and have vc-awk in the
+    directory you're working in.
+
+    DGM: I comment it out as C-c c is used elsewhere for capture in org. 
+
+#+srcname: vc-command
+#+begin_src emacs-lisp
+;;    (fset 'run-vc-then-xelatex
+;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
+;;    (global-set-key (kbd "C-c c") 'run-vc-then-xelatex);; Run the VC command before running xelatex
+;;    (fset 'run-vc-then-xelatex
+;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
+;;    (global-set-key (kbd "C-c c") 'run-vc-then-xelatex)
+#+end_src
+
+    Or just run vc alone --- this is useful when writing LaTeX files
+    using org-mode. (See the org-mode customizations below).
+    
+    dgm: I comment this out. I don't know how to make =vc= work as a command... I think you need to first make a =makefile=.  Plus I think =vc= is run automatically when =latexmk= is run thanks to the =\immediate\write18{sh ./vc}= line
+
+#+source: vc-alone
+#+begin_src emacs-lisp
+;;  (global-set-key (kbd "C-c v")
+;;                      (lambda ()
+;;                        (interactive)
+;;                        (shell-command "vc")))
+#+end_src
+
+** Local Pandoc Support 
+A pandoc menu for markdown and tex files. 
+#+src-name: pandoc_mode
+#+begin_src emacs-lisp 
+  (load "pandoc-mode")
+  (add-hook 'markdown-mode-hook 'pandoc-mode)
+  (add-hook 'TeX-mode-hook 'pandoc-mode)
+  (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
+  (global-set-key (kbd "C-c C-p") 'pandoc-main-hydra/body)
+#+end_src
+
+#+RESULTS:
+: pandoc-main-hydra/body
+
+** Local Polymode Support
+Polymode is a new package that supports multiple modes inside a single buffer. It is aimed particularly at literate programming approaches and supports, e.g., R and markdown in a single =.Rmd= file. So it is very useful with knitr in R, given that ESS does not yet fully support =.Rmd= files.
+
+#+source: Polymode
+#+begin_src emacs-lisp
+  (require 'poly-R)
+  (require 'poly-markdown)
+  ;;; polymode + markdown
+  (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
+
+  ;;; polymode + R
+  (add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
+  (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
+  (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
+
+#+end_src
+
+** Local iBuffer Settings
+   Manage a lot of buffers easily with C-x C-b. Already set up
+   elsewhere in the starter kit. Add local configuration here, e.g.,
+   display categories.
+#+srcname: iBuffer-custom
+#+begin_src emacs-lisp 
+  (setq ibuffer-saved-filter-groups
+      '(("home"
+	 ("emacs-config" (or (filename . ".emacs.d")
+			     (filename . "emacs-config")))
+	 ("Org" (or (mode . org-mode)
+		    (filename . "OrgMode")))
+	 ("Web Dev" (or (mode . html-mode)
+			(mode . css-mode)))
+	 ("Magit" (name . "\*magit"))
+	 ("ESS" (mode . ess-mode))
+         ("LaTeX" (mode . latex-mode))
+	 ("Help" (or (name . "\*Help\*")
+		     (name . "\*Apropos\*")
+		     (name . "\*info\*"))))))
+
+        (add-hook 'ibuffer-mode-hook 
+	             '(lambda ()
+	             (ibuffer-switch-to-saved-filter-groups "home")))
+       (setq ibuffer-show-empty-filter-groups nil)                     
+       (setq ibuffer-expert t)
+       (add-hook 'ibuffer-mode-hook 
+       '(lambda ()
+       (ibuffer-auto-mode 1)
+       (ibuffer-switch-to-saved-filter-groups "home")))
+#+end_src
+
+** Local Org-mode Settings
+*** Smart-quote binding
+When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by default. 
+
+#+source: org-mode-smartquote-key
+#+begin_src emacs-lisp :tangle no
+  (add-hook 'org-mode-hook 'smart-quote-keys)
+  
+;;  (defun smart-quote-keys ()
+;;    (require 'typopunct)
+;;    (typopunct-change-language 'english)
+;;    (local-set-key (kbd "C-c \'") 'typopunct-insert-single-quotation-mark)
+;;    (local-set-key (kbd "C-c \"") 'typopunct-insert-quotation-mark)
+;;    )
+#+end_src
+
+*** Archive Settings
+    Where archived projects and tasks go.
+#+source: orgmode-archive
+#+begin_src emacs-lisp
+  (setq org-archive-location "/media/dgm/blue/documents/dropbox/org/archive.org::From %s")
+#+end_src
+
+*** Mobile Settings
+   Sync orgmode files with Dropbox and iPhone. 
+#+src-name: orgmode-mobile
+#+begin_src emacs-lisp
+   ;; Set to the location of your Org files on your local system
+   (setq org-directory "/media/dgm/blue/documents/dropbox/org")
+   ;; Set to <your Dropbox root directory>/MobileOrg.
+   (setq org-mobile-directory "/media/dgm/blue/documents/dropbox/mobileorg")
+   ;; Set to the files (or directory of files) you want sync'd
+;;   (setq org-agenda-files (quote ("/media/dgm/blue/documents/dropbox/org")))  ;; this is the original line by kieran healy.
+   (setq org-agenda-files (list "/media/dgm/blue/documents/dropbox/org/notes.org"
+                                "/media/dgm/blue/documents/dropbox/org/gtd.org"
+                                "/media/dgm/blue/documents/dropbox/org/journal.org"))
+   ;; Set to the name of the file where new notes will be stored
+   (setq org-mobile-inbox-for-pull "/media/dgm/blue/documents/dropbox/org/fromMobile.org")
+#+end_src
+
+#+RESULTS:
+: /media/dgm/blue/documents/dropbox/org/fromMobile.org
+
+*** Babel Settings
+   Configure org-mode so that when you edit source code in an indirect buffer (with C-c '), the buffer is opened in the current window. That way, your window organization isn't broken when switching.
+
+#+source: orgmode-indirect-buffer-settings
+#+begin_src emacs-lisp
+  (setq org-src-window-setup 'current-window)
+#+end_src
+
+*** XeLaTeX and pdfLaTeX Export Settings
+   Configure org-mode to export directly to PDF using xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
+
+#+source: orgmode-latex-export
+#+begin_src emacs-lisp
+
+        ;; Choose either listings or minted for exporting source code blocks.
+        ;; Using minted (as here) requires pygments be installed. To use the
+        ;; default listings package instead, use
+        ;; (setq org-latex-listings t)
+        ;; and change references to "minted" below to "listings"
+        (setq org-latex-listings 'minted)
+
+        ;; default settings for minted code blocks.
+        ;; bg will need to be defined in the preamble of your document. It's defined in org-preamble-xelatex.sty below.
+        (setq org-latex-minted-options
+              '(;("frame" "single")
+                ("bgcolor" "bg") 
+                ("fontsize" "\\small")
+                ))
+
+
+
+      ;; turn off the default toc behavior; deal with it properly in headers to files.
+       (defun org-latex-no-toc (depth)  
+         (when depth
+             (format "%% Org-mode is exporting headings to %s levels.\n"
+                     depth)))
+       (setq org-latex-format-toc-function 'org-latex-no-toc)
+
+      ;; note the insertion of the \input statement for the vc information 
+      ;; dgm: remember to activate it when I git every directory
+
+      ;; I add the option "\counterwithout{section}{chapter}" mentioned in the §18.8 section of the memoir manual (http://tex.stackexchange.com/questions/62093/omitting-chapter-numbers-in-section-headers-using-memoir) to disable the \chapter{} option in the article version of the memoir class
+
+      (add-to-list 'org-latex-classes
+                     '("memarticleUnnumbered"
+                       "\\documentclass[11pt,oneside,article]{memoir}\n\\counterwithout{section}{chapter}\n\\immediate\\write18{sh ./vc}\n\\input{vc} % vc package"
+                        ("\\section*{%s}" . "\\section{%s}")
+                        ("\\subsection*{%s}" . "\\subsection{%s}")
+                        ("\\subsubsection*{%s}" . "\\subsubsection{%s}")
+                        ("\\paragraph*{%s}" .  "\\paragraph{%s}")
+                        ("\\subparagraph*{%s}" . "\\subparagraph{%s}")))
+
+      (add-to-list 'org-latex-classes
+                     '("memarticleNumbered"
+                       "\\documentclass[11pt,oneside,article]{memoir}\n\\immediate\\write18{sh ./vc}\n\\input{vc} % vc package"
+                        ("\\section{%s}" . "\\section*{%s}")
+                        ("\\subsection{%s}" . "\\subsection*{%s}")
+                        ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                        ("\\paragraph{%s}" .  "\\paragraph*{%s}")
+                        ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+      (add-to-list 'org-latex-classes
+                     '("membook"
+                       "\\documentclass[oldfontcommands,11pt,oneside]{memoir}\n\\immediate\\write18{sh ./vc}\n\\input{vc}"
+                       ("\\chapter{%s}" . "\\chapter*{%s}")
+                       ("\\section{%s}" . "\\section*{%s}")
+                       ("\\subsection{%s}" . "\\subsection*{%s}")
+                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+      (add-to-list 'org-latex-classes
+                     '("jssarticle"
+                       "\\documentclass[oldfontcommands,11pt,oneside,article]{jss}}\n\\immediate\\write18{sh ./vc}\n\\input{vc}"
+                        ("\\section{%s}" . "\\section*{%s}")
+                        ("\\subsection{%s}" . "\\subsection*{%s}")
+                        ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                        ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                        ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+      (add-to-list 'org-latex-classes
+               '("unnumberedArticle\n\\immediate\\write18{sh ./vc}\n\\input{vc}"
+                 "\\documentclass{article}"
+                        ("\\section*{%s}" . "\\section{%s}")
+                        ("\\subsection*{%s}" . "\\subsection{%s}")
+                        ("\\subsubsection*{%s}" . "\\subsubsection{%s}")
+                        ("\\paragraph*{%s}" .  "\\paragraph{%s}")
+                        ("\\subparagraph*{%s}" . "\\subparagraph{%s}")))
+
+
+;; edited out:    
+;;                  \\immediate\\write18{sh ./vc}
+;;                  \\input{vc}
+;;                  \\usepackage[rgb,x11names]{xcolor}
+;;                  \\usepackage{prelim2e}
+;;                  \\renewcommand*{\\PrelimText}{\\textnormal{\\small\\textcolor{black!40}{author: \\VCAuthor\\ -- date: \\VCDateISO\\ -- time: \\VCTime\\ -- commit: \\texttt{\\VCRevision}}}}
+;;                  \\usepackage{MnSymbol}
+;;                  \\usepackage[mathlf,textlf,minionint]{MinionPro}
+;;                  \\usepackage[T1]{fontenc}
+;;                  \\usepackage{textcomp}
+;;                  \\usepackage[utf8]{inputenc}
+;;                  \\usepackage{graphicx}
+;;                  \\usepackage{longtable}
+;;                  \\usepackage{hyperref}
+
+      (add-to-list 'org-latex-classes
+               '("numberedArticle"
+                 "\\documentclass{article}\n\\immediate\\write18{sh ./vc}\n\\input{vc}"
+                        ("\\section{%s}" . "\\section*{%s}")
+                        ("\\subsection{%s}" . "\\subsection*{%s}")
+                        ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                        ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                        ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+
+      ;; specification by http://pragmaticemacs.com/emacs/org-mode-basics-v-exporting-your-notes/
+;; (add-to-list 'org-latex-classes
+;;              '("bjmarticle"
+;;                "\\documentclass{article}
+;; \\usepackage[utf8]{inputenc}
+;; \\usepackage[T1]{fontenc}
+;; \\usepackage{graphicx}
+;; \\usepackage{longtable}
+;; \\usepackage{hyperref}
+;; \\usepackage{natbib}
+;; \\usepackage{amssymb}
+;; \\usepackage{amsmath}
+;; \\usepackage{geometry}
+;; \\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}"
+;;                ("\\section{%s}" . "\\section*{%s}")
+;;                ("\\subsection{%s}" . "\\subsection*{%s}")
+;;                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;;                ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;;                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+
+      ;; Originally taken from Bruno Tavernier: http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
+      ;; but adapted to use latexmk 4.22 or higher.  
+
+      ;; dgm: Great! This is the way to choose exporter!!
+
+;;      (defun my-auto-tex-cmd ()
+;;        "When exporting from .org with latex, automatically run latex,
+;;                         pdflatex, or xelatex as appropriate, using latexmk."
+;;        (let ((texcmd)))
+;;        ;; default command: pdflatex 
+;;        (setq texcmd "latexmk -pdflatex='pdflatex --shell-escape' -pdf %f")        
+;;        ;; pdflatex -> .pdf
+;;        (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
+;;            (setq texcmd "latexmk -pdflatex='pdflatex --shell-escape' -pdf %f"))
+;;        ;; xelatex -> .pdf
+;;        (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+;;            (setq texcmd "latexmk -pdflatex='xelatex --shell-escape' -pdf %f"))
+;;        ;; LaTeX compilation command
+;;        (setq org-latex-to-pdf-process (list texcmd)))
+;;
+;;      (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-cmd)
+
+
+      ;; In the latest version of the starter kit Kieran had deleted Bruno's selection stuff and used XeLaTeX by default instead. I comment it now.
+
+      ;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience.
+      ;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
+        (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
+      
+      ;; I make pdflatex the default
+      ;; (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape' -pdf %f"))
+
+      ;; Default packages included in the tex file. As before, org-preamble-xelatex is part of latex-custom-kjh.
+      ;; There's org-preamble-pdflatex as well, if you wish to use that instead.
+    (setq org-latex-default-packages-alist nil)     
+    (setq org-latex-packages-alist
+            '(("minted" "org-preamble-xelatex" t)
+              ("" "graphicx" t)
+              ("" "longtable" nil)
+              ("" "float" ))) 
+
+
+;;  (setq org-latex-default-packages-alist nil)
+;;    (setq org-latex-packages-alist
+;;            '(("minted" "org-preamble-pdflatex" t)
+;;              ("" "graphicx" t)
+;;              ("" "longtable" nil)
+;;              ("" "float" )))
+
+;;    (setq org-latex-default-packages-alist nil)     
+;;    (setq org-latex-packages-alist
+;;            '(("rgb,x11names" "xcolor" t)
+;;             ("" "prelim2e" t)
+;;             ("" "MnSymbol" t)
+;;             ("mathlf,textlf,minionint" "MinionPro" t) 
+;;             ("T1" "fontenc" t)
+;;             ("" "textcomp" t)
+;;             ("utf8" "inputenc" t)
+;;             ("" "graphicx" t)
+;;             ("" "longtable" nil)
+;;             ("" "hyperref"))) 
+
+
+
+#+end_src
+
+#+RESULTS: orgmode-latex-export
+| minted | org-preamble-xelatex | t   |
+|        | graphicx             | t   |
+|        | longtable            | nil |
+|        | float                |     |
+
+#+RESULTS: orgmode-xelatex-export
+| rgb,x11names            | xcolor    | t   |
+|                         | prelim2e  | t   |
+|                         | MnSymbol  | t   |
+| mathlf,textlf,minionint | MinionPro | t   |
+| T1                      | fontenc   | t   |
+|                         | textcomp  | t   |
+| utf8                    | inputenc  | t   |
+|                         | graphicx  | t   |
+|                         | longtable | nil |
+|                         | hyperref  |     |
+
+
+
+*** ebib and citation settings
+    ebib is a bibtex database manager that works inside emacs. It can
+    talk to org-mode. See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-17_2][this Worg tutorial]] for details. 
+#+source: ebib-setup
+#+begin_src emacs-lisp
+    (org-add-link-type "ebib" 'ebib)
+  
+   (org-add-link-type 
+     "cite" 'ebib
+     (lambda (path desc format)
+       (cond
+        ((eq format 'latex)
+         (if (or (not desc) (equal 0 (search "cite:" desc)))
+               (format "\\cite{%s}" path)
+               (format "\\cite[%s]{%s}" desc path)
+               )))))
+  
+   (org-add-link-type 
+     "parencite" 'ebib
+     (lambda (path desc format)
+       (cond
+        ((eq format 'latex)
+         (if (or (not desc) (equal 0 (search "parencite:" desc)))
+               (format "\\parencite{%s}" path)
+               (format "\\parencite[%s]{%s}" desc path)
+  )))))
+  
+  (org-add-link-type 
+     "textcite" 'ebib
+     (lambda (path desc format)
+       (cond
+        ((eq format 'latex)
+         (if (or (not desc) (equal 0 (search "textcite:" desc)))
+               (format "\\textcite{%s}" path)
+               (format "\\textcite[%s]{%s}" desc path)
+  )))))
+  
+  (org-add-link-type 
+     "autocite" 'ebib
+     (lambda (path desc format)
+       (cond
+        ((eq format 'latex)
+         (if (or (not desc) (equal 0 (search "autocite:" desc)))
+               (format "\\autocite{%s}" path)
+           (format "\\autocite[%s]{%s}" desc path)
+  )))))
+  
+  (org-add-link-type 
+   "footcite" 'ebib
+   (lambda (path desc format)
+     (cond
+      ((eq format 'latex)
+       (if (or (not desc) (equal 0 (search "footcite:" desc)))
+           (format "\\footcite{%s}" path)
+         (format "\\footcite[%s]{%s}" desc path)
+         )))))
+  
+  (org-add-link-type 
+   "fullcite" 'ebib
+   (lambda (path desc format)
+     (cond
+      ((eq format 'latex)
+       (if (or (not desc) (equal 0 (search "fullcite:" desc)))
+           (format "\\fullcite{%s}" path)
+         (format "\\fullcite[%s]{%s}" desc path)
+         )))))
+  
+  (org-add-link-type 
+   "citetitle" 'ebib
+   (lambda (path desc format)
+     (cond
+      ((eq format 'latex)
+       (if (or (not desc) (equal 0 (search "citetitle:" desc)))
+           (format "\\citetitle{%s}" path)
+         (format "\\citetitle[%s]{%s}" desc path)
+         )))))
+  
+  (org-add-link-type 
+   "citetitles" 'ebib
+   (lambda (path desc format)
+     (cond
+      ((eq format 'latex)
+       (if (or (not desc) (equal 0 (search "citetitles:" desc)))
+           (format "\\citetitles{%s}" path)
+         (format "\\citetitles[%s]{%s}" desc path)
+         )))))
+  
+  (org-add-link-type 
+     "headlessfullcite" 'ebib
+     (lambda (path desc format)
+       (cond
+        ((eq format 'latex)
+         (if (or (not desc) (equal 0 (search "headlessfullcite:" desc)))
+               (format "\\headlessfullcite{%s}" path)
+               (format "\\headlessfullcite[%s]{%s}" desc path)
+  )))))   
+#+end_src
+
+*** HTML export Settings
+Create =html= files form the =org= sources, to help with documentation. To set up org-mode for publishing projects to HTML you will need to change these settings, as they apply only to the Starter Kit. 
+
+#+source: html-export-settings
+#+begin_src emacs-lisp
+  (setq org-publish-project-alist
+         '(("org"
+            :base-directory "~/.emacs.d/"
+            :publishing-directory "/media/dgm/blue/documents/websites/esk/"
+            :publishing-function org-html-publish-to-html
+            :auto-sitemap t            
+            :sitemap-filename "index.org"
+            :sitemap-title "Emacs Starter Kit for the Social Sciences: Documentation"
+            :section-numbers t
+            :table-of-contents t
+            :html-head "<link rel=\"stylesheet\"
+                   href=\"http://kieranhealy.org/css/org.css\"
+                   type=\"text/css\"/>"            )))
+  
+  (setq org-html-postamble nil)
+  
+#+end_src
+
+** IRC
+Sometimes useful for getting help on R or Emacs. 
+#+source: rirc-configuration
+#+begin_src emacs-lisp
+  ;; connect to irc on invocation but don't autojoin any channels (require 'rcirc)
+;;  (add-to-list 'rcirc-server-alist
+;;                       '("irc.freenode.net")) ;; this code stopped working after my customizations following the mini emacs guide
+(setq rcirc-server-alist
+      '(("irc.freenode.net" :channels ("#emacs" "#python" "#sml" "#nasm" "#gcc"))))
+#+end_src
+** Final Custom elements
+Some last tweaks. 
+
+#+srcname: final-custom
+#+begin_src emacs-lisp
+  ;; minimize fringe
+  (setq-default indicate-empty-lines nil)
+
+  ;; Add keybindings for commenting regions of text
+  (global-set-key (kbd "C-c ;") 'comment-or-uncomment-region)
+  (global-set-key (kbd "M-'") 'comment-or-uncomment-region)
+
+  ;; Base dir
+  (cd "~/")
+
+  ;; custom variables kludge. Why can't I get these to work via setq?
+  (custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+  '(LaTeX-XeTeX-command "xelatex -synctex=1")
+  '(TeX-engine (quote xetex))
+  ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
+  ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
+  '(blink-cursor-mode nil)
+  '(text-mode-hook (quote (text-mode-hook-identify)))
+  )
+#+end_src
+
+#+RESULTS: final-custom
+
+#+RESULTS:
+
+
+
+dgm's own customizations of emacs appearance
+   
+   
+#+srcname: line-numbering
+#+begin_src emacs-lisp
+(global-linum-mode t) ;; enable line numbers globally
+#+end_src
+
+#+RESULTS: line-numbering
+: t
+   
+
+
+*** iedit mode
+Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-occurrence-editing-in-your-buffer
+
+#+begin_src emacs-lisp
+(require 'iedit)
+
+;; activate this function by Mickey Petersen if you wish to use iedit only in current function and not all across the buffer.
+;; (defun iedit-dwim (arg)
+;;   "Starts iedit but uses \\[narrow-to-defun] to limit its scope."
+;;   (interactive "P")
+;;   (if arg
+;;       (iedit-mode)
+;;     (save-excursion
+;;       (save-restriction
+;;         (widen)
+;;         ;; this function determines the scope of `iedit-start'.
+;;         (if iedit-mode
+;;             (iedit-done)
+;;           ;; `current-word' can of course be replaced by other
+;;           ;; functions.
+;;           (narrow-to-defun)
+;;           (iedit-start (current-word) (point-min) (point-max)))))))
+
+(global-set-key (kbd "C-;") 'iedit-dwim)
+#+end_src
+
+#+RESULTS:
+: iedit-dwim
+
+
+
+
+#+srcname: python-customization
+#+begin_src emacs-lisp
+;; dgm's customizations of python 
+(elpy-enable)
+(require 'live-py-mode)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+;; (elpy-use-ipython)
+ (elpy-use-ipython "ipython3")
+
+;; tip from https://github.com/jorgenschaefer/elpy/issues/992 
+;; to correct IPython 5's new prompt behavior that spitted out lots of nonsense and unreadeable characters as if it was a binary file
+(setenv "IPY_TEST_SIMPLE_PROMPT" "1")
+
+
+;; tips from: "Emacs - the Best Python Editor?" at https://realpython.com/blog/python/emacs-the-best-python-editor/
+;; Elpy comes with =flymake= by default to support syntax checking. However =flycheck= gives realtime syntax checking. 
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+;; Now if we make pep8 errors when we save the file the errors will be corrected automatically
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+
+
+;; https://github.com/jorgenschaefer/elpy/issues/979
+   ;; For elpy
+;; (setq elpy-rpc-python-command "python3")
+;; For interactive shell
+   ;; (setq python-shell-interpreter "python3")
+
+(add-to-list 'exec-path (expand-file-name "~/.local/bin"))
+
+;; Yuksel says there is a bug in =elpy= mode so that it conflicts with yasnippet expansion. He proposes this (see: https://www.youtube.com/watch?v=0kuCeS-mfyc)
+(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
+;; (define-key global-map (kbd "C-;") 'iedit-mode)
+
+;; not sure where this goes, but I guess I need it somewhere
+;; (require 'jedi)
+
+#+end_src
+
+#+RESULTS: python-customization
+: yas-expand
+
+
+
+The MU World starts here
+
+#+srcname: mu-customization
+#+begin_src emacs-lisp
+  ;; dgm's customizations of mu4e
+  ;; Setting up the MU mail server
+  ;; copied from http://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html#Gmail-configuration
+
+;; this is the path where mu4e got installed when I did the installation of mu and mu4e thru the Debian repository with maildir-utils.
+;;  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+;;  (setq mu4e-mu-binary (executable-find "/usr/bin/mu"))
+
+;; now that I have installed it manually, these are the paths
+
+  (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
+  (setq mu4e-mu-binary (executable-find "/usr/local/bin/mu"))
+
+
+  (require 'mu4e)
+  (require 'org-mu4e)
+  (require 'mu4e-contrib)
+
+;; commented out because in office PC it returns "wrong type argument", stringp nil
+;;  (mu4e-update-index)
+
+  (add-hook 'mu4e-index-updated-hook 'mu4e~headers-do-auto-update)
+
+  (setq mu4e-user-mail-address-list (list "daniel.guinea.uned@gmail.com" "daniel.guinea.martin@gmail.com"))
+
+  (setq
+   mu4e-view-show-images t
+   mu4e-view-image-max-width 800)
+  (when (fboundp 'imagemagick-register-types)
+    (imagemagick-register-types))
+  ;; (setq mu4e-view-prefer-html t)
+  ;; (setq mu4e-html2text-command "html2text -utf8 -width 72")
+  (setq mail-user-agent 'mu4e-user-agent)
+
+  ;; ;; these are actually the defaults
+    (setq
+      mu4e-maildir       "~/Maildir"               ;; top-level Maildir
+      mu4e-sent-folder   "/[Gmail].Enviados"       ;; folder for sent messages
+      mu4e-drafts-folder "/[Gmail].Borradores"     ;; unfinished messages
+      mu4e-trash-folder  "/[Gmail].Papelera"       ;; trashed messages
+      mu4e-refile-folder "/[Gmail].Destacados")    ;; saved messages
+
+  ;; Note, mu4e-maildir takes an actual filesystem-path, the other folder names are all relative to mu4e-maildir. Also note that this must not be a symbolic link.
+
+  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+  (setq mu4e-sent-messages-behavior 'delete)
+
+  ;; (See the documentation for `mu4e-sent-messages-behavior' if you have
+  ;; additional non-Gmail addresses and want assign them different
+  ;; behavior.)
+
+  ;; don't move to next message when you reach the end of a message
+  (setq mu4e-view-scroll-to-next 'nil)
+
+  ;; save attachments in the Downloads folder
+  (setq mu4e-attachment-dir  "~/Downloads")
+
+  ;; If mu4e-html2text-command is a shell command, it is expected to take html from standard input and write plain text in UTF-8 encoding on standard output.
+  (setq mu4e-html2text-command "html2text -utf8 -width 72")
+
+  ;; setup some handy shortcuts
+  ;; you can quickly switch to your Inbox -- press ``ji''
+  ;; then, when you want archive some messages, move them to
+  ;; the 'All Mail' folder by pressing ``ma''.
+
+  (setq mu4e-maildir-shortcuts
+      '( ("/INBOX"                     . ?i)
+         ("/[Gmail].Enviados"          . ?s)
+         ("/[Gmail].Papelera"          . ?t)
+         ("/[Gmail].Todos"             . ?a)
+         ("/personal/INBOX"            . ?k)
+         ("/personal/[Gmail].Enviados" . ?x)
+         ("/personal/[Gmail].Papelera" . ?f)))
+
+
+  ;; something about ourselves
+  ;; ;; general emacs mail settings; used when composing e-mail
+  ;; ;; the non-mu4e-* stuff is inherited from emacs/message-mode
+
+  ;; commented out on 23rd dic 2016 to test whether hook on replies works.
+  ;; (setq mu4e-compose-reply-to-address "daniel.guinea.uned@gmail.com"
+  ;;       user-mail-address "daniel.guinea.uned@gmail.com"
+  ;;       user-full-name  "Daniel Guinea")
+  ;; (setq mu4e-compose-signature
+  ;;    "Daniel Guinea\nDept. Sociología I\nFacultad de CC.PP. y Sociología\nUNED\n")
+
+  ;; sending mail -- replace USERNAME with your gmail username
+  ;; (require 'smtpmail)
+  ;; (setq message-send-mail-function 'smtpmail-send-it
+  ;;     smtpmail-stream-type 'starttls
+  ;;     smtpmail-default-smtp-server "smtp.gmail.com"
+  ;;     smtpmail-smtp-server "smtp.gmail.com"
+  ;;     smtpmail-smtp-service 587
+
+      ;; sending mail with msmtp rather than smtp, copied from http://zmalltalker.com/linux/mu.html#
+  (setq message-send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "/usr/bin/msmtp"
+        user-full-name "Daniel Guinea")
+
+     ;; if you need offline mode, set these -- and create the queue dir
+     ;; with 'mu mkdir', i.e.. mu mkdir /home/user/Maildir/queue
+     ;; smtpmail-queue-mail  nil
+  ;; smtpmail-queue-dir  "/home/user/Maildir/queue/cur")
+
+
+  ;; Borrowed from http://ionrock.org/emacs-email-and-mu.html (and
+  ;; included in http://zmalltalker.com/linux/mu.html#)
+  ;; Choose account label to feed msmtp -a option based on From header
+  ;; in Message buffer; This function must be added to
+  ;; message-send-mail-hook for on-the-fly change of From address before
+  ;; sending message since message-send-mail-hook is processed right
+  ;; before sending message.
+  (defun choose-msmtp-account ()
+    (if (message-mail-p)
+        (save-excursion
+          (let*
+              ((from (save-restriction
+                       (message-narrow-to-headers)
+                       (message-fetch-field "from")))
+               (account
+                (cond
+                 ((string-match "daniel.guinea.uned@gmail.com" from) "work")
+                 ((string-match "daniel.guinea.martin@gmail.com" from) "personal"))))
+            (setq message-sendmail-extra-arguments (list '"-a" account))))))
+  (setq message-sendmail-envelope-from 'header)
+  (add-hook 'message-send-mail-hook 'choose-msmtp-account)
+  (add-to-list 'mu4e-bookmarks
+               '("maildir:/INBOX OR maildir:/personal/INBOX flag:unread" "Today's news" ?z))
+  ;; (add-to-list 'mu4e-bookmarks
+  ;;              '("maildir:/Gmail/gitorious-ml flag:unread" "Unread on
+  ;; the mailing list" ?m))
+
+  ;; Wouldn't it be awesome to be able to send files from dired using your mail client?
+  ;; I'll need a special version of the gnus-dired-mail-buffers function
+  ;; so it understands mu4e buffers as well:
+  ;; copied from http://zmalltalker.com/linux/mu.html#
+
+  (require 'gnus-dired)
+  ;; make the `gnus-dired-mail-buffers' function also work on
+  ;; message-mode derived modes, such as mu4e-compose-mode
+  (defun gnus-dired-mail-buffers ()
+    "Return a list of active message buffers."
+    (let (buffers)
+      (save-current-buffer
+        (dolist (buffer (buffer-list t))
+          (set-buffer buffer)
+          (when (and (derived-mode-p 'message-mode)
+                     (null message-sent-message-via))
+            (push (buffer-name buffer) buffers))))
+      (nreverse buffers)))
+
+  (setq gnus-dired-mail-mode 'mu4e-user-agent)
+  (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+
+  ;; don't keep message buffers around
+  (setq message-kill-buffer-on-exit t)
+
+  ;; copied from http://zmalltalker.com/linux/mu.html#
+  ;; Use fancy chars
+  ;; (setq mu4e-use-fancy-chars t)
+
+  ;; When using ’fancy characters’ (mu4e-use-fancy-chars) with the Inconsolata-font (and likely others as well), the display may be slightly off; the reason for this issue is that Inconsolata does not contain the glyphs for the ’fancy’ arrows and the glyphs that are used as replacements are too high.
+
+  ;; To fix this, you can use something like the following workaround (in your .emacs-file):
+
+  ;; (if (equal window-system 'x)
+  ;;    (progn
+  ;;      (set-fontset-font "fontset-default" 'unicode "Dejavu Sans Mono")
+  ;;      (set-face-font 'default "Sans")))
+
+  ;; the headers to show in the headers list -- a pair of a field
+  ;; and its width, with `nil' meaning 'unlimited'
+  ;; (better only use that for the last field.
+  ;; These are the defaults:
+  (setq mu4e-headers-fields
+      '( (:human-date    .  25)    ;; alternatively, use :date
+         (:flags         .   6)
+         (:from          .  22)
+         (:subject       .  nil))) ;; alternatively, use :thread-subject
+
+  (setq mu4e-get-mail-command "offlineimap")   ;; or fetchmail, or ...
+  ;; (setq mu4e-update-mail-and-index 600)        ;; update every 60*10 = 600 (10 minutes)
+  ;; parece que da problemas esta última línea, así que la comento. Originalmente era:
+  ;; mu4e-update-interval 600
+
+  ;; tip from
+  ;; http://www.djcbsoftware.nl/code/mu/mu4e/Compose-hooks.html#Compose-hooks
+  ;; set the From:-address for a reply message based on the receiver of
+  ;; the original
+
+  ;; 1) messages to "daniel.guinea.uned@gmail.com should be replied with From:"daniel.guinea.uned@gmail.com
+  ;; 2) messages to danie.guinea.martin@gmail.com should be replied with From:danie.guinea.martin@gmail.com
+  ;; 3) all other mail should use From: daniel.guinea.uned@gmail.com
+  ;;  http://zmalltalker.com/linux/mu.html# has an example of this code
+  ;; When replying to an email I want to use the address I received this message to as the sender of the reply. This is fairly trivial:
+
+
+;; dec 14, 2017: reemplazo esto por nuevo código encontrado en https://www.djcbsoftware.nl/code/mu/mu4e/Compose-hooks.html#Compose-hooks
+;; porque la dirección en las nuevas composiciones no funciona
+
+
+;; old code that worked except for new compositions.
+
+;;  (add-hook 'mu4e-compose-pre-hook
+;;            (defun my-set-from-address ()
+;;              "Set the From address based on the To address of the original."
+;;              (let ((msg mu4e-compose-parent-message)) ;; msg is shorter...
+;;                (if msg
+;;                    (setq user-mail-address
+;;                          (cond
+;;                           ((mu4e-message-contact-field-matches msg :to "daniel.guinea.uned@gmail.com")
+;;                            "daniel.guinea.uned@gmail.com")
+;;                           ((mu4e-message-contact-field-matches msg :to "daniel.guinea.martin@gmail.com")
+;;                           "daniel.guinea.martin@gmail.com")
+;;                           ;; ((mu4e-message-contact-field-matches msg :to "marius.mathiesen@gmail.com")
+;;                           ;;  "zmalltalker@zmalltalker.com")
+;;                           ;; ((mu4e-message-contact-field-matches msg :to "zmalltalker@zmalltalker.com")
+;;                           ;;  "zmalltalker@zmalltalker.com")
+;;                           (t "daniel.guinea.uned@gmail.com")))))))
+
+
+
+;; 1) messages to me@foo.example.com should be replied with From:me@foo.example.com
+;; 2) messages to me@bar.example.com should be replied with From:me@bar.example.com
+;; 3) all other mail should use From:me@cuux.example.com
+(add-hook 'mu4e-compose-pre-hook
+  (defun my-set-from-address ()
+    "Set the From address based on the To address of the original."
+    (let ((msg mu4e-compose-parent-message)) ;; msg is shorter...
+      (when msg
+        (setq user-mail-address
+          (cond
+            ((mu4e-message-contact-field-matches msg :to "daniel.guinea.uned@gmail.com")
+              "daniel.guinea.uned@gmail.com")
+            ((mu4e-message-contact-field-matches msg :to "daniel.guinea@poli.uned.es")
+              "daniel.guinea.uned@gmail.com")
+            ((mu4e-message-contact-field-matches msg :to "daniel.guinea.martin@gmail.com")
+              "daniel.guinea.martin@gmail.com")
+            (t "daniel.guinea.uned@gmail.com")))))))
+
+
+
+
+  ;; stop mu4e from inserting line breaks: http://emacs.stackexchange.com/questions/3061/how-to-stop-mu4e-from-inserting-line-breaks
+  (defun no-auto-fill ()
+    "Turn off auto-fill-mode."
+    (auto-fill-mode -1))
+
+  (add-hook 'mu4e-compose-mode-hook #'no-auto-fill)
+
+  ;; I want to see full From header, not only name 
+
+  (setq mu4e-view-show-addresses t)
+
+  ;; set default signature to nil
+  (setq mu4e-compose-signature-auto-include nil
+        mu4e-compose-signature "")
+
+  ;; tip from http://www.macs.hw.ac.uk/~rs46/posts/2014-11-16-mu4e-signatures.html
+  ;; for inserting different signatures
+
+  ;; try this solution by djcb: https://github.com/djcb/mu/issues/706
+  ;; (defun insert-mu4e-sig-here ()
+  ;;  "Insert the mu4e signature here, assuming it is a string."
+  ;;  (interactive)
+  ;;  (when (stringp mu4e-compose-signature)
+  ;;    (mu4e-compose-signature)))
+
+  (defun my-mu4e-choose-signature ()
+    "Insert one of a number of signatures"
+    (interactive)
+    (let ((message-signature
+            (mu4e-read-option "Signature:"
+              '(("formal" .
+                (concat
+             "Daniel Guinea\n"
+             "Dept. Sociología I\nFacultad de CC.PP. y Sociología\nUNED, Madrid\n"))
+                 ("informal" .
+                "Daniel\n")))))
+      (message-insert-signature)))
+
+  (add-hook 'mu4e-compose-mode-hook
+            (lambda () (local-set-key (kbd "C-c C-w") #'my-mu4e-choose-signature)))
+
+  ;; but this inserts the signature not where cursor is but at the very bottom of the message.
+
+
+
+  ;; solution to multiple addresses and signatures
+  ;; from: http://danielsz.github.io/2015/06/27/mu4e-account-switching
+
+  ;; (cl-defstruct account full-name address signature)
+  ;; (setq my-accounts (list
+  ;;                    (make-account :full-name "Daniel Guinea"
+  ;;                                  :address "daniel.guinea.uned@gmail.com"
+  ;;                                  :signature "Daniel Guinea\n Dept. Sociología I\nFacultad de CC.PP. y Sociología\nUNED, Madrid\n")
+  ;;                    (make-account :full-name "Daniel Guinea"
+  ;;                                  :address "daniel.guinea.martin@gmail.com"
+  ;;                                  :signature "Daniel")))
+  ;; 
+  ;; (add-hook 'mu4e-compose-pre-hook
+  ;;           (lambda ()
+  ;;             "Set the From address based on the To address of the original."
+  ;;             (let* ((msg mu4e-compose-parent-message)
+  ;;                    (default-account (car my-accounts))
+  ;;                    (current-account (if msg
+  ;;                                         (loop for account in my-accounts
+  ;;                                               when (mu4e-message-contact-field-matches msg :to (account-address account))
+  ;;                                               return account)
+  ;;                                       default-account)))
+  ;;               (setq user-mail-address (account-address current-account)
+  ;;                     user-full-name (account-full-name current-account)
+  ;;                     mu4e-compose-signature (account-signature current-account)))))
+
+
+  ;; Updating email takes ages because I have many Maildir folders, so I follow the advice here: https://www.djcbsoftware.nl/code/mu/mu4e/General.html
+  (setq mu4e-cache-maildir-list t)
+
+  ;; notes by https://github.com/djcb/mu/blob/master/mu4e/mu4e-utils.el
+  ;; mu4e-cache-maildir-list "Whether to cache the list of maildirs; set it to t if you find
+  ;; that generating the list on the fly is too slow. If you do, you
+  ;; can set `mu4e-maildir-list' to nil to force regenerating the
+  ;; cache the next time `mu4e-get-maildirs' gets called.")
+
+     (setq mu4e-maildir-list nil)   ;;  "Cached list of maildirs."
+
+
+;; From https://github.com/djcb/mu/blob/master/NEWS.org, indexing
+;;
+;;    (1) Allow for indexing in the background; see `mu4e-index-update-in-background`.
+;;    (2) Better handle mbsync output in the update buffer
+;;    (3) Add variables mu4e-index-cleanup and mu4e-index-lazy to enable lazy checking from mu4e; you can sit from mu4e using something like:
+
+(setq
+  mu4e-index-cleanup nil      ;; don't do a full cleanup check
+  mu4e-index-lazy-check t)    ;; don't consider up-to-date dirs
+
+
+#+end_src
+
+#+RESULTS: mu-customization
+: t
+
+#+RESULTS:
+| (lambda nil (local-set-key (kbd C-c C-w) (function my-mu4e-choose-signature))) | no-auto-fill |
+
+#+srcname: ggtags-customization
+#+begin_src emacs-lisp
+;;  customizations following http://tuhdo.github.io/emacs-tutor.html#orgheadline6 on ggtags
+(add-hook 'c-mode-common-hook
+    (lambda ()
+      (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+  (ggtags-mode 1))))
+#+end_src
+
+#+RESULTS: ggtags-customization
+| lambda | nil | (when (derived-mode-p (quote c-mode) (quote c++-mode) (quote java-mode) (quote asm-mode)) (ggtags-mode 1)) |
+
+#+RESULTS:
+| lambda | nil | (when (derived-mode-p (quote c-mode) (quote c++-mode) (quote java-mode) (quote asm-mode)) (ggtags-mode 1)) |
+
+
+
+
+#+srcname: ring-max
+#+BEGIN_SRC emacs-lisp
+(setq global-mark-ring-max 5000     ;; increase mark ring to contain 5000 entries
+      mark-ring-max 5000)           ;; increase kill ring to contain 5000 entries
+#+END_SRC
+
+#+RESULTS: ring-max
+: 5000
+
+#+RESULTS:
+: 5000
+
+#+srcname: killing
+#+BEGIN_SRC emacs-lisp
+(setq
+ kill-ring-max 5000 ; increase kill-ring capacity
+ kill-whole-line t  ; if NIL, killwhole line and move the next line up
+)
+#+END_SRC
+
+#+RESULTS: killing
+: t
+
+#+RESULTS:
+: t
+
+#+srcname: tab-width
+#+BEGIN_SRC emacs-lisp
+;; default to 4 visible spaces to display a tab  
+(setq-default tab-width 4)
+#+END_SRC
+
+#+RESULTS: tab-width
+: 4
+
+#+RESULTS:
+: newline-and-indent
+
+#+BEGIN_SRC emacs-lisp
+;; (require 'workgroups2)
+   ;; change some settings
+;; (workgroups-mode 1)
+#+END_SRC
+
+#+srcname: whitespace
+#+BEGIN_SRC emacs-lisp
+
+  (add-hook 'diff-mode-hook (lambda ()
+                              (setq-local whitespace-style
+                                          '(face
+                                            tabs
+                                            tab-mark
+                                            spaces
+                                            space-mark
+                                            trailing
+                                            indentation::space
+                                            indentation::tab
+                                            newline
+                                            newline-mark))
+                              (whitespace-mode 1)))
+
+#+END_SRC
+
+#+RESULTS: whitespace
+| lambda | nil | (setq-local whitespace-style (quote (face tabs tab-mark spaces space-mark trailing indentation::space indentation::tab newline newline-mark))) | (whitespace-mode 1) |
+
+#+RESULTS:
+| lambda | nil | (setq-local whitespace-style (quote (face tabs tab-mark spaces space-mark trailing indentation::space indentation::tab newline newline-mark))) | (whitespace-mode 1) |
+
+
+#+srcname: volatile
+#+BEGIN_SRC emacs-lisp
+(require 'volatile-highlights)
+(volatile-highlights-mode t)
+#+END_SRC
+
+#+RESULTS: volatile
+: t
+
+#+RESULTS:
+: t
+
+
+#+srcname: clean-indent
+#+BEGIN_SRC emacs-lisp
+(require 'clean-aindent-mode)
+(add-hook 'prog-mode-hook 'clean-aindent-mode)
+
+ (defun my-pkg-init()
+   (electric-indent-mode -1)  ; no electric indent, auto-indent is sufficient
+   (clean-aindent-mode t)
+   (setq clean-aindent-is-simple-indent t)
+   (define-key global-map (kbd "RET") 'newline-and-indent))
+ (add-hook 'after-init-hook 'my-pkg-init)
+#+END_SRC
+
+#+RESULTS: clean-indent
+| my-pkg-init | global-flycheck-mode | global-company-mode | package--save-selected-packages | x-wm-set-size-hint | table--make-cell-map |
+
+#+srcname: undo-tree
+#+BEGIN_SRC emacs-lisp
+;; (require 'undo-tree)
+;; (global-undo-tree-mode)
+#+END_SRC
+
+#+srcname: file-revert
+#+BEGIN_SRC emacs-lisp
+;; update any change made on file to the current buffer
+(global-auto-revert-mode)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+
+#+srcname: fill-column
+#+BEGIN_SRC emacs-lisp
+(setq-default fill-column 72)
+#+END_SRC
+
+#+RESULTS: fill-column
+: 72
+
+#+RESULTS:
+: 39051
+
+#+srcname: ibuffer
+#+BEGIN_SRC emacs-lisp
+;; always display ibuffer in another window
+(setq ibuffer-use-other-window t)
+#+END_SRC
+
+#+RESULTS: ibuffer
+: t
+
+#+RESULTS:
+: t
+
+#+srcname: company
+#+BEGIN_SRC emacs-lisp
+(add-hook 'after-init-hook 'global-company-mode)
+#+END_SRC
+
+
+#+RESULTS:
+| global-flycheck-mode | global-company-mode | package--save-selected-packages | x-wm-set-size-hint |
+
+
+#+srcname: duplicate
+#+BEGIN_SRC emacs-lisp
+(require 'duplicate-thing)
+(global-set-key (kbd "M-D") 'duplicate-thing)
+#+END_SRC
+
+#+RESULTS: duplicate
+: duplicate-thing
+
+#+RESULTS:
+: duplicate-thing
+
+#+srcname: ibuffer-vc
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-hook 'ibuffer-hook
+          (lambda ()
+            (ibuffer-vc-set-filter-groups-by-vc-root)
+            (unless (eq ibuffer-sorting-mode 'alphabetic)
+              (ibuffer-do-sort-by-alphabetic))))
+
+(setq ibuffer-formats
+      '((mark modified read-only vc-status-mini " "
+              (name 18 18 :left :elide)
+              " "
+              (size 9 -1 :right)
+              " "
+              (mode 16 16 :left :elide)
+              " "
+              (vc-status 16 16 :left)
+              " "
+              filename-and-process)))
+#+END_SRC
+
+#+RESULTS: ibuffer-vc
+| mark | modified | read-only | vc-status-mini |   | (name 18 18 :left :elide) |   | (size 9 -1 :right) |   | (mode 16 16 :left :elide) |   | (vc-status 16 16 :left) |   | filename-and-process |
+
+#+srcname: dired+
+#+BEGIN_SRC emacs-lisp 
+;; (require 'dired+)
+
+;; copied  by dgm from: http://emacs-leuven.readthedocs.io/en/latest/?badge=latest
+
+    ;; Don't hide details in Dired.
+;;    (setq diredp-hide-details-initially-flag nil)
+
+    ;; Don't display the next Dired buffer the same way as the last.
+;;    (setq diredp-hide-details-propagate-flag nil)
+
+    ;; Don't wrap "next" command around to buffer beginning.
+    ;; (setq diredp-wrap-around-flag nil)
+
+    ;; Dired `find-file' commands reuse directories.
+    ;; (diredp-toggle-find-file-reuse-dir 1)
+
+    ;; Up, reusing Dired buffers.
+    ;; (define-key dired-mode-map (kbd "C-x C-j")
+    ;;  #'diredp-up-directory-reuse-dir-buffer)
+
+;; tips from Ista Zahn. Not sure if they require dired+
+;; https://github.com/izahn/dotemacs
+
+;;; Dired and Dired+ configuration
+(add-hook 'dired-mode-hook 
+          (lambda()
+            (diff-hl-dired-mode)
+            (diff-hl-margin-mode)))
+
+;; set dired listing options
+(if (eq system-type 'gnu/linux)
+    (setq dired-listing-switches "-alDhp"))
+
+;; make sure dired buffers end in a slash so we can identify them easily
+(defun ensure-buffer-name-ends-in-slash ()
+  "change buffer name to end with slash"
+  (let ((name (buffer-name)))
+    (if (not (string-match "/$" name))
+        (rename-buffer (concat name "/") t))))
+(add-hook 'dired-mode-hook 'ensure-buffer-name-ends-in-slash)
+(add-hook 'dired-mode-hook
+          (lambda()
+             (setq truncate-lines 1)))
+
+;; open files in external programs
+;; (from http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
+;; consider replacing with https://github.com/thamer/runner
+(defun xah-open-in-external-app (&optional file)
+  "Open the current file or dired marked files in external app.
+
+The app is chosen from your OS's preference."
+  (interactive)
+  (let (doIt
+        (myFileList
+         (cond
+          ((string-equal major-mode "dired-mode")
+           (dired-get-marked-files))
+          ((not file) (list (buffer-file-name)))
+          (file (list file)))))
+    (setq doIt (if (<= (length myFileList) 5)
+                   t
+                 (y-or-n-p "Open more than 5 files? "))) 
+    (when doIt
+      (cond
+       ((string-equal system-type "windows-nt")
+        (mapc
+         (lambda (fPath)
+           (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" fPath t t)))
+         myFileList))
+       ((string-equal system-type "darwin")
+        (mapc
+         (lambda (fPath)
+           (shell-command (format "open \"%s\"" fPath)))
+         myFileList))
+       ((string-equal system-type "gnu/linux")
+        (mapc
+         (lambda (fPath)
+           (let ((process-connection-type nil))
+             (start-process "" nil "xdg-open" fPath))) myFileList))))))
+;; use zip/unzip to compress/uncompress zip archives
+(with-eval-after-load "dired-aux"
+  (add-to-list 'dired-compress-file-suffixes 
+               '("\\.zip\\'" "" "unzip"))
+  ;; open files from dired with "E"
+  (define-key dired-mode-map (kbd "E") 'xah-open-in-external-app))
+#+END_SRC
+
+#+RESULTS: dired+
+: xah-open-in-external-app
+
+
+
+#+srcname: bookmarks
+#+BEGIN_SRC emacs-lisp
+;; included by dgm
+(require 'bookmark+)
+#+END_SRC
+
+#+RESULTS: bookmarks
+: bookmark+
+
+
+#+srcname: custom-setup
+#+BEGIN_SRC emacs-lisp :tangle no
+;;    Load the files in CustomDir using mapc:
+;; (mapc 'load (directory-files "~/.emacs.d/customDir" t ".*\.el"))
+;; (add-to-list 'load-path "~/.emacs.d/customDir/")
+;; (require 'setup-programming)
+#+END_SRC
+
+
+
+#+srcname: diff-hl
+#+BEGIN_SRC emacs-lisp
+  (global-diff-hl-mode)
+  (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+#+END_SRC
+
+#+RESULTS: diff-hl
+| diff-hl-dired-mode |
+
+
+
+
+#+srcname: flycheck-tip
+#+BEGIN_SRC emacs-lisp
+  (require 'flycheck-tip)
+  (define-key global-map (kbd "C-c C-n") 'flycheck-tip-cycle)
+  (setq flycheck-display-errors-function 'ignore)
+#+END_SRC
+
+#+RESULTS: flycheck-tip
+: ignore
+
+#+RESULTS:
+: ignore
+
+
+For now, I deactivate the golden-ratio mode because it distract me too much.
+
+#+srcname: golden-ratio :tangle no
+#+BEGIN_SRC emacs-lisp
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; PACKAGE: golden-ratio                         ;;
+  ;;                                               ;;
+  ;; GROUP: Environment -> Windows -> Golden Ratio ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;; activate for helm when helm is installed
+  ;; (require 'golden-ratio)
+
+  ;; (add-to-list 'golden-ratio-exclude-modes "ediff-mode")
+  ;; (add-to-list 'golden-ratio-exclude-modes "helm-mode")
+  ;; (add-to-list 'golden-ratio-exclude-modes "dired-mode")
+  ;; (add-to-list 'golden-ratio-exclude-modes "ess-mode")
+
+  ;; I dont want the golden ratio with the Helm window
+  ;;  (defun pl/helm-alive-p ()
+  ;;   (if (boundp 'helm-alive-p)
+  ;;       (symbol-value 'helm-alive-p)))
+
+  ;;  (add-to-list 'golden-ratio-inhibit-functions 'pl/helm-alive-p) 
+
+  ;; do not enable golden-ratio in theses modes
+;;   (setq golden-ratio-exclude-modes '("ediff-mode"
+;;                                      "gud-mode"
+;;                                      "gdb-locals-mode"
+;;                                      "gdb-registers-mode"
+;;                                      "gdb-breakpoints-mode"
+;;                                      "gdb-threads-mode"
+;;                                      "gdb-frames-mode"
+;;                                      "gdb-inferior-io-mode"
+;;                                      "gud-mode"
+;;                                      "gdb-inferior-io-mode"
+;;                                      "gdb-disassembly-mode"
+;;                                      "gdb-memory-mode"
+;;   ;;                                   "magit-log-mode"
+;;   ;;                                   "magit-reflog-mode"
+;;   ;;                                   "magit-status-mode"
+;;                                      "IELM"
+;;                                      "eshell-mode"
+;;                                      "dired-mode"
+;;                                      "helm-mode"
+;;                                      "ess-mode"))
+  ;; delete "dired-mode"  from the above list if you want golden-ratio to apply to helm
+
+;;   (golden-ratio-mode)
+#+END_SRC
+
+#+RESULTS: golden-ratio :tangle no
+
+
+
+#+srcname: frame-title
+#+BEGIN_SRC emacs-lisp
+;; more useful frame title, that show either a file or a
+;; buffer name (if the buffer isn't visiting a file)
+;; taken from prelude-ui.el
+(setq frame-title-format
+      '("" invocation-name " - " (:eval (if (buffer-file-name)
+                                                    (abbreviate-file-name (buffer-file-name))
+                                                  "%b"))))
+#+END_SRC
+
+#+RESULTS:
+|   | invocation-name | - | (:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) %b)) |
+
+
+#+srcname: highlight-numbers-and-symbols
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook 'highlight-numbers-mode)
+
+(require 'highlight-symbol)
+
+(highlight-symbol-nav-mode)
+
+(add-hook 'prog-mode-hook (lambda () (highlight-symbol-mode)))
+(add-hook 'org-mode-hook (lambda () (highlight-symbol-mode)))
+
+(setq highlight-symbol-idle-delay 0.2
+      highlight-symbol-on-navigation-p t)
+
+(global-set-key [(control shift mouse-1)]
+                (lambda (event)
+                  (interactive "e")
+                  (goto-char (posn-point (event-start event)))
+                  (highlight-symbol-at-point)))
+
+(global-set-key (kbd "M-n") 'highlight-symbol-next)
+(global-set-key (kbd "M-p") 'highlight-symbol-prev)
+#+END_SRC
+
+#+RESULTS: highlight-numbers-and-symbols
+: highlight-symbol-prev
+
+
+#+srcname: info+
+#+BEGIN_SRC emacs-lisp
+(require 'info+)
+#+END_SRC
+
+#+RESULTS: info+
+: info+
+
+#+srcname: discover-my-major
+#+BEGIN_SRC emacs-lisp
+;; A quick major mode help with discover-my-major
+(global-unset-key (kbd "C-h h"))        ; original "C-h h" displays "hello world" in different languages
+(define-key 'help-command (kbd "h m") 'discover-my-major)
+#+END_SRC
+
+#+RESULTS: discover-my-major
+: discover-my-major
+
+#+srcname: rainbow-mode
+#+BEGIN_SRC emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; PACKAGE: rainbow-mode              ;;
+;;                                    ;;
+;; GROUP: Help -> Rainbow             ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-hook 'html-mode-hook 'rainbow-mode)
+(add-hook 'css-mode-hook 'rainbow-mode)
+
+;;R-mode-hook runs when you open a new source buffer, so anything you put in that will only effect your source buffers.inferior-ess-mode-hook runs when you start an R console, so anything in there should only apply to the console buffer and not the source.
+(add-hook 'R-mode-hook 'rainbow-mode)
+(add-hook 'inferior-ess-mode-hook 'rainbow-mode)
+
+#+END_SRC
+
+#+RESULTS:
+| rainbow-mode | turn-on-auto-fill | (lambda nil (local-set-key [C-up] (quote comint-previous-input)) (local-set-key [C-down] (quote comint-next-input))) | ess-S-mouse-me-menu-commands | turn-on-font-lock |
+
+
+#+srcname: nyan-mode
+#+BEGIN_SRC emacs-lisp :tangle no
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; PACKAGE: nyan-mode                    ;;
+;;                                       ;;
+;; GROUP: Environment -> Frames -> Nyan  ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; only turn on if a window system is available
+;; this prevents error under terminal that does not support X
+(case window-system
+  ((x w32) (nyan-mode)))
+#+END_SRC
+
+#+srcname: helm
+#+BEGIN_SRC emacs-lisp
+  (require 'helm)
+  (require 'helm-config)
+
+  ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+  ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+  ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+  (global-set-key (kbd "C-c h") 'helm-command-prefix)
+  (global-unset-key (kbd "C-x c"))
+
+  ;; Make M-x be equal to M-x helm-M-x
+  (global-set-key (kbd "M-x") 'helm-M-x)
+
+  (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
+
+  ;; Command: helm-show-kill-ring
+  (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+
+  ;; Command: helm-mini
+  (global-set-key (kbd "C-x b") 'helm-mini)
+
+  ;; To enable fuzzy matching, add the following settings:
+
+  (setq helm-buffers-fuzzy-matching t
+        helm-recentf-fuzzy-match    t)
+
+  ;; Command: helm-find-files
+  ;; helm-find-files is file navigation on steroids: 
+
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+
+  ;; =C-x C-f= you start a =helm-find-files= session. There you can do =C-s= to recursively grep a selected directory.  Every time you type a character, helm updates grep result immediately. You can use ack-grep to replace grep with this configuration:
+
+  (when (executable-find "ack-grep")
+    (setq helm-grep-default-command "ack-grep -Hn --no-group --no-color %e %p %f"
+          helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f"))
+
+  ;; Command: helm-semantic-or-imenu
+  (setq helm-semantic-fuzzy-match t
+        helm-imenu-fuzzy-match    t)
+
+  ;; Command: helm-man-woman
+  (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
+
+  ;; Command: helm-locate
+  (setq helm-locate-fuzzy-match t)
+
+  ;; Command: helm-occur
+  ;; search for patterns in current buffer
+  (global-set-key (kbd "C-c h o") 'helm-occur)
+
+  ;; Command: helm-apropos
+  ;; To enable fuzzy matching, add this setting:
+  (setq helm-apropos-fuzzy-match t)
+
+  ;; Command: helm-lisp-completion-at-point
+  ;; To enable fuzzy matching, add this setting:
+  (setq helm-lisp-fuzzy-completion t)
+
+  ;; Command: helm-all-mark-rings
+  (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+
+  ;; Command: helm-register
+  (global-set-key (kbd "C-c h x") 'helm-register)
+
+  ;; helm-google-suggest
+  (global-set-key (kbd "C-c h g") 'helm-google-suggest)
+
+  ;; helm-eval-expression-with-eldoc
+  (global-set-key (kbd "C-c h M-:") 'helm-eval-expression-with-eldoc)   
+
+  ;; Command: helm-eshell-history
+  (require 'helm-eshell)
+
+  (add-hook 'eshell-mode-hook
+            #'(lambda ()
+                (define-key eshell-mode-map (kbd "C-c h C-c h")  'helm-eshell-history)))
+
+  ;; Command: helm-comint-input-ring
+
+  (define-key shell-mode-map (kbd "C-c h C-c h") 'helm-comint-input-ring)
+
+  ;; Command: helm-mini-buffer-history
+  (define-key minibuffer-local-map (kbd "C-c h C-c h") 'helm-minibuffer-history)
+
+  ;; Package: helm-descbindsb
+       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; PACKAGE: helm-descbinds                      ;;
+  ;;                                              ;;
+  ;; GROUP: Convenience -> Helm -> Helm Descbinds ;;
+       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (require 'helm-descbinds)
+  (helm-descbinds-mode)
+
+  ;; Projectile
+  (require 'projectile)
+  (projectile-global-mode)
+  (setq projectile-enable-caching t)
+  (setq projectile-completion-system 'helm)
+  (helm-projectile-on)
+  (setq projectile-switch-project-action 'helm-projectile)
+
+
+
+
+
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+  (define-key helm-map (kbd "C-i")   'helm-execute-persistent-action) ; make TAB work in terminal
+  (define-key helm-map (kbd "C-z")   'helm-select-action) ; list actions using C-z
+
+  (when (executable-find "curl")
+    (setq helm-google-suggest-use-curl-p t))
+
+  (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+        helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+        helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+        helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+        helm-ff-file-name-history-use-recentf t
+        helm-echo-input-in-header-line t)
+
+  (defun spacemacs//helm-hide-minibuffer-maybe ()
+    "Hide minibuffer in Helm session if we use the header line as input field."
+    (when (with-helm-buffer helm-echo-input-in-header-line)
+      (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+        (overlay-put ov 'window (selected-window))
+        (overlay-put ov 'face
+                     (let ((bg-color (face-background 'default nil)))
+                       `(:background ,bg-color :foreground ,bg-color)))
+        (setq-local cursor-type nil))))
+
+  (add-hook 'helm-minibuffer-set-up-hook
+            'spacemacs//helm-hide-minibuffer-maybe)
+
+  (helm-mode 1)
+
+;; I don't want the helm window to autoresize. I find it mareante. 
+  ;;  (setq helm-autoresize-max-height 0)
+  ;;  (setq helm-autoresize-min-height 20)
+  ;;  (helm-autoresize-mode 1)
+
+
+#+END_SRC
+
+#+RESULTS: helm
+: t
+
+#+RESULTS:
+: t
+
+
+#+srcname: spaceline
+#+BEGIN_SRC emacs-lisp 
+;; (require 'spaceline-config)
+;; (spaceline-emacs-theme)
+;; (spaceline-helm-mode)
+#+END_SRC
+
+#+RESULTS: spaceline
+: t
+
+
+#+srcname: powerline
+#+begin_src emacs-lisp :tangle no
+;;  (require 'powerline)
+;;  (powerline-default-theme)
+#+end_src
+
+#+srcname: modeline
+#+begin_src emacs-lisp
+;; (require 'smart-mode-line)
+;;       (require 'smart-mode-line-powerline-theme)
+;;       (sml/apply-theme 'powerline)
+
+
+;; (setq powerline-arrow-shape 'curve)
+;; (setq powerline-default-separator-dir '(right . left))
+;; (setq sml/theme 'powerline)
+;; (setq sml/mode-width 0)
+;; (setq sml/name-width 20)
+;; (rich-minority-mode 1)
+;; (setf rm-blacklist "")
+;; (sml/setup)
+
+
+;; (if (require 'smart-mode-line nil 'noerror)
+;;     (progn
+;;       (setq sml/name-width 20)
+;;       (setq sml/mode-width 'full)
+;;       (setq sml/shorten-directory t)
+;;       (setq sml/shorten-modes t)
+;; 
+;;       (rich-minority-mode 1)
+;; ;;      (setq rm-blacklist '(" GitGutter" " MRev" " company" " mate" " Projectile"))
+;; 
+;;       (if after-init-time
+;;         (sml/setup)
+;;         (add-hook 'after-init-hook 'sml/setup))))
+;; 
+      ;; Alternatives:
+      ;; (sml/apply-theme 'powerline)
+      ;; (sml/apply-theme 'dark)
+      ;; (sml/apply-theme 'light)
+      ;; (sml/apply-theme 'respectful)
+      ;; (sml/apply-theme 'automatic)
+
+;;      (add-to-list 'sml/replacer-regexp-list '("^~/Dropbox/" ":DB:"))
+;;      (add-to-list 'sml/replacer-regexp-list '("^~/Code/" ":CODE:"))
+;;      (add-to-list 'sml/replacer-regexp-list '("^:CODE:investor-bridge" ":IB:"))
+;;      (add-to-list 'sml/replacer-regexp-list '("^~/.*/lib/ruby/gems" ":GEMS" ))))
+#+end_src
+
+#+RESULTS: modeline
+: dark
+
+#+RESULTS: emacs-lisp
+: dark
+
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "/home/dgm/.emacs.d/src/ado-mode/lisp")
+(require 'ado-mode)
+#+END_SRC
+
+#+RESULTS:
+: ado-mode
+
+
+#+BEGIN_SRC emacs-lisp
+;;   (setq org-default-notes-file (concat org-directory "/notes.org")) ;; i disable this to see if I can choose between notes and tasks.
+;;    this is not working for some reason: (define-key global-map "\C-c c" 'org-capture) 
+  (define-key global-map (kbd "C-c c") 'org-capture)
+
+;; other bindings from http://orgmode.org/manual/Activation.html
+;;     (global-set-key "\C-c l" 'org-store-link)  este binding ya estaba listo
+;;     (global-set-key "\C-c a" 'org-agenda) ;; este binding puesto así no funcionaba
+;;    (global-set-key "\C-c b" 'org-iswitchb);; este binding puesto así no funcionaba
+
+  (define-key global-map (kbd "C-c a") 'org-agenda)
+  (define-key global-map (kbd "C-c b") 'org-iswitchb) 
+
+
+  ;; code by sacha chua: http://sachachua.com/blog/2015/02/learn-take-notes-efficiently-org-mode/
+  (set-register ?o (cons 'file "/media/dgm/blue/documents/dropbox/org/notes.org"))
+  (setq org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
+  ;; (setq org-completion-use-ido t)  ;; i think I don't need this because somehow helm is doing the job
+#+END_SRC
+
+#+RESULTS:
+: ((org-agenda-files :maxlevel . 6))
+
+
+
+Shortcuts that should work in Org but do not. Besides, they used to be bound to windmove but no more because I'd rather use ace-window
+
+#+BEGIN_SRC emacs-lisp
+  (define-key global-map (kbd "S-<left>") 'org-timestamp-down-day)
+  (define-key global-map (kbd "S-<right>") 'org-timestamp-up-day)
+  (define-key global-map (kbd "S-<up>") 'org-timestamp-up)
+  (define-key global-map (kbd "S-<down>") 'org-timestamp-down)
+#+END_SRC
+
+#+RESULTS:
+
+
+#+BEGIN_SRC emacs-lisp
+   (global-set-key (kbd "M-P") 'ace-window)
+#+END_SRC
+
+#+RESULTS:
+: ace-window
+
+Make calendar start on Monday instead of Sunday
+
+#+BEGIN_SRC emacs-lisp
+(setq calendar-week-start-day 1)
+#+END_SRC
+
+#+RESULTS:
+: 1
+
+
+Try and make =ox-twbs= work
+
+#+BEGIN_SRC emacs-lisp
+(require 'ox-twbs)
+#+END_SRC
+
+
+*** Which-key
+
+This mode shows a keymap when an incomplete command is entered. It is especially useful for families of commands with a prefix, e.g., C-c C-o for outline-mode commands, or C-c C-v for org-babel commands. Just start typing your command and pause if you want a hint.
+
+tip from: https://github.com/izahn/dotemacs
+
+#+BEGIN_SRC emacs-lisp
+(require 'which-key)
+(which-key-mode)
+#+END_SRC
+
+
+*** General REPL (comint) config
+tip from: https://github.com/izahn/dotemacs
+
+Many programs using REPLs are derived from comint-mode, so we can affect all of them by changing comint-mode settings. Here we disable line wrapping and ask programs to echo the input.
+
+Load eval-in-repl for bash, elisp, and python interaction.
+
+#+BEGIN_SRC emacs-lisp
+;; require the main file containing common functions
+(require 'eval-in-repl)
+(setq comint-process-echoes t)
+
+;; truncate lines in comint buffers
+(add-hook 'comint-mode-hook
+          (lambda()
+            (setq truncate-lines 1)))
+
+;; Scroll down for input and output
+(setq comint-scroll-to-bottom-on-input t)
+(setq comint-scroll-to-bottom-on-output t)
+(setq comint-move-point-for-output t)
+#+END_SRC
+
+
+*** Run R in emacs (ESS)
+tip from: https://github.com/izahn/dotemacs
+
+Support for R in Emacs is good, thanks to http://ess.r-project.org/. As with other programming languages this configuration enables completion via the tab key and code evaluation with C-ret. Many more features are provided by ESS, refer to http://ess.r-project.org/ for details.
+
+#+begin_src emacs-lisp
+  ;;;  ESS (Emacs Speaks Statistics)
+
+;; ;; Start R in the working directory by default
+;; (setq ess-ask-for-ess-directory nil)
+;; 
+;; ;; Make sure ESS is loaded before we configure it
+;; (autoload 'julia "ess-julia" "Start a Julia REPL." t)
+;; (with-eval-after-load "ess-site"
+;;   ;; disable ehoing input
+;;   (setq ess-eval-visibly nil)
+;;   ;; Start R in the working directory by default
+;;   (setq ess-ask-for-ess-directory nil)
+;;   ;; Use tab completion
+;;   (setq ess-tab-complete-in-script t)
+;;   ;; extra ESS stuff inspired by https://github.com/gaborcsardi/dot-emacs/blob/master/.emacs
+;;   (ess-toggle-underscore nil)
+;;   (defun my-ess-execute-screen-options (foo)
+;;     "cycle through windows whose major mode is inferior-ess-mode and fix width"
+;;     (interactive)
+;;     (setq my-windows-list (window-list))
+;;     (while my-windows-list
+;;       (when (with-selected-window (car my-windows-list) (string= "inferior-ess-mode" ;; major-mode))
+;;         (with-selected-window (car my-windows-list) (ess-execute-screen-options t)))
+;;       (setq my-windows-list (cdr my-windows-list))))
+;;   (add-to-list 'window-size-change-functions 'my-ess-execute-screen-options)
+;;   (define-key ess-mode-map (kbd "<C-return>") ;; 'ess-eval-region-or-function-or-paragraph-and-step)
+;;   ;; truncate long lines in R source files
+;;   (add-hook 'ess-mode-hook
+;;             (lambda()
+;;               ;; don't wrap long lines
+;;               (toggle-truncate-lines t)
+;;               (outline-minor-mode t))))
+#+end_src
+
+Note: for me "C-return" does not work... Comento todo esto porque me temo que entra en conflicto con la costumization del gran Kieran Healy en =starter-kit-stats.org= donde veo que la evaluación está bound a =shift-return= and that works indeed for me.
+
+*** emacs lisp REPL (ielm)
+tip from: https://github.com/izahn/dotemacs
+
+If you want to get the most out of Emacs, you’ll eventually need to learn a little Emacs-lisp. This configuration helps by providing a standard C-ret evaluation key binding, and by providing completion with the tab key.
+
+#+begin_src emacs-lisp
+(with-eval-after-load "elisp-mode"
+  (require 'company-elisp)
+  ;; ielm
+  (require 'eval-in-repl-ielm)
+  ;; For .el files
+  (define-key emacs-lisp-mode-map "\C-c\C-c" 'eir-eval-in-ielm)
+  (define-key emacs-lisp-mode-map (kbd "<C-return>") 'eir-eval-in-ielm)
+  ;; For *scratch*
+  (define-key lisp-interaction-mode-map "\C-c\C-c" 'eir-eval-in-ielm)
+  (define-key emacs-lisp-mode-map (kbd "<C-return>") 'eir-eval-in-ielm)
+  ;; For M-x info
+  (define-key Info-mode-map "\C-c\C-c" 'eir-eval-in-ielm)
+  ;; Set up completions
+  (add-hook 'emacs-lisp-mode-hook
+            (lambda()
+              ;; make sure completion calls company-elisp first
+              (require 'company-elisp)
+              (setq-local company-backends
+                          (delete-dups (cons 'company-elisp (cons 'company-files company-backends)))))))
+#+end_src
+
+
+*** Helm-bibtex
+
+Helm-bibtex and ivy-bibtex allow you to search and manage your BibTeX bibliography. They both share the same generic backend, bibtex-completion, but one uses the Helm completion framework and the other Ivy as a front-end.
+
+check titus: https://github.com/tmalsburg/helm-bibtex
+
+A minimal configuration involves telling bibtex-completion where your bibliographies can be found:
+
+#+begin_src emacs-lisp
+(setq bibtex-completion-bibliography
+      '("/media/dgm/blue/documents/bibs/socbib.bib"))
+
+;; Bibtex-completion supports two methods for storing notes. It can either store all notes in one file or store notes in multiple files, one file per publication. In the first case, the customization variable bibtex-completion-notes-path has to be set to the full path of the notes file:
+
+(setq bibtex-completion-notes-path "/media/dgm/blue/documents/dropbox/org/notes.org")
+
+;; Symbols used for indicating the availability of notes and PDF files
+(setq bibtex-completion-pdf-symbol "⌘")
+(setq bibtex-completion-notes-symbol "✎")
+#+end_src
+
+And now the bit by Ista Zahn in tip from: https://github.com/izahn/dotemacs but modified to use helm instead of ivy.
+This allows you to search your BibTeX files for references to insert into the current document. For it to work you will need to set `bibtex-completion-bibliography` to the location of your BibTeX files.
+Initiate a citation search with ivy-bibtex, bound to C-c r.
+
+#+begin_src emacs-lisp
+(setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
+(global-set-key (kbd "C-c r") 'helm-bibtex)
+#+end_src
+
+tip from titus for Helm-bibtex: I use the menu key as the prefix key for all helm commands and bind helm-bibtex to b. Helm-bibtex can then be started using <menu> b. It is also useful to bind helm-resume to <menu> in helm-command-map. With this binding, <menu> <menu> can be used to reopen the last helm search.
+
+
+
+*** Demonstration tools (command-log-mode)
+    tip from: https://github.com/izahn/dotemacs
+
+=command-log-mode= is useful for giving emacs demonstrations/tutorials. It shows the keys you’ve pressed and the commands they called.
+
+#+begin_src emacs-lisp
+;;(setq command-log-mode-auto-show t)
+;;(global-set-key (kbd "C-x c l") 'global-command-log-mode)
+#+end_src
+
+#+RESULTS:
+: global-command-log-mode
+
+Good idea but it seems that I don't have the =command-log-mode=... ah, it's a package. i will install in future.
+
+*** auto-complete
+Following Drew advice on setting up emacs as a Python IDE (https://www.youtube.com/watch?v=6BlTGPsjGJk).
+
+Gives basic auto completion for most programming modes. But doesn't know syntax. However, it has a nice interface for other packages providing completions like =jedi=.
+
+For now I comment it out because following Drew's advice has meant that I've lost auto completion in elpy mode. 
+
+#+begin_src emacs-lisp
+;; (require 'auto-complete-config)
+;; (ac-config-default)
+
+;; if you really like the menu
+;;(setq ac-show-menu-immediately-on-auto-complete t)
+#+end_src
+
+#+RESULTS:
+: t
+
+*** Jedi configuration from Drew
+Check Drew online: https://www.youtube.com/watch?v=6BlTGPsjGJk
+This is basically his https://github.com/wernerandrew/jedi-starter/blob/master/jedi-starter.el
+
+#+begin_src emacs-lisp
+
+;; (load-file "/home/dgm/.emacs.d/src/jedi-starter.el")
+
+;; ;; Global Jedi config vars
+;; 
+;; (defvar jedi-config:use-system-python nil
+;;   "Will use system python and active environment for Jedi server.
+;; May be necessary for some GUI environments (e.g., Mac OS X)")
+;; 
+;; (defvar jedi-config:with-virtualenv nil
+;;   "Set to non-nil to point to a particular virtualenv.")
+;; 
+;; (defvar jedi-config:vcs-root-sentinel ".git")
+;; 
+;; (defvar jedi-config:python-module-sentinel "__init__.py")
+;; 
+;; ;; Helper functions
+;; 
+;; ;; Small helper to scrape text from shell output
+;; (defun get-shell-output (cmd)
+;;   (replace-regexp-in-string "[ \t\n]*$" "" (shell-command-to-string cmd)))
+;; 
+;; ;; Ensure that PATH is taken from shell
+;; ;; Necessary on some environments without virtualenv
+;; ;; Taken from: http://stackoverflow.com/questions/8606954/path-and-exec-path-set-but-emacs-does-not-find-executable
+;; 
+;; (defun set-exec-path-from-shell-PATH ()
+;;   "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell."
+;;   (interactive)
+;;   (let ((path-from-shell (get-shell-output "$SHELL --login -i -c 'echo $PATH'")))
+;;     (setenv "PATH" path-from-shell)
+;;     (setq exec-path (split-string path-from-shell path-separator)))
+;; 
+;; 
+;;   (require 'jedi)
+;; 
+;; ;;  Costumization copied from https://www.youtube.com/watch?v=6BlTGPsjGJk
+;; ;;  I think what follows is more robust
+;; ;;  ;; Hook up to auto-complete
+;; ;;  (add-to-list 'ac-sources 'ac-source-jedi-direct)
+;; ;;  ;; Enable for python-mode
+;; ;;  (add-hook 'python-mode-hook 'jedi:setup)
+;; 
+;; ;;  (defvar jedi-config:with-virtualenv nil
+;; ;;     "set to non-nil to point to a particular virtualenv.")
+;; 
+;; 
+;; ;;  ;; Variables to help find the project root
+;; ;;  (defvar jedi-config:vcs-root-sentinel ".git")
+;; ;;  (defvar jedi-config:python-module-sentinel "__init__.py")
+;; ;;
+;; ;;  ;; Function to find project root given a buffer
+;; ;;  (defun get-project-root (buf repo-type init-file)
+;; ;;    (vc-find-root (expand-file-name (buffer-file-name buf)) repo-type))
+;; ;;
+;; ;;  (defvar jedi-config:find-root-function 'get-project-root)
+;; ;;
+;; ;;  ;; And call this on initialization
+;; ;;  (defun current-buffer-project-root ()
+;; ;;      (funcall jedi-config:find-root-function
+;; ;;               (current-buffer)
+;; ;;               jedi-config:vcs-root-sentinel
+;; ;;               jedi-config:python-module-sentinel))
+;; 
+;; 
+;; ;; costumization copied straight from https://github.com/wernerandrew/jedi-starter/blob/master/jedi-starter.el
+;; ;; Alternative methods of finding the current project root
+;;     ;; Method 1: basic
+;;     (defun get-project-root (buf repo-file &optional init-file)
+;;       "Just uses the vc-find-root function to figure out the project root.
+;;        Won't always work for some directory layouts."
+;;       (let* ((buf-dir (expand-file-name (file-name-directory (buffer-file-name buf))))
+;; 	     (project-root (vc-find-root buf-dir repo-file)))
+;; 	(if project-root
+;; 	    (expand-file-name project-root)
+;; 	  nil)))
+;; 
+;;     ;; Method 2: slightly more robust
+;;     (defun get-project-root-with-file (buf repo-file &optional init-file)
+;;       "Guesses that the python root is the less 'deep' of either:
+;;          -- the root directory of the repository, or
+;;          -- the directory before the first directory after the root
+;;             having the init-file file (e.g., '__init__.py'."
+;; 
+;;       ;; make list of directories from root, removing empty
+;;       (defun make-dir-list (path)
+;;         (delq nil (mapcar (lambda (x) (and (not (string= x "")) x))
+;;                           (split-string path "/"))))
+;;       ;; convert a list of directories to a path starting at "/"
+;;       (defun dir-list-to-path (dirs)
+;;         (mapconcat 'identity (cons "" dirs) "/"))
+;;       ;; a little something to try to find the "best" root directory
+;;       (defun try-find-best-root (base-dir buffer-dir current)
+;;         (cond
+;;          (base-dir ;; traverse until we reach the base
+;;           (try-find-best-root (cdr base-dir) (cdr buffer-dir)
+;;                               (append current (list (car buffer-dir)))))
+;; 
+;;          (buffer-dir ;; try until we hit the current directory
+;;           (let* ((next-dir (append current (list (car buffer-dir))))
+;;                  (file-file (concat (dir-list-to-path next-dir) "/" init-file)))
+;;             (if (file-exists-p file-file)
+;;                 (dir-list-to-path current)
+;;               (try-find-best-root nil (cdr buffer-dir) next-dir))))
+;; 
+;;          (t nil)))
+;; 
+;;       (let* ((buffer-dir (expand-file-name (file-name-directory (buffer-file-name buf))))
+;;              (vc-root-dir (vc-find-root buffer-dir repo-file)))
+;;         (if (and init-file vc-root-dir)
+;;             (try-find-best-root
+;;              (make-dir-list (expand-file-name vc-root-dir))
+;;              (make-dir-list buffer-dir)
+;;              '())
+;;           vc-root-dir))) ;; default to vc root if init file not given
+;; 
+;;     ;; Set this variable to find project root
+;;     (defvar jedi-config:find-root-function 'get-project-root-with-file)
+;; 
+;;     (defun current-buffer-project-root ()
+;;       (funcall jedi-config:find-root-function
+;;                (current-buffer)
+;;                jedi-config:vcs-root-sentinel
+;;                jedi-config:python-module-sentinel))
+;; 
+;;     (defun jedi-config:setup-server-args ()
+;;       ;; little helper macro for building the arglist
+;;       (defmacro add-args (arg-list arg-name arg-value)
+;;         `(setq ,arg-list (append ,arg-list (list ,arg-name ,arg-value))))
+;;       ;; and now define the args
+;;       (let ((project-root (current-buffer-project-root)))
+;; 
+;;         (make-local-variable 'jedi:server-args)
+;; 
+;;         (when project-root
+;;           (message (format "Adding system path: %s" project-root))
+;;           (add-args jedi:server-args "--sys-path" project-root))
+;; 
+;;         (when jedi-config:with-virtualenv
+;;           (message (format "Adding virtualenv: %s" jedi-config:with-virtualenv))
+;;           (add-args jedi:server-args "--virtual-env" jedi-config:with-virtualenv))))
+;; 
+;;     ;; Use system python
+;;     (defun jedi-config:set-python-executable ()
+;;       (set-exec-path-from-shell-PATH)
+;;       (make-local-variable 'jedi:server-command)
+;;       (set 'jedi:server-command
+;;            (list (executable-find "python") ;; may need help if running from GUI
+;;                  (cadr default-jedi-server-command))))
+;; 
+;;     ;; Now hook everything up
+;;     ;; Hook up to autocomplete
+;;     (add-to-list 'ac-sources 'ac-source-jedi-direct)
+;; 
+;;     ;; Enable Jedi setup on mode start
+;;     (add-hook 'python-mode-hook 'jedi:setup)
+;; 
+;;     ;; Buffer-specific server options
+;;     (add-hook 'python-mode-hook
+;;               'jedi-config:setup-server-args)
+;;     (when jedi-config:use-system-python
+;;       (add-hook 'python-mode-hook
+;;                 'jedi-config:set-python-executable))
+;; 
+;;     ;; And custom keybindings
+;;     (defun jedi-config:setup-keys ()
+;;       (local-set-key (kbd "M-.") 'jedi:goto-definition)
+;;       (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker)
+;;       (local-set-key (kbd "M-?") 'jedi:show-doc)
+;;       (local-set-key (kbd "M-/") 'jedi:get-in-function-call))
+;; 
+;;     ;; Don't let tooltip show up automatically
+;;     (setq jedi:get-in-function-call-delay 10000000)
+;;     ;; Start completion at method dot
+;;     (setq jedi:complete-on-dot t)
+;;     ;; Use custom keybinds
+;;     (add-hook 'python-mode-hook 'jedi-config:setup-keys)
+;; )
+#+end_src
+
+#+RESULTS:
+: jedi
+
+
+** Helm and gtags
+
+Further customization of =gtags= with =helm=, from http://tuhdo.github.io/c-ide.html. 
+
+Check out: http://tuhdo.github.io/c-ide.html
+
+#+begin_src emacs-lisp
+    ;; Tuhdo says to put this but if I do emacs spits error mesage on start up. ñ
+    ;;(require 'setup-helm)
+    ;;(require 'setup-helm-gtags)
+  
+    (setq
+     helm-gtags-ignore-case t
+     helm-gtags-auto-update t
+     helm-gtags-use-input-at-cursor t
+     helm-gtags-pulse-at-cursor t
+     helm-gtags-prefix-key "\C-cg"
+     helm-gtags-suggested-key-mapping t
+     )
+
+    (require 'helm-gtags)
+    ;; Enable helm-gtags-mode
+    (add-hook 'dired-mode-hook 'helm-gtags-mode)
+    (add-hook 'eshell-mode-hook 'helm-gtags-mode)
+    (add-hook 'c-mode-hook 'helm-gtags-mode)
+    (add-hook 'c++-mode-hook 'helm-gtags-mode)
+    (add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+    (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+    (define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+    (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+    (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+    (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+    (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+#+end_src
+
+#+RESULTS:
+: helm-gtags-next-history
+
+
+** Magit
+
+https://magit.vc/manual/magit.html#Installation
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+#+END_SRC
+
+
+
+
+
+
+#+source: message-line
+#+begin_src emacs-lisp
+(message "Starter Kit User File loaded.")
+#+end_src
