@@ -296,6 +296,17 @@ Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager.
               ("org"     . "http://orgmode.org/elpa/")
               ("gnu"     . "http://elpa.gnu.org/packages/")
               ("melpa"   . "https://melpa.org/packages/")))
+
+
+;; alternative I tried when I was checking the reasons why I don't see magit in =list-packages=
+;;  (add-to-list 'package-archives
+;;               '("melpa" . "http://melpa.org/packages/") t)
+;;  (add-to-list 'package-archives
+;;               ' ("org"     . "http://orgmode.org/elpa/") t)
+;;  (add-to-list 'package-archives
+;;               '("gnu"     . "http://elpa.gnu.org/packages/") t)
+
+
   
 
 ;;; Add support to package.el for pre-filtering available packages
@@ -342,7 +353,7 @@ ARCHIVE is the string name of the package archive.")
 #+end_src
 
 #+results: starter-kit-elpa
-: loaded starter-kit-elpa.el
+: Loaded /home/dgm/.emacs.d/starter-kit-elpa.el
 
 *** Work around OS X bug
 

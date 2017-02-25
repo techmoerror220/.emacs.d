@@ -9,125 +9,128 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 The following packages will be downloaded and installed.
 
 #+begin_src emacs-lisp
-      (defvar starter-kit-packages (list 
-                                    'org-plus-contrib
-                                    'org-ac
-                                    'adaptive-wrap  
-                                    'ag
-                                    'avy
-                                    'auto-complete
-                                    ;;'ac-emmet
-                                    ;;'ac-etags
-                                    ;;'ac-ispell
-                                    'browse-kill-ring
-                                    'company
-                                    'company-auctex
-                                    'company-math
-                                    'company-web
-                                    'company-statistics
-                                    'company-quickhelp
-                                    'css-mode
-                                    'csv-mode
-                                    'deft
-                                    'emmet-mode
-                                    'exec-path-from-shell
-                                    'expand-region
-                                    'flycheck
-                                    'flycheck-tip
-                                    'flx-ido
-                                    ;; 'gist
-                                    'hl-line+
-                                    'idle-highlight-mode
-                                    'inf-ruby
-                                    'latex-pretty-symbols
-                                    ;; 'mac-key-mode
-                                    ;; 'magit
-                                    'markdown-mode
-                                    'maxframe
-                                    'multiple-cursors
-                                    'pandoc-mode
-                                    'polymode
-                                    'pos-tip
-                                    'powerline
-                                    'python
-                                    'python-mode
-                                    'python-x
-                                    'elpy
-                                    'ob-ipython
-                                    'ein  ;; Emacs ipython notebook
-                                    'py-autopep8
-                                    ;; 'ipython
-                                    'jedi
-                                    'jedi-core
-                                    'live-py-mode
-                                    'redo+
-                                    ;; 'ruby-mode
-                                    'smartparens ;; includes all features of =paredit= so the latter is not needed.
-                                    'smex
-                                    'anti-zenburn-theme
-                                    'solarized-theme
-                                    'color-theme-sanityinc-tomorrow
-                                    'color-theme-sanityinc-solarized
-                                    'lenlen-theme
-                                    'color-theme-modern
-                                    'hc-zenburn-theme
-                                    'labburn-theme
-                                    'zenburn-theme
-                                    'material-theme
-                                    'tango-2-theme
-                                    'monokai-theme
-                                    'darkokai-theme
-                                    'textmate
-                                    ;; 'typopunct
-                                    'visual-regexp
-                                    'yaml-mode
-                                    'yasnippet
-                                    'zenburn-theme
-                                    'spacemacs-theme
-                                    'auctex
-                                    'ess
-                                    'r-autoyas 
-                                    'unicode-fonts                               
-                                    'volatile-highlights
-                                    'undo-tree
-                                    'rebox2
-                                    'workgroups2
-                                    'duplicate-thing
-                                    'ibuffer-vc
-                                    'dired+
-                                    'recentf-ext
-                                    'diff-hl
-                                    'clean-aindent-mode
-                                    'golden-ratio
-                                    'highlight-numbers
-                                    'highlight-symbol
-                                    'info+
-                                    'discover-my-major
-                                    'rainbow-mode
-                                    'nyan-mode
-                                    'helm
-                                    'free-keys
-                                    'helm-projectile
-                                    'helm-descbinds
-                                    'bookmark+
-                                    'spaceline
-                                    ;; 'smart-mode-line-powerline-theme                                 
-                                    ;; 'telephone-line
-                                    'ace-window
-                                    'ox-twbs
-                                    'ox-pandoc
-                                    'moe-theme
-                                    'which-key
-                                    'eval-in-repl
-                                    'ebib
-                                    'helm-bibtex
-                                    'helm-R
-                                    'iedit
-                                    'geiser
-                                    'helm-gtags
-                                    'helm-ag 
-                                    )
-        "Libraries that should be installed by default.")
+    (defvar starter-kit-packages (list 
+                                  'org-plus-contrib
+                                  'org-ac
+                                  'adaptive-wrap  
+                                  'ag
+                                  'avy
+                                  'auto-complete
+                                  ;;'ac-emmet
+                                  ;;'ac-etags
+                                  ;;'ac-ispell
+                                  'browse-kill-ring
+                                  'company
+                                  'company-auctex
+                                  'company-math
+                                  'company-web
+                                  'company-statistics
+                                  'company-quickhelp
+                                  'css-mode
+                                  'csv-mode
+                                  'deft
+                                  'emmet-mode
+                                  'exec-path-from-shell
+                                  'expand-region
+                                  'flycheck
+                                  'flycheck-tip
+                                  'flx-ido
+                                  ;; 'gist
+                                  'hl-line+
+                                  'idle-highlight-mode
+                                  'inf-ruby
+                                  'latex-pretty-symbols
+                                  ;; 'mac-key-mode
+                                  ;; 'magit
+                                  'markdown-mode
+                                  'maxframe
+                                  'multiple-cursors
+                                  'pandoc-mode
+                                  'polymode
+                                  'pos-tip
+                                  'powerline
+                                  'python
+                                  'python-mode
+                                  'python-x
+                                  'elpy
+                                  'ob-ipython
+                                  'ein  ;; Emacs ipython notebook
+                                  'py-autopep8
+                                  ;; 'ipython
+                                  'jedi
+                                  'jedi-core
+                                  'live-py-mode
+                                  'redo+
+                                  ;; 'ruby-mode
+                                  'smartparens ;; includes all features of =paredit= so the latter is not needed.
+                                  'smex
+                                  'anti-zenburn-theme
+                                  'solarized-theme
+                                  'color-theme-sanityinc-tomorrow
+                                  'color-theme-sanityinc-solarized
+                                  'lenlen-theme
+                                  'color-theme-modern
+                                  'hc-zenburn-theme
+                                  'labburn-theme
+                                  'zenburn-theme
+                                  'material-theme
+                                  'tango-2-theme
+                                  'monokai-theme
+                                  'darkokai-theme
+                                  'textmate
+                                  ;; 'typopunct
+                                  'visual-regexp
+                                  'yaml-mode
+                                  'yasnippet
+                                  'zenburn-theme
+                                  'spacemacs-theme
+                                  'auctex
+                                  'ess
+                                  'r-autoyas 
+                                  'unicode-fonts                               
+                                  'volatile-highlights
+                                  'undo-tree
+                                  'rebox2
+                                  'workgroups2
+                                  'duplicate-thing
+                                  'ibuffer-vc
+                                  'dired+
+                                  'recentf-ext
+                                  'diff-hl
+                                  'clean-aindent-mode
+                                  'golden-ratio
+                                  'highlight-numbers
+                                  'highlight-symbol
+                                  'info+
+                                  'discover-my-major
+                                  'rainbow-mode
+                                  'nyan-mode
+                                  'helm
+                                  'free-keys
+                                  'helm-projectile
+                                  'helm-descbinds
+                                  'bookmark+
+                                  'spaceline
+                                  ;; 'smart-mode-line-powerline-theme                                 
+                                  ;; 'telephone-line
+                                  'ace-window
+                                  'ox-twbs
+                                  'ox-pandoc
+                                  'moe-theme
+                                  'which-key
+                                  'eval-in-repl
+                                  'ebib
+                                  'helm-bibtex
+                                  'helm-R
+                                  'iedit
+                                  'geiser
+                                  'helm-gtags
+                                  'helm-ag 
+                                  'darktooth-theme
+                                  'soothe-theme
+;;                                  'uscolors-theme
+                                  )
+      "Libraries that should be installed by default.")
 #+end_src
 
 #+begin_src emacs-lisp

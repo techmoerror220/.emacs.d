@@ -354,7 +354,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 #+end_src
 
 #+RESULTS:
-: /media/dgm/blue/documents/dropbox/org/from-mobile.org
+: /media/dgm/blue/documents/dropbox/org/fromMobile.org
 
 *** Babel Settings
    Configure org-mode so that when you edit source code in an indirect buffer (with C-c '), the buffer is opened in the current window. That way, your window organization isn't broken when switching.
@@ -795,9 +795,7 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 (require 'live-py-mode)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 ;; (elpy-use-ipython)
-
-;; comment out upon fresh installation of emacs, because then I don't have ipython3
-(elpy-use-ipython "ipython3")
+ (elpy-use-ipython "ipython3")
 
 ;; tip from https://github.com/jorgenschaefer/elpy/issues/992 
 ;; to correct IPython 5's new prompt behavior that spitted out lots of nonsense and unreadeable characters as if it was a binary file
@@ -837,12 +835,10 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 
 
 
-The MU World starts here.
-
-comment out upon fresh installation of emacs, because then I don't have ipython3 (use the :tangle no thingy)
+The MU World starts here
 
 #+srcname: mu-customization
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   ;; dgm's customizations of mu4e
   ;; Setting up the MU mail server
   ;; copied from http://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html#Gmail-configuration
@@ -2373,12 +2369,13 @@ Check out: http://tuhdo.github.io/c-ide.html
 : helm-gtags-next-history
 
 
+** Magit
 
+https://magit.vc/manual/magit.html#Installation
 
-
-
-
-
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+#+END_SRC
 
 
 #+source: message-line

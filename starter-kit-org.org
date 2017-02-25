@@ -213,7 +213,7 @@ Customization in: http://orgmode.org/manual/Capture-templates.html
 
 
 #+RESULTS:
-| n | Notes | entry | (file+headline /media/dgm/blue/documents/dropbox/org/notes.org Notes) | * Added on: %U |
+| n | Notes | entry | (file+headline /media/dgm/blue/documents/dropbox/org/notes.org Notes) | * %U |
 
 
 *** Customizations from Ista Zahn: 
