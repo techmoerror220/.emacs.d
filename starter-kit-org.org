@@ -202,18 +202,18 @@ Customizations in: http://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html
 Customization in: http://orgmode.org/manual/Capture-templates.html
 #+BEGIN_SRC emacs-lisp
     (setq org-capture-templates
-     '(("n" "Notes" entry (file+headline "/media/dgm/05339CA847836DBD/documents/dropbox/org/notes.org" "Notes")
+     '(("n" "Notes" entry (file+headline "/media/dgm/blue/documents/dropbox/org/notes.org" "Notes")
             "* Added on: %U\nDescription: %i %?\nEntry created from this heading or email: %a")
-       ("t" "Todo" entry (file+headline "/media/dgm/05339CA847836DBD/documents/dropbox/org/gtd.org" "Tasks")
+       ("t" "Todo" entry (file+headline "/media/dgm/blue/documents/dropbox/org/gtd.org" "Tasks")
             "* TODO %?\nDescription: %i\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\nEntry added on: %T\nEntry created from this heading or email: %a")
-       ("j" "Journal" entry (file+datetree "/media/dgm/05339CA847836DBD/documents/dropbox/org/journal.org")
+       ("j" "Journal" entry (file+datetree "/media/dgm/blue/documents/dropbox/org/journal.org")
             "* %?\nAdded on: %U\n  %i\n  %a")))
 #+END_SRC
 
 
 
 #+RESULTS:
-| n | Notes | entry | (file+headline /media/dgm/05339CA847836DBD/documents/dropbox/org/notes.org Notes) | * %U |
+| n | Notes | entry | (file+headline /media/dgm/blue/documents/dropbox/org/notes.org Notes) | * Added on: %U |
 
 
 *** Customizations from Ista Zahn: 
