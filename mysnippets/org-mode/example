@@ -1,0 +1,8 @@
+# key: ex
+# name: example
+# --
+#+BEGIN_EXAMPLE
+$1
+#+END_EXAMPLE
+
+$0

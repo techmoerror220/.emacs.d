@@ -1,0 +1,8 @@
+# key: em
+# name: elisp
+# --
+#+begin_src emacs-lisp
+$1
+#+end_src
+
+$0
