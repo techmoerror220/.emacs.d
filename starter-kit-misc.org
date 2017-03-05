@@ -34,6 +34,7 @@ loading the =zenburn= and =anti-zenburn= themes.
 ;;  (load-theme 'solarized-light t)
 ;;  (load-theme 'darktooth t)
 ;;  (load-theme 'soothe t)
+;;  (load-theme 'clues t)
 
 ;; from https://github.com/kuanyui/moe-theme.el
 ;;    (require 'moe-theme)

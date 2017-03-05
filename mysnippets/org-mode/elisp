@@ -1,8 +1,9 @@
-# key: em
-# name: elisp
+# -*- mode: snippet -*-
+# name: lisp
+# key: lisp
 # --
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 $1
-#+end_src
+#+END_SRC
 
 $0
