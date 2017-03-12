@@ -117,3 +117,18 @@ This is useful for when you have buffers with many similar names, as when there 
 
 #+end_src
 
+** DGM customization
+
+From: http://stackoverflow.com/questions/2531372/how-to-stop-emacs-from-replacing-underbar-with-in-ess-mode
+
+To assign ":" to "<-" and to stop the assignment of underscore (underbar) "_" to "<-" put the following in .emacs (yes, the repeated line is correct)
+
+#+BEGIN_SRC emacs-lisp
+(setq ess-smart-S-assign-key ";")
+(ess-toggle-S-assign nil)
+(ess-toggle-S-assign nil)
+(ess-toggle-underscore nil) ; leave underscore key alone!
+#+END_SRC
+
+#+RESULTS:
+: ess-smart-S-assign

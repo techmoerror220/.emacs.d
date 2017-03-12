@@ -115,6 +115,7 @@ contains an up to date list of the currently supported languages.
     (haskell . t)
     (stata . t)
     (shell . t)
+    (latex . t)
     ))
 
 
@@ -216,7 +217,7 @@ Customization in: http://orgmode.org/manual/Capture-templates.html
 | n | Notes | entry | (file+headline /media/dgm/blue/documents/dropbox/org/notes.org Notes) | * %U |
 
 
-*** Customizations from Ista Zahn: 
+*** COMMENT Customizations from Ista Zahn: 
 Check "Note taking and outlining (Org-mode)"  https://github.com/izahn/dotemacs
 
 #+begin_src emacs-lisp
@@ -236,13 +237,10 @@ Check "Note taking and outlining (Org-mode)"  https://github.com/izahn/dotemacs
   ;; configure org-mode when opening first org-mode file
   ;; Load additional export formats
   (require 'ox-odt)
-  (require 'ox-md)
 ;;  (require 'ox-freemind)
   (require 'ox-bibtex)
 )
 #+end_src
 
-#+RESULTS:
-: ox-bibtex
 
 

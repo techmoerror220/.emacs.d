@@ -539,6 +539,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
         (setq org-latex-default-packages-alist nil)     
         (setq org-latex-packages-alist
               '(("minted" "org-preamble-xelatex" t)
+                ("" "biblatex" t)
                 ("" "graphicx" t)
                 ("" "longtable" nil)
                 ("" "float" ))) 
