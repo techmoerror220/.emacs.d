@@ -43,8 +43,8 @@ a lambda doesn't already exist in the list.
     (set (make-local-variable 'comment-auto-fill-only-comments) t)
     (auto-fill-mode t))
   
-  (defun turn-on-idle-highlight-mode ()
-    (idle-highlight-mode t))
+;;  (defun turn-on-idle-highlight-mode ()
+;;    (idle-highlight-mode t))
 
   (defun turn-on-hl-line-mode ()
     (require 'hl-line+)
@@ -81,7 +81,7 @@ a lambda doesn't already exist in the list.
 
 #+srcname: starter-kit-add-idle-highlight-mode
 #+begin_src emacs-lisp
-(add-hook 'starter-kit-coding-hook 'turn-on-idle-highlight-mode)
+;; (add-hook 'starter-kit-coding-hook 'turn-on-idle-highlight-mode)
 #+end_src
 
   

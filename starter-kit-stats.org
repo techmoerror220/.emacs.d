@@ -53,6 +53,25 @@ This file provides settings for ESS and R.
 #+begin_src emacs-lisp
   (setq ess-swv-processor "'knitr")
 #+end_src
+
+
+** Use Polymode 
+Polymode is a package that supports multiple modes inside a single buffer. It is aimed particularly at literate programming approaches and supports, e.g., R and markdown in a single =.Rmd= file. So it is very useful with knitr in R.
+
+#+source: Polymode
+#+begin_src emacs-lisp
+  (require 'poly-R)
+  (require 'poly-markdown)
+  ;;; polymode + markdown
+  (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
+
+  ;;; polymode + R
+  (add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
+  (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
+  (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
+
+#+end_src
+
  
 ** Make shift-enter to a lot in ESS.
  Use shift-enter to split window & launch R (if not running), execute
@@ -109,11 +128,12 @@ This is useful for when you have buffers with many similar names, as when there 
 ** lintr and flycheck
 [[https://github.com/jimhester/lintr][lintr]] checks your R code for style and syntax errors. It's an R library that integrates with [[http://www.flycheck.org][flycheck]]. You must install lintr from R. Flycheck can also check code in many other languages. You will need to install linters for them separately as well. See the flycheck documentation for details.
 
+dgm disables flycheck as it slows emacs down
 #+source: lintr
 #+begin_src emacs-lisp
-  (add-hook 'after-init-hook #'global-flycheck-mode)
-    (add-hook 'ess-mode-hook
-              (lambda () (flycheck-mode t)))
+;;  (add-hook 'after-init-hook #'global-flycheck-mode)
+;;    (add-hook 'ess-mode-hook
+;;              (lambda () (flycheck-mode t)))
 
 #+end_src
 

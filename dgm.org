@@ -529,7 +529,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 
         ;; For orgmode docs we just always use xelatex for convenience.
         ;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
-          (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
+          (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape -f' -pdf %f"))
 
         ;; I make pdflatex the default
   ;;      (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape' -pdf %f"))
@@ -570,6 +570,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 
 #+RESULTS: orgmode-latex-export
 | minted | org-preamble-xelatex | t   |
+|        | biblatex             | t   |
 |        | graphicx             | t   |
 |        | longtable            | nil |
 |        | float                |     |
@@ -816,9 +817,10 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 
 ;; tips from: "Emacs - the Best Python Editor?" at https://realpython.com/blog/python/emacs-the-best-python-editor/
 ;; Elpy comes with =flymake= by default to support syntax checking. However =flycheck= gives realtime syntax checking. 
-(when (require 'flycheck nil t)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
+;; But =flycheck= slows emacs to death, so I disable it!
+;; (when (require 'flycheck nil t)
+;;  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+;;  (add-hook 'elpy-mode-hook 'flycheck-mode))
 
 ;; Now if we make pep8 errors when we save the file the errors will be corrected automatically
 (require 'py-autopep8)
@@ -1525,13 +1527,12 @@ The app is chosen from your OS's preference."
 | diff-hl-dired-mode |
 
 
-
-
+I disable this as flycheck makes emacs too slow.
 #+srcname: flycheck-tip
 #+BEGIN_SRC emacs-lisp
-  (require 'flycheck-tip)
-  (define-key global-map (kbd "C-c C-n") 'flycheck-tip-cycle)
-  (setq flycheck-display-errors-function 'ignore)
+;;  (require 'flycheck-tip)
+;;  (define-key global-map (kbd "C-c C-n") 'flycheck-tip-cycle)
+;;  (setq flycheck-display-errors-function 'ignore)
 #+END_SRC
 
 #+RESULTS: flycheck-tip
@@ -2393,20 +2394,6 @@ Key binding to get the Magit menu
 
 #+RESULTS:
 : magit-dispatch-popup
-
-** Deft
-
-#+BEGIN_SRC emacs-lisp
-  (setq deft-extensions '("org" "txt" "tex" "Rnw" "md" "markdown"))
-  (setq deft-directory "/media/dgm/blue/documents/dropbox/notes")
-  (setq deft-recursive t)
-  (global-set-key  (kbd "C-c d") 'deft)
-  (setq deft-use-filename-as-title t)
-#+END_SRC
-
-#+RESULTS:
-: t
-
 
 *** Recent files.
 
