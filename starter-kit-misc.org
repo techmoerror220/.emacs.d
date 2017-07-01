@@ -219,10 +219,12 @@ ido-mode is like magic pixie dust!
   (set-default 'imenu-auto-rescan t)
   
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
-  (add-hook 'text-mode-hook 'turn-on-flyspell)
-  (add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
-  (add-hook 'markdown-mode-hook 'turn-on-flyspell)
-  (add-hook 'org-mode-hook 'turn-on-flyspell)
+
+;; dgm, 1 july 2017: turn flyspell off
+;;  (add-hook 'text-mode-hook 'turn-on-flyspell)
+;;  (add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
+;;  (add-hook 'markdown-mode-hook 'turn-on-flyspell)
+;;  (add-hook 'org-mode-hook 'turn-on-flyspell)
   
   (defvar starter-kit-coding-hook nil
     "Hook that gets run on activation of any programming mode.")
