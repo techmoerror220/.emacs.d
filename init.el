@@ -100,6 +100,9 @@
 (require 'org)
 (org-babel-load-file (expand-file-name "starter-kit.org" dotfiles-dir))
 
+;; This tells Emacs to open all .org files in org-mode (http://sachachua.com/blog/2007/12/emacs-getting-things-done-with-org-basic/)
+(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+
 ;;; Higher garbage collection threshold
 (setq gc-cons-threshold 20000000)
 

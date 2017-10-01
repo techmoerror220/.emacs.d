@@ -333,236 +333,315 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
     Where archived projects and tasks go.
 #+source: orgmode-archive
 #+begin_src emacs-lisp
-  (setq org-archive-location "/media/dgm/blue/documents/dropbox/org/archive.org::From %s")
+  (setq org-archive-location "/media/dgm/blue/documents/dropbox/gtd/archive.org::From %s")
 #+end_src
 
-*** Mobile Settings
+*** Mobile Settings // GTD settings
    Sync orgmode files with Dropbox and iPhone. 
 #+src-name: orgmode-mobile
 #+begin_src emacs-lisp
-   ;; Set to the location of your Org files on your local system
-   (setq org-directory "/media/dgm/blue/documents/dropbox/org")
-   ;; Set to <your Dropbox root directory>/MobileOrg.
-   (setq org-mobile-directory "/media/dgm/blue/documents/dropbox/mobileorg")
-   ;; Set to the files (or directory of files) you want sync'd
-;;   (setq org-agenda-files (quote ("/media/dgm/blue/documents/dropbox/org")))  ;; this is the original line by kieran healy.
-   (setq org-agenda-files (list "/media/dgm/blue/documents/dropbox/org/notes.org"
-                                "/media/dgm/blue/documents/dropbox/org/gtd.org"
-                                "/media/dgm/blue/documents/dropbox/org/journal.org"))
-   ;; Set to the name of the file where new notes will be stored
-   (setq org-mobile-inbox-for-pull "/media/dgm/blue/documents/dropbox/org/fromMobile.org")
-#+end_src
+  ;; Set to the location of your Org files on your local system
+  (setq org-directory "/media/dgm/blue/documents/dropbox/gtd")
+  ;; Set to <your Dropbox root directory>/MobileOrg.
+  (setq org-mobile-directory "/media/dgm/blue/documents/dropbox/mobileorg")
+  ;; Set to the files (or directory of files) you want sync'd
+  ;;   (setq org-agenda-files (quote ("/media/dgm/blue/documents/dropbox/org")))  ;; this is the original line by kieran healy.
+
+  ;; organization by: https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
+  ;; Org agenda view scans these files and collects all the heading with a TODO (or related) keyword
+  (setq org-agenda-files (list "/media/dgm/blue/documents/dropbox/gtd/inbox.org"
+                               "/media/dgm/blue/documents/dropbox/gtd/gtd.org"
+                               "/media/dgm/blue/documents/dropbox/gtd/journal.org"
+                               "/media/dgm/blue/documents/dropbox/gtd/tickler.org"))
+
+  (setq org-refile-targets '(("/media/dgm/blue/documents/dropbox/gtd/gtd.org" :maxlevel . 3)
+                             ("/media/dgm/blue/documents/dropbox/gtd/someday.org" :level . 2)
+                             ("/media/dgm/blue/documents/dropbox/gtd/tickler.org" :level . 2)))
+
+  ;; another way of doing the same
+  ;;  '(org-refile-targets (quote (("/media/dgm/blue/documents/dropbox/gtd/gtd.org" :maxlevel . 3)
+  ;;                              ("/media/dgm/blue/documents/dropbox/gtd/someday.org" :level . 1)
+  ;;                              ("/media/dgm/blue/documents/dropbox/gtd/tickler.org" :maxlevel . 2))))
+
+
+  ;; tip from https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html for  using custom agenda commands  to get an overview of actions by context or tag. Here’s an example custom agenda command that will display all actions for the @office context. Following the GTD principle, what I usually want is to only show the first action to be done (or next action) for each project with the @office tag. That can be achieved using a skipping condition. I've tweak it so that I can have it work for entries tagged for the context "work" and for the context "home".
+
+  (setq org-agenda-custom-commands 
+        '(("o" "At the office" tags-todo "@office"
+           ((org-agenda-overriding-header "Office")
+            (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))
+          ("h" "At home" tags-todo "@home"
+           ((org-agenda-overriding-header "Home")
+            (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))
+          ("H" "At either home or office" tags-todo "@homoff"
+           ((org-agenda-overriding-header "Homoff")
+            (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))
+          ("O" "Office block agenda"
+           ((agenda "" ((org-agenda-ndays 1))) ;; esto no me funciona... debe ser que (setq org-agenda-span (quote month)) en starter-kit-org.org tiene prioridad
+            ;; limits the agenda display to a single day
+            (tags-todo "@office")
+            (tags-todo "office|home")
+            ;;            (tags "project+CATEGORY=\"elephants\"")
+            ;;            (tags "review" ((org-agenda-files '("~/org/circuspeanuts.org"))))
+            ;; limits the tag search to the file circuspeanuts.org
+            ;;            (todo "WAITING")
+            )
+           ((org-agenda-compact-blocks t))) ;; options set here apply to the entire block
+          ;; ...other commands here
+          ("W" "Weekly Review"
+           ((agenda "" ((org-agenda-ndays 7))) ;; review upcoming deadlines and appointments
+            ;; type "l" in the agenda to review logged items 
+;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+            (todo "NEXT") ;; review next actions                                              
+            (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
+            (todo "WAITING"))) ;; review waiting items 
+          ("p" "Project Review"
+           ((agenda "" ((org-agenda-ndays 7))) ;; review upcoming deadlines and appointments
+            (tags "project")
+            (todo "NEXT") ;; review next actions
+            (todo "TODO")))  ;; review pending actions waiting for "next actiosn" to be fulfilled
+          ("l" "Monthly (Long-Term) Review"
+           ((agenda "" ((org-agenda-span (quote month)))))) 
+          ("y" "Yearly Review"
+           ((agenda "" ((org-agenda-span (quote year)))))) 
+          ))
+
+  ;; HOWEVER I am not 100% sure how useful is all this  because I have a nice option in C-c a to choose filtering by tag (/), etc.
+  ;; anyways, more info on agenda-custom-commands in http://orgmode.org/worg/org-tutorials/org-custom-agenda-commands.html
+
+
+  (defun my-org-agenda-skip-all-siblings-but-first ()
+    "Skip all but the first non-done entry."
+    (let (should-skip-entry)
+      (unless (org-current-is-todo)
+        (setq should-skip-entry t))
+      (save-excursion
+        (while (and (not should-skip-entry) (org-goto-sibling t))
+          (when (org-current-is-todo)
+            (setq should-skip-entry t))))
+      (when should-skip-entry
+        (or (outline-next-heading)
+            (goto-char (point-max))))))
+
+  (defun org-current-is-todo ()
+    (string= "TODO" (org-get-todo-state)))
+
+
+
+  ;; Set to the name of the file where new notes will be stored
+  (setq org-mobile-inbox-for-pull "/media/dgm/blue/documents/dropbox/org/fromMobile.org")
+                               #+end_src
 
 #+RESULTS:
 : /media/dgm/blue/documents/dropbox/org/fromMobile.org
 
 *** Babel Settings
-   Configure org-mode so that when you edit source code in an indirect buffer (with C-c '), the buffer is opened in the current window. That way, your window organization isn't broken when switching.
+    Configure org-mode so that when you edit source code in an indirect buffer (with C-c '), the buffer is opened in the current window. That way, your window organization isn't broken when switching.
 
-#+source: orgmode-indirect-buffer-settings
-#+begin_src emacs-lisp
-  (setq org-src-window-setup 'current-window)
-#+end_src
+    #+source: orgmode-indirect-buffer-settings
+    #+begin_src emacs-lisp
+      (setq org-src-window-setup 'current-window)
+    #+end_src
 
 *** XeLaTeX and pdfLaTeX Export Settings
-   Configure org-mode to export directly to PDF using xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
+    Configure org-mode to export directly to PDF using xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
 
-#+source: orgmode-latex-export
-#+begin_src emacs-lisp
+    #+source: orgmode-latex-export
+    #+begin_src emacs-lisp
 
-          ;; Choose either listings or minted for exporting source code blocks.
-          ;; Using minted (as here) requires pygments be installed. To use the
-          ;; default listings package instead, use
-          ;; (setq org-latex-listings t)
-          ;; and change references to "minted" below to "listings"
-          (setq org-latex-listings 'minted)
+      ;; Choose either listings or minted for exporting source code blocks.
+      ;; Using minted (as here) requires pygments be installed. To use the
+      ;; default listings package instead, use
+      ;; (setq org-latex-listings t)
+      ;; and change references to "minted" below to "listings"
+      (setq org-latex-listings 'minted)
 
-          ;; default settings for minted code blocks.
-          ;; bg will need to be defined in the preamble of your document. It's defined in org-preamble-xelatex.sty below.
-          (setq org-latex-minted-options
-                '(;("frame" "single")
-                  ("bgcolor" "bg") 
-                  ("fontsize" "\\small")
-                  ))
+      ;; default settings for minted code blocks.
+      ;; bg will need to be defined in the preamble of your document. It's defined in org-preamble-xelatex.sty below.
+      (setq org-latex-minted-options
+            '(;("frame" "single")
+              ("bgcolor" "bg") 
+              ("fontsize" "\\small")
+              ))
 
-        ;; turn off the default toc behavior; deal with it properly in headers to files.
-         (defun org-latex-no-toc (depth)  
-           (when depth
-               (format "%% Org-mode is exporting headings to %s levels.\n"
-                       depth)))
-           (setq org-latex-format-toc-function 'org-latex-no-toc)
+      ;; turn off the default toc behavior; deal with it properly in headers to files.
+      (defun org-latex-no-toc (depth)  
+        (when depth
+          (format "%% Org-mode is exporting headings to %s levels.\n"
+                  depth)))
+      (setq org-latex-format-toc-function 'org-latex-no-toc)
 
-        ;; note the insertion of the \input statement for the vc information 
-        ;; dgm: remember to activate it when I git every directory
+      ;; note the insertion of the \input statement for the vc information 
+      ;; dgm: remember to activate it when I git every directory
 
-        ;; I add the option "\counterwithout{section}{chapter}" mentioned in the §18.8 section of the memoir manual (http://tex.stackexchange.com/questions/62093/omitting-chapter-numbers-in-section-headers-using-memoir) to disable the \chapter{} option in the article version of the memoir class
+      ;; I add the option "\counterwithout{section}{chapter}" mentioned in the §18.8 section of the memoir manual (http://tex.stackexchange.com/questions/62093/omitting-chapter-numbers-in-section-headers-using-memoir) to disable the \chapter{} option in the article version of the memoir class
 
-        (add-to-list 'org-latex-classes
-                       '("memarticleUnnumbered"
-                         "\\documentclass[11pt,oneside,article]{memoir}\n\\counterwithout{section}{chapter}\n\\immediate\\write18{sh ./vc}\n\\input{vc} % vc package"
-                          ("\\section*{%s}" . "\\section{%s}")
-                          ("\\subsection*{%s}" . "\\subsection{%s}")
-                          ("\\subsubsection*{%s}" . "\\subsubsection{%s}")
-                          ("\\paragraph*{%s}" .  "\\paragraph{%s}")
-                          ("\\subparagraph*{%s}" . "\\subparagraph{%s}")))
+      (add-to-list 'org-latex-classes
+                   '("memarticleUnnumbered"
+                     "\\documentclass[11pt,oneside,article]{memoir}\n\\counterwithout{section}{chapter}\n\\immediate\\write18{sh ./vc}\n\\input{vc} % vc package"
+                     ("\\section*{%s}" . "\\section{%s}")
+                     ("\\subsection*{%s}" . "\\subsection{%s}")
+                     ("\\subsubsection*{%s}" . "\\subsubsection{%s}")
+                     ("\\paragraph*{%s}" .  "\\paragraph{%s}")
+                     ("\\subparagraph*{%s}" . "\\subparagraph{%s}")))
 
-        (add-to-list 'org-latex-classes
-                       '("memarticleNumbered"
-                         "\\documentclass[11pt,oneside,article]{memoir}\n\\immediate\\write18{sh ./vc}\n\\input{vc} % vc package"
-                          ("\\section{%s}" . "\\section*{%s}")
-                          ("\\subsection{%s}" . "\\subsection*{%s}")
-                          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                          ("\\paragraph{%s}" .  "\\paragraph*{%s}")
-                          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+      (add-to-list 'org-latex-classes
+                   '("memarticleNumbered"
+                     "\\documentclass[11pt,oneside,article]{memoir}\n\\immediate\\write18{sh ./vc}\n\\input{vc} % vc package"
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                     ("\\paragraph{%s}" .  "\\paragraph*{%s}")
+                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-        (add-to-list 'org-latex-classes
-                       '("membook"
-                         "\\documentclass[oldfontcommands,11pt,oneside]{memoir}\n\\immediate\\write18{sh ./vc}\n\\input{vc}"
-                         ("\\chapter{%s}" . "\\chapter*{%s}")
-                         ("\\section{%s}" . "\\section*{%s}")
-                         ("\\subsection{%s}" . "\\subsection*{%s}")
-                         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+      (add-to-list 'org-latex-classes
+                   '("membook"
+                     "\\documentclass[oldfontcommands,11pt,oneside]{memoir}\n\\immediate\\write18{sh ./vc}\n\\input{vc}"
+                     ("\\chapter{%s}" . "\\chapter*{%s}")
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
-        (add-to-list 'org-latex-classes
-                       '("jssarticle"
-                         "\\documentclass[oldfontcommands,11pt,oneside,article]{jss}}\n\\immediate\\write18{sh ./vc}\n\\input{vc}"
-                          ("\\section{%s}" . "\\section*{%s}")
-                          ("\\subsection{%s}" . "\\subsection*{%s}")
-                          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                          ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+      (add-to-list 'org-latex-classes
+                   '("jssarticle"
+                     "\\documentclass[oldfontcommands,11pt,oneside,article]{jss}}\n\\immediate\\write18{sh ./vc}\n\\input{vc}"
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-        (add-to-list 'org-latex-classes
-                 '("unnumberedArticle\n\\immediate\\write18{sh ./vc}\n\\input{vc}"
-                   "\\documentclass{article}"
-                          ("\\section*{%s}" . "\\section{%s}")
-                          ("\\subsection*{%s}" . "\\subsection{%s}")
-                          ("\\subsubsection*{%s}" . "\\subsubsection{%s}")
-                          ("\\paragraph*{%s}" .  "\\paragraph{%s}")
-                          ("\\subparagraph*{%s}" . "\\subparagraph{%s}")))
+      (add-to-list 'org-latex-classes
+                   '("unnumberedArticle\n\\immediate\\write18{sh ./vc}\n\\input{vc}"
+                     "\\documentclass{article}"
+                     ("\\section*{%s}" . "\\section{%s}")
+                     ("\\subsection*{%s}" . "\\subsection{%s}")
+                     ("\\subsubsection*{%s}" . "\\subsubsection{%s}")
+                     ("\\paragraph*{%s}" .  "\\paragraph{%s}")
+                     ("\\subparagraph*{%s}" . "\\subparagraph{%s}")))
 
-  (add-to-list 'org-latex-classes
-               '("tufte-book"
-                 "\\documentclass[twoside,nobib]{tufte-book}
-    [NO-DEFAULT-PACKAGES]"
-                 ("\\part{%s}" . "\\part*{%s}")
-                 ("\\chapter{%s}" . "\\chapter*{%s}")
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")))
-
-
-  ;; edited out:    
-  ;;                  \\immediate\\write18{sh ./vc}
-  ;;                  \\input{vc}
-  ;;                  \\usepackage[rgb,x11names]{xcolor}
-  ;;                  \\usepackage{prelim2e}
-  ;;                  \\renewcommand*{\\PrelimText}{\\textnormal{\\small\\textcolor{black!40}{author: \\VCAuthor\\ -- date: \\VCDateISO\\ -- time: \\VCTime\\ -- commit: \\texttt{\\VCRevision}}}}
-  ;;                  \\usepackage{MnSymbol}
-  ;;                  \\usepackage[mathlf,textlf,minionint]{MinionPro}
-  ;;                  \\usepackage[T1]{fontenc}
-  ;;                  \\usepackage{textcomp}
-  ;;                  \\usepackage[utf8]{inputenc}
-  ;;                  \\usepackage{graphicx}
-  ;;                  \\usepackage{longtable}
-  ;;                  \\usepackage{hyperref}
-
-        (add-to-list 'org-latex-classes
-                 '("numberedArticle"
-                   "\\documentclass{article}\n\\immediate\\write18{sh ./vc}\n\\input{vc}"
-                          ("\\section{%s}" . "\\section*{%s}")
-                          ("\\subsection{%s}" . "\\subsection*{%s}")
-                          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                          ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+      (add-to-list 'org-latex-classes
+                   '("tufte-book"
+                     "\\documentclass[twoside,nobib]{tufte-book}
+        [NO-DEFAULT-PACKAGES]"
+                     ("\\part{%s}" . "\\part*{%s}")
+                     ("\\chapter{%s}" . "\\chapter*{%s}")
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\paragraph{%s}" . "\\paragraph*{%s}")))
 
 
-  ;; specification by http://pragmaticemacs.com/emacs/org-mode-basics-v-exporting-your-notes/
-  ;; (add-to-list 'org-latex-classes
-  ;;              '("bjmarticle"
-  ;;                "\\documentclass{article}
-  ;; \\usepackage[utf8]{inputenc}
-  ;; \\usepackage[T1]{fontenc}
-  ;; \\usepackage{graphicx}
-  ;; \\usepackage{longtable}
-  ;; \\usepackage{hyperref}
-  ;; \\usepackage{natbib}
-  ;; \\usepackage{amssymb}
-  ;; \\usepackage{amsmath}
-  ;; \\usepackage{geometry}
-  ;; \\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}"
-  ;;                ("\\section{%s}" . "\\section*{%s}")
-  ;;                ("\\subsection{%s}" . "\\subsection*{%s}")
-  ;;                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-  ;;                ("\\paragraph{%s}" . "\\paragraph*{%s}")
-  ;;                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+      ;; edited out:    
+      ;;                  \\immediate\\write18{sh ./vc}
+      ;;                  \\input{vc}
+      ;;                  \\usepackage[rgb,x11names]{xcolor}
+      ;;                  \\usepackage{prelim2e}
+      ;;                  \\renewcommand*{\\PrelimText}{\\textnormal{\\small\\textcolor{black!40}{author: \\VCAuthor\\ -- date: \\VCDateISO\\ -- time: \\VCTime\\ -- commit: \\texttt{\\VCRevision}}}}
+      ;;                  \\usepackage{MnSymbol}
+      ;;                  \\usepackage[mathlf,textlf,minionint]{MinionPro}
+      ;;                  \\usepackage[T1]{fontenc}
+      ;;                  \\usepackage{textcomp}
+      ;;                  \\usepackage[utf8]{inputenc}
+      ;;                  \\usepackage{graphicx}
+      ;;                  \\usepackage{longtable}
+      ;;                  \\usepackage{hyperref}
+
+      (add-to-list 'org-latex-classes
+                   '("numberedArticle"
+                     "\\documentclass{article}\n\\immediate\\write18{sh ./vc}\n\\input{vc}"
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 
-        ;; Originally taken from Bruno Tavernier: http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
-        ;; but adapted to use latexmk 4.22 or higher.  
-
-        ;; dgm: Great! This is the way to choose exporter!!
-
-  ;;      (defun my-auto-tex-cmd ()
-  ;;        "When exporting from .org with latex, automatically run latex,
-  ;;                         pdflatex, or xelatex as appropriate, using latexmk."
-  ;;        (let ((texcmd)))
-  ;;        ;; default command: pdflatex 
-  ;;        (setq texcmd "latexmk -pdflatex='pdflatex --shell-escape' -pdf %f")        
-  ;;        ;; pdflatex -> .pdf
-  ;;        (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
-  ;;            (setq texcmd "latexmk -pdflatex='pdflatex --shell-escape' -pdf %f"))
-  ;;        ;; xelatex -> .pdf
-  ;;        (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-  ;;            (setq texcmd "latexmk -pdflatex='xelatex --shell-escape' -pdf %f"))
-  ;;        ;; LaTeX compilation command
-  ;;        (setq org-latex-to-pdf-process (list texcmd)))
-  ;;
-  ;;      (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-cmd)
+      ;; specification by http://pragmaticemacs.com/emacs/org-mode-basics-v-exporting-your-notes/
+      ;; (add-to-list 'org-latex-classes
+      ;;              '("bjmarticle"
+      ;;                "\\documentclass{article}
+      ;; \\usepackage[utf8]{inputenc}
+      ;; \\usepackage[T1]{fontenc}
+      ;; \\usepackage{graphicx}
+      ;; \\usepackage{longtable}
+      ;; \\usepackage{hyperref}
+      ;; \\usepackage{natbib}
+      ;; \\usepackage{amssymb}
+      ;; \\usepackage{amsmath}
+      ;; \\usepackage{geometry}
+      ;; \\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}"
+      ;;                ("\\section{%s}" . "\\section*{%s}")
+      ;;                ("\\subsection{%s}" . "\\subsection*{%s}")
+      ;;                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+      ;;                ("\\paragraph{%s}" . "\\paragraph*{%s}")
+      ;;                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 
-        ;; In the latest version of the starter kit Kieran had deleted Bruno's selection stuff and used XeLaTeX by default instead. That is whay I comment Tavernier's out now.
+      ;; Originally taken from Bruno Tavernier: http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
+      ;; but adapted to use latexmk 4.22 or higher.  
 
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-        ;; LaTeX compilation command. 
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      ;; dgm: Great! This is the way to choose exporter!!
 
-        ;; For orgmode docs we just always use xelatex for convenience.
-        ;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
-          (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape -f' -pdf %f"))
+      ;;      (defun my-auto-tex-cmd ()
+      ;;        "When exporting from .org with latex, automatically run latex,
+      ;;                         pdflatex, or xelatex as appropriate, using latexmk."
+      ;;        (let ((texcmd)))
+      ;;        ;; default command: pdflatex 
+      ;;        (setq texcmd "latexmk -pdflatex='pdflatex --shell-escape' -pdf %f")        
+      ;;        ;; pdflatex -> .pdf
+      ;;        (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
+      ;;            (setq texcmd "latexmk -pdflatex='pdflatex --shell-escape' -pdf %f"))
+      ;;        ;; xelatex -> .pdf
+      ;;        (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+      ;;            (setq texcmd "latexmk -pdflatex='xelatex --shell-escape' -pdf %f"))
+      ;;        ;; LaTeX compilation command
+      ;;        (setq org-latex-to-pdf-process (list texcmd)))
+      ;;
+      ;;      (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-cmd)
 
-        ;; I make pdflatex the default
-  ;;      (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape' -pdf %f"))
 
-        ;; Default packages included in the tex file. As before, org-preamble-xelatex is part of latex-custom-kjh.
-        ;; There's org-preamble-pdflatex as well, if you wish to use that instead.
-        (setq org-latex-default-packages-alist nil)     
-        (setq org-latex-packages-alist
-              '(("minted" "org-preamble-xelatex" t)
-                ("" "biblatex" t)
-                ("" "graphicx" t)
-                ("" "longtable" nil)
-                ("" "float" ))) 
+      ;; In the latest version of the starter kit Kieran had deleted Bruno's selection stuff and used XeLaTeX by default instead. That is whay I comment Tavernier's out now.
 
-  ;;  (setq org-latex-default-packages-alist nil)
-  ;;    (setq org-latex-packages-alist
-  ;;            '(("minted" "org-preamble-pdflatex" t)
-  ;;              ("" "graphicx" t)
-  ;;              ("" "longtable" nil)
-  ;;              ("" "float" )))
+            ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      ;; LaTeX compilation command. 
+            ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  ;;    (setq org-latex-default-packages-alist nil)     
-  ;;    (setq org-latex-packages-alist
-  ;;            '(("rgb,x11names" "xcolor" t)
-  ;;             ("" "prelim2e" t)
-  ;;             ("" "MnSymbol" t)
-  ;;             ("mathlf,textlf,minionint" "MinionPro" t) 
-  ;;             ("T1" "fontenc" t)
-  ;;             ("" "textcomp" t)
-  ;;             ("utf8" "inputenc" t)
-  ;;             ("" "graphicx" t)
-  ;;             ("" "longtable" nil)
-  ;;             ("" "hyperref"))) 
+      ;; For orgmode docs we just always use xelatex for convenience.
+      ;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
+      (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape -f' -pdf %f"))
+
+      ;; I make pdflatex the default
+      ;;      (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape' -pdf %f"))
+
+      ;; Default packages included in the tex file. As before, org-preamble-xelatex is part of latex-custom-kjh.
+      ;; There's org-preamble-pdflatex as well, if you wish to use that instead.
+      (setq org-latex-default-packages-alist nil)     
+      (setq org-latex-packages-alist
+            '(("minted" "org-preamble-xelatex" t)
+              ("" "biblatex" t)
+              ("" "graphicx" t)
+              ("" "longtable" nil)
+              ("" "float" ))) 
+
+      ;;  (setq org-latex-default-packages-alist nil)
+      ;;    (setq org-latex-packages-alist
+      ;;            '(("minted" "org-preamble-pdflatex" t)
+      ;;              ("" "graphicx" t)
+      ;;              ("" "longtable" nil)
+      ;;              ("" "float" )))
+
+      ;;    (setq org-latex-default-packages-alist nil)     
+      ;;    (setq org-latex-packages-alist
+      ;;            '(("rgb,x11names" "xcolor" t)
+      ;;             ("" "prelim2e" t)
+      ;;             ("" "MnSymbol" t)
+      ;;             ("mathlf,textlf,minionint" "MinionPro" t) 
+      ;;             ("T1" "fontenc" t)
+      ;;             ("" "textcomp" t)
+      ;;             ("utf8" "inputenc" t)
+      ;;             ("" "graphicx" t)
+      ;;             ("" "longtable" nil)
+      ;;             ("" "hyperref"))) 
 
 
 
@@ -1934,8 +2013,11 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 
 
   ;; code by sacha chua: http://sachachua.com/blog/2015/02/learn-take-notes-efficiently-org-mode/
-  (set-register ?o (cons 'file "/media/dgm/blue/documents/dropbox/org/notes.org"))
-  (setq org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
+
+;; commented out on 30 sept 2017 because i'm changing from sacha's organization to https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
+;;  (set-register ?o (cons 'file "/media/dgm/blue/documents/dropbox/org/notes.org"))
+;;  (setq org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
+
   ;; (setq org-completion-use-ido t)  ;; i think I don't need this because somehow helm is doing the job
 #+END_SRC
 
