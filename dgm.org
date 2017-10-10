@@ -352,9 +352,13 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
   (setq org-agenda-files (list "/media/dgm/blue/documents/dropbox/gtd/inbox.org"
                                "/media/dgm/blue/documents/dropbox/gtd/gtd.org"
                                "/media/dgm/blue/documents/dropbox/gtd/journal.org"
+                               "/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" ; i could add it with =C-c [= but that action does not survive across sections
+                               "/media/dgm/blue/documents/proyectos/iat/iat_gtd.org" 
                                "/media/dgm/blue/documents/dropbox/gtd/tickler.org"))
 
   (setq org-refile-targets '(("/media/dgm/blue/documents/dropbox/gtd/gtd.org" :maxlevel . 3)
+                             ("/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" :maxlevel . 3)
+                             ("/media/dgm/blue/documents/proyectos/iat/iat_gtd.org" :maxlevel . 3)
                              ("/media/dgm/blue/documents/dropbox/gtd/someday.org" :level . 2)
                              ("/media/dgm/blue/documents/dropbox/gtd/tickler.org" :level . 2)))
 
@@ -367,19 +371,44 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
   ;; tip from https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html for  using custom agenda commands  to get an overview of actions by context or tag. Here’s an example custom agenda command that will display all actions for the @office context. Following the GTD principle, what I usually want is to only show the first action to be done (or next action) for each project with the @office tag. That can be achieved using a skipping condition. I've tweak it so that I can have it work for entries tagged for the context "work" and for the context "home".
 
   (setq org-agenda-custom-commands 
-        '(("o" "At the office" tags-todo "@office"
-           ((org-agenda-overriding-header "Office")
-            (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))
-          ("h" "At home" tags-todo "@home"
-           ((org-agenda-overriding-header "Home")
-            (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))
-          ("H" "At either home or office" tags-todo "@homoff"
-           ((org-agenda-overriding-header "Homoff")
-            (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))
-          ("O" "Office block agenda"
+        '(("w" "Weekly Review"
+           ((agenda "" ((org-agenda-span 7)))  ;; review upcoming deadlines and appointments 
+            ;; old code ((org-agenda-fortnight-view)))
+            ;; type "l" in the agenda to review logged items 
+            ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+            (todo "STARTED") ;; review  actions that have started
+            (todo "NEXT") ;; review next actions                                              
+            (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
+            (todo "WAITING"))) ;; review waiting items 
+          ("f" "Fortnight Review"
+           ((agenda "" ((org-agenda-span 14))) ;; review upcoming deadlines and appointments
+            ;; type "l" in the agenda to review logged items 
+            ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+            (todo "STARTED") ;; review  actions that have started
+            (todo "NEXT") ;; review next actions                                              
+            (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
+            (todo "WAITING"))) ;; review waiting items 
+          ("r" "Monthly Review"
+           ((agenda "" ((org-agenda-span 14))) ;; review upcoming deadlines and appointments
+            ;; type "l" in the agenda to review logged items 
+            ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+            (todo "STARTED") ;; review  actions that have started
+            (todo "NEXT") ;; review next actions                                              
+            (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
+            (todo "WAITING"))) ;; review waiting items 
+          ("y" "Yearly Review"
+           ((agenda "" ((org-agenda-span (quote year)))))) 
+          ("p" "Project Review"
+           ((tags "project")
+            (todo "STARTED") ;; review  actions that have started
+            (todo "NEXT") ;; review next actions
+            (todo "TODO")))  ;; review pending actions waiting for "next actiosn" to be fulfilled
+          ;;          ("l" "Monthly (Long-Term) Review"
+          ;;           ((agenda "" ((org-agenda-span (quote month)))))) 
+          ("o" "Office and home agenda"
            ((agenda "" ((org-agenda-ndays 1))) ;; esto no me funciona... debe ser que (setq org-agenda-span (quote month)) en starter-kit-org.org tiene prioridad
             ;; limits the agenda display to a single day
-            (tags-todo "@office")
+            (tags-todo "@office|@home")
             (tags-todo "office|home")
             ;;            (tags "project+CATEGORY=\"elephants\"")
             ;;            (tags "review" ((org-agenda-files '("~/org/circuspeanuts.org"))))
@@ -388,22 +417,6 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
             )
            ((org-agenda-compact-blocks t))) ;; options set here apply to the entire block
           ;; ...other commands here
-          ("W" "Weekly Review"
-           ((agenda "" ((org-agenda-ndays 7))) ;; review upcoming deadlines and appointments
-            ;; type "l" in the agenda to review logged items 
-;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
-            (todo "NEXT") ;; review next actions                                              
-            (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
-            (todo "WAITING"))) ;; review waiting items 
-          ("p" "Project Review"
-           ((agenda "" ((org-agenda-ndays 7))) ;; review upcoming deadlines and appointments
-            (tags "project")
-            (todo "NEXT") ;; review next actions
-            (todo "TODO")))  ;; review pending actions waiting for "next actiosn" to be fulfilled
-          ("l" "Monthly (Long-Term) Review"
-           ((agenda "" ((org-agenda-span (quote month)))))) 
-          ("y" "Yearly Review"
-           ((agenda "" ((org-agenda-span (quote year)))))) 
           ))
 
   ;; HOWEVER I am not 100% sure how useful is all this  because I have a nice option in C-c a to choose filtering by tag (/), etc.
@@ -1368,6 +1381,36 @@ The MU World starts here
 | lambda | nil | (setq-local whitespace-style (quote (face tabs tab-mark spaces space-mark trailing indentation::space indentation::tab newline newline-mark))) | (whitespace-mode 1) |
 
 
+
+
+
+Attach multiple files to mu4e email message. (Tip from http://www.djcbsoftware.nl/code/mu/mu4e/Attaching-files-with-dired.html).
+
+
+#+BEGIN_SRC emacs-lisp
+(require 'gnus-dired)
+;; make the `gnus-dired-mail-buffers' function also work on
+;; message-mode derived modes, such as mu4e-compose-mode
+(defun gnus-dired-mail-buffers ()
+  "Return a list of active message buffers."
+  (let (buffers)
+    (save-current-buffer
+      (dolist (buffer (buffer-list t))
+        (set-buffer buffer)
+        (when (and (derived-mode-p 'message-mode)
+                (null message-sent-message-via))
+          (push (buffer-name buffer) buffers))))
+    (nreverse buffers)))
+
+(setq gnus-dired-mail-mode 'mu4e-user-agent)
+(add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+#+END_SRC
+
+#+RESULTS:
+| turn-on-gnus-dired-mode | stripe-listify-buffer | dired-extra-startup |
+
+
+
 #+srcname: volatile
 #+BEGIN_SRC emacs-lisp
 (require 'volatile-highlights)
@@ -1379,6 +1422,7 @@ The MU World starts here
 
 #+RESULTS:
 : t
+
 
 
 #+srcname: clean-indent

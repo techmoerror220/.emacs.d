@@ -196,11 +196,11 @@ Org-mode manual is available to the =info= command (bound to =C-h i=).
 Customizations in: http://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html
 #+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "|" "DONE(d)" "CANCELED(c)")))
+      '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "CANCELED(c)")))
 #+END_SRC
 
 #+RESULTS:
-| sequence | TODO(t) | NEXT(n) | WAITING(w) |   |   | DONE(d) | CANCELED(c) |
+| sequence | TODO(t) | NEXT(n) | STARTED(s) | WAITING(w) |   |   | DONE(d) | CANCELED(c) |
 
 
 Customization in: http://orgmode.org/manual/Capture-templates.html
