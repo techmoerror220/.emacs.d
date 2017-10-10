@@ -389,7 +389,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
             (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
             (todo "WAITING"))) ;; review waiting items 
           ("r" "Monthly Review"
-           ((agenda "" ((org-agenda-span 14))) ;; review upcoming deadlines and appointments
+           ((agenda "" ((org-agenda-span 31))) ;; review upcoming deadlines and appointments
             ;; type "l" in the agenda to review logged items 
             ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
             (todo "STARTED") ;; review  actions that have started
@@ -402,7 +402,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
            ((tags "project")
             (todo "STARTED") ;; review  actions that have started
             (todo "NEXT") ;; review next actions
-            (todo "TODO")))  ;; review pending actions waiting for "next actiosn" to be fulfilled
+            (todo "TODO")))  ;; review pending actions waiting for "next actions" to be fulfilled
           ;;          ("l" "Monthly (Long-Term) Review"
           ;;           ((agenda "" ((org-agenda-span (quote month)))))) 
           ("o" "Office and home agenda"
