@@ -196,7 +196,7 @@ Org-mode manual is available to the =info= command (bound to =C-h i=).
 Customizations in: http://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html
 #+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "CANCELED(c)")))
+      '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w)"  "|" "DONE(d)" "CANCELED(c)")))
 #+END_SRC
 
 #+RESULTS:
@@ -281,8 +281,8 @@ Public holidays in Spain. Tip from: https://www.emacswiki.org/emacs/CalendarLoca
           (holiday-fixed 5 31 "Corpus Christi (Madrid)")
 ;;          (holiday-easter-etc +43 "Día de la Ascención")
           (holiday-easter-etc +64 "Corpus Christi")
-          (holiday-sexp '(calendar-nth-named-day 1 1 10 year 12) "Día de la Hispanidad")
-          (holiday-sexp '(calendar-nth-named-day 1 1 11 year 1) "Todos los santos")
+          (holiday-fixed 10 12 "Día de la Hispanidad")
+          (holiday-fixed 11 1  "Todos los santos")
           (holiday-fixed 12 25 "Navidad")
           (holiday-fixed 12 6 "Día de la Constitución")
           (holiday-fixed 12 8 "Inmaculada Concepción")
