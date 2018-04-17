@@ -2554,3 +2554,16 @@ By default, Recentf saves the list of recent files on exiting Emacs (specificall
 (message "Starter Kit User File loaded.")
 #+end_src
 
+*** Make sure time stamps are in English
+
+Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-of-time-stamps
+
+#+BEGIN_SRC emacs-lisp 
+;; System locale to use for formatting time values.
+(setq system-time-locale "C")         ; Make sure that the weekdays in the
+                                      ; time stamps of your Org mode files and
+#+END_SRC 
+
+#+RESULTS:
+: C
+
