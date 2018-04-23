@@ -370,7 +370,7 @@ ARCHIVE is the string name of the package archive.")
              (not (memq package melpa-exclude-packages))))))
 
   (package-initialize)
-  (package-refresh-contents)
+  (ignore-errors (package-refresh-contents))
   (starter-kit-load "starter-kit-elpa.org")
 #+end_src
 

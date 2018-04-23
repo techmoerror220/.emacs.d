@@ -174,7 +174,7 @@ just have to assume it's online."
 On your first run, this should pull in all the base packages.
 #+begin_src emacs-lisp
 (when (esk-online?)
-  (unless package-archive-contents (package-refresh-contents))
+  (unless package-archive-contents (ignore-errors (package-refresh-contents)))
   (starter-kit-elpa-install))
 #+end_src
 
