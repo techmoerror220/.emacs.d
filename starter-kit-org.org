@@ -302,7 +302,15 @@ Public holidays in Spain. Tip from: https://www.emacswiki.org/emacs/CalendarLoca
 : t
 
 
+Remove DONE tasks from agenda view. Tip from: https://stackoverflow.com/questions/8281604/remove-done-tasks-from-agenda-view
 
+#+BEGIN_SRC emacs-lisp 
+  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-skip-deadline-if-done t)
+#+END_SRC
+
+#+RESULTS:
+: t
 
 
 *** COMMENT Customizations from Ista Zahn: 

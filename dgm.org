@@ -443,10 +443,22 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 
   ;; Set to the name of the file where new notes will be stored
   (setq org-mobile-inbox-for-pull "/media/dgm/blue/documents/dropbox/org/fromMobile.org")
+
+  ;; Finally, as Carsten Dominik says here: http://thread.gmane.org/gmane.emacs.orgmode/523, with the project list You may run into problems with this approach if you have set org-tags-match-list-sublevels to a non-nil value, because then, due to tag inheritance, every headline *inside* each project will also show up in theresulting list.  To work around this, you may define your own special command like this:
+
+   (defun my-org-project-list ()
+      "Get me a list of projects."
+      (interactive)
+      (let ((org-tags-match-list-sublevels nil))
+      (org-tags-view nil "project")))
+
+   ;; and guess what?? It works!!!
+
+
                                #+end_src
 
 #+RESULTS:
-: /media/dgm/blue/documents/dropbox/org/fromMobile.org
+: my-org-project-list
 
 *** Babel Settings
     Configure org-mode so that when you edit source code in an indirect buffer (with C-c '), the buffer is opened in the current window. That way, your window organization isn't broken when switching.
