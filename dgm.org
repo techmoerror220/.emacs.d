@@ -333,7 +333,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
     Where archived projects and tasks go.
 #+source: orgmode-archive
 #+begin_src emacs-lisp
-  (setq org-archive-location "/media/dgm/blue/documents/dropbox/gtd/archive.org::From %s")
+  (setq org-archive-location "/home/dgm/Dropbox/gtd/archive.org::From %s")
 #+end_src
 
 *** Mobile Settings // GTD settings
@@ -341,26 +341,26 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 #+src-name: orgmode-mobile
 #+begin_src emacs-lisp
   ;; Set to the location of your Org files on your local system
-  (setq org-directory "/media/dgm/blue/documents/dropbox/gtd")
+  (setq org-directory "/home/dgm/Dropbox/gtd")
   ;; Set to <your Dropbox root directory>/MobileOrg.
   (setq org-mobile-directory "/media/dgm/blue/documents/dropbox/mobileorg")
   ;; Set to the files (or directory of files) you want sync'd
-  ;;   (setq org-agenda-files (quote ("/media/dgm/blue/documents/dropbox/org")))  ;; this is the original line by kieran healy.
+  ;;   (setq org-agenda-files (quote ("/home/dgm/Dropbox/gtd")))  ;; this is the original line by kieran healy.
 
   ;; organization by: https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
   ;; Org agenda view scans these files and collects all the heading with a TODO (or related) keyword
-  (setq org-agenda-files (list "/media/dgm/blue/documents/dropbox/gtd/inbox.org"
-                               "/media/dgm/blue/documents/dropbox/gtd/gtd.org"
-                               "/media/dgm/blue/documents/dropbox/gtd/journal.org"
+  (setq org-agenda-files (list "/home/dgm/Dropbox/gtd/inbox.org"
+                               "/home/dgm/Dropbox/gtd/gtd.org"
+                               "/home/dgm/Dropbox/gtd/journal.org"
                                "/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" ; i could add it with =C-c [= but that action does not survive across sections
                                "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" 
-                               "/media/dgm/blue/documents/dropbox/gtd/tickler.org"))
+                               "/home/dgm/Dropbox/gtd/tickler.org"))
 
-  (setq org-refile-targets '(("/media/dgm/blue/documents/dropbox/gtd/gtd.org" :maxlevel . 3)
+  (setq org-refile-targets '(("/home/dgm/Dropbox/gtd/gtd.org" :maxlevel . 3)
                              ("/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" :maxlevel . 3)
                              ("/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" :maxlevel . 3)
-                             ("/media/dgm/blue/documents/dropbox/gtd/someday.org" :level . 2)
-                             ("/media/dgm/blue/documents/dropbox/gtd/tickler.org" :level . 2)))
+                             ("/home/dgm/Dropbox/gtd/someday.org" :level . 2)
+                             ("/home/dgm/Dropbox/gtd/tickler.org" :level . 2)))
 
   ;; another way of doing the same
   ;;  '(org-refile-targets (quote (("/media/dgm/blue/documents/dropbox/gtd/gtd.org" :maxlevel . 3)

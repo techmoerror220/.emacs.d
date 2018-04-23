@@ -231,23 +231,23 @@ Old code for Tickler for when I didn't know that i could schedule with <C-c C-s>
 #+BEGIN_SRC emacs-lisp
 
   (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                                 (file+headline "/media/dgm/blue/documents/dropbox/gtd/inbox.org" "Tasks")
+                                 (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
                                  "* TODO %i%? \nEntry added on: %U
                                                   \nEntry created from this heading or email: %a")
                                 ("T" "Tickler" entry
-                                 (file+headline "/media/dgm/blue/documents/dropbox/gtd/tickler.org" "Tickler")
+                                 (file+headline "/home/dgm/Dropbox/gtd/tickler.org" "Tickler")
                                  "* %i%? 
                                       \nEntry added on: %U
                                       \nEntry created from this heading or email: %a")
                                 ("j" "Journal" entry 
-                                 (file+datetree "/media/dgm/blue/documents/dropbox/gtd/journal.org")
+                                 (file+datetree "/home/dgm/Dropbox/gtd/journal.org")
                                  "* %?
                                       \n Added on: %U")))
 
 #+END_SRC
 
 #+RESULTS:
-| t | Todo [inbox] | entry | (file+headline /media/dgm/blue/documents/dropbox/gtd/inbox.org Tasks) | * TODO %i%? |
+| t | Todo [inbox] | entry | (file+headline /home/dgm/Dropbox/gtd/inbox.org Tasks) | * TODO %i%? |
 
 
 tip from https://lists.gnu.org/archive/html/emacs-orgmode/2007-08/msg00253.html
