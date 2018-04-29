@@ -865,11 +865,10 @@ dgm's own customizations of emacs appearance
    
 #+srcname: line-numbering
 #+begin_src emacs-lisp
-(global-linum-mode t) ;; enable line numbers globally
+ (global-linum-mode -1) ;; enable line numbers globally
 #+end_src
 
 #+RESULTS: line-numbering
-: t
    
 
 
@@ -2082,7 +2081,7 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 
 
 
-Shortcuts that should work in Org but do not. Besides, they used to be bound to windmove but no more because I'd rather use ace-window
+Shortcuts that should work in Org but do not. Besides, they used to be bound to windmove but no more because I'd rather use =ace-window=
 
 #+BEGIN_SRC emacs-lisp
   (define-key global-map (kbd "S-<left>") 'org-timestamp-down-day)

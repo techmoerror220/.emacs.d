@@ -316,11 +316,11 @@ Remove DONE tasks from agenda view. Tip from: https://stackoverflow.com/question
 Globally define tags. Tip from: https://orgmode.org/manual/Setting-tags.html
 
 #+BEGIN_SRC emacs-lisp
-(setq org-tag-alist '(("airbnb" . ?a) ("@computer" . ?c) ("@home" . ?h) ("medicos" . ?m) ("@office" . ?o)  ("@phone" . ?p) ("project" . ?j) ("teaching" . ?t) ("uned" . ?u)))
+(setq org-tag-alist '(("airbnb" . ?a) ("@computer" . ?b) ("course" . ?c) ("@home" . ?h) ("medicos" . ?m) ("@office" . ?o)  ("@phone" . ?p) ("project" . ?q) ("teaching" . ?t) ("uned" . ?u)))
 #+END_SRC
 
 #+RESULTS:
-: ((airbnb . 97) (@computer . 99) (@home . 104) (medicos . 109) (@office . 111) (@phone . 112) (project . 106) (teaching . 116) (uned . 117))
+: ((airbnb . 97) (@computer . 98) (course . 99) (@home . 104) (medicos . 109) (@office . 111) (@phone . 112) (project . 113) (teaching . 116) (uned . 117))
 
 
 *** COMMENT Customizations from Ista Zahn: 
