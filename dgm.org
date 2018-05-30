@@ -354,11 +354,12 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
                                "/home/dgm/Dropbox/gtd/journal.org"
                                "/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" ; i could add it with =C-c [= but that action does not survive across sections
                                "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" 
+                               "/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org" 
                                "/home/dgm/Dropbox/gtd/tickler.org"))
 
   (setq org-refile-targets '(("/home/dgm/Dropbox/gtd/gtd.org" :maxlevel . 3)
-                             ("/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" :maxlevel . 3)
-                             ("/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" :maxlevel . 3)
+                             ("/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" :maxlevel . 2)
+                             ("/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" :maxlevel . 2)
                              ("/home/dgm/Dropbox/gtd/someday.org" :level . 2)
                              ("/home/dgm/Dropbox/gtd/tickler.org" :level . 2)))
 
