@@ -1,3 +1,4 @@
+
 #+TITLE: Local User Customizations
 #+OPTIONS: toc:nil num:nil ^:nil
 
@@ -2579,3 +2580,17 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 #+RESULTS:
 : C
 
+** Key bindings
+
+#+BEGIN_SRC emacs-lisp
+    (global-set-key (kbd "<escape>") 'control)
+    (define-key global-map [?\s-u] 'undo)
+    (define-key global-map [?\s-j] 'save-buffer)
+    (define-key global-map [?\s-q] 'move-beginning-of-line)
+    (define-key global-map [?\s-e] 'move-end-of-line)
+    (define-key global-map [?\s-k] 'kill-buffer)
+  ;;  (define-key global-map [?\s-p] 'avy-goto-word-1)
+#+END_SRC
+
+#+RESULTS:
+: kill-buffer
