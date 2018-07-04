@@ -470,7 +470,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
       (setq org-src-window-setup 'current-window)
     #+end_src
 
-*** XeLaTeX and pdfLaTeX Export Settings
+*** COMMENT XeLaTeX and pdfLaTeX Export Settings
     Configure org-mode to export directly to PDF using xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
 
     #+source: orgmode-latex-export
@@ -635,27 +635,28 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 
       ;; For orgmode docs we just always use xelatex for convenience.
       ;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
-      (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape -f' -pdf %f"))
+      ;; (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape -f' -pdf %f"))
 
       ;; I make pdflatex the default
-      ;;      (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape' -pdf %f"))
+      ;;     (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape' -pdf %f"))
 
       ;; Default packages included in the tex file. As before, org-preamble-xelatex is part of latex-custom-kjh.
       ;; There's org-preamble-pdflatex as well, if you wish to use that instead.
-      (setq org-latex-default-packages-alist nil)     
-      (setq org-latex-packages-alist
-            '(("minted" "org-preamble-xelatex" t)
-              ("" "biblatex" t)
-              ("" "graphicx" t)
-              ("" "longtable" nil)
-              ("" "float" ))) 
+      ;; (setq org-latex-default-packages-alist nil)     
+      ;; (setq org-latex-packages-alist
+      ;;       '(("minted" "org-preamble-xelatex" t)
+      ;;         ("" "biblatex" t)
+      ;;         ("" "graphicx" t)
+      ;;         ("" "longtable" nil)
+      ;;         ("" "prelim2e" t)
+      ;;         ("" "float" ))) 
 
-      ;;  (setq org-latex-default-packages-alist nil)
-      ;;    (setq org-latex-packages-alist
-      ;;            '(("minted" "org-preamble-pdflatex" t)
-      ;;              ("" "graphicx" t)
-      ;;              ("" "longtable" nil)
-      ;;              ("" "float" )))
+      ;;   (setq org-latex-default-packages-alist nil)
+      ;;   (setq org-latex-packages-alist
+      ;;         '(("minted" "org-preamble-pdflatex" t)
+      ;;           ("" "graphicx" t)
+      ;;           ("" "longtable" nil)
+      ;;           ("" "float" )))
 
       ;;    (setq org-latex-default-packages-alist nil)     
       ;;    (setq org-latex-packages-alist
@@ -675,11 +676,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 #+end_src
 
 #+RESULTS: orgmode-latex-export
-| minted | org-preamble-xelatex | t   |
-|        | biblatex             | t   |
-|        | graphicx             | t   |
-|        | longtable            | nil |
-|        | float                |     |
+| numberedArticle | \documentclass{article} |
 
 #+RESULTS: orgmode-xelatex-export
 | rgb,x11names            | xcolor    | t   |
