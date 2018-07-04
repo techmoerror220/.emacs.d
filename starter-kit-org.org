@@ -327,25 +327,25 @@ Globally define tags. Tip from: https://orgmode.org/manual/Setting-tags.html
 Check "Note taking and outlining (Org-mode)"  https://github.com/izahn/dotemacs
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org"
-  (setq org-replace-disputed-keys t)
-  (setq org-support-shift-select t)
-  (setq org-export-babel-evaluate nil)
+  (with-eval-after-load "org"
+    (setq org-replace-disputed-keys t)
+    (setq org-support-shift-select t)
+    (setq org-export-babel-evaluate nil)
 
-  ;; (setq org-startup-indented t)
-  ;; increase imenu depth to include third level headings
+    ;; (setq org-startup-indented t)
+    ;; increase imenu depth to include third level headings
 
-  (setq org-imenu-depth 4)
+    (setq org-imenu-depth 4)
 
-  ;; Update images from babel code blocks automatically
-  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+    ;; Update images from babel code blocks automatically
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
-  ;; configure org-mode when opening first org-mode file
-  ;; Load additional export formats
-  (require 'ox-odt)
-;;  (require 'ox-freemind)
-  (require 'ox-bibtex)
-)
+    ;; configure org-mode when opening first org-mode file
+    ;; Load additional export formats
+    (require 'ox-odt)
+  ;;  (require 'ox-freemind)
+    (require 'ox-bibtex)
+  )
 #+end_src
 
 
