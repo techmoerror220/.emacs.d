@@ -98,12 +98,21 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
 
 ** Smartparens Mode
    Smart autopairing of quotes and parentheses. 
+   The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
 #+srcname: smartparens
 #+begin_src emacs-lisp 
   (smartparens-global-mode 1)
   (require 'smartparens-config)
+  (setq sp-base-key-bindings 'paredit)
+  (setq sp-autoskip-closing-pair 'always)
+  (setq sp-hybrid-kill-entire-symbol nil)
+  (sp-use-paredit-bindings)
   (show-smartparens-global-mode +1)
+  
 #+end_src
+
+#+RESULTS: smartparens
+: t
 
 ** Markdown 
 Markdown mode support. 
