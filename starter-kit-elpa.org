@@ -144,7 +144,9 @@ The following packages will be downloaded and installed.
                                     'helpful
                                     'eyebrowse
                                     'yasnippet-snippets
+                                    'yasnippet-classic-snippets
                                     'use-package
+                                    ;; 'mu4e-conversation
                                     )
         "Libraries that should be installed by default.")
 #+end_src
@@ -180,12 +182,17 @@ just have to assume it's online."
     t))
 #+end_src
 
+#+RESULTS:
+: esk-online\?
+
 On your first run, this should pull in all the base packages.
 #+begin_src emacs-lisp
 (when (esk-online?)
   (unless package-archive-contents (ignore-errors (package-refresh-contents)))
   (starter-kit-elpa-install))
 #+end_src
+
+#+RESULTS:
 
 Make sure the PATH variable is set properly. (Uses exec-path-from-shell package.)
 #+source: fix-path 

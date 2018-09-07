@@ -40,9 +40,7 @@ OS X ships with BSD's ls command which doesn't have all the features of GNU ls (
 
 #+source: gnu-ls
 #+begin_src emacs-lisp 
-
  (setq insert-directory-program (executable-find "ls"))
-
 #+end_src
 
 *** One space after period
@@ -160,9 +158,7 @@ Note I have binded to C-o instead of M-t:
 
 #+name: avy-mode
 #+begin_src emacs-lisp
-
   (define-key global-map (kbd "C-o") 'avy-goto-word-1)
-
 #+end_src
 
 ** Local LaTeX settings
@@ -234,7 +230,7 @@ Tell RefTeX where the bibliography files are.
 ;;    (global-set-key (kbd "C-c c") 'run-vc-then-xelatex);; Run the VC command before running xelatex
 ;;    (fset 'run-vc-then-xelatex
 ;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
-;;    (global-set-key (kbd "C-c c") 'run-vc-then-xelatex)
+;;    (global-set-key (kbd "\C-c c") 'run-vc-then-xelatex)
 #+end_src
 
     Or just run vc alone --- this is useful when writing LaTeX files
@@ -244,7 +240,7 @@ Tell RefTeX where the bibliography files are.
 
 #+source: vc-alone
 #+begin_src emacs-lisp
-;;  (global-set-key (kbd "C-c v")
+;;  (global-set-key (kbd "\C-c v")
 ;;                      (lambda ()
 ;;                        (interactive)
 ;;                        (shell-command "vc")))
@@ -324,8 +320,8 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 ;;  (defun smart-quote-keys ()
 ;;    (require 'typopunct)
 ;;    (typopunct-change-language 'english)
-;;    (local-set-key (kbd "C-c \'") 'typopunct-insert-single-quotation-mark)
-;;    (local-set-key (kbd "C-c \"") 'typopunct-insert-quotation-mark)
+;;    (local-set-key (kbd "\C-c \'") 'typopunct-insert-single-quotation-mark)
+;;    (local-set-key (kbd "\C-c \"") 'typopunct-insert-quotation-mark)
 ;;    )
 #+end_src
 
@@ -339,7 +335,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 *** Mobile Settings // GTD settings
    Sync orgmode files with Dropbox and iPhone. 
 #+src-name: orgmode-mobile
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   ;; Set to the location of your Org files on your local system
   (setq org-directory "/home/dgm/Dropbox/gtd")
   ;; Set to <your Dropbox root directory>/MobileOrg.
@@ -456,9 +452,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
       (org-tags-view nil "project")))
 
    ;; and guess what?? It works!!!
-
-
-                               #+end_src
+#+END_SRC
 
 #+RESULTS:
 : my-org-project-list
@@ -475,7 +469,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
     Configure org-mode to export directly to PDF using xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
 
     #+source: orgmode-latex-export
-    #+begin_src emacs-lisp
+    #+BEGIN_SRC emacs-lisp
 
       ;; Choose either listings or minted for exporting source code blocks.
       ;; Using minted (as here) requires pygments be installed. To use the
@@ -671,10 +665,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
       ;;             ("" "graphicx" t)
       ;;             ("" "longtable" nil)
       ;;             ("" "hyperref"))) 
-
-
-
-#+end_src
+   #+END_SRC
 
 #+RESULTS: orgmode-latex-export
 | numberedArticle | \documentclass{article} |
@@ -860,9 +851,9 @@ Some last tweaks.
 
 
 
-dgm's own customizations of emacs appearance
+** dgm's own customizations of emacs appearance
 
-GROUP: Convenience -> Linum
+** GROUP: Convenience -> Linum
 
 Next tip from http://tuhdo.github.io/emacs-tutor3.html
 It enables linum only in programming modpes   
@@ -876,7 +867,7 @@ It enables linum only in programming modpes
 | linum-mode | (lambda nil (highlight-symbol-mode)) | highlight-numbers-mode | clean-aindent-mode |
    
 
-GROUP: Convenience -> Whitespace 
+** GROUP: Convenience -> Whitespace 
 
 Whenever you create useless whitespace, the whitespace is highlighted
 
@@ -889,7 +880,6 @@ Whenever you create useless whitespace, the whitespace is highlighted
 
 #+RESULTS:
 : whitespace-mode
-
 
 
 *** iedit mode
@@ -975,7 +965,7 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 
 
 
-The MU World starts here
+** The MU World starts here
 
 #+srcname: mu-customization
 #+begin_src emacs-lisp
@@ -1257,7 +1247,7 @@ The MU World starts here
               '(("formal" .
                 (concat
              "Daniel Guinea\n"
-             "Dept. Sociología I\nFacultad de CC.PP. y Sociología\nUNED, Madrid\n"))
+             "Dept. Sociología I\nFacultad de CC.PP. y Sociología\nUniversidad Nacional de Educación a Distancia (UNED)\nCalle Obispo Trejo 2, Madrid\nemail: daniel.guinea@poli.uned.es\nTel. +34 91 398 9441"))
                  ("informal" .
                 "Daniel\n")))))
       (message-insert-signature)))
@@ -1342,10 +1332,23 @@ The MU World starts here
 | lambda | nil | (when (derived-mode-p (quote c-mode) (quote c++-mode) (quote java-mode) (quote asm-mode)) (ggtags-mode 1)) |
 
 
+*** mu4e-conversation
+- Found this stuff here: http://cestlaz.github.io/posts/using-emacs-49-mu4e-conversation/#.W4xUEK0yreQ
+
+#+BEGIN_SRC emacs-lisp
+;;(use-package mu4e-conversation
+;; :ensure t
+;;)
+
+;;(with-eval-after-load 'mu4e (require 'mu4e-conversation))
+;;(global-mu4e-conversation-mode)
+#+END_SRC
+
+#+RESULTS:
 
 
 
-GROUP: Editing -> Editing Basics from http://tuhdo.github.io/emacs-tutor3.html
+** GROUP: Editing -> Editing Basics from http://tuhdo.github.io/emacs-tutor3.html
 
 #+srcname: ring-max
 #+BEGIN_SRC emacs-lisp
@@ -1392,28 +1395,27 @@ From https://github.com/pashinin/workgroups2 and http://tuhdo.github.io/emacs-tu
   ;; (require 'workgroups2)
 
   ;; Change workgroups session file
-  (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
+  ;; (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
   ;; (wg-find-session-file "~/.emacs.d/.emacs_workgroups") ;; for emacs to load this file on startup... but it doesn't work... don't know why... 
 
   ;; Set your own keyboard shortcuts to reload/save/switch WGs:
   ;; "s" == "Super" or "Win"-key, "S" == Shift, "C" == Control
   ;; (global-set-key (kbd "<pause>")     'wg-reload-session)
   ;; (global-set-key (kbd "C-S-<pause>") 'wg-save-session)
-  (global-set-key (kbd "s-z")         'wg-switch-to-workgroup)
-  (global-set-key (kbd "s-/")         'wg-switch-to-previous-workgroup)
+  ;; (global-set-key (kbd "s-z")         'wg-switch-to-workgroup)
+  ;; (global-set-key (kbd "s-/")         'wg-switch-to-previous-workgroup)
 
   ;; What to do on Emacs exit / workgroups-mode exit?
-  (setq wg-emacs-exit-save-behavior           'save)      ; Options: 'save 'ask nil
-  (setq wg-workgroups-mode-exit-save-behavior 'save)      ; Options: 'save 'ask nil
+  ;; (setq wg-emacs-exit-save-behavior           'save)      ; Options: 'save 'ask nil
+  ;; (setq wg-workgroups-mode-exit-save-behavior 'save)      ; Options: 'save 'ask nil
 
   ;; (workgroups-mode 1)   ; put this one at the bottom of .emacs
 #+END_SRC
 
 #+RESULTS:
-: save
 
-#+srcname: whitespace
-#+BEGIN_SRC emacs-lisp
+#+srcname: whitespace  
+#+BEGIN_SRC emacs-lisp :tangle no
   (add-hook 'diff-mode-hook (lambda ()
                               (setq-local whitespace-style
                                           '(face
@@ -1430,7 +1432,8 @@ From https://github.com/pashinin/workgroups2 and http://tuhdo.github.io/emacs-tu
 #+END_SRC
 
 #+RESULTS: whitespace
-| lambda | nil | (setq-local whitespace-style (quote (face tabs tab-mark spaces space-mark trailing indentation::space indentation::tab newline newline-mark))) | (whitespace-mode 1) |
+| lambda | nil | (setq-local whitespace-style (quote (face tabs tab-mark spaces space-mark trailing indentation::space indentation::tab newline newline-mark)))                        | (whitespace-mode 1) |
+| lambda | nil | (set (make-local-variable (quote whitespace-style)) (quote (face tabs tab-mark spaces space-mark trailing indentation::space indentation::tab newline newline-mark))) | (whitespace-mode 1) |
 
 #+RESULTS:
 | lambda | nil | (setq-local whitespace-style (quote (face tabs tab-mark spaces space-mark trailing indentation::space indentation::tab newline newline-mark))) | (whitespace-mode 1) |
@@ -1728,7 +1731,7 @@ I disable this as flycheck makes emacs too slow.
 #+srcname: flycheck-tip
 #+BEGIN_SRC emacs-lisp
 ;;  (require 'flycheck-tip)
-;;  (define-key global-map (kbd "C-c C-n") 'flycheck-tip-cycle)
+;;  (define-key global-map (kbd "\C-c \C-n") 'flycheck-tip-cycle)
 ;;  (setq flycheck-display-errors-function 'ignore)
 #+END_SRC
 
@@ -1847,7 +1850,7 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 #+srcname: discover-my-major
 #+BEGIN_SRC emacs-lisp
 ;; A quick major mode help with discover-my-major
-(global-unset-key (kbd "C-h h"))        ; original "C-h h" displays "hello world" in different languages
+(global-unset-key (kbd "C-h h"))        ; original "\C-h h" displays "hello world" in different languages
 (define-key 'help-command (kbd "h m") 'discover-my-major)
 #+END_SRC
 
@@ -1888,7 +1891,7 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 #+END_SRC
 
 
-HELM - An incremental completion and selection narrowing framework forEmacs                                                                  
+** HELM - An incremental completion and selection narrowing framework forEmacs                                                                  
 
 #+srcname: helm
 #+BEGIN_SRC emacs-lisp
@@ -2009,7 +2012,9 @@ HELM - An incremental completion and selection narrowing framework forEmacs
     (define-key projectile-mode-map [?\s-f] 'projectile-find-file)
     (define-key projectile-mode-map [?\s-g] 'projectile-grep)
 
-    (setq projectile-enable-caching t)
+    ;; (setq projectile-enable-caching t)
+    (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
+
     (setq projectile-completion-system 'helm)
     (helm-projectile-on)
     (setq projectile-switch-project-action 'helm-projectile)
@@ -2298,13 +2303,13 @@ If you want to get the most out of Emacs, you’ll eventually need to learn a li
   ;; ielm
   (require 'eval-in-repl-ielm)
   ;; For .el files
-  (define-key emacs-lisp-mode-map "\C-c\C-c" 'eir-eval-in-ielm)
+  (define-key emacs-lisp-mode-map "C-c C-c" 'eir-eval-in-ielm)
   (define-key emacs-lisp-mode-map (kbd "<C-return>") 'eir-eval-in-ielm)
   ;; For *scratch*
-  (define-key lisp-interaction-mode-map "\C-c\C-c" 'eir-eval-in-ielm)
+  (define-key lisp-interaction-mode-map "C-c C-c" 'eir-eval-in-ielm)
   (define-key emacs-lisp-mode-map (kbd "<C-return>") 'eir-eval-in-ielm)
   ;; For M-x info
-  (define-key Info-mode-map "\C-c\C-c" 'eir-eval-in-ielm)
+  (define-key Info-mode-map "C-c C-c" 'eir-eval-in-ielm)
   ;; Set up completions
   (add-hook 'emacs-lisp-mode-hook
             (lambda()
@@ -2313,6 +2318,9 @@ If you want to get the most out of Emacs, you’ll eventually need to learn a li
               (setq-local company-backends
                           (delete-dups (cons 'company-elisp (cons 'company-files company-backends)))))))
 #+end_src
+
+#+RESULTS:
+| (lambda nil (require (quote company-elisp)) (setq-local company-backends (delete-dups (cons (quote company-elisp) (cons (quote company-files) company-backends))))) | esk-remove-elc-on-save | run-starter-kit-coding-hook | turn-on-eldoc-mode |
 
 
 *** Helm-bibtex
@@ -2355,7 +2363,7 @@ tip from titus for Helm-bibtex: I use the menu key as the prefix key for all hel
 
 #+begin_src emacs-lisp
 ;;(setq command-log-mode-auto-show t)
-;;(global-set-key (kbd "C-x c l") 'global-command-log-mode)
+;;(global-set-key (kbd "\C-x c l") 'global-command-log-mode)
 #+end_src
 
 #+RESULTS:
@@ -2585,7 +2593,7 @@ Check out: http://tuhdo.github.io/c-ide.html
      helm-gtags-auto-update t
      helm-gtags-use-input-at-cursor t
      helm-gtags-pulse-at-cursor t
-     helm-gtags-prefix-key "\C-cg"
+     helm-gtags-prefix-key "C-c g"
      helm-gtags-suggested-key-mapping t
      )
 
@@ -2611,6 +2619,46 @@ Check out: http://tuhdo.github.io/c-ide.html
 ** Other stuff from Tuhdo
 - Stuff from http://tuhdo.github.io/emacs-tutor3.html
 
+*** New beginning of line
+Sometimes, we want to adjust or improve the behaviours of some commands in certain contexts. Consider this situation: C-a, which runs move-beginning-of-line, always move to the beginning of line. However, sometimes we don't always to move to the beginning of line, but move to the first non-whitespace character of that line. 
+
+See http://tuhdo.github.io/emacs-tutor3.html
+
+#+BEGIN_SRC emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Customized functions                ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun prelude-move-beginning-of-line (arg)
+  "Move point back to indentation of beginning of line.
+
+Move point to the first non-whitespace character on this line.
+If point is already there, move to the beginning of the line.
+Effectively toggle between the first non-whitespace character and
+the beginning of the line.
+
+If ARG is not nil or 1, move forward ARG - 1 lines first. If
+point reaches the beginning or end of the buffer, stop there."
+  (interactive "^p")
+  (setq arg (or arg 1))
+
+  ;; Move lines first
+  (when (/= arg 1)
+    (let ((line-move-visual nil))
+      (forward-line (1- arg))))
+
+  (let ((orig-point (point)))
+    (back-to-indentation)
+    (when (= orig-point (point))
+      (move-beginning-of-line 1))))
+
+(global-set-key (kbd "C-a") 'prelude-move-beginning-of-line)
+#+END_SRC
+
+#+RESULTS:
+: prelude-move-beginning-of-line
+
+
+
 *** Recent files.
 
 Info from  https://www.emacswiki.org/emacs/RecentFiles
@@ -2621,7 +2669,7 @@ Recentf is a minor mode that builds a list of recently opened files. This list i
 (require 'recentf)
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
-(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+(global-set-key "\C-x\ \C-r" 'recentf-open-files) 
 #+END_SRC
 
 #+RESULTS:
@@ -2640,81 +2688,79 @@ By default, Recentf saves the list of recent files on exiting Emacs (specificall
 Also, we increse the number of items in the menu and saved.
 
 #+BEGIN_SRC emacs-lisp
-;; (recentf-mode)
-(setq
- recentf-max-menu-items 30
- recentf-max-saved-items 5000
- )
+  ;; (recentf-mode)
+  (setq
+   recentf-max-menu-items 30
+   recentf-max-saved-items 5000
+   )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; PACKAGE: recentf-ext    ;;
-;;                         ;;
-;; GROUP: Files -> Recentf ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; PACKAGE: recentf-ext    ;;
+  ;;                         ;;
+  ;; GROUP: Files -> Recentf ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'recentf-ext)
-
-
-
-;;;;;;;;;;;;;;;;;;;;;
-;; PACKAGE: ztree  ;;
-;;                 ;;
-;; GROUP: No group ;;
-;;;;;;;;;;;;;;;;;;;;;
-;; since ztree works with files and directories, let's consider it in
-;; group Files
-
-(require 'ztree-diff)
-(require 'ztree-dir)
+  (require 'recentf-ext)
 
 
-;;,-----------------
-;;| PACKAGE: rebox2
-;;|                 
-;;| GROUP: No group 
-;;`-----------------
 
-;; https://www.emacswiki.org/emacs/UndoTree
+  ;;;;;;;;;;;;;;;;;;;;;
+  ;; PACKAGE: ztree  ;;
+  ;;                 ;;
+  ;; GROUP: No group ;;
+  ;;;;;;;;;;;;;;;;;;;;;
+  ;; since ztree works with files and directories, let's consider it in
+  ;; group Files
 
-(require 'rebox2)
-(global-set-key [(meta q)] 'rebox-dwin-fill)
-(global-set-key [(shift meta q)] 'rebox-dwin-no-fill)
+  (require 'ztree-diff)
+  (require 'ztree-dir)
 
 
-;; PACKAGE: helpful
-;; GROUP: No group
+  ;;,-----------------
+  ;;| PACKAGE: rebox2
+  ;;|                 
+  ;;| GROUP: No group 
+  ;;`-----------------
 
-;  https://github.com/Wilfred/helpful
+;; Ojo: solo funciona si se llama M-x rebox-mode
+  (require 'rebox2)
+  (global-set-key [(meta q)] 'rebox-dwin-fill)
+  (global-set-key [(shift meta q)] 'rebox-dwin-no-fill)
 
-(require 'helpful)
 
-;; Note that the built-in `describe-function' includes both functions
-;; and macros. `helpful-function' is functions only, so we provide
-;; `helpful-callable' as a drop-in replacement.
-(global-set-key (kbd "C-h f") #'helpful-callable)
-(global-set-key (kbd "C-h v") #'helpful-variable)
-(global-set-key (kbd "C-h k") #'helpful-key)
+  ;; PACKAGE: helpful
+  ;; GROUP: No group
 
-;; Lookup the current symbol at point. C-c C-d is a common keybinding
-;; for this in lisp modes.
-(global-set-key (kbd "C-s-d") #'helpful-at-point)
+  ;  https://github.com/Wilfred/helpful
 
-;; Look up *F*unctions (excludes macros).
-;;
-;; By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
-;; already links to the manual, if a function is referenced there.
-(global-set-key (kbd "C-s-f") #'helpful-function)
+  (require 'helpful)
 
-;; Look up *C*ommands.
-;;
-;; By default, C-h C is bound to describe `describe-coding-system'. I
-;; don't find this very useful, but it's frequently useful to only
-;; look at interactive functions.
-(global-set-key (kbd "C-s-c") #'helpful-command)
+  ;; Note that the built-in `describe-function' includes both functions
+  ;; and macros. `helpful-function' is functions only, so we provide
+  ;; `helpful-callable' as a drop-in replacement.
+  (global-set-key (kbd "\C-h f") #'helpful-callable)
+  (global-set-key (kbd "\C-h v") #'helpful-variable)
+  (global-set-key (kbd "\C-h k") #'helpful-key)
 
+  ;; Lookup the current symbol at point. C-c C-d is a common keybinding
+  ;; for this in lisp modes.
+  ;; (global-set-key (kbd "\C-s d") #'helpful-at-point)
+
+  ;; Look up *F*unctions (excludes macros).
+  ;;
+  ;; By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
+  ;; already links to the manual, if a function is referenced there.
+  ;;  (global-set-key (kbd "\C-s-f") #'helpful-function)
+
+  ;; Look up *C*ommands.
+  ;;
+  ;; By default, C-h C is bound to describe `describe-coding-system'. I
+  ;; don't find this very useful, but it's frequently useful to only
+  ;; look at interactive functions.
+  ;; (global-set-key (kbd "\C-s-c") #'helpful-command)
 #+END_SRC
 #+RESULTS:
-: helpful-command
+: helpful-key
 
 *** Peek definition with Emacs frame 
 - Stuff from http://tuhdo.github.io/emacs-frame-peek.html
@@ -2787,6 +2833,11 @@ Idea from http://pragmaticemacs.com/emacs/easily-manage-emacs-workspaces-with-ey
 
 #+BEGIN_SRC emacs-lisp 
   (use-package eyebrowse
+  :ensure t
+  :defer 1
+  :init
+  (setq eyebrowse-keymap-prefix (kbd "C-c z"))
+  (global-unset-key (kbd "C-c C-w"))           
   :diminish eyebrowse-mode
   :config (progn
             (define-key eyebrowse-mode-map (kbd "s-1") 'eyebrowse-switch-to-window-config-1)
@@ -2806,6 +2857,7 @@ Idea from http://pragmaticemacs.com/emacs/easily-manage-emacs-workspaces-with-ey
 
 #+RESULTS:
 : t
+
 
 So I'll try with this new code: 
 
@@ -2837,7 +2889,7 @@ https://magit.vc/manual/magit.html#Installation
 Key binding to get the Magit menu
 
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+  (global-set-key (kbd "\C-x M-g") 'magit-dispatch-popup)
 #+END_SRC
 
 #+RESULTS:
@@ -2852,6 +2904,7 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 ;; System locale to use for formatting time values.
 (setq system-time-locale "C")         ; Make sure that the weekdays in the
                                       ; time stamps of your Org mode files and
+                                      ; in the agenda appear in English.
 #+END_SRC 
 
 #+RESULTS:
@@ -2919,6 +2972,7 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 
 #+RESULTS:
 : hrs/visit-last-dired-file
+
 *** Geiser
 #+begin_src emacs-lisp
 (setq geiser-active-implementations '(chicken guile racket scheme))
@@ -2926,6 +2980,7 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 
 #+RESULTS:
 | chicken | guile | racket | scheme |
+
 *** Change window configuration
 
 Tip from https://stackoverflow.com/questions/14881020/emacs-shortcut-to-switch-from-a-horizontal-split-to-a-vertical-split-in-one-move
@@ -2978,3 +3033,5 @@ See https://github.com/mattfidler/r-autoyas.el
 #+begin_src emacs-lisp
 (message "Starter Kit User File loaded.")
 #+end_src
+
+
