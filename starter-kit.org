@@ -515,6 +515,7 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 #+end_src
 
 ** Load User/System Specific Files
+
 *** Settings from M-x customize
 #+srcname: m-x-customize-customizations
 #+begin_src emacs-lisp 
@@ -539,6 +540,17 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
       (mapc #'load (directory-files user-specific-dir nil ".*el$"))
       (mapc #'org-babel-load-file (directory-files user-specific-dir nil ".*org$"))))
 #+end_src
+
+*** COMMENT load =dgm.org=
+
+I don't know why or how but today Sept. the 11th, after trying to load the agenda without the external drive (by mistake), emacs stopped loading my =dgm.org= file. This is my attempt to get it loaded and compiled again.
+
+#+begin_src emacs-lisp
+;;  (starter-kit-compile "/home/dgm/.emacs.d/dgm.org")
+;;  (starter-kit-load "/home/dgm/.emacs.d/dgm.org")
+#+end_src
+
+#+RESULTS:
 
 * FAQ
   :PROPERTIES:

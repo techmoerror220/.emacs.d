@@ -1,5 +1,7 @@
 #+TITLE: Local User Customizations
 #+OPTIONS: toc:nil num:nil ^:nil
+#+PROPERTY: header-args :tangle yes
+
 
 * Starter Kit kjhealy
 This file contains local customizations---ones that in some cases
@@ -39,18 +41,23 @@ Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode X
 OS X ships with BSD's ls command which doesn't have all the features of GNU ls (used internally by dired). Install `coreutils` with homebrew (`brew install coreutils`) and use `gls` instead.
 
 #+source: gnu-ls
-#+begin_src emacs-lisp 
- (setq insert-directory-program (executable-find "ls"))
+#+begin_src emacs-lisp :tangle yes 
+  (setq insert-directory-program (executable-find "ls"))
 #+end_src
+
+#+RESULTS: gnu-ls
+: /bin/ls
 
 *** One space after period
 
 Use `M-e` for sentence-level navigation, but without having to put two spaces after a period like an animal.  
 
 #+source: periods
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq sentence-end-double-space nil)
 #+end_src
+
+#+RESULTS: periods
 
 *** Color Theme Tweaks
 The theme package is loaded in =starter-kit-misc.org=. The settings
@@ -58,7 +65,7 @@ here adjust the height of some headings in Org and LaTeX mode, as well
 as turning off the sans-serif heading style that AucTeX defaults to.
 
 #+srcname: local-settings
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (add-hook 'latex-mode-hook 
             (lambda ()
               (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground "#b58900")
@@ -77,6 +84,9 @@ as turning off the sans-serif heading style that AucTeX defaults to.
                (set-face-attribute 'org-level-5 nil :height 1.1)))
 #+end_src
 
+#+RESULTS: local-settings
+| (lambda nil (set-face-attribute (quote org-level-1) nil :height 1.5) (set-face-attribute (quote org-level-2) nil :height 1.2) (set-face-attribute (quote org-level-3) nil :height 1.1) (set-face-attribute (quote org-level-4) nil :height 1.1) (set-face-attribute (quote org-level-5) nil :height 1.1)) | org-mode-reftex-setup | (lambda nil (local-set-key \216 (quote outline-next-visible-heading)) (local-set-key \220 (quote outline-previous-visible-heading)) (local-set-key \225 (quote outline-up-heading)) (local-set-key \227 (quote org-table-copy-region)) (local-set-key \231 (quote org-table-paste-rectangle)) (local-set-key \214 (quote org-table-sort-lines)) (local-set-key \311 (quote org-toggle-iimage-in-org))) | (lambda nil (add-to-list (quote org-tab-first-hook) (quote yas-org-very-safe-expand))) | er/add-org-mode-expansions | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | org-eldoc-load |
+
 *** Run Emacs in Full Screen
   I find it very useful to run Emacs in full-screen mode. There is no
     completely satisfactory way to accomplish this on Mac OS X. What
@@ -86,7 +96,7 @@ as turning off the sans-serif heading style that AucTeX defaults to.
 Bind full screen to `C-c f`.
 
 #+source: fullscreen-4
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
     (defun fullscreen (&optional f)
       (interactive)
       (set-frame-parameter f 'fullscreen
@@ -95,11 +105,14 @@ Bind full screen to `C-c f`.
     (add-hook 'after-make-frame-functions 'fullscreen)
 #+end_src
 
-*** Mac Key mode
+#+RESULTS: fullscreen-4
+| fullscreen | x-dnd-init-frame |
+
+*** COMMENT Mac Key mode
     Used with Mitsuharu Yamamoto's carbon-patched Emacs, which turns
     off support for default mac bindings. Turned off by default.
 #+srcname: mac-keys
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes 
    (require 'mac-key-mode)
    (mac-key-mode 1)
    (add-hook 'mac-key-mode-hook
@@ -114,14 +127,17 @@ Bind full screen to `C-c f`.
 *** Dired-x
 Dired extensions
 #+source: Dired-x
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (load "dired-x")
 #+end_src
+
+#+RESULTS: Dired-x
+: t
 
 *** Dired open multiple files
 In dired mode, visit all marked files using. Bound to the "F" key. 
 #+source: dired-F
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (eval-after-load "dired"
   '(progn
      (define-key dired-mode-map "F" 'my-dired-find-file)
@@ -132,9 +148,12 @@ In dired mode, visit all marked files using. Bound to the "F" key.
          (mapc 'find-file fn-list)))))
 #+end_src
 
+#+RESULTS: dired-F
+: my-dired-find-file
+
 *** Stripe Dired buffers
 #+name: stripe-dired
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (require 'stripe-buffer)
 (add-hook 'org-mode-hook 'org-table-stripes-enable)
 (add-hook 'dired-mode-hook 'stripe-listify-buffer)  
@@ -157,16 +176,19 @@ Here's what you can do now to a word that starts with a "w" and is select-able w
 Note I have binded to C-o instead of M-t:
 
 #+name: avy-mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (define-key global-map (kbd "C-o") 'avy-goto-word-1)
 #+end_src
+
+#+RESULTS: avy-mode
+: avy-goto-word-1
 
 ** Local LaTeX settings
 *** In-text Smart Quotes (XeLaTeX only)
     Redefine TeX-open-quote and TeX-close-quote to be smart quotes by default. Below, in the local org-mode settings, we'll also map the relevant function to a key we can use in org-mode, too. If you don't use XeLaTeX for processing all your =.tex= files, you should disable this option.
 
 #+source: smart-quotes
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle yes 
   (setq TeX-open-quote "“")
   (setq TeX-close-quote "”")
 #+end_src
@@ -175,7 +197,7 @@ Note I have binded to C-o instead of M-t:
 Set up AUCTeX to work with the Evince PDF viewer.
 
 #+srcname: sync
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
     ;; Synctex with Evince
     (add-hook 'TeX-mode-hook
     (lambda ()
@@ -201,7 +223,7 @@ Set up AUCTeX to work with the Evince PDF viewer.
 Tell RefTeX where the bibliography files are. 
 
 #+srcname: local-reftex
-#+begin_src emacs-lisp    
+#+begin_src emacs-lisp :tangle yes    
     ;; Make RefTex able to find my local bib files
      (setq reftex-bibpath-environment-variables
 ;;     '("/media/dgm/blue/documents/bibs"))
@@ -224,7 +246,7 @@ Tell RefTeX where the bibliography files are.
     DGM: I comment it out as C-c c is used elsewhere for capture in org. 
 
 #+srcname: vc-command
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 ;;    (fset 'run-vc-then-xelatex
 ;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
 ;;    (global-set-key (kbd "C-c c") 'run-vc-then-xelatex);; Run the VC command before running xelatex
@@ -239,7 +261,7 @@ Tell RefTeX where the bibliography files are.
     dgm: I comment this out. I don't know how to make =vc= work as a command... I think you need to first make a =makefile=.  Plus I think =vc= is run automatically when =latexmk= is run thanks to the =\immediate\write18{sh ./vc}= line
 
 #+source: vc-alone
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 ;;  (global-set-key (kbd "\C-c v")
 ;;                      (lambda ()
 ;;                        (interactive)
@@ -249,7 +271,7 @@ Tell RefTeX where the bibliography files are.
 ** Local Pandoc Support 
 A pandoc menu for markdown and tex files. 
 #+src-name: pandoc_mode
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle yes 
   (load "pandoc-mode")
   (add-hook 'markdown-mode-hook 'pandoc-mode)
   (add-hook 'TeX-mode-hook 'pandoc-mode)
@@ -264,7 +286,7 @@ A pandoc menu for markdown and tex files.
 Polymode is a new package that supports multiple modes inside a single buffer. It is aimed particularly at literate programming approaches and supports, e.g., R and markdown in a single =.Rmd= file. So it is very useful with knitr in R, given that ESS does not yet fully support =.Rmd= files.
 
 #+source: Polymode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (require 'poly-R)
   (require 'poly-markdown)
   ;;; polymode + markdown
@@ -282,7 +304,7 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
    elsewhere in the starter kit. Add local configuration here, e.g.,
    display categories.
 #+srcname: iBuffer-custom
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle yes 
   (setq ibuffer-saved-filter-groups
       '(("home"
 	 ("emacs-config" (or (filename . ".emacs.d")
@@ -310,7 +332,7 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
 #+end_src
 
 ** Local Org-mode Settings
-*** Smart-quote binding
+*** COMMENT Smart-quote binding
 When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by default. 
 
 #+source: org-mode-smartquote-key
@@ -328,14 +350,14 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 *** Archive Settings
     Where archived projects and tasks go.
 #+source: orgmode-archive
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq org-archive-location "/home/dgm/Dropbox/gtd/archive.org::From %s")
 #+end_src
 
 *** Mobile Settings // GTD settings
    Sync orgmode files with Dropbox and iPhone. 
 #+src-name: orgmode-mobile
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
   ;; Set to the location of your Org files on your local system
   (setq org-directory "/home/dgm/Dropbox/gtd")
   ;; Set to <your Dropbox root directory>/MobileOrg.
@@ -461,7 +483,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
     Configure org-mode so that when you edit source code in an indirect buffer (with C-c '), the buffer is opened in the current window. That way, your window organization isn't broken when switching.
 
     #+source: orgmode-indirect-buffer-settings
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :tangle yes
       (setq org-src-window-setup 'current-window)
     #+end_src
 
@@ -469,7 +491,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
     Configure org-mode to export directly to PDF using xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
 
     #+source: orgmode-latex-export
-    #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp :tangle yes
 
       ;; Choose either listings or minted for exporting source code blocks.
       ;; Using minted (as here) requires pygments be installed. To use the
@@ -688,7 +710,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
     ebib is a bibtex database manager that works inside emacs. It can
     talk to org-mode. See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-17_2][this Worg tutorial]] for details. 
 #+source: ebib-setup
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
     (org-add-link-type "ebib" 'ebib)
   
    (org-add-link-type 
@@ -786,7 +808,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 Create =html= files form the =org= sources, to help with documentation. To set up org-mode for publishing projects to HTML you will need to change these settings, as they apply only to the Starter Kit. 
 
 #+source: html-export-settings
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq org-publish-project-alist
          '(("org"
             :base-directory "~/.emacs.d/"
@@ -808,7 +830,7 @@ Create =html= files form the =org= sources, to help with documentation. To set u
 ** IRC
 Sometimes useful for getting help on R or Emacs. 
 #+source: rirc-configuration
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; connect to irc on invocation but don't autojoin any channels (require 'rcirc)
 ;;  (add-to-list 'rcirc-server-alist
 ;;                       '("irc.freenode.net")) ;; this code stopped working after my customizations following the mini emacs guide
@@ -819,7 +841,7 @@ Sometimes useful for getting help on R or Emacs.
 Some last tweaks. 
 
 #+srcname: final-custom
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; minimize fringe
   (setq-default indicate-empty-lines nil)
 
@@ -847,31 +869,25 @@ Some last tweaks.
 
 #+RESULTS: final-custom
 
-#+RESULTS:
-
-
-
-** dgm's own customizations of emacs appearance
-
+* dgm's own customizations of emacs appearance
 ** GROUP: Convenience -> Linum
 
 Next tip from http://tuhdo.github.io/emacs-tutor3.html
 It enables linum only in programming modpes   
    
 #+srcname: line-numbering
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
  (add-hook 'prog-mode-hook 'linum-mode) 
 #+end_src
 
 #+RESULTS: line-numbering
 | linum-mode | (lambda nil (highlight-symbol-mode)) | highlight-numbers-mode | clean-aindent-mode |
    
-
 ** GROUP: Convenience -> Whitespace 
 
 Whenever you create useless whitespace, the whitespace is highlighted
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp :tangle yes 
 (add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace 1)))
 
 ;; activate whitespace-mode to view all whitespace characters
@@ -885,7 +901,7 @@ Whenever you create useless whitespace, the whitespace is highlighted
 *** iedit mode
 Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-occurrence-editing-in-your-buffer
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (require 'iedit)
 
 ;; activate this function by Mickey Petersen if you wish to use iedit only in current function and not all across the buffer.
@@ -915,7 +931,7 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 
 
 #+srcname: python-customization
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 ;; dgm's customizations of python 
 (elpy-enable)
 (require 'live-py-mode)
@@ -963,12 +979,10 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 #+RESULTS: python-customization
 : yas-expand
 
-
-
 ** The MU World starts here
 
 #+srcname: mu-customization
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; dgm's customizations of mu4e
   ;; Setting up the MU mail server
   ;; copied from http://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html#Gmail-configuration
@@ -1317,7 +1331,7 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 | (lambda nil (local-set-key (kbd C-c C-w) (function my-mu4e-choose-signature))) | no-auto-fill |
 
 #+srcname: ggtags-customization
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 ;;  customizations following http://tuhdo.github.io/emacs-tutor.html#orgheadline6 on ggtags
 (add-hook 'c-mode-common-hook
     (lambda ()
@@ -1335,7 +1349,7 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 *** mu4e-conversation
 - Found this stuff here: http://cestlaz.github.io/posts/using-emacs-49-mu4e-conversation/#.W4xUEK0yreQ
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;;(use-package mu4e-conversation
 ;; :ensure t
 ;;)
@@ -1346,25 +1360,23 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 
 #+RESULTS:
 
-
-
 ** GROUP: Editing -> Editing Basics from http://tuhdo.github.io/emacs-tutor3.html
 
 #+srcname: ring-max
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq global-mark-ring-max 5000     ; increase mark ring to contain 5000 entries
       mark-ring-max 5000            ; increase kill ring to contain 5000 entries
       mode-require-final-newline t) ; add a newline to end of file
 #+END_SRC
 
 #+RESULTS: ring-max
-: 5000
+: t
 
 #+RESULTS:
 : 5000
 
 #+srcname: killing
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq
  kill-ring-max 5000 ; increase kill-ring capacity
  kill-whole-line t  ; if NIL, killwhole line and move the next line up
@@ -1378,7 +1390,7 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 : t
 
 #+srcname: tab-width
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;; default to 4 visible spaces to display a tab  
 (setq-default tab-width 4)
 #+END_SRC
@@ -1391,7 +1403,7 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 
 From https://github.com/pashinin/workgroups2 and http://tuhdo.github.io/emacs-tutor3.html
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
   ;; (require 'workgroups2)
 
   ;; Change workgroups session file
@@ -1415,7 +1427,7 @@ From https://github.com/pashinin/workgroups2 and http://tuhdo.github.io/emacs-tu
 #+RESULTS:
 
 #+srcname: whitespace  
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle yes
   (add-hook 'diff-mode-hook (lambda ()
                               (setq-local whitespace-style
                                           '(face
@@ -1442,7 +1454,7 @@ From https://github.com/pashinin/workgroups2 and http://tuhdo.github.io/emacs-tu
 Attach multiple files to mu4e email message. (Tip from http://www.djcbsoftware.nl/code/mu/mu4e/Attaching-files-with-dired.html).
 
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (require 'gnus-dired)
 ;; make the `gnus-dired-mail-buffers' function also work on
 ;; message-mode derived modes, such as mu4e-compose-mode
@@ -1470,7 +1482,7 @@ Attach multiple files to mu4e email message. (Tip from http://www.djcbsoftware.n
 See http://tuhdo.github.io/emacs-tutor3.html
 
 #+srcname: volatile
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (require 'volatile-highlights)
 (volatile-highlights-mode t)
 #+END_SRC
@@ -1484,7 +1496,7 @@ See http://tuhdo.github.io/emacs-tutor3.html
 
 
 #+srcname: clean-indent
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (require 'clean-aindent-mode)
 (add-hook 'prog-mode-hook 'clean-aindent-mode)
 
@@ -1503,7 +1515,7 @@ undo-tree set up from http://pragmaticemacs.com/emacs/advanced-undoredo-with-und
 More info here: https://www.emacswiki.org/emacs/UndoTree
 
 #+srcname: undo-tree
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (require 'undo-tree)
 ;;turn on everywhere
 (global-undo-tree-mode 1)
@@ -1518,7 +1530,7 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 : redo
 
 #+srcname: file-revert
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;; update any change made on file to the current buffer
 (global-auto-revert-mode)
 #+END_SRC
@@ -1528,7 +1540,7 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 
 
 #+srcname: fill-column
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq-default fill-column 72)
 #+END_SRC
 
@@ -1539,7 +1551,7 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 : 39051
 
 #+srcname: ibuffer
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;; always display ibuffer in another window
 (setq ibuffer-use-other-window t)
 #+END_SRC
@@ -1551,7 +1563,7 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 : t
 
 #+srcname: company
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (add-hook 'after-init-hook 'global-company-mode)
 #+END_SRC
 
@@ -1561,7 +1573,7 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 
 
 #+srcname: duplicate
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (require 'duplicate-thing)
 (global-set-key (kbd "M-D") 'duplicate-thing)
 #+END_SRC
@@ -1597,7 +1609,7 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 | mark | modified | read-only | vc-status-mini |   | (name 18 18 :left :elide) |   | (size 9 -1 :right) |   | (mode 16 16 :left :elide) |   | (vc-status 16 16 :left) |   | filename-and-process |
 
 #+srcname: dired+
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp :tangle yes 
 ;; (require 'dired+)
 
 ;; copied  by dgm from: http://emacs-leuven.readthedocs.io/en/latest/?badge=latest
@@ -1692,7 +1704,7 @@ The app is chosen from your OS's preference."
 Set emacs to open Bookmark+ on start. From Xah Emacs.
 
 #+srcname: bookmarks
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
   ;; included by dgm
   (setq inhibit-splash-screen t)
   ;; (require 'bookmark+) ;; no longer available in MELPA
@@ -1718,7 +1730,7 @@ Set emacs to open Bookmark+ on start. From Xah Emacs.
 
 
 #+srcname: diff-hl
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
   (global-diff-hl-mode)
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
 #+END_SRC
@@ -1729,7 +1741,7 @@ Set emacs to open Bookmark+ on start. From Xah Emacs.
 
 I disable this as flycheck makes emacs too slow.
 #+srcname: flycheck-tip
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;;  (require 'flycheck-tip)
 ;;  (define-key global-map (kbd "\C-c \C-n") 'flycheck-tip-cycle)
 ;;  (setq flycheck-display-errors-function 'ignore)
@@ -1744,8 +1756,8 @@ I disable this as flycheck makes emacs too slow.
 
 For now, I deactivate the golden-ratio mode because it distract me too much.
 
-#+srcname: golden-ratio :tangle no
-#+BEGIN_SRC emacs-lisp
+#+srcname: golden-ratio 
+#+BEGIN_SRC emacs-lisp :tangle no
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; PACKAGE: golden-ratio                         ;;
   ;;                                               ;;
@@ -1798,7 +1810,7 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 
 
 #+srcname: frame-title
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;; more useful frame title, that show either a file or a
 ;; buffer name (if the buffer isn't visiting a file)
 ;; taken from prelude-ui.el
@@ -1813,7 +1825,7 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 
 
 #+srcname: highlight-numbers-and-symbols
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (add-hook 'prog-mode-hook 'highlight-numbers-mode)
 
 (require 'highlight-symbol)
@@ -1841,14 +1853,14 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 
 
 #+srcname: info+
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;; (require 'info+) no longer available in MELPA
 #+END_SRC
 
 #+RESULTS: info+
 
 #+srcname: discover-my-major
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;; A quick major mode help with discover-my-major
 (global-unset-key (kbd "C-h h"))        ; original "\C-h h" displays "hello world" in different languages
 (define-key 'help-command (kbd "h m") 'discover-my-major)
@@ -1858,7 +1870,7 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 : discover-my-major
 
 #+srcname: rainbow-mode
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PACKAGE: rainbow-mode              ;;
 ;;                                    ;;
@@ -1890,11 +1902,10 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
   ((x w32) (nyan-mode)))
 #+END_SRC
 
-
 ** HELM - An incremental completion and selection narrowing framework forEmacs                                                                  
 
 #+srcname: helm
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 
     (require 'helm)
     (require 'helm-config)
@@ -2075,7 +2086,7 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 
 
 #+srcname: spaceline
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp :tangle yes 
 ;; (require 'spaceline-config)
 ;; (spaceline-emacs-theme)
 ;; (spaceline-helm-mode)
@@ -2092,7 +2103,7 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 #+end_src
 
 #+srcname: modeline
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 ;; (require 'smart-mode-line)
 ;;       (require 'smart-mode-line-powerline-theme)
 ;;       (sml/apply-theme 'powerline)
@@ -2142,7 +2153,7 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 : dark
 
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'load-path "/home/dgm/.emacs.d/src/ado-mode/lisp")
 (require 'ado-mode)
 #+END_SRC
@@ -2151,7 +2162,7 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 : ado-mode
 
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;;   (setq org-default-notes-file (concat org-directory "/notes.org")) ;; i disable this to see if I can choose between notes and tasks.
 ;;    this is not working for some reason: (define-key global-map "\C-c c" 'org-capture) 
   (define-key global-map (kbd "C-c c") 'org-capture)
@@ -2181,7 +2192,7 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 
 Shortcuts that should work in Org but do not. Besides, they used to be bound to windmove but no more because I'd rather use =ace-window=
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
   (define-key global-map (kbd "S-<left>") 'org-timestamp-down-day)
   (define-key global-map (kbd "S-<right>") 'org-timestamp-up-day)
   (define-key global-map (kbd "S-<up>") 'org-timestamp-up)
@@ -2191,7 +2202,7 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
 #+RESULTS:
 
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
    (global-set-key (kbd "M-P") 'ace-window)
 #+END_SRC
 
@@ -2200,7 +2211,7 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
 
 Make calendar start on Monday instead of Sunday
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq calendar-week-start-day 1)
 #+END_SRC
 
@@ -2210,17 +2221,17 @@ Make calendar start on Monday instead of Sunday
 
 Try and make =ox-twbs= work
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (require 'ox-twbs)
 #+END_SRC
 
 
 *** Which-key
-This mode shows a keymap when an incomplete command is entered. It is especially useful for families of commands with a prefix, e.g., C-c C-o for outline-mode commands, or C-c C-v for org-babel commands. Just start typing your command and pause if you want a hint.
+This mode shows a keymap when an incomplete command is entered. It is especially useful for families of commands with a prefix, e.g., =C-c C-o= for outline-mode commands, or ==C-c C-v= for org-babel commands. Just start typing your command and pause if you want a hint.
 
 tip from: https://github.com/izahn/dotemacs
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (require 'which-key)
 (which-key-mode)
 #+END_SRC
@@ -2233,7 +2244,7 @@ Many programs using REPLs are derived from comint-mode, so we can affect all of 
 
 Load eval-in-repl for bash, elisp, and python interaction.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;; require the main file containing common functions
 (require 'eval-in-repl)
 (setq comint-process-echoes t)
@@ -2255,7 +2266,7 @@ tip from: https://github.com/izahn/dotemacs
 
 Support for R in Emacs is good, thanks to http://ess.r-project.org/. As with other programming languages this configuration enables completion via the tab key and code evaluation with C-ret. Many more features are provided by ESS, refer to http://ess.r-project.org/ for details.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;;;  ESS (Emacs Speaks Statistics)
 
 ;; ;; Start R in the working directory by default
@@ -2297,7 +2308,7 @@ Tip from: https://github.com/izahn/dotemacs
 
 If you want to get the most out of Emacs, you’ll eventually need to learn a little Emacs-lisp. This configuration helps by providing a standard C-ret evaluation key binding, and by providing completion with the tab key.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (with-eval-after-load "elisp-mode"
   (require 'company-elisp)
   ;; ielm
@@ -2331,7 +2342,7 @@ check titus: https://github.com/tmalsburg/helm-bibtex
 
 A minimal configuration involves telling bibtex-completion where your bibliographies can be found:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (setq bibtex-completion-bibliography
       '("/media/dgm/blue/documents/bibs/socbib.bib"))
 
@@ -2348,7 +2359,7 @@ And now the bit by Ista Zahn in tip from: https://github.com/izahn/dotemacs but 
 This allows you to search your BibTeX files for references to insert into the current document. For it to work you will need to set `bibtex-completion-bibliography` to the location of your BibTeX files.
 Initiate a citation search with ivy-bibtex, bound to C-c r.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
 (global-set-key (kbd "C-c r") 'helm-bibtex)
 #+end_src
@@ -2361,7 +2372,7 @@ tip from titus for Helm-bibtex: I use the menu key as the prefix key for all hel
 
 =command-log-mode= is useful for giving emacs demonstrations/tutorials. It shows the keys you’ve pressed and the commands they called.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 ;;(setq command-log-mode-auto-show t)
 ;;(global-set-key (kbd "\C-x c l") 'global-command-log-mode)
 #+end_src
@@ -2378,7 +2389,7 @@ Gives basic auto completion for most programming modes. But doesn't know syntax.
 
 For now I comment it out because following Drew's advice has meant that I've lost auto completion in elpy mode. 
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 ;; (require 'auto-complete-config)
 ;; (ac-config-default)
 
@@ -2393,7 +2404,7 @@ For now I comment it out because following Drew's advice has meant that I've los
 Check Drew online: https://www.youtube.com/watch?v=6BlTGPsjGJk
 This is basically his https://github.com/wernerandrew/jedi-starter/blob/master/jedi-starter.el
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 
 ;; (load-file "/home/dgm/.emacs.d/src/jedi-starter.el")
 
@@ -2583,7 +2594,7 @@ Further customization of =gtags= with =helm=, from http://tuhdo.github.io/c-ide.
 
 Check out: http://tuhdo.github.io/c-ide.html
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
     ;; Tuhdo says to put this but if I do emacs spits error mesage on start up. 
     ;;(require 'setup-helm)
     ;;(require 'setup-helm-gtags)
@@ -2624,7 +2635,7 @@ Sometimes, we want to adjust or improve the behaviours of some commands in certa
 
 See http://tuhdo.github.io/emacs-tutor3.html
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Customized functions                ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2651,13 +2662,11 @@ point reaches the beginning or end of the buffer, stop there."
     (when (= orig-point (point))
       (move-beginning-of-line 1))))
 
-(global-set-key (kbd "C-a") 'prelude-move-beginning-of-line)
+(global-set-key (kbd "\C-a") 'prelude-move-beginning-of-line)
 #+END_SRC
 
 #+RESULTS:
 : prelude-move-beginning-of-line
-
-
 
 *** Recent files.
 
@@ -2665,7 +2674,7 @@ Info from  https://www.emacswiki.org/emacs/RecentFiles
 
 Recentf is a minor mode that builds a list of recently opened files. This list is is automatically saved across sessions on exiting Emacs - you can then access this list through a command or the menu.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (require 'recentf)
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
@@ -2677,7 +2686,7 @@ Recentf is a minor mode that builds a list of recently opened files. This list i
 
 By default, Recentf saves the list of recent files on exiting Emacs (specifically, `recentf-save-list` is called on `kill-emacs-hook`). If Emacs exits abruptly for some reason the recent file list will be lost - therefore you may wish to call `recentf-save-list` periodically, e.g. every 5 minutes:
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
     (run-at-time nil (* 5 60) 'recentf-save-list)
 #+END_SRC
 
@@ -2687,7 +2696,7 @@ By default, Recentf saves the list of recent files on exiting Emacs (specificall
 
 Also, we increse the number of items in the menu and saved.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
   ;; (recentf-mode)
   (setq
    recentf-max-menu-items 30
@@ -2766,7 +2775,7 @@ Also, we increse the number of items in the menu and saved.
 - Stuff from http://tuhdo.github.io/emacs-frame-peek.html
 - So far I have not made it work in this =dgm.org= file but maybe it works with other programming languages.  
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp :tangle yes 
 (defun rtags-peek-definition ()
   "Peek at definition at point using rtags."
   (interactive)
@@ -2831,7 +2840,7 @@ Also, we increse the number of items in the menu and saved.
 
 Idea from http://pragmaticemacs.com/emacs/easily-manage-emacs-workspaces-with-eyebrowse/ but for some reason when I activate this bit of code, my configuration file does not work and everything fails.
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp :tangle yes 
   (use-package eyebrowse
   :ensure t
   :defer 1
@@ -2861,7 +2870,7 @@ Idea from http://pragmaticemacs.com/emacs/easily-manage-emacs-workspaces-with-ey
 
 So I'll try with this new code: 
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp :tangle yes 
 ;;            (eyebrowse-mode t)
 ;;            (global-set-key (kbd "s-1") 'eyebrowse-switch-to-window-config-1)
 ;;            (global-set-key (kbd "s-2") 'eyebrowse-switch-to-window-config-2)
@@ -2881,15 +2890,14 @@ But again, if I activate this bit of code, when I open emacs most of this file i
 
 MISTERIO RESUELTO: cuando use' yasnippet para crear el snippet con elisp, me lo dio con begin_src y end_src en minusculas y esto es lo que causaba el caos (tambien pone lo del tangle yes o no pero creo que eso no es problema.)
 
-
 ** Magit
 
 https://magit.vc/manual/magit.html#Installation
 
 Key binding to get the Magit menu
 
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "\C-x M-g") 'magit-dispatch-popup)
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
 #+END_SRC
 
 #+RESULTS:
@@ -2900,7 +2908,7 @@ Key binding to get the Magit menu
 
 Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-of-time-stamps
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp :tangle yes 
 ;; System locale to use for formatting time values.
 (setq system-time-locale "C")         ; Make sure that the weekdays in the
                                       ; time stamps of your Org mode files and
@@ -2910,14 +2918,14 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 #+RESULTS:
 : C
 
-** COMMENT Key bindings
+** Key bindings
 
-#+BEGIN_SRC emacs-lisp
-    (define-key global-map [?\s-u] 'undo)
-    (define-key global-map [?\s-j] 'save-buffer)
-    (define-key global-map [?\s-q] 'move-beginning-of-line)
-    (define-key global-map [?\s-e] 'move-end-of-line)
-    (define-key global-map [?\s-k] 'kill-buffer)
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;    (define-key global-map [?\s-u] 'undo)
+;;    (define-key global-map [?\s-j] 'save-buffer)
+;;    (define-key global-map [?\s-q] 'move-beginning-of-line)
+;;    (define-key global-map [?\s-e] 'move-end-of-line)
+;;    (define-key global-map [?\s-k] 'kill-buffer)
 #+END_SRC
 
 #+RESULTS:
@@ -2927,7 +2935,7 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 
 *** Rename file
    
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (defun hrs/rename-file (new-name)
   (interactive "FNew name: ")
   (let ((filename (buffer-file-name)))
@@ -2947,7 +2955,7 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 
 *** Generate scratch buffer
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (defun hrs/generate-scratch-buffer ()
   "Create and switch to a temporary scratch buffer with a random
      name."
@@ -2958,10 +2966,9 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 #+RESULTS:
 : hrs/generate-scratch-buffer
 
-
 *** Visit last dired buffer
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (defun hrs/visit-last-dired-file ()
   "Open the last file in an open dired buffer."
   (interactive)
@@ -2974,7 +2981,7 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 : hrs/visit-last-dired-file
 
 *** Geiser
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (setq geiser-active-implementations '(chicken guile racket scheme))
 #+end_src
 
@@ -2985,7 +2992,7 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 
 Tip from https://stackoverflow.com/questions/14881020/emacs-shortcut-to-switch-from-a-horizontal-split-to-a-vertical-split-in-one-move
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (defun toggle-window-split ()
   (interactive)
   (if (= (count-windows) 2)
@@ -3017,8 +3024,7 @@ Tip from https://stackoverflow.com/questions/14881020/emacs-shortcut-to-switch-f
 #+RESULTS:
 : toggle-window-split
 
-
-*** COMMENT Yasnippet for R
+*** Yasnippet for R
 See https://github.com/mattfidler/r-autoyas.el
 
 #+begin_src emacs-lisp :tangle yes
@@ -3028,10 +3034,26 @@ See https://github.com/mattfidler/r-autoyas.el
 
 #+RESULTS:
 
+*** Org customization
+How do I change my dotfile so that when I call org-agenda it takes up the entire screen?
+https://stackoverflow.com/questions/36873727/make-org-agenda-full-screen
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-agenda-window-setup 'only-window)
+;; (setq org-export-dispatch 'only-window)
+#+END_SRC
+
+#+RESULTS:
+: only-window
+
+
+
+
+* Final message 
 #+source: message-line
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (message "Starter Kit User File loaded.")
 #+end_src
 
-
+#+RESULTS: message-line
+: Starter Kit User File loaded.

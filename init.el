@@ -58,7 +58,7 @@
   (if (null (x-list-fonts font))
       nil t))
 
-;; on Why Pragmata Pro doesn't work, read here: https://github.com/fabrizioschiavi/pragmatapro/issues/9
+;; on Why Pragmata Pro doesn't work, read here: https://github.com/hiavi/pragmatapro/issues/9
 ;; Set default font. First one found is selected.
  (cond
   ((eq window-system nil) nil)
