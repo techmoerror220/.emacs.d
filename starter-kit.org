@@ -307,6 +307,30 @@ aspell workaround in [[file:starter-kit-aspell.org][starter-kit-aspell]]
 #+end_src
 
 *** ELPA (Emacs Lisp Package Manager)
+
+#+begin_src emacs-lisp
+(defun esk-online? ()
+  "See if we're online.
+
+Windows does not have the network-interface-list function, so we
+just have to assume it's online."
+  ;; TODO how could this work on Windows?
+  (if (and (functionp 'network-interface-list)
+           (network-interface-list))
+      (some (lambda (iface) (unless (equal "lo" (car iface))
+                         (member 'up (first (last (network-interface-info
+                                                   (car iface)))))))
+            (network-interface-list))
+    t))
+#+end_src
+
+#+RESULTS:
+: esk-online\?
+
+
+
+
+
 Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager.
 
 #+srcname: starter-kit-elpa
@@ -356,6 +380,7 @@ ARCHIVE is the string name of the package archive.")
 	 archive))
     ad-do-it))
 
+
 (defvar melpa-exclude-packages
 ;;      '(slime magit)
       '()
@@ -369,9 +394,14 @@ ARCHIVE is the string name of the package archive.")
          (or (not (string-equal archive "melpa"))
              (not (memq package melpa-exclude-packages))))))
 
-  (package-initialize)
-  (ignore-errors (package-refresh-contents))
-  (starter-kit-load "starter-kit-elpa.org")
+    (package-initialize)
+    (when (esk-online?)
+       (ignore-errors (package-refresh-contents)))
+    (starter-kit-load "starter-kit-elpa.org")
+
+;;  (package-initialize)
+;;  (ignore-errors (package-refresh-contents))
+;;  (starter-kit-load "starter-kit-elpa.org")
 #+end_src
 
 #+results: starter-kit-elpa
