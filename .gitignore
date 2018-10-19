@@ -18,7 +18,6 @@ oddmuse/*
 .DS_Store
 image-dired/
 elim/
-elpa/*
 elpa-to-submit/nxhtml/etc/schema/xhtml-loader.rnc~
 session*
 tramp
@@ -66,3 +65,5 @@ recentf
 smex-items
 oldStuff/
 speed-type/
+history
+ido.last~
