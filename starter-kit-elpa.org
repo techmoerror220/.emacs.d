@@ -63,7 +63,7 @@ The following packages will be downloaded and installed.
                                     'jedi
                                     'jedi-core
                                     'live-py-mode
-                                    'redo+
+                                    'redo+  ;; not available in emacs 27
                                     ;; 'ruby-mode
                                     'smartparens ;; includes all features of =paredit= so the latter is not needed.
                                     'smex
@@ -170,6 +170,7 @@ The following packages will be downloaded and installed.
 On your first run, this should pull in all the base packages.
 #+begin_src emacs-lisp
   (unless package-archive-contents (ignore-errors (package-refresh-contents)))
+
   (starter-kit-elpa-install)
 #+end_src
 
