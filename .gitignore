@@ -21,9 +21,7 @@ elim/
 elpa-to-submit/nxhtml/etc/schema/xhtml-loader.rnc~
 session*
 tramp
-\#*
 ## exported files
-*el
 starter-kit*html
 starter-kit*tex
 starter-kit*pdf
