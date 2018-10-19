@@ -93,7 +93,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 #+end_src
 
 #+RESULTS: ebib-load
-| TeX-PDF-mode | (lambda nil (local-set-key  v (quote ebib-insert-bibtex-key))) | turn-on-reftex | turn-on-flyspell |
+| er/add-latex-mode-expansions | TeX-PDF-mode | (lambda nil (local-set-key  v 'ebib-insert-bibtex-key)) | turn-on-reftex |
 
 ** Configure AucTeX 
 *** Automatic Parsing

@@ -12,7 +12,7 @@ The Emacs Starter Kit for the Social Sciences is maintained by [[http://kieranhe
 Healy]]. The original version was written by [[http://github.com/technomancy/emacs-starter-kit/tree][Phil Hagelberg]]. This
 version is more directly descended from [[http://eschulte.github.com/emacs-starter-kit/][Eric Schulte's]] excellent
 org-mode implementation. It is designed specifically for [[http://emacsformacosx.com/builds][GNU Emacs 24.4
-on Mac OS X]]. 
+on Mac OS X]].
 
 The goal of this kit is to provide a more useful set of defaults than
 you get normally with Emacs. It's intended for beginners, but provides
@@ -22,12 +22,12 @@ particularly useful for researchers in the social sciences.
 
 The main advantage of this Emacs Starter Kit are
 - better default settings
-- inclusion of many useful libraries and packages 
+- inclusion of many useful libraries and packages
 - "literate" customization embedded in Org-mode files
 - an organized directory structure
 - git provides for version control, backup, and sharing
 
-Source code for the latest version is at [[http://kjhealy.github.com/emacs-starter-kit/]]. 
+Source code for the latest version is at [[http://kjhealy.github.com/emacs-starter-kit/]].
 
 ** Learning
    :PROPERTIES:
@@ -48,21 +48,21 @@ can be found at [[http://kieranhealy.org/resources/eamcs-starter-kit.html/]].
 If you have used Emacs before and already have a =.emacs= file or =.emacs.d= directory, back them up and then delete them. See below for details on how to add customizations to the kit.
 
 *** Getting the Starter Kit
-You have two choices. 
+You have two choices.
 
-/Option A/. [[https://github.com/kjhealy/emacs-starter-kit/archive/master.zip][Download]] a =.zip= file of the kit. 
+/Option A/. [[https://github.com/kjhealy/emacs-starter-kit/archive/master.zip][Download]] a =.zip= file of the kit.
 
-/Option B/. If you want to keep up with changes to the kit, you should clone the source code using git rather than simply copying a static version of it. In general I think you should be using version control on your plain-text documents anyway, so I recommend this option. The most straightforward way to get the tools you need is to *install Xcode*. Xcode is what software developers use to write Mac and iOS applications. As such it comes with a bunch of things we are not so interested in, but it makes it easy to install the tools we do need. It's available for free [[https://developer.apple.com/xcode/][via the Mac App Store]]. Once downloaded, launch Xcode, go to Xcode &#62; Preferences &#62; Downloads and install the *Command Line Tools for Xcode*. At that point you can quit Xcode and never use it again. Alternatively, go to [[https://developer.apple.com][Apple's Developer Site]], login with your Apple ID and download the Command Line Tools for Xcode package by itself, without the Xcode application. 
+/Option B/. If you want to keep up with changes to the kit, you should clone the source code using git rather than simply copying a static version of it. In general I think you should be using version control on your plain-text documents anyway, so I recommend this option. The most straightforward way to get the tools you need is to *install Xcode*. Xcode is what software developers use to write Mac and iOS applications. As such it comes with a bunch of things we are not so interested in, but it makes it easy to install the tools we do need. It's available for free [[https://developer.apple.com/xcode/][via the Mac App Store]]. Once downloaded, launch Xcode, go to Xcode &#62; Preferences &#62; Downloads and install the *Command Line Tools for Xcode*. At that point you can quit Xcode and never use it again. Alternatively, go to [[https://developer.apple.com][Apple's Developer Site]], login with your Apple ID and download the Command Line Tools for Xcode package by itself, without the Xcode application.
 
 *** Prerequisites
 
-*0.1 Get Emacs*.  The starter kit requires at least Emacs 24.4 (released October 2014), and preferably the most recent released version. [[http://emacsformacosx.com][Download Emacs here]]. Alternatively, if you know what you're doing you may [[http://www.gnu.org/software/emacs/#Obtaining][compile it yourself]]. 
+*0.1 Get Emacs*.  The starter kit requires at least Emacs 24.4 (released October 2014), and preferably the most recent released version. [[http://emacsformacosx.com][Download Emacs here]]. Alternatively, if you know what you're doing you may [[http://www.gnu.org/software/emacs/#Obtaining][compile it yourself]].
 
 
-*0.2 Install a Modern TeX Distribution and the Skim PDF reader*. If you are using OS X, [[http://tug.org/mactex/][download MacTeX]]  and install it. The kit is set up to use the [[skim-app.sourceforge.net/][Skim PDF reader]] to display PDF files created from =.tex= files. You can use other readers, but will need to modify the setup in the =starter-kit-latex.org= file.
+*0.2 Install a Modern TeX Distribution and the Skim PDF reader*. If you are using OS X, [[http://tug.org/mactex/][download MacTeX]]  and install it. The kit is set up to use the Skim PDF reader to display PDF files created from =.tex= files. You can use other readers, but will need to modify the setup in the =starter-kit-latex.org= file.
 
 
-*0.3 Install R and Pandoc*. These are not strictly required for the installation to work, and you can skip this step if you like. But you will probably be using them anyway, if you're not already. If you're doing statistical work you will probably want to use R or Stata. R is free and you can [[http://www.r-project.org][download it here]]. Pandoc is a very useful utility that lets you convert easily between many different forms of plain-text markup (such as Markdown, HTML, LaTeX, and others). [[johnmacfarlane.net/pandoc/][Get Pandoc here]].
+*0.3 Install R and Pandoc*. These are not strictly required for the installation to work, and you can skip this step if you like. But you will probably be using them anyway, if you're not already. If you're doing statistical work you will probably want to use R or Stata. R is free and you can [[http://www.r-project.org][download it here]]. Pandoc is a very useful utility that lets you convert easily between many different forms of plain-text markup (such as Markdown, HTML, LaTeX, and others). [Get Pandoc here].
 
 *0.4 Note your user name* or the name of your computer. If you don't know either, open the Terminal application and do
 
@@ -102,7 +102,7 @@ Alternatively, if you are using git (the preferred method), then clone the start
 
 *4.* Launch Emacs.
 
-When you first start Emacs after installing the starter-kit, it will try to contact several package repositories, so make sure you have an internet connection. The kit will download packages mainly from the official [[http://http://elpa.gnu.org][GNU ELPA Repository]] and the [[MELPA Repo]]. Each package will be fetched, compiled by Emacs, and stored in the =~/.emacs.d= directory. In practice I've found that this process is prone to hiccups as packages are fetched from the servers, so please be patient with it. If it doesn't get everything first time around, quit and relaunch Emacs, and it will try again. If the problem persists---especially if you get a message saying "The package 'auctex' is not available for installation"---you can manually install packages as follows. Open Emacs, do =M-x list-packages= and in the resulting buffer search or scroll down the list to, e.g., auctex, mark it for installation by pressing =i= and then install it (or them) by hitting =x=. With the packages in place, restart Emacs and the starter kit will finish setting itself up. Unfortunately, I can't control these intermittent installation errors. They seem to have something to do with the way Emacs talks to the GNU ELPA package server.
+When you first start Emacs after installing the starter-kit, it will try to contact several package repositories, so make sure you have an internet connection. The kit will download packages mainly from the official [[http://http://elpa.gnu.org][GNU ELPA Repository]] and the [MELPA Repo]. Each package will be fetched, compiled by Emacs, and stored in the =~/.emacs.d= directory. In practice I've found that this process is prone to hiccups as packages are fetched from the servers, so please be patient with it. If it doesn't get everything first time around, quit and relaunch Emacs, and it will try again. If the problem persists---especially if you get a message saying "The package 'auctex' is not available for installation"---you can manually install packages as follows. Open Emacs, do =M-x list-packages= and in the resulting buffer search or scroll down the list to, e.g., auctex, mark it for installation by pressing =i= and then install it (or them) by hitting =x=. With the packages in place, restart Emacs and the starter kit will finish setting itself up. Unfortunately, I can't control these intermittent installation errors. They seem to have something to do with the way Emacs talks to the GNU ELPA package server.
 
 *5.* (Optional.) Once Emacs is up and running, do =M-x starter-kit-compile= to byte-compile the starter-kit's files, for slightly faster loading.
 
@@ -132,7 +132,7 @@ a number of additional packages. These are stored in
 package manager yet. These are stored in =~/.emacs.d/src/=.
 
 There are also a few files that are meant for code that doesn't belong
-in the Starter Kit, they are described below in [[* customization][Customization]].
+in the Starter Kit, they are described below in [Customization].
 
 ** Customization
    :PROPERTIES:
@@ -163,7 +163,7 @@ general starter-kit updates without conflict.
      #+begin_src sh
        echo $USER
      #+end_src
-       
+
      If your configuration starts to feel cramped in a single file
      (although with the nested headlines of an Org-mode file, that
      could take a while) and you want to stretch your config's legs,
@@ -185,12 +185,12 @@ general starter-kit updates without conflict.
 - Installing more elisp libraries :: While the starter kit include
      many useful Emacs lisp libraries, you are bound to find more that
      you will want to install.  The easiest way to install new
-     libraries is through the Emacs Lisp Package Archive (see [[* elpa][ELPA]]).
+     libraries is through the Emacs Lisp Package Archive (see [ELPA]).
      When a library is not available through ELPA you can grab its
      source and place it directly in the =src= directory.  Any
      packages found there will automatically be added to your
      load-path when Emacs starts up.
-     
+
 Some additional miscellaneous configuration and getting started
 suggestions
 - First off see the [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Customization.html#Customization][Customization]] node in the Emacs manual.  Available
@@ -211,14 +211,14 @@ suggestions
 
 Libraries from [[http://elpa.gnu.org/packages/][ELPA]] or the [[http://melpa.milkbox.net/][MELPA]] Repo pare preferred when available since dependencies
 are handled automatically, and the burden to update them is removed
-from the user. 
+from the user.
 
 Sometimes packages are removed from the Starter Kit as they get added
 to ELPA itself. This has occasionally caused problems with certain
 packages. If you run into problems with such a package, try removing
 everything from inside the elpa/ directory and invoking =M-x starter-kit-elpa-install= in a fresh instance.
 
-* Implementation 
+* Implementation
   :PROPERTIES:
   :CUSTOM_ID: implementation
   :END:
@@ -232,10 +232,10 @@ These should be loaded on startup rather than autoloaded on demand
 since they are likely to be used in every session
 
 #+srcname: starter-kit-load-on-startup
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (require 'cl)
   (require 'ffap)
-  (require 'uniquify)
+;;  (require 'uniquify) ;; already included in dgm.org under Better defaults
   (require 'ansi-color)
   (require 'recentf)
 #+end_src
@@ -266,7 +266,7 @@ source may already be found in the load path.
 
 *** Function for loading/compiling starter-kit-*
 #+srcname: starter-kit-load
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (defun starter-kit-load (file)
     "This function is to be used to load starter-kit-*.org files."
     (org-babel-load-file (expand-file-name file
@@ -300,17 +300,43 @@ source may already be found in the load path.
                (list (concat dotfiles-dir user-login-name) dotfiles-dir))))))
 #+end_src
 
-*** Starter Kit aspell (Spell checking with flyspell)
+*** COMMENT Starter Kit aspell (Spell checking with flyspell)
 aspell workaround in [[file:starter-kit-aspell.org][starter-kit-aspell]]
-#+begin_src emacs-lisp
-  (starter-kit-load "starter-kit-aspell.org")
+#+begin_src emacs-lisp :tangle no
+;;  (starter-kit-load "starter-kit-aspell.org")
 #+end_src
 
+#+RESULTS:
+
 *** ELPA (Emacs Lisp Package Manager)
+
+#+begin_src emacs-lisp
+(defun esk-online? ()
+  "See if we're online.
+
+Windows does not have the network-interface-list function, so we
+just have to assume it's online."
+  ;; TODO how could this work on Windows?
+  (if (and (functionp 'network-interface-list)
+           (network-interface-list))
+      (some (lambda (iface) (unless (equal "lo" (car iface))
+                         (member 'up (first (last (network-interface-info
+                                                   (car iface)))))))
+            (network-interface-list))
+    t))
+#+end_src
+
+#+RESULTS:
+: esk-online\?
+
+
+
+
+
 Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager.
 
 #+srcname: starter-kit-elpa
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (require 'package)
   (setq package-archives
              '(
@@ -328,7 +354,7 @@ Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager.
 ;;               '("gnu"     . "http://elpa.gnu.org/packages/") t)
 
 
-  
+
 
 ;;; Add support to package.el for pre-filtering available packages
 (defvar package-filter-function nil
@@ -338,15 +364,15 @@ The function is called with the arguments PACKAGE VERSION ARCHIVE, where
 PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 ARCHIVE is the string name of the package archive.")
 
-  
+
 (defadvice package--add-to-archive-contents
-  
+
   (around filter-packages (package archive) activate)
-  
+
   "Add filtering of available packages using `package-filter-function', if non-nil."
-  
+
   (when (or (null package-filter-function)
-  
+
 (funcall package-filter-function
 	 (car package)
 	 (funcall (if (fboundp 'package-desc-version)
@@ -355,6 +381,7 @@ ARCHIVE is the string name of the package archive.")
 		  (cdr package))
 	 archive))
     ad-do-it))
+
 
 (defvar melpa-exclude-packages
 ;;      '(slime magit)
@@ -369,19 +396,25 @@ ARCHIVE is the string name of the package archive.")
          (or (not (string-equal archive "melpa"))
              (not (memq package melpa-exclude-packages))))))
 
-  (package-initialize)
-  (ignore-errors (package-refresh-contents))
-  (starter-kit-load "starter-kit-elpa.org")
+;; commented out as this blocked exwm when called from init.el
+;;    (package-initialize)
+;;    (when (esk-online?)
+;;       (ignore-errors (package-refresh-contents)))
+;;    (starter-kit-load "starter-kit-elpa.org")
+
+;;  (package-initialize)
+;;  (ignore-errors (package-refresh-contents))
+;;  (starter-kit-load "starter-kit-elpa.org")
 #+end_src
 
 #+results: starter-kit-elpa
-: Loaded /home/dgm/.emacs.d/starter-kit-elpa.el
+| lambda | (package version archive) | (and (not (memq package '(eieio))) (or (not (string-equal archive melpa)) (not (memq package melpa-exclude-packages)))) |
 
 *** Work around OS X bug
 
 Work around a bug on OS X where system-name is FQDN
 #+srcname: starter-kit-osX-workaround
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (if (eq system-type 'darwin)
       (setq system-name (car (split-string system-name "\\."))))
 #+end_src
@@ -393,7 +426,7 @@ raw emacs-lisp files or as embedded elisp in org-mode files (as done
 in this document).
 
 #+srcname: starter-kit-user/system-setup
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (setq system-specific-config (concat dotfiles-dir system-name ".el")
         system-specific-literate-config (concat dotfiles-dir system-name ".org")
         user-specific-config (concat dotfiles-dir user-login-name ".el")
@@ -401,6 +434,9 @@ in this document).
         user-specific-dir (concat dotfiles-dir user-login-name))
   (add-to-list 'load-path user-specific-dir)
 #+end_src
+
+#+RESULTS: starter-kit-user/system-setup
+| /usr/share/emacs/site-lisp/mu4e | /home/dgm/.emacs.d/elpa/ess-20180911.2135/obsolete/ | /home/dgm/.emacs.d/elpa/ess-20180911.2135/ | /home/dgm/.emacs.d/elpa/yasnippet | /home/dgm/.emacs.d/dgm | ~/.emacs.d/src/ambrevar/ | /home/dgm/.emacs.d/src/org/lisp | /home/dgm/.emacs.d/elpa/adaptive-wrap-0.5.2 | /home/dgm/.emacs.d/elpa/ag-20180225.1040 | /home/dgm/.emacs.d/elpa/anaphora-20180618.2200 | /home/dgm/.emacs.d/elpa/anti-zenburn-theme-20180712.1838 | /home/dgm/.emacs.d/elpa/browse-kill-ring-20171219.1908 | /home/dgm/.emacs.d/elpa/clean-aindent-mode-20171017.2043 | /home/dgm/.emacs.d/elpa/clues-theme-20161213.1127 | /home/dgm/.emacs.d/elpa/color-theme-modern-20161219.1144 | /home/dgm/.emacs.d/elpa/color-theme-sanityinc-solarized-20160430.203 | /home/dgm/.emacs.d/elpa/color-theme-sanityinc-tomorrow-20180804.1045 | /home/dgm/.emacs.d/elpa/company-auctex-20180725.1912 | /home/dgm/.emacs.d/elpa/auctex-12.1.1/ | /home/dgm/.emacs.d/elpa/auctex-12.1.1 | /home/dgm/.emacs.d/elpa/company-math-20171016.1514 | /home/dgm/.emacs.d/elpa/company-quickhelp-20180525.1003 | /home/dgm/.emacs.d/elpa/company-statistics-20170210.1933 | /home/dgm/.emacs.d/elpa/company-web-20180402.1155 | /home/dgm/.emacs.d/elpa/csv-mode-1.7 | /home/dgm/.emacs.d/elpa/darkokai-theme-20180514.157 | /home/dgm/.emacs.d/elpa/darktooth-theme-20180726.302 | /home/dgm/.emacs.d/elpa/deft-20180902.1302 | /home/dgm/.emacs.d/elpa/diff-hl-20180201.1155 | /home/dgm/.emacs.d/elpa/discover-my-major-20180606.511 | /home/dgm/.emacs.d/elpa/duplicate-thing-20120515.1648 | /home/dgm/.emacs.d/elpa/ebib-20180817.1024 | /home/dgm/.emacs.d/elpa/ein-20180909.1451 | /home/dgm/.emacs.d/elpa/elpy-20180915.1046 | /home/dgm/.emacs.d/elpa/company-20180913.2311 | /home/dgm/.emacs.d/elpa/emmet-mode-20180613.341 | /home/dgm/.emacs.d/elpa/eval-in-repl-20171122.1343 | /home/dgm/.emacs.d/elpa/ace-window-20180814.1516 | /home/dgm/.emacs.d/elpa/avy-20180913.1819 | /home/dgm/.emacs.d/elpa/exec-path-from-shell-20180324.204 | /home/dgm/.emacs.d/elpa/expand-region-20180817.1134 | /home/dgm/.emacs.d/elpa/eyebrowse-20180514.1919 | /home/dgm/.emacs.d/elpa/find-file-in-project-20180912.1218 | /home/dgm/.emacs.d/elpa/flx-ido-20180117.1519 | /home/dgm/.emacs.d/elpa/flx-20151030.1812 | /home/dgm/.emacs.d/elpa/flycheck-tip-20171020.1048 | /home/dgm/.emacs.d/elpa/flycheck-20180907.1319 | /home/dgm/.emacs.d/elpa/free-keys-20160726.2050 | /home/dgm/.emacs.d/elpa/geiser-20180626.1140 | /home/dgm/.emacs.d/elpa/golden-ratio-20150819.1120 | /home/dgm/.emacs.d/elpa/gruvbox-theme-20180624.309 | /home/dgm/.emacs.d/elpa/autothemer-20170112.2124 | /home/dgm/.emacs.d/elpa/hc-zenburn-theme-20150928.1633 | /home/dgm/.emacs.d/elpa/helm-R-20120820.14 | /home/dgm/.emacs.d/elpa/helm-ag-20170209.1545 | /home/dgm/.emacs.d/elpa/helm-descbinds-20180429.1456 | /home/dgm/.emacs.d/elpa/helm-exwm-20180827.837 | /home/dgm/.emacs.d/elpa/exwm-0.19 | /home/dgm/.emacs.d/elpa/helm-gtags-20170116.529 | /home/dgm/.emacs.d/elpa/helm-projectile-20180815.1514 | /home/dgm/.emacs.d/elpa/helpful-20180912.2343 | /home/dgm/.emacs.d/elpa/elisp-refs-20180715.2302 | /home/dgm/.emacs.d/elpa/highlight-indentation-20171218.937 | /home/dgm/.emacs.d/elpa/highlight-numbers-20170905.1042 | /home/dgm/.emacs.d/elpa/highlight-symbol-20160102.2009 | /home/dgm/.emacs.d/elpa/ibuffer-vc-20171107.741 | /home/dgm/.emacs.d/elpa/idle-highlight-mode-20120920.1648 | /home/dgm/.emacs.d/elpa/iedit-20180830.531 | /home/dgm/.emacs.d/elpa/inf-ruby-20180521.1348 | /home/dgm/.emacs.d/elpa/jedi-20160426.456 | /home/dgm/.emacs.d/elpa/jedi-core-20170121.1410 | /home/dgm/.emacs.d/elpa/epc-20140610.534 | /home/dgm/.emacs.d/elpa/ctable-20171006.11 | /home/dgm/.emacs.d/elpa/concurrent-20161229.330 | /home/dgm/.emacs.d/elpa/kurecolor-20180401.1221 | /home/dgm/.emacs.d/elpa/labburn-theme-20170502.907 | /home/dgm/.emacs.d/elpa/latex-pretty-symbols-20151112.1044 | /home/dgm/.emacs.d/elpa/lenlen-theme-20170329.245 | /home/dgm/.emacs.d/elpa/color-theme-solarized-20171024.1525 | /home/dgm/.emacs.d/elpa/color-theme-20080305.834 | /home/dgm/.emacs.d/elpa/live-py-mode-20180811.1820 | /home/dgm/.emacs.d/elpa/load-dir-0.0.5 | /home/dgm/.emacs.d/elpa/loop-20160813.1407 | /home/dgm/.emacs.d/elpa/magit-20180915.1359 | /home/dgm/.emacs.d/elpa/git-commit-20180912.1012 | /home/dgm/.emacs.d/elpa/ghub-20180914.802 | /home/dgm/.emacs.d/elpa/graphql-20180912.31 | /home/dgm/.emacs.d/elpa/magit-popup-20180726.2037 | /home/dgm/.emacs.d/elpa/makey-20131231.1430 | /home/dgm/.emacs.d/elpa/material-theme-20171123.1840 | /home/dgm/.emacs.d/elpa/math-symbol-lists-20170221.1353 | /home/dgm/.emacs.d/elpa/maxframe-20170120.1705 | /home/dgm/.emacs.d/elpa/moe-theme-20180617.200 | /home/dgm/.emacs.d/elpa/monokai-theme-20180730.1329 | /home/dgm/.emacs.d/elpa/mu4e-conversation-20180827.845 | /home/dgm/.emacs.d/elpa/multiple-cursors-20180913.1237 | /home/dgm/.emacs.d/elpa/nyan-mode-20170423.740 | /home/dgm/.emacs.d/elpa/ob-ipython-20180224.953 | /home/dgm/.emacs.d/elpa/dash-functional-20180107.1618 | /home/dgm/.emacs.d/elpa/org-ac-20170401.1307 | /home/dgm/.emacs.d/elpa/auto-complete-pcmp-20140227.651 | /home/dgm/.emacs.d/elpa/log4e-20170401.1304 | /home/dgm/.emacs.d/elpa/auto-complete-20170125.245 | /home/dgm/.emacs.d/elpa/org-plus-contrib-20180910 | /home/dgm/.emacs.d/elpa/org-ref-20180917.2018 | /home/dgm/.emacs.d/elpa/key-chord-20160227.1238 | /home/dgm/.emacs.d/elpa/ivy-20180911.1701 | /home/dgm/.emacs.d/elpa/helm-bibtex-20180826.1548 | /home/dgm/.emacs.d/elpa/biblio-20161014.2304 | /home/dgm/.emacs.d/elpa/biblio-core-20160901.1815 | /home/dgm/.emacs.d/elpa/helm-20180906.517 | /home/dgm/.emacs.d/elpa/helm-core-20180826.515 | /home/dgm/.emacs.d/elpa/htmlize-20180412.1944 | /home/dgm/.emacs.d/elpa/ox-gfm-20170628.2102 | /home/dgm/.emacs.d/elpa/ox-pandoc-20180510.1338 | /home/dgm/.emacs.d/elpa/ht-20180129.2234 | /home/dgm/.emacs.d/elpa/ox-tufte-20160926.1607 | /home/dgm/.emacs.d/elpa/ox-twbs-20161103.2016 | /home/dgm/.emacs.d/elpa/pandoc-mode-20180727.2201 | /home/dgm/.emacs.d/elpa/hydra-20180703.1502 | /home/dgm/.emacs.d/elpa/paredit-20171127.205 | /home/dgm/.emacs.d/elpa/parent-mode-20150824.2300 | /home/dgm/.emacs.d/elpa/parsebib-20180116.1427 | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527 | /home/dgm/.emacs.d/elpa/poly-R-20180906.2029 | /home/dgm/.emacs.d/elpa/poly-markdown-20180912.1853 | /home/dgm/.emacs.d/elpa/markdown-mode-20180904.1601 | /home/dgm/.emacs.d/elpa/poly-noweb-20180906.1419 | /home/dgm/.emacs.d/elpa/polymode-20180912.1854 | /home/dgm/.emacs.d/elpa/popup-20160709.1429 | /home/dgm/.emacs.d/elpa/pos-tip-20150318.1513 | /home/dgm/.emacs.d/elpa/projectile-20180911.540 | /home/dgm/.emacs.d/elpa/pkg-info-20150517.1143 | /home/dgm/.emacs.d/elpa/epl-20180205.2049 | /home/dgm/.emacs.d/elpa/py-autopep8-20160925.1052 | /home/dgm/.emacs.d/elpa/python-environment-20150310.853 | /home/dgm/.emacs.d/elpa/python-mode-20180814.721 | /home/dgm/.emacs.d/elpa/python-x-20180802.1742 | /home/dgm/.emacs.d/elpa/folding-20170925.1538 | /home/dgm/.emacs.d/elpa/pyvenv-20180831.847 | /home/dgm/.emacs.d/elpa/r-autoyas-20140101.1510 | /home/dgm/.emacs.d/elpa/ess-20180911.2135 | /home/dgm/.emacs.d/elpa/julia-mode-20180816.2117 | /home/dgm/.emacs.d/elpa/rainbow-mode-1.0.1 | /home/dgm/.emacs.d/elpa/rebox2-20121113.1300 | /home/dgm/.emacs.d/elpa/recentf-ext-20170926.35 | /home/dgm/.emacs.d/elpa/request-deferred-20160419.2305 | /home/dgm/.emacs.d/elpa/request-20170201.147 | /home/dgm/.emacs.d/elpa/deferred-20170901.1330 | /home/dgm/.emacs.d/elpa/shut-up-20180628.1830 | /home/dgm/.emacs.d/elpa/skewer-mode-20180706.1807 | /home/dgm/.emacs.d/elpa/js2-mode-20180724.801 | /home/dgm/.emacs.d/elpa/simple-httpd-20180528.1603 | /home/dgm/.emacs.d/elpa/smartparens-20180912.1750 | /home/dgm/.emacs.d/elpa/smex-20151212.2209 | /home/dgm/.emacs.d/elpa/solarized-theme-20180808.539 | /home/dgm/.emacs.d/elpa/soothe-theme-20141027.1441 | /home/dgm/.emacs.d/elpa/spaceline-20180628.746 | /home/dgm/.emacs.d/elpa/powerline-20180322.248 | /home/dgm/.emacs.d/elpa/spacemacs-theme-20180817.1304 | /home/dgm/.emacs.d/elpa/speed-type-20171230.1647 | /home/dgm/.emacs.d/elpa/tablist-20170220.335 | /home/dgm/.emacs.d/elpa/tango-2-theme-20120312.2025 | /home/dgm/.emacs.d/elpa/textmate-20110816.2146 | /home/dgm/.emacs.d/elpa/treepy-20180724.656 | /home/dgm/.emacs.d/elpa/typit-20180317.807 | /home/dgm/.emacs.d/elpa/mmt-20180101.619 | /home/dgm/.emacs.d/elpa/f-20180106.922 | /home/dgm/.emacs.d/elpa/dash-20180910.1856 | /home/dgm/.emacs.d/elpa/s-20180406.808 | /home/dgm/.emacs.d/elpa/undo-tree-0.6.5 | /home/dgm/.emacs.d/elpa/unicode-fonts-20150826.2232 | /home/dgm/.emacs.d/elpa/ucs-utils-20150826.1414 | /home/dgm/.emacs.d/elpa/font-utils-20150806.1751 | /home/dgm/.emacs.d/elpa/persistent-soft-20150223.1853 | /home/dgm/.emacs.d/elpa/list-utils-20160414.1402 | /home/dgm/.emacs.d/elpa/pcache-20170105.2214 | /home/dgm/.emacs.d/elpa/use-package-20180715.1801 | /home/dgm/.emacs.d/elpa/bind-key-20180513.430 | /home/dgm/.emacs.d/elpa/visual-regexp-20170301.116 | /home/dgm/.emacs.d/elpa/volatile-highlights-20160612.155 | /home/dgm/.emacs.d/elpa/web-completion-data-20160318.848 | /home/dgm/.emacs.d/elpa/websocket-20180423.16 | /home/dgm/.emacs.d/elpa/which-key-20180621.1938 | /home/dgm/.emacs.d/elpa/with-editor-20180726.2044 | /home/dgm/.emacs.d/elpa/async-20180527.1730 | /home/dgm/.emacs.d/elpa/xelb-0.15 | /home/dgm/.emacs.d/elpa/yaml-mode-20180409.607 | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2 | /home/dgm/.emacs.d/elpa/yasnippet-snippets-20180909.1015 | /home/dgm/.emacs.d/elpa/yasnippet-20180621.50 | /home/dgm/.emacs.d/elpa/yaxception-20150105.1452 | /home/dgm/.emacs.d/elpa/zenburn-theme-20180911.1244 | /home/dgm/.emacs.d/elpa/ztree-20180512.1850 | /usr/local/share/emacs/27.0.50/site-lisp | /usr/local/share/emacs/site-lisp | /usr/local/share/emacs/27.0.50/lisp | /usr/local/share/emacs/27.0.50/lisp/vc | /usr/local/share/emacs/27.0.50/lisp/url | /usr/local/share/emacs/27.0.50/lisp/textmodes | /usr/local/share/emacs/27.0.50/lisp/progmodes | /usr/local/share/emacs/27.0.50/lisp/play | /usr/local/share/emacs/27.0.50/lisp/org | /usr/local/share/emacs/27.0.50/lisp/nxml | /usr/local/share/emacs/27.0.50/lisp/net | /usr/local/share/emacs/27.0.50/lisp/mh-e | /usr/local/share/emacs/27.0.50/lisp/mail | /usr/local/share/emacs/27.0.50/lisp/leim | /usr/local/share/emacs/27.0.50/lisp/language | /usr/local/share/emacs/27.0.50/lisp/international | /usr/local/share/emacs/27.0.50/lisp/image | /usr/local/share/emacs/27.0.50/lisp/gnus | /usr/local/share/emacs/27.0.50/lisp/eshell | /usr/local/share/emacs/27.0.50/lisp/erc | /usr/local/share/emacs/27.0.50/lisp/emulation | /usr/local/share/emacs/27.0.50/lisp/emacs-lisp | /usr/local/share/emacs/27.0.50/lisp/cedet | /usr/local/share/emacs/27.0.50/lisp/calendar | /usr/local/share/emacs/27.0.50/lisp/calc | /usr/local/share/emacs/27.0.50/lisp/obsolete | /home/dgm/.emacs.d/auto-save-list | /home/dgm/.emacs.d/backups | /home/dgm/.emacs.d/elpa | /home/dgm/.emacs.d/eshell | /home/dgm/.emacs.d/mysnippets | /home/dgm/.emacs.d/snippets | /home/dgm/.emacs.d/src | /home/dgm/.emacs.d/url | /home/dgm/.emacs.d/var | /home/dgm/.emacs.d/elpa/ace-window-20180814.1516 | /home/dgm/.emacs.d/elpa/adaptive-wrap-0.5.2 | /home/dgm/.emacs.d/elpa/ag-20180225.1040 | /home/dgm/.emacs.d/elpa/anaphora-20180618.2200 | /home/dgm/.emacs.d/elpa/anti-zenburn-theme-20180712.1838 | /home/dgm/.emacs.d/elpa/archives | /home/dgm/.emacs.d/elpa/async-20180527.1730 | /home/dgm/.emacs.d/elpa/auctex-12.1.1 | /home/dgm/.emacs.d/elpa/auto-complete-20170125.245 | /home/dgm/.emacs.d/elpa/auto-complete-pcmp-20140227.651 | /home/dgm/.emacs.d/elpa/autothemer-20170112.2124 | /home/dgm/.emacs.d/elpa/avy-20180913.1819 | /home/dgm/.emacs.d/elpa/biblio-20161014.2304 | /home/dgm/.emacs.d/elpa/biblio-core-20160901.1815 | /home/dgm/.emacs.d/elpa/bind-key-20180513.430 | /home/dgm/.emacs.d/elpa/browse-kill-ring-20171219.1908 | /home/dgm/.emacs.d/elpa/clean-aindent-mode-20171017.2043 | /home/dgm/.emacs.d/elpa/clues-theme-20161213.1127 | /home/dgm/.emacs.d/elpa/color-theme-20080305.834 | /home/dgm/.emacs.d/elpa/color-theme-modern-20161219.1144 | /home/dgm/.emacs.d/elpa/color-theme-sanityinc-solarized-20160430.203 | /home/dgm/.emacs.d/elpa/color-theme-sanityinc-tomorrow-20180804.1045 | /home/dgm/.emacs.d/elpa/color-theme-solarized-20171024.1525 | /home/dgm/.emacs.d/elpa/company-20180913.2311 | /home/dgm/.emacs.d/elpa/company-auctex-20180725.1912 | /home/dgm/.emacs.d/elpa/company-math-20171016.1514 | /home/dgm/.emacs.d/elpa/company-quickhelp-20180525.1003 | /home/dgm/.emacs.d/elpa/company-statistics-20170210.1933 | /home/dgm/.emacs.d/elpa/company-web-20180402.1155 | /home/dgm/.emacs.d/elpa/concurrent-20161229.330 | /home/dgm/.emacs.d/elpa/csv-mode-1.7 | /home/dgm/.emacs.d/elpa/ctable-20171006.11 | /home/dgm/.emacs.d/elpa/darkokai-theme-20180514.157 | /home/dgm/.emacs.d/elpa/darktooth-theme-20180726.302 | /home/dgm/.emacs.d/elpa/dash-20180910.1856 | /home/dgm/.emacs.d/elpa/dash-functional-20180107.1618 | /home/dgm/.emacs.d/elpa/deferred-20170901.1330 | /home/dgm/.emacs.d/elpa/deft-20180902.1302 | /home/dgm/.emacs.d/elpa/diff-hl-20180201.1155 | /home/dgm/.emacs.d/elpa/discover-my-major-20180606.511 | /home/dgm/.emacs.d/elpa/duplicate-thing-20120515.1648 | /home/dgm/.emacs.d/elpa/ebib-20180817.1024 | /home/dgm/.emacs.d/elpa/ein-20180909.1451 | /home/dgm/.emacs.d/elpa/elisp-refs-20180715.2302 | /home/dgm/.emacs.d/elpa/elpy-20180915.1046 | /home/dgm/.emacs.d/elpa/emmet-mode-20180613.341 | /home/dgm/.emacs.d/elpa/epc-20140610.534 | /home/dgm/.emacs.d/elpa/epl-20180205.2049 | /home/dgm/.emacs.d/elpa/ess-20180911.2135 | /home/dgm/.emacs.d/elpa/eval-in-repl-20171122.1343 | /home/dgm/.emacs.d/elpa/exec-path-from-shell-20180324.204 | /home/dgm/.emacs.d/elpa/expand-region-20180817.1134 | /home/dgm/.emacs.d/elpa/exwm-0.19 | /home/dgm/.emacs.d/elpa/eyebrowse-20180514.1919 | /home/dgm/.emacs.d/elpa/f-20180106.922 | /home/dgm/.emacs.d/elpa/find-file-in-project-20180912.1218 | /home/dgm/.emacs.d/elpa/flx-20151030.1812 | /home/dgm/.emacs.d/elpa/flx-ido-20180117.1519 | /home/dgm/.emacs.d/elpa/flycheck-20180907.1319 | /home/dgm/.emacs.d/elpa/flycheck-tip-20171020.1048 | /home/dgm/.emacs.d/elpa/folding-20170925.1538 | /home/dgm/.emacs.d/elpa/font-utils-20150806.1751 | /home/dgm/.emacs.d/elpa/free-keys-20160726.2050 | /home/dgm/.emacs.d/elpa/geiser-20180626.1140 | /home/dgm/.emacs.d/elpa/ghub-20180914.802 | /home/dgm/.emacs.d/elpa/git-commit-20180912.1012 | /home/dgm/.emacs.d/elpa/gnupg | /home/dgm/.emacs.d/elpa/golden-ratio-20150819.1120 | /home/dgm/.emacs.d/elpa/graphql-20180912.31 | /home/dgm/.emacs.d/elpa/gruvbox-theme-20180624.309 | /home/dgm/.emacs.d/elpa/hc-zenburn-theme-20150928.1633 | /home/dgm/.emacs.d/elpa/helm-20180906.517 | /home/dgm/.emacs.d/elpa/helm-R-20120820.14 | /home/dgm/.emacs.d/elpa/helm-ag-20170209.1545 | /home/dgm/.emacs.d/elpa/helm-bibtex-20180826.1548 | /home/dgm/.emacs.d/elpa/helm-core-20180826.515 | /home/dgm/.emacs.d/elpa/helm-descbinds-20180429.1456 | /home/dgm/.emacs.d/elpa/helm-exwm-20180827.837 | /home/dgm/.emacs.d/elpa/helm-gtags-20170116.529 | /home/dgm/.emacs.d/elpa/helm-projectile-20180815.1514 | /home/dgm/.emacs.d/elpa/helpful-20180912.2343 | /home/dgm/.emacs.d/elpa/highlight-indentation-20171218.937 | /home/dgm/.emacs.d/elpa/highlight-numbers-20170905.1042 | /home/dgm/.emacs.d/elpa/highlight-symbol-20160102.2009 | /home/dgm/.emacs.d/elpa/ht-20180129.2234 | /home/dgm/.emacs.d/elpa/htmlize-20180412.1944 | /home/dgm/.emacs.d/elpa/hydra-20180703.1502 | /home/dgm/.emacs.d/elpa/ibuffer-vc-20171107.741 | /home/dgm/.emacs.d/elpa/idle-highlight-mode-20120920.1648 | /home/dgm/.emacs.d/elpa/iedit-20180830.531 | /home/dgm/.emacs.d/elpa/inf-ruby-20180521.1348 | /home/dgm/.emacs.d/elpa/ivy-20180911.1701 | /home/dgm/.emacs.d/elpa/jedi-20160426.456 | /home/dgm/.emacs.d/elpa/jedi-core-20170121.1410 | /home/dgm/.emacs.d/elpa/js2-mode-20180724.801 | /home/dgm/.emacs.d/elpa/julia-mode-20180816.2117 | /home/dgm/.emacs.d/elpa/key-chord-20160227.1238 | /home/dgm/.emacs.d/elpa/kurecolor-20180401.1221 | /home/dgm/.emacs.d/elpa/labburn-theme-20170502.907 | /home/dgm/.emacs.d/elpa/latex-pretty-symbols-20151112.1044 | /home/dgm/.emacs.d/elpa/lenlen-theme-20170329.245 | /home/dgm/.emacs.d/elpa/list-utils-20160414.1402 | /home/dgm/.emacs.d/elpa/live-py-mode-20180811.1820 | /home/dgm/.emacs.d/elpa/load-dir-0.0.5 | /home/dgm/.emacs.d/elpa/log4e-20170401.1304 | /home/dgm/.emacs.d/elpa/loop-20160813.1407 | /home/dgm/.emacs.d/elpa/magit-20180915.1359 | /home/dgm/.emacs.d/elpa/magit-popup-20180726.2037 | /home/dgm/.emacs.d/elpa/makey-20131231.1430 | /home/dgm/.emacs.d/elpa/markdown-mode-20180904.1601 | /home/dgm/.emacs.d/elpa/material-theme-20171123.1840 | /home/dgm/.emacs.d/elpa/math-symbol-lists-20170221.1353 | /home/dgm/.emacs.d/elpa/maxframe-20170120.1705 | /home/dgm/.emacs.d/elpa/mmt-20180101.619 | /home/dgm/.emacs.d/elpa/moe-theme-20180617.200 | /home/dgm/.emacs.d/elpa/monokai-theme-20180730.1329 | /home/dgm/.emacs.d/elpa/mu4e-conversation-20180827.845 | /home/dgm/.emacs.d/elpa/multiple-cursors-20180913.1237 | /home/dgm/.emacs.d/elpa/nyan-mode-20170423.740 | /home/dgm/.emacs.d/elpa/ob-ipython-20180224.953 | /home/dgm/.emacs.d/elpa/org-ac-20170401.1307 | /home/dgm/.emacs.d/elpa/org-plus-contrib-20180910 | /home/dgm/.emacs.d/elpa/org-ref-20180917.2018 | /home/dgm/.emacs.d/elpa/ox-gfm-20170628.2102 | /home/dgm/.emacs.d/elpa/ox-pandoc-20180510.1338 | /home/dgm/.emacs.d/elpa/ox-tufte-20160926.1607 | /home/dgm/.emacs.d/elpa/ox-twbs-20161103.2016 | /home/dgm/.emacs.d/elpa/pandoc-mode-20180727.2201 | /home/dgm/.emacs.d/elpa/paredit-20171127.205 | /home/dgm/.emacs.d/elpa/parent-mode-20150824.2300 | /home/dgm/.emacs.d/elpa/parsebib-20180116.1427 | /home/dgm/.emacs.d/elpa/pcache-20170105.2214 | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527 | /home/dgm/.emacs.d/elpa/persistent-soft-20150223.1853 | /home/dgm/.emacs.d/elpa/pkg-info-20150517.1143 | /home/dgm/.emacs.d/elpa/poly-R-20180906.2029 | /home/dgm/.emacs.d/elpa/poly-markdown-20180912.1853 | /home/dgm/.emacs.d/elpa/poly-noweb-20180906.1419 | /home/dgm/.emacs.d/elpa/polymode-20180912.1854 | /home/dgm/.emacs.d/elpa/popup-20160709.1429 | /home/dgm/.emacs.d/elpa/pos-tip-20150318.1513 | /home/dgm/.emacs.d/elpa/powerline-20180322.248 | /home/dgm/.emacs.d/elpa/projectile-20180911.540 | /home/dgm/.emacs.d/elpa/py-autopep8-20160925.1052 | /home/dgm/.emacs.d/elpa/python-environment-20150310.853 | /home/dgm/.emacs.d/elpa/python-mode-20180814.721 | /home/dgm/.emacs.d/elpa/python-x-20180802.1742 | /home/dgm/.emacs.d/elpa/pyvenv-20180831.847 | /home/dgm/.emacs.d/elpa/r-autoyas-20140101.1510 | /home/dgm/.emacs.d/elpa/rainbow-mode-1.0.1 | /home/dgm/.emacs.d/elpa/rebox2-20121113.1300 | /home/dgm/.emacs.d/elpa/recentf-ext-20170926.35 | /home/dgm/.emacs.d/elpa/request-20170201.147 | /home/dgm/.emacs.d/elpa/request-deferred-20160419.2305 | /home/dgm/.emacs.d/elpa/s-20180406.808 | /home/dgm/.emacs.d/elpa/shut-up-20180628.1830 | /home/dgm/.emacs.d/elpa/simple-httpd-20180528.1603 | /home/dgm/.emacs.d/elpa/skewer-mode-20180706.1807 | /home/dgm/.emacs.d/elpa/smartparens-20180912.1750 | /home/dgm/.emacs.d/elpa/smex-20151212.2209 | /home/dgm/.emacs.d/elpa/solarized-theme-20180808.539 | /home/dgm/.emacs.d/elpa/soothe-theme-20141027.1441 | /home/dgm/.emacs.d/elpa/spaceline-20180628.746 | /home/dgm/.emacs.d/elpa/spacemacs-theme-20180817.1304 | /home/dgm/.emacs.d/elpa/speed-type-20171230.1647 | /home/dgm/.emacs.d/elpa/tablist-20170220.335 | /home/dgm/.emacs.d/elpa/tango-2-theme-20120312.2025 | /home/dgm/.emacs.d/elpa/textmate-20110816.2146 | /home/dgm/.emacs.d/elpa/treepy-20180724.656 | /home/dgm/.emacs.d/elpa/typit-20180317.807 | /home/dgm/.emacs.d/elpa/ucs-utils-20150826.1414 | /home/dgm/.emacs.d/elpa/undo-tree-0.6.5 | /home/dgm/.emacs.d/elpa/unicode-fonts-20150826.2232 | /home/dgm/.emacs.d/elpa/use-package-20180715.1801 | /home/dgm/.emacs.d/elpa/visual-regexp-20170301.116 | /home/dgm/.emacs.d/elpa/volatile-highlights-20160612.155 | /home/dgm/.emacs.d/elpa/web-completion-data-20160318.848 | /home/dgm/.emacs.d/elpa/websocket-20180423.16 | /home/dgm/.emacs.d/elpa/which-key-20180621.1938 | /home/dgm/.emacs.d/elpa/with-editor-20180726.2044 | /home/dgm/.emacs.d/elpa/xelb-0.15 | /home/dgm/.emacs.d/elpa/yaml-mode-20180409.607 | /home/dgm/.emacs.d/elpa/yasnippet-20180621.50 | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2 | /home/dgm/.emacs.d/elpa/yaxception-20150105.1452 | /home/dgm/.emacs.d/elpa/zenburn-theme-20180911.1244 | /home/dgm/.emacs.d/elpa/ztree-20180512.1850 | /home/dgm/.emacs.d/mysnippets/latex-mode | /home/dgm/.emacs.d/mysnippets/org-mode | /home/dgm/.emacs.d/snippets/markdown-mode | /home/dgm/.emacs.d/snippets/org-mode | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4 | /home/dgm/.emacs.d/src/ambrevar | /home/dgm/.emacs.d/src/dvc | /home/dgm/.emacs.d/src/minimal | /home/dgm/.emacs.d/src/org-bullets | /home/dgm/.emacs.d/src/smooth-scrolling | /home/dgm/.emacs.d/src/stripe-buffer | /home/dgm/.emacs.d/src/wc | /home/dgm/.emacs.d/src/word-count | /home/dgm/.emacs.d/var/pcache | /home/dgm/.emacs.d/elpa/archives/gnu | /home/dgm/.emacs.d/elpa/archives/melpa | /home/dgm/.emacs.d/elpa/archives/org | /home/dgm/.emacs.d/elpa/auctex-12.1.1/build-aux | /home/dgm/.emacs.d/elpa/auctex-12.1.1/doc | /home/dgm/.emacs.d/elpa/auctex-12.1.1/etc | /home/dgm/.emacs.d/elpa/auctex-12.1.1/images | /home/dgm/.emacs.d/elpa/auctex-12.1.1/latex | /home/dgm/.emacs.d/elpa/auctex-12.1.1/tests | /home/dgm/.emacs.d/elpa/auto-complete-20170125.245/dict | /home/dgm/.emacs.d/elpa/color-theme-20080305.834/themes | /home/dgm/.emacs.d/elpa/elpy-20180915.1046/elpy | /home/dgm/.emacs.d/elpa/elpy-20180915.1046/snippets | /home/dgm/.emacs.d/elpa/ess-20180911.2135/etc | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/bin | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme | /home/dgm/.emacs.d/elpa/nyan-mode-20170423.740/img | /home/dgm/.emacs.d/elpa/nyan-mode-20170423.740/mus | /home/dgm/.emacs.d/elpa/org-plus-contrib-20180910/etc | /home/dgm/.emacs.d/elpa/org-ref-20180917.2018/citeproc | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build | /home/dgm/.emacs.d/elpa/python-mode-20180814.721/completion | /home/dgm/.emacs.d/elpa/typit-20180317.807/dict | /home/dgm/.emacs.d/elpa/web-completion-data-20160318.848/html-stuff | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4/docs4github | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4/lisp | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4/scripts | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4/setup_aids | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4/syntax_testers | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4/templates | /home/dgm/.emacs.d/src/dvc/debian | /home/dgm/.emacs.d/src/dvc/docs | /home/dgm/.emacs.d/src/dvc/lisp | /home/dgm/.emacs.d/src/dvc/scripts | /home/dgm/.emacs.d/src/dvc/texinfo | /home/dgm/.emacs.d/elpa/auctex-12.1.1/tests/context | /home/dgm/.emacs.d/elpa/auctex-12.1.1/tests/japanese | /home/dgm/.emacs.d/elpa/auctex-12.1.1/tests/latex | /home/dgm/.emacs.d/elpa/auctex-12.1.1/tests/tex | /home/dgm/.emacs.d/elpa/elpy-20180915.1046/elpy/tests | /home/dgm/.emacs.d/elpa/elpy-20180915.1046/snippets/python-mode | /home/dgm/.emacs.d/elpa/ess-20180911.2135/etc/ESSR | /home/dgm/.emacs.d/elpa/ess-20180911.2135/etc/icons | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/chez | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/chibi | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/chicken | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/guile | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/mit | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/racket | /home/dgm/.emacs.d/elpa/org-plus-contrib-20180910/etc/styles | /home/dgm/.emacs.d/elpa/org-ref-20180917.2018/citeproc/csl | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build/server | /home/dgm/.emacs.d/elpa/web-completion-data-20160318.848/html-stuff/html-attributes-complete | /home/dgm/.emacs.d/elpa/web-completion-data-20160318.848/html-stuff/html-attributes-list | /home/dgm/.emacs.d/elpa/web-completion-data-20160318.848/html-stuff/html-attributes-short-docs | /home/dgm/.emacs.d/elpa/web-completion-data-20160318.848/html-stuff/html-tag-short-docs | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/c++-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/c-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/cc-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/cperl-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/csharp-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/css-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/emacs-lisp-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/erlang-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/f90-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/html-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/js-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/latex-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/markdown-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/nxml-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/objc-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/perl-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/python-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/rst-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/ruby-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/scala-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/snippet-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/sql-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/text-mode | /home/dgm/.emacs.d/src/dvc/lisp/contrib | /home/dgm/.emacs.d/src/dvc/lisp/tests | /home/dgm/.emacs.d/elpa/ess-20180911.2135/etc/ESSR/R | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/chez/geiser | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/chibi/geiser | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/chicken/geiser | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/guile/geiser | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/mit/geiser | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/racket/geiser | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build/server/m4 | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build/server/test | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/html-mode/header | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/html-mode/list | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/html-mode/meta | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/html-mode/table | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/nxml-mode/header | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/nxml-mode/meta | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/ruby-mode/collections | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/ruby-mode/control structure | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/ruby-mode/definitions | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/ruby-mode/general | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build/server/test/docker | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build/server/test/docker/lib | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build/server/test/docker/templates |
 
 You can keep elisp source in the =src= directory.  Packages loaded
 from here will override those installed by ELPA.  This is useful if
@@ -442,9 +478,9 @@ Miscellaneous settings in [[file:starter-kit-misc.org][starter-kit-misc]]
 *** Starter kit completion and snippets
 Located in [[file:starter-kit-completion.org][starter-kit-completion]].
 
-#+begin_src emacs-lisp 
-  (starter-kit-load "starter-kit-completion.org")    
-#+end_src 
+#+begin_src emacs-lisp
+  (starter-kit-load "starter-kit-completion.org")
+#+end_src
 
 ** Language/Mode Specific Files
 These sections pertain to specific languages or modes.  Feel free to
@@ -518,28 +554,54 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 
 *** Settings from M-x customize
 #+srcname: m-x-customize-customizations
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (load custom-file 'noerror)
 #+end_src
 
 *** E-lisp customization
 After we've loaded all the Starter Kit defaults, lets load the User's stuff.
+
 #+srcname: starter-kit-load-files
 #+begin_src emacs-lisp
   (if (file-exists-p elisp-source-dir)
       (let ((default-directory elisp-source-dir))
         (normal-top-level-add-subdirs-to-load-path)))
+#+end_src
+
+#+RESULTS: starter-kit-load-files
+| /home/dgm/.emacs.d/url | /home/dgm/.emacs.d/var | /home/dgm/.emacs.d/elpa/ace-window-20180814.1516 | /home/dgm/.emacs.d/elpa/adaptive-wrap-0.5.2 | /home/dgm/.emacs.d/elpa/ag-20180225.1040 | /home/dgm/.emacs.d/elpa/anaphora-20180618.2200 | /home/dgm/.emacs.d/elpa/anti-zenburn-theme-20180712.1838 | /home/dgm/.emacs.d/elpa/archives | /home/dgm/.emacs.d/elpa/async-20180527.1730 | /home/dgm/.emacs.d/elpa/auctex-12.1.1 | /home/dgm/.emacs.d/elpa/auto-complete-20170125.245 | /home/dgm/.emacs.d/elpa/auto-complete-pcmp-20140227.651 | /home/dgm/.emacs.d/elpa/autothemer-20170112.2124 | /home/dgm/.emacs.d/elpa/avy-20180913.1819 | /home/dgm/.emacs.d/elpa/biblio-20161014.2304 | /home/dgm/.emacs.d/elpa/biblio-core-20160901.1815 | /home/dgm/.emacs.d/elpa/bind-key-20180513.430 | /home/dgm/.emacs.d/elpa/browse-kill-ring-20171219.1908 | /home/dgm/.emacs.d/elpa/clean-aindent-mode-20171017.2043 | /home/dgm/.emacs.d/elpa/clues-theme-20161213.1127 | /home/dgm/.emacs.d/elpa/color-theme-20080305.834 | /home/dgm/.emacs.d/elpa/color-theme-modern-20161219.1144 | /home/dgm/.emacs.d/elpa/color-theme-sanityinc-solarized-20160430.203 | /home/dgm/.emacs.d/elpa/color-theme-sanityinc-tomorrow-20180804.1045 | /home/dgm/.emacs.d/elpa/color-theme-solarized-20171024.1525 | /home/dgm/.emacs.d/elpa/company-20180913.2311 | /home/dgm/.emacs.d/elpa/company-auctex-20180725.1912 | /home/dgm/.emacs.d/elpa/company-math-20171016.1514 | /home/dgm/.emacs.d/elpa/company-quickhelp-20180525.1003 | /home/dgm/.emacs.d/elpa/company-statistics-20170210.1933 | /home/dgm/.emacs.d/elpa/company-web-20180402.1155 | /home/dgm/.emacs.d/elpa/concurrent-20161229.330 | /home/dgm/.emacs.d/elpa/csv-mode-1.7 | /home/dgm/.emacs.d/elpa/ctable-20171006.11 | /home/dgm/.emacs.d/elpa/darkokai-theme-20180514.157 | /home/dgm/.emacs.d/elpa/darktooth-theme-20180726.302 | /home/dgm/.emacs.d/elpa/dash-20180910.1856 | /home/dgm/.emacs.d/elpa/dash-functional-20180107.1618 | /home/dgm/.emacs.d/elpa/deferred-20170901.1330 | /home/dgm/.emacs.d/elpa/deft-20180902.1302 | /home/dgm/.emacs.d/elpa/diff-hl-20180201.1155 | /home/dgm/.emacs.d/elpa/discover-my-major-20180606.511 | /home/dgm/.emacs.d/elpa/duplicate-thing-20120515.1648 | /home/dgm/.emacs.d/elpa/ebib-20180817.1024 | /home/dgm/.emacs.d/elpa/ein-20180909.1451 | /home/dgm/.emacs.d/elpa/elisp-refs-20180715.2302 | /home/dgm/.emacs.d/elpa/elpy-20180915.1046 | /home/dgm/.emacs.d/elpa/emmet-mode-20180613.341 | /home/dgm/.emacs.d/elpa/epc-20140610.534 | /home/dgm/.emacs.d/elpa/epl-20180205.2049 | /home/dgm/.emacs.d/elpa/ess-20180911.2135 | /home/dgm/.emacs.d/elpa/eval-in-repl-20171122.1343 | /home/dgm/.emacs.d/elpa/exec-path-from-shell-20180324.204 | /home/dgm/.emacs.d/elpa/expand-region-20180817.1134 | /home/dgm/.emacs.d/elpa/exwm-0.19 | /home/dgm/.emacs.d/elpa/eyebrowse-20180514.1919 | /home/dgm/.emacs.d/elpa/f-20180106.922 | /home/dgm/.emacs.d/elpa/find-file-in-project-20180912.1218 | /home/dgm/.emacs.d/elpa/flx-20151030.1812 | /home/dgm/.emacs.d/elpa/flx-ido-20180117.1519 | /home/dgm/.emacs.d/elpa/flycheck-20180907.1319 | /home/dgm/.emacs.d/elpa/flycheck-tip-20171020.1048 | /home/dgm/.emacs.d/elpa/folding-20170925.1538 | /home/dgm/.emacs.d/elpa/font-utils-20150806.1751 | /home/dgm/.emacs.d/elpa/free-keys-20160726.2050 | /home/dgm/.emacs.d/elpa/geiser-20180626.1140 | /home/dgm/.emacs.d/elpa/ghub-20180914.802 | /home/dgm/.emacs.d/elpa/git-commit-20180912.1012 | /home/dgm/.emacs.d/elpa/gnupg | /home/dgm/.emacs.d/elpa/golden-ratio-20150819.1120 | /home/dgm/.emacs.d/elpa/graphql-20180912.31 | /home/dgm/.emacs.d/elpa/gruvbox-theme-20180624.309 | /home/dgm/.emacs.d/elpa/hc-zenburn-theme-20150928.1633 | /home/dgm/.emacs.d/elpa/helm-20180906.517 | /home/dgm/.emacs.d/elpa/helm-R-20120820.14 | /home/dgm/.emacs.d/elpa/helm-ag-20170209.1545 | /home/dgm/.emacs.d/elpa/helm-bibtex-20180826.1548 | /home/dgm/.emacs.d/elpa/helm-core-20180826.515 | /home/dgm/.emacs.d/elpa/helm-descbinds-20180429.1456 | /home/dgm/.emacs.d/elpa/helm-exwm-20180827.837 | /home/dgm/.emacs.d/elpa/helm-gtags-20170116.529 | /home/dgm/.emacs.d/elpa/helm-projectile-20180815.1514 | /home/dgm/.emacs.d/elpa/helpful-20180912.2343 | /home/dgm/.emacs.d/elpa/highlight-indentation-20171218.937 | /home/dgm/.emacs.d/elpa/highlight-numbers-20170905.1042 | /home/dgm/.emacs.d/elpa/highlight-symbol-20160102.2009 | /home/dgm/.emacs.d/elpa/ht-20180129.2234 | /home/dgm/.emacs.d/elpa/htmlize-20180412.1944 | /home/dgm/.emacs.d/elpa/hydra-20180703.1502 | /home/dgm/.emacs.d/elpa/ibuffer-vc-20171107.741 | /home/dgm/.emacs.d/elpa/idle-highlight-mode-20120920.1648 | /home/dgm/.emacs.d/elpa/iedit-20180830.531 | /home/dgm/.emacs.d/elpa/inf-ruby-20180521.1348 | /home/dgm/.emacs.d/elpa/ivy-20180911.1701 | /home/dgm/.emacs.d/elpa/jedi-20160426.456 | /home/dgm/.emacs.d/elpa/jedi-core-20170121.1410 | /home/dgm/.emacs.d/elpa/js2-mode-20180724.801 | /home/dgm/.emacs.d/elpa/julia-mode-20180816.2117 | /home/dgm/.emacs.d/elpa/key-chord-20160227.1238 | /home/dgm/.emacs.d/elpa/kurecolor-20180401.1221 | /home/dgm/.emacs.d/elpa/labburn-theme-20170502.907 | /home/dgm/.emacs.d/elpa/latex-pretty-symbols-20151112.1044 | /home/dgm/.emacs.d/elpa/lenlen-theme-20170329.245 | /home/dgm/.emacs.d/elpa/list-utils-20160414.1402 | /home/dgm/.emacs.d/elpa/live-py-mode-20180811.1820 | /home/dgm/.emacs.d/elpa/load-dir-0.0.5 | /home/dgm/.emacs.d/elpa/log4e-20170401.1304 | /home/dgm/.emacs.d/elpa/loop-20160813.1407 | /home/dgm/.emacs.d/elpa/magit-20180915.1359 | /home/dgm/.emacs.d/elpa/magit-popup-20180726.2037 | /home/dgm/.emacs.d/elpa/makey-20131231.1430 | /home/dgm/.emacs.d/elpa/markdown-mode-20180904.1601 | /home/dgm/.emacs.d/elpa/material-theme-20171123.1840 | /home/dgm/.emacs.d/elpa/math-symbol-lists-20170221.1353 | /home/dgm/.emacs.d/elpa/maxframe-20170120.1705 | /home/dgm/.emacs.d/elpa/mmt-20180101.619 | /home/dgm/.emacs.d/elpa/moe-theme-20180617.200 | /home/dgm/.emacs.d/elpa/monokai-theme-20180730.1329 | /home/dgm/.emacs.d/elpa/mu4e-conversation-20180827.845 | /home/dgm/.emacs.d/elpa/multiple-cursors-20180913.1237 | /home/dgm/.emacs.d/elpa/nyan-mode-20170423.740 | /home/dgm/.emacs.d/elpa/ob-ipython-20180224.953 | /home/dgm/.emacs.d/elpa/org-ac-20170401.1307 | /home/dgm/.emacs.d/elpa/org-plus-contrib-20180910 | /home/dgm/.emacs.d/elpa/org-ref-20180917.2018 | /home/dgm/.emacs.d/elpa/ox-gfm-20170628.2102 | /home/dgm/.emacs.d/elpa/ox-pandoc-20180510.1338 | /home/dgm/.emacs.d/elpa/ox-tufte-20160926.1607 | /home/dgm/.emacs.d/elpa/ox-twbs-20161103.2016 | /home/dgm/.emacs.d/elpa/pandoc-mode-20180727.2201 | /home/dgm/.emacs.d/elpa/paredit-20171127.205 | /home/dgm/.emacs.d/elpa/parent-mode-20150824.2300 | /home/dgm/.emacs.d/elpa/parsebib-20180116.1427 | /home/dgm/.emacs.d/elpa/pcache-20170105.2214 | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527 | /home/dgm/.emacs.d/elpa/persistent-soft-20150223.1853 | /home/dgm/.emacs.d/elpa/pkg-info-20150517.1143 | /home/dgm/.emacs.d/elpa/poly-R-20180906.2029 | /home/dgm/.emacs.d/elpa/poly-markdown-20180912.1853 | /home/dgm/.emacs.d/elpa/poly-noweb-20180906.1419 | /home/dgm/.emacs.d/elpa/polymode-20180912.1854 | /home/dgm/.emacs.d/elpa/popup-20160709.1429 | /home/dgm/.emacs.d/elpa/pos-tip-20150318.1513 | /home/dgm/.emacs.d/elpa/powerline-20180322.248 | /home/dgm/.emacs.d/elpa/projectile-20180911.540 | /home/dgm/.emacs.d/elpa/py-autopep8-20160925.1052 | /home/dgm/.emacs.d/elpa/python-environment-20150310.853 | /home/dgm/.emacs.d/elpa/python-mode-20180814.721 | /home/dgm/.emacs.d/elpa/python-x-20180802.1742 | /home/dgm/.emacs.d/elpa/pyvenv-20180831.847 | /home/dgm/.emacs.d/elpa/r-autoyas-20140101.1510 | /home/dgm/.emacs.d/elpa/rainbow-mode-1.0.1 | /home/dgm/.emacs.d/elpa/rebox2-20121113.1300 | /home/dgm/.emacs.d/elpa/recentf-ext-20170926.35 | /home/dgm/.emacs.d/elpa/request-20170201.147 | /home/dgm/.emacs.d/elpa/request-deferred-20160419.2305 | /home/dgm/.emacs.d/elpa/s-20180406.808 | /home/dgm/.emacs.d/elpa/shut-up-20180628.1830 | /home/dgm/.emacs.d/elpa/simple-httpd-20180528.1603 | /home/dgm/.emacs.d/elpa/skewer-mode-20180706.1807 | /home/dgm/.emacs.d/elpa/smartparens-20180912.1750 | /home/dgm/.emacs.d/elpa/smex-20151212.2209 | /home/dgm/.emacs.d/elpa/solarized-theme-20180808.539 | /home/dgm/.emacs.d/elpa/soothe-theme-20141027.1441 | /home/dgm/.emacs.d/elpa/spaceline-20180628.746 | /home/dgm/.emacs.d/elpa/spacemacs-theme-20180817.1304 | /home/dgm/.emacs.d/elpa/speed-type-20171230.1647 | /home/dgm/.emacs.d/elpa/tablist-20170220.335 | /home/dgm/.emacs.d/elpa/tango-2-theme-20120312.2025 | /home/dgm/.emacs.d/elpa/textmate-20110816.2146 | /home/dgm/.emacs.d/elpa/treepy-20180724.656 | /home/dgm/.emacs.d/elpa/typit-20180317.807 | /home/dgm/.emacs.d/elpa/ucs-utils-20150826.1414 | /home/dgm/.emacs.d/elpa/undo-tree-0.6.5 | /home/dgm/.emacs.d/elpa/unicode-fonts-20150826.2232 | /home/dgm/.emacs.d/elpa/use-package-20180715.1801 | /home/dgm/.emacs.d/elpa/visual-regexp-20170301.116 | /home/dgm/.emacs.d/elpa/volatile-highlights-20160612.155 | /home/dgm/.emacs.d/elpa/web-completion-data-20160318.848 | /home/dgm/.emacs.d/elpa/websocket-20180423.16 | /home/dgm/.emacs.d/elpa/which-key-20180621.1938 | /home/dgm/.emacs.d/elpa/with-editor-20180726.2044 | /home/dgm/.emacs.d/elpa/xelb-0.15 | /home/dgm/.emacs.d/elpa/yaml-mode-20180409.607 | /home/dgm/.emacs.d/elpa/yasnippet-20180621.50 | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2 | /home/dgm/.emacs.d/elpa/yaxception-20150105.1452 | /home/dgm/.emacs.d/elpa/zenburn-theme-20180911.1244 | /home/dgm/.emacs.d/elpa/ztree-20180512.1850 | /home/dgm/.emacs.d/mysnippets/latex-mode | /home/dgm/.emacs.d/mysnippets/org-mode | /home/dgm/.emacs.d/snippets/markdown-mode | /home/dgm/.emacs.d/snippets/org-mode | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4 | /home/dgm/.emacs.d/src/ambrevar | /home/dgm/.emacs.d/src/dvc | /home/dgm/.emacs.d/src/minimal | /home/dgm/.emacs.d/src/org-bullets | /home/dgm/.emacs.d/src/smooth-scrolling | /home/dgm/.emacs.d/src/stripe-buffer | /home/dgm/.emacs.d/src/wc | /home/dgm/.emacs.d/src/word-count | /home/dgm/.emacs.d/var/pcache | /home/dgm/.emacs.d/elpa/archives/gnu | /home/dgm/.emacs.d/elpa/archives/melpa | /home/dgm/.emacs.d/elpa/archives/org | /home/dgm/.emacs.d/elpa/auctex-12.1.1/build-aux | /home/dgm/.emacs.d/elpa/auctex-12.1.1/doc | /home/dgm/.emacs.d/elpa/auctex-12.1.1/etc | /home/dgm/.emacs.d/elpa/auctex-12.1.1/images | /home/dgm/.emacs.d/elpa/auctex-12.1.1/latex | /home/dgm/.emacs.d/elpa/auctex-12.1.1/tests | /home/dgm/.emacs.d/elpa/auto-complete-20170125.245/dict | /home/dgm/.emacs.d/elpa/color-theme-20080305.834/themes | /home/dgm/.emacs.d/elpa/elpy-20180915.1046/elpy | /home/dgm/.emacs.d/elpa/elpy-20180915.1046/snippets | /home/dgm/.emacs.d/elpa/ess-20180911.2135/etc | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/bin | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme | /home/dgm/.emacs.d/elpa/nyan-mode-20170423.740/img | /home/dgm/.emacs.d/elpa/nyan-mode-20170423.740/mus | /home/dgm/.emacs.d/elpa/org-plus-contrib-20180910/etc | /home/dgm/.emacs.d/elpa/org-ref-20180917.2018/citeproc | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build | /home/dgm/.emacs.d/elpa/python-mode-20180814.721/completion | /home/dgm/.emacs.d/elpa/typit-20180317.807/dict | /home/dgm/.emacs.d/elpa/web-completion-data-20160318.848/html-stuff | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4/docs4github | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4/lisp | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4/scripts | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4/setup_aids | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4/syntax_testers | /home/dgm/.emacs.d/src/ado-mode-1.15.1.4/templates | /home/dgm/.emacs.d/src/dvc/debian | /home/dgm/.emacs.d/src/dvc/docs | /home/dgm/.emacs.d/src/dvc/lisp | /home/dgm/.emacs.d/src/dvc/scripts | /home/dgm/.emacs.d/src/dvc/texinfo | /home/dgm/.emacs.d/elpa/auctex-12.1.1/tests/context | /home/dgm/.emacs.d/elpa/auctex-12.1.1/tests/japanese | /home/dgm/.emacs.d/elpa/auctex-12.1.1/tests/latex | /home/dgm/.emacs.d/elpa/auctex-12.1.1/tests/tex | /home/dgm/.emacs.d/elpa/elpy-20180915.1046/elpy/tests | /home/dgm/.emacs.d/elpa/elpy-20180915.1046/snippets/python-mode | /home/dgm/.emacs.d/elpa/ess-20180911.2135/etc/ESSR | /home/dgm/.emacs.d/elpa/ess-20180911.2135/etc/icons | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/chez | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/chibi | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/chicken | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/guile | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/mit | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/racket | /home/dgm/.emacs.d/elpa/org-plus-contrib-20180910/etc/styles | /home/dgm/.emacs.d/elpa/org-ref-20180917.2018/citeproc/csl | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build/server | /home/dgm/.emacs.d/elpa/web-completion-data-20160318.848/html-stuff/html-attributes-complete | /home/dgm/.emacs.d/elpa/web-completion-data-20160318.848/html-stuff/html-attributes-list | /home/dgm/.emacs.d/elpa/web-completion-data-20160318.848/html-stuff/html-attributes-short-docs | /home/dgm/.emacs.d/elpa/web-completion-data-20160318.848/html-stuff/html-tag-short-docs | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/c++-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/c-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/cc-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/cperl-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/csharp-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/css-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/emacs-lisp-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/erlang-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/f90-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/html-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/js-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/latex-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/markdown-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/nxml-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/objc-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/perl-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/python-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/rst-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/ruby-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/scala-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/snippet-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/sql-mode | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/text-mode | /home/dgm/.emacs.d/src/dvc/lisp/contrib | /home/dgm/.emacs.d/src/dvc/lisp/tests | /home/dgm/.emacs.d/elpa/ess-20180911.2135/etc/ESSR/R | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/chez/geiser | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/chibi/geiser | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/chicken/geiser | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/guile/geiser | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/mit/geiser | /home/dgm/.emacs.d/elpa/geiser-20180626.1140/scheme/racket/geiser | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build/server/m4 | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build/server/test | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/html-mode/header | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/html-mode/list | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/html-mode/meta | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/html-mode/table | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/nxml-mode/header | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/nxml-mode/meta | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/ruby-mode/collections | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/ruby-mode/control structure | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/ruby-mode/definitions | /home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets/ruby-mode/general | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build/server/test/docker | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build/server/test/docker/lib | /home/dgm/.emacs.d/elpa/pdf-tools-20180428.1527/build/server/test/docker/templates |
+
+
+#+begin_src emacs-lisp
   (if (file-exists-p system-specific-config) (load system-specific-config))
+#+end_src
+
+#+RESULTS:
+
+#+begin_src emacs-lisp
   (if (file-exists-p system-specific-literate-config)
       (org-babel-load-file system-specific-literate-config))
+#+end_src
+
+#+RESULTS:
+
+#+begin_src emacs-lisp
   (if (file-exists-p user-specific-config) (load user-specific-config))
+#+end_src
+
+#+begin_src emacs-lisp
   (if (file-exists-p user-specific-literate-config)
       (org-babel-load-file user-specific-literate-config))
+#+end_src
+
+#+begin_src emacs-lisp
   (when (file-exists-p user-specific-dir)
     (let ((default-directory user-specific-dir))
       (mapc #'load (directory-files user-specific-dir nil ".*el$"))
       (mapc #'org-babel-load-file (directory-files user-specific-dir nil ".*org$"))))
 #+end_src
+
+#+RESULTS:
 
 *** COMMENT load =dgm.org=
 
@@ -551,6 +613,7 @@ I don't know why or how but today Sept. the 11th, after trying to load the agend
 #+end_src
 
 #+RESULTS:
+
 
 * FAQ
   :PROPERTIES:
@@ -582,7 +645,7 @@ these instructions.
    manual, you can enter =make doc/org.pdf= and find the resulting
    file in the doc directory.
 
-** I recently updated the starter kit, but org is an old version. How do I fix this? 
+** I recently updated the starter kit, but org is an old version. How do I fix this?
 Doing a =git pull= and =git submodule update= will not be
 enough. Go to the =src/org= directory and enter =make clean= to get
 rid of the old version. Then, enter =make=, or follow the
@@ -627,7 +690,7 @@ uses), the problem most likely resides in your local setup.
 
    If you installed the starter kit to =~/.emacs.d/= then the
    directory =~/.emacs.d/src/org/doc= should be at the top of
-   =Info-directory-list=. 
+   =Info-directory-list=.
 3) Did you =make= the manual?  Especially if you choose [[#no-compile][not to compile
    org-mode]], you may need to compile the documentation. Regardless of
    whether or not you compiled org, it may be helpful to try this
@@ -653,3 +716,6 @@ directly from [[http://orgmode.org/][Org Mode]] documents.
 #+begin_src emacs-lisp
   (message "Starter Kit main file loaded.")
 #+end_src
+
+#+RESULTS: message-line
+: Starter Kit main file loaded.

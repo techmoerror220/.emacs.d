@@ -478,15 +478,12 @@ First mark the word, then add more cursors. To get out of multiple-cursors-mode,
 #+end_src
 
 ** DGM bindings 
-
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-<escape>") 'cua-set-mark)
 #+END_SRC
 
 #+RESULTS:
 : cua-set-mark
-
-
 
 ** Closing
 #+begin_src emacs-lisp 

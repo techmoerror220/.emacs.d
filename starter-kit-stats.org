@@ -54,7 +54,6 @@ This file provides settings for ESS and R.
   (setq ess-swv-processor "'knitr")
 #+end_src
 
-
 ** Use Polymode 
 Polymode is a package that supports multiple modes inside a single buffer. It is aimed particularly at literate programming approaches and supports, e.g., R and markdown in a single =.Rmd= file. So it is very useful with knitr in R.
 
@@ -72,7 +71,6 @@ Polymode is a package that supports multiple modes inside a single buffer. It is
 
 #+end_src
 
- 
 ** Make shift-enter to a lot in ESS.
  Use shift-enter to split window & launch R (if not running), execute
  highlighted region (if R running & area highlighted), or execute
@@ -152,3 +150,9 @@ To assign ":" to "<-" and to stop the assignment of underscore (underbar) "_" to
 
 #+RESULTS:
 : ess-smart-S-assign
+
+* Final message
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit main file loaded.")
+#+end_src

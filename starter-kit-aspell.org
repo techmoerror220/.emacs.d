@@ -10,8 +10,8 @@ flyspell doesn't start properly. Putting this customization in
 
 - This file is loaded by a special line added to [[file:starter-kit.org][starter-kit.org]]. 
 
-** Specify aspell
-#+begin_src emacs-lisp
+** COMMENT Specify aspell
+#+begin_src emacs-lisp :tangle no
   (require 'flyspell)
   (setq ispell-program-name "aspell"
         ispell-dictionary "english"
@@ -34,6 +34,9 @@ flyspell doesn't start properly. Putting this customization in
   (ad-activate 'flyspell-region)
   
 #+end_src
+
+#+RESULTS:
+: flyspell-region
 
 #+source: message-line
 #+begin_src emacs-lisp

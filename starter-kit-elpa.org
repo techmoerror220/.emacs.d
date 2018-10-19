@@ -36,7 +36,7 @@ The following packages will be downloaded and installed.
                                     'flycheck-tip
                                     'flx-ido
                                     ;; 'gist
-                                    'hl-line+
+                                    ;; 'hl-line+     ;; disable in emacs 27
                                     'idle-highlight-mode
                                     'inf-ruby
                                     'latex-pretty-symbols
@@ -63,7 +63,7 @@ The following packages will be downloaded and installed.
                                     'jedi
                                     'jedi-core
                                     'live-py-mode
-                                    'redo+
+                                    ;; 'redo+
                                     ;; 'ruby-mode
                                     'smartparens ;; includes all features of =paredit= so the latter is not needed.
                                     'smex
@@ -94,7 +94,7 @@ The following packages will be downloaded and installed.
                                     'volatile-highlights
                                     'undo-tree
                                     'rebox2
-                                    'workgroups2
+                                    ;; 'workgroups2
                                     'duplicate-thing
                                     'ibuffer-vc
                                     ;; 'dired+
@@ -146,7 +146,10 @@ The following packages will be downloaded and installed.
                                     'yasnippet-snippets
                                     'yasnippet-classic-snippets
                                     'use-package
-                                    ;; 'mu4e-conversation
+                                    'mu4e-conversation
+                                    'org-ref
+                                    'pulseaudio-control
+                                    'gpastel
                                     )
         "Libraries that should be installed by default.")
 #+end_src
@@ -166,30 +169,11 @@ The following packages will be downloaded and installed.
       (package-install package))))
 #+end_src
 
-#+begin_src emacs-lisp
-(defun esk-online? ()
-  "See if we're online.
-
-Windows does not have the network-interface-list function, so we
-just have to assume it's online."
-  ;; TODO how could this work on Windows?
-  (if (and (functionp 'network-interface-list)
-           (network-interface-list))
-      (some (lambda (iface) (unless (equal "lo" (car iface))
-                         (member 'up (first (last (network-interface-info
-                                                   (car iface)))))))
-            (network-interface-list))
-    t))
-#+end_src
-
-#+RESULTS:
-: esk-online\?
 
 On your first run, this should pull in all the base packages.
 #+begin_src emacs-lisp
-(when (esk-online?)
   (unless package-archive-contents (ignore-errors (package-refresh-contents)))
-  (starter-kit-elpa-install))
+  (starter-kit-elpa-install)
 #+end_src
 
 #+RESULTS:

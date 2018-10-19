@@ -106,7 +106,7 @@ contains an up to date list of the currently supported languages.
   (org-babel-do-load-languages
    'org-babel-load-languages
   '((emacs-lisp . t)
-    (sh . t)
+;;    (sh . t)
     (R . t)
     (perl . t)
     (ruby . t)
@@ -186,167 +186,33 @@ Org-mode manual is available to the =info= command (bound to =C-h i=).
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+end_src
 
+** Local Org-mode Settings
+*** COMMENT Smart-quote binding
+When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by default.
+
+#+source: org-mode-smartquote-key
+#+begin_src emacs-lisp :tangle no
+  (add-hook 'org-mode-hook 'smart-quote-keys)
+
+;;  (defun smart-quote-keys ()
+;;    (require 'typopunct)
+;;    (typopunct-change-language 'english)
+;;    (local-set-key (kbd "\C-c \'") 'typopunct-insert-single-quotation-mark)
+;;    (local-set-key (kbd "\C-c \"") 'typopunct-insert-quotation-mark)
+;;    )
+#+end_src
+
+*** Archive Settings
+    Where archived projects and tasks go.
+#+source: orgmode-archive
+#+begin_src emacs-lisp :tangle yes
+  (setq org-archive-location "/home/dgm/Dropbox/gtd/archive.org::From %s")
+#+end_src
+
+
+* Final message
 #+source: message-line
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (message "Starter Kit Org loaded.")
 #+end_src
-
-** DGM customization
-
-Customizations in: http://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html
-#+BEGIN_SRC emacs-lisp
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w)"  "|" "DONE(d)" "CANCELED(c)")))
-#+END_SRC
-
-#+RESULTS:
-| sequence | TODO(t) | NEXT(n) | STARTED(s) | WAITING(w) |   |   | DONE(d) | CANCELED(c) |
-
-
-Customization in: http://orgmode.org/manual/Capture-templates.html
-Organization copied from: https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
-
-
-Old code that worked alright but I've changed it to reflect the simpler code in: https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
-
-  (setq org-capture-templates
-        '(("n" "Notes" entry (file+headline "/media/dgm/blue/documents/dropbox/org/notes.org" "Notes")
-           "* Added on: %U\nDescription: %i %?\nEntry created from this heading or email: %a")
-          ("t" "Todo" entry (file+headline "/media/dgm/blue/documents/dropbox/gtd/inbox.org" "Tasks")
-           "* TODO %?\nDescription: %i\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\nEntry added on: %T\nEntry created from this heading or email: %a")
-          ("j" "Journal" entry (file+datetree "/media/dgm/blue/documents/dropbox/org/journal.org")
-           "* %?\nAdded on: %U\n  %i\n  %a")))
-
-Old code for Tickler for when I didn't know that i could schedule with <C-c C-s>
-
-                                ("T" "Tickler" entry
-                                 (file+headline "/media/dgm/blue/documents/dropbox/gtd/tickler.org" "Tickler")
-                                 "* %i%? 
-                                  \nScheduled: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
-                                  \nDeadline:  %(org-insert-time-stamp (org-read-date nil t \"+0d\")) 
-                                  \nEntry added on: %U
-                                  \nEntry created from this heading or email: %a")))
-
-
-#+BEGIN_SRC emacs-lisp
-
-  (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                                 (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
-                                 "* TODO %i%? \nEntry added on: %U
-                                                  \nEntry created from this heading or email: %a")
-                                ("T" "Tickler" entry
-                                 (file+headline "/home/dgm/Dropbox/gtd/tickler.org" "Tickler")
-                                 "* %i%? 
-                                      \nEntry added on: %U
-                                      \nEntry created from this heading or email: %a")
-                                ("j" "Journal" entry 
-                                 (file+datetree "/home/dgm/Dropbox/gtd/journal.org")
-                                 "* %?
-                                      \n Added on: %U")))
-
-#+END_SRC
-
-#+RESULTS:
-| t | Todo [inbox] | entry | (file+headline /home/dgm/Dropbox/gtd/inbox.org Tasks) | * TODO %i%? |
-
-
-tip from https://lists.gnu.org/archive/html/emacs-orgmode/2007-08/msg00253.html
-for having agenda show 30 days
-
-#+BEGIN_SRC emacs-lisp 
-;; (setq org-agenda-span (quote month))
-
-#+END_SRC
-
-#+RESULTS:
-
-
-Public holidays in Spain. Tip from: https://www.emacswiki.org/emacs/CalendarLocalization
-
-#+BEGIN_SRC emacs-lisp 
-
-  (setq holiday-other-holidays
-        '((holiday-fixed 1 1 "Año Nuevo")
-          (holiday-fixed 1 6 "Día de Reyes")
-          (holiday-fixed 2 14 "Miércoles de Ceniza")
-          (holiday-sexp '(calendar-nth-named-day 1 1 3 year 19) "Día de San José")
-          (holiday-easter-etc -7 "Domingo de Ramos")
-          (holiday-easter-etc -3 "Jueves Santo")
-          (holiday-easter-etc -2 "Viernes Santo")
-          (holiday-easter-etc +1 "Lunes de Pascua")
-          (holiday-fixed 5 1 "Día Internacional del Trabajo")
-          (holiday-fixed 5 2 "Día de la Comunidad de Madrid")
-          (holiday-fixed 5 6 "Día de la Madre")
-          (holiday-fixed 5 15 "Día de San Isidro")
-          (holiday-fixed 5 31 "Corpus Christi (Madrid)")
-;;          (holiday-easter-etc +43 "Día de la Ascención")
-          (holiday-easter-etc +64 "Corpus Christi")
-          (holiday-fixed 10 12 "Día de la Hispanidad")
-          (holiday-fixed 11 1  "Todos los santos")
-          (holiday-fixed 12 25 "Navidad")
-          (holiday-fixed 12 6 "Día de la Constitución")
-          (holiday-fixed 12 8 "Inmaculada Concepción")
-          ))                                                                                  
-
-
-  (require 'org-agenda)
-  (require 'holidays)
-  (setq calendar-holidays holiday-other-holidays)
-  (setq org-agenda-include-diary t)
-
-
-
-#+END_SRC
-
-#+RESULTS:
-: t
-
-
-Remove DONE tasks from agenda view. Tip from: https://stackoverflow.com/questions/8281604/remove-done-tasks-from-agenda-view
-
-#+BEGIN_SRC emacs-lisp 
-  (setq org-agenda-skip-scheduled-if-done t)
-  (setq org-agenda-skip-deadline-if-done t)
-#+END_SRC
-
-#+RESULTS:
-: t
-
-
-Globally define tags. Tip from: https://orgmode.org/manual/Setting-tags.html
-
-#+BEGIN_SRC emacs-lisp
-(setq org-tag-alist '(("airbnb" . ?a) ("@computer" . ?b) ("course" . ?c)  ("errands" . ?e) ("@home" . ?h) ("medicos" . ?m) ("@office" . ?o)  ("@phone" . ?p) ("project" . ?q) ("teaching" . ?t) ("uned" . ?u)))
-#+END_SRC
-
-#+RESULTS:
-: ((airbnb . 97) (@computer . 98) (course . 99) (errands . 101) (@home . 104) (medicos . 109) (@office . 111) (@phone . 112) (project . 113) (teaching . 116) (uned . 117))
-
-
-*** COMMENT Customizations from Ista Zahn: 
-Check "Note taking and outlining (Org-mode)"  https://github.com/izahn/dotemacs
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "org"
-    (setq org-replace-disputed-keys t)
-    (setq org-support-shift-select t)
-    (setq org-export-babel-evaluate nil)
-
-    ;; (setq org-startup-indented t)
-    ;; increase imenu depth to include third level headings
-
-    (setq org-imenu-depth 4)
-
-    ;; Update images from babel code blocks automatically
-    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-
-    ;; configure org-mode when opening first org-mode file
-    ;; Load additional export formats
-    (require 'ox-odt)
-  ;;  (require 'ox-freemind)
-    (require 'ox-bibtex)
-  )
-#+end_src
-
-
 
