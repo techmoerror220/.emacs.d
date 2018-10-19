@@ -26,6 +26,25 @@ tramp
 ## exported files
 *el
 starter-kit*html
+starter-kit*tex
+starter-kit*pdf
+starter-kit*fls
+starter-kit*aux
+starter-kit*fdb_latexmk
+starter-kit*out
+starter-kit*synctex(busy)
+starter-kit*xdv
+starter-kit*log
+dgm*html
+dgm*tex
+dgm*pdf
+dgm*fls
+dgm*aux
+dgm*fdb_latexmk
+dgm*out
+dgm*synctex(busy)
+dgm*xdv
+dgm*log
 doc
 eshell/lastdir
 eshell/history
