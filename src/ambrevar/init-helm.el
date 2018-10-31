@@ -305,12 +305,12 @@ Requires `call-process-to-string' from `functions'."
   (interactive)
   (helm-grep-do-git-grep t))
 
-(defun ambrevar/helm-mark-or-exchange-rect ()
-  "Run `helm-all-mark-rings-before-mark-point' or `rectangle-exchange-point-and-mark' if in rectangle-mark-mode."
-  (interactive)
-  (if rectangle-mark-mode
-      (rectangle-exchange-point-and-mark)
-    (helm-all-mark-rings)))
+;; (defun ambrevar/helm-mark-or-exchange-rect ()
+;;   "Run `helm-all-mark-rings-before-mark-point' or `rectangle-exchange-point-and-mark' if in rectangle-mark-mode."
+;;   (interactive)
+;;   (if rectangle-mark-mode
+;;       (rectangle-exchange-point-and-mark)
+;;     (helm-all-mark-rings)))
 
 ; commented out by dgm signalled by single ;
 ;(global-set-key [remap execute-extended-command] 'helm-M-x)
@@ -320,7 +320,7 @@ Requires `call-process-to-string' from `functions'."
 ;; (global-set-key [remap dabbrev-expand] 'helm-dabbrev)
 ;(global-set-key [remap yank-pop] 'helm-show-kill-ring)
 ;;; Do not remap 'exchange-point-and-mark, Evil needs it in visual mode.
-(global-set-key (kbd "C-x C-x") 'ambrevar/helm-mark-or-exchange-rect)
+;;; (global-set-key (kbd "C-x C-x") 'ambrevar/helm-mark-or-exchange-rect)
 (global-set-key [remap apropos-command] 'helm-apropos)
 (global-set-key [remap query-replace-regexp] 'helm-regexp)
 (unless (boundp 'completion-in-region-function)
@@ -418,5 +418,14 @@ With prefix argument, UPDATE the databases with custom uptions thanks to the
 (define-key helm-map (kbd "S-SPC") 'ambrevar/helm-toggle-visible-mark-backwards)
 
 (global-set-key  (kbd "C-<f4>") 'helm-execute-kmacro)
+
+;;; Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs
+
+(define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
+;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+(define-key helm-map (kbd "C-i")   'helm-execute-persistent-action) ; make TAB work in terminal
+
+
 
 (provide 'init-helm)

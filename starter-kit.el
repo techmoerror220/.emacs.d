@@ -185,4 +185,18 @@ ARCHIVE is the string name of the package archive.")
     (mapc #'load (directory-files user-specific-dir nil ".*el$"))
     (mapc #'org-babel-load-file (directory-files user-specific-dir nil ".*org$"))))
 
+;;; Bootstrap use-package
+;; Install use-package if it's not already installed.
+;; use-package is used to configure the rest of the packages.
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;; From use-package README
+(eval-when-compile
+  (require 'use-package))
+
+(require 'diminish)
+(require 'bind-key)
+
 (message "Starter Kit main file loaded.")

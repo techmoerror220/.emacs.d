@@ -227,16 +227,33 @@
             (t "daniel.guinea.uned@gmail.com")))))))
 
 
-  ;; stop mu4e from inserting line breaks: http://emacs.stackexchange.com/questions/3061/how-to-stop-mu4e-from-inserting-line-breaks
-  (defun no-auto-fill ()
-    "Turn off auto-fill-mode."
-    (auto-fill-mode -1))
+  ;; stop mu4e from inserting line breaks:
+;; http://emacs.stackexchange.com/questions/3061/how-to-stop-mu4e-from-inserting-line-breaks
+;; commented out by dgm on Oct 30, to try caolan's stuff
+  ;;(defun no-auto-fill ()
+  ;;  "Turn off auto-fill-mode."
+  ;;  (auto-fill-mode -1))
 
-  (add-hook 'mu4e-compose-mode-hook #'no-auto-fill)
+;; (add-hook 'mu4e-compose-mode-hook #'no-auto-fill)
+
+;; From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+;; Avoid hard wrapping email content
+;; Many email services/clients expect soft-wrapped emails, so I like to use visual-line-mode and the visual-fill-column package instead of auto-fill-mode. To show whether a paragraph is hard- or soft-wrapped I also turn on visual line indicators in the fringe.
+
+(use-package visual-fill-column
+  :ensure t)
+
+(add-hook 'mu4e-compose-mode-hook
+          (lambda ()
+            (set-fill-column 72)
+            (auto-fill-mode 0)
+            (visual-fill-column-mode)
+            (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+            (visual-line-mode)))
+
 
   ;; I want to see full From header, not only name
-
-;;  (setq mu4e-view-show-addresses t)
+  (setq mu4e-view-show-addresses t)
 
   ;; set default signature to nil
   (setq mu4e-compose-signature-auto-include nil
@@ -367,7 +384,7 @@ Default to unread messages if the header buffer does not already exist."
  mu4e-context-policy nil
 
  ;; Don't keep sent e-mail buffer.
- ;; message-kill-buffer-on-exit t
+ message-kill-buffer-on-exit t
 
  ;; For reporting bugs, "C-x m", etc.
  ;; mail-user-agent 'mu4e-user-agent
@@ -717,5 +734,13 @@ If MSG is nil, use message at point."
 
 (setq mu4e-conversation-print-function 'mu4e-conversation-print-tree)
 
+;;;;;;;;;;;;;;;;;;;;;;;;; stuff from caolan: https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+;; Add option to view HTML emails in browser using 'aV' in message view.
+(add-to-list 'mu4e-view-actions
+             '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+
+;; GPG encryption
+;; Try to automatically decrypt emails.
+(setq mu4e-decryption-policy t)
 
 (provide 'init-mu4e)

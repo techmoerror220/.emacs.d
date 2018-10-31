@@ -603,6 +603,35 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
 
 #+RESULTS:
 
+From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+
+#+BEGIN_SRC emacs-lisp 
+;;; Bootstrap use-package
+;; Install use-package if it's not already installed.
+;; use-package is used to configure the rest of the packages.
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;; From use-package README
+(eval-when-compile
+  (require 'use-package))
+#+END_SRC
+
+#+RESULTS:
+: use-package
+
+#+BEGIN_SRC emacs-lisp 
+(require 'diminish)
+(require 'bind-key)
+#+END_SRC
+
+#+RESULTS:
+: bind-key
+
+
+
+
 *** COMMENT load =dgm.org=
 
 I don't know why or how but today Sept. the 11th, after trying to load the agenda without the external drive (by mistake), emacs stopped loading my =dgm.org= file. This is my attempt to get it loaded and compiled again.

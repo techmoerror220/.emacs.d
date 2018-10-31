@@ -343,6 +343,17 @@ ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://githu
   (global-set-key (kbd "C-c <down>") 'winner-redo)
 #+end_src
 
+Restore the windows after Ediff quits. By default, when you quit the Ediff session with q, it just leaves the two diff windows around, instead of restoring the window configuration from when Ediff was started.
+(tip from https://caolan.org/dotfiles/emacs.html#orgd96aeb0)
+
+#+BEGIN_SRC emacs-lisp 
+(add-hook 'ediff-after-quit-hook-internal 'winner-undo)
+#+END_SRC
+
+#+RESULTS:
+| winner-undo |
+
+
 ** Don't Use Suspend Frame
 By default C-z is bound to "Suspend Frame", which minimizes Emacs. I find this of no use. Bind it to "Undo" instead. 
 
@@ -434,12 +445,19 @@ The reason is that in many data science programs, the great ista zahn binds the 
    Expand selected region by semantic units. Just keep pressing the key until it selects what you want.
 #+source: expand-region
 #+begin_src emacs-lisp
-    (require 'expand-region)
-    (global-set-key (kbd "C-=") 'er/expand-region)  
+(use-package expand-region
+  :ensure t
+  :bind (("C-=" . er/expand-region)
+         ("M-=" . er/contract-region)))
 #+end_src
+
+#+RESULTS: expand-region
+: er/contract-region
 
 ** Multiple Cursors
    Use multiple cursors for search, replace, and text-cleaning tasks. For a demonstration, see http://emacsrocks.com/e13.html
+   Alternative customization at https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+
 #+source: multiple-cursors
 #+begin_src emacs-lisp
   (require 'multiple-cursors)

@@ -42,7 +42,20 @@ is pre-populated with some generally applicable aliases.
   (setq eshell-directory-name (expand-file-name "./" (expand-file-name "eshell" dotfiles-dir)))
 #+end_src
 
+** Caolan's configuration
+From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
 
+#+BEGIN_SRC emacs-lisp 
+(require 'em-smart)
+(setq eshell-where-to-jump 'begin)
+(setq eshell-review-quick-commands nil)
+(setq eshell-smart-space-goes-to-end t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* Final message 
 #+source: message-line
 #+begin_src emacs-lisp
   (message "Starter Kit Eshell loaded.")

@@ -41,7 +41,14 @@
 (add-hook 'org-mode-hook 'org-table-stripes-enable)
 (add-hook 'dired-mode-hook 'stripe-listify-buffer)
 
-(define-key global-map (kbd "C-o") 'avy-goto-word-1)
+(use-package avy
+  :ensure t
+  :bind
+    ("s-s" . avy-goto-char))  ;; goes literally to any char
+
+(define-key global-map (kbd "C-o") 'avy-goto-word-1) ;; goes to word that starts with a given char
+
+
 
 (setq TeX-open-quote "“")
 (setq TeX-close-quote "”")
@@ -750,8 +757,6 @@ The app is chosen from your OS's preference."
 (define-key global-map (kbd "S-<up>") 'org-timestamp-up)
 (define-key global-map (kbd "S-<down>") 'org-timestamp-down)
 
-(global-set-key (kbd "M-P") 'ace-window)
-
 (setq calendar-week-start-day 1)
 
 (require 'ox-twbs)
@@ -1261,8 +1266,25 @@ point reaches the beginning or end of the buffer, stop there."
 ;; (require 'r-autoyas)
 ;; (add-hook 'ess-mode-hook 'r-autoyas-ess-activate)
 
-(setq org-agenda-window-setup 'only-window)
+;; (setq org-agenda-window-setup 'only-window)
 ;; (setq org-export-dispatch 'only-window)
+
+(defun my-window-displaying-agenda-p (window)
+    (equal (with-current-buffer (window-buffer window) major-mode)
+        'org-agenda-mode)) 
+
+(defun my-position-calendar-buffer (buffer alist)
+  (let ((agenda-window (car (remove-if-not #'my-window-displaying-agenda-p (window-list)))))
+    (when agenda-window
+      (let ((desired-window (split-window agenda-window nil 'below)))
+        (set-window-buffer desired-window  buffer)
+        desired-window))))
+
+(add-to-list 'display-buffer-alist (cons "\\*Calendar\\*" (cons #'my-position-calendar-buffer nil)))
+
+(add-to-list 'display-buffer-alist
+             `(,(rx string-start "*Calendar*" string-end)
+               (display-buffer-below-selected)))
 
 ;;; Save M-: history.
 (savehist-mode)
@@ -1296,7 +1318,12 @@ point reaches the beginning or end of the buffer, stop there."
 ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly
    ;; plus in https://github.com/ch11ng/exwm/wiki/Configuration-Example the developer puts this line before <(require 'exwm)>. 
    ;; so that is why I've taken it out of the bit on exwm
-    (server-start) 
+
+;; from https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+;; run server if using emacsclient as default EDITOR also useful for
+;; org-protocol capture https://www.emacswiki.org/emacs/EmacsClient
+
+;;(server-start)
 
   (use-package exwm 
     :ensure t
@@ -1305,8 +1332,12 @@ point reaches the beginning or end of the buffer, stop there."
     ;; necessary to configure exwm manually
     (require 'exwm-config)
 
-    ;; fringe size, most people prefer 1
+    ;; fringe size, most people prefer 1 (uncle dave's setup)
     (fringe-mode 3)
+
+    (require 'server)
+      (unless (server-running-p)
+        (server-start))
 
     (exwm-config-default))
 
@@ -1336,17 +1367,6 @@ point reaches the beginning or end of the buffer, stop there."
       browse-url-generic-program "chromium")
 ;      browse-url-generic-program "qutebrowser")
 
-(use-package dashboard
-  :ensure t
-  :config
-    (dashboard-setup-startup-hook)
-;    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
-    (setq dashboard-items '((recents   . 10)
-                            (bookmarks . 10)
-                            (projects  . 10)))
-    (setq dashboard-banner-logo-title ""))
-(message "Testing 2 dashboard chunk is evaluated.")
-
 (require 'fortune)
 (setq fortune-dir "/usr/share/games/fortunes"
       fortune-file "/usr/share/games/fortunes/fortunes")
@@ -1360,5 +1380,301 @@ point reaches the beginning or end of the buffer, stop there."
 
 (setq apropos-do-all t
       mouse-yank-at-point t)
+
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+(setq ediff-split-window-function 'split-window-horizontally)
+
+;;(winner-mode)
+;;(add-hook 'ediff-after-quit-hook-internal 'winner-undo)
+
+;; write merge buffer.  If the optional argument save-and-continue is non-nil,
+;; then don't kill the merge buffer
+(defun caolan/ediff-write-merge-buffer-and-maybe-kill (buf file
+                                                           &optional
+                                                           show-file save-and-continue)
+  (if (not (eq (find-buffer-visiting file) buf))
+      (let ((warn-message
+             (format "Another buffer is visiting file %s. Too dangerous to save the merge buffer"
+                     file)))
+        (beep)
+        (message "%s" warn-message)
+        (with-output-to-temp-buffer ediff-msg-buffer
+          (princ "\n\n")
+          (princ warn-message)
+          (princ "\n\n")
+          )
+        (sit-for 2))
+    (ediff-with-current-buffer buf
+      (if (or (not (file-exists-p file))
+              (y-or-n-p (format "File %s exists, overwrite? " file)))
+          (progn
+            ;;(write-region nil nil file)
+            (ediff-with-current-buffer buf
+              (set-visited-file-name file)
+              (save-buffer))
+            (if show-file
+                (progn
+                  (message "Merge buffer saved in: %s" file)
+                  (set-buffer-modified-p nil)))
+            (if (and (not save-and-continue))
+                (ediff-kill-buffer-carefully buf)))))
+    ))
+
+(defun caolan/ediff-maybe-save-and-delete-merge (&optional save-and-continue)
+  "Default hook to run on quitting a merge job.
+This can also be used to save merge buffer in the middle of an Ediff session.
+
+If the optional SAVE-AND-CONTINUE argument is non-nil, save merge buffer and
+continue.  Otherwise:
+If `ediff-autostore-merges' is nil, this does nothing.
+If it is t, it saves the merge buffer in the file `ediff-merge-store-file'
+or asks the user, if the latter is nil.  It then asks the user whether to
+delete the merge buffer.
+If `ediff-autostore-merges' is neither nil nor t, the merge buffer is saved
+only if this merge job is part of a group, i.e., was invoked from within
+`ediff-merge-directories', `ediff-merge-directory-revisions', and such."
+  (let ((merge-store-file ediff-merge-store-file)
+        (ediff-autostore-merges ; fake ediff-autostore-merges, if necessary
+         (if save-and-continue t ediff-autostore-merges)))
+    (if ediff-autostore-merges
+        (cond ((stringp merge-store-file)
+               ;; store, ask to delete
+               (caolan/ediff-write-merge-buffer-and-maybe-kill
+                ediff-buffer-C merge-store-file 'show-file save-and-continue))
+              ((eq ediff-autostore-merges t)
+               ;; ask for file name
+               (setq merge-store-file
+                     (read-file-name "Save the result of the merge in file: "))
+               (caolan/ediff-write-merge-buffer-and-maybe-kill
+                ediff-buffer-C merge-store-file nil save-and-continue))
+              ((and (ediff-buffer-live-p ediff-meta-buffer)
+                    (ediff-with-current-buffer ediff-meta-buffer
+                                               (ediff-merge-metajob)))
+               ;; The parent metajob passed nil as the autostore file.
+               nil)))
+    ))
+
+(add-hook 'ediff-quit-merge-hook #'caolan/ediff-maybe-save-and-delete-merge)
+
+(add-hook 'ediff-prepare-buffer-hook #'outline-show-all)
+
+(add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
+
+(defun my-goto-match-beginning ()
+  (when (and isearch-forward isearch-other-end)
+    (goto-char isearch-other-end)))
+
+(defadvice isearch-exit (after my-goto-match-beginning activate)
+  "Go to beginning of match."
+  (when (and isearch-forward isearch-other-end)
+    (goto-char isearch-other-end)))
+
+(setenv "TEST_USE_ANSI" "1")
+
+(use-package shell-pop
+  :ensure t
+  :bind (("C-t" . shell-pop))
+  :config
+  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+  (setq shell-pop-term-shell "/bin/bash")
+  (setq shell-pop-universal-key "C-t")
+  ;; need to do this manually or not picked up by `shell-pop'
+  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
+
+(add-to-list 'display-buffer-alist
+             `(,(rx string-start "*shell*" string-end)
+               (display-buffer-below-selected)))
+
+(use-package dumb-jump
+  :ensure t
+  :init (lambda ()
+          (dumb-jump-mode)))
+
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
+
+(use-package synosaurus
+  :ensure t
+  :config (progn
+            (setq synosaurus-backend 'synosaurus-backend-wordnet)
+            (setq synosaurus-choose-method 'default)))
+
+(use-package wordnut
+  :ensure t)
+
+(use-package olivetti
+  :ensure t
+  :config (setq olivetti-body-width 90))
+
+(setq org-export-with-section-numbers nil)
+(setq org-html-include-timestamps nil)
+(setq org-export-with-sub-superscripts nil)
+(setq org-export-with-toc nil)
+(setq org-html-toplevel-hlevel 2)
+(setq org-export-htmlize-output-type 'css)
+(setq org-export-html-coding-system 'utf-8-unix)
+(setq org-html-viewport nil)
+
+(use-package htmlize :ensure t)
+
+(use-package async
+  :ensure t
+  :init (dired-async-mode 1))
+
+(defun exwm-async-run (name)
+  (interactive)
+  (start-process name nil name))
+
+(defun daedreth/launch-browser ()
+  (interactive)
+  (exwm-async-run "chromium"))
+
+(defun daedreth/lock-screen ()
+  (interactive)
+  (exwm-async-run "slock"))
+
+(global-set-key (kbd "<s-escape>") 'daedreth/launch-browser)
+(global-set-key (kbd "<s-@>") 'daedreth/lock-screen)
+
+(defun daedreth/take-screenshot ()
+  "Takes a fullscreen screenshot of the current workspace"
+  (interactive)
+  (when window-system
+  (loop for i downfrom 3 to 1 do
+        (progn
+          (message (concat (number-to-string i) "..."))
+          (sit-for 1)))
+  (message "Cheese!")
+  (sit-for 1)
+  (start-process "screenshot" nil "import" "-window" "root" 
+             (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
+  (message "Screenshot taken!")))
+(global-set-key (kbd "s-[") 'daedreth/take-screenshot)
+
+(defun daedreth/take-screenshot-region ()
+  "Takes a screenshot of a region selected by the user."
+  (interactive)
+  (when window-system
+  (call-process "import" nil nil nil ".newScreen.png")
+  (call-process "convert" nil nil nil ".newScreen.png" "-shave" "1x1"
+                (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
+  (call-process "rm" nil nil nil ".newScreen.png")))
+(global-set-key (kbd "s-]") 'daedreth/take-screenshot-region)
+
+(use-package symon
+  :ensure t
+  :bind
+  ("s-h" . symon-mode))
+
+(defvar my-term-shell "/bin/bash")
+(defadvice ansi-term (before force-bash)
+  (interactive (list my-term-shell)))
+(ad-activate 'ansi-term)
+
+;; (global-set-key (kbd "<s-return>") 'ansi-term)
+
+(use-package ivy
+  :ensure t)
+
+;; (setq scroll-conservatively 100)
+
+(global-set-key (kbd "M-P") 'ace-window)
+
+(use-package switch-window
+  :ensure t
+  :config
+    (setq switch-window-input-style 'minibuffer)
+    (setq switch-window-increase 4)
+    (setq switch-window-threshold 2)
+    (setq switch-window-shortcut-style 'qwerty)
+    (setq switch-window-qwerty-shortcuts
+        '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
+  :bind
+    ([remap other-window] . switch-window))
+
+(defun split-and-follow-horizontally ()
+  (interactive)
+  (split-window-below)
+  (balance-windows)
+  (other-window 1))
+(global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
+
+(defun split-and-follow-vertically ()
+  (interactive)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
+(global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
+
+(use-package swiper
+  :ensure t)
+
+(global-set-key (kbd "<s-return>") 'swiper)
+(setq ivy-display-style 'fancy)
+
+;;advise swiper to recenter on exit
+(defun bjm-swiper-recenter (&rest args)
+  "recenter display after swiper"
+  (recenter))
+(advice-add 'swiper :after #'bjm-swiper-recenter)
+
+(defun close-all-buffers ()
+  "Kill all buffers without regard for their origin."
+  (interactive)
+  (mapc 'kill-buffer (buffer-list)))
+(global-set-key (kbd "C-M-s-k") 'close-all-buffers)
+
+(use-package avy
+  :ensure t
+  :bind
+    ("s-s" . avy-goto-char))
+
+(use-package mark-multiple
+  :ensure t
+  :bind ("s-q" . 'mark-next-like-this))
+
+(defun daedreth/kill-inner-word ()
+  "Kills the entire word your cursor is in. Equivalent to 'ciw' in vim."
+  (interactive)
+  (forward-char 1)
+  (backward-word)
+  (kill-word 1))
+(global-set-key (kbd "s-k") 'daedreth/kill-inner-word)
+
+(defun daedreth/copy-whole-word ()
+  (interactive)
+  (save-excursion
+    (forward-char 1)
+    (backward-word)
+    (kill-word 1)
+    (yank)))
+(global-set-key (kbd "M-s-w") 'daedreth/copy-whole-word)
+
+(defun daedreth/copy-whole-line ()
+  "Copies a line without regard for cursor position."
+  (interactive)
+  (save-excursion
+    (kill-new
+     (buffer-substring
+      (point-at-bol)
+      (point-at-eol)))))
+(global-set-key (kbd "M-s-l") 'daedreth/copy-whole-line)
+
+(global-set-key (kbd "M-s-k") 'kill-whole-line)
+
+(global-subword-mode 1)
+
+(use-package beacon
+  :ensure t
+  :config
+    (beacon-mode 1))
+
+(use-package rainbow-delimiters
+  :ensure t
+  :init
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 (message "Starter Kit User (DGM) File loaded.")

@@ -187,6 +187,8 @@
 (global-set-key (kbd "C-c <up>") 'winner-undo)
 (global-set-key (kbd "C-c <down>") 'winner-redo)
 
+(add-hook 'ediff-after-quit-hook-internal 'winner-undo)
+
 ;; I can't remember ever having meant to use C-z to suspend the frame
 (global-set-key (kbd "C-z") 'undo)
 
@@ -253,8 +255,10 @@
 ;; and down; lines scrolled outside the top or bottom of the rectangle
 ;; are lost, but can be recovered using [C-z].
 
-(require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
+(use-package expand-region
+  :ensure t
+  :bind (("C-=" . er/expand-region)
+         ("M-=" . er/contract-region)))
 
 (require 'multiple-cursors)
 ;; When you have an active region that spans multiple lines, the following will add a cursor to each line:

@@ -50,23 +50,35 @@
                                "/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org"
                                "/home/dgm/Dropbox/gtd/tickler.org"))
 
-(defun ambrevar/org-switch-agenda-file (&optional other-window)
-  "Switch between org-agenda and the first org-agenda-files."
-  (interactive "P")
-  (if (and buffer-file-name
-           (member (expand-file-name buffer-file-name) (mapcar 'expand-file-name org-agenda-files)))
-      (org-agenda)
-    (let ((b (find-buffer-visiting (car org-agenda-files))))
-      (if b
-          (if (get-buffer-window b)
-              (select-window (get-buffer-window b))
-            (funcall (if other-window 'switch-to-buffer-other-window 'switch-to-buffer) b))
-        (funcall (if other-window 'find-file-other-window 'find-file) (car org-agenda-files))))))
+;;;;;;; commented out by dgm to try and get org-agenda windows in
+;; current window
+;; (defun ambrevar/org-switch-agenda-file (&optional other-window)
+;;   "Switch between org-agenda and the first org-agenda-files."
+;;   (interactive "P")
+;;   (if (and buffer-file-name
+;;            (member (expand-file-name buffer-file-name) (mapcar 'expand-file-name org-agenda-files)))
+;;       (org-agenda)
+;;     (let ((b (find-buffer-visiting (car org-agenda-files))))
+;;       (if b
+;;           (if (get-buffer-window b)
+;;               (select-window (get-buffer-window b))
+;;             (funcall (if other-window 'switch-to-buffer-other-window 'switch-to-buffer) b))
+;;         (funcall (if other-window 'find-file-other-window 'find-file) (car org-agenda-files))))))
 
-(defun ambrevar/org-switch-agenda-file-other-window ()
-  "Like `ambrevar/org-switch-agenda-file' but use other window if possible."
-  (interactive)
-  (ambrevar/org-switch-agenda-file t))
+;; (defun ambrevar/org-switch-agenda-file-other-window ()
+;;   "Like `ambrevar/org-switch-agenda-file' but use other window if possible."
+;;   (interactive)
+;;   (ambrevar/org-switch-agenda-file t))
+
+;; https://stackoverflow.com/questions/10635989/emacs-org-agenda-list-destroy-my-windows-splits
+
+(setq org-agenda-window-setup 'current-window)
+
+;; From Caolan at https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+
+;; Provide refile targets as paths, so a level 3 headline will be available as level1/level2/level3. Offer completions in hierarchical steps.
+(setq org-refile-use-outline-path t)
+(setq org-outline-path-complete-in-steps t)
 
   (setq org-refile-targets '(("/home/dgm/Dropbox/gtd/gtd.org" :maxlevel . 3)
                              ("/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" :maxlevel . 2)
@@ -74,9 +86,17 @@
                              ("/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" :maxlevel . 2)
                              ("/home/dgm/Dropbox/gtd/someday.org" :level . 2)
                              ("/home/dgm/Dropbox/gtd/inbox.org" :level . 2)
+                             ("/home/dgm/Dropbox/gtd/notes.org" :level . 2)
                              ("/home/dgm/Dropbox/gtd/tickler.org" :level . 2)))
 
-  ;; another way of doing the same
+;; Create any missing parent nodes during refile (after asking for
+;; confirmation). (From Caolan at
+;; https://caolan.org/dotfiles/emacs.html#orgd96aeb0)
+(setq org-refile-allow-creating-parent-nodes 'confirm)
+
+
+
+  ;; Another way of doing the same
   ;;  '(org-refile-targets (quote (("/media/dgm/blue/documents/dropbox/gtd/gtd.org" :maxlevel . 3)
   ;;                              ("/media/dgm/blue/documents/dropbox/gtd/someday.org" :level . 1)
   ;;                              ("/media/dgm/blue/documents/dropbox/gtd/tickler.org" :maxlevel . 2))))
@@ -221,19 +241,39 @@
 ;;                                   \nEntry created from this heading or email: %a")))
 
 
-  (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                                 (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
-                                 "* TODO %i%? \nEntry added on: %U
-                                                  \nEntry created from this heading or email: %a")
+(setq org-capture-templates '(
+                              ;; ("t" "Todo [inbox]" entry
+                              ;;   (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
+                              ;;   "* TODO %i%? \nEntry added on: %U
+                              ;;                    \nEntry created from this heading or email: %a")
                                 ("T" "Tickler" entry
                                  (file+headline "/home/dgm/Dropbox/gtd/tickler.org" "Tickler")
                                  "* %i%?
-                                      \nEntry added on: %U
-                                      \nEntry created from this heading or email: %a")
+                                      \nEntry added on: %U from %a")
                                 ("j" "Journal" entry
                                  (file+datetree "/home/dgm/Dropbox/gtd/journal.org")
                                  "* %?
-                                      \n Added on: %U")))
+                                      \n Added on: %U")
+                                ("n" "Note" entry
+                                 (file "~/Dropbox/gtd/notes.org")
+                                     "* %?\nCaptured on %U from %a")))
+
+
+;; from caolan: https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+
+(push `("t" "Todo" entry (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
+        ,(string-join
+          '("* TODO %^{Description}"
+            "  %?"
+            "  %a"
+            "  :LOGBOOK:"
+            "  - Captured on %U from %a"
+            "  :END:")
+          "\n"))
+      org-capture-templates)
+
+;; As Caolan (https://caolan.org/dotfiles/emacs.html#orgd96aeb0) says,
+;; During expansion of the template, %a has been replaced by a link to the location from where you called the capture command. This can be extremely useful for deriving tasks from emails, for example. This tip from the Org-mode manual. The %U will be replaced with the time of the capture, this is an 'inactive' timestamp meaning it won't show up in the agenda view.
 
 ;; tip from https://lists.gnu.org/archive/html/emacs-orgmode/2007-08/msg00253.html
 ;; for having agenda show 30 days
@@ -279,5 +319,73 @@
 
 ;; Globally define tags. Tip from: https://orgmode.org/manual/Setting-tags.html
 (setq org-tag-alist '(("airbnb" . ?a) ("@computer" . ?b) ("course" . ?c)  ("errands" . ?e) ("@home" . ?h) ("medicos" . ?m) ("@office" . ?o)  ("@phone" . ?p) ("project" . ?q) ("teaching" . ?t) ("uned" . ?u)))
+
+;;; stuff from caolan: https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+;;; Mu4e
+;; Store a link to a mu4e query or message, setting various properties for use in capture templates. Basic support is provided by 'org-mu4e, but this uses some code from Using org-capture-templates with mu4e to extend the properties available to templates.
+
+
+(defun org-mu4e-store-link ()
+  "Store a link to a mu4e query or message."
+  (cond
+    ;; storing links to queries
+    ((eq major-mode 'mu4e-headers-mode)
+     (let* ((query (mu4e-last-query))
+             desc link)
+       (org-store-link-props :type "mu4e" :query query)
+       (setq link (concat "mu4e:query:" query))
+       (org-add-link-props :link link :description link)
+       link))
+    ;; storing links to messages
+    ((eq major-mode 'mu4e-view-mode)
+     (let* ((msg (mu4e-message-at-point))
+            (msgid (or (plist-get msg :message-id) "<none>"))
+            (from (car (car (mu4e-message-field msg :from))))
+            (to (car (car (mu4e-message-field msg :to))))
+            (subject (mu4e-message-field msg :subject))
+            link)
+       (setq link (concat "mu4e:msgid:" msgid))
+       (org-store-link-props
+          :type "mu4e" :from from :to to :subject subject
+          :message-id msgid)
+       (org-add-link-props
+          :link link
+          :description (funcall org-mu4e-link-desc-func msg))
+   link))))
+
+(org-add-link-type "mu4e" 'org-mu4e-open)
+(add-hook 'org-store-link-functions 'org-mu4e-store-link)
+
+
+;; Respond later
+;; The 'Respond later' template is a customised TODO which includes some extra email information. This relies on the extended email properties made available in the Org-mode -> Custom Links -> mu4e section of this config.
+
+(push `("r" "Respond later" entry (file+headline "~/Dropbox/gtd/inbox.org" "Email")
+        ,(string-join
+          '("* TODO Respond to %:from on %a"
+            "  %?"
+            "  :LOGBOOK:"
+            "  - Captured on %U from %a"
+            "  :END:")
+          "\n"))
+        org-capture-templates)
+
+;; Store interesting links... not working
+
+;; (push `("l" "Link" entry (file+headline "~/Dropbox/gtd/inbox.org" "Link")
+;;         ,(string-join
+;;           '("* TODO Read this %:from on %a"
+;;             "  %?"
+;;             "  :LOGBOOK:"
+;;             "  - Captured on %U from %a"
+;;             "  :END:")
+;;           "\n"))
+;;         org-capture-templates)
+
+
+;; Org-protocol from https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+;; Use org-protocol to trigger org-mode interactions from external programs. Useful for capturing links from Firefox using the org-mode-capture add-on.
+(require 'org-protocol)
+
 
 (provide 'init-org)

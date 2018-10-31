@@ -402,7 +402,7 @@ This does not affect .csv files."
   "Unconditionally turn on tab indentation."
   (setq indent-tabs-mode t))
 
-(defun ambrevar/turn-off-line-number-mode ()
+ (defun ambrevar/turn-off-line-number-mode ()
   "Unconditionally turn off `line-number-mode' fur the current buffer.."
   (set (make-variable-buffer-local 'line-number-mode) nil))
 

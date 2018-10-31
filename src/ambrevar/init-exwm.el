@@ -40,10 +40,10 @@
 ;;; prefix will conflict with the WM bindings.
 (exwm-input-set-key (kbd "s-R") #'exwm-reset)
 (exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
-(exwm-input-set-key (kbd "s-h") #'windmove-left)
-(exwm-input-set-key (kbd "s-j") #'windmove-down)
-(exwm-input-set-key (kbd "s-k") #'windmove-up)
-(exwm-input-set-key (kbd "s-l") #'windmove-right)
+(exwm-input-set-key (kbd "s-<left>") #'windmove-left)
+(exwm-input-set-key (kbd "s-<down>") #'windmove-down)
+(exwm-input-set-key (kbd "s-<up>") #'windmove-up)
+(exwm-input-set-key (kbd "s-<right>") #'windmove-right)
 (exwm-input-set-key (kbd "s-D") #'kill-this-buffer)
 (exwm-input-set-key (kbd "s-b") #'list-buffers)
 (exwm-input-set-key (kbd "s-f") #'find-file)
@@ -201,9 +201,21 @@
 ; Costumization from Technomancy's wm.el
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq exwm-workspace-number 9
-        exwm-workspace-show-all-buffers t
-        exwm-layout-show-all-buffers t)
+;; we start out with 1 workspace, as exwm creates workspaces dynamically.
+(setq exwm-workspace-number 1
+      exwm-workspace-show-all-buffers t
+      exwm-layout-show-all-buffers t)
+
+
+;; the next loop will bind s-<number> to switch to the corresponding
+;; workspace
+;; from https://github.com/daedreth/UncleDavesEmacs
+    (dotimes (i 10)
+      (exwm-input-set-key (kbd (format "s-%d" i))
+                          `(lambda ()
+                             (interactive)
+                             (exwm-workspace-switch-create ,i))))
+
 
   ;; http://p.hagelb.org/exwm-ff-tabs
   ;; Using ido to change "tabs" in Firefox!
@@ -325,17 +337,28 @@
         ([?\C-v] . [next])
         ([?\C-d] . [delete])
         ([?\C-k] . [S-end delete])
-        ;; cut/paste.
-        ([?\C-w] . [?\C-x])
-        ([?\M-w] . [?\C-c])
-        ([?\C-y] . [?\C-v])
         ([?\M-h] . [S-end select])
         ([?\M-d] . [C-S-right ?\C-x])
         ([M-backspace] . [C-S-left ?\C-x])
         ;; escape
         ([?\C-g] . [escape])
+        ;; cut/paste.
+        ([?\C-w] . [?\C-x])
+        ([?\M-w] . [?\C-c])
+        ([?\C-y] . [?\C-v])
         ;; search
         ([?\C-s] . [?\C-f])))
+
+        ;; cut/paste.
+        ;; ([?\C-w] . [?\C-x])
+        ;; ([?\M-w] . [?\C-c])
+        ;; ([?\C-y] . [?\C-v])
+        ;; with whole-line-or-region-kill-save
+        ;; these simulation keys stop working on chromium, so
+        ;; there I use the native keybind C-c after doing C-q for
+        ;; sending the key straight down to the native process. I think
+        ;; it is worthwhile because whole-line is very handy in emacs
+
 
   ;; (global-set-key (kbd "C-x m")
   ;;                 (defun pnh-eshell-per-workspace (n)

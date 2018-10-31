@@ -64,8 +64,6 @@
        ;; (setq load-path (cons my-lisp-dir load-path))
        (normal-top-level-add-subdirs-to-load-path)))
 
-
-
 ;; ;; Font-face setup. Check the availability of a some default fonts, in
 ;; ;; order of preference. The first of these alternatives to be found is
 ;; ;; set as the default font, together with base size and fg/bg
@@ -156,7 +154,7 @@
 
 ;;; other stuff for setting up unicode by: https://github.com/izahn/emacs-starter-kit
 ;;; which is a fork of kieran healy's starter kit
-;;; he says that setting this coding system prevents emacs from choking  on melpa file listings
+;;; he says that setting this coding system prevents emacs from choking on melpa file listings
  (set-language-environment 'utf-8)
  (setq locale-coding-system 'utf-8)
  (set-default-coding-systems 'utf-8)
@@ -607,7 +605,12 @@
   (require 'org-mu4e)
   (require 'mu4e-contrib)
    ;; https://groups.google.com/forum/#!topic/mu-discuss/0QIgZ27x3Is
-;; commmented out by dgm to tray and get rid of warning  (setq mu4e-html2text-command 'mu4e-shr2text)
+;; following https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+;; In the words of caolan
+;; I find the included mu4e-shr2text command which uses the shr package (also used by eww) to render HTML too slow and have switched to using w3m with the display_link_number option.
+;; (setq mu4e-html2text-command 'mu4e-shr2text)
+(setq mu4e-html2text-command "w3m -dump -s -T text/html -o display_link_number=true")
+
   ;; make shr/eww readable with dark themes
   (setq shr-color-visible-luminance-min 80)
 
@@ -655,3 +658,15 @@
 (with-eval-after-load 'org (require 'init-org))
 (autoload 'ambrevar/org-switch-agenda-file "org")
 (autoload 'ambrevar/org-switch-agenda-file-other-window "org")
+
+;; trying to get dashboard to work (originally in dgm.org)
+(use-package dashboard
+  :ensure t
+  :config
+    (dashboard-setup-startup-hook)
+;    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
+    (setq dashboard-items '((recents   . 10)
+                            (bookmarks . 10)
+                            (projects  . 10)))
+    (setq dashboard-banner-logo-title ""))
+(message "Testing 2 dashboard chunk is evaluated.")

@@ -1,0 +1,13 @@
+(puthash "http://orgmode.org/elpa/archive-contents" '(23513 60271 415883 352000) url-history-hash-table)
+(puthash "http://orgmode.org/elpa/archive-contents.sig" '(23513 60271 554353 599000) url-history-hash-table)
+(puthash "http://elpa.gnu.org/packages/archive-contents" '(23513 60272 147400 440000) url-history-hash-table)
+(puthash "http://elpa.gnu.org/packages/archive-contents.sig" '(23513 60272 340544 629000) url-history-hash-table)
+(puthash "https://melpa.org/packages/archive-contents" '(23513 60273 435109 524000) url-history-hash-table)
+(puthash "https://melpa.org/packages/archive-contents.sig" '(23513 60274 754152 590000) url-history-hash-table)
+(puthash "https://melpa.org/packages/switch-window-20181012.121.tar" '(23513 60275 465685 899000) url-history-hash-table)
+(puthash "https://melpa.org/packages/switch-window-20181012.121.tar.sig" '(23513 60275 956343 832000) url-history-hash-table)
+(puthash "https://melpa.org/packages/swiper-20181008.1731.el" '(23513 61114 135881 638000) url-history-hash-table)
+(puthash "https://melpa.org/packages/swiper-20181008.1731.el.sig" '(23513 61114 532943 751000) url-history-hash-table)
+(puthash "https://melpa.org/packages/linum-relative-20180124.1047.el" '(23513 61944 127648 526000) url-history-hash-table)
+(puthash "https://melpa.org/packages/linum-relative-20180124.1047.el.sig" '(23513 61944 300307 174000) url-history-hash-table)
+

@@ -24,4 +24,9 @@
 
 (setq eshell-directory-name (expand-file-name "./" (expand-file-name "eshell" dotfiles-dir)))
 
+(require 'em-smart)
+(setq eshell-where-to-jump 'begin)
+(setq eshell-review-quick-commands nil)
+(setq eshell-smart-space-goes-to-end t)
+
 (message "Starter Kit Eshell loaded.")

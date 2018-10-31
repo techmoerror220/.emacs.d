@@ -27,6 +27,9 @@
 ;;    (global-hl-line-mode nil)
 ;;    (toggle-hl-line-when-idle)
 ;;    (hl-line-when-idle-interval 2))
+
+;; From uncle dave's dot files
+(when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
       
   (defun turn-on-save-place-mode ()
     (setq save-place t))

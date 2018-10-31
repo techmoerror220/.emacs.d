@@ -11,7 +11,7 @@
   (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
   (setq custom-safe-themes t)
 ;;  (load-theme 'zenburn t)
-  (load-theme 'solarized-dark t)
+(load-theme 'solarized-dark t)
 ;;  (load-theme 'solarized-light t)
 ;;  (load-theme 'darktooth t)
 ;;  (load-theme 'soothe t)
@@ -87,9 +87,26 @@
 
 (minimal-mode)
 
+;; (setq browse-url-browser-function 'browse-url-firefox)
+;; (setq browse-url-browser-function 'browse-default-macosx-browser)
+;; (setq browse-url-browser-function 'browse-default-windows-browser)
+;; (setq browse-url-browser-function 'browse-default-kde)
+;; (setq browse-url-browser-function 'browse-default-epiphany)
+;; (setq browse-url-browser-function 'browse-default-w3m)
+;; (setq browse-url-browser-function 'browse-url-generic
+;;       browse-url-generic-program "~/src/conkeror/conkeror")
+
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "chromium")
+
 (auto-compression-mode t)
 
 ;;(global-font-lock-mode t)
+
+;;  (if window-system
+;      (menu-bar-mode t)
+;;      (menu-bar-mode -1)
+;;      )
 
 ;; Code by Kieran Healy:
 ;; saveplace remembers your location in a file when saving files
