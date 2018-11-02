@@ -434,8 +434,6 @@ Create =html= files form the =org= sources, to help with documentation. To set u
       (setq org-src-window-setup 'current-window)
     #+end_src
 
-
-
 ** DGM customization
 
 *** COMMENT Customizations from Ista Zahn: 
@@ -780,7 +778,7 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq
  kill-ring-max 5000 ; increase kill-ring capacity
- kill-whole-line t  ; if NIL, killwhole line and move the next line up
+;; kill-whole-line t  ; if NIL, killwhole line and move the next line up / commented out by dgm as it might interere with kill-whole-line-or-region mode
 )
 #+END_SRC
 
@@ -2402,7 +2400,7 @@ Tip from Uncle Dave's emacs
 ;; run server if using emacsclient as default EDITOR also useful for
 ;; org-protocol capture https://www.emacswiki.org/emacs/EmacsClient
 
-;;(server-start)
+(server-start)
 
   (use-package exwm 
     :ensure t
@@ -2414,9 +2412,10 @@ Tip from Uncle Dave's emacs
     ;; fringe size, most people prefer 1 (uncle dave's setup)
     (fringe-mode 3)
 
-    (require 'server)
-      (unless (server-running-p)
-        (server-start))
+;; dgm comments this as it appears to not be working!! reverts to old (server-star)
+;;    (require 'server)
+;;      (unless (server-running-p)
+;;        (server-start))
 
     (exwm-config-default))
 
@@ -2664,13 +2663,12 @@ Note, show-all is marked obsolete in Emacs 25.1 in favor of outline-show-all. Bu
 
 
 
-
 *** Cut/copy/comment current line if no region selected
 In many programs, like SlickEdit, TextMate and VisualStudio, "cut" and "copy" act on the current line if no text is visually selected. For this, I originally used code from Tim Krones Emacs config, but now I'm using the whole-line-or-region package, which can be customised to use the same line-or-region style for comments too. See comments in whole-line-or-region.el for details.
 
 However, I disable it or else the copy/paste emacs bindings won't work in external apps PLUS uncle dave has defined handy functions to do the copying and killing on current words and lines.
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package whole-line-or-region
   :ensure t)
 
@@ -2718,6 +2716,29 @@ Add my home bin directory to PATH (when I have it)
 #+BEGIN_SRC emacs-lisp :tangle no
 (setenv "PATH" (concat "/home/dgm/bin:" (getenv "PATH")))
 #+END_SRC
+
+*** Trying to get =M-x stata= working
+
+Originally this got stata working when I called it interactively with =M-x stata=
+#+BEGIN_SRC emacs-lisp :tangle no
+;; (setenv "PATH" (concat "/usr/local/stata14:/usr/local/stata:" (getenv "PATH")))
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/stata"))
+(setq exec-path (append exec-path '("/usr/local/stata")))
+#+END_SRC
+
+#+RESULTS:
+| /home/dgm/.local/bin | /usr/local/bin | /usr/bin | /bin | /usr/local/games | /usr/games | /usr/local/libexec/emacs/27.0.50/x86_64-pc-linux-gnu | /usr/local/stata | /usr/local/stata | /usr/local/bin/stata | /usr/local/stata | /usr/local/bin/stata | /usr/local/stata |
+
+
+However, once I used the script sent from Stata Corp. to make stata work after updating it, this does not work. So I have changed it to:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin/stata"))
+(setq exec-path (append exec-path '("/usr/local/bin/stata")))
+#+END_SRC
+
+#+RESULTS:
+| /home/dgm/.local/bin | /usr/local/bin | /usr/bin | /bin | /usr/local/games | /usr/games | /usr/local/libexec/emacs/27.0.50/x86_64-pc-linux-gnu | /usr/local/bin/stata | /usr/local/bin/stata | /usr/local/bin/stata |
 
 *** Pop-up terminal
 From http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/. Opens a quick ANSI terminal in the directory of the currently open file.
@@ -2821,27 +2842,6 @@ A minor mode for a nice writing environment.
 #+RESULTS:
 : t
 
-*** Publishing
-Remove section numbers, table of contents etc. from HTML output plus some other sensible defaults. These can be overridden in org-publish-project-alist.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-export-with-section-numbers nil)
-(setq org-html-include-timestamps nil)
-(setq org-export-with-sub-superscripts nil)
-(setq org-export-with-toc nil)
-(setq org-html-toplevel-hlevel 2)
-(setq org-export-htmlize-output-type 'css)
-(setq org-export-html-coding-system 'utf-8-unix)
-(setq org-html-viewport nil)
-#+END_SRC
-
-#+RESULTS:
-
-We'll need the htmlize package for syntax highlighting of code blocks.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package htmlize :ensure t)
-#+END_SRC
 
 ** Uncle Dave
 https://github.com/daedreth/UncleDavesEmacs
@@ -2933,7 +2933,7 @@ A teeny-tiny system monitor that can be enabled or disabled at runtime, useful f
 
 symon can be toggled on and off with =super+h=.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package symon
   :ensure t
   :bind
@@ -3095,7 +3095,6 @@ This can be invoked using C-M-s-k. This keybinding makes sure you don’t hit it
 #+RESULTS:
 : close-all-buffers
 
-
 *** line numbers and programming
 Every now and then all of us feel the urge to be productive and write some code. In the event that this happens, the following bit of configuration makes sure that we have access to relative line numbering in programming-related modes. I highly recommend not enabling linum-relative-mode globally, as it messed up something like ansi-term for instance.
 
@@ -3236,6 +3235,74 @@ Colors parentheses and other delimiters depending on their depth, useful for any
 #+END_SRC
 
 #+RESULTS:
+
+*** Hungry deletion
+On the list of things I like doing, deleting big whitespaces is pretty close to the bottom. Backspace or Delete will get rid of all whitespace until the next non-whitespace character is encountered. You may not like it, thus disable it if you must, but it’s pretty decent.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package hungry-delete
+  :ensure t
+  :config
+    (global-hungry-delete-mode))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+*** popup-kill-ring
+Out of all the packages I tried out, this one, being the simplest, appealed to me most. With a simple M-y you can now browse your kill-ring like browsing autocompletion items. C-n and C-p totally work for this.
+
+DGM: nice, but i prefer to use helm to browse the kill ring.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package popup-kill-ring
+  :ensure t
+  :bind ("M-y" . popup-kill-ring))
+#+END_SRC
+
+#+RESULTS:
+: popup-kill-ring
+
+*** Remote editing
+***  Editing
+I have no need to directly edit files over SSH, but what I do need is a way to edit files as root. Opening up nano in a terminal as root to play around with grubs default settings is a no-no, this solves that.
+*** Editing with sudo
+Pretty self-explanatory, useful as hell if you use exwm.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package sudo-edit
+  :ensure t
+  :bind
+    ("s-e" . sudo-edit))
+#+END_SRC
+
+#+RESULTS:
+: sudo-edit
+
+*** Diminishing modes 
+
+Your modeline is sacred, and if you have a lot of modes enabled, as you will if you use this config, you might end up with a lot of clutter there, the package diminish disables modes on the mode line but keeps them running, it just prevents them from showing up and taking up space.
+
+THIS WILL BE REMOVED SOON AS USE-PACKAGE HAS THE FUNCTIONALITY BUILT IN
+
+Edit this list as you see fit!
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package diminish
+  :ensure t
+  :init
+  (diminish 'which-key-mode)
+  (diminish 'linum-relative-mode)
+  (diminish 'hungry-delete-mode)
+  (diminish 'visual-line-mode)
+  (diminish 'subword-mode)
+  (diminish 'beacon-mode)
+  (diminish 'irony-mode)
+  (diminish 'page-break-lines-mode)
+  (diminish 'auto-revert-mode)
+  (diminish 'rainbow-delimiters-mode)
+  (diminish 'yas-minor-mode)
+  (diminish 'rainbow-mode))
+#+END_SRC
 
 
 * Final message

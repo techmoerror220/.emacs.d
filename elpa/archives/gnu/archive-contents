@@ -389,7 +389,7 @@
 	 ((:keywords "convenience" "languages")
 	  (:url . "https://github.com/joaotavora/eglot"))])
  (el-search .
-	    [(1 7 9)
+	    [(1 7 10)
 	     ((emacs
 	       (25))
 	      (stream
@@ -545,7 +545,7 @@
 	 ((:keywords "games" "processes")
 	  (:url . "http://www.gnuvola.org/software/gnugo/"))])
  (gnus-mock .
-	    [(0 1 2)
+	    [(0 2 0)
 	     nil "Mock Gnus installation for testing" tar
 	     ((:url . "http://elpa.gnu.org/packages/gnus-mock.html"))])
  (heap .

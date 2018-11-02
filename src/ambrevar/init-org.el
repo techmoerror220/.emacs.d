@@ -8,6 +8,12 @@
 ; (define-key org-mode-map (kbd "C-c C-a") 'org-agenda)  ;; dgm
 ; comments out
 
+;; We'll need the htmlize package for syntax highlighting of code blocks
+;; (in Caolan's and Uncle Dave's dot files)
+
+(use-package htmlize
+  :ensure t)
+
 (setq
  ;; Disable line splitting on M-RET.
  org-M-RET-may-split-line '((default))
@@ -17,6 +23,10 @@
  org-agenda-default-appointment-duration 60
  org-agenda-columns-add-appointments-to-effort-sum t
  org-ellipsis " […]"
+ org-src-fontify-natively t
+ org-src-tab-acts-natively t
+ org-confirm-babel-evaluate nil
+ org-export-with-smart-quotes t
  org-adapt-indentation nil
  ;; Add keywords.
 ; org-todo-keywords '((sequence "TODO" "REVIEW" "DONE"))  ;; commented
@@ -33,7 +43,37 @@
  ;; Org-mode aligns text.
  indent-tabs-mode nil)
 
-  ;; Set to the location of your Org files on your local system
+;; hook from uncle dave at https://github.com/daedreth/UncleDavesEmacs
+(add-hook 'org-mode-hook 'org-indent-mode)
+
+;;; from caolan on Publishing (...)
+;; Remove section numbers, table of contents etc. from HTML output plus some other sensible defaults. These can be overridden in org-publish-project-alist.
+
+(setq org-export-with-section-numbers nil)
+(setq org-html-include-timestamps nil)
+(setq org-export-with-sub-superscripts nil)
+(setq org-export-with-toc nil)
+(setq org-html-toplevel-hlevel 2)
+(setq org-export-htmlize-output-type 'css)
+(setq org-export-html-coding-system 'utf-8-unix)
+(setq org-html-viewport nil)
+
+;;;; Daniel Mai on exporting
+;; Pandoc exporter
+;; Pandoc converts between a huge number of different file formats.
+
+(use-package ox-pandoc
+  :no-require t
+  :defer 10
+  :ensure t)
+
+
+;; Line wrapping from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs
+(add-hook 'org-mode-hook
+        '(lambda ()
+           (visual-line-mode 1)))
+
+;; Set to the location of your Org files on your local system
   (setq org-directory "/home/dgm/Dropbox/gtd")
   ;; Set to <your Dropbox root directory>/MobileOrg.
   (setq org-mobile-directory "/media/dgm/blue/documents/dropbox/mobileorg")
@@ -214,7 +254,29 @@
 ;; (when (require 'org-bullets nil t)
 ;;   (add-hook 'org-mode-hook 'org-bullets-mode))
 
+;; uncle dave's take on it at
+;; https://github.com/daedreth/UncleDavesEmacs
 
+(use-package org-bullets
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
+
+;; Easy-to-add emacs-lisp template from uncle dave abs well
+;; Hitting tab after an “<el” in an org-mode file will create a template for elisp insertion.
+
+
+;;;;;;;;;;;;; Template Lists from Daniel Mai at
+;;;;;;;;;;;;; https://github.com/danielmai/.emacs.d/blob/master/config.org
+
+(add-to-list 'org-structure-template-alist
+             '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+(add-to-list 'org-structure-template-alist
+             '("py" "#+BEGIN_SRC python\n?\n#+END_SRC" ""))
+(add-to-list 'org-structure-template-alist
+             '("sh" "#+BEGIN_SRC sh\n?\n#+END_SRC" ""))
+(add-to-list 'org-structure-template-alist
+             '("md" "#+BEGIN_SRC markdown\n?\n#+END_SRC" ""))
 
 ;; Customization in: http://orgmode.org/manual/Capture-templates.html
 ;; Organization copied from: https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html

@@ -279,16 +279,16 @@
 
 (setq ibuffer-saved-filter-groups
     '(("home"
-       ("emacs-config" (or (filename . ".emacs.d")
+   ("emacs-config" (or (filename . ".emacs.d")
 			   (filename . "emacs-config")))
-       ("Org" (or (mode . org-mode)
+   ("Org" (or (mode . org-mode)
 		  (filename . "OrgMode")))
-       ("Web Dev" (or (mode . html-mode)
-		      (mode . css-mode)))
-       ("Magit" (name . "\*magit"))
-       ("ESS" (mode . ess-mode))
+   ("Web Dev" (or (mode . html-mode)
+		  (mode . css-mode)))
+   ("Magit" (name . "\*magit"))
+   ("ESS" (mode . ess-mode))
        ("LaTeX" (mode . latex-mode))
-       ("Help" (or (name . "\*Help\*")
+   ("Help" (or (name . "\*Help\*")
 		   (name . "\*Apropos\*")
 		   (name . "\*info\*"))))))
 
@@ -420,7 +420,7 @@
 
 (setq
  kill-ring-max 5000 ; increase kill-ring capacity
- kill-whole-line t  ; if NIL, killwhole line and move the next line up
+;; kill-whole-line t  ; if NIL, killwhole line and move the next line up / commented out by dgm as it might interere with kill-whole-line-or-region mode
 )
 
 ;; default to 4 visible spaces to display a tab
@@ -1323,7 +1323,7 @@ point reaches the beginning or end of the buffer, stop there."
 ;; run server if using emacsclient as default EDITOR also useful for
 ;; org-protocol capture https://www.emacswiki.org/emacs/EmacsClient
 
-;;(server-start)
+(server-start)
 
   (use-package exwm 
     :ensure t
@@ -1335,9 +1335,10 @@ point reaches the beginning or end of the buffer, stop there."
     ;; fringe size, most people prefer 1 (uncle dave's setup)
     (fringe-mode 3)
 
-    (require 'server)
-      (unless (server-running-p)
-        (server-start))
+;; dgm comments this as it appears to not be working!! reverts to old (server-star)
+;;    (require 'server)
+;;      (unless (server-running-p)
+;;        (server-start))
 
     (exwm-config-default))
 
@@ -1459,6 +1460,14 @@ only if this merge job is part of a group, i.e., was invoked from within
 
 (add-hook 'ediff-prepare-buffer-hook #'outline-show-all)
 
+(use-package whole-line-or-region
+  :ensure t)
+
+(add-to-list 'whole-line-or-region-extensions-alist
+             '(comment-dwim whole-line-or-region-comment-dwim nil))
+
+(whole-line-or-region-global-mode 1)
+
 (add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
 
 (defun my-goto-match-beginning ()
@@ -1471,6 +1480,9 @@ only if this merge job is part of a group, i.e., was invoked from within
     (goto-char isearch-other-end)))
 
 (setenv "TEST_USE_ANSI" "1")
+
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin/stata"))
+(setq exec-path (append exec-path '("/usr/local/bin/stata")))
 
 (use-package shell-pop
   :ensure t
@@ -1508,17 +1520,6 @@ only if this merge job is part of a group, i.e., was invoked from within
 (use-package olivetti
   :ensure t
   :config (setq olivetti-body-width 90))
-
-(setq org-export-with-section-numbers nil)
-(setq org-html-include-timestamps nil)
-(setq org-export-with-sub-superscripts nil)
-(setq org-export-with-toc nil)
-(setq org-html-toplevel-hlevel 2)
-(setq org-export-htmlize-output-type 'css)
-(setq org-export-html-coding-system 'utf-8-unix)
-(setq org-html-viewport nil)
-
-(use-package htmlize :ensure t)
 
 (use-package async
   :ensure t
@@ -1563,11 +1564,6 @@ only if this merge job is part of a group, i.e., was invoked from within
                 (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
   (call-process "rm" nil nil nil ".newScreen.png")))
 (global-set-key (kbd "s-]") 'daedreth/take-screenshot-region)
-
-(use-package symon
-  :ensure t
-  :bind
-  ("s-h" . symon-mode))
 
 (defvar my-term-shell "/bin/bash")
 (defadvice ansi-term (before force-bash)
@@ -1676,5 +1672,31 @@ only if this merge job is part of a group, i.e., was invoked from within
   :ensure t
   :init
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+(use-package hungry-delete
+  :ensure t
+  :config
+    (global-hungry-delete-mode))
+
+(use-package sudo-edit
+  :ensure t
+  :bind
+    ("s-e" . sudo-edit))
+
+(use-package diminish
+  :ensure t
+  :init
+  (diminish 'which-key-mode)
+  (diminish 'linum-relative-mode)
+  (diminish 'hungry-delete-mode)
+  (diminish 'visual-line-mode)
+  (diminish 'subword-mode)
+  (diminish 'beacon-mode)
+  (diminish 'irony-mode)
+  (diminish 'page-break-lines-mode)
+  (diminish 'auto-revert-mode)
+  (diminish 'rainbow-delimiters-mode)
+  (diminish 'yas-minor-mode)
+  (diminish 'rainbow-mode))
 
 (message "Starter Kit User (DGM) File loaded.")

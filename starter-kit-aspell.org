@@ -8,7 +8,8 @@ Hackish file to accommodate having aspell installed on your Mac. Otherwise
 flyspell doesn't start properly. Putting this customization in
 <username>.org initiates it too late. 
 
-- This file is loaded by a special line added to [[file:starter-kit.org][starter-kit.org]]. 
+- This file is loaded by a special line added to [[file:starter-kit.org][starter-kit.org]].
+
 
 ** COMMENT Specify aspell
 #+begin_src emacs-lisp :tangle no

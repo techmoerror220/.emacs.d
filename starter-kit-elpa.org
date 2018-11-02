@@ -143,7 +143,6 @@ The following packages will be downloaded and installed.
                                     'ztree
                                     'helpful
                                     'eyebrowse
-                                    'yasnippet-snippets
                                     'yasnippet-classic-snippets
                                     'use-package
                                     'mu4e-conversation
