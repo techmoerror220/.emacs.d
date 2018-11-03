@@ -23,9 +23,7 @@
  org-agenda-default-appointment-duration 60
  org-agenda-columns-add-appointments-to-effort-sum t
  org-ellipsis " […]"
- org-src-fontify-natively t
- org-src-tab-acts-natively t
- org-confirm-babel-evaluate nil
+  org-confirm-babel-evaluate nil
  org-export-with-smart-quotes t
  org-adapt-indentation nil
  ;; Add keywords.

@@ -63,6 +63,11 @@ just have to assume it's online."
               ("gnu"     . "http://elpa.gnu.org/packages/")
               ("melpa"   . "https://melpa.org/packages/")))
 
+;; from https://github.com/danielmai/.emacs.d/blob/master/init.el
+(when (boundp 'package-pinned-packages)
+  (setq package-pinned-packages
+        '((org-plus-contrib . "org"))))
+
 
 ;; alternative I tried when I was checking the reasons why I don't see magit in =list-packages=
 ;;  (add-to-list 'package-archives
@@ -188,15 +193,16 @@ ARCHIVE is the string name of the package archive.")
 ;;; Bootstrap use-package
 ;; Install use-package if it's not already installed.
 ;; use-package is used to configure the rest of the packages.
-(unless (package-installed-p 'use-package)
+(unless (or (package-installed-p 'use-package)
+            (package-installed-p 'diminish))
   (package-refresh-contents)
-  (package-install 'use-package))
+  (package-install 'use-package)
+  (package-install 'diminish))
 
 ;; From use-package README
 (eval-when-compile
   (require 'use-package))
-
-(require 'diminish)
+(require 'diminish)                ;; if you use :diminish
 (require 'bind-key)
 
 (message "Starter Kit main file loaded.")

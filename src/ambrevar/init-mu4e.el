@@ -83,7 +83,8 @@
       ;; sending mail with msmtp rather than smtp, copied from http://zmalltalker.com/linux/mu.html#
   (setq message-send-mail-function 'message-send-mail-with-sendmail
         sendmail-program "/usr/bin/msmtp"
-        user-full-name "Daniel Guinea")
+        user-full-name "Daniel Guinea"
+        user-mail-address "daniel.guinea.uned@gmail.com")
 
      ;; if you need offline mode, set these -- and create the queue dir
      ;; with 'mu mkdir', i.e.. mu mkdir /home/user/Maildir/queue

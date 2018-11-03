@@ -238,8 +238,6 @@
 
 (setq org-html-postamble nil)
 
-(setq org-src-window-setup 'current-window)
-
 ;; Make RefTex able to find my local bib files
      (setq reftex-bibpath-environment-variables
 ;;     '("/media/dgm/blue/documents/bibs"))
@@ -1354,13 +1352,6 @@ point reaches the beginning or end of the buffer, stop there."
   :config 
  (gpastel-start-listening))
 
-(require 'org-ref)
-  (setq reftex-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
-  (setq org-ref-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
-  (setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
-  (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
-;;  (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape -bibtex -f'  -pdf %f"))
-
 (setq default-frame-alist '((font . "Pragmata Pro Mono-16")))
 (add-to-list 'default-frame-alist '(line-spacing . 0.06))
 
@@ -1481,12 +1472,9 @@ only if this merge job is part of a group, i.e., was invoked from within
 
 (setenv "TEST_USE_ANSI" "1")
 
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin/stata"))
-(setq exec-path (append exec-path '("/usr/local/bin/stata")))
-
 (use-package shell-pop
   :ensure t
-  :bind (("C-t" . shell-pop))
+  :bind (("s--" . shell-pop))
   :config
   (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
   (setq shell-pop-term-shell "/bin/bash")
@@ -1698,5 +1686,28 @@ only if this merge job is part of a group, i.e., was invoked from within
   (diminish 'rainbow-delimiters-mode)
   (diminish 'yas-minor-mode)
   (diminish 'rainbow-mode))
+
+(use-package page-break-lines
+  :ensure t)
+
+(use-package tramp)
+
+(defun vsplit-other-window ()
+  "Splits the window vertically and switches to that window."
+  (interactive)
+  (split-window-vertically)
+  (other-window 1 nil))
+(defun hsplit-other-window ()
+  "Splits the window horizontally and switches to that window."
+  (interactive)
+  (split-window-horizontally)
+  (other-window 1 nil))
+
+(bind-key "C-x 2" 'vsplit-other-window)
+(bind-key "C-x 3" 'hsplit-other-window)
+
+(use-package transpose-frame
+  :ensure t
+  :bind ("C-c t" . transpose-frame))
 
 (message "Starter Kit User (DGM) File loaded.")

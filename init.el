@@ -128,22 +128,16 @@
  ;; This tells Emacs to open all .org files in org-mode (http://sachachua.com/blog/2007/12/emacs-getting-things-done-with-org-basic/)
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
-
-;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience.
-;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
-(setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
-;; the alternative, if you want a regular pdflatex would be, I think
-;; (setq org-latex-pdf-process '("latexmk -pdf %f"))
-
-
-
-
  ;;; Higher garbage collection threshold
  (setq gc-cons-threshold 20000000)
 
  ;;; init.el ends here
+ ;;; from https://github.com/danielmai/.emacs.d/blob/master/config.org
+
  (put 'upcase-region 'disabled nil)
  (put 'downcase-region 'disabled nil)
+ (put 'narrow-to-region 'disabled nil)
+ (put 'dired-find-alternate-file 'disabled nil)
 
 
 ;; coding system
@@ -670,3 +664,12 @@
                             (projects  . 10)))
     (setq dashboard-banner-logo-title ""))
 (message "Testing 2 dashboard chunk is evaluated.")
+
+
+;; https://github.com/purcell/exec-path-from-shell
+
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))

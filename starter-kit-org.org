@@ -82,6 +82,8 @@ Speed commands enable single-letter commands in Org-mode files when
 the point is at the beginning of a headline, or at the beginning of a
 code block.
 
+Speed commands are a nice and quick way to perform certain actions while at the beginning of a heading. It’s not activated by default.
+
 See the =org-speed-commands-default= variable for a list of the keys
 and commands enabled at the beginning of headlines.  All code blocks
 are available at the beginning of a code block, the following key
@@ -151,10 +153,19 @@ using the major-mode of the code.  It also changes the behavior of
 =TAB= to as if it were used in the appropriate major mode.  This means
 that reading and editing code form inside of your Org-mode files is
 much more like reading and editing of code using its major mode.
+
+Added from Daniel Mai at https://github.com/danielmai/.emacs.d/blob/master/config.org as well
+
 #+begin_src emacs-lisp
-  (setq org-src-fontify-natively t)
-  (setq org-src-tab-acts-natively t)
+(setq org-src-fontify-natively t
+      org-src-window-setup 'current-window
+      org-src-strip-leading-and-trailing-blank-lines t
+      org-src-preserve-indentation t
+      org-src-tab-acts-natively t)
 #+end_src
+
+#+RESULTS:
+: t
 
 Don't ask for confirmation on every =C-c C-c= code-block compile. 
 
@@ -208,6 +219,49 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 #+begin_src emacs-lisp :tangle yes
   (setq org-archive-location "/home/dgm/Dropbox/gtd/archive.org::From %s")
 #+end_src
+
+** Daniel Mai's costumization
+
+From https://github.com/danielmai/.emacs.d/blob/master/config.org
+
+#+BEGIN_SRC emacs-lisp 
+(setq org-image-actual-width 550)
+(setq org-highlight-latex-and-related '(latex script entities))
+#+END_SRC
+
+*** SRC block exectuation, watch out!
+
+On Org mode version 9 I wasn’t able to execute source blocks out of the box. Others have ran into the same issue too. The solution is to remove the .elc files from the package directory: =rm ${ORG_DIR}/*.elc=.
+*** Org tags
+
+The default value is -77, which is weird for smaller width windows. I’d rather have the tags align horizontally with the header. 45 is a good column number to do that.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-tags-column 45)
+#+END_SRC
+
+** =org-ref=
+
+From https://github.com/jkitchin/org-ref
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (require 'org-ref)
+  (setq reftex-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
+  (setq org-ref-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
+  (setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
+  (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
+;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience.
+;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
+;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+;; the alternative, if you want a regular pdflatex would be, I think
+;; (setq org-latex-pdf-process '("latexmk -pdf %f"))
+;; (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape -bibtex -f'  -pdf %f"))
+#+END_SRC
+
+#+RESULTS:
+| latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f |
+
+
 
 
 * Final message

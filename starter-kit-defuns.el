@@ -33,9 +33,10 @@
       
   (defun turn-on-save-place-mode ()
     (setq save-place t))
-  
-  (defun turn-on-whitespace ()
-    (whitespace-mode t))
+
+;; already in dgm.org
+;;  (defun turn-on-whitespace ()
+;;    (whitespace-mode t))
 
 (add-hook 'starter-kit-coding-hook 'local-column-number-mode)
 

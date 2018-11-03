@@ -1,5 +1,19 @@
 ;;; Helm
 
+;;; Daniel Mai stuff from
+;;; https://github.com/danielmai/.emacs.d/blob/master/config.org
+
+(use-package helm-ag
+  :ensure t
+  :after helm-mode)
+
+(use-package helm-swoop
+  :ensure t
+  :after helm-mode
+  ;; :bind ("H-w" . helm-swoop)
+  )
+
+
 ;;; Original DGM's stuff
 
     ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.

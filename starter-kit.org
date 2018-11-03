@@ -344,6 +344,11 @@ Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager.
               ("gnu"     . "http://elpa.gnu.org/packages/")
               ("melpa"   . "https://melpa.org/packages/")))
 
+;; from https://github.com/danielmai/.emacs.d/blob/master/init.el
+(when (boundp 'package-pinned-packages)
+  (setq package-pinned-packages
+        '((org-plus-contrib . "org"))))
+
 
 ;; alternative I tried when I was checking the reasons why I don't see magit in =list-packages=
 ;;  (add-to-list 'package-archives
@@ -603,31 +608,28 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
 
 #+RESULTS:
 
-From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+From https://github.com/danielmai/.emacs.d/blob/master/init.el
 
 #+BEGIN_SRC emacs-lisp 
 ;;; Bootstrap use-package
 ;; Install use-package if it's not already installed.
 ;; use-package is used to configure the rest of the packages.
-(unless (package-installed-p 'use-package)
+(unless (or (package-installed-p 'use-package)
+            (package-installed-p 'diminish))
   (package-refresh-contents)
-  (package-install 'use-package))
+  (package-install 'use-package)
+  (package-install 'diminish))
 
 ;; From use-package README
 (eval-when-compile
   (require 'use-package))
-#+END_SRC
-
-#+RESULTS:
-: use-package
-
-#+BEGIN_SRC emacs-lisp 
-(require 'diminish)
+(require 'diminish)                ;; if you use :diminish
 (require 'bind-key)
 #+END_SRC
 
 #+RESULTS:
 : bind-key
+
 
 
 

@@ -46,6 +46,26 @@
 ;;  (load-theme 'spacemacs-dark t)
 ;;  (load-theme 'misterioso t)
 
+(defun switch-theme (theme)
+  "Disables any currently active themes and loads THEME."
+  ;; This interactive call is taken from `load-theme'
+  (interactive
+   (list
+    (intern (completing-read "Load custom theme: "
+                             (mapc 'symbol-name
+                                   (custom-available-themes))))))
+  (let ((enabled-themes custom-enabled-themes))
+    (mapc #'disable-theme custom-enabled-themes)
+    (load-theme theme t)))
+
+(defun disable-active-themes ()
+  "Disables any currently active themes listed in `custom-enabled-themes'."
+  (interactive)
+  (mapc #'disable-theme custom-enabled-themes))
+
+(bind-key "s-<f12>" 'switch-theme)
+(bind-key "s-<f11>" 'disable-active-themes)
+
 (when window-system
 ;;      (setq frame-title-format '(buffer-file-name "%f" ("%b")))
       (setq frame-title-format (concat "%b" (unless (daemonp) " [serverless]"))) ;; from ambrevar's main.el
@@ -121,16 +141,35 @@
 
   (save-place-mode 1)
 
-(when (> emacs-major-version 21)
-  (require 'flx-ido) 
-  (ido-mode t)
-  (ido-everywhere 1)
+;;  (when (> emacs-major-version 21)
+;;    (require 'flx-ido) 
+;;    (ido-mode t)
+;;    (ido-everywhere 1)
+;;    (setq ido-enable-prefix nil
+;;          ido-enable-flex-matching t
+;;          ido-create-new-buffer 'always
+;;          ido-use-filename-at-point nil
+;;          ido-use-faces nil
+;;          ido-max-prospects 10))
+
+(use-package ido
+  :ensure t
+  :init
   (setq ido-enable-prefix nil
         ido-enable-flex-matching t
         ido-create-new-buffer 'always
-        ido-use-filename-at-point nil
-        ido-use-faces nil
-        ido-max-prospects 10))
+        ido-use-filename-at-point nil 
+        ido-use-faces nil             
+        ido-max-prospects 10
+        ido-everywhere t
+        ido-mode t)
+  (use-package flx-ido
+    :ensure t) 
+  (use-package ido-vertical-mode
+    :ensure t
+    :defer t
+    :init (ido-vertical-mode 1)
+    (setq ido-vertical-define-keys 'C-n-and-C-p-only)))
 
 (set-default 'indent-tabs-mode nil)
   (set-default 'indicate-empty-lines t)

@@ -8,7 +8,7 @@
     (flycheck-mode 'toggle)
     (if flyspell-mode (flyspell-mode 0) (flyspell-prog-mode)))
   (whitespace-mode 'toggle))
-(global-set-key (kbd "<f9>") 'ambrevar/flycheck-and-whitespace-mode)
+;; (global-set-key (kbd "<f9>") 'ambrevar/flycheck-and-whitespace-mode)
 
 (define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck)
 

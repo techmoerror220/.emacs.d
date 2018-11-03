@@ -72,6 +72,35 @@ loading the =zenburn= and =anti-zenburn= themes.
 #+RESULTS:
 : t
 
+*** Theme function for changing theme and disabling temes
+
+From https://github.com/danielmai/.emacs.d/blob/master/config.org
+His explanation: I tend to switch themes more often than normal. For example, switching to a lighter theme (such as the default) or to a different theme depending on the time of day or my mood. Normally, switching themes is a multi-step process with disable-theme and load-theme. The switch-theme function will do that in one swoop. I just choose which theme I want to go to.
+
+#+BEGIN_SRC emacs-lisp 
+(defun switch-theme (theme)
+  "Disables any currently active themes and loads THEME."
+  ;; This interactive call is taken from `load-theme'
+  (interactive
+   (list
+    (intern (completing-read "Load custom theme: "
+                             (mapc 'symbol-name
+                                   (custom-available-themes))))))
+  (let ((enabled-themes custom-enabled-themes))
+    (mapc #'disable-theme custom-enabled-themes)
+    (load-theme theme t)))
+
+(defun disable-active-themes ()
+  "Disables any currently active themes listed in `custom-enabled-themes'."
+  (interactive)
+  (mapc #'disable-theme custom-enabled-themes))
+
+(bind-key "s-<f12>" 'switch-theme)
+(bind-key "s-<f11>" 'disable-active-themes)
+#+END_SRC
+
+#+RESULTS:
+: disable-active-themes
 
 ** Window system 
 
@@ -217,17 +246,43 @@ Note by dgm on 16 sept 2018: I'm trying to use =exwm= so I am not going to use m
 ido-mode is like magic pixie dust!
 #+srcname: starter-kit-loves-ido-mode
 #+begin_src emacs-lisp 
-  (when (> emacs-major-version 21)
-    (require 'flx-ido) 
-    (ido-mode t)
-    (ido-everywhere 1)
-    (setq ido-enable-prefix nil
-          ido-enable-flex-matching t
-          ido-create-new-buffer 'always
-          ido-use-filename-at-point nil
-          ido-use-faces nil
-          ido-max-prospects 10))
+;;  (when (> emacs-major-version 21)
+;;    (require 'flx-ido) 
+;;    (ido-mode t)
+;;    (ido-everywhere 1)
+;;    (setq ido-enable-prefix nil
+;;          ido-enable-flex-matching t
+;;          ido-create-new-buffer 'always
+;;          ido-use-filename-at-point nil
+;;          ido-use-faces nil
+;;          ido-max-prospects 10))                    
 #+end_src
+
+New setup from https://github.com/danielmai/.emacs.d/blob/master/config.org
+
+#+BEGIN_SRC emacs-lisp
+(use-package ido
+  :ensure t
+  :init
+  (setq ido-enable-prefix nil
+        ido-enable-flex-matching t
+        ido-create-new-buffer 'always
+        ido-use-filename-at-point nil 
+        ido-use-faces nil             
+        ido-max-prospects 10
+        ido-everywhere t
+        ido-mode t)
+  (use-package flx-ido
+    :ensure t) 
+  (use-package ido-vertical-mode
+    :ensure t
+    :defer t
+    :init (ido-vertical-mode 1)
+    (setq ido-vertical-define-keys 'C-n-and-C-p-only)))
+#+END_SRC
+
+#+RESULTS:
+
 
 ** Other, tabs, imenu and a coding hook
 #+begin_src emacs-lisp 
@@ -304,7 +359,7 @@ DGM says: yes, but I activate it elsewhere.
 (setq diff-switches "-u")
 #+end_src
 
-
+* Final Message
 
 #+source: message-line
 #+begin_src emacs-lisp

@@ -108,6 +108,7 @@ Building regular expressions in Emacs is kind of a pain.  The visual-regexp pack
 
 ** Window switching.
 =C-x o= goes to the next window, Shift+direction arrow moves between frames.
+
 #+begin_src emacs-lisp 
 ;; dgm comments this out because Shift-Arrows should work in org mode for choosing dates and because instead of windmove I will use ace-window by the great abo-abo.
 ;; (windmove-default-keybindings) 
@@ -126,11 +127,14 @@ Note from DGM: these key bindings are superseded by org mode and don't work in t
 #+srcname: resize-splits
 #+begin_src emacs-lisp
   ;; resizing 'windows' (i.e., inside the frame)
-  (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
-  (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
-  (global-set-key (kbd "S-C-<down>") 'shrink-window)
-  (global-set-key (kbd "S-C-<up>") 'enlarge-window)  
+  (global-set-key (kbd "s-M-<left>") 'shrink-window-horizontally)
+  (global-set-key (kbd "s-M-<right>") 'enlarge-window-horizontally)
+  (global-set-key (kbd "s-M-<down>") 'shrink-window)
+  (global-set-key (kbd "s-M-<up>") 'enlarge-window)  
 #+end_src
+
+#+RESULTS: resize-splits
+: enlarge-window
 
 ** Rotate Windows in a Frame
 When windows get out of order, you can rotate them.
@@ -296,6 +300,28 @@ and I copy it below because it is awesome.
       (occur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
 #+end_src
 
+And from https://github.com/danielmai/.emacs.d/blob/master/config.org
+
+The following function for occur-dwim is taken from Oleh Krehel from his blog post at (or emacs. It takes the current region or the symbol at point as the default value for occur.
+
+#+BEGIN_SRC emacs-lisp
+(defun occur-dwim ()
+  "Call `occur' with a sane default."
+  (interactive)
+  (push (if (region-active-p)
+            (buffer-substring-no-properties
+             (region-beginning)
+             (region-end))
+          (thing-at-point 'symbol))
+        regexp-history)
+  (call-interactively 'occur))
+
+(bind-key "M-s o" 'occur-dwim)
+#+END_SRC
+
+#+RESULTS:
+: occur-dwim
+
 ** Org-mode
 A global binding for Org-mode (see [[file:starter-kit-org.org][starter-kit-org]])
 
@@ -331,6 +357,9 @@ ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://githu
 : ag-regexp
 
 ** Winner mode
+
+Winner mode allows you to undo/redo changes to window changes in Emacs.
+
     Remember the previous window configurations and jump back to them
     as needed (as when, e.g., some other mode messes with your working
     layout.) Rebind the default keys to C-c-up and C-c-down as in a moment 
@@ -338,10 +367,20 @@ ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://githu
 
 #+source: local-winner-mode
 #+begin_src emacs-lisp
-  (winner-mode 1)
-  (global-set-key (kbd "C-c <up>") 'winner-undo)
-  (global-set-key (kbd "C-c <down>") 'winner-redo)
+(use-package winner
+  :config
+  (winner-mode t)
+  :bind (("C-c <down>" . winner-undo)
+         ("C-c <up>" . winner-redo)))
+
+;; Old khj's code
+;;  (winner-mode 1)
+;;  (global-set-key (kbd "C-c <up>") 'winner-undo)
+;;  (global-set-key (kbd "C-c <down>") 'winner-redo)
 #+end_src
+
+#+RESULTS: local-winner-mode
+: winner-undo
 
 Restore the windows after Ediff quits. By default, when you quit the Ediff session with q, it just leaves the two diff windows around, instead of restoring the window configuration from when Ediff was started.
 (tip from https://caolan.org/dotfiles/emacs.html#orgd96aeb0)

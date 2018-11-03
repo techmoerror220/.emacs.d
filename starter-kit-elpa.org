@@ -110,7 +110,6 @@ The following packages will be downloaded and installed.
                                     'nyan-mode
                                     'helm
                                     'free-keys
-                                    'helm-projectile
                                     'helm-descbinds
                                     ;; 'bookmark+
                                     'spaceline
@@ -128,7 +127,6 @@ The following packages will be downloaded and installed.
                                     'iedit
                                     'geiser
                                     'helm-gtags
-                                    'helm-ag 
                                     'darktooth-theme
                                     'soothe-theme
   ;;                                  'uscolors-theme 

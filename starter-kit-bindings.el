@@ -73,10 +73,10 @@
 ;; (setq windmove-wrap-around t)
 
 ;; resizing 'windows' (i.e., inside the frame)
-(global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
-(global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
-(global-set-key (kbd "S-C-<down>") 'shrink-window)
-(global-set-key (kbd "S-C-<up>") 'enlarge-window)
+(global-set-key (kbd "s-M-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "s-M-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "s-M-<down>") 'shrink-window)
+(global-set-key (kbd "s-M-<up>") 'enlarge-window)
 
 (defun rotate-windows ()
    "Rotate your windows" (interactive) (cond ((not (> (count-windows) 1)) (message "You can't rotate a single window!"))
@@ -173,6 +173,19 @@
     (let ((case-fold-search isearch-case-fold-search))
       (occur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
 
+(defun occur-dwim ()
+  "Call `occur' with a sane default."
+  (interactive)
+  (push (if (region-active-p)
+            (buffer-substring-no-properties
+             (region-beginning)
+             (region-end))
+          (thing-at-point 'symbol))
+        regexp-history)
+  (call-interactively 'occur))
+
+(bind-key "M-s o" 'occur-dwim)
+
 (define-key global-map "\C-cl" 'org-store-link)
 
 (require 'ag)
@@ -183,9 +196,16 @@
 ;;  (define-key global-map "\C-x\C-a" 'helm-ag) 
 ;;  (define-key global-map "\C-x\C-r" 'helm-ag-regexp)
 
-(winner-mode 1)
-(global-set-key (kbd "C-c <up>") 'winner-undo)
-(global-set-key (kbd "C-c <down>") 'winner-redo)
+(use-package winner
+  :config
+  (winner-mode t)
+  :bind (("C-c <down>" . winner-undo)
+         ("C-c <up>" . winner-redo)))
+
+;; Old khj's code
+;;  (winner-mode 1)
+;;  (global-set-key (kbd "C-c <up>") 'winner-undo)
+;;  (global-set-key (kbd "C-c <down>") 'winner-redo)
 
 (add-hook 'ediff-after-quit-hook-internal 'winner-undo)
 

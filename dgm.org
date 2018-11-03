@@ -429,9 +429,11 @@ Create =html= files form the =org= sources, to help with documentation. To set u
 *** Babel Settings
     Configure org-mode so that when you edit source code in an indirect buffer (with C-c '), the buffer is opened in the current window. That way, your window organization isn't broken when switching.
 
+Disabled as it is in =starter-kit-org.org=
+
     #+source: orgmode-indirect-buffer-settings
-    #+begin_src emacs-lisp :tangle yes
-      (setq org-src-window-setup 'current-window)
+    #+begin_src emacs-lisp :tangle no
+;;      (setq org-src-window-setup 'current-window)
     #+end_src
 
 ** DGM customization
@@ -641,7 +643,7 @@ Whenever you create useless whitespace, the whitespace is highlighted
 
 ;; activate whitespace-mode to view all whitespace characters
 (global-set-key (kbd "C-c w") 'whitespace-mode)
-#+END_SRC
+#+END_SRC    
 
 #+RESULTS:
 : whitespace-mode
@@ -1334,8 +1336,15 @@ I disable this as it is dealt with in -misc.org
     ;; (setq projectile-enable-caching t)
     (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
 
+    (use-package helm-projectile
+      :ensure t
+      :after helm-mode
+      :commands helm-projectile
+    ;;   :bind ("C-c p h" . helm-projectile)
+    )
+
     (setq projectile-completion-system 'helm)
-    (helm-projectile-on)
+    (helm-projectile-on)   ;;; creo que no hace falta tras decir =ensure t= in use-package.
     (setq projectile-switch-project-action 'helm-projectile)
 
   ;; from https://projectile.readthedocs.io/en/latest/usage/
@@ -2465,22 +2474,6 @@ https://emacs.stackexchange.com/questions/5603/how-to-quickly-copy-move-file-in-
 #+RESULTS:
 : t
 
-** =org-ref=
-
-From https://github.com/jkitchin/org-ref
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (require 'org-ref)
-  (setq reftex-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
-  (setq org-ref-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
-  (setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
-  (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
-;;  (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape -bibtex -f'  -pdf %f"))
-#+END_SRC
-
-#+RESULTS:
-| latexmk -shell-escape -bibtex -f -pdf %f |
-
 ** Customize =emacsclient=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -2727,18 +2720,20 @@ Originally this got stata working when I called it interactively with =M-x stata
 #+END_SRC
 
 #+RESULTS:
-| /home/dgm/.local/bin | /usr/local/bin | /usr/bin | /bin | /usr/local/games | /usr/games | /usr/local/libexec/emacs/27.0.50/x86_64-pc-linux-gnu | /usr/local/stata | /usr/local/stata | /usr/local/bin/stata | /usr/local/stata | /usr/local/bin/stata | /usr/local/stata |
+| /usr/local/bin/ | /usr/bin/ | /bin/ | /usr/local/games/ | /usr/games/ | /usr/local/sbin/ | /usr/sbin/ | /sbin/ | /usr/bin/ | /bin/ | /usr/local/bin/ | /usr/local/stata14/ | /usr/local/stata/ | /usr/local/libexec/emacs/27.0.50/x86_64-pc-linux-gnu/ | /usr/local/bin/stata | /usr/local/stata |
 
 
 However, once I used the script sent from Stata Corp. to make stata work after updating it, this does not work. So I have changed it to:
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin/stata"))
 (setq exec-path (append exec-path '("/usr/local/bin/stata")))
 #+END_SRC
 
 #+RESULTS:
-| /home/dgm/.local/bin | /usr/local/bin | /usr/bin | /bin | /usr/local/games | /usr/games | /usr/local/libexec/emacs/27.0.50/x86_64-pc-linux-gnu | /usr/local/bin/stata | /usr/local/bin/stata | /usr/local/bin/stata |
+| /usr/local/bin/ | /usr/bin/ | /bin/ | /usr/local/games/ | /usr/games/ | /usr/local/sbin/ | /usr/sbin/ | /sbin/ | /usr/bin/ | /bin/ | /usr/local/bin/ | /usr/local/stata14/ | /usr/local/stata/ | /usr/local/libexec/emacs/27.0.50/x86_64-pc-linux-gnu/ | /usr/local/bin/stata |
+
+However, I've tangled it up to "no" because I think this is not needed now that I use Purcell's package =exec-path-from-shell=.
 
 *** Pop-up terminal
 From http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/. Opens a quick ANSI terminal in the directory of the currently open file.
@@ -2746,7 +2741,7 @@ From http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/. Opens
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package shell-pop
   :ensure t
-  :bind (("C-t" . shell-pop))
+  :bind (("s--" . shell-pop))
   :config
   (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
   (setq shell-pop-term-shell "/bin/bash")
@@ -2841,7 +2836,6 @@ A minor mode for a nice writing environment.
 
 #+RESULTS:
 : t
-
 
 ** Uncle Dave
 https://github.com/daedreth/UncleDavesEmacs
@@ -2990,16 +2984,22 @@ I've disabled it because it is set to 0 in =starter-kit-text.org=.
 Some of us have large displays, others have tiny netbook screens, but regardless of your hardware you probably use more than 2 panes/windows at times, cycling through all of them with C-c o is annoying to say the least, it’s a lot of keystrokes and takes time, time you could spend doing something more productive.
 
 ***** =ace-window=
-Originally I used =ace-window=
+ace-window is a package that uses the same idea from ace-jump-mode for buffer navigation, but applies it to windows. 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-   (global-set-key (kbd "M-P") 'ace-window)
+(use-package ace-window
+  :ensure t
+  :config
+  (ace-window-display-mode)
+  :bind ("M-P" . ace-window))
+
+;; (global-set-key (kbd "M-P") 'ace-window)
 #+END_SRC
 
 #+RESULTS:
 : ace-window
 
-Problema: if I am in an external app within =exwm= =ace-window= does not work.
+Problema: if I am in an external app within =exwm=, then =ace-window= does not work and I'd rather use =switch-window=.
 
 ***** switch-window
 This magnificent package takes care of this issue. It’s unnoticeable if you have <3 panes open, but with 3 or more, upon pressing C-x o you will notice how your buffers turn a solid color and each buffer is asigned a letter (the list below shows the letters, you can modify them to suit your liking), upon pressing a letter asigned to a window, your will be taken to said window, easy to remember, quick to use and most importantly, it annihilates a big issue I had with emacs. An alternative is ace-window, however by default it also changes the behaviour of C-x o even if only 2 windows are open, this is bad, it also works less well with exwm for some reason.
@@ -3303,6 +3303,82 @@ Edit this list as you see fit!
   (diminish 'yas-minor-mode)
   (diminish 'rainbow-mode))
 #+END_SRC
+
+** Daniel Mai
+
+https://github.com/danielmai/.emacs.d/blob/master/config.org
+
+*** Page breaks
+
+Here we make page-break characters look pretty, instead of appearing as ^L in Emacs. Here’s an informative article called “Using Page-Breaks in GNU Emacs” by Eric J. M. Ritz.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package page-break-lines
+  :ensure t)
+#+END_SRC
+
+#+RESULTS:
+
+*** Tramp 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package tramp)
+#+END_SRC
+
+#+RESULTS:
+
+*** Split window and move to new window
+
+Whenever I split windows, I usually do so and also switch to the other window as well, so might as well rebind the splitting key bindings to do just that to reduce the repetition.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun vsplit-other-window ()
+  "Splits the window vertically and switches to that window."
+  (interactive)
+  (split-window-vertically)
+  (other-window 1 nil))
+(defun hsplit-other-window ()
+  "Splits the window horizontally and switches to that window."
+  (interactive)
+  (split-window-horizontally)
+  (other-window 1 nil))
+
+(bind-key "C-x 2" 'vsplit-other-window)
+(bind-key "C-x 3" 'hsplit-other-window)
+#+END_SRC
+
+#+RESULTS:
+: hsplit-other-window
+
+*** Transpose frame
+
+Check it out here: https://www.emacswiki.org/emacs/TransposeFrame
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package transpose-frame
+  :ensure t
+  :bind ("C-c t" . transpose-frame))
+#+END_SRC
+
+#+RESULTS :
+: transpose-frame
+
+*** Ace-jump 
+A quick way to jump around text in buffers.
+
+See Emacs Rocks Episode 10 for a screencast: http://emacsrocks.com/e10.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ace-jump-mode
+  :ensure t
+  :diminish ace-jump-mode
+  :commands ace-jump-mode
+  :bind ("C-s-s" . ace-jump-mode))
+#+END_SRC
+
+#+RESULTS:
+: ace-jump-mode
+
 
 
 * Final message
