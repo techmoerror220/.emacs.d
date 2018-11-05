@@ -6,7 +6,10 @@ Yasnippet is a snippet expansion system for Emacs. It uses short phrases and the
 Load the snippets defined in the package's =./snippets/= directory, and local snippets from the =./local-snippets/= directory. 
 Added tips from Uncle Dave and Daniel Mai (https://github.com/danielmai/.emacs.d/blob/master/config.org)
 
-#+begin_src emacs-lisp :tangle yes
+
+This is the old configuration.
+
+#+begin_src emacs-lisp :tangle no
   (add-to-list 'load-path
                (expand-file-name  "yasnippet"
                                   (expand-file-name "elpa"
@@ -34,7 +37,38 @@ Added tips from Uncle Dave and Daniel Mai (https://github.com/danielmai/.emacs.d
                            "~/.emacs.d/elpa/"))
 
   ;;   (yas-load-directory (expand-file-name "snippets" dotfiles-dir))  ;; original line from kieran healy
+#+end_src
 
+The new config from Daniel Mai's config files is this:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package yasnippet
+  :ensure t
+  :diminish yas-minor-mode
+  :config
+(setq yas-snippet-dirs '("~/.emacs.d/mysnippets"
+                         "~/.emacs.d/snippets"
+                         "~/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets"
+                         "~/.emacs.d/elpa/yasnippet-snippets-20180909.1015/snippets"
+                         "~/.emacs.d/elpa/"))
+  (setq yas-indent-line 'fixed)
+  (yas-global-mode))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+His text is: 
+Yeah, snippets! I start with snippets from Andrea Crotti’s collection and have also modified them and added my own.
+
+It takes a few seconds to load and I don’t need them immediately when Emacs starts up, so we can defer loading yasnippet until there’s some idle time.
+
+Setting yas-indent-line to =’fixed= fixes Python indentation behavior when typing a templated snippet.
+
+
+These are some functions defined in the old configuration that I leave as they might be useful or required somewhere.
+
+#+begin_src emacs-lisp :tangle yes
   (defun check-expansion ()
     (save-excursion
       (if (looking-at "\\_>") t
@@ -70,7 +104,6 @@ We use the `:with` keyword to include dabbrev in every backend, which gives us c
 
 #+source: company-mode
 #+begin_src emacs-lisp :tangle yes
-
 ;;Use C-TAB to complete. We put this in eval-after-load 
 ;; because otherwise some modes will try to override our settings.
 ;;;;;;; (require 'company) ;; commented out by dgm in favor of uncle dave's use-package from https://github.com/daedreth/UncleDavesEmacs
@@ -78,7 +111,9 @@ We use the `:with` keyword to include dabbrev in every backend, which gives us c
 (use-package company
   :ensure t
   :config
-  (setq company-idle-delay 0)
+  (setq company-tooltip-limit 20)
+  (setq company-idle-delay .3)
+  (setq company-ech-delay 0)
   (setq company-minimum-prefix-length 3))
 
 ;; set to 0 to prevent completion starting automatically 
@@ -119,6 +154,7 @@ We use the `:with` keyword to include dabbrev in every backend, which gives us c
 
 #+RESULTS: company-mode
 : yank-pop
+
 ** Autocomplete
 We use company mode, as initiated above, but here's a working auto-complete setup as an alternative. Don't use company mode and autocomplete together. To switch from company-mode to autocomplete, move the `tangle: no` from the `begin_src` line below up to the corresponding line in the `company-mode` section above. Then open the `starter-kit-elpa.org` file, uncomment the `autocomplete` and `ac-` extensions there, and restart Emacs.
 
@@ -212,13 +248,17 @@ Requires libclang to be installed.
     (add-hook 'python-mode-hook 'python-mode-company-init))
 #+END_SRC
 
-*** emacs-lisp
+*** COMMENT emacs-lisp
+
+Watch out: you have to install in your system =sbcl=. 
+I comment this out for the time being as it seems to use a keybinding that conflicts with others (I get this warning =Error (use-package): slime-company/:catch: Key sequence C-x C-a C-l starts with non-prefix key C-x C-a=)
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
 (add-hook 'emacs-lisp-mode-hook 'company-mode)
 
-;; (use-package slime
+;;(use-package slime
 ;;  :ensure t
 ;;  :config
 ;;  (setq inferior-lisp-program "/usr/bin/sbcl")
@@ -253,6 +293,9 @@ Requires libclang to be installed.
     (require 'company)
     (add-hook 'shell-mode-hook 'shell-mode-company-init))
 #+END_SRC
+
+#+RESULTS:
+: t
 
 * Final message
 #+source: message-line

@@ -561,14 +561,19 @@
 
 
 ;; Ambrevar's stuff (from his init)
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; commented out by dgm on 5 nov
+;;2018 when trying to write a ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; starter-kit-helm file
 ;;;;;;;;;;;;; helm
 
-(require 'helm)
-(require 'helm-config)
+;;(require 'helm)
+;;(require 'helm-config)
 
-(nconc package-selected-packages '(helm helm-descbinds helm-ls-git))
-(when (require 'helm-config nil t) (require 'init-helm))
+;;(nconc package-selected-packages '(helm helm-descbinds helm-ls-git))
+;; (when (require 'helm-config nil t) (require 'init-helm))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 
 ;;;;;;;;;;;; other helm-related stuff
 ;; commented out as flyspell makes email work very slowly and I don't
@@ -577,65 +582,13 @@
 ;; (nconc package-selected-packages '(flycheck helm-flycheck))
 ;; (when (require 'flycheck nil t) (require 'init-flycheck))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; commented out by dgm on
+;;; 5 nov 2018
 ;;; System packages
-(nconc package-selected-packages '(helm-system-packages))
-(global-set-key (kbd "C-x c #") 'helm-system-packages)
+;;;;;;;;;;;; (nconc package-selected-packages '(helm-system-packages))
+;;;;;;;;;;;; (global-set-key (kbd "C-x c #") 'helm-system-packages)
 
-
-;;;;;;;;;;;;; mu4e
-
-;; this is the path where mu4e got installed when I did the installation
-;; of mu and mu4e thru the Debian repository with maildir-utils.
-
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
-  (setq mu4e-mu-binary (executable-find "/usr/bin/mu"))
-
-;; if I installed mu  manually, these are the paths in the officePC
-;;  (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
-;;  (setq mu4e-mu-binary (executable-find "/usr/local/bin/mu"))
-
-;; files in "/usr/share/emacs/site-lisp/mu4e"
-  (require 'mu4e)
-  (require 'org-mu4e)
-  (require 'mu4e-contrib)
-   ;; https://groups.google.com/forum/#!topic/mu-discuss/0QIgZ27x3Is
-;; following https://caolan.org/dotfiles/emacs.html#orgd96aeb0
-;; In the words of caolan
-;; I find the included mu4e-shr2text command which uses the shr package (also used by eww) to render HTML too slow and have switched to using w3m with the display_link_number option.
-;; (setq mu4e-html2text-command 'mu4e-shr2text)
-(setq mu4e-html2text-command "w3m -dump -s -T text/html -o display_link_number=true")
-
-  ;; make shr/eww readable with dark themes
-  (setq shr-color-visible-luminance-min 80)
-
-(with-eval-after-load 'mu4e
-  ;; mu4e-conversation must be enabled here.
-  ;; REVIEW: https://github.com/djcb/mu/issues/1258
-  (when (require 'mu4e-conversation nil t)
-    (global-mu4e-conversation-mode)
-    ;; (setq mu4e-debug t)
-;;;;;;;;;;;;;;;;;    (setq mu4e-headers-show-threads nil        ;; maybe comment out these two lines (dgm)
-;;;;;;;;;;;;;;;;;          mu4e-headers-include-related nil)
-    ;; For testing purposes:
-    ;; (set-face-background mu4e-conversation-sender-1 "#335533")
-    ;; (set-face-background mu4e-conversation-sender-2 "#553333")
-    ;; (set-face-background mu4e-conversation-sender-3 "#333355")
-    ;; (set-face-background mu4e-conversation-sender-4 "#888855")
-    ;; (setq mu4e-conversation-print-function 'mu4e-conversation-print-tree)
-    ;; (add-hook 'mu4e-conversation-hook 'flyspell-mode) ;; commented
-    ;; out by dgm. it blocks the loading of messages!!!
-    ;; (add-hook
-    ;;  'mu4e-conversation-before-send-hook
-    ;;  (lambda ()
-    ;;    (setq mu4e-compose-signature-auto-include nil)))
-    (add-hook
-     'mu4e-conversation-after-send-hook
-     (lambda ()
-       (let ((mu4e-get-mail-command "offlineimap"))
-         (mu4e-update-mail-and-index 'run-in-background))))
-    (add-hook 'mu4e-view-mode-hook 'auto-fill-mode))
-  (require 'init-mu4e))
-(autoload 'ambrevar/mu4e-headers "mu4e")
 
 ;;; Ambrevar's stuff for setting Window manager
 (nconc package-selected-packages '(exwm helm-exwm))

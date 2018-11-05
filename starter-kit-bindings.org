@@ -7,35 +7,34 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 Key Bindings.
 
-** Map fn to Hyper
-#+source: fn-to-hyper :tangle no
+** COMMENT Map fn to Hyper
+#+source: fn-to-hyper 
 #+begin_src emacs-lisp
-  (setq mac-function-modifier 'hyper)
-  ;; fix page-up and page-down keys
+;;  (setq mac-function-modifier 'hyper)
+;;  ;; fix page-up and page-down keys
   
-  (defun sfp-page-down (&optional arg)
-    (interactive "^P")
-    (setq this-command 'next-line)
-    (next-line
-     (- (window-text-height)
-        next-screen-context-lines)))
-  (put 'sfp-page-down 'isearch-scroll t)
-  (put 'sfp-page-down 'CUA 'move)
+;;  (defun sfp-page-down (&optional arg)
+;;    (interactive "^P")
+;;    (setq this-command 'next-line)
+;;    (next-line
+;;     (- (window-text-height)
+;;        next-screen-context-lines)))
+;;  (put 'sfp-page-down 'isearch-scroll t)
+;;  (put 'sfp-page-down 'CUA 'move)
   
-  (defun sfp-page-up (&optional arg)
-    (interactive "^P")
-    (setq this-command 'previous-line)
-    (previous-line
-     (- (window-text-height)
-        next-screen-context-lines)))
-  (put 'sfp-page-up 'isearch-scroll t)
-  (put 'sfp-page-up 'CUA 'move)
-  
-  (global-set-key [(H down)] 'scroll-up)
-  (global-set-key [(H up)]   'scroll-down) 
-  (require 'scroll-lock)
-  (setq scroll-preserve-screen-position t)
-  
+;;  (defun sfp-page-up (&optional arg)
+;;    (interactive "^P")
+;;    (setq this-command 'previous-line)
+;;    (previous-line
+;;     (- (window-text-height)
+;;        next-screen-context-lines)))
+;;  (put 'sfp-page-up 'isearch-scroll t)
+;;  (put 'sfp-page-up 'CUA 'move)
+;;  
+;;  (global-set-key [(H down)] 'scroll-up)
+;;  (global-set-key [(H up)]   'scroll-down) 
+;;  (require 'scroll-lock)
+;;  (setq scroll-preserve-screen-position t)
 #+end_src
 
 ** Align your code in a pretty way.
@@ -196,13 +195,48 @@ When windows get out of order, you can rotate them.
 
 ** Start a regular shell if you prefer that.
 #+begin_src emacs-lisp 
-(global-set-key (kbd "C-x M-m") 'shell)
+(global-set-key (kbd "s--") 'shell)
 #+end_src
+
+#+RESULTS:
+: shell
+
+And open it at the bottom of current window
+
+
+#+BEGIN_SRC emacs-lisp
+ (add-to-list 'display-buffer-alist
+              `(,(rx string-start "*shell*" string-end)
+               (display-buffer-below-selected)))
+#+END_SRC
+
+#+RESULTS:
+| \`\*shell\*\'    | (display-buffer-below-selected) |
+| \`\*Calendar\*\' | (display-buffer-below-selected) |
+| \*Calendar\*     | my-position-calendar-buffer     |
+
 
 ** Smex replaces M-x
     Smex replaces M-x, and is built on top of ido-mode. See
     http://github.com/nonsequitur/smex or
     http://www.emacswiki.org/emacs/Smex for details.  
+
+The commands are displayed in an Ido completion buffer, ordered by relevance. The 7 most recently executed commands come first, the rest are sorted by frequency of use, command length and in alphabetical order.
+
+Ido completion in 10 seconds: Typing selects matching commands: e.g. 'lnmd' matches 'line-number-mode'. C-s/C-r switches to the next/previous match. Enter executes the selected command.
+
+=smex-major-mode-commands= runs Smex, limited to commands that are relevant to the active major mode. Try it with Dired or Magit.
+
+=smex-show-unbound-commands= shows frequently used commands that have no key bindings.
+
+*** Command help
+
+=C-h f=, while Smex is active, runs describe-function on the currently selected command.
+
+=M-.= jumps to the definition of the selected command.
+
+=C-h w= shows the key bindings for the selected command. (Via =where-is=.)
+
 #+srcname: smex
 #+begin_src emacs-lisp
   (require 'smex)
@@ -212,10 +246,13 @@ When windows get out of order, you can rotate them.
   (global-set-key (kbd "M-X") 'smex-major-mode-commands)
   (global-set-key (kbd "C-x C-M") 'smex-major-mode-commands)
   ;; This is your old M-x.
-  (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+  ;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
   (setq smex-show-unbound-commands t)
   (smex-auto-update 30)
 #+end_src
+
+#+RESULTS: smex
+: [nil 0 30 0 t (lambda nil (if (smex-detect-new-commands) (smex-update))) nil idle 0]
 
 ** If you want to be able to M-x without meta
 #+begin_src emacs-lisp 
@@ -248,8 +285,11 @@ Use a little bit of Mac keys, but not all of them.
 
 ** Fetch the contents at a URL, display it raw.
 #+begin_src emacs-lisp 
-(global-set-key (kbd "C-x h") 'view-url)
+(global-set-key (kbd "C-M-x") 'view-url)
 #+end_src
+
+#+RESULTS:
+: view-url
 
 ** Help should search more than just commands
 
@@ -289,7 +329,7 @@ and I copy it below because it is awesome.
                                                                      "*irc.freenode.net*")))
   (global-set-key (kbd "C-c J") 'jabber-send-presence)
   (global-set-key (kbd "C-c M-j") 'jabber-disconnect)
-  (global-set-key (kbd "C-x g") 'magit-status)
+;;  (global-set-key (kbd "C-x g") 'magit-status) ;; now in dgm.org
 #+end_src
 
 ** Activate occur easily inside isearch

@@ -13,6 +13,8 @@ Function definitions
 
 ** Network
 
+I (dgm) comment this, as it somehow uses =C-x h= for =view-url= and I want the default behavior of =C-x h= for selecting whole buffer.
+
 #+srcname: start-kit-view-url
 #+begin_src emacs-lisp 
   (defun view-url ()
@@ -25,6 +27,9 @@ Function definitions
       (cond ((search-forward "<?xml" nil t) (xml-mode))
             ((search-forward "<html" nil t) (html-mode)))))
 #+end_src
+
+#+RESULTS: start-kit-view-url
+: view-url
 
 ** These belong in coding-hook:
 

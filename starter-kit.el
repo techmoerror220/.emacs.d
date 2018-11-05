@@ -151,6 +151,8 @@ ARCHIVE is the string name of the package archive.")
 
 (starter-kit-load "starter-kit-completion.org")
 
+(starter-kit-load "starter-kit-helm.org")
+
 (starter-kit-load "starter-kit-org.org")
 
 (starter-kit-load "starter-kit-eshell.org")

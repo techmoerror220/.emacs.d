@@ -1,7 +1,9 @@
-;;; Helm
-
-;;; Daniel Mai stuff from
-;;; https://github.com/danielmai/.emacs.d/blob/master/config.org
+(use-package helm
+  :ensure t
+  :diminish helm-mode
+  :init 
+  (helm-mode 1)
+  (require 'helm-config))
 
 (use-package helm-ag
   :ensure t
@@ -13,12 +15,6 @@
   ;; :bind ("H-w" . helm-swoop)
   )
 
-
-;;; Original DGM's stuff
-
-    ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-    ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-    ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
 
@@ -33,7 +29,6 @@
     ;; Command: helm-mini
 (global-set-key (kbd "C-x b") 'helm-mini)
 
-    ;; To enable fuzzy matching, add the following settings:
 (setq helm-buffers-fuzzy-matching t
       helm-recentf-fuzzy-match    t)
 
@@ -54,14 +49,38 @@
 ;; Command: helm-locate
 (setq helm-locate-fuzzy-match t)
 
+;; From ambrevar: Fallback on 'find' if 'locate' is not available.
+(unless (executable-find "locate")
+  (setq helm-locate-recursive-dirs-command "find %s -type d -regex .*%s.*$"))
+
+;; See https://github.com/emacs-helm/helm/issues/1962.
+(defun ambrevar/helm-locate-meta (&optional update)
+  "Like `helm-locate' but also use the databases found in /media and /run/media.
+With prefix argument, UPDATE the databases with custom uptions thanks to the
+'updatedb-local' script."
+  (interactive "P")
+  (let ((user-db (expand-file-name "~/.cache/locate.db"))
+        (media-dbs (apply 'append
+                          (mapcar
+                           (lambda (root) (ignore-errors (file-expand-wildcards (concat root "/*/locate.db"))))
+                           (list (concat "/run/media/" (user-login-name))
+                                 (concat "/media/" (user-login-name))
+                                 "/media")))))
+    (when update
+      (with-temp-buffer
+        (if (= (shell-command "updatedb-local" (current-buffer)) 0)
+            (message "%s" (buffer-string))
+          (error "%s" (current-buffer)))))
+    (helm-locate-with-db
+     (mapconcat 'identity
+                (cons user-db media-dbs)
+                ":")
+     nil (thing-at-point 'filename))))
+
 ;; Command: helm-occur
 ;; search for patterns in current buffer
 (global-set-key (kbd "C-c h o") 'helm-occur)
 (global-set-key (kbd "s-;") 'helm-occur)
-
-;; Command: helm-apropos
-;; To enable fuzzy matching, add this setting:
-(setq helm-apropos-fuzzy-match t)
 
 ;; Command: helm-lisp-completion-at-point
 ;; To enable fuzzy matching, add this setting:
@@ -72,6 +91,33 @@
 
 ;; Command: helm-register
 (global-set-key (kbd "C-c h x") 'helm-register)
+
+(setq helm-grep-git-grep-command "git --no-pager grep -n%cH --color=always --full-name -e %p -- %f")
+
+(defun ambrevar/helm-grep-git-or-ag (arg)
+  "Run `helm-grep-do-git-grep' if possible; fallback to `helm-do-grep-ag' otherwise.
+Requires `call-process-to-string' from `functions'."
+  (interactive "P")
+  (require 'vc)
+  (require 'functions)
+  (if (and (vc-find-root default-directory ".git")
+           (or arg (split-string (ambrevar/call-process-to-string "git" "ls-files" "-z") "\0" t)))
+      (helm-grep-do-git-grep arg)
+    (helm-do-grep-ag nil)))
+
+(defun ambrevar/helm-grep-git-all-or-ag ()
+  "Run `helm-grep-do-git-grep' over all git files."
+  (interactive)
+  (helm-grep-do-git-grep t))
+
+(global-set-key [remap query-replace-regexp] 'helm-regexp)
+(unless (boundp 'completion-in-region-function)
+  (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+  (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
+
+(ambrevar/global-set-keys
+ "C-x M-g" 'ambrevar/helm-grep-git-or-ag
+ "C-x M-G" 'helm-do-grep-ag)
 
 ;; helm-google-suggest
 (global-set-key (kbd "C-c h g") 'helm-google-suggest)
@@ -86,27 +132,21 @@
           '(lambda ()
              (define-key eshell-mode-map (kbd "C-c h C-c h")  'helm-eshell-history)))
 
-;; Command: helm-comint-input-ring
-(define-key shell-mode-map (kbd "C-c h C-c h") 'helm-comint-input-ring)
+;;; Eshell
+(defun ambrevar/helm/eshell-set-keys ()
+  (define-key eshell-mode-map [remap eshell-pcomplete] 'helm-esh-pcomplete)
+  (define-key eshell-mode-map (kbd "M-p") 'helm-eshell-history)
+  (define-key eshell-mode-map (kbd "M-s") nil) ; Useless when we have 'helm-eshell-history.
+  (define-key eshell-mode-map (kbd "M-s f") 'helm-eshell-prompts-all))
+(add-hook 'eshell-mode-hook 'ambrevar/helm/eshell-set-keys)
 
 ;; Command: helm-mini-buffer-history
 (define-key minibuffer-local-map (kbd "C-c h C-c h") 'helm-minibuffer-history)
 
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; PACKAGE: helm-descbinds                      ;;
-    ;;                                              ;;
-    ;; GROUP: Convenience -> Helm -> Helm Descbinds ;;
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (require 'helm-descbinds)
 (helm-descbinds-mode)
 
-
-;;; Tuhdo customizing helm's appearance
-;;; https://www.reddit.com/r/emacs/comments/2z7nbv/lean_helm_window/
-
 (setq  helm-display-header-line nil)
-
 ;; Helm window is too big? That's why you have helm-autoresize-mode:
 
 (helm-autoresize-mode -1)
@@ -148,23 +188,6 @@
                         :box nil
                         :height 0.1)))
 
-;;; Ambrevar's stuff
-;;; TODO: helm-ff should allow opening several marks externally, e.g.  sxiv for
-;;; pics. See
-;;; https://github.com/emacs-helm/helm/wiki/Find-Files#open-files-externally.
-;;; What about the default program?  It currently defaults to ~/.mailcap, which is
-;;; not so customizable.  Would ranger's rifle be useful here?  See
-;;; https://github.com/emacs-helm/helm/issues/1796.  There is the `openwith' package.
-
-;;; TODO: Batch-open torrent files automatically.  Add to mailcap?  Same as
-;;; above, C-c C-x does not allow for opening several files at once.
-
-;;; TODO: helm-find in big folders sometimes leads bad results, like exact match
-;;; not appearing first. Better sorting?
-
-;;; TODO: Implement alternating-color multiline lists.
-;;; See https://github.com/emacs-helm/helm/issues/1790.
-
 (when (< emacs-major-version 26)
   (when (require 'linum-relative nil t)
     (helm-linum-relative-mode 1)))
@@ -184,15 +207,6 @@
              (helm-make-source "Git files" 'helm-ls-git-source
                :fuzzy-match helm-ls-git-fuzzy-match))))
 
-(helm-mode 1)
-;; (helm-autoresize-mode 1)
-;; (add-to-list 'helm-sources-using-default-as-input
-;; 'helm-source-man-pages)  ;; dgm comments out
-
-;;; This makes the copy and rename operations asynchronous.
-(dired-async-mode)
-
-;;; Generic configuration.
 (setq
  helm-follow-mode-persistent t
  helm-reuse-last-window-split-state t
@@ -220,42 +234,10 @@
  helm-window-show-buffers-function 'helm-window-mosaic-fn
  helm-window-prefer-horizontal-split t)
 
-
-;; DGM: estoy muy mareado en el split de las windows... a ver si con
-;; esto se para
-;; (defun ambrevar/helm-split-window-combined-fn (window)
-;;   "Helm window splitting that combined most standard features.
-
-;; - With C-u, split inside. With C-u C-u, use same window.
-;; - Else use biggest other window when available.
-;; - Else split horizontally if width>height, vertically otherwise."
-;;   (cond
-;;    ((or (minibufferp helm-current-buffer)
-;;         (and
-;;          (not (one-window-p t))
-;;          (not (equal current-prefix-arg '(4)))
-;;          (not (equal current-prefix-arg '(16)))))
-;;     ;; Find biggest window.
-;;     (let (biggest (maxarea 0))
-;;       (dolist (w (window-list))
-;;         (unless (eq w (selected-window))
-;;           (let ((area (* (window-pixel-width w) (window-pixel-height w))))
-;;             (when (> area maxarea)
-;;               (setq maxarea area
-;;                     biggest w)))))
-;;       biggest))
-;;    ((equal current-prefix-arg '(16))
-;;     ;; Same window.
-;;     (selected-window))
-;;    (t
-;;     ;; If split inside or if unique window.
-;;     (split-window (selected-window) nil
-;;                   (if (> (window-pixel-width) (window-pixel-height))
-;;                       'right
-;;                     'below)))))
-;; (setq helm-split-window-preferred-function 'ambrevar/helm-split-window-combined-fn)
-
-
+;; Command: helm-apropos
+;; To enable fuzzy matching, add this setting:
+(setq helm-apropos-fuzzy-match t)
+(global-set-key [remap apropos-command] 'helm-apropos)
 
 ;;; Add bindings to `helm-apropos`. TODO: Does not work most of the times.
 ;;; https://github.com/emacs-helm/helm/issues/1140
@@ -272,7 +254,6 @@
               ("Find Function" . helm-find-function)
               ("Info lookup" . helm-info-lookup-symbol))))
 
-;;; Make `helm-mini' almighty.
 (require 'helm-bookmark)
 (setq helm-mini-default-sources `(helm-source-buffers-list
                                   helm-source-recentf
@@ -280,70 +261,6 @@
                                   helm-source-bookmarks
                                   helm-source-bookmark-set
                                   helm-source-buffer-not-found))
-
-;;; Eshell
-(defun ambrevar/helm/eshell-set-keys ()
-  (define-key eshell-mode-map [remap eshell-pcomplete] 'helm-esh-pcomplete)
-  (define-key eshell-mode-map (kbd "M-p") 'helm-eshell-history)
-  (define-key eshell-mode-map (kbd "M-s") nil) ; Useless when we have 'helm-eshell-history.
-  (define-key eshell-mode-map (kbd "M-s f") 'helm-eshell-prompts-all))
-(add-hook 'eshell-mode-hook 'ambrevar/helm/eshell-set-keys)
-
-;;; Comint
-; commented out by DGM or else I cannot use M-p for
-; comint-previous-input as usual
-;; (defun ambrevar/helm/comint-set-keys ()
-;;   (define-key comint-mode-map (kbd "M-p") 'helm-comint-input-ring))
-;; (add-hook 'comint-mode-hook 'ambrevar/helm/comint-set-keys)
-
-;;; TODO: Use helm-ff history in helm file completion.
-;;; https://github.com/emacs-helm/helm/issues/1118
-;; (define-key helm-read-file-map (kbd "M-p") 'helm-ff-run-switch-to-history)
-
-;;; Do not exclude any files from 'git grep'.
-(setq helm-grep-git-grep-command "git --no-pager grep -n%cH --color=always --full-name -e %p -- %f")
-
-(defun ambrevar/helm-grep-git-or-ag (arg)
-  "Run `helm-grep-do-git-grep' if possible; fallback to `helm-do-grep-ag' otherwise.
-Requires `call-process-to-string' from `functions'."
-  (interactive "P")
-  (require 'vc)
-  (require 'functions)
-  (if (and (vc-find-root default-directory ".git")
-           (or arg (split-string (ambrevar/call-process-to-string "git" "ls-files" "-z") "\0" t)))
-      (helm-grep-do-git-grep arg)
-    (helm-do-grep-ag nil)))
-
-(defun ambrevar/helm-grep-git-all-or-ag ()
-  "Run `helm-grep-do-git-grep' over all git files."
-  (interactive)
-  (helm-grep-do-git-grep t))
-
-;; (defun ambrevar/helm-mark-or-exchange-rect ()
-;;   "Run `helm-all-mark-rings-before-mark-point' or `rectangle-exchange-point-and-mark' if in rectangle-mark-mode."
-;;   (interactive)
-;;   (if rectangle-mark-mode
-;;       (rectangle-exchange-point-and-mark)
-;;     (helm-all-mark-rings)))
-
-; commented out by dgm signalled by single ;
-;(global-set-key [remap execute-extended-command] 'helm-M-x)
-;(global-set-key [remap find-file] 'helm-find-files)
-;(global-set-key [remap occur] 'helm-occur)
-;(global-set-key [remap list-buffers] 'helm-mini)
-;; (global-set-key [remap dabbrev-expand] 'helm-dabbrev)
-;(global-set-key [remap yank-pop] 'helm-show-kill-ring)
-;;; Do not remap 'exchange-point-and-mark, Evil needs it in visual mode.
-;;; (global-set-key (kbd "C-x C-x") 'ambrevar/helm-mark-or-exchange-rect)
-(global-set-key [remap apropos-command] 'helm-apropos)
-(global-set-key [remap query-replace-regexp] 'helm-regexp)
-(unless (boundp 'completion-in-region-function)
-  (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
-  (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
-
-(ambrevar/global-set-keys
- "C-x M-g" 'ambrevar/helm-grep-git-or-ag
- "C-x M-G" 'helm-do-grep-ag)
 
 ;;; Use the M-s prefix just like `occur'.
 (define-key prog-mode-map (kbd "M-s f") 'helm-semantic-or-imenu)
@@ -397,34 +314,6 @@ Requires `call-process-to-string' from `functions'."
 ;;; https://github.com/emacs-helm/helm/issues/1586 and
 ;;; https://github.com/emacs-helm/helm/issues/1909.
 
-;;; Fallback on 'find' if 'locate' is not available.
-(unless (executable-find "locate")
-  (setq helm-locate-recursive-dirs-command "find %s -type d -regex .*%s.*$"))
-
-;; See https://github.com/emacs-helm/helm/issues/1962.
-(defun ambrevar/helm-locate-meta (&optional update)
-  "Like `helm-locate' but also use the databases found in /media and /run/media.
-With prefix argument, UPDATE the databases with custom uptions thanks to the
-'updatedb-local' script."
-  (interactive "P")
-  (let ((user-db (expand-file-name "~/.cache/locate.db"))
-        (media-dbs (apply 'append
-                          (mapcar
-                           (lambda (root) (ignore-errors (file-expand-wildcards (concat root "/*/locate.db"))))
-                           (list (concat "/run/media/" (user-login-name))
-                                 (concat "/media/" (user-login-name))
-                                 "/media")))))
-    (when update
-      (with-temp-buffer
-        (if (= (shell-command "updatedb-local" (current-buffer)) 0)
-            (message "%s" (buffer-string))
-          (error "%s" (current-buffer)))))
-    (helm-locate-with-db
-     (mapconcat 'identity
-                (cons user-db media-dbs)
-                ":")
-     nil (thing-at-point 'filename))))
-
 ;;; Convenience.
 (defun ambrevar/helm-toggle-visible-mark-backwards (arg)
   (interactive "p")
@@ -433,13 +322,11 @@ With prefix argument, UPDATE the databases with custom uptions thanks to the
 
 (global-set-key  (kbd "C-<f4>") 'helm-execute-kmacro)
 
-;;; Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs
-
 (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
 ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i")   'helm-execute-persistent-action) ; make TAB work in terminal
 
+(provide 'starter-kit-helm)
 
-
-(provide 'init-helm)
+(message "Starter Kit Helm File loaded.")

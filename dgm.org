@@ -2176,11 +2176,76 @@ https://magit.vc/manual/magit.html#Installation
 Key binding to get the Magit menu
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+(use-package magit
+  :ensure t
+  :defer t
+  :bind (("C-x g" . magit-status) 
+         ("C-x M-l" . magit-log-buffer-file)
+         ("C-x M-b" . magit-blame)))
+
+(global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
 #+END_SRC
 
 #+RESULTS:
 : magit-dispatch-popup
+
+The following code makes magit-status run alone in the frame, and then restores the old window configuration when you quit out of magit.
+
+No more juggling windows after commiting. It’s magit bliss.
+
+Source: Magnar Sveen
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; full screen magit-status
+(defadvice magit-status (around magit-fullscreen activate)
+  (window-configuration-to-register :magit-fullscreen)
+  ad-do-it
+  (delete-other-windows))
+
+(defun magit-quit-session ()
+  "Restores the previous window configuration and kills the magit buffer"
+  (interactive)
+  (kill-buffer)
+  (jump-to-register :magit-fullscreen))
+#+END_SRC
+
+#+RESULTS:
+: magit-quit-session
+
+**** Edit With Emacs
+Editing input boxes from Chrome with Emacs. Pretty useful to keep all significant text-writing on the web within emacs. I typically use this with posts on Discourse, which has a post editor that overrides normal Emacs key bindings with other functions. As such, markdown-mode is used (dgm comments this out to have the default text mode operative.)
+
+Para usarlo creo que es necesario instalar la extension "edit with emacs" en la chrome web store. This extension has the following information:
+
+Allow user to edit web-page textareas with Emacs (and other editors).
+Edit with Emacs is an extension for Google's Chrome(ium) browser family
+that allows you to edit text areas on your browser in a more full
+featured editor. It does this in conjunction with an "Edit Server"
+which services requests by the browser. This is because extensions
+cannot spawn new processes as a security measure.  For this reason and for the Chromium extension to work, you need to be running an "edit server" on your local machine. For emacs users it is recommended that you use the supplied native =edit-server.el=. 
+
+The extension packages native elisp version that can be run inside
+GNU Emacs itself, just follow the instructions from the options page
+of the extension. It has been known to work with GNU Emacs and
+Aquamacs (MacOS); it is presently not compatible with XEmacs.
+
+Other example edit servers can be found at the project homepage. There
+is no reason why other server scripts could not spawn other editors
+and currently a number of servers support the simple URL based
+protocol.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package edit-server
+  :ensure t
+  :config
+  (edit-server-start)
+;;  (setq edit-server-default-major-mode 'markdown-mode)
+(setq edit-server-new-frame nil))
+#+END_SRC
+
+#+RESULTS:
+: t
+
 
 
 *** Make sure time stamps are in English
@@ -2211,7 +2276,6 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 : kill-buffer
 **  Harry R. Schwartz  stuff
 - Taken from https://github.com/hrs/dotfiles/blob/master/emacs/.emacs.d/configuration.org
-
 *** Rename file
 
 #+begin_src emacs-lisp :tangle yes
@@ -2232,7 +2296,8 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 #+RESULTS:
 : hrs/rename-file
 
-*** Generate scratch buffer
+*** COMMENT Generate scratch buffer
+Rendered obsolete by =scratch= package.
 
 #+begin_src emacs-lisp :tangle yes
 (defun hrs/generate-scratch-buffer ()
@@ -2258,14 +2323,6 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 
 #+RESULTS:
 : hrs/visit-last-dired-file
-
-*** Geiser
-#+begin_src emacs-lisp :tangle yes
-(setq geiser-active-implementations '(chicken guile racket scheme))
-#+end_src
-
-#+RESULTS:
-| chicken | guile | racket | scheme |
 
 *** COMMENT Change window configuration
 
@@ -2356,6 +2413,19 @@ The following will make the Calendar to use a window below the selected window
              `(,(rx string-start "*Calendar*" string-end)
                (display-buffer-below-selected)))
 #+END_SRC
+
+*** Generate scratch buffer
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun hrs/generate-scratch-buffer ()
+  "Create and switch to a temporary scratch buffer with a random
+     name."
+  (interactive)
+  (switch-to-buffer (make-temp-name "scratch-")))
+#+END_SRC
+
+#+RESULTS:
+: hrs/generate-scratch-buffer
 
 ** Ambrevar's stuff
 
@@ -2710,7 +2780,7 @@ Add my home bin directory to PATH (when I have it)
 (setenv "PATH" (concat "/home/dgm/bin:" (getenv "PATH")))
 #+END_SRC
 
-*** Trying to get =M-x stata= working
+*** COMMENT Trying to get =M-x stata= working
 
 Originally this got stata working when I called it interactively with =M-x stata=
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -2735,17 +2805,20 @@ However, once I used the script sent from Stata Corp. to make stata work after u
 
 However, I've tangled it up to "no" because I think this is not needed now that I use Purcell's package =exec-path-from-shell=.
 
-*** Pop-up terminal
+*** COMMENT Shell pop-up terminal
+
+Its window behavour is crazy, plus I can define an easy shortcut for popping a shell, so I don't see the point.
+
 From http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/. Opens a quick ANSI terminal in the directory of the currently open file.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package shell-pop
   :ensure t
   :bind (("s--" . shell-pop))
   :config
-  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+  (setq shell-pop-shell-type "ansi-term")
   (setq shell-pop-term-shell "/bin/bash")
-  (setq shell-pop-universal-key "C-t")
+  (setq shell-pop-universal-key "s--")
   ;; need to do this manually or not picked up by `shell-pop'
   (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
 #+END_SRC
@@ -2753,18 +2826,8 @@ From http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/. Opens
 #+RESULTS:
 : shell-pop
 
-Try to open it at bottom of current window
+Code originally by Caolan that made shell-pop a read-only buffer
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(add-to-list 'display-buffer-alist
-             `(,(rx string-start "*shell*" string-end)
-               (display-buffer-below-selected)))
-#+END_SRC
-
-#+RESULTS:
-| \`\*shell\*\'    | (display-buffer-below-selected) |
-| \`\*Calendar\*\' | (display-buffer-below-selected) |
-| \*Calendar\*     | my-position-calendar-buffer     |
 
 *** Using dumb-jump to jump to definitions
 The dumb-jump package provides 'jump to definition' support for multiple languages by simply searching for possible definitions using The Silver Searcher ag, ripgrep rg, or grep. It does not require building stored indexes (TAGS) or background processes etc.
@@ -2850,6 +2913,7 @@ Lets us use asynchronous processes wherever possible, pretty useful.
 #+END_SRC
 
 #+RESULTS:
+
 
 *** Launchers
 Since I do not use a GUI launcher and do not have an external one like dmenu or rofi, I figured the best way to launch my most used applications would be direct emacsy keybindings.
@@ -3380,6 +3444,80 @@ See Emacs Rocks Episode 10 for a screencast: http://emacsrocks.com/e10.html
 : ace-jump-mode
 
 
+*** Racket
+Starting to use Racket now, mainly for programming paradigms class, though I’m looking forward to some “REPL-driven development” whenever I get the chance.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package racket-mode
+  :ensure t
+  :commands racket-mode
+  :config
+  (setq racket-smart-open-bracket-enable t))
+
+(use-package geiser
+  :ensure t
+  :defer t
+  :config
+  (setq geiser-active-implementations '(chicken guile racket scheme))
+  (setq geiser-default-implementation '(racket)))
+#+END_SRC
+
+#+RESULTS:
+
+*** Smartscan
+Quickly jumps between other symbols found at point in Emacs.
+
+http://www.masteringemacs.org/article/smart-scan-jump-symbols-buffer
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package smartscan
+  :ensure t
+  :config (global-smartscan-mode 1)
+  :bind (("s-n" . smartscan-symbol-go-forward)
+         ("s-p" . smartscan-symbol-go-backward)))
+#+END_SRC
+
+#+RESULTS:
+: smartscan-symbol-go-backward
+
+*** Smoothscrolling
+This makes it so =C-n-=ing and =C-p-=ing won’t make the buffer jump around so much.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package smooth-scrolling
+  :ensure t
+  :config
+  (smooth-scrolling-mode))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+*** Scratch
+
+From: https://github.com/ieure/scratch-el
+Convenient package to create *scratch* buffers that are based on the current buffer’s major mode. This is more convienent than manually creating a buffer to do some scratch work or reusing the initial *scratch* buffer.
+
+Se usa con =M-x scratch= y te crea un scratch buffer of the currently used mode. But you can choose another mode by doing =C-u M-x scratch=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package scratch
+  :ensure t
+  :commands scratch)
+#+END_SRC
+
+#+RESULTS:
+
+*** Visible mode
+I found out about this mode by looking through simple.el. I use it to see raw org-mode files without going to a different mode like text-mode, which is what I had done in order to see invisible text (with org hyperlinks). The entire buffer contents will be visible while still being in org mode.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package visible-mode
+  :bind (("s-h" . visible-mode)))
+#+END_SRC
+
+#+RESULTS:
+: visible-mode
 
 * Final message
 #+source: message-line

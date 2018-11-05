@@ -1,54 +1,38 @@
-(add-to-list 'load-path
-               (expand-file-name  "yasnippet"
-                                  (expand-file-name "elpa"
-                                                    dotfiles-dir)))
-  ;;    (require 'yasnippet)
-  ;; above line replaced with the following use-package from uncle dave
-  ;; https://github.com/daedreth/UncleDavesEmacs
-  (use-package yasnippet
-    :ensure t)
-
-;;  (use-package yasnippet-snippets
-;;      :ensure t)
-
-  ;; Setting yas-indent-line to =’fixed= fixes Python indentation behavior when typing a templated snippet. 
-  ;; Tip from https://github.com/danielmai/.emacs.d/blob/master/config.org
+(use-package yasnippet
+  :ensure t
+  :diminish yas-minor-mode
+  :config
+(setq yas-snippet-dirs '("~/.emacs.d/mysnippets"
+                         "~/.emacs.d/snippets"
+                         "~/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets"
+                         "~/.emacs.d/elpa/yasnippet-snippets-20180909.1015/snippets"
+                         "~/.emacs.d/elpa/"))
   (setq yas-indent-line 'fixed)
+  (yas-global-mode))
 
-  ;;  (yas-set-ac-modes)
-  ;;  (yas-enable-emacs-lisp-paren-hack)
-  (yas-global-mode 1)
-  (setq yas-snippet-dirs '("~/.emacs.d/mysnippets"
-                           "~/.emacs.d/snippets"
-                           "~/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets"
-                           "~/.emacs.d/elpa/yasnippet-snippets-20180909.1015/snippets"
-                           "~/.emacs.d/elpa/"))
-
-  ;;   (yas-load-directory (expand-file-name "snippets" dotfiles-dir))  ;; original line from kieran healy
-
-  (defun check-expansion ()
-    (save-excursion
-      (if (looking-at "\\_>") t
+(defun check-expansion ()
+  (save-excursion
+    (if (looking-at "\\_>") t
+      (backward-char 1)
+      (if (looking-at "\\.") t
         (backward-char 1)
-        (if (looking-at "\\.") t
-          (backward-char 1)
-          (if (looking-at "->") t nil)))))
+        (if (looking-at "->") t nil)))))
 
-  (defun do-yas-expand ()
-    (let ((yas-fallback-behavior 'return-nil))
-      (yas-expand)))
+(defun do-yas-expand ()
+  (let ((yas-fallback-behavior 'return-nil))
+    (yas-expand)))
 
-  (defun tab-indent-or-complete ()
-    (interactive)
-    (if (minibufferp)
-        (minibuffer-complete)
-      (if (or (not yas-minor-mode)
-              (null (do-yas-expand)))
-          (if (check-expansion)
-              (company-complete-common)
-            (indent-for-tab-command)))))
+(defun tab-indent-or-complete ()
+  (interactive)
+  (if (minibufferp)
+      (minibuffer-complete)
+    (if (or (not yas-minor-mode)
+            (null (do-yas-expand)))
+        (if (check-expansion)
+            (company-complete-common)
+          (indent-for-tab-command)))))
 
-  (global-set-key [tab] 'tab-indent-or-complete)
+(global-set-key [tab] 'tab-indent-or-complete)
 
 ;;Use C-TAB to complete. We put this in eval-after-load 
 ;; because otherwise some modes will try to override our settings.
@@ -57,7 +41,9 @@
 (use-package company
   :ensure t
   :config
-  (setq company-idle-delay 0)
+  (setq company-tooltip-limit 20)
+  (setq company-idle-delay .3)
+  (setq company-ech-delay 0)
   (setq company-minimum-prefix-length 3))
 
 ;; set to 0 to prevent completion starting automatically 
@@ -118,22 +104,6 @@
   :config
     (require 'company)
     (add-hook 'python-mode-hook 'python-mode-company-init))
-
-(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
-(add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
-(add-hook 'emacs-lisp-mode-hook 'company-mode)
-
-;; (use-package slime
-;;  :ensure t
-;;  :config
-;;  (setq inferior-lisp-program "/usr/bin/sbcl")
-;;  (setq slime-contribs '(slime-fancy)))
-
-;; (use-package slime-company
-;;  :ensure t
-;;  :init
-;;    (require 'company)
-;;    (slime-setup '(slime-fancy slime-company)))
 
 (add-hook 'shell-mode-hook 'yas-minor-mode)
 (add-hook 'shell-mode-hook 'flycheck-mode)

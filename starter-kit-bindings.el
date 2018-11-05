@@ -1,29 +1,3 @@
-(setq mac-function-modifier 'hyper)
-;; fix page-up and page-down keys
-
-(defun sfp-page-down (&optional arg)
-  (interactive "^P")
-  (setq this-command 'next-line)
-  (next-line
-   (- (window-text-height)
-      next-screen-context-lines)))
-(put 'sfp-page-down 'isearch-scroll t)
-(put 'sfp-page-down 'CUA 'move)
-
-(defun sfp-page-up (&optional arg)
-  (interactive "^P")
-  (setq this-command 'previous-line)
-  (previous-line
-   (- (window-text-height)
-      next-screen-context-lines)))
-(put 'sfp-page-up 'isearch-scroll t)
-(put 'sfp-page-up 'CUA 'move)
-
-(global-set-key [(H down)] 'scroll-up)
-(global-set-key [(H up)]   'scroll-down) 
-(require 'scroll-lock)
-(setq scroll-preserve-screen-position t)
-
 (global-set-key (kbd "C-x \\") 'align-regexp)
 
 (global-set-key (kbd "M-/") 'hippie-expand) ;; replace dabbrev-expand
@@ -116,7 +90,11 @@
 
 (global-set-key (kbd "C-x M") (lambda () (interactive) (eshell t)))
 
-(global-set-key (kbd "C-x M-m") 'shell)
+(global-set-key (kbd "s--") 'shell)
+
+(add-to-list 'display-buffer-alist
+             `(,(rx string-start "*shell*" string-end)
+              (display-buffer-below-selected)))
 
 (require 'smex)
   (smex-initialize)  
@@ -125,7 +103,7 @@
   (global-set-key (kbd "M-X") 'smex-major-mode-commands)
   (global-set-key (kbd "C-x C-M") 'smex-major-mode-commands)
   ;; This is your old M-x.
-  (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+  ;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
   (setq smex-show-unbound-commands t)
   (smex-auto-update 30)
 
@@ -144,7 +122,7 @@
 ;;(global-set-key [(alt g)] 'isearch-repeat-forward)
 ;; (global-set-key [(alt z)] 'undo)
 
-(global-set-key (kbd "C-x h") 'view-url)
+(global-set-key (kbd "C-M-x") 'view-url)
 
 (global-set-key (kbd "C-h a") 'apropos)
 
@@ -161,12 +139,12 @@
 (global-set-key (kbd "C-c e") 'eval-and-replace)
 
 (global-set-key (kbd "C-c j") (lambda () (interactive) (switch-or-start 'jabber-connect "*-jabber-*")))
-(global-set-key (kbd "C-c i") (lambda () (interactive) (switch-or-start (lambda ()
-                                                                     (rcirc-connect "irc.freenode.net"))
-                                                                   "*irc.freenode.net*")))
-(global-set-key (kbd "C-c J") 'jabber-send-presence)
-(global-set-key (kbd "C-c M-j") 'jabber-disconnect)
-(global-set-key (kbd "C-x g") 'magit-status)
+  (global-set-key (kbd "C-c i") (lambda () (interactive) (switch-or-start (lambda ()
+                                                                       (rcirc-connect "irc.freenode.net"))
+                                                                     "*irc.freenode.net*")))
+  (global-set-key (kbd "C-c J") 'jabber-send-presence)
+  (global-set-key (kbd "C-c M-j") 'jabber-disconnect)
+;;  (global-set-key (kbd "C-x g") 'magit-status) ;; now in dgm.org
 
 (define-key isearch-mode-map (kbd "C-o")
   (lambda () (interactive)

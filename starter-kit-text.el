@@ -26,7 +26,7 @@
     (global-set-key (kbd "<f6>") 'unfill-paragraph)
 
     ;; smooth-scrolling 
-    (require 'smooth-scrolling)
+    ;; (require 'smooth-scrolling) ;; moved to dgm.org
 
     ;; more smooth efforts.
     (setq-default 

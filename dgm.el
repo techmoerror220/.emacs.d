@@ -666,8 +666,15 @@ The app is chosen from your OS's preference."
     ;; (setq projectile-enable-caching t)
     (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
 
+    (use-package helm-projectile
+      :ensure t
+      :after helm-mode
+      :commands helm-projectile
+    ;;   :bind ("C-c p h" . helm-projectile)
+    )
+
     (setq projectile-completion-system 'helm)
-    (helm-projectile-on)
+    (helm-projectile-on)   ;;; creo que no hace falta tras decir =ensure t= in use-package.
     (setq projectile-switch-project-action 'helm-projectile)
 
   ;; from https://projectile.readthedocs.io/en/latest/usage/
@@ -1220,7 +1227,33 @@ point reaches the beginning or end of the buffer, stop there."
 
 (global-set-key (kbd "M-s-p") 'rtags-peek-definition)
 
+(use-package magit
+  :ensure t
+  :defer t
+  :bind (("C-x g" . magit-status) 
+         ("C-x M-l" . magit-log-buffer-file)
+         ("C-x M-b" . magit-blame)))
+
 (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+
+;; full screen magit-status
+(defadvice magit-status (around magit-fullscreen activate)
+  (window-configuration-to-register :magit-fullscreen)
+  ad-do-it
+  (delete-other-windows))
+
+(defun magit-quit-session ()
+  "Restores the previous window configuration and kills the magit buffer"
+  (interactive)
+  (kill-buffer)
+  (jump-to-register :magit-fullscreen))
+
+(use-package edit-server
+  :ensure t
+  :config
+  (edit-server-start)
+;;  (setq edit-server-default-major-mode 'markdown-mode)
+(setq edit-server-new-frame nil))
 
 ;; System locale to use for formatting time values.
 (setq system-time-locale "C")         ; Make sure that the weekdays in the
@@ -1246,20 +1279,12 @@ point reaches the beginning or end of the buffer, stop there."
           (message "Renamed '%s' -> '%s'" filename new-name))
       (message "Buffer '%s' isn't backed by a file!" (buffer-name)))))
 
-(defun hrs/generate-scratch-buffer ()
-  "Create and switch to a temporary scratch buffer with a random
-     name."
-  (interactive)
-  (switch-to-buffer (make-temp-name "scratch-")))
-
 (defun hrs/visit-last-dired-file ()
   "Open the last file in an open dired buffer."
   (interactive)
   (end-of-buffer)
   (previous-line)
   (dired-find-file))
-
-(setq geiser-active-implementations '(chicken guile racket scheme))
 
 ;; (require 'r-autoyas)
 ;; (add-hook 'ess-mode-hook 'r-autoyas-ess-activate)
@@ -1283,6 +1308,12 @@ point reaches the beginning or end of the buffer, stop there."
 (add-to-list 'display-buffer-alist
              `(,(rx string-start "*Calendar*" string-end)
                (display-buffer-below-selected)))
+
+(defun hrs/generate-scratch-buffer ()
+  "Create and switch to a temporary scratch buffer with a random
+     name."
+  (interactive)
+  (switch-to-buffer (make-temp-name "scratch-")))
 
 ;;; Save M-: history.
 (savehist-mode)
@@ -1472,20 +1503,6 @@ only if this merge job is part of a group, i.e., was invoked from within
 
 (setenv "TEST_USE_ANSI" "1")
 
-(use-package shell-pop
-  :ensure t
-  :bind (("s--" . shell-pop))
-  :config
-  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
-  (setq shell-pop-term-shell "/bin/bash")
-  (setq shell-pop-universal-key "C-t")
-  ;; need to do this manually or not picked up by `shell-pop'
-  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
-
-(add-to-list 'display-buffer-alist
-             `(,(rx string-start "*shell*" string-end)
-               (display-buffer-below-selected)))
-
 (use-package dumb-jump
   :ensure t
   :init (lambda ()
@@ -1565,7 +1582,13 @@ only if this merge job is part of a group, i.e., was invoked from within
 
 ;; (setq scroll-conservatively 100)
 
-(global-set-key (kbd "M-P") 'ace-window)
+(use-package ace-window
+  :ensure t
+  :config
+  (ace-window-display-mode)
+  :bind ("M-P" . ace-window))
+
+;; (global-set-key (kbd "M-P") 'ace-window)
 
 (use-package switch-window
   :ensure t
@@ -1709,5 +1732,42 @@ only if this merge job is part of a group, i.e., was invoked from within
 (use-package transpose-frame
   :ensure t
   :bind ("C-c t" . transpose-frame))
+
+(use-package ace-jump-mode
+  :ensure t
+  :diminish ace-jump-mode
+  :commands ace-jump-mode
+  :bind ("C-s-s" . ace-jump-mode))
+
+(use-package racket-mode
+  :ensure t
+  :commands racket-mode
+  :config
+  (setq racket-smart-open-bracket-enable t))
+
+(use-package geiser
+  :ensure t
+  :defer t
+  :config
+  (setq geiser-active-implementations '(chicken guile racket scheme))
+  (setq geiser-default-implementation '(racket)))
+
+(use-package smartscan
+  :ensure t
+  :config (global-smartscan-mode 1)
+  :bind (("s-n" . smartscan-symbol-go-forward)
+         ("s-p" . smartscan-symbol-go-backward)))
+
+(use-package smooth-scrolling
+  :ensure t
+  :config
+  (smooth-scrolling-mode))
+
+(use-package scratch
+  :ensure t
+  :commands scratch)
+
+(use-package visible-mode
+  :bind (("s-h" . visible-mode)))
 
 (message "Starter Kit User (DGM) File loaded.")
