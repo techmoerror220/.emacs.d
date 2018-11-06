@@ -31,11 +31,6 @@ You will also need to change the values for the location of bibtex
  need to be updated. Change them as needed or delete them if you don't
  need these features.
 
-Finally, the [Local Org-mode XeLaTeX Export Settings] section below has
- references to fonts that you may not have available on your
- system. Change the references as appropriate, or comment out or
- delete the lines.
-
 ** Local Miscellaneous Settings
 *** Use GNU ls
 OS X ships with BSD's ls command which doesn't have all the features of GNU ls (used internally by dired). Install `coreutils` with homebrew (`brew install coreutils`) and use `gls` instead.
@@ -50,7 +45,7 @@ OS X ships with BSD's ls command which doesn't have all the features of GNU ls (
 
 *** One space after period
 
-Use `M-e` for sentence-level navigation, but without having to put two spaces after a period like an animal.
+Use =M-e= for sentence-level navigation, but without having to put two spaces after a period like an animal.
 
 #+source: periods
 #+begin_src emacs-lisp :tangle yes
@@ -58,34 +53,6 @@ Use `M-e` for sentence-level navigation, but without having to put two spaces af
 #+end_src
 
 #+RESULTS: periods
-
-*** Color Theme Tweaks
-The theme package is loaded in =starter-kit-misc.org=. The settings
-here adjust the height of some headings in Org and LaTeX mode, as well
-as turning off the sans-serif heading style that AucTeX defaults to.
-
-#+srcname: local-settings
-#+begin_src emacs-lisp :tangle yes
-  (add-hook 'latex-mode-hook
-            (lambda ()
-              (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground "#b58900")
-              (set-face-attribute 'font-latex-sectioning-0-face nil :height 3)
-              (set-face-attribute 'font-latex-sectioning-1-face nil :height 2)
-              (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5)
-              (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2)
-              (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)))
-
-   (add-hook 'org-mode-hook
-             (lambda ()
-               (set-face-attribute 'org-level-1 nil :height 1.5)
-               (set-face-attribute 'org-level-2 nil :height 1.2)
-               (set-face-attribute 'org-level-3 nil :height 1.1)
-               (set-face-attribute 'org-level-4 nil :height 1.1)
-               (set-face-attribute 'org-level-5 nil :height 1.1)))
-#+end_src
-
-#+RESULTS: local-settings
-| org-ref-org-menu | (lambda nil (highlight-symbol-mode)) | org-table-stripes-enable | (lambda nil (set-face-attribute 'org-level-1 nil :height 1.5) (set-face-attribute 'org-level-2 nil :height 1.2) (set-face-attribute 'org-level-3 nil :height 1.1) (set-face-attribute 'org-level-4 nil :height 1.1) (set-face-attribute 'org-level-5 nil :height 1.1)) | org-mode-reftex-setup | (lambda nil (local-set-key \216 'outline-next-visible-heading) (local-set-key \220 'outline-previous-visible-heading) (local-set-key \225 'outline-up-heading) (local-set-key \227 'org-table-copy-region) (local-set-key \231 'org-table-paste-rectangle) (local-set-key \214 'org-table-sort-lines) (local-set-key \311 'org-toggle-iimage-in-org)) | (lambda nil (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)) | er/add-org-mode-expansions | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | org-eldoc-load |
 
 *** Run Emacs in Full Screen
   I find it very useful to run Emacs in full-screen mode. There is no
@@ -158,7 +125,6 @@ In dired mode, visit all marked files using. Bound to the "F" key.
 (add-hook 'org-mode-hook 'org-table-stripes-enable)
 (add-hook 'dired-mode-hook 'stripe-listify-buffer)
 #+end_src
-
 *** Avy Mode
 From: http://oremacs.com/2016/01/23/avy-0.4.0/
 
@@ -199,459 +165,6 @@ I like M-s for it, same as C-s is for moving by searching string, now M-s is mov
 #+BEGIN_SRC emacs-lisp :tangle yes
 #+END_SRC
 
-
-** Local LaTeX settings
-*** In-text Smart Quotes (XeLaTeX only)
-    Redefine TeX-open-quote and TeX-close-quote to be smart quotes by default. Below, in the local org-mode settings, we'll also map the relevant function to a key we can use in org-mode, too. If you don't use XeLaTeX for processing all your =.tex= files, you should disable this option.
-
-#+source: smart-quotes
-#+begin_src emacs-lisp :tangle yes
-  (setq TeX-open-quote "“")
-  (setq TeX-close-quote "”")
-#+end_src
-
-*** SyncTeX, PDF mode, Evince
-Set up AUCTeX to work with the Evince PDF viewer.
-
-#+srcname: sync
-#+begin_src emacs-lisp :tangle yes
-    ;; Synctex with Evince
-    (add-hook 'TeX-mode-hook
-    (lambda ()
-    (add-to-list 'TeX-output-view-style
-    '("^pdf$" "."
-     "/usr/bin/evince  %n %o %b")))
-     )
-
-  (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
-  (setq TeX-view-program-list
-       '(("PDF Viewer" "/usr/bin/evince -b -g %n %o %b")))
-
-    ;; Make emacs aware of multi-file projects
-    ;; (setq-default TeX-master nil)
-
-    ;; Auto-raise Emacs on activation (from Skim, usually)
-;;    (defun raise-emacs-on-aqua()
-;;    (shell-command "osascript -e 'tell application \"Emacs\" to activate' &"))
-;;    (add-hook 'server-switch-hook 'raise-emacs-on-aqua)
-#+end_src
-
-*** XeLaTeX and pdfLaTeX Export Settings
-    Configure org-mode to export directly to PDF using xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
-
-    #+source: orgmode-latex-export
-    #+BEGIN_SRC emacs-lisp :tangle yes
-    (require 'ox-latex)
-;; From https://github.com/kjhealy/emacs-starter-kit/blob/master/kjhealy.org
-
-  ;; Choose either listings or minted for exporting source code blocks.
-  ;; Using minted (as here) requires pygments be installed. To use the
-  ;; default listings package instead, use
-  ;; (setq org-latex-listings t)
-  ;; and change references to "minted" below to "listings"
-  (setq org-latex-listings 'minted)
-  
-  ;; default settings for minted code blocks.
-  ;; bg will need to be defined in the preamble of your document. It's defined in  org-preamble-xelatex.sty below.
-  (setq org-latex-minted-options
-        '(;("frame" "single")
-          ("bgcolor" "bg") 
-          ("fontsize" "\\small")
-          ))
-  
-;; turn off the default toc behavior; deal with it properly in headers to files.
-(defun org-latex-no-toc (depth)  
-  (when depth
-      (format "%% Org-mode is exporting headings to %s levels.\n"
-              depth)))
-(setq org-latex-format-toc-function 'org-latex-no-toc)
-
-;; note the insertion of the \input statement for the vc information 
-(add-to-list 'org-latex-classes
-               '("memarticle"
-                 "\\documentclass[11pt,oneside,article]{memoir}\n\%\input{vc} % vc package"
-                  ("\\section{%s}" . "\\section*{%s}")
-                  ("\\subsection{%s}" . "\\subsection*{%s}")
-                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-(add-to-list 'org-latex-classes
-               '("membook"
-                 "\\documentclass[11pt,oneside]{memoir}\n\%\input{vc} % vc package"
-                 ("\\chapter{%s}" . "\\chapter*{%s}")
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
- 
-;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience.
-;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
-;; dgm: moved to init.el or else it wouldn't work
-;; (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
-
-;; Default packages included in the tex file. As before, org-preamble-xelatex is part of latex-custom-kjh.
-;; There's org-preamble-pdflatex as well, if you wish to use that instead.
-(setq org-latex-default-packages-alist nil)     
-(setq org-latex-packages-alist
-        '(("minted" "org-preamble-xelatex" t)
-          ("" "graphicx" t)
-          ("" "longtable" nil)
-          ("" "float" ))) 
-   #+END_SRC
-
-#+RESULTS: orgmode-latex-export
-| minted | org-preamble-xelatex | t   |
-|        | graphicx             | t   |
-|        | longtable            | nil |
-|        | float                |     |
-
-*** ebib and citation settings
-    ebib is a bibtex database manager that works inside emacs. It can
-    talk to org-mode. See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-17_2][this Worg tutorial]] for details.
-#+source: ebib-setup
-#+begin_src emacs-lisp :tangle yes
-    (org-add-link-type "ebib" 'ebib)
-
-   (org-add-link-type
-     "cite" 'ebib
-     (lambda (path desc format)
-       (cond
-        ((eq format 'latex)
-         (if (or (not desc) (equal 0 (search "cite:" desc)))
-               (format "\\cite{%s}" path)
-               (format "\\cite[%s]{%s}" desc path)
-               )))))
-
-   (org-add-link-type
-     "parencite" 'ebib
-     (lambda (path desc format)
-       (cond
-        ((eq format 'latex)
-         (if (or (not desc) (equal 0 (search "parencite:" desc)))
-               (format "\\parencite{%s}" path)
-               (format "\\parencite[%s]{%s}" desc path)
-  )))))
-
-  (org-add-link-type
-     "textcite" 'ebib
-     (lambda (path desc format)
-       (cond
-        ((eq format 'latex)
-         (if (or (not desc) (equal 0 (search "textcite:" desc)))
-               (format "\\textcite{%s}" path)
-               (format "\\textcite[%s]{%s}" desc path)
-  )))))
-
-  (org-add-link-type
-     "autocite" 'ebib
-     (lambda (path desc format)
-       (cond
-        ((eq format 'latex)
-         (if (or (not desc) (equal 0 (search "autocite:" desc)))
-               (format "\\autocite{%s}" path)
-           (format "\\autocite[%s]{%s}" desc path)
-  )))))
-
-  (org-add-link-type
-   "footcite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "footcite:" desc)))
-           (format "\\footcite{%s}" path)
-         (format "\\footcite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "fullcite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "fullcite:" desc)))
-           (format "\\fullcite{%s}" path)
-         (format "\\fullcite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "citetitle" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "citetitle:" desc)))
-           (format "\\citetitle{%s}" path)
-         (format "\\citetitle[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "citetitles" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "citetitles:" desc)))
-           (format "\\citetitles{%s}" path)
-         (format "\\citetitles[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-     "headlessfullcite" 'ebib
-     (lambda (path desc format)
-       (cond
-        ((eq format 'latex)
-         (if (or (not desc) (equal 0 (search "headlessfullcite:" desc)))
-               (format "\\headlessfullcite{%s}" path)
-               (format "\\headlessfullcite[%s]{%s}" desc path)
-  )))))
-#+end_src
-
-*** HTML export Settings
-Create =html= files form the =org= sources, to help with documentation. To set up org-mode for publishing projects to HTML you will need to change these settings, as they apply only to the Starter Kit.
-
-#+source: html-export-settings
-#+begin_src emacs-lisp :tangle yes
-  (setq org-publish-project-alist
-         '(("org"
-            :base-directory "~/.emacs.d/"
-            :publishing-directory "/media/dgm/blue/documents/websites/esk/"
-            :publishing-function org-html-publish-to-html
-            :auto-sitemap t
-            :sitemap-filename "index.org"
-            :sitemap-title "Emacs Starter Kit for the Social Sciences: Documentation"
-            :section-numbers t
-            :table-of-contents t
-            :html-head "<link rel=\"stylesheet\"
-                   href=\"http://kieranhealy.org/css/org.css\"
-                   type=\"text/css\"/>"            )))
-
-  (setq org-html-postamble nil)
-
-#+end_src
-
-*** Babel Settings
-    Configure org-mode so that when you edit source code in an indirect buffer (with C-c '), the buffer is opened in the current window. That way, your window organization isn't broken when switching.
-
-Disabled as it is in =starter-kit-org.org=
-
-    #+source: orgmode-indirect-buffer-settings
-    #+begin_src emacs-lisp :tangle no
-;;      (setq org-src-window-setup 'current-window)
-    #+end_src
-
-** DGM customization
-*** COMMENT Customizations from Ista Zahn: 
-Check "Note taking and outlining (Org-mode)"  https://github.com/izahn/dotemacs
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "org"
-    (setq org-replace-disputed-keys t)
-    (setq org-support-shift-select t)
-    (setq org-export-babel-evaluate nil)
-
-    ;; (setq org-startup-indented t)
-    ;; increase imenu depth to include third level headings
-
-    (setq org-imenu-depth 4)
-
-    ;; Update images from babel code blocks automatically
-    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-
-    ;; configure org-mode when opening first org-mode file
-    ;; Load additional export formats
-    (require 'ox-odt)
-  ;;  (require 'ox-freemind)
-    (require 'ox-bibtex)
-  )
-#+end_src
-
-
-*** Local RefTeX Settings
-Tell RefTeX where the bibliography files are.
-
-#+srcname: local-reftex
-#+begin_src emacs-lisp :tangle yes
-    ;; Make RefTex able to find my local bib files
-     (setq reftex-bibpath-environment-variables
-;;     '("/media/dgm/blue/documents/bibs"))
-     '("/home/dgm/texmf/bibtex/bib"))
-
-    ;; Default bibliography
-     (setq reftex-default-bibliography
-     '("/media/dgm/blue/documents/bibs/socbib.bib"))
-#+end_src
-
-#+RESULTS: local-reftex
-| /media/dgm/blue/documents/bibs/socbib.bib |
-
-*** Local vc commands
-
-    Run the vc shellscript before running xelatex with C-c c (instead
-    of C-c C-c for regular compile). This assumes you're using the VC
-    LaTeX package, have vc in your path, and have vc-awk in the
-    directory you're working in.
-
-    DGM: I comment it out as C-c c is used elsewhere for capture in org.
-
-#+srcname: vc-command
-#+begin_src emacs-lisp :tangle yes
-;;    (fset 'run-vc-then-xelatex
-;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
-;;    (global-set-key (kbd "C-c c") 'run-vc-then-xelatex);; Run the VC command before running xelatex
-;;    (fset 'run-vc-then-xelatex
-;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
-;;    (global-set-key (kbd "\C-c c") 'run-vc-then-xelatex)
-#+end_src
-
-    Or just run vc alone --- this is useful when writing LaTeX files
-    using org-mode. (See the org-mode customizations below).
-
-    dgm: I comment this out. I don't know how to make =vc= work as a command... I think you need to first make a =makefile=.  Plus I think =vc= is run automatically when =latexmk= is run thanks to the =\immediate\write18{sh ./vc}= line
-
-#+source: vc-alone
-#+begin_src emacs-lisp :tangle yes
-;;  (global-set-key (kbd "\C-c v")
-;;                      (lambda ()
-;;                        (interactive)
-;;                        (shell-command "vc")))
-#+end_src
-
-*** Mark current word
-
-#+BEGIN_SRC emacs-lisp :tangle yes
- (defun dgm/my-mark-current-word (&optional arg allow-extend)
-    "Put point at beginning of current word, set mark at end."
-    (interactive "p\np")
-    (setq arg (if arg arg 1))
-    (if (and allow-extend
-             (or (and (eq last-command this-command) (mark t))
-                 (region-active-p)))
-        (set-mark
-         (save-excursion
-           (when (< (mark) (point))
-             (setq arg (- arg)))
-           (goto-char (mark))
-           (forward-word arg)
-           (point)))
-      (let ((wbounds (bounds-of-thing-at-point 'word)))
-        (unless (consp wbounds)
-          (error "No word at point"))
-        (if (>= arg 0)
-            (goto-char (car wbounds))
-          (goto-char (cdr wbounds)))
-        (push-mark (save-excursion
-                     (forward-word arg)
-                     (point)))
-        (activate-mark))))
-
-(global-set-key (kbd "C-c x") 'dgm/my-mark-current-word)
-#+END_SRC
-
-#+RESULTS:
-: dgm/my-mark-current-word
-
-** Local Pandoc Support
-A pandoc menu for markdown and tex files.
-#+src-name: pandoc_mode
-#+begin_src emacs-lisp :tangle yes
-  (load "pandoc-mode")
-  (add-hook 'markdown-mode-hook 'pandoc-mode)
-  (add-hook 'TeX-mode-hook 'pandoc-mode)
-  (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
-  (global-set-key (kbd "C-c C-p") 'pandoc-main-hydra/body)
-#+end_src
-
-#+RESULTS:
-: pandoc-main-hydra/body
-
-** Local Polymode Support
-Polymode is a new package that supports multiple modes inside a single buffer. It is aimed particularly at literate programming approaches and supports, e.g., R and markdown in a single =.Rmd= file. So it is very useful with knitr in R, given that ESS does not yet fully support =.Rmd= files.
-
-#+source: Polymode
-#+begin_src emacs-lisp :tangle yes
-  (require 'poly-R)
-  (require 'poly-markdown)
-  ;;; polymode + markdown
-  (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
-
-  ;;; polymode + R
-  (add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
-
-#+end_src
-
-** Local iBuffer Settings
-   Manage a lot of buffers easily with C-x C-b. Already set up
-   elsewhere in the starter kit. Add local configuration here, e.g.,
-   display categories.
-#+srcname: iBuffer-custom
-#+begin_src emacs-lisp :tangle yes
-  (setq ibuffer-saved-filter-groups
-      '(("home"
-	 ("emacs-config" (or (filename . ".emacs.d")
-			     (filename . "emacs-config")))
-	 ("Org" (or (mode . org-mode)
-		    (filename . "OrgMode")))
-	 ("Web Dev" (or (mode . html-mode)
-			(mode . css-mode)))
-	 ("Magit" (name . "\*magit"))
-	 ("ESS" (mode . ess-mode))
-         ("LaTeX" (mode . latex-mode))
-	 ("Help" (or (name . "\*Help\*")
-		     (name . "\*Apropos\*")
-		     (name . "\*info\*"))))))
-
-        (add-hook 'ibuffer-mode-hook
-	             '(lambda ()
-	             (ibuffer-switch-to-saved-filter-groups "home")))
-       (setq ibuffer-show-empty-filter-groups nil)
-       (setq ibuffer-expert t)
-       (add-hook 'ibuffer-mode-hook
-       '(lambda ()
-       (ibuffer-auto-mode 1)
-       (ibuffer-switch-to-saved-filter-groups "home")))
-#+end_src
-
-
-** IRC
-Sometimes useful for getting help on R or Emacs.
-#+source: rirc-configuration
-#+begin_src emacs-lisp :tangle yes
-  ;; connect to irc on invocation but don't autojoin any channels (require 'rcirc)
-;;  (add-to-list 'rcirc-server-alist
-;;                       '("irc.freenode.net")) ;; this code stopped working after my customizations following the mini emacs guide
-(setq rcirc-server-alist
-      '(("irc.freenode.net" :channels ("#emacs" "#python" "#sml" "#nasm" "#gcc"))))
-#+end_src
-** Final Custom elements
-Some last tweaks.
-
-#+srcname: final-custom
-#+begin_src emacs-lisp :tangle yes
-  ;; minimize fringe
-  (setq-default indicate-empty-lines nil)
-
-  ;; Add keybindings for commenting regions of text
-  (global-set-key (kbd "C-c ;") 'comment-or-uncomment-region)
-  (global-set-key (kbd "M-'") 'comment-or-uncomment-region)
-
-  ;; Base dir
-  (cd "~/")
-
-  ;; custom variables kludge. Why can't I get these to work via setq?
-  (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
-  '(LaTeX-XeTeX-command "xelatex -synctex=1")
-  '(TeX-engine (quote xetex))
-  ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
-  ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
-  '(blink-cursor-mode nil)
-  '(text-mode-hook (quote (text-mode-hook-identify)))
-  )
-#+end_src
-
-#+RESULTS: final-custom
 
 * dgm's own customizations of emacs appearance
 ** GROUP: Convenience -> Linum
@@ -774,25 +287,12 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 #+end_src
 
 #+RESULTS: ggtags-customization
-| lambda | nil | (when (derived-mode-p (quote c-mode) (quote c++-mode) (quote java-mode) (quote asm-mode)) (ggtags-mode 1)) |
+| lambda | nil | (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode) (ggtags-mode 1))       |
+| lambda | nil | (if (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode) (progn (ggtags-mode 1))) |
 
 #+RESULTS:
 | lambda | nil | (when (derived-mode-p (quote c-mode) (quote c++-mode) (quote java-mode) (quote asm-mode)) (ggtags-mode 1)) |
 
-
-*** mu4e-conversation
-- Found this stuff here: http://cestlaz.github.io/posts/using-emacs-49-mu4e-conversation/#.W4xUEK0yreQ
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-;;(use-package mu4e-conversation
-;; :ensure t
-;;)
-
-;;(with-eval-after-load 'mu4e (require 'mu4e-conversation))
-;;(global-mu4e-conversation-mode)
-#+END_SRC
-
-#+RESULTS:
 
 ** GROUP: Editing -> Editing Basics from http://tuhdo.github.io/emacs-tutor3.html
 
@@ -1280,12 +780,13 @@ I disable this as it is dealt with in -misc.org
                   (goto-char (posn-point (event-start event)))
                   (highlight-symbol-at-point)))
 
-(global-set-key (kbd "M-n") 'highlight-symbol-next)
-(global-set-key (kbd "M-p") 'highlight-symbol-prev)
+;; keybinds conflict so...
+;;(global-set-key (kbd "M-n") 'highlight-symbol-next)
+;;(global-set-key (kbd "M-p") 'highlight-symbol-prev)
 #+END_SRC
 
 #+RESULTS: highlight-numbers-and-symbols
-: highlight-symbol-prev
+| lambda | (event) | (interactive e) | (goto-char (posn-point (event-start event))) | (highlight-symbol-at-point) |
 
 
 #+srcname: info+
@@ -1325,8 +826,6 @@ I disable this as it is dealt with in -misc.org
 | rainbow-mode | turn-on-auto-fill | (lambda nil (local-set-key [C-up] (quote comint-previous-input)) (local-set-key [C-down] (quote comint-next-input))) | ess-S-mouse-me-menu-commands | turn-on-font-lock |
 
 
-
-
 #+srcname: nyan-mode
 #+BEGIN_SRC emacs-lisp :tangle no
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1340,66 +839,7 @@ I disable this as it is dealt with in -misc.org
   ((x w32) (nyan-mode)))
 #+END_SRC
 
-** =projectile=
-
-#+srcname: projectile
-#+BEGIN_SRC emacs-lisp :tangle yes
-    ;; Projectile
-    (require 'projectile)
-
-    ;; https://github.com/bbatsov/projectile/issues/1183
-    ;; trying to fix slow behaviour of emacs
-    (setq projectile-mode-line
-         '(:eval (format " Projectile[%s]"
-                        (projectile-project-name))))
-
-    (projectile-global-mode)
-
-    ;; from https://github.com/bbatsov/projectile#usage
-    ;; (projectile-mode +1) ;; don't know what this does.
-    ;; (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-
-    ;; nota que todo funciona menos la que usa la =p=, no se por que
-    (define-key projectile-mode-map [?\s-d] 'projectile-find-dir)
-    ;; (define-key projectile-mode-map [?\s-p] 'projectile-switch-project)
-    ;; (define-key projectile-mode-map [?\s-f] 'projectile-find-file) ;; used now with helm-find-files and exwm
-    ;; (define-key projectile-mode-map [?\s-g] 'projectile-grep)      ;; used now with helm-find-files and exwm
-
-    ;; (setq projectile-enable-caching t)
-    (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
-
-    (use-package helm-projectile
-      :ensure t
-      :after helm-mode
-      :commands helm-projectile
-    ;;   :bind ("C-c p h" . helm-projectile)
-    )
-
-    (setq projectile-completion-system 'helm)
-    (helm-projectile-on)   ;;; creo que no hace falta tras decir =ensure t= in use-package.
-    (setq projectile-switch-project-action 'helm-projectile)
-
-  ;; from https://projectile.readthedocs.io/en/latest/usage/
-  ;; You can go one step further and set a list of folders which Projectile is automatically going to check for projects:
-
-  (setq projectile-project-search-path '("~/.emacs.d/"
-;;                                         "~/.oh-my-zsh/"
-                                         "~/texmf/"
-                                         "~/Dropbox/gtd/"))
-;;                                         "/media/dgm/blue/documents/proyectos/mtj/"
-;;                                         "/media/dgm/blue/documents/dropbox/"
-;;                                         "/media/dgm/blue/documents/templates"))
-
-#+END_SRC
-
-#+RESULTS: projectile
-| ~/.emacs.d/ | ~/texmf/ | ~/Dropbox/gtd/ |
-
-#+RESULTS: helm
-| ~/.emacs.d/ | ~/texmf/ | ~/Dropbox/gtd/ |
-
-#+RESULTS:
+#+RESULTS: nyan-mode
 : t
 
 
@@ -1470,7 +910,7 @@ I disable this as it is dealt with in -misc.org
 #+RESULTS: emacs-lisp
 : dark
 
-
+*** Stata
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'load-path "/home/dgm/.emacs.d/src/ado-mode-1.15.1.4/lisp")
 (require 'ado-mode)
@@ -1478,64 +918,6 @@ I disable this as it is dealt with in -misc.org
 
 #+RESULTS:
 : ado-mode
-
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-;;   (setq org-default-notes-file (concat org-directory "/notes.org")) ;; i disable this to see if I can choose between notes and tasks.
-;;    this is not working for some reason: (define-key global-map "\C-c c" 'org-capture)
-  (define-key global-map (kbd "C-c c") 'org-capture)
-
-;; other bindings from http://orgmode.org/manual/Activation.html
-;;     (global-set-key "\C-c l" 'org-store-link)  este binding ya estaba listo
-;;     (global-set-key "\C-c a" 'org-agenda) ;; este binding puesto así no funcionaba
-;;    (global-set-key "\C-c b" 'org-iswitchb);; este binding puesto así no funcionaba
-
-  (define-key global-map (kbd "C-c a") 'org-agenda)
-  (define-key global-map (kbd "C-c b") 'org-iswitchb)
-
-
-  ;; code by sacha chua: http://sachachua.com/blog/2015/02/learn-take-notes-efficiently-org-mode/
-
-;; commented out on 30 sept 2017 because i'm changing from sacha's organization to https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
-;;  (set-register ?o (cons 'file "/media/dgm/blue/documents/dropbox/org/notes.org"))
-;;  (setq org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
-
-  ;; (setq org-completion-use-ido t)  ;; i think I don't need this because somehow helm is doing the job
-#+END_SRC
-
-#+RESULTS:
-: ((org-agenda-files :maxlevel . 6))
-
-
-
-Shortcuts that should work in Org but do not. Besides, they used to be bound to windmove but no more because I'd rather use =ace-window=
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (define-key global-map (kbd "S-<left>") 'org-timestamp-down-day)
-  (define-key global-map (kbd "S-<right>") 'org-timestamp-up-day)
-  (define-key global-map (kbd "S-<up>") 'org-timestamp-up)
-  (define-key global-map (kbd "S-<down>") 'org-timestamp-down)
-#+END_SRC
-
-#+RESULTS:
-
-
-Make calendar start on Monday instead of Sunday
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq calendar-week-start-day 1)
-#+END_SRC
-
-
-#+RESULTS:
-: 1
-
-Try and make =ox-twbs= work
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(require 'ox-twbs)
-#+END_SRC
-
 
 *** Which-key
 This mode shows a keymap when an incomplete command is entered. It is especially useful for families of commands with a prefix, e.g., =C-c C-o= for outline-mode commands, or ==C-c C-v= for org-babel commands. Just start typing your command and pause if you want a hint.
@@ -1546,7 +928,6 @@ tip from: https://github.com/izahn/dotemacs
 (require 'which-key)
 (which-key-mode)
 #+END_SRC
-
 
 *** General REPL (comint) config
 tip from: https://github.com/izahn/dotemacs
@@ -1570,7 +951,6 @@ Load eval-in-repl for bash, elisp, and python interaction.
 (setq comint-scroll-to-bottom-on-output t)
 (setq comint-move-point-for-output t)
 #+END_SRC
-
 
 *** Run R in emacs (ESS)
 tip from: https://github.com/izahn/dotemacs
@@ -1643,40 +1023,6 @@ If you want to get the most out of Emacs, you’ll eventually need to learn a li
 
 #+RESULTS:
 | (lambda nil (require (quote company-elisp)) (setq-local company-backends (delete-dups (cons (quote company-elisp) (cons (quote company-files) company-backends))))) | esk-remove-elc-on-save | run-starter-kit-coding-hook | turn-on-eldoc-mode |
-
-
-*** Helm-bibtex
-
-Helm-bibtex and ivy-bibtex allow you to search and manage your BibTeX bibliography. They both share the same generic backend, bibtex-completion, but one uses the Helm completion framework and the other Ivy as a front-end.
-
-check titus: https://github.com/tmalsburg/helm-bibtex
-
-A minimal configuration involves telling bibtex-completion where your bibliographies can be found:
-
-#+begin_src emacs-lisp :tangle yes
-(setq bibtex-completion-bibliography
-      '("/media/dgm/blue/documents/bibs/socbib.bib"))
-
-;; Bibtex-completion supports two methods for storing notes. It can either store all notes in one file or store notes in multiple files, one file per publication. In the first case, the customization variable bibtex-completion-notes-path has to be set to the full path of the notes file:
-
-(setq bibtex-completion-notes-path "/media/dgm/blue/documents/dropbox/org/notes.org")
-
-;; Symbols used for indicating the availability of notes and PDF files
-(setq bibtex-completion-pdf-symbol "⌘")
-(setq bibtex-completion-notes-symbol "✎")
-#+end_src
-
-And now the bit by Ista Zahn in tip from: https://github.com/izahn/dotemacs but modified to use helm instead of ivy.
-This allows you to search your BibTeX files for references to insert into the current document. For it to work you will need to set `bibtex-completion-bibliography` to the location of your BibTeX files.
-Initiate a citation search with ivy-bibtex, bound to C-c r.
-
-#+begin_src emacs-lisp :tangle yes
-(setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
-(global-set-key (kbd "C-c r") 'helm-bibtex)
-#+end_src
-
-tip from titus for Helm-bibtex: I use the menu key as the prefix key for all helm commands and bind helm-bibtex to b. Helm-bibtex can then be started using <menu> b. It is also useful to bind helm-resume to <menu> in helm-command-map. With this binding, <menu> <menu> can be used to reopen the last helm search.
-
 
 *** Demonstration tools (command-log-mode)
     tip from: https://github.com/izahn/dotemacs
@@ -1898,45 +1244,6 @@ This is basically his https://github.com/wernerandrew/jedi-starter/blob/master/j
 
 #+RESULTS:
 : jedi
-
-** Helm and gtags
-
-Further customization of =gtags= with =helm=, from http://tuhdo.github.io/c-ide.html.
-
-Check out: http://tuhdo.github.io/c-ide.html
-
-#+begin_src emacs-lisp :tangle yes
-    ;; Tuhdo says to put this but if I do emacs spits error mesage on start up.
-    ;;(require 'setup-helm)
-    ;;(require 'setup-helm-gtags)
-
-    (setq
-     helm-gtags-ignore-case t
-     helm-gtags-auto-update t
-     helm-gtags-use-input-at-cursor t
-     helm-gtags-pulse-at-cursor t
-     helm-gtags-prefix-key "C-c g"
-     helm-gtags-suggested-key-mapping t
-     )
-
-    (require 'helm-gtags)
-    ;; Enable helm-gtags-mode
-    (add-hook 'dired-mode-hook 'helm-gtags-mode)
-    (add-hook 'eshell-mode-hook 'helm-gtags-mode)
-    (add-hook 'c-mode-hook 'helm-gtags-mode)
-    (add-hook 'c++-mode-hook 'helm-gtags-mode)
-    (add-hook 'asm-mode-hook 'helm-gtags-mode)
-
-    (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-    (define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
-    (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-    (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
-    (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-    (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
-#+end_src
-
-#+RESULTS:
-: helm-gtags-next-history
 
 ** Other stuff from Tuhdo
 - Stuff from http://tuhdo.github.io/emacs-tutor3.html
@@ -2279,8 +1586,6 @@ protocol.
 #+RESULTS:
 : t
 
-
-
 *** Make sure time stamps are in English
 
 Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-of-time-stamps
@@ -2498,48 +1803,7 @@ From his =main.el=
 #+RESULTS:
 : /home/dgm/.emacs.d/url/history
 
-** EXWM: emacs as desktop manager!
-
-Tip from Uncle Dave's emacs 
-
-#+source: exwm-starting
-#+begin_src emacs-lisp :tangle yes
-   ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly
-   ;; plus in https://github.com/ch11ng/exwm/wiki/Configuration-Example the developer puts this line before <(require 'exwm)>. 
-   ;; so that is why I've taken it out of the bit on exwm
-
-;; from https://caolan.org/dotfiles/emacs.html#orgd96aeb0
-;; run server if using emacsclient as default EDITOR also useful for
-;; org-protocol capture https://www.emacswiki.org/emacs/EmacsClient
-
-(server-start)
-
-  (use-package exwm 
-    :ensure t
-    :config 
-  
-    ;; necessary to configure exwm manually
-    (require 'exwm-config)
-
-    ;; fringe size, most people prefer 1 (uncle dave's setup)
-    (fringe-mode 3)
-
-;; dgm comments this as it appears to not be working!! reverts to old (server-star)
-;;    (require 'server)
-;;      (unless (server-running-p)
-;;        (server-start))
-
-    (exwm-config-default))
-
-    ;; this just enables exwm, it started automatically once everything is ready
-;; commented out now that I have the Ferguson setup    (exwm-enable))  
-      #+end_src
-
-#+RESULTS: exwm-starting
-: t
-
-*** pulseaudio-control
-
+** pulseaudio-control
 Info in https://github.com/flexibeast/pulseaudio-control
 
 Sets prefix to =C-x /=. Then 
@@ -2554,7 +1818,6 @@ Sets prefix to =C-x /=. Then
 
 #+RESULTS:
 : pulseaudio-control-map
-
 *** =dired= do what I mean
 - Tip from
 https://emacs.stackexchange.com/questions/5603/how-to-quickly-copy-move-file-in-emacs-dired
@@ -2949,38 +2212,6 @@ Lets us use asynchronous processes wherever possible, pretty useful.
 #+RESULTS:
 
 
-*** Launchers
-Since I do not use a GUI launcher and do not have an external one like dmenu or rofi, I figured the best way to launch my most used applications would be direct emacsy keybindings.
-
-**** Functions to start processes
-I guess this goes without saying but you absolutely have to change the arguments to suit the software that you are using. What good is a launcher for discord if you don’t use it at all.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun exwm-async-run (name)
-  (interactive)
-  (start-process name nil name))
-
-(defun daedreth/launch-browser ()
-  (interactive)
-  (exwm-async-run "chromium"))
-
-(defun daedreth/lock-screen ()
-  (interactive)
-  (exwm-async-run "slock"))
-#+END_SRC
-
-#+RESULTS:
-: daedreth/lock-screen
-
-***** Keybindings to start processes
-#+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key (kbd "<s-escape>") 'daedreth/launch-browser)
-(global-set-key (kbd "<s-@>") 'daedreth/lock-screen)
-#+END_SRC
-
-#+RESULTS:
-: daedreth/launch-browser
-
 **** Screenshots
 I don’t need scrot to take screenshots, or shutter or whatever tools you might have. This is enough. These won’t work in the terminal version or the virtual console, obvious reasons.
 
@@ -3269,8 +2500,6 @@ And again, the same as above but we make sure to not delete the source word.
 
 #+RESULTS:
 : daedreth/copy-whole-word
-
-
 **** Copy a line
 Regardless of where your cursor is, this quickly copies a line.
 
@@ -3360,21 +2589,6 @@ DGM: nice, but i prefer to use helm to browse the kill ring.
 
 #+RESULTS:
 : popup-kill-ring
-
-*** Remote editing
-***  Editing
-I have no need to directly edit files over SSH, but what I do need is a way to edit files as root. Opening up nano in a terminal as root to play around with grubs default settings is a no-no, this solves that.
-*** Editing with sudo
-Pretty self-explanatory, useful as hell if you use exwm.
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package sudo-edit
-  :ensure t
-  :bind
-    ("s-e" . sudo-edit))
-#+END_SRC
-
-#+RESULTS:
-: sudo-edit
 
 *** Diminishing modes 
 
@@ -3477,7 +2691,6 @@ See Emacs Rocks Episode 10 for a screencast: http://emacsrocks.com/e10.html
 #+RESULTS:
 : ace-jump-mode
 
-
 *** Racket
 Starting to use Racket now, mainly for programming paradigms class, though I’m looking forward to some “REPL-driven development” whenever I get the chance.
 
@@ -3552,6 +2765,83 @@ I found out about this mode by looking through simple.el. I use it to see raw or
 
 #+RESULTS:
 : visible-mode
+
+*** Pulseaudio 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package pulseaudio-control
+  :ensure t)
+
+(with-eval-after-load 'pulseaudio-control
+  ;; REVIEW: Upstream should set path dynamically.
+  ;; https://github.com/flexibeast/pulseaudio-control/issues/7
+  (setq pulseaudio-control-pactl-path (executable-find "pactl")
+        pulseaudio-control-volume-step "2%"))
+#+END_SRC
+
+#+RESULTS:
+: 2%
+
+*** Enabling various commands for up/down casing, etc. 
+From https://github.com/danielmai/.emacs.d/blob/master/config.org
+#+BEGIN_SRC emacs-lisp :tangle yes
+ (put 'upcase-region 'disabled nil)
+ (put 'downcase-region 'disabled nil)
+ (put 'narrow-to-region 'disabled nil)
+ (put 'dired-find-alternate-file 'disabled nil)
+#+END_SRC
+** Dashboard
+I leave it out as it doesn't work with =exwm=
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package dashboard
+  :ensure t
+  :config
+    (dashboard-setup-startup-hook)
+;    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
+    (setq dashboard-items '((recents   . 10)
+                            (bookmarks . 10)
+                            (projects  . 10)))
+    (setq dashboard-banner-logo-title ""))
+(message "Testing 2 dashboard chunk is evaluated.")
+#+END_SRC
+
+#+RESULTS:
+: Testing 2 dashboard chunk is evaluated.
+
+** Mark current word
+From https://www.emacswiki.org/emacs/MarkCommands#toc7
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun my-mark-current-word (&optional arg allow-extend)
+    "Put point at beginning of current word, set mark at end."
+    (interactive "p\np")
+    (setq arg (if arg arg 1))
+    (if (and allow-extend
+             (or (and (eq last-command this-command) (mark t))
+                 (region-active-p)))
+        (set-mark
+         (save-excursion
+           (when (< (mark) (point))
+             (setq arg (- arg)))
+           (goto-char (mark))
+           (forward-word arg)
+           (point)))
+      (let ((wbounds (bounds-of-thing-at-point 'word)))
+        (unless (consp wbounds)
+          (error "No word at point"))
+        (if (>= arg 0)
+            (goto-char (car wbounds))
+          (goto-char (cdr wbounds)))
+        (push-mark (save-excursion
+                     (forward-word arg)
+                     (point)))
+        (activate-mark))))
+
+(define-key global-map (kbd "C-c x") 'my-mark-current-word) 
+#+END_SRC
+
+#+RESULTS:
+: my-mark-current-word
+
 
 * Final message
 #+source: message-line

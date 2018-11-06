@@ -143,7 +143,11 @@ ARCHIVE is the string name of the package archive.")
 (setq elisp-source-dir (concat dotfiles-dir "src"))
 (add-to-list 'load-path elisp-source-dir)
 
+(starter-kit-load "starter-kit-exwm.org")
+
 (starter-kit-load "starter-kit-defuns.org")
+
+(starter-kit-load "starter-kit-org.org")
 
 (starter-kit-load "starter-kit-bindings.org")
 
@@ -154,8 +158,6 @@ ARCHIVE is the string name of the package archive.")
 (starter-kit-load "starter-kit-helm.org")
 
 (starter-kit-load "starter-kit-mu4e.org")
-
-(starter-kit-load "starter-kit-org.org")
 
 (starter-kit-load "starter-kit-eshell.org")
 

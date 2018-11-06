@@ -362,16 +362,6 @@ The following function for occur-dwim is taken from Oleh Krehel from his blog po
 #+RESULTS:
 : occur-dwim
 
-** Org-mode
-A global binding for Org-mode (see [[file:starter-kit-org.org][starter-kit-org]])
-
-Org-mode supports [[http://orgmode.org/manual/Hyperlinks.html#Hyperlinks][links]], this command allows you to store links
-globally for later insertion into an Org-mode buffer.  See
-[[http://orgmode.org/manual/Handling-links.html#Handling-links][Handling-links]] in the Org-mode manual.
-#+begin_src emacs-lisp
-(define-key global-map "\C-cl" 'org-store-link)
-#+end_src
-
 ** Interface with Ag ("The Silver Searcher")
 
 The Silver Searcher is grep-like program implemented by =C=. An attempt to make something better than =ack-grep=.
@@ -497,8 +487,8 @@ The reason is that in many data science programs, the great ista zahn binds the 
 ;; [M-n] fills each line of the rectangle with increasing numbers using
 ;;       a supplied format string (prompt)
 ;; [M-o] opens the rectangle by moving the highlighted text to the
-;;       right of the rectangle and filling the rectangle with blanks.
-;; [M-p] toggles virtual straight rectangle edges
+;;       right of the rectangle and filling the rectangle with [blanks.
+;;  M-p] toggles virtual straight rectangle edges
 ;; [M-P] inserts tabs and spaces (padding) to make real straight edges
 ;; [M-q] performs text filling on the rectangle
 ;; [M-r] replaces REGEXP (prompt) by STRING (prompt) in rectangle
@@ -588,6 +578,7 @@ First mark the word, then add more cursors. To get out of multiple-cursors-mode,
 ;;; starter-kit-bindings.el ends here
 #+end_src
 
+* Final message
 #+source: message-line
 #+begin_src emacs-lisp
   (message "Starter Kit Bindings loaded.")

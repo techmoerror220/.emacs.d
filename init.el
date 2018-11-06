@@ -132,19 +132,16 @@
  (setq gc-cons-threshold 20000000)
 
  ;;; init.el ends here
- ;;; from https://github.com/danielmai/.emacs.d/blob/master/config.org
 
- (put 'upcase-region 'disabled nil)
- (put 'downcase-region 'disabled nil)
- (put 'narrow-to-region 'disabled nil)
- (put 'dired-find-alternate-file 'disabled nil)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;; The Power of UTF8 ;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; coding system
 ;; from: lopez-ibanez.eu/dotemacs.html
  (prefer-coding-system 'utf-8)
 ;; ;; Enable UTF-8 by default
-
 
 ;;; other stuff for setting up unicode by: https://github.com/izahn/emacs-starter-kit
 ;;; which is a fork of kieran healy's starter kit
@@ -160,11 +157,25 @@
  (setq buffer-file-coding-system 'utf-8)
  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
- ;; Instead, lopez-ibañez says that Emacs < 23 sometimes require setting these directly
+;; Instead, lopez-ibañez says that Emacs < 23 sometimes require setting these directly
  ;; but now they cause more problems than they solve... I leave them on as Kieran and Istha use them but I am not sure...
  ;; (setq locale-coding-system 'utf-8);; ;; (set-terminal-coding-system 'utf-8)
  ;; (set-keyboard-coding-system 'utf-8)
  ;; (set-selection-coding-system 'utf-8)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;; PATH ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/purcell/exec-path-from-shell
+
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
+
+
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -590,39 +601,7 @@
 ;;;;;;;;;;;; (global-set-key (kbd "C-x c #") 'helm-system-packages)
 
 
-;;; Ambrevar's stuff for setting Window manager
-(nconc package-selected-packages '(exwm helm-exwm))
-(nconc package-selected-packages '(pulseaudio-control))
-(with-eval-after-load 'pulseaudio-control
-  ;; REVIEW: Upstream should set path dynamically.
-  ;; https://github.com/flexibeast/pulseaudio-control/issues/7
-  (setq pulseaudio-control-pactl-path (executable-find "pactl")
-        pulseaudio-control-volume-step "2%"))
-(when (require 'exwm nil t) (require 'init-exwm))
-
+;;;;;;;;;;;;;;;;;;;;;;;; commented out by dgm on 6 nov 2018
 ;;; Org-mode
-(nconc package-selected-packages '(org-plus-contrib org-bullets helm-org-contacts)) ; org-plus contains latest Org mode.
-(with-eval-after-load 'org (require 'init-org))
-(autoload 'ambrevar/org-switch-agenda-file "org")
-(autoload 'ambrevar/org-switch-agenda-file-other-window "org")
-
-;; trying to get dashboard to work (originally in dgm.org)
-(use-package dashboard
-  :ensure t
-  :config
-    (dashboard-setup-startup-hook)
-;    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
-    (setq dashboard-items '((recents   . 10)
-                            (bookmarks . 10)
-                            (projects  . 10)))
-    (setq dashboard-banner-logo-title ""))
-(message "Testing 2 dashboard chunk is evaluated.")
-
-
-;; https://github.com/purcell/exec-path-from-shell
-
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
+;;(nconc package-selected-packages '(org-plus-contrib org-bullets helm-org-contacts)) ; org-plus contains latest Org mode.
+;;(with-eval-after-load 'org (require 'init-org))

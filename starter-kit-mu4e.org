@@ -35,8 +35,9 @@ The following files live In the directory =/usr/share/emacs/site-lisp/mu4e=
 #+RESULTS:
 : mu4e-contrib
 
-
 * mu4e-conversation
+
+Check this as well: http://cestlaz.github.io/posts/using-emacs-49-mu4e-conversation/#.W4xUEK0yreQ
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (defun ambrevar/mu4e-headers ()
@@ -79,12 +80,10 @@ Don't refresh so that we don't lose the current filter upon, e.g. reading e-mail
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq  mu4e-headers-auto-update nil)
-(add-hook 'mu4e-index-updated-hook 'mu4e~headers-do-auto-update)
+;; (add-hook 'mu4e-index-updated-hook 'mu4e-headers-do-auto-update) ;; updated it says...
 #+END_SRC
 
 #+RESULTS:
-| mu4e~headers-do-auto-update | mu4e-conversation--query-new |
-
 
 * helm
 
@@ -525,7 +524,6 @@ Set default signature to university's
 #+RESULTS:
 : t
 
-
 * Caolan's costumization 
 
 From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
@@ -544,6 +542,43 @@ From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
   (setq mu4e-view-show-addresses t)
 #+END_SRC
 
+Store a link to a mu4e query or message, setting various properties for use in capture templates. Basic support is provided by 'org-mu4e, but this uses some code from Using org-capture-templates with mu4e to extend the properties available to templates.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun org-mu4e-store-link ()
+  "Store a link to a mu4e query or message."
+  (cond
+    ;; storing links to queries
+    ((eq major-mode 'mu4e-headers-mode)
+     (let* ((query (mu4e-last-query))
+             desc link)
+       (org-store-link-props :type "mu4e" :query query)
+       (setq link (concat "mu4e:query:" query))
+       (org-add-link-props :link link :description link)
+       link))
+    ;; storing links to messages
+    ((eq major-mode 'mu4e-view-mode)
+     (let* ((msg (mu4e-message-at-point))
+            (msgid (or (plist-get msg :message-id) "<none>"))
+            (from (car (car (mu4e-message-field msg :from))))
+            (to (car (car (mu4e-message-field msg :to))))
+            (subject (mu4e-message-field msg :subject))
+            link)
+       (setq link (concat "mu4e:msgid:" msgid))
+       (org-store-link-props
+          :type "mu4e" :from from :to to :subject subject
+          :message-id msgid)
+       (org-add-link-props
+          :link link
+          :description (funcall org-mu4e-link-desc-func msg))
+   link))))
+
+(org-add-link-type "mu4e" 'org-mu4e-open)
+(add-hook 'org-store-link-functions 'org-mu4e-store-link)
+#+END_SRC
+
+#+RESULTS:
+| org-mu4e-store-link |
 
 * Ambrevar's customization
 

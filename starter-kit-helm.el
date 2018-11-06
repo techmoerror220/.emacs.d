@@ -188,6 +188,48 @@ Requires `call-process-to-string' from `functions'."
                         :box nil
                         :height 0.1)))
 
+;; Tuhdo says to put this but if I do emacs spits error mesage on start up.
+;;(require 'setup-helm)
+;;(require 'setup-helm-gtags)
+
+(require 'helm-gtags)
+
+;; Enable helm-gtags-mode
+(add-hook 'dired-mode-hook 'helm-gtags-mode)
+(add-hook 'eshell-mode-hook 'helm-gtags-mode)
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+
+(setq
+ helm-gtags-ignore-case t
+ helm-gtags-auto-update t
+ helm-gtags-use-input-at-cursor t
+ helm-gtags-pulse-at-cursor t
+ helm-gtags-prefix-key "C-c g"
+ helm-gtags-suggested-key-mapping t)
+
+(setq bibtex-completion-bibliography
+      '("/media/dgm/blue/documents/bibs/socbib.bib"))
+
+;; Bibtex-completion supports two methods for storing notes. It can either store all notes in one file or store notes in multiple files, one file per publication. In the first case, the customization variable bibtex-completion-notes-path has to be set to the full path of the notes file:
+
+(setq bibtex-completion-notes-path "/media/dgm/blue/documents/dropbox/org/notes.org")
+
+;; Symbols used for indicating the availability of notes and PDF files
+(setq bibtex-completion-pdf-symbol "⌘")
+(setq bibtex-completion-notes-symbol "✎")
+
+(setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
+(global-set-key (kbd "C-c r") 'helm-bibtex)
+
 (when (< emacs-major-version 26)
   (when (require 'linum-relative nil t)
     (helm-linum-relative-mode 1)))
@@ -326,6 +368,53 @@ Requires `call-process-to-string' from `functions'."
 ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i")   'helm-execute-persistent-action) ; make TAB work in terminal
+
+;; Projectile
+    (require 'projectile)
+
+    ;; https://github.com/bbatsov/projectile/issues/1183
+    ;; trying to fix slow behaviour of emacs
+    (setq projectile-mode-line
+         '(:eval (format " Projectile[%s]"
+                        (projectile-project-name))))
+
+    (projectile-global-mode)
+
+    ;; from https://github.com/bbatsov/projectile#usage
+    ;; (projectile-mode +1) ;; don't know what this does.
+    ;; (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+    ;; nota que todo funciona menos la que usa la =p=, no se por que
+    (define-key projectile-mode-map [?\s-d] 'projectile-find-dir)
+    ;; (define-key projectile-mode-map [?\s-p] 'projectile-switch-project)
+    ;; (define-key projectile-mode-map [?\s-f] 'projectile-find-file) ;; used now with helm-find-files and exwm
+    ;; (define-key projectile-mode-map [?\s-g] 'projectile-grep)      ;; used now with helm-find-files and exwm
+
+    ;; (setq projectile-enable-caching t)
+    (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
+
+    (use-package helm-projectile
+      :ensure t
+      :after helm-mode
+      :commands helm-projectile
+    ;;   :bind ("C-c p h" . helm-projectile)
+    )
+
+    (setq projectile-completion-system 'helm)
+    (helm-projectile-on)   ;;; creo que no hace falta tras decir =ensure t= in use-package.
+    (setq projectile-switch-project-action 'helm-projectile)
+
+  ;; from https://projectile.readthedocs.io/en/latest/usage/
+  ;; You can go one step further and set a list of folders which Projectile is automatically going to check for projects:
+
+  (setq projectile-project-search-path '("~/.emacs.d/"
+;;                                         "~/.oh-my-zsh/"
+                                         "~/texmf/"
+                                         "~/Dropbox/gtd/"))
+;;                                         "/media/dgm/blue/documents/proyectos/mtj/"
+;;                                         "/media/dgm/blue/documents/dropbox/"
+;;                                         "/media/dgm/blue/documents/templates"))
 
 (provide 'starter-kit-helm)
 

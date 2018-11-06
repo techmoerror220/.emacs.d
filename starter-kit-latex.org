@@ -6,6 +6,69 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 * Starter Kit LaTeX
   Support for editing LaTeX.
 
+** Color Theme Tweaks
+The theme package is loaded in =starter-kit-misc.org=. The settings
+here adjust the height of some headings in Org and LaTeX mode, as well
+as turning off the sans-serif heading style that AucTeX defaults to.
+
+#+srcname: local-settings
+#+begin_src emacs-lisp :tangle yes
+  (add-hook 'latex-mode-hook
+            (lambda ()
+              (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground "#b58900")
+              (set-face-attribute 'font-latex-sectioning-0-face nil :height 3)
+              (set-face-attribute 'font-latex-sectioning-1-face nil :height 2)
+              (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5)
+              (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2)
+              (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)))
+#+end_src
+
+#+RESULTS: local-settings
+| (lambda nil (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground #b58900) (set-face-attribute 'font-latex-sectioning-0-face nil :height 3) (set-face-attribute 'font-latex-sectioning-1-face nil :height 2) (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5) (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2) (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)) | turn-off-auto-fill | turn-on-reftex |
+
+** Local LaTeX settings
+*** In-text Smart Quotes (XeLaTeX only)
+    Redefine TeX-open-quote and TeX-close-quote to be smart quotes by default. Below, in the local org-mode settings, we'll also map the relevant function to a key we can use in org-mode, too. If you don't use XeLaTeX for processing all your =.tex= files, you should disable this option.
+
+#+source: smart-quotes
+#+begin_src emacs-lisp :tangle yes
+  (setq TeX-open-quote "“")
+  (setq TeX-close-quote "”")
+#+end_src
+
+#+RESULTS: smart-quotes
+: ”
+
+*** SyncTeX, PDF mode, Evince
+Set up AUCTeX to work with the Evince PDF viewer.
+
+#+srcname: sync
+#+begin_src emacs-lisp :tangle yes
+    ;; Synctex with Evince
+    (add-hook 'TeX-mode-hook
+    (lambda ()
+    (add-to-list 'TeX-output-view-style
+    '("^pdf$" "."
+     "/usr/bin/evince  %n %o %b")))
+     )
+
+  (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+  (setq TeX-view-program-list
+       '(("PDF Viewer" "/usr/bin/evince -b -g %n %o %b")))
+
+    ;; Make emacs aware of multi-file projects
+    ;; (setq-default TeX-master nil)
+
+    ;; Auto-raise Emacs on activation (from Skim, usually)
+;;    (defun raise-emacs-on-aqua()
+;;    (shell-command "osascript -e 'tell application \"Emacs\" to activate' &"))
+;;    (add-hook 'server-switch-hook 'raise-emacs-on-aqua)
+#+end_src
+
+#+RESULTS: sync
+| PDF Viewer | /usr/bin/evince -b -g %n %o %b |
+
+
 ** Load Support Packages
 *** Prettify Math in Buffers
 #+source: latex-pretty-symbols 
@@ -104,7 +167,6 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
   (setq TeX-auto-save t) ; Enable parse on save.
 #+end_src
 
-
 *** Use pdfLaTeX
     - Take this out to compile to DVI, instead.
 #+srcname: pdf-mode
@@ -200,6 +262,7 @@ We use this (rather than the underscore character) for compatibilty with Pandoc.
       path to the bibliographic databases.  This source-code block is
       turned off be default as it should be configured by the user in
       a personal file/directory.
+
 #+srcname: default-bibliography
 #+begin_src emacs-lisp :tangle no
   (setq reftex-default-bibliography
@@ -207,21 +270,8 @@ We use this (rather than the underscore character) for compatibilty with Pandoc.
          ("user.bib" "local.bib")))
 #+end_src
 
-** Configure Org-babel
-   - Add LaTeX to the list of languages Org-babel will recognize.
-#+srcname: add-latex
-#+begin_src emacs-lisp 
-     (require 'ob-latex)
-  ;; (org-babel-add-interpreter "latex")
-  ;; (add-to-list 'org-babel-tangle-langs '("latex" "tex"))
-#+end_src
-   - Add LaTeX to a list of languages that raise noweb-type errors.
-#+srcname: noweb-error
-#+begin_src emacs-lisp 
-  (add-to-list 'org-babel-noweb-error-langs "latex")
-#+end_src
-
-
+ 
+* Final message
 #+source: message-line
 #+begin_src emacs-lisp
   (message "Starter Kit LaTeX loaded.")

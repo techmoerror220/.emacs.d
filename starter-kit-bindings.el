@@ -20,25 +20,25 @@
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
 
-(global-set-key (kbd "C-s") 'isearch-forward-regexp)
-(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s") 'isearch-forward)
-(global-set-key (kbd "C-M-r") 'isearch-backward)
+  (global-set-key (kbd "C-s") 'isearch-forward-regexp)
+  (global-set-key (kbd "\C-r") 'isearch-backward-regexp)
+  (global-set-key (kbd "C-M-s") 'isearch-forward)
+  (global-set-key (kbd "C-M-r") 'isearch-backward)
+  
+  (require 'visual-regexp)
+  (define-key global-map (kbd "C-c r") 'vr/replace) ;; note from dgm: now it seems these keys are binded to opening =helm-bibtex=
+  (define-key global-map (kbd "C-c q") 'vr/query-replace)
 
-(require 'visual-regexp)
-(define-key global-map (kbd "C-c r") 'vr/replace) ;; note from dgm: now it seems these keys are binded to opening =helm-bibtex=
-(define-key global-map (kbd "C-c q") 'vr/query-replace)
+  (global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
+  (global-set-key (kbd "C-x C-p") 'find-file-at-point)
+  (global-set-key (kbd "C-c y") 'bury-buffer)
+  (global-set-key (kbd "C-c r") 'revert-buffer)
+  (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (global-set-key (kbd "C-x f") 'recentf-ido-find-file)
 
-(global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
-(global-set-key (kbd "C-x C-p") 'find-file-at-point)
-(global-set-key (kbd "C-c y") 'bury-buffer)
-(global-set-key (kbd "C-c r") 'revert-buffer)
-(global-set-key (kbd "M-`") 'file-cache-minibuffer-complete)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key (kbd "C-x f") 'recentf-ido-find-file)
-
-(when (require 'browse-kill-ring nil 'noerror)
-(browse-kill-ring-default-keybindings))
+  (when (require 'browse-kill-ring nil 'noerror)
+  (browse-kill-ring-default-keybindings))
 
 ;; dgm comments this out because Shift-Arrows should work in org mode for choosing dates and because instead of windmove I will use ace-window by the great abo-abo.
 ;; (windmove-default-keybindings) 
@@ -46,33 +46,33 @@
 ;; (global-set-key (kbd "C-x C-o") (lambda () (interactive) (other-window 2))) ;; forward two
 ;; (setq windmove-wrap-around t)
 
-;; resizing 'windows' (i.e., inside the frame)
-(global-set-key (kbd "s-M-<left>") 'shrink-window-horizontally)
-(global-set-key (kbd "s-M-<right>") 'enlarge-window-horizontally)
-(global-set-key (kbd "s-M-<down>") 'shrink-window)
-(global-set-key (kbd "s-M-<up>") 'enlarge-window)
+  ;; resizing 'windows' (i.e., inside the frame)
+  (global-set-key (kbd "s-M-<left>") 'shrink-window-horizontally)
+  (global-set-key (kbd "s-M-<right>") 'enlarge-window-horizontally)
+  (global-set-key (kbd "s-M-<down>") 'shrink-window)
+  (global-set-key (kbd "s-M-<up>") 'enlarge-window)
 
-(defun rotate-windows ()
-   "Rotate your windows" (interactive) (cond ((not (> (count-windows) 1)) (message "You can't rotate a single window!"))
-(t
- (setq i 1)
- (setq numWindows (count-windows))
- (while  (< i numWindows)
-   (let* (
-          (w1 (elt (window-list) i))
-          (w2 (elt (window-list) (+ (% i numWindows) 1)))
-          (b1 (window-buffer w1))
-          (b2 (window-buffer w2))
-          (s1 (window-start w1))
-          (s2 (window-start w2))
-          )
-     (set-window-buffer w1  b2)
-     (set-window-buffer w2 b1)
-     (set-window-start w1 s2)
-     (set-window-start w2 s1)
-     (setq i (1+ i)))))))
+   (defun rotate-windows ()
+     "Rotate your windows" (interactive) (cond ((not (> (count-windows) 1)) (message "You can't rotate a single window!"))
+  (t
+   (setq i 1)
+   (setq numWindows (count-windows))
+   (while  (< i numWindows)
+     (let* (
+            (w1 (elt (window-list) i))
+            (w2 (elt (window-list) (+ (% i numWindows) 1)))
+            (b1 (window-buffer w1))
+            (b2 (window-buffer w2))
+            (s1 (window-start w1))
+            (s2 (window-start w2))
+            )
+       (set-window-buffer w1  b2)
+       (set-window-buffer w2 b1)
+       (set-window-start w1 s2)
+       (set-window-start w2 s1)
+       (setq i (1+ i)))))))
 
-(global-set-key (kbd "C-c m") 'rotate-windows)
+  (global-set-key (kbd "C-c m") 'rotate-windows)
 
 (global-set-key (kbd "C-x a") 'join-line)
 
@@ -92,11 +92,11 @@
 
 (global-set-key (kbd "s--") 'shell)
 
-(add-to-list 'display-buffer-alist
-             `(,(rx string-start "*shell*" string-end)
-              (display-buffer-below-selected)))
+ (add-to-list 'display-buffer-alist
+              `(,(rx string-start "*shell*" string-end)
+               (display-buffer-below-selected)))
 
-(require 'smex)
+  (require 'smex)
   (smex-initialize)  
 ;;  (global-set-key (kbd "M-x") 'smex)  ;; I think this is superseded by helm now
 ;;  (global-set-key (kbd "C-x C-m") 'smex) ;; supersedes binding in starter-kit-bindings.org. DGM: it's below again, so left below.
@@ -111,16 +111,16 @@
 
 ;;  (setq mac-option-modifier 'meta)
 
-(global-set-key [(meta z)] 'undo)
-;; (require 'redo+) 
-;;(global-set-key [(alt a)] 'mark-whole-buffer)
-;;(global-set-key [(alt v)] 'yank)
-;; (global-set-key [(alt c)] 'kill-ring-save)
-;;(global-set-key [(alt x)] 'kill-region)
-;;(global-set-key [(alt s)] 'save-buffer)
-;;(global-set-key [(alt f)] 'isearch-forward)
-;;(global-set-key [(alt g)] 'isearch-repeat-forward)
-;; (global-set-key [(alt z)] 'undo)
+  (global-set-key [(meta z)] 'undo)
+  ;; (require 'redo+) 
+  ;;(global-set-key [(alt a)] 'mark-whole-buffer)
+  ;;(global-set-key [(alt v)] 'yank)
+  ;; (global-set-key [(alt c)] 'kill-ring-save)
+  ;;(global-set-key [(alt x)] 'kill-region)
+  ;;(global-set-key [(alt s)] 'save-buffer)
+  ;;(global-set-key [(alt f)] 'isearch-forward)
+  ;;(global-set-key [(alt g)] 'isearch-repeat-forward)
+  ;; (global-set-key [(alt z)] 'undo)
 
 (global-set-key (kbd "C-M-x") 'view-url)
 
@@ -138,7 +138,7 @@
 
 (global-set-key (kbd "C-c e") 'eval-and-replace)
 
-(global-set-key (kbd "C-c j") (lambda () (interactive) (switch-or-start 'jabber-connect "*-jabber-*")))
+  (global-set-key (kbd "C-c j") (lambda () (interactive) (switch-or-start 'jabber-connect "*-jabber-*")))
   (global-set-key (kbd "C-c i") (lambda () (interactive) (switch-or-start (lambda ()
                                                                        (rcirc-connect "irc.freenode.net"))
                                                                      "*irc.freenode.net*")))
@@ -164,9 +164,7 @@
 
 (bind-key "M-s o" 'occur-dwim)
 
-(define-key global-map "\C-cl" 'org-store-link)
-
-(require 'ag)
+  (require 'ag)
   (define-key global-map "\C-x\C-a" 'ag) 
   (define-key global-map "\C-x\C-r" 'ag-regexp)
 
@@ -187,10 +185,10 @@
 
 (add-hook 'ediff-after-quit-hook-internal 'winner-undo)
 
-;; I can't remember ever having meant to use C-z to suspend the frame
-(global-set-key (kbd "C-z") 'undo)
+  ;; I can't remember ever having meant to use C-z to suspend the frame
+  (global-set-key (kbd "C-z") 'undo)
 
-(setq cua-enable-cua-keys nil)
+  (setq cua-enable-cua-keys nil)
   (global-unset-key (read-kbd-macro "C-<return>"))
   (setq cua-rectangle-mark-key (kbd "C-M-<return>"))
   (cua-mode)
@@ -235,8 +233,8 @@
 ;; [M-n] fills each line of the rectangle with increasing numbers using
 ;;       a supplied format string (prompt)
 ;; [M-o] opens the rectangle by moving the highlighted text to the
-;;       right of the rectangle and filling the rectangle with blanks.
-;; [M-p] toggles virtual straight rectangle edges
+;;       right of the rectangle and filling the rectangle with [blanks.
+;;  M-p] toggles virtual straight rectangle edges
 ;; [M-P] inserts tabs and spaces (padding) to make real straight edges
 ;; [M-q] performs text filling on the rectangle
 ;; [M-r] replaces REGEXP (prompt) by STRING (prompt) in rectangle
@@ -258,35 +256,35 @@
   :bind (("C-*" . er/expand-region)
          ("M-*" . er/contract-region)))
 
-(require 'multiple-cursors)
-;; When you have an active region that spans multiple lines, the following will add a cursor to each line:
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  (require 'multiple-cursors)
+  ;; When you have an active region that spans multiple lines, the following will add a cursor to each line:
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  
+  (global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
+  (global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
+  
+  ;; When you want to add multiple cursors not based on continuous lines, but based on keywords in the buffer, use:
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+  
+  ;; Rectangular region mode
+  (global-set-key (kbd "H-SPC") 'set-rectangular-region-anchor)
+  
+  ;; Mark more like this
+  (global-set-key (kbd "H-a") 'mc/mark-all-like-this)
+  (global-set-key (kbd "H-p") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "H-n") 'mc/mark-next-like-this)
+  (global-set-key (kbd "H-S-n") 'mc/mark-more-like-this-extended)
+  (global-set-key (kbd "H-S-a") 'mc/mark-all-in-region)
 
-(global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
-(global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
-
-;; When you want to add multiple cursors not based on continuous lines, but based on keywords in the buffer, use:
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-
-;; Rectangular region mode
-(global-set-key (kbd "H-SPC") 'set-rectangular-region-anchor)
-
-;; Mark more like this
-(global-set-key (kbd "H-a") 'mc/mark-all-like-this)
-(global-set-key (kbd "H-p") 'mc/mark-previous-like-this)
-(global-set-key (kbd "H-n") 'mc/mark-next-like-this)
-(global-set-key (kbd "H-S-n") 'mc/mark-more-like-this-extended)
-(global-set-key (kbd "H-S-a") 'mc/mark-all-in-region)
-
-(set-fringe-mode '(5 . 5))
-(require 'minimal)
-(global-set-key (kbd "C-c s") 'minimal-mode)
+  (set-fringe-mode '(5 . 5))
+  (require 'minimal)
+  (global-set-key (kbd "C-c s") 'minimal-mode)
 
 (global-set-key (kbd "C-<escape>") 'cua-set-mark)
 
 (provide 'starter-kit-bindings)
 ;;; starter-kit-bindings.el ends here
 
-(message "Starter Kit Bindings loaded.")
+  (message "Starter Kit Bindings loaded.")

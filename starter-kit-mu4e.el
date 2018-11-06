@@ -30,7 +30,7 @@ Default to unread messages if the header buffer does not already exist."
 (setq mu4e-conversation-print-function 'mu4e-conversation-print-tree)
 
 (setq  mu4e-headers-auto-update nil)
-(add-hook 'mu4e-index-updated-hook 'mu4e~headers-do-auto-update)
+;; (add-hook 'mu4e-index-updated-hook 'mu4e-headers-do-auto-update) ;; updated it says...
 
 (when (require 'helm-mu nil t)
   (dolist (map (list mu4e-headers-mode-map mu4e-main-mode-map mu4e-view-mode-map))
@@ -116,53 +116,53 @@ Default to unread messages if the header buffer does not already exist."
 
 (setq  mml-secure-openpgp-encrypt-to-self t)
 
-(setq mu4e-maildir-shortcuts
-    '( ("/INBOX"                     . ?i)
-       ("/[Gmail].Enviados"          . ?s)
-       ("/[Gmail].Papelera"          . ?t)
-       ("/[Gmail].Todos"             . ?a)
-       ("/personal/INBOX"            . ?k)
-       ("/personal/[Gmail].Enviados" . ?x)
-       ("/personal/[Gmail].Papelera" . ?f)))
+  (setq mu4e-maildir-shortcuts
+      '( ("/INBOX"                     . ?i)
+         ("/[Gmail].Enviados"          . ?s)
+         ("/[Gmail].Papelera"          . ?t)
+         ("/[Gmail].Todos"             . ?a)
+         ("/personal/INBOX"            . ?k)
+         ("/personal/[Gmail].Enviados" . ?x)
+         ("/personal/[Gmail].Papelera" . ?f)))
 
-(setq message-send-mail-function 'message-send-mail-with-sendmail
-      sendmail-program "/usr/bin/msmtp"
-      user-full-name "Daniel Guinea"
-      user-mail-address "daniel.guinea.uned@gmail.com")
+  (setq message-send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "/usr/bin/msmtp"
+        user-full-name "Daniel Guinea"
+        user-mail-address "daniel.guinea.uned@gmail.com")
 
-(defun choose-msmtp-account ()
-  (if (message-mail-p)
-      (save-excursion
-        (let*
-            ((from (save-restriction
-                     (message-narrow-to-headers)
-                     (message-fetch-field "from")))
-             (account
-              (cond
-               ((string-match "daniel.guinea.uned@gmail.com" from) "work")
-               ((string-match "daniel.guinea.martin@gmail.com" from) "personal"))))
-          (setq message-sendmail-extra-arguments (list '"-a" account))))))
-(setq message-sendmail-envelope-from 'header)
-(add-hook 'message-send-mail-hook 'choose-msmtp-account)
-(add-to-list 'mu4e-bookmarks
-             '("maildir:/INBOX OR maildir:/personal/INBOX flag:unread" "Today's news" ?z))
+  (defun choose-msmtp-account ()
+    (if (message-mail-p)
+        (save-excursion
+          (let*
+              ((from (save-restriction
+                       (message-narrow-to-headers)
+                       (message-fetch-field "from")))
+               (account
+                (cond
+                 ((string-match "daniel.guinea.uned@gmail.com" from) "work")
+                 ((string-match "daniel.guinea.martin@gmail.com" from) "personal"))))
+            (setq message-sendmail-extra-arguments (list '"-a" account))))))
+  (setq message-sendmail-envelope-from 'header)
+  (add-hook 'message-send-mail-hook 'choose-msmtp-account)
+  (add-to-list 'mu4e-bookmarks
+               '("maildir:/INBOX OR maildir:/personal/INBOX flag:unread" "Today's news" ?z))
 
-(require 'gnus-dired)
-;; make the `gnus-dired-mail-buffers' function also work on
-;; message-mode derived modes, such as mu4e-compose-mode
-(defun gnus-dired-mail-buffers ()
-  "Return a list of active message buffers."
-  (let (buffers)
-    (save-current-buffer
-      (dolist (buffer (buffer-list t))
-        (set-buffer buffer)
-        (when (and (derived-mode-p 'message-mode)
-                   (null message-sent-message-via))
-          (push (buffer-name buffer) buffers))))
-    (nreverse buffers)))
+  (require 'gnus-dired)
+  ;; make the `gnus-dired-mail-buffers' function also work on
+  ;; message-mode derived modes, such as mu4e-compose-mode
+  (defun gnus-dired-mail-buffers ()
+    "Return a list of active message buffers."
+    (let (buffers)
+      (save-current-buffer
+        (dolist (buffer (buffer-list t))
+          (set-buffer buffer)
+          (when (and (derived-mode-p 'message-mode)
+                     (null message-sent-message-via))
+            (push (buffer-name buffer) buffers))))
+      (nreverse buffers)))
 
-(setq gnus-dired-mail-mode 'mu4e-user-agent)
-(add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+  (setq gnus-dired-mail-mode 'mu4e-user-agent)
+  (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
 
 (setq mu4e-get-mail-command "offlineimap")
 
@@ -194,26 +194,26 @@ Default to unread messages if the header buffer does not already exist."
 (use-package visual-fill-column
   :ensure t)
 
-(defun my-mu4e-choose-signature ()
-  "Insert one of a number of signatures"
-  (interactive)
-  (let ((message-signature
-          (mu4e-read-option "Signature:"
-            '(("formal" .
-              (concat
-           "Daniel Guinea\n"
-           "Dept. Sociología I\nFacultad de CC.PP. y Sociología\nUniversidad Nacional de Educación a Distancia (UNED)\nCalle Obispo Trejo 2, Madrid\nemail: daniel.guinea@poli.uned.es\nTel. +34 91 398 9441"))
-               ("informal" .
-              "Daniel\n")))))
-    (message-insert-signature)))
+  (defun my-mu4e-choose-signature ()
+    "Insert one of a number of signatures"
+    (interactive)
+    (let ((message-signature
+            (mu4e-read-option "Signature:"
+              '(("formal" .
+                (concat
+             "Daniel Guinea\n"
+             "Dept. Sociología I\nFacultad de CC.PP. y Sociología\nUniversidad Nacional de Educación a Distancia (UNED)\nCalle Obispo Trejo 2, Madrid\nemail: daniel.guinea@poli.uned.es\nTel. +34 91 398 9441"))
+                 ("informal" .
+                "Daniel\n")))))
+      (message-insert-signature)))
 
-(add-hook 'mu4e-compose-mode-hook
-          (lambda () (local-set-key (kbd "C-c C-w") #'my-mu4e-choose-signature)))
+  (add-hook 'mu4e-compose-mode-hook
+            (lambda () (local-set-key (kbd "C-c C-w") #'my-mu4e-choose-signature)))
 
-(setq mu4e-compose-signature-auto-include nil
-      mu4e-compose-signature (concat
-                              "Daniel Guinea\n"
-                              "Dept. Sociología I\nFacultad de CC.PP. y Sociología\nUniversidad Nacional de Educación a Distancia (UNED)\nCalle Obispo Trejo 2, Madrid\nemail: daniel.guinea@poli.uned.es\nTel. +34 91 398 9441"))
+  (setq mu4e-compose-signature-auto-include nil
+        mu4e-compose-signature (concat
+                                "Daniel Guinea\n"
+                                "Dept. Sociología I\nFacultad de CC.PP. y Sociología\nUniversidad Nacional de Educación a Distancia (UNED)\nCalle Obispo Trejo 2, Madrid\nemail: daniel.guinea@poli.uned.es\nTel. +34 91 398 9441"))
 
 (setq mu4e-attachment-dir "~/Downloads"
       mu4e-save-multiple-attachments-without-asking t)
@@ -229,6 +229,37 @@ Default to unread messages if the header buffer does not already exist."
 
   ;; I want to see full From header, not only name
   (setq mu4e-view-show-addresses t)
+
+(defun org-mu4e-store-link ()
+  "Store a link to a mu4e query or message."
+  (cond
+    ;; storing links to queries
+    ((eq major-mode 'mu4e-headers-mode)
+     (let* ((query (mu4e-last-query))
+             desc link)
+       (org-store-link-props :type "mu4e" :query query)
+       (setq link (concat "mu4e:query:" query))
+       (org-add-link-props :link link :description link)
+       link))
+    ;; storing links to messages
+    ((eq major-mode 'mu4e-view-mode)
+     (let* ((msg (mu4e-message-at-point))
+            (msgid (or (plist-get msg :message-id) "<none>"))
+            (from (car (car (mu4e-message-field msg :from))))
+            (to (car (car (mu4e-message-field msg :to))))
+            (subject (mu4e-message-field msg :subject))
+            link)
+       (setq link (concat "mu4e:msgid:" msgid))
+       (org-store-link-props
+          :type "mu4e" :from from :to to :subject subject
+          :message-id msgid)
+       (org-add-link-props
+          :link link
+          :description (funcall org-mu4e-link-desc-func msg))
+   link))))
+
+(org-add-link-type "mu4e" 'org-mu4e-open)
+(add-hook 'org-store-link-functions 'org-mu4e-store-link)
 
 (defun ambrevar/message-fetch-addresses ()
   "Return a list of (NAME EMAIL) from the message header.
@@ -345,7 +376,7 @@ This function could be useful in `mu4e-compose-mode-hook'."
         (delete-blank-lines)))))
 (add-hook 'mu4e-compose-mode-hook 'ambrevar/message-github)
 
-(defun ambrevar/mu4e-contact-dwim ()
+  (defun ambrevar/mu4e-contact-dwim ()
     "Return a list of (NAME . ADDRESS).
 If point has an `email' property, move it to the front of the list.
 Addresses in `mu4e-user-mail-address-list' are skipped."

@@ -1,41 +1,24 @@
-(setq insert-directory-program (executable-find "ls"))
+  (setq insert-directory-program (executable-find "ls"))
 
-(setq sentence-end-double-space nil)
+  (setq sentence-end-double-space nil)
 
-(add-hook 'latex-mode-hook
-          (lambda ()
-            (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground "#b58900")
-            (set-face-attribute 'font-latex-sectioning-0-face nil :height 3)
-            (set-face-attribute 'font-latex-sectioning-1-face nil :height 2)
-            (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5)
-            (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2)
-            (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)))
+    (defun fullscreen (&optional f)
+      (interactive)
+      (set-frame-parameter f 'fullscreen
+                           (if (frame-parameter f 'fullscreen) nil 'fullboth)))
+    (global-set-key (kbd "C-c f") 'fullscreen)
+    (add-hook 'after-make-frame-functions 'fullscreen)
 
- (add-hook 'org-mode-hook
-           (lambda ()
-             (set-face-attribute 'org-level-1 nil :height 1.5)
-             (set-face-attribute 'org-level-2 nil :height 1.2)
-             (set-face-attribute 'org-level-3 nil :height 1.1)
-             (set-face-attribute 'org-level-4 nil :height 1.1)
-             (set-face-attribute 'org-level-5 nil :height 1.1)))
+  (load "dired-x")
 
-(defun fullscreen (&optional f)
-  (interactive)
-  (set-frame-parameter f 'fullscreen
-                       (if (frame-parameter f 'fullscreen) nil 'fullboth)))
-(global-set-key (kbd "C-c f") 'fullscreen)
-(add-hook 'after-make-frame-functions 'fullscreen)
-
-(load "dired-x")
-
-(eval-after-load "dired"
-'(progn
-   (define-key dired-mode-map "F" 'my-dired-find-file)
-   (defun my-dired-find-file (&optional arg)
-     "Open each of the marked files, or the file under the point, or when prefix arg, the next N files "
-     (interactive "P")
-     (let* ((fn-list (dired-get-marked-files nil arg)))
-       (mapc 'find-file fn-list)))))
+  (eval-after-load "dired"
+  '(progn
+     (define-key dired-mode-map "F" 'my-dired-find-file)
+     (defun my-dired-find-file (&optional arg)
+       "Open each of the marked files, or the file under the point, or when prefix arg, the next N files "
+       (interactive "P")
+       (let* ((fn-list (dired-get-marked-files nil arg)))
+         (mapc 'find-file fn-list)))))
 
 (require 'stripe-buffer)
 (add-hook 'org-mode-hook 'org-table-stripes-enable)
@@ -50,314 +33,7 @@
 
 
 
-(setq TeX-open-quote "“")
-(setq TeX-close-quote "”")
-
-;; Synctex with Evince
-    (add-hook 'TeX-mode-hook
-    (lambda ()
-    (add-to-list 'TeX-output-view-style
-    '("^pdf$" "."
-     "/usr/bin/evince  %n %o %b")))
-     )
-
-  (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
-  (setq TeX-view-program-list
-       '(("PDF Viewer" "/usr/bin/evince -b -g %n %o %b")))
-
-    ;; Make emacs aware of multi-file projects
-    ;; (setq-default TeX-master nil)
-
-    ;; Auto-raise Emacs on activation (from Skim, usually)
-;;    (defun raise-emacs-on-aqua()
-;;    (shell-command "osascript -e 'tell application \"Emacs\" to activate' &"))
-;;    (add-hook 'server-switch-hook 'raise-emacs-on-aqua)
-
-(require 'ox-latex)
-;; From https://github.com/kjhealy/emacs-starter-kit/blob/master/kjhealy.org
-
-  ;; Choose either listings or minted for exporting source code blocks.
-  ;; Using minted (as here) requires pygments be installed. To use the
-  ;; default listings package instead, use
-  ;; (setq org-latex-listings t)
-  ;; and change references to "minted" below to "listings"
-  (setq org-latex-listings 'minted)
-  
-  ;; default settings for minted code blocks.
-  ;; bg will need to be defined in the preamble of your document. It's defined in  org-preamble-xelatex.sty below.
-  (setq org-latex-minted-options
-        '(;("frame" "single")
-          ("bgcolor" "bg") 
-          ("fontsize" "\\small")
-          ))
-  
-;; turn off the default toc behavior; deal with it properly in headers to files.
-(defun org-latex-no-toc (depth)  
-  (when depth
-      (format "%% Org-mode is exporting headings to %s levels.\n"
-              depth)))
-(setq org-latex-format-toc-function 'org-latex-no-toc)
-
-;; note the insertion of the \input statement for the vc information 
-(add-to-list 'org-latex-classes
-               '("memarticle"
-                 "\\documentclass[11pt,oneside,article]{memoir}\n\%\input{vc} % vc package"
-                  ("\\section{%s}" . "\\section*{%s}")
-                  ("\\subsection{%s}" . "\\subsection*{%s}")
-                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-(add-to-list 'org-latex-classes
-               '("membook"
-                 "\\documentclass[11pt,oneside]{memoir}\n\%\input{vc} % vc package"
-                 ("\\chapter{%s}" . "\\chapter*{%s}")
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
- 
-;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience.
-;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
-;; dgm: moved to init.el or else it wouldn't work
-;; (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
-
-;; Default packages included in the tex file. As before, org-preamble-xelatex is part of latex-custom-kjh.
-;; There's org-preamble-pdflatex as well, if you wish to use that instead.
-(setq org-latex-default-packages-alist nil)     
-(setq org-latex-packages-alist
-        '(("minted" "org-preamble-xelatex" t)
-          ("" "graphicx" t)
-          ("" "longtable" nil)
-          ("" "float" )))
-
-(org-add-link-type "ebib" 'ebib)
-
- (org-add-link-type
-   "cite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "cite:" desc)))
-             (format "\\cite{%s}" path)
-             (format "\\cite[%s]{%s}" desc path)
-             )))))
-
- (org-add-link-type
-   "parencite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "parencite:" desc)))
-             (format "\\parencite{%s}" path)
-             (format "\\parencite[%s]{%s}" desc path)
-)))))
-
-(org-add-link-type
-   "textcite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "textcite:" desc)))
-             (format "\\textcite{%s}" path)
-             (format "\\textcite[%s]{%s}" desc path)
-)))))
-
-(org-add-link-type
-   "autocite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "autocite:" desc)))
-             (format "\\autocite{%s}" path)
-         (format "\\autocite[%s]{%s}" desc path)
-)))))
-
-(org-add-link-type
- "footcite" 'ebib
- (lambda (path desc format)
-   (cond
-    ((eq format 'latex)
-     (if (or (not desc) (equal 0 (search "footcite:" desc)))
-         (format "\\footcite{%s}" path)
-       (format "\\footcite[%s]{%s}" desc path)
-       )))))
-
-(org-add-link-type
- "fullcite" 'ebib
- (lambda (path desc format)
-   (cond
-    ((eq format 'latex)
-     (if (or (not desc) (equal 0 (search "fullcite:" desc)))
-         (format "\\fullcite{%s}" path)
-       (format "\\fullcite[%s]{%s}" desc path)
-       )))))
-
-(org-add-link-type
- "citetitle" 'ebib
- (lambda (path desc format)
-   (cond
-    ((eq format 'latex)
-     (if (or (not desc) (equal 0 (search "citetitle:" desc)))
-         (format "\\citetitle{%s}" path)
-       (format "\\citetitle[%s]{%s}" desc path)
-       )))))
-
-(org-add-link-type
- "citetitles" 'ebib
- (lambda (path desc format)
-   (cond
-    ((eq format 'latex)
-     (if (or (not desc) (equal 0 (search "citetitles:" desc)))
-         (format "\\citetitles{%s}" path)
-       (format "\\citetitles[%s]{%s}" desc path)
-       )))))
-
-(org-add-link-type
-   "headlessfullcite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "headlessfullcite:" desc)))
-             (format "\\headlessfullcite{%s}" path)
-             (format "\\headlessfullcite[%s]{%s}" desc path)
-)))))
-
-(setq org-publish-project-alist
-       '(("org"
-          :base-directory "~/.emacs.d/"
-          :publishing-directory "/media/dgm/blue/documents/websites/esk/"
-          :publishing-function org-html-publish-to-html
-          :auto-sitemap t
-          :sitemap-filename "index.org"
-          :sitemap-title "Emacs Starter Kit for the Social Sciences: Documentation"
-          :section-numbers t
-          :table-of-contents t
-          :html-head "<link rel=\"stylesheet\"
-                 href=\"http://kieranhealy.org/css/org.css\"
-                 type=\"text/css\"/>"            )))
-
-(setq org-html-postamble nil)
-
-;; Make RefTex able to find my local bib files
-     (setq reftex-bibpath-environment-variables
-;;     '("/media/dgm/blue/documents/bibs"))
-     '("/home/dgm/texmf/bibtex/bib"))
-
-    ;; Default bibliography
-     (setq reftex-default-bibliography
-     '("/media/dgm/blue/documents/bibs/socbib.bib"))
-
-;;    (fset 'run-vc-then-xelatex
-;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
-;;    (global-set-key (kbd "C-c c") 'run-vc-then-xelatex);; Run the VC command before running xelatex
-;;    (fset 'run-vc-then-xelatex
-;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
-;;    (global-set-key (kbd "\C-c c") 'run-vc-then-xelatex)
-
-;;  (global-set-key (kbd "\C-c v")
-;;                      (lambda ()
-;;                        (interactive)
-;;                        (shell-command "vc")))
-
-(defun dgm/my-mark-current-word (&optional arg allow-extend)
-    "Put point at beginning of current word, set mark at end."
-    (interactive "p\np")
-    (setq arg (if arg arg 1))
-    (if (and allow-extend
-             (or (and (eq last-command this-command) (mark t))
-                 (region-active-p)))
-        (set-mark
-         (save-excursion
-           (when (< (mark) (point))
-             (setq arg (- arg)))
-           (goto-char (mark))
-           (forward-word arg)
-           (point)))
-      (let ((wbounds (bounds-of-thing-at-point 'word)))
-        (unless (consp wbounds)
-          (error "No word at point"))
-        (if (>= arg 0)
-            (goto-char (car wbounds))
-          (goto-char (cdr wbounds)))
-        (push-mark (save-excursion
-                     (forward-word arg)
-                     (point)))
-        (activate-mark))))
-
-(global-set-key (kbd "C-c x") 'dgm/my-mark-current-word)
-
-(load "pandoc-mode")
-(add-hook 'markdown-mode-hook 'pandoc-mode)
-(add-hook 'TeX-mode-hook 'pandoc-mode)
-(add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
-(global-set-key (kbd "C-c C-p") 'pandoc-main-hydra/body)
-
-(require 'poly-R)
-(require 'poly-markdown)
-;;; polymode + markdown
-(add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
-
-;;; polymode + R
-(add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
-(add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
-(add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
-
-(setq ibuffer-saved-filter-groups
-    '(("home"
-   ("emacs-config" (or (filename . ".emacs.d")
-			   (filename . "emacs-config")))
-   ("Org" (or (mode . org-mode)
-		  (filename . "OrgMode")))
-   ("Web Dev" (or (mode . html-mode)
-		  (mode . css-mode)))
-   ("Magit" (name . "\*magit"))
-   ("ESS" (mode . ess-mode))
-       ("LaTeX" (mode . latex-mode))
-   ("Help" (or (name . "\*Help\*")
-		   (name . "\*Apropos\*")
-		   (name . "\*info\*"))))))
-
-      (add-hook 'ibuffer-mode-hook
-	           '(lambda ()
-	           (ibuffer-switch-to-saved-filter-groups "home")))
-     (setq ibuffer-show-empty-filter-groups nil)
-     (setq ibuffer-expert t)
-     (add-hook 'ibuffer-mode-hook
-     '(lambda ()
-     (ibuffer-auto-mode 1)
-     (ibuffer-switch-to-saved-filter-groups "home")))
-
-;; connect to irc on invocation but don't autojoin any channels (require 'rcirc)
-;;  (add-to-list 'rcirc-server-alist
-;;                       '("irc.freenode.net")) ;; this code stopped working after my customizations following the mini emacs guide
-(setq rcirc-server-alist
-      '(("irc.freenode.net" :channels ("#emacs" "#python" "#sml" "#nasm" "#gcc"))))
-
-;; minimize fringe
-(setq-default indicate-empty-lines nil)
-
-;; Add keybindings for commenting regions of text
-(global-set-key (kbd "C-c ;") 'comment-or-uncomment-region)
-(global-set-key (kbd "M-'") 'comment-or-uncomment-region)
-
-;; Base dir
-(cd "~/")
-
-;; custom variables kludge. Why can't I get these to work via setq?
-(custom-set-variables
-;; custom-set-variables was added by Custom.
-;; If you edit it by hand, you could mess it up, so be careful.
-;; Your init file should contain only one such instance.
-;; If there is more than one, they won't work right.
-'(LaTeX-XeTeX-command "xelatex -synctex=1")
-'(TeX-engine (quote xetex))
-;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
-;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
-'(blink-cursor-mode nil)
-'(text-mode-hook (quote (text-mode-hook-identify)))
-)
-
-(add-hook 'prog-mode-hook 'linum-mode)
+ (add-hook 'prog-mode-hook 'linum-mode)
 
 (add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace 1)))
 
@@ -432,13 +108,6 @@
       (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
   (ggtags-mode 1))))
 
-;;(use-package mu4e-conversation
-;; :ensure t
-;;)
-
-;;(with-eval-after-load 'mu4e (require 'mu4e-conversation))
-;;(global-mu4e-conversation-mode)
-
 (setq global-mark-ring-max 5000     ; increase mark ring to contain 5000 entries
       mark-ring-max 5000            ; increase kill ring to contain 5000 entries
       mode-require-final-newline t) ; add a newline to end of file
@@ -451,38 +120,38 @@
 ;; default to 4 visible spaces to display a tab
 (setq-default tab-width 4)
 
-;; (require 'workgroups2)
+  ;; (require 'workgroups2)
 
-;; Change workgroups session file
-;; (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
-;; (wg-find-session-file "~/.emacs.d/.emacs_workgroups") ;; for emacs to load this file on startup... but it doesn't work... don't know why...
+  ;; Change workgroups session file
+  ;; (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
+  ;; (wg-find-session-file "~/.emacs.d/.emacs_workgroups") ;; for emacs to load this file on startup... but it doesn't work... don't know why...
 
-;; Set your own keyboard shortcuts to reload/save/switch WGs:
-;; "s" == "Super" or "Win"-key, "S" == Shift, "C" == Control
-;; (global-set-key (kbd "<pause>")     'wg-reload-session)
-;; (global-set-key (kbd "C-S-<pause>") 'wg-save-session)
-;; (global-set-key (kbd "s-z")         'wg-switch-to-workgroup)
-;; (global-set-key (kbd "s-/")         'wg-switch-to-previous-workgroup)
+  ;; Set your own keyboard shortcuts to reload/save/switch WGs:
+  ;; "s" == "Super" or "Win"-key, "S" == Shift, "C" == Control
+  ;; (global-set-key (kbd "<pause>")     'wg-reload-session)
+  ;; (global-set-key (kbd "C-S-<pause>") 'wg-save-session)
+  ;; (global-set-key (kbd "s-z")         'wg-switch-to-workgroup)
+  ;; (global-set-key (kbd "s-/")         'wg-switch-to-previous-workgroup)
 
-;; What to do on Emacs exit / workgroups-mode exit?
-;; (setq wg-emacs-exit-save-behavior           'save)      ; Options: 'save 'ask nil
-;; (setq wg-workgroups-mode-exit-save-behavior 'save)      ; Options: 'save 'ask nil
+  ;; What to do on Emacs exit / workgroups-mode exit?
+  ;; (setq wg-emacs-exit-save-behavior           'save)      ; Options: 'save 'ask nil
+  ;; (setq wg-workgroups-mode-exit-save-behavior 'save)      ; Options: 'save 'ask nil
 
-;; (workgroups-mode 1)   ; put this one at the bottom of .emacs
+  ;; (workgroups-mode 1)   ; put this one at the bottom of .emacs
 
-(add-hook 'diff-mode-hook (lambda ()
-                            (setq-local whitespace-style
-                                        '(face
-                                          tabs
-                                          tab-mark
-                                          spaces
-                                          space-mark
-                                          trailing
-                                          indentation::space
-                                          indentation::tab
-                                          newline
-                                          newline-mark))
-                            (whitespace-mode 1)))
+  (add-hook 'diff-mode-hook (lambda ()
+                              (setq-local whitespace-style
+                                          '(face
+                                            tabs
+                                            tab-mark
+                                            spaces
+                                            space-mark
+                                            trailing
+                                            indentation::space
+                                            indentation::tab
+                                            newline
+                                            newline-mark))
+                              (whitespace-mode 1)))
 
 (require 'gnus-dired)
 ;; make the `gnus-dired-mail-buffers' function also work on
@@ -622,8 +291,8 @@ The app is chosen from your OS's preference."
   ;; open files from dired with "E"
   (define-key dired-mode-map (kbd "E") 'xah-open-in-external-app))
 
-(global-diff-hl-mode)
-(add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+  (global-diff-hl-mode)
+  (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
 
 ;;  (require 'flycheck-tip)
 ;;  (define-key global-map (kbd "\C-c \C-n") 'flycheck-tip-cycle)
@@ -647,8 +316,9 @@ The app is chosen from your OS's preference."
                   (goto-char (posn-point (event-start event)))
                   (highlight-symbol-at-point)))
 
-(global-set-key (kbd "M-n") 'highlight-symbol-next)
-(global-set-key (kbd "M-p") 'highlight-symbol-prev)
+;; keybinds conflict so...
+;;(global-set-key (kbd "M-n") 'highlight-symbol-next)
+;;(global-set-key (kbd "M-p") 'highlight-symbol-prev)
 
 ;; (require 'info+) no longer available in MELPA
 
@@ -667,53 +337,6 @@ The app is chosen from your OS's preference."
 ;;R-mode-hook runs when you open a new source buffer, so anything you put in that will only effect your source buffers.inferior-ess-mode-hook runs when you start an R console, so anything in there should only apply to the console buffer and not the source.
 (add-hook 'R-mode-hook 'rainbow-mode)
 (add-hook 'inferior-ess-mode-hook 'rainbow-mode)
-
-;; Projectile
-    (require 'projectile)
-
-    ;; https://github.com/bbatsov/projectile/issues/1183
-    ;; trying to fix slow behaviour of emacs
-    (setq projectile-mode-line
-         '(:eval (format " Projectile[%s]"
-                        (projectile-project-name))))
-
-    (projectile-global-mode)
-
-    ;; from https://github.com/bbatsov/projectile#usage
-    ;; (projectile-mode +1) ;; don't know what this does.
-    ;; (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-
-    ;; nota que todo funciona menos la que usa la =p=, no se por que
-    (define-key projectile-mode-map [?\s-d] 'projectile-find-dir)
-    ;; (define-key projectile-mode-map [?\s-p] 'projectile-switch-project)
-    ;; (define-key projectile-mode-map [?\s-f] 'projectile-find-file) ;; used now with helm-find-files and exwm
-    ;; (define-key projectile-mode-map [?\s-g] 'projectile-grep)      ;; used now with helm-find-files and exwm
-
-    ;; (setq projectile-enable-caching t)
-    (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
-
-    (use-package helm-projectile
-      :ensure t
-      :after helm-mode
-      :commands helm-projectile
-    ;;   :bind ("C-c p h" . helm-projectile)
-    )
-
-    (setq projectile-completion-system 'helm)
-    (helm-projectile-on)   ;;; creo que no hace falta tras decir =ensure t= in use-package.
-    (setq projectile-switch-project-action 'helm-projectile)
-
-  ;; from https://projectile.readthedocs.io/en/latest/usage/
-  ;; You can go one step further and set a list of folders which Projectile is automatically going to check for projects:
-
-  (setq projectile-project-search-path '("~/.emacs.d/"
-;;                                         "~/.oh-my-zsh/"
-                                         "~/texmf/"
-                                         "~/Dropbox/gtd/"))
-;;                                         "/media/dgm/blue/documents/proyectos/mtj/"
-;;                                         "/media/dgm/blue/documents/dropbox/"
-;;                                         "/media/dgm/blue/documents/templates"))
 
 ;; (require 'spaceline-config)
 ;; (spaceline-emacs-theme)
@@ -763,36 +386,6 @@ The app is chosen from your OS's preference."
 (add-to-list 'load-path "/home/dgm/.emacs.d/src/ado-mode-1.15.1.4/lisp")
 (require 'ado-mode)
 
-;;   (setq org-default-notes-file (concat org-directory "/notes.org")) ;; i disable this to see if I can choose between notes and tasks.
-;;    this is not working for some reason: (define-key global-map "\C-c c" 'org-capture)
-  (define-key global-map (kbd "C-c c") 'org-capture)
-
-;; other bindings from http://orgmode.org/manual/Activation.html
-;;     (global-set-key "\C-c l" 'org-store-link)  este binding ya estaba listo
-;;     (global-set-key "\C-c a" 'org-agenda) ;; este binding puesto así no funcionaba
-;;    (global-set-key "\C-c b" 'org-iswitchb);; este binding puesto así no funcionaba
-
-  (define-key global-map (kbd "C-c a") 'org-agenda)
-  (define-key global-map (kbd "C-c b") 'org-iswitchb)
-
-
-  ;; code by sacha chua: http://sachachua.com/blog/2015/02/learn-take-notes-efficiently-org-mode/
-
-;; commented out on 30 sept 2017 because i'm changing from sacha's organization to https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
-;;  (set-register ?o (cons 'file "/media/dgm/blue/documents/dropbox/org/notes.org"))
-;;  (setq org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
-
-  ;; (setq org-completion-use-ido t)  ;; i think I don't need this because somehow helm is doing the job
-
-(define-key global-map (kbd "S-<left>") 'org-timestamp-down-day)
-(define-key global-map (kbd "S-<right>") 'org-timestamp-up-day)
-(define-key global-map (kbd "S-<up>") 'org-timestamp-up)
-(define-key global-map (kbd "S-<down>") 'org-timestamp-down)
-
-(setq calendar-week-start-day 1)
-
-(require 'ox-twbs)
-
 (require 'which-key)
 (which-key-mode)
 
@@ -810,7 +403,7 @@ The app is chosen from your OS's preference."
 (setq comint-scroll-to-bottom-on-output t)
 (setq comint-move-point-for-output t)
 
-;;;  ESS (Emacs Speaks Statistics)
+  ;;;  ESS (Emacs Speaks Statistics)
 
 ;; ;; Start R in the working directory by default
 ;; (setq ess-ask-for-ess-directory nil)
@@ -862,20 +455,6 @@ The app is chosen from your OS's preference."
               (require 'company-elisp)
               (setq-local company-backends
                           (delete-dups (cons 'company-elisp (cons 'company-files company-backends)))))))
-
-(setq bibtex-completion-bibliography
-      '("/media/dgm/blue/documents/bibs/socbib.bib"))
-
-;; Bibtex-completion supports two methods for storing notes. It can either store all notes in one file or store notes in multiple files, one file per publication. In the first case, the customization variable bibtex-completion-notes-path has to be set to the full path of the notes file:
-
-(setq bibtex-completion-notes-path "/media/dgm/blue/documents/dropbox/org/notes.org")
-
-;; Symbols used for indicating the availability of notes and PDF files
-(setq bibtex-completion-pdf-symbol "⌘")
-(setq bibtex-completion-notes-symbol "✎")
-
-(setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
-(global-set-key (kbd "C-c r") 'helm-bibtex)
 
 ;;(setq command-log-mode-auto-show t)
 ;;(global-set-key (kbd "\C-x c l") 'global-command-log-mode)
@@ -1064,34 +643,6 @@ The app is chosen from your OS's preference."
 ;;     (add-hook 'python-mode-hook 'jedi-config:setup-keys)
 ;; )
 
-;; Tuhdo says to put this but if I do emacs spits error mesage on start up.
-;;(require 'setup-helm)
-;;(require 'setup-helm-gtags)
-
-(setq
- helm-gtags-ignore-case t
- helm-gtags-auto-update t
- helm-gtags-use-input-at-cursor t
- helm-gtags-pulse-at-cursor t
- helm-gtags-prefix-key "C-c g"
- helm-gtags-suggested-key-mapping t
- )
-
-(require 'helm-gtags)
-;; Enable helm-gtags-mode
-(add-hook 'dired-mode-hook 'helm-gtags-mode)
-(add-hook 'eshell-mode-hook 'helm-gtags-mode)
-(add-hook 'c-mode-hook 'helm-gtags-mode)
-(add-hook 'c++-mode-hook 'helm-gtags-mode)
-(add-hook 'asm-mode-hook 'helm-gtags-mode)
-
-(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
-(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
-(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Customized functions                ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1125,9 +676,9 @@ point reaches the beginning or end of the buffer, stop there."
 (setq recentf-max-menu-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 
-(run-at-time nil (* 5 60) 'recentf-save-list)
+    (run-at-time nil (* 5 60) 'recentf-save-list)
 
-;; (recentf-mode)
+  ;; (recentf-mode)
   (setq
    recentf-max-menu-items 30
    xrecentf-max-saved-items 50
@@ -1371,44 +922,14 @@ point reaches the beginning or end of the buffer, stop there."
 (setq url-history-track t
       url-history-file (expand-file-name "url/history" user-emacs-directory))
 
-;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly
-   ;; plus in https://github.com/ch11ng/exwm/wiki/Configuration-Example the developer puts this line before <(require 'exwm)>. 
-   ;; so that is why I've taken it out of the bit on exwm
+  (pulseaudio-control-default-keybindings)
 
-;; from https://caolan.org/dotfiles/emacs.html#orgd96aeb0
-;; run server if using emacsclient as default EDITOR also useful for
-;; org-protocol capture https://www.emacswiki.org/emacs/EmacsClient
+ (setq dired-dwim-target t)
 
-(server-start)
-
-  (use-package exwm 
+  (use-package gpastel
     :ensure t
     :config 
-  
-    ;; necessary to configure exwm manually
-    (require 'exwm-config)
-
-    ;; fringe size, most people prefer 1 (uncle dave's setup)
-    (fringe-mode 3)
-
-;; dgm comments this as it appears to not be working!! reverts to old (server-star)
-;;    (require 'server)
-;;      (unless (server-running-p)
-;;        (server-start))
-
-    (exwm-config-default))
-
-    ;; this just enables exwm, it started automatically once everything is ready
-;; commented out now that I have the Ferguson setup    (exwm-enable))
-
-(pulseaudio-control-default-keybindings)
-
-(setq dired-dwim-target t)
-
-(use-package gpastel
-  :ensure t
-  :config 
- (gpastel-start-listening))
+   (gpastel-start-listening))
 
 (setq default-frame-alist '((font . "Pragmata Pro Mono-16")))
 (add-to-list 'default-frame-alist '(line-spacing . 0.06))
@@ -1421,7 +942,7 @@ point reaches the beginning or end of the buffer, stop there."
 (setq fortune-dir "/usr/share/games/fortunes"
       fortune-file "/usr/share/games/fortunes/fortunes")
 
-(require 'uniquify)
+  (require 'uniquify)
   (setq uniquify-buffer-name-style 'forward)
 
 (autoload 'zap-up-to-char "misc"
@@ -1556,21 +1077,6 @@ only if this merge job is part of a group, i.e., was invoked from within
 (use-package async
   :ensure t
   :init (dired-async-mode 1))
-
-(defun exwm-async-run (name)
-  (interactive)
-  (start-process name nil name))
-
-(defun daedreth/launch-browser ()
-  (interactive)
-  (exwm-async-run "chromium"))
-
-(defun daedreth/lock-screen ()
-  (interactive)
-  (exwm-async-run "slock"))
-
-(global-set-key (kbd "<s-escape>") 'daedreth/launch-browser)
-(global-set-key (kbd "<s-@>") 'daedreth/lock-screen)
 
 (defun daedreth/take-screenshot ()
   "Takes a fullscreen screenshot of the current workspace"
@@ -1716,11 +1222,6 @@ only if this merge job is part of a group, i.e., was invoked from within
   :config
     (global-hungry-delete-mode))
 
-(use-package sudo-edit
-  :ensure t
-  :bind
-    ("s-e" . sudo-edit))
-
 (use-package diminish
   :ensure t
   :init
@@ -1796,5 +1297,46 @@ only if this merge job is part of a group, i.e., was invoked from within
 
 (use-package visible-mode
   :bind (("s-h" . visible-mode)))
+
+(use-package pulseaudio-control
+  :ensure t)
+
+(with-eval-after-load 'pulseaudio-control
+  ;; REVIEW: Upstream should set path dynamically.
+  ;; https://github.com/flexibeast/pulseaudio-control/issues/7
+  (setq pulseaudio-control-pactl-path (executable-find "pactl")
+        pulseaudio-control-volume-step "2%"))
+
+ (put 'upcase-region 'disabled nil)
+ (put 'downcase-region 'disabled nil)
+ (put 'narrow-to-region 'disabled nil)
+ (put 'dired-find-alternate-file 'disabled nil)
+
+  (defun my-mark-current-word (&optional arg allow-extend)
+    "Put point at beginning of current word, set mark at end."
+    (interactive "p\np")
+    (setq arg (if arg arg 1))
+    (if (and allow-extend
+             (or (and (eq last-command this-command) (mark t))
+                 (region-active-p)))
+        (set-mark
+         (save-excursion
+           (when (< (mark) (point))
+             (setq arg (- arg)))
+           (goto-char (mark))
+           (forward-word arg)
+           (point)))
+      (let ((wbounds (bounds-of-thing-at-point 'word)))
+        (unless (consp wbounds)
+          (error "No word at point"))
+        (if (>= arg 0)
+            (goto-char (car wbounds))
+          (goto-char (cdr wbounds)))
+        (push-mark (save-excursion
+                     (forward-word arg)
+                     (point)))
+        (activate-mark))))
+
+(define-key global-map (kbd "C-c x") 'my-mark-current-word)
 
 (message "Starter Kit User (DGM) File loaded.")

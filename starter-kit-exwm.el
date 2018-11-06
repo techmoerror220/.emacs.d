@@ -1,24 +1,3 @@
-#+TITLE: EXWM Customizations
-#+OPTIONS: toc:nil num:nil ^:nil
-#+PROPERTY: header-args :tangle yes
-
-This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
-
-* Set up of  EXWM: emacs as desktop manager!
-
-Tip from Uncle Dave's emacs 
-
-
-Tip from Uncle Dave's emacs. 
-
-Emacs as a daemon means you can use =emacsclient <filename>= to seamlessly edit files from the terminal directly.
-Plus in https://github.com/ch11ng/exwm/wiki/Configuration-Example the developer puts this line before =(require 'exwm)=, so that is why I've taken it out of the bit on exwm. 
-From https://caolan.org/dotfiles/emacs.html#orgd96aeb0,  run server if using =emacsclient= as default EDITOR also useful for =org-protocol capture= https://www.emacswiki.org/emacs/EmacsClient
-
-
-#+source: exwm-starting
-#+begin_src emacs-lisp :tangle yes
-
 (server-start)
 
   (use-package exwm 
@@ -39,62 +18,24 @@ From https://caolan.org/dotfiles/emacs.html#orgd96aeb0,  run server if using =em
     (exwm-config-default))
 
     ;; this just enables exwm, it started automatically once everything is ready
-;; commented out now that I have the Ferguson setup    (exwm-enable))  
-      #+end_src
+;; commented out now that I have the Ferguson setup    (exwm-enable))
 
-      #+RESULTS: exwm-starting
-      : t
-
-
-* Further configuration
-
-When stating the client from .xinitrc, =save-buffer-kill-terminal= will =force-kill= Emacs before it can run through =kill-emacs-hook=.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
-#+END_SRC
 
-#+RESULTS:
-: save-buffers-kill-emacs
-
-** Buffers
-
-Rename buffer to window title.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (defun ambrevar/exwm-rename-buffer-to-title () (exwm-workspace-rename-buffer exwm-title))
 (add-hook 'exwm-update-title-hook 'ambrevar/exwm-rename-buffer-to-title)
 
 (add-hook 'exwm-floating-setup-hook 'exwm-layout-hide-mode-line)
 (add-hook 'exwm-floating-exit-hook 'exwm-layout-show-mode-line)
-#+END_SRC
 
-Allow non-floating resizing with mouse.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (setq window-divider-default-bottom-width 2
       window-divider-default-right-width 2)
 (window-divider-mode)
-#+END_SRC
 
-#+RESULTS:
-: t
-
-
-** System tray
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (require 'exwm-systemtray)
 (exwm-systemtray-enable)
 (setq exwm-systemtray-height 16)
-#+END_SRC
 
-
-** Shortcuts 
-
-These cannot be set globally: if Emacs were to be run in another WM, the =s-= prefix would conflict with the WM bindings.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (exwm-input-set-key (kbd "s-R") #'exwm-reset)
 (exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
 (exwm-input-set-key (kbd "s-<left>") #'windmove-left)
@@ -111,40 +52,15 @@ These cannot be set globally: if Emacs were to be run in another WM, the =s-= pr
   (exwm-input-set-key (kbd "s-J") 'ambrevar/swap-windows-below)
   (exwm-input-set-key (kbd "s-K") 'ambrevar/swap-windows-above)
   (exwm-input-set-key (kbd "s-L") 'ambrevar/swap-windows-right))
-#+END_SRC
 
-#+RESULTS:
-
-The following can only apply to EXWM buffers, else it could have unexpected effects.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (push ?\s-  exwm-input-prefix-keys)
 (exwm-input-set-key (kbd "s-i") #'follow-delete-other-windows-and-split)
 (exwm-input-set-key (kbd "s-o") #'ambrevar/toggle-single-window)
 (exwm-input-set-key (kbd "s-O") #'exwm-layout-toggle-fullscreen)
-#+END_SRC
 
-#+RESULTS:
-
-** Send key literally 
-
-From Damien Cassou.  Bind =C-q= so that the next key is sent literally to the application. 
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'exwm-input-prefix-keys ?\C-q)
     (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
-#+END_SRC
 
-#+RESULTS:
-: exwm-input-send-next-key
-
-** Simulation keys
-
-From  https://github.com/ch11ng/exwm/wiki/Configuration-Example. 
-
-Note that with the package =whole-line-or-region-kill-save= these simulation keys stop working on chromium, so there I use the native keybind =C-c= after doing =C-q= for sending the key straight down to the native process. I think it is worthwhile because whole-line is very handy in emacs.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (setq exwm-input-simulation-keys
       '(
         ;; movement
@@ -171,14 +87,7 @@ Note that with the package =whole-line-or-region-kill-save= these simulation key
         ([?\C-y] . [?\C-v])
         ;; search
         ([?\C-s] . [?\C-f])))
-#+END_SRC
 
-#+RESULTS:
-: (([2] . [left]) ([134217826] . [C-left]) ([6] . [right]) ([134217830] . [C-right]) ([16] . [up]) ([14] . [down]) ([1] . [home]) ([5] . [end]) ([134217846] . [prior]) ([22] . [next]) ([4] . [delete]) ([11] . [S-end delete]) ([134217832] . [S-end select]) ([134217828] . [C-S-right 24]) ([M-backspace] . [C-S-left 24]) ([7] . [escape]) ([23] . [24]) ([134217847] . [3]) ([25] . [22]) ([19] . [6]))
-
-* Helm 
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (with-eval-after-load 'helm
   ;; Need `with-eval-after-load' here since 'helm-map is not defined in 'helm-config.
   (ambrevar/define-keys helm-map
@@ -201,11 +110,7 @@ Note that with the package =whole-line-or-region-kill-save= these simulation key
   (start-process-shell-command command nil command))
 (exwm-input-set-key (kbd "s-&") #'ambrevar/exwm-start)
 (exwm-input-set-key (kbd "s-r") #'ambrevar/exwm-start)
-#+END_SRC
 
-** helm-exwm
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (when (require 'helm-exwm nil t)
   (add-to-list 'helm-source-names-using-follow "EXWM buffers")
   (setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
@@ -226,55 +131,21 @@ Note that with the package =whole-line-or-region-kill-save= these simulation key
   ;; Web browser
   (exwm-input-set-key (kbd "s-w") #'helm-exwm-switch-browser)
   (exwm-input-set-key (kbd "s-W") #'helm-exwm-switch-browser-other-window))
-#+END_SRC
 
-#+RESULTS:
-
-
-* Ambrevar's functions
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (require 'functions)
 (exwm-input-set-key (kbd "s-<tab>") #'ambrevar/switch-to-last-buffer)
-#+END_SRC
 
-
-** Lock screen 
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (defun ambrevar/exwm-start-lock () (interactive) (start-process "slock" nil "slock"))
 (exwm-input-set-key (kbd "s-z") #'ambrevar/exwm-start-lock)
-#+END_SRC
 
-** Screenshot 
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (defun ambrevar/exwm-start-screenshot () (interactive) (start-process-shell-command "scrot" nil "scrot ~/temp/screen-%F-%T.png"))
 (exwm-input-set-key (kbd "<print>") #'ambrevar/exwm-start-screenshot)
-#+END_SRC
 
-* More goodies 
-**  *** Remote editing
-
-From Uncle Dave at https://github.com/daedreth/UncleDavesEmacs.
-
-I have no need to directly edit files over SSH, but what I do need is a way to edit files as root. Opening up nano in a terminal as root to play around with grubs default settings is a no-no, this solves that.
-
-*** Editing with sudo
-Pretty self-explanatory, useful as hell if you use exwm.
-#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package sudo-edit
   :ensure t
   :bind
     ("s-e" . sudo-edit))
-#+END_SRC
 
-#+RESULTS:
-: sudo-edit
-
-** Check for start-up errors. See =~/.profile=.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (let ((error-logs (directory-files "~" t "errors.*log$")))
   (when error-logs
     (warn "Error during system startup.  See %s." (mapconcat 'identity error-logs ", "))
@@ -282,80 +153,31 @@ Pretty self-explanatory, useful as hell if you use exwm.
       ;; Non-daemon Emacs already brings up the *Warning* buffer.
       (setq initial-buffer-choice
             (lambda () (get-buffer "*Warnings*"))))))
-#+END_SRC
 
-** =char= mode
-
-Some programs such as 'emacs' are better off being started in char-mode.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (defun ambrevar/exwm-start-in-char-mode ()
   (when (string-prefix-p "emacs" exwm-instance-name)
     (exwm-input-release-keyboard (exwm--buffer->id (window-buffer)))))
 (add-hook 'exwm-manage-finish-hook 'ambrevar/exwm-start-in-char-mode)
-#+END_SRC
 
-#+RESULTS:
-| ambrevar/exwm-start-in-char-mode |
-
-
-
-* Technomancy's customization
-
-** Workspaces
-We start out with 1 workspace, as exwm creates workspaces dynamically. (I think Technomancy starts with 9 workspaces really and this setup of 1 is really from Uncle Dave.)
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (setq exwm-workspace-number 1
       exwm-workspace-show-all-buffers t
       exwm-layout-show-all-buffers t)
-#+END_SRC
 
-The next loop will bind =s-<number>= to switch to the corresponding workspace from https://github.com/daedreth/UncleDavesEmacs.
+(dotimes (i 10)
+  (exwm-input-set-key (kbd (format "s-%d" i))
+                      `(lambda ()
+                         (interactive)
+                         (exwm-workspace-switch-create ,i))))
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-    (dotimes (i 10)
-      (exwm-input-set-key (kbd (format "s-%d" i))
-                          `(lambda ()
-                             (interactive)
-                             (exwm-workspace-switch-create ,i))))
-#+END_SRC
+(dolist (k '(("<XF86AudioLowerVolume>"
+              "amixer sset Master 5%-")
+             ("<XF86AudioRaiseVolume>"
+              "amixer set Master unmute; amixer sset Master 5%+")))
+  (let ((f (lambda () (interactive)
+             (save-window-excursion
+               (start-process-shell-command (cadr k) nil (cadr k))))))
+    (exwm-input-set-key (kbd (car k)) f)))
 
-
-
-** Making the audio keys work
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (dolist (k '(("<XF86AudioLowerVolume>"
-                "amixer sset Master 5%-")
-               ("<XF86AudioRaiseVolume>"
-                "amixer set Master unmute; amixer sset Master 5%+")))
-    (let ((f (lambda () (interactive)
-               (save-window-excursion
-                 (start-process-shell-command (cadr k) nil (cadr k))))))
-      (exwm-input-set-key (kbd (car k)) f)))
-#+END_SRC
-
-#+RESULTS:
-
-
-
-
-
-
-
-
-
-
-* Launchers
-Stuff from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs
-
-Since I do not use a GUI launcher and do not have an external one like dmenu or rofi, I figured the best way to launch my most used applications would be direct emacsy keybindings.
-
-** Functions to start processes
-I guess this goes without saying but you absolutely have to change the arguments to suit the software that you are using. What good is a launcher for discord if you don’t use it at all.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (defun exwm-async-run (name)
   (interactive)
   (start-process name nil name))
@@ -367,29 +189,10 @@ I guess this goes without saying but you absolutely have to change the arguments
 (defun daedreth/lock-screen ()
   (interactive)
   (exwm-async-run "slock"))
-#+END_SRC
 
-#+RESULTS:
-: daedreth/lock-screen
-
-*** Keybindings to start processes
-#+BEGIN_SRC emacs-lisp :tangle yes
 (global-set-key (kbd "<s-escape>") 'daedreth/launch-browser)
 (global-set-key (kbd "<s-@>") 'daedreth/lock-screen)
-#+END_SRC
 
-#+RESULTS:
-: daedreth/lock-screen
-
-
-* Provide
-
-#+BEGIN_SRC emacs-lisp :tangle yes
 (provide 'starter-kit-exwm)
-#+END_SRC
 
-* Final message
-#+source: message-line
-#+begin_src emacs-lisp :tangle yes
 (message "Starter Kit User EXWM File loaded.")
-#+end_src
