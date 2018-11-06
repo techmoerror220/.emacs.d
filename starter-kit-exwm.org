@@ -1,0 +1,16 @@
+#+TITLE: EXWM Customizations
+#+OPTIONS: toc:nil num:nil ^:nil
+#+PROPERTY: header-args :tangle yes
+
+This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
+
+* Set up of  EXWM: emacs as desktop manager!
+
+Tip from Uncle Dave's emacs 
+
+
+* Final message
+#+source: message-line
+#+begin_src emacs-lisp :tangle yes
+(message "Starter Kit User EXWM File loaded.")
+#+end_src

@@ -255,8 +255,8 @@
 
 (use-package expand-region
   :ensure t
-  :bind (("C-=" . er/expand-region)
-         ("M-=" . er/contract-region)))
+  :bind (("C-*" . er/expand-region)
+         ("M-*" . er/contract-region)))
 
 (require 'multiple-cursors)
 ;; When you have an active region that spans multiple lines, the following will add a cursor to each line:

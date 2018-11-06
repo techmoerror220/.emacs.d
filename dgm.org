@@ -437,7 +437,6 @@ Disabled as it is in =starter-kit-org.org=
     #+end_src
 
 ** DGM customization
-
 *** COMMENT Customizations from Ista Zahn: 
 Check "Note taking and outlining (Org-mode)"  https://github.com/izahn/dotemacs
 
@@ -464,7 +463,6 @@ Check "Note taking and outlining (Org-mode)"  https://github.com/izahn/dotemacs
 #+end_src
 
 
-
 *** Local RefTeX Settings
 Tell RefTeX where the bibliography files are.
 
@@ -484,6 +482,7 @@ Tell RefTeX where the bibliography files are.
 | /media/dgm/blue/documents/bibs/socbib.bib |
 
 *** Local vc commands
+
     Run the vc shellscript before running xelatex with C-c c (instead
     of C-c C-c for regular compile). This assumes you're using the VC
     LaTeX package, have vc in your path, and have vc-awk in the
@@ -513,6 +512,40 @@ Tell RefTeX where the bibliography files are.
 ;;                        (interactive)
 ;;                        (shell-command "vc")))
 #+end_src
+
+*** Mark current word
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+ (defun dgm/my-mark-current-word (&optional arg allow-extend)
+    "Put point at beginning of current word, set mark at end."
+    (interactive "p\np")
+    (setq arg (if arg arg 1))
+    (if (and allow-extend
+             (or (and (eq last-command this-command) (mark t))
+                 (region-active-p)))
+        (set-mark
+         (save-excursion
+           (when (< (mark) (point))
+             (setq arg (- arg)))
+           (goto-char (mark))
+           (forward-word arg)
+           (point)))
+      (let ((wbounds (bounds-of-thing-at-point 'word)))
+        (unless (consp wbounds)
+          (error "No word at point"))
+        (if (>= arg 0)
+            (goto-char (car wbounds))
+          (goto-char (cdr wbounds)))
+        (push-mark (save-excursion
+                     (forward-word arg)
+                     (point)))
+        (activate-mark))))
+
+(global-set-key (kbd "C-c x") 'dgm/my-mark-current-word)
+#+END_SRC
+
+#+RESULTS:
+: dgm/my-mark-current-word
 
 ** Local Pandoc Support
 A pandoc menu for markdown and tex files.
@@ -2504,6 +2537,7 @@ Tip from Uncle Dave's emacs
 
 #+RESULTS: exwm-starting
 : t
+
 *** pulseaudio-control
 
 Info in https://github.com/flexibeast/pulseaudio-control
