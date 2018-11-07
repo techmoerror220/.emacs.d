@@ -6,7 +6,60 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 * Starter Kit LaTeX
   Support for editing LaTeX.
 
-** Color Theme Tweaks
+* Set the engine running latex
+
+** Set a Path to Executables (optional)
+The location of the LaTeX excecutables is system dependent. AUCTeX calls everything through a shell, so you may or may not need this.  This source-code block is turned off by default as it should be added to the user's personal configuration as needed.
+
+DGM: Creo que ya no es necesario porque tengo el paquete de Purcell para que Emacs use el path definido systemwide.
+
+#+srcname: set-exec-path
+#+begin_src emacs-lisp :tangle no
+;;      (setenv "PATH" (concat "/usr/texbin:" (getenv "PATH")))
+#+end_src
+
+
+** Use latexmk for compilation by default
+
+#+srcname: latemkdefault
+#+begin_src emacs-lisp :tangle yes
+    (eval-after-load "tex"
+      '(add-to-list 'TeX-command-list '("latexmk" "latexmk -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
+      )
+    (eval-after-load "tex"
+      '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
+      )
+
+  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))  
+#+end_src
+
+
+** Set =xelatex= by default 
+
+Custom variables kludge. Why can't I get these to work via =setq=?
+
+DGM: Originally this was at the end of =kjhealy.org=.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(LaTeX-XeTeX-command "xelatex -synctex=1")
+ '(TeX-engine (quote xetex))
+ ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
+ ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
+ '(blink-cursor-mode nil)
+ '(text-mode-hook (quote (text-mode-hook-identify)))
+ )
+#+END_SRC
+
+#+RESULTS:
+
+
+
+* Color Theme Tweaks
 The theme package is loaded in =starter-kit-misc.org=. The settings
 here adjust the height of some headings in Org and LaTeX mode, as well
 as turning off the sans-serif heading style that AucTeX defaults to.
@@ -26,8 +79,8 @@ as turning off the sans-serif heading style that AucTeX defaults to.
 #+RESULTS: local-settings
 | (lambda nil (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground #b58900) (set-face-attribute 'font-latex-sectioning-0-face nil :height 3) (set-face-attribute 'font-latex-sectioning-1-face nil :height 2) (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5) (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2) (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)) | turn-off-auto-fill | turn-on-reftex |
 
-** Local LaTeX settings
-*** In-text Smart Quotes (XeLaTeX only)
+* Local LaTeX settings
+** In-text Smart Quotes (XeLaTeX only)
     Redefine TeX-open-quote and TeX-close-quote to be smart quotes by default. Below, in the local org-mode settings, we'll also map the relevant function to a key we can use in org-mode, too. If you don't use XeLaTeX for processing all your =.tex= files, you should disable this option.
 
 #+source: smart-quotes
@@ -72,13 +125,13 @@ Set up AUCTeX to work with the Evince PDF viewer.
 ** Load Support Packages
 *** Prettify Math in Buffers
 #+source: latex-pretty-symbols 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;;  (require 'latex-pretty-symbols)
 #+end_src
 
 *** Load RefTeX
 #+srcname: reftex-support
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle yes
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
   (add-hook 'pandoc-mode-hook 'turn-on-reftex)  ; with Pandoc mode
   (autoload 'reftex-mode     "reftex" "RefTeX Minor Mode" t)
@@ -135,7 +188,6 @@ Set up AUCTeX to work with the Evince PDF viewer.
 
   (setq reftex-cite-prompt-optional-args nil)
   (setq reftex-cite-cleanup-optional-args t)
-
 #+end_src
 
 #+RESULTS: reftex-support
@@ -147,7 +199,7 @@ Set up AUCTeX to work with the Evince PDF viewer.
     loaded, you can run it with =M-x ebib=.
   
 #+source: ebib-load
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (autoload 'ebib "ebib" "Ebib, a BibTeX database manager." t)
   (setq ebib-preload-bib-files 
         '("/media/dgm/blue/documents/bibs/socbib.bib"))
@@ -162,7 +214,7 @@ Set up AUCTeX to work with the Evince PDF viewer.
 *** Automatic Parsing
 
 #+source: autoparse
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq TeX-parse-self t) ; Enable parse on load.
   (setq TeX-auto-save t) ; Enable parse on save.
 #+end_src
@@ -170,14 +222,17 @@ Set up AUCTeX to work with the Evince PDF viewer.
 *** Use pdfLaTeX
     - Take this out to compile to DVI, instead.
 #+srcname: pdf-mode
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle yes
       (add-hook 'LaTeX-mode-hook 'TeX-PDF-mode)
 #+end_src
+
+#+RESULTS: pdf-mode
+| er/add-latex-mode-expansions | TeX-PDF-mode | (lambda nil (local-set-key  v 'ebib-insert-bibtex-key)) | turn-on-reftex |
 
 *** Configure Biber
 Allow AucTeX to use biber as well as/instead of bibtex.
 #+source: setup-biber
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
     ;; Biber under AUCTeX
     (defun TeX-run-Biber (name command file)
       "Create a process for NAME using COMMAND to format FILE with Biber." 
@@ -215,7 +270,7 @@ Allow AucTeX to use biber as well as/instead of bibtex.
 
 *** Use Biblatex key template by default in bib files
 #+source: bibtex-dialect
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
   (setq bibtex-dialect "BibTeX")
 #+end_src
 
@@ -223,45 +278,15 @@ Allow AucTeX to use biber as well as/instead of bibtex.
 We use this (rather than the underscore character) for compatibilty with Pandoc.
 
 #+source: bibtex-key-separator
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
   (setq bibtex-autokey-titleword-separator "_")
   (setq bibtex-autokey-year-title-separator ":_")
 #+end_src
 
-*** Use latexmk for compilation by default
-
-#+srcname: latemkdefault
-#+begin_src emacs-lisp
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-command-list '("latexmk" "latexmk -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
-      )
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
-      )
-
-  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))  
-#+end_src
-
-*** Set a Path to Executables (optional)
-    - The location of the LaTeX excecutables is system
-      dependent. AUCTeX calls everything through a shell, so you may
-      or may not need this.  This source-code block is turned off by
-      default as it should be added to the user's personal
-      configuration as needed.
-#+srcname: set-exec-path
-#+begin_src emacs-lisp :tangle no
-      (setenv "PATH" (concat "/usr/texbin:" (getenv "PATH")))
-#+end_src
 
 ** Configure RefTeX
 *** Default Bibliography
-    - This is important when editing source code in Org-babel, since
-      the LaTeX source code block being edited probably doesn't
-      include the \bibliography{} command that RefTeX uses to find
-      bibliographic database(s).  Make certain also that RefTeX has a
-      path to the bibliographic databases.  This source-code block is
-      turned off be default as it should be configured by the user in
-      a personal file/directory.
+This is important when editing source code in Org-babel, since the LaTeX source code block being edited probably doesn't include the \bibliography{} command that RefTeX uses to find bibliographic database(s).  Make certain also that RefTeX has a path to the bibliographic databases.  This source-code block is turned off be default as it should be configured by the user in a personal file/directory.
 
 #+srcname: default-bibliography
 #+begin_src emacs-lisp :tangle no
@@ -270,9 +295,60 @@ We use this (rather than the underscore character) for compatibilty with Pandoc.
          ("user.bib" "local.bib")))
 #+end_src
 
+*** Local RefTeX Settings
+
+Tell RefTeX where the bibliography files are.
+
+#+srcname: local-reftex
+#+begin_src emacs-lisp :tangle yes
+    ;; Make RefTex able to find my local bib files
+     (setq reftex-bibpath-environment-variables
+;;     '("/media/dgm/blue/documents/bibs"))
+     '("/home/dgm/texmf/bibtex/bib"))
+
+    ;; Default bibliography
+     (setq reftex-default-bibliography
+     '("/media/dgm/blue/documents/bibs/socbib.bib"))
+#+end_src
+
+#+RESULTS: local-reftex
+| /media/dgm/blue/documents/bibs/socbib.bib |
+
+** Local vc commands
+
+    Run the =vc= shellscript before running xelatex with =C-c c= (instead
+    of =C-c C-c= for regular compile). This assumes you're using the VC
+    LaTeX package, have vc in your path, and have =vc-awk= in the
+    directory you're working in.
+
+    DGM: I comment it out as =C-c c= is used elsewhere for capture in org.
+
+#+srcname: vc-command
+#+begin_src emacs-lisp :tangle yes
+;;    (fset 'run-vc-then-xelatex
+;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
+;;    (global-set-key (kbd "C-c c") 'run-vc-then-xelatex);; Run the VC command before running xelatex
+;;    (fset 'run-vc-then-xelatex
+;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
+;;    (global-set-key (kbd "\C-c c") 'run-vc-then-xelatex)
+#+end_src
+
+    Or just run =vc= alone --- this is useful when writing LaTeX files
+    using org-mode. (See the org-mode customizations below).
+
+    dgm: I comment this out. I don't know how to make =vc= work as a command... I think you need to first make a =makefile=.  Plus I think =vc= is run automatically when =latexmk= is run thanks to the =\immediate\write18{sh ./vc}= line
+
+#+source: vc-alone
+#+begin_src emacs-lisp :tangle yes
+;;  (global-set-key (kbd "\C-c v")
+;;                      (lambda ()
+;;                        (interactive)
+;;                        (shell-command "vc")))
+#+end_src
+
  
 * Final message
 #+source: message-line
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (message "Starter Kit LaTeX loaded.")
 #+end_src

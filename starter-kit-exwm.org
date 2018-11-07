@@ -254,7 +254,7 @@ Note that with the package =whole-line-or-region-kill-save= these simulation key
 #+END_SRC
 
 * More goodies 
-**  *** Remote editing
+** Remote editing
 
 From Uncle Dave at https://github.com/daedreth/UncleDavesEmacs.
 
@@ -380,7 +380,6 @@ I guess this goes without saying but you absolutely have to change the arguments
 
 #+RESULTS:
 : daedreth/lock-screen
-
 
 * Provide
 

@@ -54,7 +54,7 @@ This file provides settings for ESS and R.
   (setq ess-swv-processor "'knitr")
 #+end_src
 
-** Use Polymode 
+** Local Polymode Support
 Polymode is a package that supports multiple modes inside a single buffer. It is aimed particularly at literate programming approaches and supports, e.g., R and markdown in a single =.Rmd= file. So it is very useful with knitr in R.
 
 #+source: Polymode

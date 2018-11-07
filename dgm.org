@@ -930,7 +930,7 @@ tip from: https://github.com/izahn/dotemacs
 #+END_SRC
 
 *** General REPL (comint) config
-tip from: https://github.com/izahn/dotemacs
+Tip from: https://github.com/izahn/dotemacs
 
 Many programs using REPLs are derived from comint-mode, so we can affect all of them by changing comint-mode settings. Here we disable line wrapping and ask programs to echo the input.
 
@@ -953,7 +953,7 @@ Load eval-in-repl for bash, elisp, and python interaction.
 #+END_SRC
 
 *** Run R in emacs (ESS)
-tip from: https://github.com/izahn/dotemacs
+Tip from: https://github.com/izahn/dotemacs
 
 Support for R in Emacs is good, thanks to http://ess.r-project.org/. As with other programming languages this configuration enables completion via the tab key and code evaluation with C-ret. Many more features are provided by ESS, refer to http://ess.r-project.org/ for details.
 
@@ -1803,22 +1803,7 @@ From his =main.el=
 #+RESULTS:
 : /home/dgm/.emacs.d/url/history
 
-** pulseaudio-control
-Info in https://github.com/flexibeast/pulseaudio-control
-
-Sets prefix to =C-x /=. Then 
-=+=: Increase the volume of the currently-selected sink by pulseaudio-control-volume-step (pulseaudio-control-increase-volume).
-=-=: Decrease the volume of the currently-selected sink by pulseaudio-control-volume-step (pulseaudio-control-decrease-volume).
-=m=: Toggle muting of the currently-selected sink (pulseaudio-control-toggle-current-sink-mute).
-=d=: Display volume of the currently-selected sink (pulseaudio-control-display-volume).
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (pulseaudio-control-default-keybindings)
-#+END_SRC
-
-#+RESULTS:
-: pulseaudio-control-map
-*** =dired= do what I mean
+** =dired= do what I mean
 - Tip from
 https://emacs.stackexchange.com/questions/5603/how-to-quickly-copy-move-file-in-emacs-dired
 
@@ -1829,7 +1814,7 @@ https://emacs.stackexchange.com/questions/5603/how-to-quickly-copy-move-file-in-
 #+RESULTS:
 : t
 
-*** gpastel
+** gpastel
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package gpastel
@@ -2495,7 +2480,7 @@ And again, the same as above but we make sure to not delete the source word.
     (backward-word)
     (kill-word 1)
     (yank)))
-(global-set-key (kbd "M-s-w") 'daedreth/copy-whole-word)
+(global-set-key (kbd "s-,") 'daedreth/copy-whole-word) 
 #+END_SRC
 
 #+RESULTS:
@@ -2512,7 +2497,7 @@ Regardless of where your cursor is, this quickly copies a line.
      (buffer-substring
       (point-at-bol)
       (point-at-eol)))))
-(global-set-key (kbd "M-s-l") 'daedreth/copy-whole-line)
+(global-set-key (kbd "s-.") 'daedreth/copy-whole-line)
 #+END_SRC
 
 #+RESULTS:
@@ -2522,7 +2507,7 @@ Regardless of where your cursor is, this quickly copies a line.
 And this quickly deletes a line.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key (kbd "M-s-k") 'kill-whole-line)
+(global-set-key (kbd "s-l") 'kill-whole-line)
 #+END_SRC
 
 #+RESULTS:
@@ -2767,6 +2752,15 @@ I found out about this mode by looking through simple.el. I use it to see raw or
 : visible-mode
 
 *** Pulseaudio 
+
+Info in https://github.com/flexibeast/pulseaudio-control
+
+Sets prefix to =C-x /=. Then  
+=+=: Increase the volume of the currently-selected sink by pulseaudio-control-volume-step (pulseaudio-control-increase-volume).
+=-=: Decrease the volume of the currently-selected sink by pulseaudio-control-volume-step (pulseaudio-control-decrease-volume).
+=m=: Toggle muting of the currently-selected sink (pulseaudio-control-toggle-current-sink-mute).
+=d=: Display volume of the currently-selected sink (pulseaudio-control-display-volume).
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package pulseaudio-control
   :ensure t)
@@ -2781,16 +2775,29 @@ I found out about this mode by looking through simple.el. I use it to see raw or
 #+RESULTS:
 : 2%
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(pulseaudio-control-default-keybindings)
+#+END_SRC
+
+#+RESULTS:
+: pulseaudio-control-map
+
+
 *** Enabling various commands for up/down casing, etc. 
+
 From https://github.com/danielmai/.emacs.d/blob/master/config.org
+
 #+BEGIN_SRC emacs-lisp :tangle yes
  (put 'upcase-region 'disabled nil)
  (put 'downcase-region 'disabled nil)
  (put 'narrow-to-region 'disabled nil)
  (put 'dired-find-alternate-file 'disabled nil)
 #+END_SRC
+
 ** Dashboard
+
 I leave it out as it doesn't work with =exwm=
+
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package dashboard
   :ensure t
@@ -2842,6 +2849,46 @@ From https://www.emacswiki.org/emacs/MarkCommands#toc7
 #+RESULTS:
 : my-mark-current-word
 
+** IRC
+
+Sometimes useful for getting help on R or Emacs.
+
+#+source: rirc-configuration
+#+begin_src emacs-lisp :tangle yes
+;; connect to irc on invocation but don't autojoin any channels (require 'rcirc)
+;;  (add-to-list 'rcirc-server-alist
+;;                       '("irc.freenode.net")) ;; this code stopped working after my customizations following the mini emacs guide
+(setq rcirc-server-alist
+      '(("irc.freenode.net" :channels ("#emacs" "#python" "#sml" "#nasm" "#gcc"))))
+#+end_src
+
+#+RESULTS: rirc-configuration
+| irc.freenode.net | :channels | (#emacs #python #sml #nasm #gcc) |
+
+
+** Comment or uncomment region 
+
+#+srcname: final-custom
+#+begin_src emacs-lisp :tangle yes
+  ;; minimize fringe
+  (setq-default indicate-empty-lines nil)
+
+  ;; Add keybindings for commenting regions of text
+  (global-set-key (kbd "C-c ;") 'comment-or-uncomment-region)
+#+end_src
+
+#+RESULTS: final-custom
+: comment-or-uncomment-region
+
+** Base dir
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; Base dir
+  (cd "~/")
+#+END_SRC
+
+#+RESULTS:
+: /home/dgm/
 
 * Final message
 #+source: message-line

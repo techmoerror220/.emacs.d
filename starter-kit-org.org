@@ -57,6 +57,22 @@ Following Daniel Mai we add the exporter for Pandoc as well (remember to install
   :ensure t)
 #+END_SRC
 
+*** Local Pandoc Support
+
+A pandoc menu for markdown and tex files.
+
+#+src-name: pandoc_mode
+#+begin_src emacs-lisp :tangle yes
+  (load "pandoc-mode")
+  (add-hook 'markdown-mode-hook 'pandoc-mode)
+  (add-hook 'TeX-mode-hook 'pandoc-mode)
+  (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
+  ;; (global-set-key (kbd "C-c C-p") 'pandoc-main-hydra/body) ;; not sure it is taken
+#+end_src
+
+#+RESULTS:
+: pandoc-main-hydra/body
+
 *** Export options 
 
 Taken from Caolan on Publishing (https://caolan.org/dotfiles/emacs.html)
@@ -74,7 +90,7 @@ Remove section numbers, table of contents etc. from =HTML= output plus some othe
 (setq org-export-with-smart-quotes t)
 #+END_SRC
 
-*** Html
+*** Html export settings
 
 Create =html= files form the =org= sources, to help with documentation. To set up org-mode for publishing projects to HTML you will need to change these settings, as they apply only to the Starter Kit.
 
@@ -100,7 +116,6 @@ Create =html= files form the =org= sources, to help with documentation. To set u
 #+RESULTS: html-export-settings
 
 *** =twbs= or html made cool 
-
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'ox-twbs)
@@ -174,7 +189,12 @@ Create =html= files form the =org= sources, to help with documentation. To set u
 ;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience.
 ;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
 ;; dgm: moved to init.el or else it wouldn't work
-;; (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
+   (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
+
+;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+;; the alternative, if you want a regular pdflatex would be, I think
+;; (setq org-latex-pdf-process '("latexmk -pdf %f"))
+;; (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape -bibtex -f'  -pdf %f"))
 
 ;; Default packages included in the tex file. As before, org-preamble-xelatex is part of latex-custom-kjh.
 ;; There's org-preamble-pdflatex as well, if you wish to use that instead.
@@ -626,7 +646,7 @@ The default value is -77, which is weird for smaller width windows. I’d rather
 (setq org-tags-column 45)
 #+END_SRC
 
-** =org-ref=
+** =org-ref= 
 
 From https://github.com/jkitchin/org-ref
 
@@ -635,18 +655,10 @@ From https://github.com/jkitchin/org-ref
   (setq reftex-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
   (setq org-ref-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
   (setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
-  (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
-;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience.
-;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
-;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
-;; the alternative, if you want a regular pdflatex would be, I think
-;; (setq org-latex-pdf-process '("latexmk -pdf %f"))
-;; (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape -bibtex -f'  -pdf %f"))
 #+END_SRC
 
 #+RESULTS:
 | latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f |
-
 
 
 ** Goodies
