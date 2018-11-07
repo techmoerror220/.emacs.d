@@ -69,16 +69,6 @@ just have to assume it's online."
         '((org-plus-contrib . "org"))))
 
 
-;; alternative I tried when I was checking the reasons why I don't see magit in =list-packages=
-;;  (add-to-list 'package-archives
-;;               '("melpa" . "http://melpa.org/packages/") t)
-;;  (add-to-list 'package-archives
-;;               ' ("org"     . "http://orgmode.org/elpa/") t)
-;;  (add-to-list 'package-archives
-;;               '("gnu"     . "http://elpa.gnu.org/packages/") t)
-
-
-
 
 ;;; Add support to package.el for pre-filtering available packages
 (defvar package-filter-function nil
@@ -121,6 +111,7 @@ ARCHIVE is the string name of the package archive.")
              (not (memq package melpa-exclude-packages))))))
 
 ;; commented out as this blocked exwm when called from init.el
+;; I think this all means that now my Emacs config does not call on Elpa on startup and that is why I can now use emacs with no internet connection
 ;;    (package-initialize)
 ;;    (when (esk-online?)
 ;;       (ignore-errors (package-refresh-contents)))
@@ -130,8 +121,8 @@ ARCHIVE is the string name of the package archive.")
 ;;  (ignore-errors (package-refresh-contents))
 ;;  (starter-kit-load "starter-kit-elpa.org")
 
-(if (eq system-type 'darwin)
-    (setq system-name (car (split-string system-name "\\."))))
+;;  (if (eq system-type 'darwin)
+;;      (setq system-name (car (split-string system-name "\\."))))
 
 (setq system-specific-config (concat dotfiles-dir system-name ".el")
       system-specific-literate-config (concat dotfiles-dir system-name ".org")
@@ -147,6 +138,8 @@ ARCHIVE is the string name of the package archive.")
 
 (starter-kit-load "starter-kit-defuns.org")
 
+(starter-kit-load "starter-kit-helm.org")
+
 (starter-kit-load "starter-kit-org.org")
 
 (starter-kit-load "starter-kit-bindings.org")
@@ -154,8 +147,6 @@ ARCHIVE is the string name of the package archive.")
 (starter-kit-load "starter-kit-misc.org")
 
 (starter-kit-load "starter-kit-completion.org")
-
-(starter-kit-load "starter-kit-helm.org")
 
 (starter-kit-load "starter-kit-mu4e.org")
 
@@ -211,4 +202,4 @@ ARCHIVE is the string name of the package archive.")
 (require 'diminish)                ;; if you use :diminish
 (require 'bind-key)
 
-(message "Starter Kit main file loaded.")
+(message "Starter Kit main (starter-kit.org) file loaded.")

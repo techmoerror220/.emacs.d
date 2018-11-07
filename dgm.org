@@ -92,7 +92,9 @@ Bind full screen to `C-c f`.
 #+end_src
 
 *** Dired-x
+
 Dired extensions
+
 #+source: Dired-x
 #+begin_src emacs-lisp :tangle yes
   (load "dired-x")
@@ -568,10 +570,11 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 ;; https://github.com/izahn/dotemacs
 
 ;;; Dired and Dired+ configuration
-(add-hook 'dired-mode-hook
-          (lambda()
-            (diff-hl-dired-mode)
-            (diff-hl-margin-mode)))
+;; this is commented as it is reapplied somewhere else in this file
+;; (add-hook 'dired-mode-hook
+;;          (lambda()
+;;            (diff-hl-dired-mode)
+;;            (diff-hl-margin-mode)))
 
 ;; set dired listing options
 (if (eq system-type 'gnu/linux)
@@ -904,11 +907,6 @@ I disable this as it is dealt with in -misc.org
 ;;      (add-to-list 'sml/replacer-regexp-list '("^~/.*/lib/ruby/gems" ":GEMS" ))))
 #+end_src
 
-#+RESULTS: modeline
-: dark
-
-#+RESULTS: emacs-lisp
-: dark
 
 *** Stata
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1924,7 +1922,7 @@ Restore the windows after Ediff quits. By default, when you quit the Ediff sessi
 
 Don't wait 3 seconds then ask about closing the merge buffer, just close it!
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;; write merge buffer.  If the optional argument save-and-continue is non-nil,
 ;; then don't kill the merge buffer
 (defun caolan/ediff-write-merge-buffer-and-maybe-kill (buf file
@@ -1999,7 +1997,7 @@ Fully expand Org files in Ediff (otherwise it's hard to see the changes between 
 
 Note, show-all is marked obsolete in Emacs 25.1 in favor of outline-show-all. But the latter symbol is not bound in 24.5, and since I use Debian stable (Jessie) on my desktop which provides Emacs 24.4, I need to use the older show-all for now.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (add-hook 'ediff-prepare-buffer-hook #'outline-show-all)
 #+END_SRC
 
@@ -2583,10 +2581,9 @@ THIS WILL BE REMOVED SOON AS USE-PACKAGE HAS THE FUNCTIONALITY BUILT IN
 
 Edit this list as you see fit!
 
+PS: recall that the =diminish= package is installed in =starter-kit.org=.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package diminish
-  :ensure t
-  :init
   (diminish 'which-key-mode)
   (diminish 'linum-relative-mode)
   (diminish 'hungry-delete-mode)
@@ -2598,8 +2595,10 @@ Edit this list as you see fit!
   (diminish 'auto-revert-mode)
   (diminish 'rainbow-delimiters-mode)
   (diminish 'yas-minor-mode)
-  (diminish 'rainbow-mode))
+  (diminish 'rainbow-mode)
 #+END_SRC
+
+#+RESULTS:
 
 ** Daniel Mai
 
@@ -2699,14 +2698,22 @@ Starting to use Racket now, mainly for programming paradigms class, though I’m
 *** Smartscan
 Quickly jumps between other symbols found at point in Emacs.
 
+Originally, I tried to bind it to =s-p= and =s-n= here, but smartscan kept using =M-p= and =M-n= so now I have changed it at =smartscan.el=.
+
+Now the mapping is as follows:
+
+- =s-n= smartscan-symbol-go-forward
+- =s-p= smartscan-symbol-go-backward
+- =s-'= smartscan-symbol-replace
+
 http://www.masteringemacs.org/article/smart-scan-jump-symbols-buffer
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package smartscan
   :ensure t
-  :config (global-smartscan-mode 1)
-  :bind (("s-n" . smartscan-symbol-go-forward)
-         ("s-p" . smartscan-symbol-go-backward)))
+  :config (global-smartscan-mode 1))
+;;  :bind (("s-n" . smartscan-symbol-go-forward)
+;;         ("s-p" . smartscan-symbol-go-backward)))
 #+END_SRC
 
 #+RESULTS:
@@ -2889,6 +2896,52 @@ Sometimes useful for getting help on R or Emacs.
 
 #+RESULTS:
 : /home/dgm/
+
+** Customization of helm's looks 
+
+If I place this in the =starter-kit-helm.org= file, for some reason, probably because some code in the way overlaps the following, it does not work.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; comment out by dgm
+; (set-face-attribute 'helm-source-header nil :inherit 'header-line :height 'unspecified :background 'unspecified :foreground 'unspecified)
+(set-face-background 'helm-selection "#4f4f4f")
+(set-face-background 'helm-visible-mark "#2f2f2f")
+(set-face-foreground 'helm-visible-mark nil)
+(set-face-foreground 'helm-match "tomato")
+(set-face-attribute 'helm-buffer-file nil :background 'unspecified :foreground "white" :weight 'normal)
+(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)
+(set-face-attribute 'helm-ff-directory nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-directory)
+(set-face-attribute 'helm-ff-file nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-file)
+(set-face-foreground 'helm-grep-finish "green4")
+#+END_SRC
+
+#+RESULTS:
+
+** Electric pair mode
+
+From http://ergoemacs.org/emacs/emacs_insert_brackets_by_pair.html
+
+Emacs 24 has a new minor mode electric-pair-mode. When on, typing any left bracket automatically insert the right matching bracket. 
+You can have it on always. Put this in your emacs init:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; auto close bracket insertion. New in emacs 24
+(electric-pair-mode 1)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+Brackets includes ASCII and Unicode brackets or quotation marks. Deleting one bracket doesn't delete the other. Exactly which brackets are auto-closed depends on the current major mode's syntax table. If you always want certain brackets be inserted in pairs, you can customize the variable electric-pair-pairs. Its value should be a Association List. For example, the curly bracket {} isn't auto-closed when in emacs-lisp-mode. You can make it do so, like this:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;; make electric-pair-mode work on more brackets
+(setq electric-pair-pairs
+      '(
+        (?\" . ?\")
+        (?\{ . ?\})))
+#+END_SRC
+
 
 * Final message
 #+source: message-line

@@ -58,6 +58,12 @@
 (exwm-input-set-key (kbd "s-o") #'ambrevar/toggle-single-window)
 (exwm-input-set-key (kbd "s-O") #'exwm-layout-toggle-fullscreen)
 
+(defun ambrevar/exwm-start (command)
+  (interactive (list (read-shell-command "$ ")))
+  (start-process-shell-command command nil command))
+(exwm-input-set-key (kbd "s-&") #'ambrevar/exwm-start)
+;; (exwm-input-set-key (kbd "s-r") #'ambrevar/exwm-start)
+
 (add-to-list 'exwm-input-prefix-keys ?\C-q)
     (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
@@ -88,51 +94,7 @@
         ;; search
         ([?\C-s] . [?\C-f])))
 
-(with-eval-after-load 'helm
-  ;; Need `with-eval-after-load' here since 'helm-map is not defined in 'helm-config.
-  (ambrevar/define-keys helm-map
-                        "s-\\" 'helm-toggle-resplit-and-swap-windows)
-  (exwm-input-set-key (kbd "s-c") #'helm-resume)
-  (exwm-input-set-key (kbd "s-b") #'helm-mini)
-  (exwm-input-set-key (kbd "s-f") #'helm-find-files)
-  (exwm-input-set-key (kbd "s-F") #'helm-locate)
-  (when (fboundp 'ambrevar/helm-locate-meta)
-    (exwm-input-set-key (kbd "s-F") #'ambrevar/helm-locate-meta))
-  (exwm-input-set-key (kbd "s-g") 'ambrevar/helm-grep-git-or-ag)
-  (exwm-input-set-key (kbd "s-G") 'ambrevar/helm-grep-git-all-or-ag))
-
-(when (fboundp 'magit-status)
-  (exwm-input-set-key (kbd "s-v") #'magit-status))
-
-;;; External application shortcuts.
-(defun ambrevar/exwm-start (command)
-  (interactive (list (read-shell-command "$ ")))
-  (start-process-shell-command command nil command))
-(exwm-input-set-key (kbd "s-&") #'ambrevar/exwm-start)
-(exwm-input-set-key (kbd "s-r") #'ambrevar/exwm-start)
-
-(when (require 'helm-exwm nil t)
-  (add-to-list 'helm-source-names-using-follow "EXWM buffers")
-  (setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
-  (setq helm-exwm-source (helm-exwm-build-source))
-  (setq helm-mini-default-sources `(helm-exwm-emacs-buffers-source
-                                    helm-exwm-source
-                                    helm-source-recentf
-                                    ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
-                                    helm-source-bookmarks
-                                    helm-source-bookmark-set
-                                    helm-source-buffer-not-found))
-  (ambrevar/define-keys
-   helm-exwm-map
-   "M-d" 'helm-buffer-run-kill-persistent
-   "S-<return>" 'helm-buffer-switch-other-window)
-  ;; Launcher
-  (exwm-input-set-key (kbd "s-r") 'helm-run-external-command)
-  ;; Web browser
-  (exwm-input-set-key (kbd "s-w") #'helm-exwm-switch-browser)
-  (exwm-input-set-key (kbd "s-W") #'helm-exwm-switch-browser-other-window))
-
-(require 'functions)
+;; (require 'functions) ;; this is the first thing loaded in the whole process so no need to use it here again
 (exwm-input-set-key (kbd "s-<tab>") #'ambrevar/switch-to-last-buffer)
 
 (defun ambrevar/exwm-start-lock () (interactive) (start-process "slock" nil "slock"))

@@ -3,7 +3,7 @@
     (unless (package-installed-p package)
       (package-install package)))
 
-(autoload 'python-mode "python-mode" "Python Mode." t)
+  (autoload 'python-mode "python-mode" "Python Mode." t)
   (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
   (add-to-list 'interpreter-mode-alist '("python" . python-mode))
     
@@ -21,14 +21,14 @@
    python-shell-completion-string-code
      "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
-(when (require 'cython-mode nil 'no-error)
-  (add-to-list 'auto-mode-alist '("\\.pyx\\'" . cython-mode))
-  (add-to-list 'auto-mode-alist '("\\.pxd\\'" . cython-mode))
-  (add-to-list 'auto-mode-alist '("\\.pxi\\'" . cython-mode)))
+  (when (require 'cython-mode nil 'no-error)
+    (add-to-list 'auto-mode-alist '("\\.pyx\\'" . cython-mode))
+    (add-to-list 'auto-mode-alist '("\\.pxd\\'" . cython-mode))
+    (add-to-list 'auto-mode-alist '("\\.pxi\\'" . cython-mode)))
 
-(message "Starter Kit Python loaded.")
+  (message "Starter Kit Python loaded.")
 
-(with-eval-after-load "python"
+  (with-eval-after-load "python"
     ;; try to get indent/completion working nicely
     (setq python-indent-trigger-commands '(company-indent-for-tab-command indent-for-tab-command yas-expand yas/expand))
     ;; readline support is wonky at the moment
@@ -41,13 +41,13 @@
 ;;  (define-key python-mode-map (kbd "<M-return>") 'eir-eval-in-python)
 ;;  (define-key python-mode-map (kbd "<S-return>") 'eir-eval-in-python)
 
-(defun python-shell-completion-native-try ()
-  "Return non-nil if can trigger native completion."
-  (with-eval-after-load 'python
-    '(let ((python-shell-completion-native-enable t)
-           (python-shell-completion-native-output-timeout
-            python-shell-completion-native-try-output-timeout)
-           (python-shell-completion-native-get-completions
-            (get-buffer-process (current-buffer))
-            nil "_")))
-    ))
+  (defun python-shell-completion-native-try ()
+    "Return non-nil if can trigger native completion."
+    (with-eval-after-load 'python
+      '(let ((python-shell-completion-native-enable t)
+             (python-shell-completion-native-output-timeout
+              python-shell-completion-native-try-output-timeout)
+             (python-shell-completion-native-get-completions
+              (get-buffer-process (current-buffer))
+              nil "_")))
+      ))

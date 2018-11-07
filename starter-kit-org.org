@@ -25,7 +25,7 @@ The [Local Org-mode XeLaTeX Export Settings] section has
 *** Markdown 
 HTML and LaTeX exporters are shown by default. We add the Markdown exporter to the menu.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; Autocomplete for orgmode
   ;; (require 'org-ac)
   ;; (org-ac/config-default)
@@ -127,14 +127,14 @@ Create =html= files form the =org= sources, to help with documentation. To set u
 ***  Configure Org-babel
    - Add LaTeX to the list of languages Org-babel will recognize.
 #+srcname: add-latex
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle yes
      (require 'ob-latex)
   ;; (org-babel-add-interpreter "latex")
   ;; (add-to-list 'org-babel-tangle-langs '("latex" "tex"))
 #+end_src
    - Add LaTeX to a list of languages that raise noweb-type errors.
 #+srcname: noweb-error
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle yes
   (add-to-list 'org-babel-noweb-error-langs "latex")
 #+end_src
 
@@ -344,7 +344,7 @@ Use org-protocol to trigger org-mode interactions from external programs. Useful
 ** Org-Mode Hooks
 Make yasnippet work properly with org-mode.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 ;;  (defun yas/org-very-safe-expand ()
 ;;    (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
 
@@ -360,7 +360,7 @@ Make yasnippet work properly with org-mode.
 
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (add-hook 'org-mode-hook
             (lambda ()
               (local-set-key "\M-\C-n" 'outline-next-visible-heading)
@@ -451,7 +451,7 @@ are available at the beginning of a code block, the following key
 sequence =C-c C-v h= (bound to =org-babel-describe-bindings=) will
 display a list of the code blocks commands and their related keys.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq org-use-speed-commands t)
 #+end_src
 
@@ -462,7 +462,7 @@ to activate more languages using the customize interface for the
 one below.  The customize interface of =org-babel-load-languages=
 contains an up to date list of the currently supported languages.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (require 'ess) 
 (require 'ob-stata)
 
@@ -493,7 +493,7 @@ contains an up to date list of the currently supported languages.
 The next block makes org-babel aware that a lower-case 'r' in a =src= block header should be processed as R. 
 
 #+source: add-r
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
     (add-to-list 'org-src-lang-modes
                  '("r" . ess-mode))
 
@@ -517,7 +517,7 @@ much more like reading and editing of code using its major mode.
 
 Added from Daniel Mai at https://github.com/danielmai/.emacs.d/blob/master/config.org as well
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (setq org-src-fontify-natively t
       org-src-window-setup 'current-window
       org-src-strip-leading-and-trailing-blank-lines t
@@ -531,7 +531,7 @@ Added from Daniel Mai at https://github.com/danielmai/.emacs.d/blob/master/confi
 Don't ask for confirmation on every =C-c C-c= code-block compile. 
 
 #+source: turn-off-code-block-confirm
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq org-confirm-babel-evaluate nil)
 #+end_src
 
@@ -546,10 +546,12 @@ We'll need the =htmlize= package for syntax highlighting of code blocks (in Caol
 #+END_SRC
 
 ** Ensure the Latest Org-mode manual is in the info directory
+
 By placing the =doc/= directory in Org-mode at the front of the
 =Info-directory-list= we can be sure that the latest version of the
 Org-mode manual is available to the =info= command (bound to =C-h i=).
-#+begin_src emacs-lisp
+
+#+begin_src emacs-lisp :tangle yes
   (unless (boundp 'Info-directory-list)
     (setq Info-directory-list Info-default-directory-list))
   (setq Info-directory-list
@@ -630,7 +632,7 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 
 From https://github.com/danielmai/.emacs.d/blob/master/config.org
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq org-image-actual-width 550)
 (setq org-highlight-latex-and-related '(latex script entities))
 #+END_SRC
@@ -642,7 +644,7 @@ On Org mode version 9 I wasn’t able to execute source blocks out of the box. O
 
 The default value is -77, which is weird for smaller width windows. I’d rather have the tags align horizontally with the header. 45 is a good column number to do that.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq org-tags-column 45)
 #+END_SRC
 

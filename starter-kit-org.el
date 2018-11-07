@@ -1,7 +1,32 @@
+;; Autocomplete for orgmode
+  ;; (require 'org-ac)
+  ;; (org-ac/config-default)
+
+  ;; Markdown exporter
+  (require 'ox-md)
+
+  (setq org-completion-use-ido t)
+  ;; (require 'org-special-blocks)
+  ;; (if window-system (require 'org-mouse))
+
+  ;; Compatibility with WindMove
+  ;; Make windmove work in org-mode:
+;;  (add-hook 'org-shiftup-final-hook 'windmove-up)
+;;  (add-hook 'org-shiftleft-final-hook 'windmove-left)
+;;  (add-hook 'org-shiftdown-final-hook 'windmove-down)
+;;  (add-hook 'org-shiftright-final-hook 'windmove-right)
+  ;; (if window-system (require 'org-mouse))
+
 (use-package ox-pandoc
   :no-require t
   :defer 10
   :ensure t)
+
+(load "pandoc-mode")
+(add-hook 'markdown-mode-hook 'pandoc-mode)
+(add-hook 'TeX-mode-hook 'pandoc-mode)
+(add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
+;; (global-set-key (kbd "C-c C-p") 'pandoc-main-hydra/body) ;; not sure it is taken
 
 (setq org-export-with-section-numbers nil)
 (setq org-html-include-timestamps nil)
@@ -83,7 +108,12 @@
 ;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience.
 ;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
 ;; dgm: moved to init.el or else it wouldn't work
-;; (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
+   (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
+
+;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+;; the alternative, if you want a regular pdflatex would be, I think
+;; (setq org-latex-pdf-process '("latexmk -pdf %f"))
+;; (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape -bibtex -f'  -pdf %f"))
 
 ;; Default packages included in the tex file. As before, org-preamble-xelatex is part of latex-custom-kjh.
 ;; There's org-preamble-pdflatex as well, if you wish to use that instead.
@@ -319,16 +349,9 @@
 (setq org-tags-column 45)
 
 (require 'org-ref)
-  (setq reftex-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
-  (setq org-ref-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
-  (setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
-  (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
-;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience.
-;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
-;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
-;; the alternative, if you want a regular pdflatex would be, I think
-;; (setq org-latex-pdf-process '("latexmk -pdf %f"))
-;; (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape -bibtex -f'  -pdf %f"))
+(setq reftex-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
+(setq org-ref-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
+(setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
 
 (add-to-list 'org-structure-template-alist
              '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))

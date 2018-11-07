@@ -45,7 +45,6 @@ From https://caolan.org/dotfiles/emacs.html#orgd96aeb0,  run server if using =em
       #+RESULTS: exwm-starting
       : t
 
-
 * Further configuration
 
 When stating the client from .xinitrc, =save-buffer-kill-terminal= will =force-kill= Emacs before it can run through =kill-emacs-hook=.
@@ -126,6 +125,29 @@ The following can only apply to EXWM buffers, else it could have unexpected effe
 
 #+RESULTS:
 
+
+**  External application shortcuts.
+
+I comment out =s-r= because it is already defined for =helm-run-external-command= in =starter-kit-helm.org=.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun ambrevar/exwm-start (command)
+  (interactive (list (read-shell-command "$ ")))
+  (start-process-shell-command command nil command))
+(exwm-input-set-key (kbd "s-&") #'ambrevar/exwm-start)
+;; (exwm-input-set-key (kbd "s-r") #'ambrevar/exwm-start)
+#+END_SRC
+
+
+** Magit 
+
+I don't need this shortcut as I already have =C-x g= for =magit-status=.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(when (fboundp 'magit-status)
+  (exwm-input-set-key (kbd "s-v") #'magit-status))
+#+END_SRC
+
 ** Send key literally 
 
 From Damien Cassou.  Bind =C-q= so that the next key is sent literally to the application. 
@@ -176,65 +198,10 @@ Note that with the package =whole-line-or-region-kill-save= these simulation key
 #+RESULTS:
 : (([2] . [left]) ([134217826] . [C-left]) ([6] . [right]) ([134217830] . [C-right]) ([16] . [up]) ([14] . [down]) ([1] . [home]) ([5] . [end]) ([134217846] . [prior]) ([22] . [next]) ([4] . [delete]) ([11] . [S-end delete]) ([134217832] . [S-end select]) ([134217828] . [C-S-right 24]) ([M-backspace] . [C-S-left 24]) ([7] . [escape]) ([23] . [24]) ([134217847] . [3]) ([25] . [22]) ([19] . [6]))
 
-* Helm 
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(with-eval-after-load 'helm
-  ;; Need `with-eval-after-load' here since 'helm-map is not defined in 'helm-config.
-  (ambrevar/define-keys helm-map
-                        "s-\\" 'helm-toggle-resplit-and-swap-windows)
-  (exwm-input-set-key (kbd "s-c") #'helm-resume)
-  (exwm-input-set-key (kbd "s-b") #'helm-mini)
-  (exwm-input-set-key (kbd "s-f") #'helm-find-files)
-  (exwm-input-set-key (kbd "s-F") #'helm-locate)
-  (when (fboundp 'ambrevar/helm-locate-meta)
-    (exwm-input-set-key (kbd "s-F") #'ambrevar/helm-locate-meta))
-  (exwm-input-set-key (kbd "s-g") 'ambrevar/helm-grep-git-or-ag)
-  (exwm-input-set-key (kbd "s-G") 'ambrevar/helm-grep-git-all-or-ag))
-
-(when (fboundp 'magit-status)
-  (exwm-input-set-key (kbd "s-v") #'magit-status))
-
-;;; External application shortcuts.
-(defun ambrevar/exwm-start (command)
-  (interactive (list (read-shell-command "$ ")))
-  (start-process-shell-command command nil command))
-(exwm-input-set-key (kbd "s-&") #'ambrevar/exwm-start)
-(exwm-input-set-key (kbd "s-r") #'ambrevar/exwm-start)
-#+END_SRC
-
-** helm-exwm
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(when (require 'helm-exwm nil t)
-  (add-to-list 'helm-source-names-using-follow "EXWM buffers")
-  (setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
-  (setq helm-exwm-source (helm-exwm-build-source))
-  (setq helm-mini-default-sources `(helm-exwm-emacs-buffers-source
-                                    helm-exwm-source
-                                    helm-source-recentf
-                                    ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
-                                    helm-source-bookmarks
-                                    helm-source-bookmark-set
-                                    helm-source-buffer-not-found))
-  (ambrevar/define-keys
-   helm-exwm-map
-   "M-d" 'helm-buffer-run-kill-persistent
-   "S-<return>" 'helm-buffer-switch-other-window)
-  ;; Launcher
-  (exwm-input-set-key (kbd "s-r") 'helm-run-external-command)
-  ;; Web browser
-  (exwm-input-set-key (kbd "s-w") #'helm-exwm-switch-browser)
-  (exwm-input-set-key (kbd "s-W") #'helm-exwm-switch-browser-other-window))
-#+END_SRC
-
-#+RESULTS:
-
-
 * Ambrevar's functions
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(require 'functions)
+;; (require 'functions) ;; this is the first thing loaded in the whole process so no need to use it here again
 (exwm-input-set-key (kbd "s-<tab>") #'ambrevar/switch-to-last-buffer)
 #+END_SRC
 
@@ -299,7 +266,6 @@ Some programs such as 'emacs' are better off being started in char-mode.
 | ambrevar/exwm-start-in-char-mode |
 
 
-
 * Technomancy's customization
 
 ** Workspaces
@@ -337,7 +303,6 @@ The next loop will bind =s-<number>= to switch to the corresponding workspace fr
 #+END_SRC
 
 #+RESULTS:
-
 
 
 

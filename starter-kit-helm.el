@@ -115,10 +115,6 @@ Requires `call-process-to-string' from `functions'."
   (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
   (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
 
-(ambrevar/global-set-keys
- "C-x M-g" 'ambrevar/helm-grep-git-or-ag
- "C-x M-G" 'helm-do-grep-ag)
-
 ;; helm-google-suggest
 (global-set-key (kbd "C-c h g") 'helm-google-suggest)
 
@@ -239,7 +235,7 @@ Requires `call-process-to-string' from `functions'."
 
 (when (require 'wgrep-helm nil t)
   (setq wgrep-auto-save-buffer t
-        wgrep-enable-key (kbd "C-x C-q")))
+        wgrep-enable-key (kbd "C-c h w")))
 
 (when (require 'helm-ls-git nil t)
   ;; `helm-source-ls-git' must be defined manually.
@@ -258,21 +254,17 @@ Requires `call-process-to-string' from `functions'."
  helm-dwim-target 'completion
  helm-echo-input-in-header-line t
  helm-use-frame-when-more-than-two-windows nil
-
  ;; helm-apropos-fuzzy-match t
  ;; helm-buffers-fuzzy-matching t
  ;; helm-eshell-fuzzy-match t
  ;; helm-imenu-fuzzy-match t
  ;; helm-M-x-fuzzy-match t
  ;; helm-recentf-fuzzy-match t
-
  ;; Use woman instead of man.
  helm-man-or-woman-function nil
-
  ;; https://github.com/emacs-helm/helm/issues/1910
  helm-buffers-end-truncated-string "…"
  helm-buffer-max-length 22
-
  helm-window-show-buffers-function 'helm-window-mosaic-fn
  helm-window-prefer-horizontal-split t)
 
@@ -304,7 +296,6 @@ Requires `call-process-to-string' from `functions'."
                                   helm-source-bookmark-set
                                   helm-source-buffer-not-found))
 
-;;; Use the M-s prefix just like `occur'.
 (define-key prog-mode-map (kbd "M-s f") 'helm-semantic-or-imenu)
 ;;; The text-mode-map binding targets structured text modes like Markdown.
 (define-key text-mode-map (kbd "M-s f") 'helm-semantic-or-imenu)
@@ -315,18 +306,6 @@ Requires `call-process-to-string' from `functions'."
   (define-key woman-mode-map (kbd "M-s f") 'helm-imenu))
 (with-eval-after-load 'man
   (define-key Man-mode-map (kbd "M-s f") 'helm-imenu))
-
-;; comment out by dgm
-; (set-face-attribute 'helm-source-header nil :inherit 'header-line :height 'unspecified :background 'unspecified :foreground 'unspecified)
-(set-face-background 'helm-selection "#4f4f4f")
-(set-face-background 'helm-visible-mark "#2f2f2f")
-(set-face-foreground 'helm-visible-mark nil)
-(set-face-foreground 'helm-match "tomato")
-(set-face-attribute 'helm-buffer-file nil :background 'unspecified :foreground "white" :weight 'normal)
-(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)
-(set-face-attribute 'helm-ff-directory nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-directory)
-(set-face-attribute 'helm-ff-file nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-file)
-(set-face-foreground 'helm-grep-finish "green4")
 
 (setq helm-source-names-using-follow '("Occur" "Git-Grep" "AG" "mark-ring" "Org Headings" "Imenu"))
 
@@ -340,6 +319,7 @@ Requires `call-process-to-string' from `functions'."
   (let ((sel (helm-get-selection))) ; if we reached .. move back
     (if (and (stringp sel) (string-match "/\\.\\.$" sel))
         (helm-previous-line 1))))
+
 (advice-add #'helm-preselect :around #'ambrevar/helm-skip-dots)
 (advice-add #'helm-ff-move-to-first-real-candidate :around #'ambrevar/helm-skip-dots)
 
@@ -360,9 +340,9 @@ Requires `call-process-to-string' from `functions'."
 (defun ambrevar/helm-toggle-visible-mark-backwards (arg)
   (interactive "p")
   (helm-toggle-visible-mark (- arg)))
-(define-key helm-map (kbd "S-SPC") 'ambrevar/helm-toggle-visible-mark-backwards)
+;; (define-key helm-map (kbd "S-SPC") 'ambrevar/helm-toggle-visible-mark-backwards)
 
-(global-set-key  (kbd "C-<f4>") 'helm-execute-kmacro)
+;; (global-set-key  (kbd "C-<f4>") 'helm-execute-kmacro)
 
 (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
 ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
@@ -415,6 +395,45 @@ Requires `call-process-to-string' from `functions'."
 ;;                                         "/media/dgm/blue/documents/proyectos/mtj/"
 ;;                                         "/media/dgm/blue/documents/dropbox/"
 ;;                                         "/media/dgm/blue/documents/templates"))
+
+(with-eval-after-load 'helm
+  ;; Need `with-eval-after-load' here since 'helm-map is not defined in 'helm-config.
+  (ambrevar/define-keys helm-map
+                        "s-\\" 'helm-toggle-resplit-and-swap-windows)
+  (exwm-input-set-key (kbd "s-c") #'helm-resume)
+  (exwm-input-set-key (kbd "s-b") #'helm-mini)
+  (exwm-input-set-key (kbd "s-f") #'helm-find-files)
+  (exwm-input-set-key (kbd "s-F") #'helm-locate)
+  (when (fboundp 'ambrevar/helm-locate-meta)
+    (exwm-input-set-key (kbd "s-F") #'ambrevar/helm-locate-meta))
+  (exwm-input-set-key (kbd "s-a") #'helm-ag)
+  (exwm-input-set-key (kbd "s-A") #'helm-do-grep-ag)
+  (exwm-input-set-key (kbd "s-g") 'ambrevar/helm-grep-git-or-ag)
+  (exwm-input-set-key (kbd "s-G") 'ambrevar/helm-grep-git-all-or-ag))
+
+(when (require 'helm-exwm nil t)
+  (add-to-list 'helm-source-names-using-follow "EXWM buffers")
+  (setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
+  (setq helm-exwm-source (helm-exwm-build-source))
+  (setq helm-mini-default-sources `(helm-exwm-emacs-buffers-source
+                                    helm-exwm-source
+                                    helm-source-recentf
+                                    ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
+                                    helm-source-bookmarks
+                                    helm-source-bookmark-set
+                                    helm-source-buffer-not-found))
+
+;; Not sure how this works
+;;  (ambrevar/define-keys
+;;   helm-exwm-map
+;;   "M-d" 'helm-buffer-run-kill-persistent
+;;   "S-<return>" 'helm-buffer-switch-other-window)
+
+  ;; Launcher
+  (exwm-input-set-key (kbd "s-r") 'helm-run-external-command)
+  ;; Web browser
+  (exwm-input-set-key (kbd "s-w") #'helm-exwm-switch-browser)
+  (exwm-input-set-key (kbd "s-W") #'helm-exwm-switch-browser-other-window))
 
 (provide 'starter-kit-helm)
 

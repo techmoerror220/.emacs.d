@@ -208,9 +208,9 @@ actual work."
 ;;; Default Keybindings
 (defvar smartscan-map
   (let ((m (make-sparse-keymap)))
-    (define-key m (kbd "M-n") 'smartscan-symbol-go-forward)
-    (define-key m (kbd "M-p") 'smartscan-symbol-go-backward)
-    (define-key m (kbd "M-'") 'smartscan-symbol-replace)
+    (define-key m (kbd "s-n") 'smartscan-symbol-go-forward)
+    (define-key m (kbd "s-p") 'smartscan-symbol-go-backward)
+    (define-key m (kbd "s-'") 'smartscan-symbol-replace)
     m)
   "Keymap for `smartscan'.")
 

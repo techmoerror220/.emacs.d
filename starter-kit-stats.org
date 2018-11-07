@@ -22,8 +22,9 @@ This file provides settings for ESS and R.
 #+end_src
 
 ** Define Rnw-mode and make LaTeX aware of it. 
+
 #+srcname: misc-r
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.Rnw\\'" . Rnw-mode))
 (add-to-list 'auto-mode-alist '("\\.Snw\\'" . Rnw-mode))
 (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . Rnw-mode))
@@ -44,9 +45,11 @@ This file provides settings for ESS and R.
 			 '("LatexSweave" "%l %(mode) %s"
 			   TeX-run-TeX nil (latex-mode) :help "Run Latex after Sweave") t)
 	    (setq TeX-command-default "Sweave")))
-
-
 #+end_src
+
+#+RESULTS: misc-r
+| lambda | nil | (add-to-list 'TeX-command-list '(Sweave R CMD Sweave %s TeX-run-command nil (latex-mode) :help Run Sweave) t) | (add-to-list 'TeX-command-list '(LatexSweave %l %(mode) %s TeX-run-TeX nil (latex-mode) :help Run Latex after Sweave) t) | (setq TeX-command-default Sweave) |
+| lambda | nil | (local-set-key [(shift return)] 'my-ess-eval)                                                                 |                                                                                                                          |                                   |
 
 ** Use Knitr to process Sweave documents
 #+source: knitr-swv
@@ -154,5 +157,5 @@ To assign ":" to "<-" and to stop the assignment of underscore (underbar) "_" to
 * Final message
 #+source: message-line
 #+begin_src emacs-lisp
-  (message "Starter Kit main file loaded.")
+  (message "Starter Kit STATS file loaded.")
 #+end_src

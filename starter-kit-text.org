@@ -56,45 +56,48 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
     ;;  (global-centered-cursor-mode +1)) 
 #+end_src
 
-** Spelling
-    Use aspell instead of ispell. Turned off here because it loads
-    too late. I had to put it in [[file:starter-kit-aspell.org][starter-kit-aspell.org]].
-#+srcname: spelling-mode
-#+begin_src emacs-lisp :tangle no
- (setq ispell-program-name "aspell"
-      ispell-dictionary "english"
-      ispell-dictionary-alist
-      (let ((default '("[A-Za-z]" "[^A-Za-z]" "[']" nil
-                       ("-B" "-d" "english")
-                       nil iso-8859-1)))
-        `((nil ,@default)
-          ("english" ,@default))))
+** COMMENT Spelling
 
-    ;; ispell --- make ispell skip \citep, \citet etc in .tex files.
-    (setq ispell-tex-skip-alists
-    '((;;("%\\[" . "%\\]") ; AMStex block comment...
-    ;; All the standard LaTeX keywords from L. Lamport's guide:
-    ;; \cite, \hspace, \hspace*, \hyphenation, \include, \includeonly, \input,
-    ;; \label, \nocite, \rule (in ispell - rest included here)
-    ("\\\\addcontentsline"              ispell-tex-arg-end 2)
-    ("\\\\add\\(tocontents\\|vspace\\)" ispell-tex-arg-end)
-    ("\\\\\\([aA]lph\\|arabic\\)"   ispell-tex-arg-end)
-    ("\\\\author"                         ispell-tex-arg-end)
-    ;; New regexps here --- kjh
-    ("\\\\\\(text\\|paren\\)cite" ispell-tex-arg-end)
-    ("\\\\cite\\(t\\|p\\|year\\|yearpar\\)" ispell-tex-arg-end)
-    ("\\\\bibliographystyle"                ispell-tex-arg-end)
-    ("\\\\makebox"                  ispell-tex-arg-end 0)
-    ("\\\\e?psfig"                  ispell-tex-arg-end)
-    ("\\\\document\\(class\\|style\\)" .
-    "\\\\begin[ \t\n]*{[ \t\n]*document[ \t\n]*}"))
-    (;; delimited with \begin.  In ispell: displaymath, eqnarray, eqnarray*,
-    ;; equation, minipage, picture, tabular, tabular* (ispell)
-    ("\\(figure\\|table\\)\\*?"     ispell-tex-arg-end 0)
-    ("list"                                 ispell-tex-arg-end 2)
-    ("program"             . "\\\\end[ \t\n]*{[ \t\n]*program[ \t\n]*}")
-    ("verbatim\\*?"        . "\\\\end[ \t\n]*{[ \t\n]*verbatim\\*?[ \t\n]*}"))))
+    Use aspell instead of ispell. Turned off here because it loads too late. I had to put it in [[file:starter-kit-aspell.org][starter-kit-aspell.org]].
+
+#+srcname: spelling-mode
+#+begin_src emacs-lisp 
+;; (setq ispell-program-name "aspell"
+;;      ispell-dictionary "english"
+;;      ispell-dictionary-alist
+;;      (let ((default '("[A-Za-z]" "[^A-Za-z]" "[']" nil
+;;                       ("-B" "-d" "english")
+;;                       nil iso-8859-1)))
+;;        `((nil ,@default)
+;;          ("english" ,@default))))
+;;
+;;    ;; ispell --- make ispell skip \citep, \citet etc in .tex files.
+;;    (setq ispell-tex-skip-alists
+;;    '((;;("%\\[" . "%\\]") ; AMStex block comment...
+;;    ;; All the standard LaTeX keywords from L. Lamport's guide:
+;;    ;; \cite, \hspace, \hspace*, \hyphenation, \include, \includeonly, \input,
+;;    ;; \label, \nocite, \rule (in ispell - rest included here)
+;;    ("\\\\addcontentsline"              ispell-tex-arg-end 2)
+;;    ("\\\\add\\(tocontents\\|vspace\\)" ispell-tex-arg-end)
+;;    ("\\\\\\([aA]lph\\|arabic\\)"   ispell-tex-arg-end)
+;;    ("\\\\author"                         ispell-tex-arg-end)
+;;    ;; New regexps here --- kjh
+;;    ("\\\\\\(text\\|paren\\)cite" ispell-tex-arg-end)
+;;    ("\\\\cite\\(t\\|p\\|year\\|yearpar\\)" ispell-tex-arg-end)
+;;    ("\\\\bibliographystyle"                ispell-tex-arg-end)
+;;    ("\\\\makebox"                  ispell-tex-arg-end 0)
+;;    ("\\\\e?psfig"                  ispell-tex-arg-end)
+;;    ("\\\\document\\(class\\|style\\)" .
+;;    "\\\\begin[ \t\n]*{[ \t\n]*document[ \t\n]*}"))
+;;    (;; delimited with \begin.  In ispell: displaymath, eqnarray, eqnarray*,
+;;    ;; equation, minipage, picture, tabular, tabular* (ispell)
+;;    ("\\(figure\\|table\\)\\*?"     ispell-tex-arg-end 0)
+;;    ("list"                                 ispell-tex-arg-end 2)
+;;    ("program"             . "\\\\end[ \t\n]*{[ \t\n]*program[ \t\n]*}")
+;;    ("verbatim\\*?"        . "\\\\end[ \t\n]*{[ \t\n]*verbatim\\*?[ \t\n]*}"))))
 #+end_src
+
+#+RESULTS: spelling-mode
 
 ** Smartparens Mode
    Smart autopairing of quotes and parentheses. 

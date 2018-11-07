@@ -66,7 +66,7 @@
 (bind-key "s-<f12>" 'switch-theme)
 (bind-key "s-<f11>" 'disable-active-themes)
 
-(when window-system
+    (when window-system
 ;;      (setq frame-title-format '(buffer-file-name "%f" ("%b")))
       (setq frame-title-format (concat "%b" (unless (daemonp) " [serverless]"))) ;; from ambrevar's main.el
       (tooltip-mode -1)
@@ -105,7 +105,7 @@
           xterm-mouse-mode t
           save-place-file (concat dotfiles-dir "places"))
 
-(minimal-mode)
+  (minimal-mode)
 
 ;; (setq browse-url-browser-function 'browse-url-firefox)
 ;; (setq browse-url-browser-function 'browse-default-macosx-browser)
@@ -171,7 +171,7 @@
     :init (ido-vertical-mode 1)
     (setq ido-vertical-define-keys 'C-n-and-C-p-only)))
 
-(set-default 'indent-tabs-mode nil)
+  (set-default 'indent-tabs-mode nil)
   (set-default 'indicate-empty-lines t)
   (set-default 'imenu-auto-rescan t)
   
@@ -219,4 +219,4 @@
 
 (setq diff-switches "-u")
 
-(message "Starter Kit Misc loaded.")
+  (message "Starter Kit Misc loaded.")

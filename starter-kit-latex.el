@@ -1,4 +1,56 @@
-;;  (require 'latex-pretty-symbols)
+    (eval-after-load "tex"
+      '(add-to-list 'TeX-command-list '("latexmk" "latexmk -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
+      )
+    (eval-after-load "tex"
+      '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
+      )
+
+  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(LaTeX-XeTeX-command "xelatex -synctex=1")
+ '(TeX-engine (quote xetex))
+ ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
+ ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
+ '(blink-cursor-mode nil)
+ '(text-mode-hook (quote (text-mode-hook-identify)))
+ )
+
+  (add-hook 'latex-mode-hook
+            (lambda ()
+              (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground "#b58900")
+              (set-face-attribute 'font-latex-sectioning-0-face nil :height 3)
+              (set-face-attribute 'font-latex-sectioning-1-face nil :height 2)
+              (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5)
+              (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2)
+              (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)))
+
+  (setq TeX-open-quote "“")
+  (setq TeX-close-quote "”")
+
+    ;; Synctex with Evince
+    (add-hook 'TeX-mode-hook
+    (lambda ()
+    (add-to-list 'TeX-output-view-style
+    '("^pdf$" "."
+     "/usr/bin/evince  %n %o %b")))
+     )
+
+  (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+  (setq TeX-view-program-list
+       '(("PDF Viewer" "/usr/bin/evince -b -g %n %o %b")))
+
+    ;; Make emacs aware of multi-file projects
+    ;; (setq-default TeX-master nil)
+
+    ;; Auto-raise Emacs on activation (from Skim, usually)
+;;    (defun raise-emacs-on-aqua()
+;;    (shell-command "osascript -e 'tell application \"Emacs\" to activate' &"))
+;;    (add-hook 'server-switch-hook 'raise-emacs-on-aqua)
 
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
   (add-hook 'pandoc-mode-hook 'turn-on-reftex)  ; with Pandoc mode
@@ -101,13 +153,30 @@
     '(add-to-list 'TeX-command-list '("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber"))
     )
 
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-command-list '("latexmk" "latexmk -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
-      )
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
-      )
+  (setq bibtex-dialect "BibTeX")
 
-  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
+  (setq bibtex-autokey-titleword-separator "_")
+  (setq bibtex-autokey-year-title-separator ":_")
+
+    ;; Make RefTex able to find my local bib files
+     (setq reftex-bibpath-environment-variables
+;;     '("/media/dgm/blue/documents/bibs"))
+     '("/home/dgm/texmf/bibtex/bib"))
+
+    ;; Default bibliography
+     (setq reftex-default-bibliography
+     '("/media/dgm/blue/documents/bibs/socbib.bib"))
+
+;;    (fset 'run-vc-then-xelatex
+;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
+;;    (global-set-key (kbd "C-c c") 'run-vc-then-xelatex);; Run the VC command before running xelatex
+;;    (fset 'run-vc-then-xelatex
+;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
+;;    (global-set-key (kbd "\C-c c") 'run-vc-then-xelatex)
+
+;;  (global-set-key (kbd "\C-c v")
+;;                      (lambda ()
+;;                        (interactive)
+;;                        (shell-command "vc")))
 
   (message "Starter Kit LaTeX loaded.")

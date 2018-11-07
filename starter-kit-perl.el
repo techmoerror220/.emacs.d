@@ -9,4 +9,4 @@
 (add-to-list 'auto-mode-alist '("\\.pod$" . pod-mode))
 (add-to-list 'auto-mode-alist '("\\.tt$" . tt-mode))
 
-(message "Starter Kit Perl loaded.")
+  (message "Starter Kit Perl loaded.")

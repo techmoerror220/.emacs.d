@@ -26,4 +26,4 @@
     (insert (pp json-object))
     (goto-char (point-min))))
 
-(message "Starter Kit JS loaded.")
+  (message "Starter Kit JS loaded.")

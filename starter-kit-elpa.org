@@ -191,3 +191,6 @@ Make sure the PATH variable is set properly. (Uses exec-path-from-shell package.
 #+begin_src emacs-lisp
   (message "Starter Kit ELPA loaded.")
 #+end_src
+
+#+RESULTS: message-line
+: Starter Kit ELPA loaded.

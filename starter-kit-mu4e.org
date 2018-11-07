@@ -85,6 +85,18 @@ Don't refresh so that we don't lose the current filter upon, e.g. reading e-mail
 
 #+RESULTS:
 
+** Default reply addresses
+
+Currently, by default =mu4e-conversation= replies to all. I want to be more conservative. Ideally, I would like to be able to choose whether to reply to all or not and never to reply to self but I don't know how to accomplish it.
+
+I've tried the following but it is not working.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq mu4e-conversation--draft-reply-all nil)
+#+END_SRC
+
+#+RESULTS:
+
 * helm
 
 #+BEGIN_SRC emacs-lisp :tangle yes

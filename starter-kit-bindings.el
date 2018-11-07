@@ -29,6 +29,31 @@
   (define-key global-map (kbd "C-c r") 'vr/replace) ;; note from dgm: now it seems these keys are binded to opening =helm-bibtex=
   (define-key global-map (kbd "C-c q") 'vr/query-replace)
 
+(setq ibuffer-saved-filter-groups
+      '(("home"
+	     ("emacs-config" (or (filename . ".emacs.d")
+			                 (filename . "emacs-config")))
+	     ("Org" (or (mode . org-mode)
+		            (filename . "OrgMode")))
+	     ("Web Dev" (or (mode . html-mode)
+			            (mode . css-mode)))
+	     ("Magit" (name . "\*magit"))
+	     ("ESS" (mode . ess-mode))
+         ("LaTeX" (mode . latex-mode))
+	     ("Help" (or (name . "\*Help\*")
+		             (name . "\*Apropos\*")
+		             (name . "\*info\*"))))))
+
+(add-hook 'ibuffer-mode-hook
+	      '(lambda ()
+	         (ibuffer-switch-to-saved-filter-groups "home")))
+(setq ibuffer-show-empty-filter-groups nil)
+(setq ibuffer-expert t)
+(add-hook 'ibuffer-mode-hook
+          '(lambda ()
+             (ibuffer-auto-mode 1)
+             (ibuffer-switch-to-saved-filter-groups "home")))
+
   (global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
   (global-set-key (kbd "C-x C-p") 'find-file-at-point)
   (global-set-key (kbd "C-c y") 'bury-buffer)

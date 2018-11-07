@@ -1,4 +1,4 @@
-(when (fboundp 'adaptive-wrap-prefix-mode)
+  (when (fboundp 'adaptive-wrap-prefix-mode)
     (defun my-activate-adaptive-wrap-prefix-mode ()
       "Toggle `visual-line-mode' and `adaptive-wrap-prefix-mode' simultaneously."
       (adaptive-wrap-prefix-mode (if visual-line-mode 1 -1)))
@@ -39,47 +39,47 @@
     ;;  (require 'centered-cursor-mode)
     ;;  (global-centered-cursor-mode +1))
 
-(smartparens-global-mode 1)
-(require 'smartparens-config)
-(setq sp-base-key-bindings 'paredit)
-(setq sp-autoskip-closing-pair 'always)
-(setq sp-hybrid-kill-entire-symbol nil)
-(sp-use-paredit-bindings)
-(show-smartparens-global-mode +1)
+  (smartparens-global-mode 1)
+  (require 'smartparens-config)
+  (setq sp-base-key-bindings 'paredit)
+  (setq sp-autoskip-closing-pair 'always)
+  (setq sp-hybrid-kill-entire-symbol nil)
+  (sp-use-paredit-bindings)
+  (show-smartparens-global-mode +1)
 
-(autoload 'markdown-mode "markdown-mode"
-    "Major mode for editing Markdown files" t)
-    (setq auto-mode-alist
-    (cons '("\\.Markdown" . markdown-mode) auto-mode-alist)
-    )
-    (setq auto-mode-alist
-    (cons '("\\.MarkDown" . markdown-mode) auto-mode-alist)
-    )
-    (setq auto-mode-alist
-    (cons '("\\.markdown" . markdown-mode) auto-mode-alist)
-    )
-    (setq auto-mode-alist
-    (cons '("\\.md" . markdown-mode) auto-mode-alist)
-    )
-    (setq auto-mode-alist
-    (cons '("README\\.md" . gfm-mode) auto-mode-alist)
-    )
+      (autoload 'markdown-mode "markdown-mode"
+      "Major mode for editing Markdown files" t)
+      (setq auto-mode-alist
+      (cons '("\\.Markdown" . markdown-mode) auto-mode-alist)
+      )
+      (setq auto-mode-alist
+      (cons '("\\.MarkDown" . markdown-mode) auto-mode-alist)
+      )
+      (setq auto-mode-alist
+      (cons '("\\.markdown" . markdown-mode) auto-mode-alist)
+      )
+      (setq auto-mode-alist
+      (cons '("\\.md" . markdown-mode) auto-mode-alist)
+      )
+      (setq auto-mode-alist
+      (cons '("README\\.md" . gfm-mode) auto-mode-alist)
+      )
 
- ;; This function will open Marked.app and monitor the current markdown document
- ;; for anything changes.  In other words, it will live reload and convert the
- ;; markdown documment
- (defun markdown-preview-file ()
-   "run Marked on the current file and revert the buffer"
-   (interactive)
-   (shell-command
-    (format "open -a /Applications/Marked\\ 2.app %s"
-            (shell-quote-argument (buffer-file-name))))
-   )  
- (global-set-key "\C-co" 'markdown-preview-file) 
+   ;; This function will open Marked.app and monitor the current markdown document
+   ;; for anything changes.  In other words, it will live reload and convert the
+   ;; markdown documment
+   (defun markdown-preview-file ()
+     "run Marked on the current file and revert the buffer"
+     (interactive)
+     (shell-command
+      (format "open -a /Applications/Marked\\ 2.app %s"
+              (shell-quote-argument (buffer-file-name))))
+     )  
+   (global-set-key "\C-co" 'markdown-preview-file) 
 
-(add-hook 'markdown-mode-hook 'latex-unicode-simplified)
+  (add-hook 'markdown-mode-hook 'latex-unicode-simplified)
 
-(message "Starter Kit Text loaded.")
+  (message "Starter Kit Text loaded.")
 
 (require 'deft)
 (setq deft-extensions '("org" "txt" "tex" "Rnw" "md" "markdown"))

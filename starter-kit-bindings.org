@@ -90,7 +90,7 @@ Building regular expressions in Emacs is kind of a pain.  The visual-regexp pack
 Manage a lot of buffers easily with C-x C-b. Already set up elsewhere in the starter kit. Add local configuration here, e.g., display categories.
 
 #+srcname: iBuffer-custom
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
 (setq ibuffer-saved-filter-groups
       '(("home"
 	     ("emacs-config" (or (filename . ".emacs.d")
