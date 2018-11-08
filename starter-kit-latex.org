@@ -8,6 +8,20 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 * Set the engine running latex
 
+** With =tex= comes =auctex=
+
+Following advice from https://emacs.stackexchange.com/questions/41321/when-to-specify-a-package-name-in-use-packages-ensure-tag
+Also see https://emacs.stackexchange.com/questions/41332/how-to-automatically-install-auctex-if-certain-package-is-unable-to-be-activated
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package tex
+  :ensure auctex)
+#+END_SRC
+
+#+RESULTS:
+
+
+
 ** Set a Path to Executables (optional)
 The location of the LaTeX excecutables is system dependent. AUCTeX calls everything through a shell, so you may or may not need this.  This source-code block is turned off by default as it should be added to the user's personal configuration as needed.
 
@@ -211,8 +225,18 @@ Set up AUCTeX to work with the Evince PDF viewer.
 | er/add-latex-mode-expansions | TeX-PDF-mode | (lambda nil (local-set-key  v 'ebib-insert-bibtex-key)) | turn-on-reftex |
 
 ** Configure AucTeX 
-*** Automatic Parsing
 
+Following advice from https://github.com/alexeyr/company-auctex/issues/27
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package company-auctex
+  :after (auctex company)
+  :config (company-auctex-init))
+#+END_SRC
+
+#+RESULTS:
+
+*** Automatic Parsing
 #+source: autoparse
 #+begin_src emacs-lisp :tangle yes
   (setq TeX-parse-self t) ; Enable parse on load.

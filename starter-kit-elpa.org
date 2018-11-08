@@ -21,7 +21,7 @@ The following packages will be downloaded and installed.
                                     ;;'ac-ispell
                                     'browse-kill-ring
                                     'company
-                                    'company-auctex
+                                    ';; company-auctex
                                     'company-math
                                     'company-web
                                     'company-statistics

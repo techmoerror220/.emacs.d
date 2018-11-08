@@ -1,3 +1,6 @@
+(use-package tex
+  :ensure auctex)
+
     (eval-after-load "tex"
       '(add-to-list 'TeX-command-list '("latexmk" "latexmk -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
       )
@@ -114,6 +117,10 @@
         '("/media/dgm/blue/documents/bibs/socbib.bib"))
   (add-hook 'LaTeX-mode-hook #'(lambda ()
           (local-set-key "\C-c v" 'ebib-insert-bibtex-key)))
+
+(use-package company-auctex
+  :after (auctex company)
+  :config (company-auctex-init))
 
   (setq TeX-parse-self t) ; Enable parse on load.
   (setq TeX-auto-save t) ; Enable parse on save.
