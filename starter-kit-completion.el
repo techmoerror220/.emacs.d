@@ -59,10 +59,10 @@
 (define-key company-active-map (kbd "C-p") 'company-select-previous)
 (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
 ;; enable math completions
-(require 'company-math)
+;;(require 'company-math)
 ;; company-mode completions for ess
 ;; (require 'company-ess)
-(add-to-list 'company-backends 'company-math-symbols-unicode)
+;;  (add-to-list 'company-backends 'company-math-symbols-unicode)
 ;;(add-to-list 'company-backends 'company-math-symbols-latex)
 ;; put company-capf at the beginning of the list
 (require 'company-capf)

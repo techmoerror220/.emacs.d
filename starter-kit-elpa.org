@@ -10,7 +10,7 @@ The following packages will be downloaded and installed.
 
 #+begin_src emacs-lisp
       (defvar starter-kit-packages (list 
-                                    'org-plus-contrib
+                                    'org-plus-contrib ;; loaded in init.el
                                     'org-ac
                                     'adaptive-wrap  
                                     'ag
@@ -21,15 +21,15 @@ The following packages will be downloaded and installed.
                                     ;;'ac-ispell
                                     'browse-kill-ring
                                     'company
-                                    ';; company-auctex
-                                    'company-math
-                                    'company-web
+                                    ;;'company-auctex
+                                    ;;'company-math
+                                    ;;'company-web
                                     'company-statistics
                                     'company-quickhelp
                                     'css-mode
                                     'csv-mode
                                     'deft
-                                    'emmet-mode
+                                    ;;'emmet-mode
                                     'exec-path-from-shell
                                     'expand-region
                                     'flycheck
@@ -83,7 +83,7 @@ The following packages will be downloaded and installed.
                                     'textmate
                                     ;; 'typopunct
                                     'visual-regexp
-                                    'yaml-mode
+                                    ;; 'yaml-mode
                                     'yasnippet
                                     'zenburn-theme
                                     'spacemacs-theme
@@ -101,7 +101,7 @@ The following packages will be downloaded and installed.
                                     'recentf-ext
                                     'diff-hl
                                     'clean-aindent-mode
-                                    'golden-ratio
+                                    ;; 'golden-ratio
                                     'highlight-numbers
                                     'highlight-symbol
                                     ;; 'info+
@@ -129,7 +129,7 @@ The following packages will be downloaded and installed.
                                     'helm-gtags
                                     'darktooth-theme
                                     'soothe-theme
-  ;;                                  'uscolors-theme 
+                                    ;; 'uscolors-theme 
                                     'kurecolor 
                                     'gruvbox-theme
                                     'clues-theme
@@ -140,7 +140,7 @@ The following packages will be downloaded and installed.
                                     'ox-gfm
                                     'ztree
                                     'helpful
-                                    'eyebrowse
+                                    ;; 'eyebrowse
                                     'yasnippet-classic-snippets
                                     'use-package
                                     'mu4e-conversation
@@ -187,10 +187,12 @@ Make sure the PATH variable is set properly. (Uses exec-path-from-shell package.
 #+RESULTS: fix-path
 : ((MANPATH . ) (PATH . /home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/local/stata:/usr/local/stata/stata-mp:/usr/local/stata/xstata-mp:/usr/bin:/home/dgm/anaconda3/bin:/home/dgm/anaconda3/bin/R:/home/dgm/anaconda3/bin/ipython3:/home/dgm/anaconda3/bin/ipython:/home/dgm/anaconda3/bin/python3.5:/home/dgm/.local/bin:/usr/local/bin:/usr/local/stata:/usr/local/stata/stata-mp:/usr/local/stata/xstata-mp:/usr/bin:/home/dgm/anaconda3/bin:/home/dgm/anaconda3/bin/R:/home/dgm/anaconda3/bin/ipython3:/home/dgm/anaconda3/bin/ipython:/home/dgm/anaconda3/bin/python3.5:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games))
 
+
+* Final message
 #+source: message-line
 #+begin_src emacs-lisp
-  (message "Starter Kit ELPA loaded.")
+  (message "Hello! Starter Kit ELPA loaded.")
 #+end_src
 
 #+RESULTS: message-line
-: Starter Kit ELPA loaded.
+: Hello! Starter Kit ELPA loaded.

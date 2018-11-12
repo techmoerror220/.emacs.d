@@ -6,6 +6,15 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 It controls helm and projectile.
 
+
+* First, make sure that =ido-everywhere= is disabled
+
+See https://github.com/emacs-helm/helm/issues/2085
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;;(cl-assert (null ido-everywhere)
+;;             nil "ido-everywhere is incompatible with helm, please disable it")
+#+END_SRC
 * Starting out the helm magic
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -62,9 +71,12 @@ cannot change `helm-command-prefix-key' once `helm-config' is loaded.
 : helm-mini
 
 * Search options
-
 ** Fuzzy matching 
 To enable fuzzy matching, add the following settings:
+
+On semantic, read https://tuhdo.github.io/helm-intro.html: Semantic is a package that provides language-aware editing commands based on 'source-code parsers'. When enabled, each file you visit is automatically parsed. Semantic provides execellent support for C/C++. To enable Semantic mode, execute (semantic-mode 1).
+
+Helm offers an interface to both Semantic and Imenu at the same time: If `semantic-mode' is active in the current buffer, then use semantic for generating tags, otherwise fall back to imenu. If point is on a symbol, helm feeds the symbol into input prompt by default.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq helm-buffers-fuzzy-matching t
@@ -81,8 +93,11 @@ To enable fuzzy matching, add the following settings:
         helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f"))
 
 ;; Command: helm-semantic-or-imenu
+(semantic-mode 1)
 (setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t)
+
+(global-set-key (kbd "M-i") 'helm-semantic-or-imenu)
 
 ;; Command: helm-locate
 (setq helm-locate-fuzzy-match t)
@@ -554,7 +569,6 @@ Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs
 (define-key helm-map (kbd "C-i")   'helm-execute-persistent-action) ; make TAB work in terminal
 #+END_SRC
 
-
 * Projectile 
 #+srcname: projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -609,7 +623,6 @@ Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs
 
 #+RESULTS: projectile
 | ~/.emacs.d/ | ~/texmf/ | ~/Dropbox/gtd/ |
-
 
 * EXWM
 

@@ -1245,7 +1245,6 @@ This is basically his https://github.com/wernerandrew/jedi-starter/blob/master/j
 
 ** Other stuff from Tuhdo
 - Stuff from http://tuhdo.github.io/emacs-tutor3.html
-
 *** New beginning of line
 Sometimes, we want to adjust or improve the behaviours of some commands in certain contexts. Consider this situation: C-a, which runs move-beginning-of-line, always move to the beginning of line. However, sometimes we don't always to move to the beginning of line, but move to the first non-whitespace character of that line.
 
@@ -1507,6 +1506,18 @@ So I'll try with this new code:
 But again, if I activate this bit of code, when I open emacs most of this file is not processed and I don't have my goodies running (helm, etc). However, if after I open emacs I run this code, then the code and all the rest works... why?
 
 MISTERIO RESUELTO: cuando use' yasnippet para crear el snippet con elisp, me lo dio con begin_src y end_src en minusculas y esto es lo que causaba el caos (tambien pone lo del tangle yes o no pero creo que eso no es problema.)
+
+*** COMMENT C  and C++ support.
+
+- Tips from http://tuhdo.github.io/c-ide.html
+
+Tuhdo tells how to install GNU Global and then the package =ggtags= from Melpa. 
+I'm not sure if including this package in the =elpa.org= file will get this =ggtags= package or another with the same name but not from Melpa.
+
+#+begin_src emacs-lisp :tangle no
+;; sudo apt-get install global
+#+end_src
+
 ** Magit
 
 https://magit.vc/manual/magit.html#Installation
@@ -1846,26 +1857,6 @@ Originally from https://github.com/daedreth/UncleDavesEmacs/blob/master/config.o
 #+RESULTS:
 : qutebrowser
 
-** Customize the startup screen
-
-No sé por qué pero este código con el setup Ferguson, i.e., EXWM-gnome-flashback-does not work anymore. 
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package dashboard
-  :ensure t
-  :config
-    (dashboard-setup-startup-hook)
-;    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
-    (setq dashboard-items '((recents   . 10)
-                            (bookmarks . 10)
-                            (projects  . 10)))
-    (setq dashboard-banner-logo-title ""))
-(message "Testing 2 dashboard chunk is evaluated.")
-#+END_SRC
-
-#+RESULTS:
-: Testing 2 dashboard chunk is evaluated.
-
 ** Tell emacs where =fortune= is
 From 
 
@@ -2182,7 +2173,6 @@ A minor mode for a nice writing environment.
 
 ** Uncle Dave
 https://github.com/daedreth/UncleDavesEmacs
-
 *** Async
 Lets us use asynchronous processes wherever possible, pretty useful.
 
@@ -2265,7 +2255,7 @@ I don’t know why this is a thing, but asking me what shell to launch every sin
 **** Easy to remember keybinding
 In loving memory of bspwm, =super+Enter= opens a new terminal, old habits die hard.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; (global-set-key (kbd "<s-return>") 'ansi-term)
 #+END_SRC
 
@@ -2438,7 +2428,6 @@ I like M-s for it, same as C-s is for moving by searching string, now M-s is mov
 
 *** Text manipulation
 Here I shall collect self-made functions that make editing text easier.
-
 **** Mark-Multiple
 I can barely contain my joy. This extension allows you to quickly mark the next occurence of a region and edit them all at once. Wow!
 
@@ -2801,7 +2790,7 @@ From https://github.com/danielmai/.emacs.d/blob/master/config.org
  (put 'dired-find-alternate-file 'disabled nil)
 #+END_SRC
 
-** Dashboard
+** COMMENT Dashboard
 
 I leave it out as it doesn't work with =exwm=
 
@@ -2942,6 +2931,248 @@ Brackets includes ASCII and Unicode brackets or quotation marks. Deleting one br
         (?\{ . ?\})))
 #+END_SRC
 
+** Select whole word
+From https://emacs.stackexchange.com/questions/35069/best-way-to-select-a-word
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun mark-whole-word (&optional arg allow-extend)
+  "Like `mark-word', but selects whole words and skips over whitespace.
+If you use a negative prefix arg then select words backward.
+Otherwise select them forward.
+
+If cursor starts in the middle of word then select that whole word.
+
+If there is whitespace between the initial cursor position and the
+first word (in the selection direction), it is skipped (not selected).
+
+If the command is repeated or the mark is active, select the next NUM
+words, where NUM is the numeric prefix argument.  (Negative NUM
+selects backward.)"
+  (interactive "P\np")
+  (let ((num  (prefix-numeric-value arg)))
+    (unless (eq last-command this-command)
+      (if (natnump num)
+          (skip-syntax-forward "\\s-")
+        (skip-syntax-backward "\\s-")))
+    (unless (or (eq last-command this-command)
+                (if (natnump num)
+                    (looking-at "\\b")
+                  (looking-back "\\b")))
+      (if (natnump num)
+          (left-word)
+        (right-word)))
+    (mark-word arg allow-extend)))
+
+(global-set-key (kbd "s-/") 'mark-whole-word) 
+#+END_SRC
+
+#+RESULTS:
+: mark-whole-word
+
+** Mastering emacs with Mickey Petersen
+
+*** Make =C-n= insert newlines if point is at the end of the buffer
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq next-line-add-newlines t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+*** Visible mark
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defface visible-mark-active ;; put this before (require 'visible-mark)
+  '((((type tty) (class mono)))
+    (t (:background "magenta"))) "")
+(setq visible-mark-max 2)
+(setq visible-mark-faces `(visible-mark-face1 visible-mark-face2))
+
+(use-package visible-mark
+  :ensure t
+  :defer 1
+  :init
+  (global-visible-mark-mode 1))
+#+END_SRC
+
+#+RESULTS:
+: [nil 0 1 0 nil require (visible-mark nil t) idle 0]
+
+*** Imenu
+
+Can I make Imenu index the whole buffer even if using FoldingMode and all folds are folded?
+From https://www.emacswiki.org/emacs/ImenuMode#toc10
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+ (defadvice imenu (around unfold-it compile activate)
+      (save-restriction
+        (widen)
+        ad-do-it))
+#+END_SRC
+
+#+RESULTS:
+: imenu
+
+Quickly force rescan. You can avoid auto rescanning big buffers just making it easy to manually rescan:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+ (defun my-imenu-rescan ()
+   (interactive)
+   (imenu--menubar-select imenu--rescan-item))
+#+END_SRC
+
+#+RESULTS:
+: my-imenu-rescan
+
+=.el= file for function =ido-goto-symbol= downloaded from https://www.emacswiki.org/emacs/ImenuMode#toc10
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (defun ido-goto-symbol (&optional symbol-list)
+      "Refresh imenu and jump to a place in the buffer using Ido."
+      (interactive)
+      (unless (featurep 'imenu)
+        (require 'imenu nil t))
+      (cond
+       ((not symbol-list)
+        (let ((ido-mode ido-mode)
+              (ido-enable-flex-matching
+               (if (boundp 'ido-enable-flex-matching)
+                   ido-enable-flex-matching t))
+              name-and-pos symbol-names position)
+          (unless ido-mode
+            (ido-mode 1)
+            (setq ido-enable-flex-matching t))
+          (while (progn
+                   (imenu--cleanup)
+                   (setq imenu--index-alist nil)
+                   (ido-goto-symbol (imenu--make-index-alist))
+                   (setq selected-symbol
+                         (ido-completing-read "Symbol? " symbol-names))
+                   (string= (car imenu--rescan-item) selected-symbol)))
+          (unless (and (boundp 'mark-active) mark-active)
+            (push-mark nil t nil))
+          (setq position (cdr (assoc selected-symbol name-and-pos)))
+          (cond
+           ((overlayp position)
+            (goto-char (overlay-start position)))
+           (t
+            (goto-char position)))))
+       ((listp symbol-list)
+        (dolist (symbol symbol-list)
+          (let (name position)
+            (cond
+             ((and (listp symbol) (imenu--subalist-p symbol))
+              (ido-goto-symbol symbol))
+             ((listp symbol)
+              (setq name (car symbol))
+              (setq position (cdr symbol)))
+             ((stringp symbol)
+              (setq name symbol)
+              (setq position
+                    (get-text-property 1 'org-imenu-marker symbol))))
+            (unless (or (null position) (null name)
+                        (string= (car imenu--rescan-item) name))
+              (add-to-list 'symbol-names name)
+              (add-to-list 'name-and-pos (cons name position))))))))
+
+(global-set-key (kbd "s-?") 'ido-goto-symbol)
+#+END_SRC
+
+#+RESULTS:
+: ido-goto-symbol
+
+
+*** TODO =etags= costumization: learn what these =etags= are
+
+TAGS is ancient technology that uses an external tool called =ctags= or =etags= (see manpage for ctags for example) to index function signatures from source files into one big flat file. Emacs has excellent support for TAGS (but again lacks the fuzziness ido provides, unless you write some elisp) but TAGS was never meant for modern object-oriented languages as it struggles with the hierarchical nature of the code; another big problem is that TAGS is unbearably slow on large codebases, making it unusable in single-threaded Emacs.
+
+The two bread-and-butter TAGS commands to find stuff are bound to M-, and M-. (use M-* to jump back); there is also an Emacs-style apropos command called M-x tags-apropos for wildcard search.
+
+If you use my code below, you can use C-. to find by file in the TAGS file, like a poor man’s IDE-style project file.
+
+I don’t remember if I wrote the code below (or if I simply snarfed it from somewhere and modified it.)
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'etags)
+(defun ido-find-tag ()
+  "Find a tag using ido"
+  (interactive)
+  (tags-completion-table)
+  (let (tag-names)
+    (mapc (lambda (x)
+        (unless (integerp x)
+          (push (prin1-to-string x t) tag-names)))
+      tags-completion-table)
+    (find-tag (ido-completing-read "Tag: " tag-names))))
+
+(defun ido-find-file-in-tag-files ()
+  (interactive)
+  (save-excursion
+    (let ((enable-recursive-minibuffers t))
+      (visit-tags-table-buffer))
+    (find-file
+     (expand-file-name
+      (ido-completing-read
+       "Project file: " (tags-table-files) nil t)))))
+
+(global-set-key [remap find-tag] 'ido-find-tag)
+(global-set-key (kbd "C-`") 'ido-find-file-in-tag-files)
+#+END_SRC
+
+#+RESULTS:
+: ido-find-file-in-tag-files
+
+*** Mark functionality
+**** Explicitly set the mark
+
+From https://www.masteringemacs.org/article/fixing-mark-commands-transient-mark-mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun push-mark-no-activate ()
+  "Pushes `point' to `mark-ring' and does not activate the region
+   Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
+  (interactive)
+  (push-mark (point) t nil)
+  (message "Pushed mark to ring"))
+
+(global-set-key (kbd "C-.") 'push-mark-no-activate)
+#+END_SRC
+
+#+RESULTS:
+: push-mark-no-activate
+
+**** Jump to mark
+
+The C-u C-SPC command jumps to mark but Petersen prefers to jump to the mark with a shortcut bound to =M-`=.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun jump-to-mark ()
+  "Jumps to the local mark, respecting the `mark-ring' order.
+  This is the same as using \\[set-mark-command] with the prefix argument."
+  (interactive)
+  (set-mark-command 1))
+(global-set-key (kbd "M-`") 'jump-to-mark)
+#+END_SRC
+
+#+RESULTS:
+: jump-to-mark
+
+**** Exchange point and mark without activating the region 
+
+The exchange-point-and-mark, bound to C-x C-x, will by default activate the region when it is invoked. You must use the prefix argument to suppress the activation, but I find that to be too cumbersome for day-to-day use so I disable it outright. The snippet below will do this, so if you don’t want that to happen don’t use the snippet below!
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun exchange-point-and-mark-no-activate ()
+  "Identical to \\[exchange-point-and-mark] but will not activate the region."
+  (interactive)
+  (exchange-point-and-mark)
+  (deactivate-mark nil))
+(define-key global-map [remap exchange-point-and-mark] 'exchange-point-and-mark-no-activate)
+#+END_SRC
+
+#+RESULTS:
+: exchange-point-and-mark-no-activate
 
 * Final message
 #+source: message-line
@@ -2951,3 +3182,6 @@ Brackets includes ASCII and Unicode brackets or quotation marks. Deleting one br
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+
+
+

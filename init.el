@@ -46,6 +46,91 @@
                                   "org" (expand-file-name
                                          "src" dotfiles-dir))))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; use-package ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;From https://github.com/danielmai/.emacs.d/blob/master/init.el
+
+;;; Bootstrap use-package
+;; Install use-package if it's not already installed.
+;; use-package is used to configure the rest of the packages.
+(unless (or (package-installed-p 'use-package)
+            (package-installed-p 'diminish))
+  (package-refresh-contents)
+  (package-install 'use-package)
+  (package-install 'diminish))
+
+;; From use-package README
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)                ;; if you use :diminish
+(require 'bind-key)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  exwm
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(server-start)
+
+  (use-package exwm
+    :ensure t
+    :config
+
+    ;; necessary to configure exwm manually
+    (require 'exwm-config)
+
+    ;; fringe size, most people prefer 1 (uncle dave's setup)
+    (fringe-mode 3)
+
+;; dgm comments this as it appears to not be working!! reverts to old (server-star)
+;;    (require 'server)
+;;      (unless (server-running-p)
+;;        (server-start))
+
+    (exwm-config-default))
+
+    ;; this just enables exwm, it started automatically once everything is ready
+;; commented out now that I have the Ferguson setup    (exwm-enable))
+
+
+;;;;; multiple screens when working on the laptop
+;; From: https://github.com/ch11ng/exwm/wiki#randr-multi-screen
+
+(when (string=(system-name) "toshiba")
+(require 'exwm-randr)
+;;(setq exwm-randr-workspace-output-plist '(0 "VGA1"))
+(setq exwm-randr-workspace-output-plist '(0 "HDMI-2"))
+(add-hook 'exwm-randr-screen-change-hook
+          (lambda ()
+            (start-process-shell-command
+            ;; "xrandr" nil "xrandr --output HDMI-2 --left-of LVDS1 --auto")))
+             "xrandr" nil "xrandr --output eDP1-1 --off --output HDMI-2 --auto")))
+(exwm-randr-enable)
+
+(defun exwm-change-screen-hook ()
+  (let ((xrandr-output-regexp "\n\\([^ ]+\\) connected ")
+        default-output)
+    (with-temp-buffer
+      (call-process "xrandr" nil t nil)
+      (goto-char (point-min))
+      (re-search-forward xrandr-output-regexp nil 'noerror)
+      (setq default-output (match-string 1))
+      (forward-line)
+      (if (not (re-search-forward xrandr-output-regexp nil 'noerror))
+          (call-process "xrandr" nil nil nil "--output" default-output "--auto")
+        (call-process
+         "xrandr" nil nil nil
+         "--output" (match-string 1) "--primary" "--auto"
+         "--output" default-output "--off")
+        (setq exwm-randr-workspace-output-plist (list 0 (match-string 1))))))))
+
+
+;;; debug options from https://github.com/ch11ng/exwm/wiki
+(setq debug-on-error t)
+;; (setq debug-on-quit t)
+(setq edebug-all-forms t)
+
+
+
 ;; Ambrevar's functions
 (load "/home/dgm/.emacs.d/src/ambrevar/functions.el")
 (require 'functions)
@@ -84,10 +169,12 @@
 
 ;; on Why Pragmata Pro doesn't work, read here: https://github.com/hiavi/pragmatapro/issues/9
 ;; Set default font. First one found is selected.
- (cond
-  ((eq window-system nil) nil)
- ((font-existsp "Pragmata Pro Mono")
-  (set-face-attribute 'default nil :height 156 :font "Pragmata Pro Mono"))
+ ;; (cond
+ ;;  ((eq window-system nil) nil)
+ ;; ((font-existsp "Pragmata Pro Mono")
+ ;;  (set-face-attribute 'default nil :height 156 :font "Pragmata Pro Mono")))
+
+
  ;;  ((font-existsp "FiraCode")
  ;;   (set-face-attribute 'default nil :height 121 :font "FiraCode"))
  ;;  ((font-existsp "Monoid")
@@ -105,8 +192,8 @@
  ;; ((font-existsp "Envy Code R")
  ;;   (set-face-attribute 'default nil :height 121 :font "Envy Code R"))
  ;; ((font-existsp "Source Code Pro")
- ;;  (set-face-attribute 'default nil :height 121 :font "Source Code Pro"))
-   )
+ ;;  (set-face-attribute 'default nil :height 121 :font "Source Code Pro")))
+
 
 ;; Line-spacing tweak
 ;; Set this to a different number depending on taste and the fonr
@@ -605,3 +692,4 @@
 ;;; Org-mode
 ;;(nconc package-selected-packages '(org-plus-contrib org-bullets helm-org-contacts)) ; org-plus contains latest Org mode.
 ;;(with-eval-after-load 'org (require 'init-org))
+(put 'set-goal-column 'disabled nil)

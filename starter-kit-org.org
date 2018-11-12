@@ -662,7 +662,6 @@ From https://github.com/jkitchin/org-ref
 #+RESULTS:
 | latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f |
 
-
 ** Goodies
 
 Template Lists from Daniel Mai at https://github.com/danielmai/.emacs.d/blob/master/config.org.
@@ -1086,6 +1085,17 @@ Create any missing parent nodes during refile (after asking for confirmation). (
 
 #+RESULTS:
 : ambrevar/org-switch-agenda-file-other-window
+
+* Ido =Imenu='s depth of search
+
+Depth of search for =Imenu= in Org buffers. From https://www.reddit.com/r/emacs/comments/8v6fny/how_to_change_the_depth_of_imenulist_for_org_files/
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-imenu-depth 5)
+#+END_SRC
+
+#+RESULTS:
+: 5
 
 * Provide
 

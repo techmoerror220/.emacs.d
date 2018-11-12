@@ -4,9 +4,9 @@
 
 This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
-* Set up of  EXWM: emacs as desktop manager!
+* COMMENT Set up of  EXWM: emacs as desktop manager!
 
-Tip from Uncle Dave's emacs 
+First step with =use-package= moved to init.
 
 
 Tip from Uncle Dave's emacs. 
@@ -17,7 +17,7 @@ From https://caolan.org/dotfiles/emacs.html#orgd96aeb0,  run server if using =em
 
 
 #+source: exwm-starting
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 
 (server-start)
 

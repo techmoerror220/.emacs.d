@@ -43,8 +43,11 @@
         helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f"))
 
 ;; Command: helm-semantic-or-imenu
+(semantic-mode 1)
 (setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t)
+
+(global-set-key (kbd "M-i") 'helm-semantic-or-imenu)
 
 ;; Command: helm-locate
 (setq helm-locate-fuzzy-match t)

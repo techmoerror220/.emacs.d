@@ -152,24 +152,24 @@
 ;;          ido-use-faces nil
 ;;          ido-max-prospects 10))
 
-(use-package ido
-  :ensure t
-  :init
-  (setq ido-enable-prefix nil
-        ido-enable-flex-matching t
-        ido-create-new-buffer 'always
-        ido-use-filename-at-point nil 
-        ido-use-faces nil             
-        ido-max-prospects 10
-        ido-everywhere t
-        ido-mode t)
-  (use-package flx-ido
-    :ensure t) 
-  (use-package ido-vertical-mode
-    :ensure t
-    :defer t
-    :init (ido-vertical-mode 1)
-    (setq ido-vertical-define-keys 'C-n-and-C-p-only)))
+;;(use-package ido
+;;  :ensure t
+;;  :init
+;;  (setq ido-enable-prefix nil
+;;        ido-enable-flex-matching t
+;;        ido-create-new-buffer 'always
+;;        ido-use-filename-at-point 'guess ;; changed from nil. If intrusive, revert to nil
+;;        ido-use-faces nil             
+;;        ido-max-prospects 10
+;;        ido-everywhere nil ;; t conflicts with helm sometimes. See https://github.com/emacs-helm/helm/issues/2085
+;;        ido-mode t)
+;;  (use-package flx-ido
+;;    :ensure t) 
+;;  (use-package ido-vertical-mode
+;;    :ensure t
+;;    :defer t
+;;    :init (ido-vertical-mode 1)
+;;    (setq ido-vertical-define-keys 'C-n-and-C-p-only)))
 
   (set-default 'indent-tabs-mode nil)
   (set-default 'indicate-empty-lines t)
@@ -212,8 +212,8 @@
 
 (add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
 (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
-(require 'yaml-mode)
-(add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
+;; (require 'yaml-mode) ;; dgm comments out as I don't know what it is for
+;; (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
 

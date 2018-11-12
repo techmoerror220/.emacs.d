@@ -583,6 +583,8 @@
 (autoload 'ambrevar/org-switch-agenda-file "org")
 (autoload 'ambrevar/org-switch-agenda-file-other-window "org")
 
+(setq org-imenu-depth 5)
+
 (provide 'starter-kit-org)
 
 (message "Starter Kit Org loaded.")

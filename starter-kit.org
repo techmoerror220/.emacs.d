@@ -348,7 +348,6 @@ Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager.
         '((org-plus-contrib . "org"))))
 
 
-
 ;;; Add support to package.el for pre-filtering available packages
 (defvar package-filter-function nil
   "Optional predicate function used to internally filter packages used by package.el.
@@ -391,6 +390,9 @@ ARCHIVE is the string name of the package archive.")
 
 ;; commented out as this blocked exwm when called from init.el
 ;; I think this all means that now my Emacs config does not call on Elpa on startup and that is why I can now use emacs with no internet connection
+;; So comment out if no internet connection available
+
+;; Emacs 27: Warning (package): Unnecessary call to ‘package-initialize’ in init file
 ;;    (package-initialize)
 ;;    (when (esk-online?)
 ;;       (ignore-errors (package-refresh-contents)))
@@ -402,7 +404,7 @@ ARCHIVE is the string name of the package archive.")
 #+end_src
 
 #+results: starter-kit-elpa
-| lambda | (package version archive) | (and (not (memq package '(eieio))) (or (not (string-equal archive melpa)) (not (memq package melpa-exclude-packages)))) |
+: Loaded /home/dgm/.emacs.d/starter-kit-elpa.el
 
 *** Work around OS X bug
 
@@ -622,31 +624,6 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
 #+end_src
 
 #+RESULTS:
-
-
-** =use-package=, =diminish= and =bind-key=
-
-From https://github.com/danielmai/.emacs.d/blob/master/init.el
-
-#+BEGIN_SRC emacs-lisp 
-;;; Bootstrap use-package
-;; Install use-package if it's not already installed.
-;; use-package is used to configure the rest of the packages.
-(unless (or (package-installed-p 'use-package)
-            (package-installed-p 'diminish))
-  (package-refresh-contents)
-  (package-install 'use-package)
-  (package-install 'diminish))
-
-;; From use-package README
-(eval-when-compile
-  (require 'use-package))
-(require 'diminish)                ;; if you use :diminish
-(require 'bind-key)
-#+END_SRC
-
-#+RESULTS:
-: bind-key
 
 
 * FAQ

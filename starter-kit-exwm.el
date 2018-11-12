@@ -1,25 +1,3 @@
-(server-start)
-
-  (use-package exwm 
-    :ensure t
-    :config 
-  
-    ;; necessary to configure exwm manually
-    (require 'exwm-config)
-
-    ;; fringe size, most people prefer 1 (uncle dave's setup)
-    (fringe-mode 3)
-
-;; dgm comments this as it appears to not be working!! reverts to old (server-star)
-;;    (require 'server)
-;;      (unless (server-running-p)
-;;        (server-start))
-
-    (exwm-config-default))
-
-    ;; this just enables exwm, it started automatically once everything is ready
-;; commented out now that I have the Ferguson setup    (exwm-enable))
-
 (global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
 
 (defun ambrevar/exwm-rename-buffer-to-title () (exwm-workspace-rename-buffer exwm-title))

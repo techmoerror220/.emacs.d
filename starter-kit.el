@@ -69,7 +69,6 @@ just have to assume it's online."
         '((org-plus-contrib . "org"))))
 
 
-
 ;;; Add support to package.el for pre-filtering available packages
 (defvar package-filter-function nil
   "Optional predicate function used to internally filter packages used by package.el.
@@ -112,6 +111,9 @@ ARCHIVE is the string name of the package archive.")
 
 ;; commented out as this blocked exwm when called from init.el
 ;; I think this all means that now my Emacs config does not call on Elpa on startup and that is why I can now use emacs with no internet connection
+;; So comment out if no internet connection available
+
+;; Emacs 27: Warning (package): Unnecessary call to ‘package-initialize’ in init file
 ;;    (package-initialize)
 ;;    (when (esk-online?)
 ;;       (ignore-errors (package-refresh-contents)))
@@ -186,20 +188,5 @@ ARCHIVE is the string name of the package archive.")
   (let ((default-directory user-specific-dir))
     (mapc #'load (directory-files user-specific-dir nil ".*el$"))
     (mapc #'org-babel-load-file (directory-files user-specific-dir nil ".*org$"))))
-
-;;; Bootstrap use-package
-;; Install use-package if it's not already installed.
-;; use-package is used to configure the rest of the packages.
-(unless (or (package-installed-p 'use-package)
-            (package-installed-p 'diminish))
-  (package-refresh-contents)
-  (package-install 'use-package)
-  (package-install 'diminish))
-
-;; From use-package README
-(eval-when-compile
-  (require 'use-package))
-(require 'diminish)                ;; if you use :diminish
-(require 'bind-key)
 
 (message "Starter Kit main (starter-kit.org) file loaded.")
