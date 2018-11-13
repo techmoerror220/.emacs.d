@@ -66,6 +66,18 @@
 (require 'bind-key)
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; async ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; activate for all packages. Advised in Helm's wiki
+;; also, uncle dave says: Lets us use asynchronous processes wherever
+;; possible, pretty useful.
+
+(use-package async
+  :ensure t
+  :init (dired-async-mode 1))
+
+(setq async-bytecomp-allowed-packages '(all))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  exwm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -2173,19 +2173,7 @@ A minor mode for a nice writing environment.
 
 ** Uncle Dave
 https://github.com/daedreth/UncleDavesEmacs
-*** Async
-Lets us use asynchronous processes wherever possible, pretty useful.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package async
-  :ensure t
-  :init (dired-async-mode 1))
-#+END_SRC
-
-#+RESULTS:
-
-
-**** Screenshots
+*** Screenshots
 I don’t need scrot to take screenshots, or shutter or whatever tools you might have. This is enough. These won’t work in the terminal version or the virtual console, obvious reasons.
 
 ***** Screenshotting the entire screen
@@ -2224,7 +2212,7 @@ I don’t need scrot to take screenshots, or shutter or whatever tools you might
 #+RESULTS:
 : daedreth/take-screenshot-region
 
-**** System monitor
+*** System monitor
 A teeny-tiny system monitor that can be enabled or disabled at runtime, useful for checking performance with power-hungry processes in ansi-term
 
 symon can be toggled on and off with =super+h=.
@@ -2239,7 +2227,7 @@ symon can be toggled on and off with =super+h=.
 #+RESULTS:
 : symon-mode
 
-**** Default shell should be bash
+*** Default shell should be bash
 I don’t know why this is a thing, but asking me what shell to launch every single time I open a terminal makes me want to slap babies, this gets rid of it. This goes without saying but you can replace bash with your shell of choice.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -2252,7 +2240,7 @@ I don’t know why this is a thing, but asking me what shell to launch every sin
 #+RESULTS:
 : ansi-term
 
-**** Easy to remember keybinding
+*** Easy to remember keybinding
 In loving memory of bspwm, =super+Enter= opens a new terminal, old habits die hard.
 
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -2264,7 +2252,7 @@ In loving memory of bspwm, =super+Enter= opens a new terminal, old habits die ha
 
 I think this will is too powerful a shortcut for this. I'd rather use it for =swipe=.
 
-**** Ivy 
+*** Ivy 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ivy
@@ -2273,7 +2261,7 @@ I think this will is too powerful a shortcut for this. I'd rather use it for =sw
 
 #+RESULTS:
 
-**** scrolling and why does the screen move
+*** scrolling and why does the screen move
 I don’t know to be honest, but this little bit of code makes scrolling with emacs a lot nicer.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -2282,7 +2270,7 @@ I don’t know to be honest, but this little bit of code makes scrolling with em
 
 I've disabled it because it is set to 0 in =starter-kit-text.org=.
 
-**** windows, panes and why I hate other-window
+*** windows, panes and why I hate other-window
 Some of us have large displays, others have tiny netbook screens, but regardless of your hardware you probably use more than 2 panes/windows at times, cycling through all of them with C-c o is annoying to say the least, it’s a lot of keystrokes and takes time, time you could spend doing something more productive.
 
 ***** =ace-window=
@@ -2345,7 +2333,7 @@ After you split a window, your focus remains in the previous one. This annoyed m
 #+RESULTS:
 : split-and-follow-vertically
 
-**** =swipe=
+*** =swipe=
 I like me some searching, the default search is very meh. In emacs, you mostly use search to get around your buffer, much like with avy, but sometimes it doesn’t hurt to search for entire words or mode, swiper makes sure this is more efficient.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -2381,7 +2369,7 @@ The other tweak I have made is to get swiper to recenter the display when it exi
 
 #+RESULTS:
 
-**** close-all-buffers
+*** close-all-buffers
 It’s one of those things where I genuinely have to wonder why there is no built in functionality for it. Once in a blue moon I need to kill all buffers, and having ~150 of them open would mean I’d need to spend a few too many seconds doing this than I’d like, here’s a solution.
 
 This can be invoked using C-M-s-k. This keybinding makes sure you don’t hit it unless you really want to.
@@ -2777,7 +2765,6 @@ Sets prefix to =C-x /=. Then
 
 #+RESULTS:
 : pulseaudio-control-map
-
 
 *** Enabling various commands for up/down casing, etc. 
 

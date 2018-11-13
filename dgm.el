@@ -1073,10 +1073,6 @@ only if this merge job is part of a group, i.e., was invoked from within
   :ensure t
   :config (setq olivetti-body-width 90))
 
-(use-package async
-  :ensure t
-  :init (dired-async-mode 1))
-
 (defun daedreth/take-screenshot ()
   "Takes a fullscreen screenshot of the current workspace"
   (interactive)
