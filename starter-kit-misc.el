@@ -165,11 +165,21 @@
 ;;        ido-mode t)
 ;;  (use-package flx-ido
 ;;    :ensure t) 
-;;  (use-package ido-vertical-mode
-;;    :ensure t
-;;    :defer t
-;;    :init (ido-vertical-mode 1)
-;;    (setq ido-vertical-define-keys 'C-n-and-C-p-only)))
+(use-package ido-vertical-mode
+    :ensure t
+    :defer t
+    :init (ido-vertical-mode 1)
+    (setq ido-vertical-define-keys 'C-n-and-C-p-only)
+    (setq ido-vertical-show-count t))
+
+(set-face-attribute 'ido-vertical-first-match-face nil
+                    :background nil
+                    :foreground "orange")
+(set-face-attribute 'ido-vertical-only-match-face nil
+                    :background nil
+                    :foreground nil)
+(set-face-attribute 'ido-vertical-match-face nil
+                    :foreground nil)
 
   (set-default 'indent-tabs-mode nil)
   (set-default 'indicate-empty-lines t)

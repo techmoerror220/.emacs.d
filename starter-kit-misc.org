@@ -284,11 +284,21 @@ With helm-mode active, to use Emacs default completion instead of either Helm or
 ;;        ido-mode t)
 ;;  (use-package flx-ido
 ;;    :ensure t) 
-;;  (use-package ido-vertical-mode
-;;    :ensure t
-;;    :defer t
-;;    :init (ido-vertical-mode 1)
-;;    (setq ido-vertical-define-keys 'C-n-and-C-p-only)))
+(use-package ido-vertical-mode
+    :ensure t
+    :defer t
+    :init (ido-vertical-mode 1)
+    (setq ido-vertical-define-keys 'C-n-and-C-p-only)
+    (setq ido-vertical-show-count t))
+
+(set-face-attribute 'ido-vertical-first-match-face nil
+                    :background nil
+                    :foreground "orange")
+(set-face-attribute 'ido-vertical-only-match-face nil
+                    :background nil
+                    :foreground nil)
+(set-face-attribute 'ido-vertical-match-face nil
+                    :foreground nil)
 #+END_SRC
 
 #+RESULTS:

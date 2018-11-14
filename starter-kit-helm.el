@@ -35,6 +35,7 @@
     ;; Command: helm-find-files
     ;; helm-find-files is file navigation on steroids:
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "<s-escape>") 'helm-recentf)
 
 ;; =C-x C-f= you start a =helm-find-files= session. There you can do =C-s= to recursively grep a selected directory.  Every time you type a character, helm updates grep result immediately. You can use ack-grep to replace grep with this configuration:
 
@@ -430,6 +431,17 @@ Requires `call-process-to-string' from `functions'."
   ;; Web browser
   (exwm-input-set-key (kbd "s-w") #'helm-exwm-switch-browser)
   (exwm-input-set-key (kbd "s-W") #'helm-exwm-switch-browser-other-window)
+
+(defun ido-recentf-open ()
+  "Use `ido-completing-read' to find a recent file."
+  (interactive)
+  (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+      (message "Opening file...")
+    (message "Aborting")))
+
+(global-set-key (kbd "C-x f") 'ido-recentf-open)
+
+(add-to-list 'helm-completing-read-handlers-alist '(ido-recentf-open  . ido))
 
 (provide 'starter-kit-helm)
 
