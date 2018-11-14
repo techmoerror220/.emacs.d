@@ -420,6 +420,16 @@ Requires `call-process-to-string' from `functions'."
                                     helm-source-bookmarks
                                     helm-source-bookmark-set
                                     helm-source-buffer-not-found)))
+;; Not sure how this works
+;; (ambrevar/define-keys
+;; helm-exwm-map
+;;   "M-d" 'helm-buffer-run-kill-persistent
+;;   "S-<return>" 'helm-buffer-switch-other-window)
+  ;; Launcher
+  (exwm-input-set-key (kbd "s-r") 'helm-run-external-command)
+  ;; Web browser
+  (exwm-input-set-key (kbd "s-w") #'helm-exwm-switch-browser)
+  (exwm-input-set-key (kbd "s-W") #'helm-exwm-switch-browser-other-window)
 
 (provide 'starter-kit-helm)
 

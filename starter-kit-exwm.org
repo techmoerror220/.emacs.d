@@ -135,7 +135,7 @@ I comment out =s-r= because it is already defined for =helm-run-external-command
   (interactive (list (read-shell-command "$ ")))
   (start-process-shell-command command nil command))
 (exwm-input-set-key (kbd "s-&") #'ambrevar/exwm-start)
-;; (exwm-input-set-key (kbd "s-r") #'ambrevar/exwm-start)
+;; (exwm-input-set-key (kbd "s-r") #'ambrevar/exwm-start) 
 #+END_SRC
 
 
@@ -339,7 +339,7 @@ I guess this goes without saying but you absolutely have to change the arguments
 
 *** Keybindings to start processes
 #+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key (kbd "<s-escape>") 'daedreth/launch-browser)
+;;(global-set-key (kbd "<s-escape>") 'daedreth/launch-browser) ;; commented out as <s-w> also lunches the browser and <s-W> does so in other window
 (global-set-key (kbd "<s-@>") 'daedreth/lock-screen)
 #+END_SRC
 

@@ -130,7 +130,7 @@
   (interactive)
   (exwm-async-run "slock"))
 
-(global-set-key (kbd "<s-escape>") 'daedreth/launch-browser)
+;;(global-set-key (kbd "<s-escape>") 'daedreth/launch-browser) ;; commented out as <s-w> also lunches the browser and <s-W> does so in other window
 (global-set-key (kbd "<s-@>") 'daedreth/lock-screen)
 
 (provide 'starter-kit-exwm)
