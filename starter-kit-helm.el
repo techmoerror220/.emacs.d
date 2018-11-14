@@ -291,14 +291,6 @@ Requires `call-process-to-string' from `functions'."
               ("Find Function" . helm-find-function)
               ("Info lookup" . helm-info-lookup-symbol))))
 
-(require 'helm-bookmark)
-(setq helm-mini-default-sources `(helm-source-buffers-list
-                                  helm-source-recentf
-                                  ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
-                                  helm-source-bookmarks
-                                  helm-source-bookmark-set
-                                  helm-source-buffer-not-found))
-
 (define-key prog-mode-map (kbd "M-s f") 'helm-semantic-or-imenu)
 ;;; The text-mode-map binding targets structured text modes like Markdown.
 (define-key text-mode-map (kbd "M-s f") 'helm-semantic-or-imenu)
@@ -414,29 +406,20 @@ Requires `call-process-to-string' from `functions'."
   (exwm-input-set-key (kbd "s-g") 'ambrevar/helm-grep-git-or-ag)
   (exwm-input-set-key (kbd "s-G") 'ambrevar/helm-grep-git-all-or-ag))
 
+(require 'helm-bookmark)
+
 (when (require 'helm-exwm nil t)
   (add-to-list 'helm-source-names-using-follow "EXWM buffers")
   (setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
   (setq helm-exwm-source (helm-exwm-build-source))
   (setq helm-mini-default-sources `(helm-exwm-emacs-buffers-source
                                     helm-exwm-source
+                                    helm-source-buffers-list
                                     helm-source-recentf
                                     ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
                                     helm-source-bookmarks
                                     helm-source-bookmark-set
-                                    helm-source-buffer-not-found))
-
-;; Not sure how this works
-;;  (ambrevar/define-keys
-;;   helm-exwm-map
-;;   "M-d" 'helm-buffer-run-kill-persistent
-;;   "S-<return>" 'helm-buffer-switch-other-window)
-
-  ;; Launcher
-  (exwm-input-set-key (kbd "s-r") 'helm-run-external-command)
-  ;; Web browser
-  (exwm-input-set-key (kbd "s-w") #'helm-exwm-switch-browser)
-  (exwm-input-set-key (kbd "s-W") #'helm-exwm-switch-browser-other-window))
+                                    helm-source-buffer-not-found)))
 
 (provide 'starter-kit-helm)
 

@@ -4,6 +4,19 @@
 ;;
 ;; This is the first thing to get loaded.
 
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+;; However, I comment it out because with emacs 27 we get a message
+;; saying this is not needed any more.
+;; (package-initialize)
+
+(require 'cl)
+(require 'ffap)
+(require 'ansi-color)
+
 ;;; Tip 1 from Ambrevar's init.el
 
 ;;; Speed up init.
@@ -27,13 +40,6 @@
 ;;; Avoid the "loaded old bytecode instead of newer source" pitfall.
 (setq load-prefer-newer t)
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-;; However, I comment it out because with emacs 27 we get a message
-;; saying this is not needed any more.
-;; (package-initialize)
 
  (setq dotfiles-dir (file-name-directory (or (buffer-file-name) load-file-name)))
  (setq dotfiles-dir (file-name-directory (or load-file-name (buffer-file-name))))
@@ -62,21 +68,35 @@
 ;; From use-package README
 (eval-when-compile
   (require 'use-package))
+(setq-default use-package-minimum-reported-time 0)
+(setq use-package-minimum-reported-time 0)
+(eval-and-compile (setq-default use-package-verbose t))
+(eval-and-compile (setq use-package-verbose t))
+
 (require 'diminish)                ;; if you use :diminish
 (require 'bind-key)
 
+
+
+;; tramp package from
+;; https://github.com/danielmai/.emacs.d/blob/master/config.org
+;; TRAMP (Transparent Remote Access, Multiple Protocols) is a package for editing remote files, similar to AngeFtp or efs. Whereas the others use FTP to connect to the remote host and to transfer the files, TRAMP uses a remote shell connection (rlogin, telnet, ssh). It can transfer the files using rcp or a similar program, or it can encode the file contents (using uuencode or base64) and transfer them right through the shell connection.
+;; Tramp was formerly called RCP or rcp.el.
+(use-package tramp)
+;; Do this to quicken startup:
+;; https://emacs.stackexchange.com/questions/14708/debugging-slowness-in-init-file-not-hostname-related
+;; because I was getting the startup process tripped until I did this.
+(setq tramp-ssh-controlmaster-options "")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; async ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; activate for all packages. Advised in Helm's wiki
 ;; also, uncle dave says: Lets us use asynchronous processes wherever
 ;; possible, pretty useful.
-
 (use-package async
   :ensure t
   :init (dired-async-mode 1))
 
 (setq async-bytecomp-allowed-packages '(all))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  exwm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -268,10 +288,14 @@
 ;; https://github.com/purcell/exec-path-from-shell
 
 (use-package exec-path-from-shell
-  :ensure t
-  :config
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
+  :ensure t)
+
+(setq-default exec-path-from-shell-arguments nil)
+(setq exec-path-from-shell-arguments nil)
+(setq exec-path-from-shell-check-startup-files t)
+
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
 
 

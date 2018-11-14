@@ -266,7 +266,7 @@ Default to unread messages if the header buffer does not already exist."
 The \"From\", \"To\", \"Cc\" and \"Bcc\" fields are looked up.
 Addresses in `mu4e-user-mail-address-list' are filtered out.
 Duplicates are removed."
-  (require 'cl)
+;;  (require 'cl) ;; already in starter-kit.org
   (cl-delete-duplicates
    (seq-remove
     (lambda (contact) (member (cadr contact) mu4e-user-mail-address-list))

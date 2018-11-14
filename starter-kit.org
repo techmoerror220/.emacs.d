@@ -76,7 +76,15 @@ for your user name and
  hostname
 #+end_src
 
-for the system name. You will need to know your login name to activate the final customization file properly. You can use the system name as well (or instead).
+for the system name. 
+
+DGM: there is also a "full hostname" (or fully qualified domain name set) in
+
+#+BEGIN_EXAMPLE
+hostname -f
+#+END_EXAMPLE
+
+You will need to know your login name to activate the final customization file properly. You can use the system name as well (or instead).
 
 *** Setup
 
@@ -221,7 +229,6 @@ everything from inside the elpa/ directory and invoking =M-x starter-kit-elpa-in
 This section contains all code implementing the Emacs Starter Kit.
 
 ** Starter kit basics
-
 *** Ubiquitous Packages
 
 These should be loaded on startup rather than autoloaded on demand 
@@ -229,12 +236,14 @@ since they are likely to be used in every session
 
 #+srcname: starter-kit-load-on-startup
 #+begin_src emacs-lisp
-  (require 'cl)
-  (require 'ffap)
+;;  (require 'cl)    ;; in init.el 
+;;  (require 'ffap)  ;; in init.el
 ;;  (require 'uniquify) ;; already included in dgm.org under Better defaults
-  (require 'ansi-color)
-  (require 'recentf)
+;;  (require 'ansi-color) ;; in init.el
+;;  (require 'recentf) ;; already in dgm.org
 #+end_src
+
+#+RESULTS: starter-kit-load-on-startup
 
 
 Function to check if a packages exist in the load path.  This may be
@@ -252,13 +261,6 @@ source may already be found in the load path.
               (when (file-exists-p path)
                 (throw 'file-found path)))))))
  #+end_src
-
- #+RESULTS: starter-kit-loadable
- : starter-kit-loadable-p
-
-
-#+RESULTS: starter-kit-load-on-startup
-: recentf
 
 *** Function for loading/compiling starter-kit-*
 #+srcname: starter-kit-load

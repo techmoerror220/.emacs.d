@@ -30,7 +30,7 @@ The following packages will be downloaded and installed.
                                     'csv-mode
                                     'deft
                                     ;;'emmet-mode
-                                    'exec-path-from-shell
+                                    ;;'exec-path-from-shell
                                     'expand-region
                                     'flycheck
                                     'flycheck-tip
@@ -98,7 +98,7 @@ The following packages will be downloaded and installed.
                                     'duplicate-thing
                                     'ibuffer-vc
                                     ;; 'dired+
-                                    'recentf-ext
+                                    ;; 'recentf-ext
                                     'diff-hl
                                     'clean-aindent-mode
                                     ;; 'golden-ratio
@@ -175,17 +175,16 @@ On your first run, this should pull in all the base packages.
 
 #+RESULTS:
 
-Make sure the PATH variable is set properly. (Uses exec-path-from-shell package.)
+Make sure the PATH variable is set properly. (Uses exec-path-from-shell package but this is all done already in the =init.el= file.)
 #+source: fix-path 
 #+begin_src emacs-lisp
 ;;  (when (memq window-system '(mac ns))
 ;;  (exec-path-from-shell-initialize))
 
- (exec-path-from-shell-initialize)
+;;  (exec-path-from-shell-initialize)
 #+end_src
 
 #+RESULTS: fix-path
-: ((MANPATH . ) (PATH . /home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/bin:/home/dgm/anaconda3/bin:/usr/local/stata:/home/dgm/.local/bin:/usr/local/bin:/usr/local/stata:/usr/local/stata/stata-mp:/usr/local/stata/xstata-mp:/usr/bin:/home/dgm/anaconda3/bin:/home/dgm/anaconda3/bin/R:/home/dgm/anaconda3/bin/ipython3:/home/dgm/anaconda3/bin/ipython:/home/dgm/anaconda3/bin/python3.5:/home/dgm/.local/bin:/usr/local/bin:/usr/local/stata:/usr/local/stata/stata-mp:/usr/local/stata/xstata-mp:/usr/bin:/home/dgm/anaconda3/bin:/home/dgm/anaconda3/bin/R:/home/dgm/anaconda3/bin/ipython3:/home/dgm/anaconda3/bin/ipython:/home/dgm/anaconda3/bin/python3.5:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games))
 
 
 * Final message

@@ -1,8 +1,8 @@
-(require 'cl)
-  (require 'ffap)
+;;  (require 'cl)    ;; in init.el 
+;;  (require 'ffap)  ;; in init.el
 ;;  (require 'uniquify) ;; already included in dgm.org under Better defaults
-  (require 'ansi-color)
-  (require 'recentf)
+;;  (require 'ansi-color) ;; in init.el
+;;  (require 'recentf) ;; already in dgm.org
 
 (defun starter-kit-loadable-p (package)
   "Check if PACKAGE is loadable from a directory in `load-path'."

@@ -19,24 +19,24 @@ From https://caolan.org/dotfiles/emacs.html#orgd96aeb0,  run server if using =em
 #+source: exwm-starting
 #+begin_src emacs-lisp :tangle no
 
-(server-start)
+;; (server-start)
 
-  (use-package exwm 
-    :ensure t
-    :config 
+;;  (use-package exwm 
+;;    :ensure t
+;;    :config 
   
-    ;; necessary to configure exwm manually
-    (require 'exwm-config)
+;;    ;; necessary to configure exwm manually
+;;    (require 'exwm-config)
 
-    ;; fringe size, most people prefer 1 (uncle dave's setup)
-    (fringe-mode 3)
+;;    ;; fringe size, most people prefer 1 (uncle dave's setup)
+;;    (fringe-mode 3)
 
 ;; dgm comments this as it appears to not be working!! reverts to old (server-star)
 ;;    (require 'server)
 ;;      (unless (server-running-p)
 ;;        (server-start))
 
-    (exwm-config-default))
+;;    (exwm-config-default))
 
     ;; this just enables exwm, it started automatically once everything is ready
 ;; commented out now that I have the Ferguson setup    (exwm-enable))  

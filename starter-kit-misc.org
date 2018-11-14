@@ -202,20 +202,6 @@ Note by dgm on 16 sept 2018: I'm trying to use =exwm= so I am not going to use m
 
 #+RESULTS: starter-kit-no-menu-in-tty
 
-** Save a list of recent files visited.
-#+begin_src emacs-lisp 
-(recentf-mode 1)
-(setq recentf-max-menu-items 25)
-(global-set-key "\C-x\ \C-r" 'recentf-open-files)
-
-;; By default, Recentf saves the list of recent files on exiting Emacs (specifically, `recentf-save-list` is called on `kill-emacs-hook`). If Emacs exits abruptly for some ;; reason the recent file list will be lost - therefore you may wish to call `recentf-save-list` periodically, e.g. every 5 minutes:
-
-(run-at-time nil (* 5 60) 'recentf-save-list)
-
-;; expand recentf
-(require 'recentf-ext)
-#+end_src emacs-lisp
-
 ** Save place last visited in buffer
 
 #+srcname: starter-kit-saveplace

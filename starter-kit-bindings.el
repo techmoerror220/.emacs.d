@@ -54,13 +54,13 @@
              (ibuffer-auto-mode 1)
              (ibuffer-switch-to-saved-filter-groups "home")))
 
-  (global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
+;;  (global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
   (global-set-key (kbd "C-x C-p") 'find-file-at-point)
   (global-set-key (kbd "C-c y") 'bury-buffer)
   (global-set-key (kbd "C-c r") 'revert-buffer)
   (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete)
   (global-set-key (kbd "C-x C-b") 'ibuffer)
-  (global-set-key (kbd "C-x f") 'recentf-ido-find-file)
+;;  (global-set-key (kbd "C-x f") 'recentf-ido-find-file) ;; commented out until helm and ido are made to work together
 
   (when (require 'browse-kill-ring nil 'noerror)
   (browse-kill-ring-default-keybindings))
@@ -121,22 +121,22 @@
               `(,(rx string-start "*shell*" string-end)
                (display-buffer-below-selected)))
 
-  (require 'smex)
-  (smex-initialize)  
+;;  (require 'smex)
+;;  (smex-initialize)  
 ;;  (global-set-key (kbd "M-x") 'smex)  ;; I think this is superseded by helm now
-;;  (global-set-key (kbd "C-x C-m") 'smex) ;; supersedes binding in starter-kit-bindings.org. DGM: it's below again, so left below.
-  (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-  (global-set-key (kbd "C-x C-M") 'smex-major-mode-commands)
+;;  (global-set-key (kbd "C-x C-m") 'smex) 
+;;  (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;;  (global-set-key (kbd "C-x C-M") 'smex-major-mode-commands)
   ;; This is your old M-x.
   ;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-  (setq smex-show-unbound-commands t)
-  (smex-auto-update 30)
+;;  (setq smex-show-unbound-commands t)
+;;  (smex-auto-update 30)
 
-(global-set-key (kbd "C-x C-m") 'smex)
+;; (global-set-key (kbd "C-x C-m") 'smex)
 
 ;;  (setq mac-option-modifier 'meta)
 
-  (global-set-key [(meta z)] 'undo)
+  ;; (global-set-key [(meta z)] 'undo) ;; M-z is for zap to char on my watch
   ;; (require 'redo+) 
   ;;(global-set-key [(alt a)] 'mark-whole-buffer)
   ;;(global-set-key [(alt v)] 'yank)

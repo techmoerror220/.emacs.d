@@ -672,83 +672,79 @@ point reaches the beginning or end of the buffer, stop there."
 
 (global-set-key (kbd "\C-a") 'prelude-move-beginning-of-line)
 
-(require 'recentf)
+(use-package recentf
+  :ensure t)
+
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
+(setq recentf-max-saved-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 
-    (run-at-time nil (* 5 60) 'recentf-save-list)
-
-  ;; (recentf-mode)
-  (setq
-   recentf-max-menu-items 30
-   xrecentf-max-saved-items 50
-   )
-
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; PACKAGE: recentf-ext    ;;
-  ;;                         ;;
-  ;; GROUP: Files -> Recentf ;;
+;; PACKAGE: recentf-ext    ;;
+;;                         ;;
+;; GROUP: Files -> Recentf ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  (require 'recentf-ext)
 
+(use-package recentf-ext
+  :ensure t)
 
 
   ;;;;;;;;;;;;;;;;;;;;;
-  ;; PACKAGE: ztree  ;;
-  ;;                 ;;
-  ;; GROUP: No group ;;
+;; PACKAGE: ztree  ;;
+;;                 ;;
+;; GROUP: No group ;;
   ;;;;;;;;;;;;;;;;;;;;;
-  ;; since ztree works with files and directories, let's consider it in
-  ;; group Files
+;; since ztree works with files and directories, let's consider it in
+;; group Files
 
-  (require 'ztree-diff)
-  (require 'ztree-dir)
+(require 'ztree-diff)
+(require 'ztree-dir)
 
 
-  ;;,-----------------
-  ;;| PACKAGE: rebox2
-  ;;|
-  ;;| GROUP: No group
-  ;;`-----------------
+;;,-----------------
+;;| PACKAGE: rebox2
+;;|
+;;| GROUP: No group
+;;`-----------------
 
 ;; Ojo: solo funciona si se llama M-x rebox-mode
-  (require 'rebox2)
-  (global-set-key [(meta q)] 'rebox-dwin-fill)
-  (global-set-key [(shift meta q)] 'rebox-dwin-no-fill)
+(require 'rebox2)
+(global-set-key [(meta q)] 'rebox-dwin-fill)
+(global-set-key [(shift meta q)] 'rebox-dwin-no-fill)
 
 
-  ;; PACKAGE: helpful
-  ;; GROUP: No group
+;; PACKAGE: helpful
+;; GROUP: No group
 
-  ;  https://github.com/Wilfred/helpful
+                                        ;  https://github.com/Wilfred/helpful
 
-  (require 'helpful)
+(require 'helpful)
 
-  ;; Note that the built-in `describe-function' includes both functions
-  ;; and macros. `helpful-function' is functions only, so we provide
-  ;; `helpful-callable' as a drop-in replacement.
-  (global-set-key (kbd "\C-h f") #'helpful-callable)
-  (global-set-key (kbd "\C-h v") #'helpful-variable)
-  (global-set-key (kbd "\C-h k") #'helpful-key)
+;; Note that the built-in `describe-function' includes both functions
+;; and macros. `helpful-function' is functions only, so we provide
+;; `helpful-callable' as a drop-in replacement.
+(global-set-key (kbd "\C-h f") #'helpful-callable)
+(global-set-key (kbd "\C-h v") #'helpful-variable)
+(global-set-key (kbd "\C-h k") #'helpful-key)
 
-  ;; Lookup the current symbol at point. C-c C-d is a common keybinding
-  ;; for this in lisp modes.
-  ;; (global-set-key (kbd "\C-s d") #'helpful-at-point)
+;; Lookup the current symbol at point. C-c C-d is a common keybinding
+;; for this in lisp modes.
+;; (global-set-key (kbd "\C-s d") #'helpful-at-point)
 
-  ;; Look up *F*unctions (excludes macros).
-  ;;
-  ;; By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
-  ;; already links to the manual, if a function is referenced there.
-  ;;  (global-set-key (kbd "\C-s-f") #'helpful-function)
+;; Look up *F*unctions (excludes macros).
+;;
+;; By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
+;; already links to the manual, if a function is referenced there.
+;;  (global-set-key (kbd "\C-s-f") #'helpful-function)
 
-  ;; Look up *C*ommands.
-  ;;
-  ;; By default, C-h C is bound to describe `describe-coding-system'. I
-  ;; don't find this very useful, but it's frequently useful to only
-  ;; look at interactive functions.
-  ;; (global-set-key (kbd "\C-s-c") #'helpful-command)
+;; Look up *C*ommands.
+;;
+;; By default, C-h C is bound to describe `describe-coding-system'. I
+;; don't find this very useful, but it's frequently useful to only
+;; look at interactive functions.
+;; (global-set-key (kbd "\C-s-c") #'helpful-command)
 
 (defun rtags-peek-definition ()
   "Peek at definition at point using rtags."
@@ -1230,8 +1226,6 @@ only if this merge job is part of a group, i.e., was invoked from within
 
 (use-package page-break-lines
   :ensure t)
-
-(use-package tramp)
 
 (defun vsplit-other-window ()
   "Splits the window vertically and switches to that window."

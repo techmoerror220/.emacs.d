@@ -476,19 +476,6 @@ Tip from =titus= for =helm-bibtex=: I use the menu key as the prefix key for all
 #+RESULTS:
 : ambrevar/helm-def-source--emacs-commands
 
-** Make =helm-mini= almighty
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(require 'helm-bookmark)
-(setq helm-mini-default-sources `(helm-source-buffers-list
-                                  helm-source-recentf
-                                  ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
-                                  helm-source-bookmarks
-                                  helm-source-bookmark-set
-                                  helm-source-buffer-not-found))
-#+END_SRC
-
-
 ** The =M-s= prefix
 
 Use the =M-s= prefix just like `occur'.
@@ -645,20 +632,31 @@ Basic commands with for interfacing with =exwm= with =helm=
   (exwm-input-set-key (kbd "s-G") 'ambrevar/helm-grep-git-all-or-ag))
 #+END_SRC
 
-** EXWM buffers with helm
+** EXWM buffers with helm and make =helm-mini= almighty
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+(require 'helm-bookmark)
+
 (when (require 'helm-exwm nil t)
   (add-to-list 'helm-source-names-using-follow "EXWM buffers")
   (setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
   (setq helm-exwm-source (helm-exwm-build-source))
   (setq helm-mini-default-sources `(helm-exwm-emacs-buffers-source
                                     helm-exwm-source
+                                    helm-source-buffers-list
                                     helm-source-recentf
                                     ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
                                     helm-source-bookmarks
                                     helm-source-bookmark-set
-                                    helm-source-buffer-not-found))
+                                    helm-source-buffer-not-found)))
+#+END_SRC
+
+#+RESULTS:
+| helm-exwm-emacs-buffers-source | helm-exwm-source | helm-source-buffers-list | helm-source-recentf | nil | helm-source-bookmarks | helm-source-bookmark-set | helm-source-buffer-not-found |
+
+
+
+
 
 ;; Not sure how this works
 ;;  (ambrevar/define-keys
