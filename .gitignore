@@ -3,7 +3,7 @@
 backups/*
 auto-save-list/*
 places
-url/*
+url/
 session*
 ## exported files
 starter-kit*html
