@@ -69,9 +69,9 @@
     (when window-system
 ;;      (setq frame-title-format '(buffer-file-name "%f" ("%b")))
       (setq frame-title-format (concat "%b" (unless (daemonp) " [serverless]"))) ;; from ambrevar's main.el
-      (tooltip-mode -1)
-      (tool-bar-mode -1)
-      (blink-cursor-mode -1))
+      (tooltip-mode -1))
+;;      (tool-bar-mode -1)) ;; already in minimal.el
+;;      (blink-cursor-mode -1))  
 
     (mouse-wheel-mode t)
 
@@ -105,7 +105,7 @@
           xterm-mouse-mode t
           save-place-file (concat dotfiles-dir "places"))
 
-  (minimal-mode)
+(minimal-mode)
 
 ;; (setq browse-url-browser-function 'browse-url-firefox)
 ;; (setq browse-url-browser-function 'browse-default-macosx-browser)
@@ -174,7 +174,7 @@
 
 (set-face-attribute 'ido-vertical-first-match-face nil
                     :background nil
-                    :foreground "orange")
+                    :foreground "DarkOrange1")
 (set-face-attribute 'ido-vertical-only-match-face nil
                     :background nil
                     :foreground nil)

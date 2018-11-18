@@ -1,28 +1,6 @@
 (use-package tex
   :ensure auctex)
 
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-command-list '("latexmk" "latexmk -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
-      )
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
-      )
-
-  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(LaTeX-XeTeX-command "xelatex -synctex=1")
- '(TeX-engine (quote xetex))
- ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
- ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
- '(blink-cursor-mode nil)
- '(text-mode-hook (quote (text-mode-hook-identify)))
- )
-
   (add-hook 'latex-mode-hook
             (lambda ()
               (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground "#b58900")
@@ -160,19 +138,12 @@
     '(add-to-list 'TeX-command-list '("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber"))
     )
 
-  (setq bibtex-dialect "BibTeX")
+(setq bibtex-dialect "BibTeX")
 
   (setq bibtex-autokey-titleword-separator "_")
   (setq bibtex-autokey-year-title-separator ":_")
 
-    ;; Make RefTex able to find my local bib files
-     (setq reftex-bibpath-environment-variables
-;;     '("/media/dgm/blue/documents/bibs"))
-     '("/home/dgm/texmf/bibtex/bib"))
-
-    ;; Default bibliography
-     (setq reftex-default-bibliography
-     '("/media/dgm/blue/documents/bibs/socbib.bib"))
+  (setq reftex-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
 
 ;;    (fset 'run-vc-then-xelatex
 ;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])

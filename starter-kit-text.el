@@ -91,3 +91,7 @@
 (setq deft-org-mode-title-prefix t)
 (global-set-key (kbd "C-x C-g") 'deft-find-file)
 (global-set-key  (kbd "C-c d") 'deft)
+
+(setq text-mode-hook (quote (text-mode-hook-identify)))
+
+(message "Starter Kit Text File loaded.")

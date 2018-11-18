@@ -1,0 +1,274 @@
+#+TITLE: Starter Kit Latex-Org combination
+#+OPTIONS: toc:nil num:nil ^:nil
+
+This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
+
+* Starter Kit Latex-Org combination
+
+I've always been troubled by the fact that I sometimes want to work in pure Latex and sometimes in XeLaTeX.
+My default is XeLatex. If I want to change it to LaTeX (maybe it is really pdflatex), then change the default [[engine]]. 
+And if I am working with org-mode, I also have to change the [[export]] option and comment out the XeLaTeX [[options]].
+
+To simplify things I have created two routes in this document. By commenting out the one I don't want, and compiling this document, I will have =xelatex= or =pdflatex= in action. 
+
+** How to use 
+1. Comment the engine you don't want to use. 
+2. Delete =starter-kit-latex-org.el=
+3. Evaluate the following:
+
+#+BEGIN_EXAMPLE
+(starter-kit-load "starter-kit-latex-org.org")
+#+END_EXAMPLE
+
+4. Use the export facility of org and it should be fine.
+   - REMEMBER: include =#+LaTeX_CLASS: memarticle= if using /XeLaTeX/ and the standard org export. This way I'll have the Minion, Myriad and Pragmata fonts.
+     + No need to include it if using the Pandoc export with the /XeLaTeX/ export.
+ 
+** Use compilation default
+
+The default set here does not matter much as I'm asked what command to run every time I run tex on a file. 
+
+#+srcname: latemkdefault
+#+begin_src emacs-lisp :tangle yes
+    (eval-after-load "tex"
+      '(add-to-list 'TeX-command-list '("latexmk" "latexmk -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
+      )
+    (eval-after-load "tex"
+      '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
+      )
+
+  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))  
+#+end_src
+
+* COMMENT The /XeLaTeX/ route 
+** Set default engine <<engine>>
+
+Custom variables kludge. Why can't I get these to work via =setq=?
+DGM: Originally this was at the end of =kjhealy.org=.
+What if I don't set one by default?
+
+Watch out! If I want to change to latex (instead of xelatex), and I have a =custom.el= file, then I have to get rid of this =custom.el= file
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (LaTeX-XeTeX-command "xelatex -synctex=1 -shell-escape")
+(setq-default TeX-engine (quote xetex))
+;; (custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ ;;'(LaTeX-XeTeX-command "xelatex -synctex=1 -shell-escape")
+ ;;'(TeX-engine (quote xetex))
+ ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
+ ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
+;; '(blink-cursor-mode nil)
+;; '(text-mode-hook (quote (text-mode-hook-identify)))
+;; )
+#+END_SRC
+
+#+RESULTS:
+: xetex
+
+** XeLaTeX and pdfLaTeX Org Export Settings 
+
+    Configure org-mode to export directly to PDF using xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
+
+From https://github.com/kjhealy/emacs-starter-kit/blob/master/kjhealy.org
+
+    #+source: orgmode-latex-export
+    #+BEGIN_SRC emacs-lisp :tangle yes
+    (require 'ox-latex)
+    #+END_SRC
+
+LaTeX compilation command. For orgmode docs we just always use xelatex for convenience. You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
+<<export>>
+
+Also, if I change to latex instead of xelatex, then change tangle option to no or else latex will use xelatex options the compilation will fail. Update: it's enough if I comment out the following heading.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -bibtex -pdf %f"))
+
+;;  (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))  ;; this is Kitchin's way
+
+;; the alternative, if you want a regular pdflatex would be, I think
+;; (setq org-latex-pdf-process '("latexmk -pdf %f"))
+;; (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape -bibtex -f'  -pdf %f"))
+#+END_SRC
+
+#+RESULTS:
+| latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -bibtex -pdf %f |
+
+
+*** XeLaTeX options (Comment out if default latex is used instead)  <<options>>
+
+Choose either listings or minted for exporting source code blocks. Using minted (as here) requires pygments be installed. 
+I don't tangle it now because I set the default to =minted= in =/home/dgm/texmf/tex/generic/latex-custom-kjh/needs-org-mode/org-preamble-xelatex.sty=
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;;   (setq org-latexg-listings t)
+  ;; and change references to "minted" below to "listings"
+;;;;;;;;;;;;;;;;  (setq org-latex-listings 'minted)  ;; already included in =~/texmf/tex/generic/latex-custom-kjh/needs-org-mode/org-preamble-xelatex.sty=
+#+END_SRC
+
+Default settings for minted code blocks. =bg= will need to be defined in the preamble of your document. Now I don't use them and I don't see differences in the documents produced \dots Why?
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;;(setq org-latex-minted-options
+;;      '(;("frame" "single")
+;;        ("bgcolor" "bg") 
+;;        ("fontsize" "\\small")
+;;        ))
+#+END_SRC
+
+Turn off the default toc behavior; deal with it properly in headers to files.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun org-latex-no-toc (depth)  
+  (when depth
+      (format "%% Org-mode is exporting headings to %s levels.\n"
+              depth)))
+(setq org-latex-format-toc-function 'org-latex-no-toc)
+#+END_SRC
+
+Now I define the style of memoir-class articles and others. Note the insertion of the =\input= statement for the vc information 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list 'org-latex-classes
+               '("memarticle"
+                 "\\documentclass[11pt,oneside,article]{memoir}\n\%\input{vc} % vc package"
+                  ("\\section{%s}" . "\\section*{%s}")
+                  ("\\subsection{%s}" . "\\subsection*{%s}")
+                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+               '("membook"
+                 "\\documentclass[11pt,oneside]{memoir}\n\%\input{vc} % vc package"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+ #+END_SRC
+
+
+Default packages included in the tex file. As before, =org-preamble-xelatex= is part of =latex-custom-kjh=. There's =org-preamble-pdflatex= as well, if you wish to use that instead.
+DGM note: This code calls on the stuff in the =~/texmf= directory that allows using fonts a la MinionPro etc. Specifically, it uses the =org-preamble-xelatex= style file. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+ (setq org-latex-default-packages-alist nil)     
+ (setq org-latex-packages-alist
+        '(("minted" "org-preamble-xelatex" t)
+          ("" "graphicx" t)
+          ("" "longtable" nil)
+          ("" "float" ))) 
+   #+END_SRC
+
+   #+RESULTS: orgmode-latex-export
+   : ox-latex
+
+
+* The  /LaTeX/ route 
+
+** Set default engine 
+
+Custom variables kludge. Why can't I get these to work via =setq=?
+DGM: Originally this was at the end of =kjhealy.org=.
+What if I don't set one by default?
+
+Watch out! If I want to change to latex (instead of xelatex), and I have a =custom.el= file, then I have to get rid of this =custom.el= file
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq-default TeX-engine (quote default))
+;;(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+;; '(LaTeX-XeTeX-command "latex -synctex=1 -shell-escape")
+;; '(TeX-engine (quote default))
+ ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
+ ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
+;; '(blink-cursor-mode nil)
+;; '(text-mode-hook (quote (text-mode-hook-identify)))
+;; )
+#+END_SRC
+
+
+** =pdfLaTeX= Org Export Settings 
+
+    Configure org-mode to export directly to PDF using xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
+
+From https://github.com/kjhealy/emacs-starter-kit/blob/master/kjhealy.org
+
+
+    #+source: orgmode-latex-export
+    #+BEGIN_SRC emacs-lisp :tangle yes
+    (require 'ox-latex)
+    #+END_SRC
+
+LaTeX compilation command. For orgmode docs we just always use xelatex for convenience. You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
+<<export>>
+
+Also, if I change to latex instead of xelatex, then change tangle option to no or else latex will use xelatex options the compilation will fail. Update: it's enough if I comment out the following heading.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+;; (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex -synctex=1 --shell-escape -bibtex -f' -pdf %f")) ;; with this it doesn't work
+;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))  ;; this is Kitchin's way
+(setq org-latex-pdf-process (list "latexmk -synctex=1 -shell-escape -bibtex -f -pdf %f"))  ;; this is Kitchin's way customized
+
+;; the alternative, if you want a regular pdflatex would be, I think
+;; (setq org-latex-pdf-process '("latexmk -pdf %f"))
+#+END_SRC
+
+#+RESULTS:
+| latexmk -synctex=1 -shell-escape -bibtex -f -pdf %f |
+
+
+*** LaTeX options 
+
+Turn off the default toc behavior; deal with it properly in headers to files.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun org-latex-no-toc (depth)  
+  (when depth
+      (format "%% Org-mode is exporting headings to %s levels.\n"
+              depth)))
+(setq org-latex-format-toc-function 'org-latex-no-toc)
+#+END_SRC
+
+Originally the package =minted= was not working with /LaTeX/ even though it worked with /XeLaTeX/. I found the solution reading this https://emacs.stackexchange.com/questions/27982/export-code-blocks-in-org-mode-with-minted-environment
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-latex-listings 'minted
+      org-latex-default-packages-alist nil)     
+(setq org-latex-packages-alist
+        '(("minted" "org-preamble-pdflatex" t)
+          ;;("" "graphicx" t)
+          ;;("" "longtable" nil)
+          ;;("" "float" )
+          ))
+   #+END_SRC
+
+   #+RESULTS:
+   | minted | org-preamble-pdflatex | t |
+
+
+* Final message
+#+source: message-line
+#+begin_src emacs-lisp :tangle yes
+  (message "Starter Kit LaTeX-Org loaded.")
+#+end_src
+
+#+RESULTS: message-line
+: Starter Kit LaTeX-Org loaded.
+
+
+
+
+
+
+
+
+

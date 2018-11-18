@@ -237,7 +237,7 @@
 
 ;; set dired listing options
 (if (eq system-type 'gnu/linux)
-    (setq dired-listing-switches "-alDhp"))
+    (setq dired-listing-switches "-alDh")) ;; originally with a p as in =-alDh= but in https://www.reddit.com/r/emacs/comments/9flask/dired_mode_move_directory/ they explain that this causes failure when moving directories.
 
 ;; make sure dired buffers end in a slash so we can identify them easily
 (defun ensure-buffer-name-ends-in-slash ()
@@ -679,6 +679,7 @@ point reaches the beginning or end of the buffer, stop there."
 (setq recentf-max-menu-items 25)
 (setq recentf-max-saved-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
+(setq recentf-auto-cleanup 'never)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PACKAGE: recentf-ext    ;;
@@ -1297,6 +1298,7 @@ only if this merge job is part of a group, i.e., was invoked from within
  (put 'downcase-region 'disabled nil)
  (put 'narrow-to-region 'disabled nil)
  (put 'dired-find-alternate-file 'disabled nil)
+ (put 'set-goal-column 'disabled nil)
 
   (defun my-mark-current-word (&optional arg allow-extend)
     "Put point at beginning of current word, set mark at end."
@@ -1345,9 +1347,9 @@ only if this merge job is part of a group, i.e., was invoked from within
 (set-face-background 'helm-selection "#4f4f4f")
 (set-face-background 'helm-visible-mark "#2f2f2f")
 (set-face-foreground 'helm-visible-mark nil)
-(set-face-foreground 'helm-match "tomato")
-(set-face-attribute 'helm-buffer-file nil :background 'unspecified :foreground "white" :weight 'normal)
-(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)
+(set-face-foreground 'helm-match "DarkOrange3")
+(set-face-attribute 'helm-buffer-file nil :background 'unspecified :foreground nil :weight 'normal)
+(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)  ;; #1e90ff
 (set-face-attribute 'helm-ff-directory nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-directory)
 (set-face-attribute 'helm-ff-file nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-file)
 (set-face-foreground 'helm-grep-finish "green4")
@@ -1386,18 +1388,6 @@ selects backward.)"
 (global-set-key (kbd "s-/") 'mark-whole-word)
 
 (setq next-line-add-newlines t)
-
-(defface visible-mark-active ;; put this before (require 'visible-mark)
-  '((((type tty) (class mono)))
-    (t (:background "magenta"))) "")
-(setq visible-mark-max 2)
-(setq visible-mark-faces `(visible-mark-face1 visible-mark-face2))
-
-(use-package visible-mark
-  :ensure t
-  :defer 1
-  :init
-  (global-visible-mark-mode 1))
 
  (defadvice imenu (around unfold-it compile activate)
       (save-restriction
@@ -1505,5 +1495,13 @@ selects backward.)"
   (exchange-point-and-mark)
   (deactivate-mark nil))
 (define-key global-map [remap exchange-point-and-mark] 'exchange-point-and-mark-no-activate)
+
+(use-package interleave
+  :ensure t)
+
+(use-package pdf-tools
+  :ensure t)
+
+(pdf-tools-install)
 
 (message "Starter Kit User (DGM) File loaded.")

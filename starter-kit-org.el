@@ -5,7 +5,7 @@
   ;; Markdown exporter
   (require 'ox-md)
 
-  (setq org-completion-use-ido t)
+  ;; (setq org-completion-use-ido t)  ;; dgm disables in case it interferes with helm
   ;; (require 'org-special-blocks)
   ;; (if window-system (require 'org-mouse))
 
@@ -61,68 +61,6 @@
 ;; (add-to-list 'org-babel-tangle-langs '("latex" "tex"))
 
 (add-to-list 'org-babel-noweb-error-langs "latex")
-
-(require 'ox-latex)
-;; From https://github.com/kjhealy/emacs-starter-kit/blob/master/kjhealy.org
-
-  ;; Choose either listings or minted for exporting source code blocks.
-  ;; Using minted (as here) requires pygments be installed. To use the
-  ;; default listings package instead, use
-  ;; (setq org-latex-listings t)
-  ;; and change references to "minted" below to "listings"
-  (setq org-latex-listings 'minted)
-  
-  ;; default settings for minted code blocks.
-  ;; bg will need to be defined in the preamble of your document. It's defined in  org-preamble-xelatex.sty below.
-  (setq org-latex-minted-options
-        '(;("frame" "single")
-          ("bgcolor" "bg") 
-          ("fontsize" "\\small")
-          ))
-  
-;; turn off the default toc behavior; deal with it properly in headers to files.
-(defun org-latex-no-toc (depth)  
-  (when depth
-      (format "%% Org-mode is exporting headings to %s levels.\n"
-              depth)))
-(setq org-latex-format-toc-function 'org-latex-no-toc)
-
-;; note the insertion of the \input statement for the vc information 
-(add-to-list 'org-latex-classes
-               '("memarticle"
-                 "\\documentclass[11pt,oneside,article]{memoir}\n\%\input{vc} % vc package"
-                  ("\\section{%s}" . "\\section*{%s}")
-                  ("\\subsection{%s}" . "\\subsection*{%s}")
-                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-(add-to-list 'org-latex-classes
-               '("membook"
-                 "\\documentclass[11pt,oneside]{memoir}\n\%\input{vc} % vc package"
-                 ("\\chapter{%s}" . "\\chapter*{%s}")
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
- 
-;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience.
-;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
-;; dgm: moved to init.el or else it wouldn't work
-   (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
-
-;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
-;; the alternative, if you want a regular pdflatex would be, I think
-;; (setq org-latex-pdf-process '("latexmk -pdf %f"))
-;; (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape -bibtex -f'  -pdf %f"))
-
-;; Default packages included in the tex file. As before, org-preamble-xelatex is part of latex-custom-kjh.
-;; There's org-preamble-pdflatex as well, if you wish to use that instead.
-(setq org-latex-default-packages-alist nil)     
-(setq org-latex-packages-alist
-        '(("minted" "org-preamble-xelatex" t)
-          ("" "graphicx" t)
-          ("" "longtable" nil)
-          ("" "float" )))
 
 (define-key global-map "\C-cl" 'org-store-link)
 
@@ -348,10 +286,21 @@
 
 (setq org-tags-column 45)
 
-(require 'org-ref)
-(setq reftex-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
-(setq org-ref-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
-(setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
+(use-package org-ref
+    :ensure t
+    :init
+    (setq org-ref-completion-library 'org-ref-helm-bibtex)
+    (setq org-ref-notes-directory "/media/dgm/blue/documents/elibrary/org/references"
+          org-ref-bibliography-notes "/media/dgm/blue/documents/elibrary/org/references/readings.org"
+          org-ref-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib")
+          org-ref-pdf-directory "/media/dgm/blue/documents/elibrary/org/references/pdfs/"))
+
+(require 'org-id)
+(require 'org-ref-wos)
+(require 'org-ref-scopus)
+(require 'org-ref-pubmed)
+
+;; (add-to-list 'org-ref-bibtex-completion-actions '("Edit notes" . helm-bibtex-edit-notes))
 
 (add-to-list 'org-structure-template-alist
              '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
@@ -496,6 +445,17 @@
                               ;;   (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
                               ;;   "* TODO %i%? \nEntry added on: %U
                               ;;                    \nEntry created from this heading or email: %a")
+                              ;; ("a"  "Article"  entry  
+                              ;;  (file+headline "/home/dgm/Dropbox/gtd/bibliography.org" "Bibliography") 
+                              ;;    "* %a %^g
+                              ;;     \n:PROPERTIES: 
+                              ;;     \n:Created: %U
+                              ;;     \n:END:
+                              ;;     \n%i
+                              ;;     \nBrief description:
+                              ;;     \n%?"  
+                              ;;  :empty-lines 1    
+                              ;;  :created t)        
                                 ("T" "Tickler" entry
                                  (file+headline "/home/dgm/Dropbox/gtd/tickler.org" "Tickler")
                                  "* %i%?

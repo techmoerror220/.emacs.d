@@ -143,8 +143,6 @@ Finally, I adopted the solution by Caolan, who thinks the included =mu4e-shr2tex
 ;; (setq mu4e-html2text-command 'mu4e-shr2text)
 (setq mu4e-html2text-command "w3m -dump -s -T text/html -o display_link_number=true")
 #+END_SRC
-
-
 ** Costumization
 
 #+BEGIN_SRC emacs-lisp :tangle yes

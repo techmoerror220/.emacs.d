@@ -140,9 +140,9 @@ ARCHIVE is the string name of the package archive.")
 
 (starter-kit-load "starter-kit-defuns.org")
 
-(starter-kit-load "starter-kit-helm.org")
-
 (starter-kit-load "starter-kit-org.org")
+
+(starter-kit-load "starter-kit-helm.org")
 
 (starter-kit-load "starter-kit-bindings.org")
 
@@ -164,29 +164,14 @@ ARCHIVE is the string name of the package archive.")
 
 (starter-kit-load "starter-kit-latex.org")
 
+(starter-kit-load "starter-kit-latex-org.org")
+
 (starter-kit-load "starter-kit-stats.org")
 
 (starter-kit-load "starter-kit-text.org")
 
 (load custom-file 'noerror)
 
-(if (file-exists-p elisp-source-dir)
-    (let ((default-directory elisp-source-dir))
-      (normal-top-level-add-subdirs-to-load-path)))
-
-(if (file-exists-p system-specific-config) (load system-specific-config))
-
-(if (file-exists-p system-specific-literate-config)
-    (org-babel-load-file system-specific-literate-config))
-
-(if (file-exists-p user-specific-config) (load user-specific-config))
-
-(if (file-exists-p user-specific-literate-config)
-    (org-babel-load-file user-specific-literate-config))
-
-(when (file-exists-p user-specific-dir)
-  (let ((default-directory user-specific-dir))
-    (mapc #'load (directory-files user-specific-dir nil ".*el$"))
-    (mapc #'org-babel-load-file (directory-files user-specific-dir nil ".*org$"))))
+(starter-kit-load "dgm.org")
 
 (message "Starter Kit main (starter-kit.org) file loaded.")

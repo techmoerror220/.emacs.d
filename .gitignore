@@ -3,7 +3,7 @@
 backups/*
 auto-save-list/*
 places
-url/cookies
+url/*
 session*
 ## exported files
 starter-kit*html
@@ -41,3 +41,5 @@ projectile-bookmarks.eld
 recentf
 smex-items
 history
+.org-id-locations
+

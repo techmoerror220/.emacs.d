@@ -728,4 +728,3 @@
 ;;; Org-mode
 ;;(nconc package-selected-packages '(org-plus-contrib org-bullets helm-org-contacts)) ; org-plus contains latest Org mode.
 ;;(with-eval-after-load 'org (require 'init-org))
-(put 'set-goal-column 'disabled nil)

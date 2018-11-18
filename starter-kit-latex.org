@@ -21,7 +21,6 @@ Also see https://emacs.stackexchange.com/questions/41332/how-to-automatically-in
 #+RESULTS:
 
 
-
 ** Set a Path to Executables (optional)
 The location of the LaTeX excecutables is system dependent. AUCTeX calls everything through a shell, so you may or may not need this.  This source-code block is turned off by default as it should be added to the user's personal configuration as needed.
 
@@ -31,47 +30,6 @@ DGM: Creo que ya no es necesario porque tengo el paquete de Purcell para que Ema
 #+begin_src emacs-lisp :tangle no
 ;;      (setenv "PATH" (concat "/usr/texbin:" (getenv "PATH")))
 #+end_src
-
-
-** Use latexmk for compilation by default
-
-#+srcname: latemkdefault
-#+begin_src emacs-lisp :tangle yes
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-command-list '("latexmk" "latexmk -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
-      )
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
-      )
-
-  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))  
-#+end_src
-
-
-** Set =xelatex= by default 
-
-Custom variables kludge. Why can't I get these to work via =setq=?
-
-DGM: Originally this was at the end of =kjhealy.org=.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(LaTeX-XeTeX-command "xelatex -synctex=1")
- '(TeX-engine (quote xetex))
- ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
- ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
- '(blink-cursor-mode nil)
- '(text-mode-hook (quote (text-mode-hook-identify)))
- )
-#+END_SRC
-
-#+RESULTS:
-
-
 
 * Color Theme Tweaks
 The theme package is loaded in =starter-kit-misc.org=. The settings
@@ -134,7 +92,6 @@ Set up AUCTeX to work with the Evince PDF viewer.
 
 #+RESULTS: sync
 | PDF Viewer | /usr/bin/evince -b -g %n %o %b |
-
 
 ** Load Support Packages
 *** Prettify Math in Buffers
@@ -295,8 +252,11 @@ Allow AucTeX to use biber as well as/instead of bibtex.
 *** Use Biblatex key template by default in bib files
 #+source: bibtex-dialect
 #+begin_src emacs-lisp :tangle yes
-  (setq bibtex-dialect "BibTeX")
+(setq bibtex-dialect "BibTeX")
 #+end_src
+
+#+RESULTS: bibtex-dialect
+: BibTeX
 
 *** Use '-' as the separator in auto-generated bibtex keys
 We use this (rather than the underscore character) for compatibilty with Pandoc.
@@ -307,36 +267,29 @@ We use this (rather than the underscore character) for compatibilty with Pandoc.
   (setq bibtex-autokey-year-title-separator ":_")
 #+end_src
 
-
 ** Configure RefTeX
 *** Default Bibliography
 This is important when editing source code in Org-babel, since the LaTeX source code block being edited probably doesn't include the \bibliography{} command that RefTeX uses to find bibliographic database(s).  Make certain also that RefTeX has a path to the bibliographic databases.  This source-code block is turned off be default as it should be configured by the user in a personal file/directory.
 
 #+srcname: default-bibliography
-#+begin_src emacs-lisp :tangle no
-  (setq reftex-default-bibliography
-        (quote
-         ("user.bib" "local.bib")))
+#+begin_src emacs-lisp :tangle yes
+  (setq reftex-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
 #+end_src
+
+#+RESULTS: default-bibliography
+| /media/dgm/blue/documents/bibs/socbib.bib |
 
 *** Local RefTeX Settings
 
-Tell RefTeX where the bibliography files are.
+Tell RefTeX where the bibliography files are. Commented out for now cos the path specified does not exist and I dont know what this bibpath-environment-variables does.
 
 #+srcname: local-reftex
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
     ;; Make RefTex able to find my local bib files
      (setq reftex-bibpath-environment-variables
 ;;     '("/media/dgm/blue/documents/bibs"))
      '("/home/dgm/texmf/bibtex/bib"))
-
-    ;; Default bibliography
-     (setq reftex-default-bibliography
-     '("/media/dgm/blue/documents/bibs/socbib.bib"))
 #+end_src
-
-#+RESULTS: local-reftex
-| /media/dgm/blue/documents/bibs/socbib.bib |
 
 ** Local vc commands
 
@@ -370,7 +323,6 @@ Tell RefTeX where the bibliography files are.
 ;;                        (shell-command "vc")))
 #+end_src
 
- 
 * Final message
 #+source: message-line
 #+begin_src emacs-lisp :tangle yes

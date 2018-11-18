@@ -434,6 +434,7 @@ in this document).
   (add-to-list 'load-path user-specific-dir)
 #+end_src
 
+*** Load =.el= files in =src/= directory
 You can keep elisp source in the =src= directory.  OJO! *Packages loaded
 from here will override those installed by ELPA.*  This is useful if
 you want to track the development versions of a project, or if a
@@ -465,15 +466,6 @@ Starter kit function definitions in [[file:starter-kit-defuns.org][starter-kit-d
 (starter-kit-load "starter-kit-defuns.org")
 #+end_src
 
-*** Starter kit =helm=
-
-#+BEGIN_SRC emacs-lisp
-  (starter-kit-load "starter-kit-helm.org")
-#+END_SRC
-
-#+RESULTS:
-: Loaded /home/dgm/.emacs.d/starter-kit-helm.el
-
 *** Starter kit Org-mode
 Located in [[file:starter-kit-org.org][starter-kit-org]].
 
@@ -483,7 +475,14 @@ Located in [[file:starter-kit-org.org][starter-kit-org]].
 
 #+RESULTS:
 : Loaded /home/dgm/.emacs.d/starter-kit-org.el
+*** Starter kit =helm=
 
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-load "starter-kit-helm.org")
+#+END_SRC
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-helm.el
 
 *** Starter kit bindings
 Key Bindings in [[file:starter-kit-bindings.org][starter-kit-bindings]]
@@ -562,6 +561,15 @@ Located in [[file:starter-kit-latex.org][starter-kit-latex]]
 #+begin_src emacs-lisp
 (starter-kit-load "starter-kit-latex.org")
 #+end_src
+*** Starter Kit Latex-Org
+Located in [[file:starter-kit-latex-org.org][starter-kit-latex-org]]
+
+#+begin_src emacs-lisp
+(starter-kit-load "starter-kit-latex-org.org")
+#+end_src
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-latex-org.el
 
 *** Starter Kit Stats
 Located in [[file:starter-kit-stats.org][starter-kit-stats]]
@@ -578,54 +586,43 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 #+end_src
 
 ** Load User/System Specific Files
-
 *** Settings from M-x customize
 #+srcname: m-x-customize-customizations
 #+begin_src emacs-lisp
   (load custom-file 'noerror)
 #+end_src
 
-*** E-lisp customization
+*** COMMENT E-lisp customization
 
-After we've loaded all the Starter Kit defaults, lets load the User's stuff.
+After we've loaded all the Starter Kit defaults, lets load the User's stuff. However, when I did this loading with the following code that is now commented out, I loaded =dgm.org= twice for some reason. Hence, I've simplified by loading =dgm.org= as any other file.
 
 #+srcname: starter-kit-load-files
 #+begin_src emacs-lisp
-  (if (file-exists-p elisp-source-dir)
-      (let ((default-directory elisp-source-dir))
-        (normal-top-level-add-subdirs-to-load-path)))
+(if (file-exists-p elisp-source-dir)
+    (let ((default-directory elisp-source-dir))
+      (normal-top-level-add-subdirs-to-load-path)))
+(if (file-exists-p system-specific-config) (load system-specific-config))
+(if (file-exists-p system-specific-literate-config)
+    (org-babel-load-file system-specific-literate-config))
+(if (file-exists-p user-specific-config) (load user-specific-config))
+(if (file-exists-p user-specific-literate-config)
+    (org-babel-load-file user-specific-literate-config))
+(when (file-exists-p user-specific-dir)
+  (let ((default-directory user-specific-dir))
+    (mapc #'load (directory-files user-specific-dir nil ".*el$"))
+    (mapc #'org-babel-load-file (directory-files user-specific-dir nil ".*org$"))))
 #+end_src
 
+
+*** Starter Kit DGM
+Located in [[file:starter-kit-dgm.org][starter-kit-dgm]]. I loaded like any other package to avoid loading twice as it happened before when the part of this file entitled =E-lisp customization= was uncommented and run.
+
 #+begin_src emacs-lisp
-  (if (file-exists-p system-specific-config) (load system-specific-config))
+  (starter-kit-load "dgm.org")
 #+end_src
 
 #+RESULTS:
-
-#+begin_src emacs-lisp
-  (if (file-exists-p system-specific-literate-config)
-      (org-babel-load-file system-specific-literate-config))
-#+end_src
-
-#+RESULTS:
-
-#+begin_src emacs-lisp
-  (if (file-exists-p user-specific-config) (load user-specific-config))
-#+end_src
-
-#+begin_src emacs-lisp
-  (if (file-exists-p user-specific-literate-config)
-      (org-babel-load-file user-specific-literate-config))
-#+end_src
-
-#+begin_src emacs-lisp
-  (when (file-exists-p user-specific-dir)
-    (let ((default-directory user-specific-dir))
-      (mapc #'load (directory-files user-specific-dir nil ".*el$"))
-      (mapc #'org-babel-load-file (directory-files user-specific-dir nil ".*org$"))))
-#+end_src
-
-#+RESULTS:
+: Loaded /home/dgm/.emacs.d/dgm.el
 
 
 * FAQ

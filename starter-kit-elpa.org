@@ -34,7 +34,7 @@ The following packages will be downloaded and installed.
                                     'expand-region
                                     'flycheck
                                     'flycheck-tip
-                                    'flx-ido
+                                    ;; 'flx-ido
                                     ;; 'gist
                                     ;; 'hl-line+     ;; disable in emacs 27
                                     'idle-highlight-mode

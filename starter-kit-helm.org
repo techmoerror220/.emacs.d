@@ -85,7 +85,7 @@ Helm offers an interface to both Semantic and Imenu at the same time: If `semant
     ;; Command: helm-find-files
     ;; helm-find-files is file navigation on steroids:
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "<s-escape>") 'helm-recentf)
+;;(global-set-key (kbd "<s-escape>") 'helm-recentf)
 
 ;; =C-x C-f= you start a =helm-find-files= session. There you can do =C-s= to recursively grep a selected directory.  Every time you type a character, helm updates grep result immediately. You can use ack-grep to replace grep with this configuration:
 
@@ -349,36 +349,107 @@ Check out: http://tuhdo.github.io/c-ide.html
 : t
 
 * Helm-bibtex
+And now the bit by Ista Zahn in tip from: https://github.com/izahn/dotemacs but modified to use helm instead of ivy.
+This allows you to search your BibTeX files for references to insert into the current document. For it to work you will need to set `bibtex-completion-bibliography` to the location of your BibTeX files.
+Initiate a citation search with ivy-bibtex, bound to C-c r.
+
+Commented out by DGM: not sure it is working and i can use ivy with helm
+
+#+begin_src emacs-lisp :tangle yes
+;; (setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
+(use-package helm-bibtex
+  :ensure t)
+(global-set-key (kbd "<s-escape>") 'helm-bibtex)
+#+end_src
+
+#+RESULTS:
+: helm-bibtex
+
+Tip from =titus= for =helm-bibtex=: I use the menu key as the prefix key for all helm commands and bind helm-bibtex to b. Helm-bibtex can then be started using <menu> b. It is also useful to bind helm-resume to <menu> in helm-command-map. With this binding, <menu> <menu> can be used to reopen the last helm search.
+
+** Bibtex-completion
+
+Bibtex-completion depends on helm-bibtex. That's why I paste it here.
+
+From https://github.com/tmalsburg/helm-bibtex
 
 Helm-bibtex and ivy-bibtex allow you to search and manage your BibTeX bibliography. They both share the same generic backend, bibtex-completion, but one uses the Helm completion framework and the other Ivy as a front-end.
 
 check titus: https://github.com/tmalsburg/helm-bibtex
 
-A minimal configuration involves telling bibtex-completion where your bibliographies can be found:
+A minimal configuration involves telling bibtex-completion where your bibliographies can be found.
+I am leaving it as not a list.
+I am commenting it out now as I am using the variable =helm-bibtex-bibliography= in =starter-kit-helm.org=.
 
-#+begin_src emacs-lisp :tangle yes
-(setq bibtex-completion-bibliography
-      '("/media/dgm/blue/documents/bibs/socbib.bib"))
+#+BEGIN_EXAMPLE
+(setq bibtex-completion-bibliography 
+      '("/media/dgm/blue/documents/bibs/socbib.bib"))  
+#+END_EXAMPLE
 
-;; Bibtex-completion supports two methods for storing notes. It can either store all notes in one file or store notes in multiple files, one file per publication. In the first case, the customization variable bibtex-completion-notes-path has to be set to the full path of the notes file:
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
+#+END_SRC
 
-(setq bibtex-completion-notes-path "/media/dgm/blue/documents/dropbox/org/notes.org")
+#+RESULTS:
+: /media/dgm/blue/documents/bibs/socbib.bib
 
-;; Symbols used for indicating the availability of notes and PDF files
+Specify where PDFs can be found: Bibtex-completion assumes that the name of a PDF consists of the BibTeX key followed plus a user-defined suffix (.pdf by default). For example, if a BibTeX entry has the key Darwin1859, bibtex-completion searches for Darwin1859.pdf.
+
+I am commenting out as I have the variable =helm-bibtex-library-path= in =starter-kit-helm.org=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq bibtex-completion-library-path '("/media/dgm/blue/documents/elibrary/org/references/pdfs"))
+#+END_SRC
+
+#+RESULTS:
+| /media/dgm/blue/documents/elibrary/org/references/pdfs/ |
+
+
+Bibtex-completion supports two methods for storing notes. It can either store all notes in one file or store notes in multiple files, one file per publication. In the first case, the customization variable bibtex-completion-notes-path has to be set to the full path of the notes file:
+I am commenting it out as I have the variable =helm-bibtex-notes-path= in =starter-kit-helm.org=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq bibtex-completion-notes-path "/media/dgm/blue/documents/elibrary/org/references")
+#+END_SRC
+
+#+RESULTS:
+: /media/dgm/blue/documents/elibrary/org/references/readings.org
+
+(See also Kitchin on setting these paths here https://github.com/jkitchin/org-ref.)
+
+Symbols used for indicating the availability of notes and PDF files
+
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq bibtex-completion-pdf-symbol "⌘")
 (setq bibtex-completion-notes-symbol "✎")
-#+end_src
+#+END_SRC
 
-And now the bit by Ista Zahn in tip from: https://github.com/izahn/dotemacs but modified to use helm instead of ivy.
-This allows you to search your BibTeX files for references to insert into the current document. For it to work you will need to set `bibtex-completion-bibliography` to the location of your BibTeX files.
-Initiate a citation search with ivy-bibtex, bound to C-c r.
+#+RESULTS:
+: ✎
 
-#+begin_src emacs-lisp :tangle yes
-(setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
-(global-set-key (kbd "C-c r") 'helm-bibtex)
-#+end_src
+Open pdf with system pdf viewer
 
-Tip from =titus= for =helm-bibtex=: I use the menu key as the prefix key for all helm commands and bind helm-bibtex to b. Helm-bibtex can then be started using <menu> b. It is also useful to bind helm-resume to <menu> in helm-command-map. With this binding, <menu> <menu> can be used to reopen the last helm search.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq bibtex-completion-pdf-open-function 'org-open-file)
+#+END_SRC
+
+#+RESULTS:
+: org-open-file
+
+** The Reddit workflow
+
+From: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/
+
+With this setup helm-bibtex points to the same notes file as org-ref. Just run M-x helm-bibtex and select the article you want. Instead of pressing <return>, press <tab>. This opens up helm's alternate action list where you can choose to Edit notes. This opens up the exact notes file created by org-ref.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+ (setq helm-bibtex-bibliography "/media/dgm/blue/documents/bibs/socbib.bib" 
+       helm-bibtex-library-path "/media/dgm/blue/documents/elibrary/org/references/pdfs/"
+       helm-bibtex-notes-path "/media/dgm/blue/documents/elibrary/org/references/readings.org")
+#+END_SRC
+
+#+RESULTS:
+: /media/dgm/blue/documents/elibrary/org/references/readings.org
 
 * Ambrevar's stuff
 
@@ -548,14 +619,19 @@ Note that the =s= in the prefix is the letter =s= and not the =super= key.
 
 * Uncle Dave
 
-Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs
+Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs and Tuhdo  https://tuhdo.github.io/helm-intro.html
+
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
 ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action but this gives rise to problems. See https://github.com/jkitchin/org-ref/issues/527
 (define-key helm-map (kbd "C-i")   'helm-execute-persistent-action) ; make TAB work in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z... direct from Tuhdo! 
 #+END_SRC
+
+#+RESULTS:
+: helm-select-action
 
 * Projectile 
 #+srcname: projectile
@@ -682,7 +758,6 @@ Basic commands with for interfacing with =exwm= with =helm=
 #+RESULTS:
 : ((ido-use-virtual-buffers . ido) (ido-recentf-open . ido) (recentf-open-files . ido) (describe-function . helm-completing-read-symbols) (describe-variable . helm-completing-read-symbols) (describe-symbol . helm-completing-read-symbols) (debug-on-entry . helm-completing-read-symbols) (find-function . helm-completing-read-symbols) (disassemble . helm-completing-read-symbols) (trace-function . helm-completing-read-symbols) (trace-function-foreground . helm-completing-read-symbols) (trace-function-background . helm-completing-read-symbols) (find-tag . helm-completing-read-default-find-tag) (org-capture . helm-org-completing-read-tags) (org-set-tags . helm-org-completing-read-tags) (ffap-alternate-file) (tmm-menubar) (find-file) (find-file-at-point . helm-completing-read-sync-default-handler) (ffap . helm-completing-read-sync-default-handler) (execute-extended-command) (dired-do-rename . helm-read-file-name-handler-1) (dired-do-copy . helm-read-file-name-handler-1) (dired-do-symlink . helm-read-file-name-handler-1) (dired-do-relsymlink . helm-read-file-name-handler-1) (dired-do-hardlink . helm-read-file-name-handler-1))
 
-
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -700,3 +775,4 @@ Basic commands with for interfacing with =exwm= with =helm=
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+

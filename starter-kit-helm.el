@@ -35,7 +35,7 @@
     ;; Command: helm-find-files
     ;; helm-find-files is file navigation on steroids:
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "<s-escape>") 'helm-recentf)
+;;(global-set-key (kbd "<s-escape>") 'helm-recentf)
 
 ;; =C-x C-f= you start a =helm-find-files= session. There you can do =C-s= to recursively grep a selected directory.  Every time you type a character, helm updates grep result immediately. You can use ack-grep to replace grep with this configuration:
 
@@ -188,47 +188,53 @@ Requires `call-process-to-string' from `functions'."
                         :box nil
                         :height 0.1)))
 
-;; Tuhdo says to put this but if I do emacs spits error mesage on start up.
-;;(require 'setup-helm)
-;;(require 'setup-helm-gtags)
+    ;; Tuhdo says to put this but if I do emacs spits error mesage on start up.
+    ;;(require 'setup-helm)
+    ;;(require 'setup-helm-gtags)
 
-(require 'helm-gtags)
+    (require 'helm-gtags)
 
-;; Enable helm-gtags-mode
-(add-hook 'dired-mode-hook 'helm-gtags-mode)
-(add-hook 'eshell-mode-hook 'helm-gtags-mode)
-(add-hook 'c-mode-hook 'helm-gtags-mode)
-(add-hook 'c++-mode-hook 'helm-gtags-mode)
-(add-hook 'asm-mode-hook 'helm-gtags-mode)
+    ;; Enable helm-gtags-mode
+    (add-hook 'dired-mode-hook 'helm-gtags-mode)
+    (add-hook 'eshell-mode-hook 'helm-gtags-mode)
+    (add-hook 'c-mode-hook 'helm-gtags-mode)
+    (add-hook 'c++-mode-hook 'helm-gtags-mode)
+    (add-hook 'asm-mode-hook 'helm-gtags-mode)
 
-(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
-(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
-(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+    (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+    (define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+    (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+    (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+    (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+    (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
 
-(setq
- helm-gtags-ignore-case t
- helm-gtags-auto-update t
- helm-gtags-use-input-at-cursor t
- helm-gtags-pulse-at-cursor t
- helm-gtags-prefix-key "C-c g"
- helm-gtags-suggested-key-mapping t)
+    (setq
+     helm-gtags-ignore-case t
+     helm-gtags-auto-update t
+     helm-gtags-use-input-at-cursor t
+     helm-gtags-pulse-at-cursor t
+     helm-gtags-prefix-key "C-c g"
+     helm-gtags-suggested-key-mapping t)
 
-(setq bibtex-completion-bibliography
-      '("/media/dgm/blue/documents/bibs/socbib.bib"))
+;; (setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
+(use-package helm-bibtex
+  :ensure t)
+(global-set-key (kbd "<s-escape>") 'helm-bibtex)
 
-;; Bibtex-completion supports two methods for storing notes. It can either store all notes in one file or store notes in multiple files, one file per publication. In the first case, the customization variable bibtex-completion-notes-path has to be set to the full path of the notes file:
+(setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
 
-(setq bibtex-completion-notes-path "/media/dgm/blue/documents/dropbox/org/notes.org")
+(setq bibtex-completion-library-path '("/media/dgm/blue/documents/elibrary/org/references/pdfs"))
 
-;; Symbols used for indicating the availability of notes and PDF files
+(setq bibtex-completion-notes-path "/media/dgm/blue/documents/elibrary/org/references")
+
 (setq bibtex-completion-pdf-symbol "⌘")
 (setq bibtex-completion-notes-symbol "✎")
 
-(setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
-(global-set-key (kbd "C-c r") 'helm-bibtex)
+(setq bibtex-completion-pdf-open-function 'org-open-file)
+
+ (setq helm-bibtex-bibliography "/media/dgm/blue/documents/bibs/socbib.bib" 
+       helm-bibtex-library-path "/media/dgm/blue/documents/elibrary/org/references/pdfs/"
+       helm-bibtex-notes-path "/media/dgm/blue/documents/elibrary/org/references/readings.org")
 
 (when (< emacs-major-version 26)
   (when (require 'linum-relative nil t)
@@ -342,10 +348,11 @@ Requires `call-process-to-string' from `functions'."
 
 (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
 ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action but this gives rise to problems. See https://github.com/jkitchin/org-ref/issues/527
 (define-key helm-map (kbd "C-i")   'helm-execute-persistent-action) ; make TAB work in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z... direct from Tuhdo!
 
-;; Projectile
+    ;; Projectile
     (require 'projectile)
 
     ;; https://github.com/bbatsov/projectile/issues/1183

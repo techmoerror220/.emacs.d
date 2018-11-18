@@ -1,4 +1,4 @@
-(define-package "helm-bibtex" "20180826.1548" "A bibliography manager based on Helm"
+(define-package "helm-bibtex" "20181030.2142" "A bibliography manager based on Helm"
   '((helm "1.5.5")
     (parsebib "1.0")
     (s "1.9.0")

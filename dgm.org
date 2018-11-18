@@ -578,7 +578,7 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 
 ;; set dired listing options
 (if (eq system-type 'gnu/linux)
-    (setq dired-listing-switches "-alDhp"))
+    (setq dired-listing-switches "-alDh")) ;; originally with a p as in =-alDh= but in https://www.reddit.com/r/emacs/comments/9flask/dired_mode_move_directory/ they explain that this causes failure when moving directories.
 
 ;; make sure dired buffers end in a slash so we can identify them easily
 (defun ensure-buffer-name-ends-in-slash ()
@@ -1297,10 +1297,11 @@ Recentf is a minor mode that builds a list of recently opened files. This list i
 (setq recentf-max-menu-items 25)
 (setq recentf-max-saved-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
+(setq recentf-auto-cleanup 'never)
 #+END_SRC
 
 #+RESULTS:
-: recentf-open-files
+: never
 
 By default, Recentf saves the list of recent files on exiting Emacs (specifically, `recentf-save-list` is called on `kill-emacs-hook`). If Emacs exits abruptly for some reason the recent file list will be lost - therefore you may wish to call `recentf-save-list` periodically, e.g. every 5 minutes:
 (DGM disables it because I find it too invasive)
@@ -2772,13 +2773,14 @@ Sets prefix to =C-x /=. Then
 
 *** Enabling various commands for up/down casing, etc. 
 
-From https://github.com/danielmai/.emacs.d/blob/master/config.org
+From https://github.com/danielmai/.emacs.d/blob/master/config.org and http://tobytripp.github.io/emacs.d/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
  (put 'upcase-region 'disabled nil)
  (put 'downcase-region 'disabled nil)
  (put 'narrow-to-region 'disabled nil)
  (put 'dired-find-alternate-file 'disabled nil)
+ (put 'set-goal-column 'disabled nil)
 #+END_SRC
 
 ** COMMENT Dashboard
@@ -2887,9 +2889,9 @@ If I place this in the =starter-kit-helm.org= file, for some reason, probably be
 (set-face-background 'helm-selection "#4f4f4f")
 (set-face-background 'helm-visible-mark "#2f2f2f")
 (set-face-foreground 'helm-visible-mark nil)
-(set-face-foreground 'helm-match "tomato")
-(set-face-attribute 'helm-buffer-file nil :background 'unspecified :foreground "white" :weight 'normal)
-(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)
+(set-face-foreground 'helm-match "DarkOrange3")
+(set-face-attribute 'helm-buffer-file nil :background 'unspecified :foreground nil :weight 'normal)
+(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)  ;; #1e90ff
 (set-face-attribute 'helm-ff-directory nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-directory)
 (set-face-attribute 'helm-ff-file nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-file)
 (set-face-foreground 'helm-grep-finish "green4")
@@ -2961,7 +2963,6 @@ selects backward.)"
 : mark-whole-word
 
 ** Mastering emacs with Mickey Petersen
-
 *** Make =C-n= insert newlines if point is at the end of the buffer
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -2973,7 +2974,9 @@ selects backward.)"
 
 *** Visible mark
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Too disruptive. I confuse point for mark and vice versa. 
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (defface visible-mark-active ;; put this before (require 'visible-mark)
   '((((type tty) (class mono)))
     (t (:background "magenta"))) "")
@@ -2984,7 +2987,7 @@ selects backward.)"
   :ensure t
   :defer 1
   :init
-  (global-visible-mark-mode 1))
+  (global-visible-mark-mode nil)) ;; too disruptive
 #+END_SRC
 
 #+RESULTS:
@@ -3072,7 +3075,6 @@ Quickly force rescan. You can avoid auto rescanning big buffers just making it e
 
 #+RESULTS:
 : ido-goto-symbol
-
 
 *** TODO =etags= costumization: learn what these =etags= are
 
@@ -3165,6 +3167,31 @@ The exchange-point-and-mark, bound to C-x C-x, will by default activate the regi
 #+RESULTS:
 : exchange-point-and-mark-no-activate
 
+
+** Interleave 
+
+From Reddit: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package interleave
+  :ensure t)
+#+END_SRC
+
+#+RESULTS:
+
+** pdf-tools
+
+From https://github.com/politza/pdf-tools
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package pdf-tools
+  :ensure t)
+
+(pdf-tools-install)
+#+END_SRC
+
+#+RESULTS:
+
 * Final message
 #+source: message-line
 #+begin_src emacs-lisp :tangle yes
@@ -3173,6 +3200,10 @@ The exchange-point-and-mark, bound to C-x C-x, will by default activate the regi
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+
+
+
+
 
 
 

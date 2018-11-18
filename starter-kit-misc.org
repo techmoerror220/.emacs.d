@@ -109,9 +109,9 @@ His explanation: I tend to switch themes more often than normal. For example, sw
     (when window-system
 ;;      (setq frame-title-format '(buffer-file-name "%f" ("%b")))
       (setq frame-title-format (concat "%b" (unless (daemonp) " [serverless]"))) ;; from ambrevar's main.el
-      (tooltip-mode -1)
-      (tool-bar-mode -1)
-      (blink-cursor-mode -1))
+      (tooltip-mode -1))
+;;      (tool-bar-mode -1)) ;; already in minimal.el
+;;      (blink-cursor-mode -1))  
 
     (mouse-wheel-mode t)
 
@@ -154,8 +154,11 @@ Thin window dividers and no scroll bars. Toggle with `C-c C-s`.
 
 #+source: minimal-mode-on
 #+begin_src emacs-lisp
-  (minimal-mode)
+(minimal-mode)
 #+end_src
+
+#+RESULTS: minimal-mode-on
+: t
 
 ** Set browser
 Set this to whatever browser you use e.g...
@@ -293,7 +296,7 @@ With helm-mode active, to use Emacs default completion instead of either Helm or
 
 (set-face-attribute 'ido-vertical-first-match-face nil
                     :background nil
-                    :foreground "orange")
+                    :foreground "DarkOrange1")
 (set-face-attribute 'ido-vertical-only-match-face nil
                     :background nil
                     :foreground nil)

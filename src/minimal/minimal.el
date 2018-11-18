@@ -31,7 +31,7 @@
 ;;
 ;; (nconc default-frame-alist '((cursor-type . bar)))
 ;; (setq inhibit-startup-message t)
-;; (blink-cursor-mode -1)
+(blink-cursor-mode -1)
 
 ;;; Code:
 

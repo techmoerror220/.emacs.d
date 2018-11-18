@@ -212,5 +212,20 @@ In CSV mode, the following commands are available:
 (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
 (autoload 'csv-mode "csv-mode"
   "Major mode for editing comma-separated value files." t)
+#+end_src
 
+
+** Bit originally under =custom-set-variables=
+
+#+BEGIN_SRC emacs-lisp
+(setq text-mode-hook (quote (text-mode-hook-identify)))
+#+END_SRC
+
+#+RESULTS:
+| text-mode-hook-identify |
+
+* Final message
+#+source: message-line
+#+begin_src emacs-lisp
+(message "Starter Kit Text File loaded.")
 #+end_src
