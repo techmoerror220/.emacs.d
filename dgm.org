@@ -167,7 +167,6 @@ I like M-s for it, same as C-s is for moving by searching string, now M-s is mov
 #+BEGIN_SRC emacs-lisp :tangle yes
 #+END_SRC
 
-
 * dgm's own customizations of emacs appearance
 ** GROUP: Convenience -> Linum
 
@@ -294,7 +293,6 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 
 #+RESULTS:
 | lambda | nil | (when (derived-mode-p (quote c-mode) (quote c++-mode) (quote java-mode) (quote asm-mode)) (ggtags-mode 1)) |
-
 
 ** GROUP: Editing -> Editing Basics from http://tuhdo.github.io/emacs-tutor3.html
 
@@ -1999,7 +1997,7 @@ In many programs, like SlickEdit, TextMate and VisualStudio, "cut" and "copy" ac
 
 However, I disable it or else the copy/paste emacs bindings won't work in external apps PLUS uncle dave has defined handy functions to do the copying and killing on current words and lines.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package whole-line-or-region
   :ensure t)
 
@@ -2563,33 +2561,6 @@ DGM: nice, but i prefer to use helm to browse the kill ring.
 #+RESULTS:
 : popup-kill-ring
 
-*** Diminishing modes 
-
-Your modeline is sacred, and if you have a lot of modes enabled, as you will if you use this config, you might end up with a lot of clutter there, the package diminish disables modes on the mode line but keeps them running, it just prevents them from showing up and taking up space.
-
-THIS WILL BE REMOVED SOON AS USE-PACKAGE HAS THE FUNCTIONALITY BUILT IN
-
-Edit this list as you see fit!
-
-PS: recall that the =diminish= package is installed in =starter-kit.org=.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (diminish 'which-key-mode)
-  (diminish 'linum-relative-mode)
-  (diminish 'hungry-delete-mode)
-  (diminish 'visual-line-mode)
-  (diminish 'subword-mode)
-  (diminish 'beacon-mode)
-  (diminish 'irony-mode)
-  (diminish 'page-break-lines-mode)
-  (diminish 'auto-revert-mode)
-  (diminish 'rainbow-delimiters-mode)
-  (diminish 'yas-minor-mode)
-  (diminish 'rainbow-mode)
-#+END_SRC
-
-#+RESULTS:
-
 ** Daniel Mai
 
 https://github.com/danielmai/.emacs.d/blob/master/config.org
@@ -2854,7 +2825,6 @@ Sometimes useful for getting help on R or Emacs.
 #+RESULTS: rirc-configuration
 | irc.freenode.net | :channels | (#emacs #python #sml #nasm #gcc) |
 
-
 ** Comment or uncomment region 
 
 #+srcname: final-custom
@@ -2878,26 +2848,6 @@ Sometimes useful for getting help on R or Emacs.
 
 #+RESULTS:
 : /home/dgm/
-
-** Customization of helm's looks 
-
-If I place this in the =starter-kit-helm.org= file, for some reason, probably because some code in the way overlaps the following, it does not work.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; comment out by dgm
-; (set-face-attribute 'helm-source-header nil :inherit 'header-line :height 'unspecified :background 'unspecified :foreground 'unspecified)
-(set-face-background 'helm-selection "#4f4f4f")
-(set-face-background 'helm-visible-mark "#2f2f2f")
-(set-face-foreground 'helm-visible-mark nil)
-(set-face-foreground 'helm-match "DarkOrange3")
-(set-face-attribute 'helm-buffer-file nil :background 'unspecified :foreground nil :weight 'normal)
-(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)  ;; #1e90ff
-(set-face-attribute 'helm-ff-directory nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-directory)
-(set-face-attribute 'helm-ff-file nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-file)
-(set-face-foreground 'helm-grep-finish "green4")
-#+END_SRC
-
-#+RESULTS:
 
 ** Electric pair mode
 
@@ -3167,7 +3117,6 @@ The exchange-point-and-mark, bound to C-x C-x, will by default activate the regi
 #+RESULTS:
 : exchange-point-and-mark-no-activate
 
-
 ** Interleave 
 
 From Reddit: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/
@@ -3187,7 +3136,139 @@ From https://github.com/politza/pdf-tools
 (use-package pdf-tools
   :ensure t)
 
-(pdf-tools-install)
+;; (pdf-tools-install) ;; commented out as I think it gets activated below
+#+END_SRC
+
+
+Tweaking from Ambrevar's dot file. However, his original combination of colors was too aggresive for me. Researching on the web, I came across this article https://www.cs.cmu.edu/~jbigham/pubs/pdfs/2017/colors.pdf and it looks cool now.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(when (require 'pdf-tools nil t)
+   ;; (setq pdf-view-midnight-colors '("#ffffff" . "#000000")) 
+   ;; (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; Amber's original combination. Too agressive for me. 
+   (setq pdf-view-midnight-colors '("black" . "#EDD1B9" )) ; peach is the answer.
+   (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
+   (pdf-tools-install t t t))
+#+END_SRC
+
+#+RESULTS:
+
+** Diminishing modes 
+
+Your modeline is sacred, and if you have a lot of modes enabled, as you will if you use this config, you might end up with a lot of clutter there, the package diminish disables modes on the mode line but keeps them running, it just prevents them from showing up and taking up space.
+
+THIS WILL BE REMOVED SOON AS USE-PACKAGE HAS THE FUNCTIONALITY BUILT IN
+
+Edit this list as you see fit!
+
+PS: recall that the =diminish= package is installed in =starter-kit.org=.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (diminish 'which-key-mode)
+  (diminish 'linum-relative-mode)
+  (diminish 'hungry-delete-mode)
+  (diminish 'visual-line-mode)
+  (diminish 'subword-mode)
+  (diminish 'beacon-mode)
+  (diminish 'irony-mode)
+  (diminish 'page-break-lines-mode)
+  (diminish 'auto-revert-mode)
+  (diminish 'rainbow-delimiters-mode)
+  (diminish 'yas-minor-mode)
+  (diminish 'rainbow-mode)
+  (diminish 'undo-tree-mode)
+  (diminish 'editorconfig-mode)
+  (diminish 'smartparens-mode)
+  (diminish 'minimal-mode)
+  (diminish 'org-mode)
+  (diminish 'org-indent-mode)
+  (diminish 'volatile-highlights-mode) 
+  (diminish 'highlight-symbol-mode) 
+  (diminish 'pandoc-mode) 
+  (diminish 'projectile-mode) 
+  (diminish 'browse-kill-ring-mode) 
+  (diminish 'auto-fill-mode) 
+#+END_SRC
+
+#+RESULTS:
+
+* Tuhdo's customization of Helm's appearance
+
+Sometimes, customization of helm's looks set in =starter-kit-helm.org= gets overriden... that's why I place it here now.
+From: https://www.reddit.com/r/emacs/comments/2z7nbv/lean_helm_window/
+
+Helm window is too big? That's why you have helm-autoresize-mode:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq  helm-display-header-line nil)
+#+END_SRC
+
+The resizing is too annoying and you only want the window to be less varied or even at a different fixed size rather than the default size? It can be done with:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(helm-autoresize-mode -1)
+(setq helm-autoresize-max-height 30)
+(setq helm-autoresize-min-height 30)
+#+END_SRC
+
+Now, you have a Helm window that always takes 30% of your frame height.
+
+One of the thing that annoyed me with Ido is that it is always at the bottom in the minibuffer and raise the mode line. If you are like me, you may want to open Helm window in the current window where point is in, so you don't have to move eyes far away from the upper-half of the window to the minibuffer. This is problematic if you have large monitor (i.e. 24 inches or above).
+
+By setting this:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (setq helm-split-window-in-side-p t)
+(setq helm-split-window-inside-p t)
+#+END_SRC
+
+Now, Helm always opens a small window right inside and at the lower half of current window. No more random Helm window! 
+
+You may want to remove the header line for Helm command with only one source.  (Note: No entiendo que' es esto de one vs. multiple sources.)
+
+For Helm command with multiple sources, the header line appears as a very thin line. This is fine, but if you want Helm to be a bit smart, that is, keep the full source header line when multiple sources and hidden when there's a single source, you can add the following function to =helm-before-initialize-hook=:
+(Now, Helm appears as usual when there's multiple sources.)
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defvar helm-source-header-default-background (face-attribute 'helm-source-header :background))
+(defvar helm-source-header-default-foreground (face-attribute 'helm-source-header :foreground))
+(defvar helm-source-header-default-box (face-attribute 'helm-source-header :box))
+
+(defun helm-toggle-header-line ()
+  (if (> (length helm-sources) 1)
+      (set-face-attribute 'helm-source-header
+                          nil
+                          :foreground helm-source-header-default-foreground
+                          :background helm-source-header-default-background
+                          :box helm-source-header-default-box
+                          :height 1.0)
+    (set-face-attribute 'helm-source-header
+                        nil
+                        :foreground (face-attribute 'helm-selection :background)
+                        :background (face-attribute 'helm-selection :background)
+                        :box nil
+                        :height 0.1)))
+#+END_SRC
+
+#+RESULTS:
+: helm-toggle-header-line
+
+** Further customization of helm's looks, mainly colors
+
+If I place this in the =starter-kit-helm.org= file, for some reason, probably because some code in the way overlaps the following, it does not work.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;; comment out by dgm
+; (set-face-attribute 'helm-source-header nil :inherit 'header-line :height 'unspecified :background 'unspecified :foreground 'unspecified)
+(set-face-background 'helm-selection "#4f4f4f")
+(set-face-background 'helm-visible-mark "#2f2f2f")
+(set-face-foreground 'helm-visible-mark nil)
+(set-face-foreground 'helm-match "DarkOrange3")
+(set-face-attribute 'helm-buffer-file nil :background 'unspecified :foreground nil :weight 'normal)
+(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)  ;; #1e90ff
+(set-face-attribute 'helm-ff-directory nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-directory)
+(set-face-attribute 'helm-ff-file nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-file)
+(set-face-foreground 'helm-grep-finish "green4")
 #+END_SRC
 
 #+RESULTS:
@@ -3200,6 +3281,7 @@ From https://github.com/politza/pdf-tools
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+
 
 
 

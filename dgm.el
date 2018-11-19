@@ -1026,14 +1026,6 @@ only if this merge job is part of a group, i.e., was invoked from within
 
 (add-hook 'ediff-prepare-buffer-hook #'outline-show-all)
 
-(use-package whole-line-or-region
-  :ensure t)
-
-(add-to-list 'whole-line-or-region-extensions-alist
-             '(comment-dwim whole-line-or-region-comment-dwim nil))
-
-(whole-line-or-region-global-mode 1)
-
 (add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
 
 (defun my-goto-match-beginning ()
@@ -1212,19 +1204,6 @@ only if this merge job is part of a group, i.e., was invoked from within
   :config
     (global-hungry-delete-mode))
 
-  (diminish 'which-key-mode)
-  (diminish 'linum-relative-mode)
-  (diminish 'hungry-delete-mode)
-  (diminish 'visual-line-mode)
-  (diminish 'subword-mode)
-  (diminish 'beacon-mode)
-  (diminish 'irony-mode)
-  (diminish 'page-break-lines-mode)
-  (diminish 'auto-revert-mode)
-  (diminish 'rainbow-delimiters-mode)
-  (diminish 'yas-minor-mode)
-  (diminish 'rainbow-mode)
-
 (use-package page-break-lines
   :ensure t)
 
@@ -1341,18 +1320,6 @@ only if this merge job is part of a group, i.e., was invoked from within
 
   ;; Base dir
   (cd "~/")
-
-;; comment out by dgm
-; (set-face-attribute 'helm-source-header nil :inherit 'header-line :height 'unspecified :background 'unspecified :foreground 'unspecified)
-(set-face-background 'helm-selection "#4f4f4f")
-(set-face-background 'helm-visible-mark "#2f2f2f")
-(set-face-foreground 'helm-visible-mark nil)
-(set-face-foreground 'helm-match "DarkOrange3")
-(set-face-attribute 'helm-buffer-file nil :background 'unspecified :foreground nil :weight 'normal)
-(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)  ;; #1e90ff
-(set-face-attribute 'helm-ff-directory nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-directory)
-(set-face-attribute 'helm-ff-file nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-file)
-(set-face-foreground 'helm-grep-finish "green4")
 
 ;; auto close bracket insertion. New in emacs 24
 (electric-pair-mode 1)
@@ -1502,6 +1469,66 @@ selects backward.)"
 (use-package pdf-tools
   :ensure t)
 
-(pdf-tools-install)
+;; (pdf-tools-install) ;; commented out as I think it gets activated below
+
+(when (require 'pdf-tools nil t)
+   ;; (setq pdf-view-midnight-colors '("#ffffff" . "#000000")) 
+   ;; (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; Amber's original combination. Too agressive for me. 
+   (setq pdf-view-midnight-colors '("black" . "#EDD1B9" )) ; peach is the answer.
+   (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
+   (pdf-tools-install t t t))
+
+  (diminish 'which-key-mode)
+  (diminish 'linum-relative-mode)
+  (diminish 'hungry-delete-mode)
+  (diminish 'visual-line-mode)
+  (diminish 'subword-mode)
+  (diminish 'beacon-mode)
+  (diminish 'irony-mode)
+  (diminish 'page-break-lines-mode)
+  (diminish 'auto-revert-mode)
+  (diminish 'rainbow-delimiters-mode)
+  (diminish 'yas-minor-mode)
+  (diminish 'rainbow-mode)
+  (diminish 'undo-tree-mode)
+  (diminish 'editorconfig-mode)
+  (diminish 'smartparens-mode)
+  (diminish 'minimal-mode)
+  (diminish 'org-mode)
+  (diminish 'org-indent-mode)
+  (diminish 'volatile-highlights-mode) 
+  (diminish 'highlight-symbol-mode) 
+  (diminish 'pandoc-mode) 
+  (diminish 'projectile-mode) 
+  (diminish 'browse-kill-ring-mode) 
+  (diminish 'auto-fill-mode)
+
+(setq  helm-display-header-line nil)
+
+(helm-autoresize-mode -1)
+(setq helm-autoresize-max-height 30)
+(setq helm-autoresize-min-height 30)
+
+;; (setq helm-split-window-in-side-p t)
+(setq helm-split-window-inside-p t)
+
+(defvar helm-source-header-default-background (face-attribute 'helm-source-header :background))
+(defvar helm-source-header-default-foreground (face-attribute 'helm-source-header :foreground))
+(defvar helm-source-header-default-box (face-attribute 'helm-source-header :box))
+
+(defun helm-toggle-header-line ()
+  (if (> (length helm-sources) 1)
+      (set-face-attribute 'helm-source-header
+                          nil
+                          :foreground helm-source-header-default-foreground
+                          :background helm-source-header-default-background
+                          :box helm-source-header-default-box
+                          :height 1.0)
+    (set-face-attribute 'helm-source-header
+                        nil
+                        :foreground (face-attribute 'helm-selection :background)
+                        :background (face-attribute 'helm-selection :background)
+                        :box nil
+                        :height 0.1)))
 
 (message "Starter Kit User (DGM) File loaded.")

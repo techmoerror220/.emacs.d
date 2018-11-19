@@ -66,13 +66,13 @@ The following packages will be downloaded and installed.
                                     ;; 'redo+
                                     ;; 'ruby-mode
                                     'smartparens ;; includes all features of =paredit= so the latter is not needed.
-                                    'smex
+                                    ;; 'smex
                                     'anti-zenburn-theme
-                                    'solarized-theme
-                                    'color-theme-sanityinc-tomorrow
-                                    'color-theme-sanityinc-solarized
-                                    'lenlen-theme
-                                    'color-theme-modern
+                                    ;; 'solarized-theme
+                                    ;; 'color-theme-sanityinc-tomorrow
+                                    ;; 'color-theme-sanityinc-solarized
+                                    ;; 'lenlen-theme
+                                    ;; 'color-theme-modern
                                     'hc-zenburn-theme
                                     'labburn-theme
                                     'zenburn-theme

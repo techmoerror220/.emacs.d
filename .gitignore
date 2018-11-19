@@ -3,7 +3,7 @@
 backups/*
 auto-save-list/*
 places
-url/
+url
 session*
 ## exported files
 starter-kit*html
@@ -38,6 +38,7 @@ bookmarks
 ido.last
 ido.last~
 projectile-bookmarks.eld
+projectile.cache
 recentf
 smex-items
 history

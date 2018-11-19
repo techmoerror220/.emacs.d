@@ -189,14 +189,6 @@
 
 (bind-key "M-s o" 'occur-dwim)
 
-  (require 'ag)
-  (define-key global-map "\C-x\C-a" 'ag) 
-  (define-key global-map "\C-x\C-r" 'ag-regexp)
-
-;; new bindings by DGM to try and use 'helm-ag
-;;  (define-key global-map "\C-x\C-a" 'helm-ag) 
-;;  (define-key global-map "\C-x\C-r" 'helm-ag-regexp)
-
 (use-package winner
   :config
   (winner-mode t)

@@ -5,9 +5,28 @@
   (helm-mode 1)
   (require 'helm-config))
 
+;; Originally in starter-kit-bindings.org like this
+;;  (require 'ag)
+;;  (define-key global-map "\C-x\C-a" 'ag) 
+;;  (define-key global-map "\C-x\C-r" 'ag-regexp)
+
+;; new bindings by DGM to try and use 'helm-ag
+;;  (define-key global-map "\C-x\C-a" 'helm-ag) 
+;;  (define-key global-map "\C-x\C-r" 'helm-ag-regexp)
+
+(use-package ag 
+  :ensure t)
+
 (use-package helm-ag
   :ensure t
-  :after helm-mode)
+  :after (helm-mode ag))
+
+(setq helm-ag-base-command "/usr/bin/ag")
+;; (setq helm-ag-use-agignore t) ;; should work with projectile.cache included in .gitignore
+(setq helm-ag-command-option " --hidden") ;; search in hidden files
+
+(setq helm-ag-insert-at-point t)
+(setq helm-ag-fuzzy-match t)
 
 (use-package helm-swoop
   :ensure t
@@ -145,48 +164,6 @@ Requires `call-process-to-string' from `functions'."
 
 (require 'helm-descbinds)
 (helm-descbinds-mode)
-
-(setq  helm-display-header-line nil)
-;; Helm window is too big? That's why you have helm-autoresize-mode:
-
-(helm-autoresize-mode -1)
-
-;; The resizing is too annoying and you only want the window to be less varied or even at a different fixed size rather than the default size? It can be done with:
-
-(setq helm-autoresize-max-height 30)
-(setq helm-autoresize-min-height 30)
-
-;; Now, you have a Helm window that always takes 30% of your frame height.
-
-;; One of the thing that annoyed me with Ido is that it is always at the bottom in the minibuffer and raise the mode line. If you are like me, you may want to open Helm window in the current window where point is in, so you don't have to move eyes far away from the upper-half of the window to the minibuffer. This is problematic if you have large monitor (i.e. 24 inches or above).
-
-;; By setting this:
-
-;; (setq helm-split-window-in-side-p t)
-(setq helm-split-window-inside-p t)
-
-;; Now, Helm always opens a small window right inside and at the lower half of current window. No more random Helm window!
-;; You may want to remove the header line for Helm command with only one source. For Helm command with multiple sources, the header line appears as a very thin line. This is fine, but if you want Helm to be a bit smart, that is, keep the full source header line when multiple sources and hidden when there's a single source, you can add the following function to helm-before-initialize-hook:
-;; (Now, Helm appears as usual when there's multiple sources.)
-
-(defvar helm-source-header-default-background (face-attribute 'helm-source-header :background))
-(defvar helm-source-header-default-foreground (face-attribute 'helm-source-header :foreground))
-(defvar helm-source-header-default-box (face-attribute 'helm-source-header :box))
-
-(defun helm-toggle-header-line ()
-  (if (> (length helm-sources) 1)
-      (set-face-attribute 'helm-source-header
-                          nil
-                          :foreground helm-source-header-default-foreground
-                          :background helm-source-header-default-background
-                          :box helm-source-header-default-box
-                          :height 1.0)
-    (set-face-attribute 'helm-source-header
-                        nil
-                        :foreground (face-attribute 'helm-selection :background)
-                        :background (face-attribute 'helm-selection :background)
-                        :box nil
-                        :height 0.1)))
 
     ;; Tuhdo says to put this but if I do emacs spits error mesage on start up.
     ;;(require 'setup-helm)
@@ -398,6 +375,9 @@ Requires `call-process-to-string' from `functions'."
 ;;                                         "/media/dgm/blue/documents/proyectos/mtj/"
 ;;                                         "/media/dgm/blue/documents/dropbox/"
 ;;                                         "/media/dgm/blue/documents/templates"))
+
+(add-to-list 'projectile-globally-ignored-files "*.png")
+(setq projectile-globally-ignored-file-suffixes '(".cache"))
 
 (with-eval-after-load 'helm
   ;; Need `with-eval-after-load' here since 'helm-map is not defined in 'helm-config.

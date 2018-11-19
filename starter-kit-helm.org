@@ -33,11 +33,52 @@ See https://github.com/emacs-helm/helm/issues/2085
 
 From: https://github.com/danielmai/.emacs.d/blob/master/config.org
 
+** =helm-ag=:  Interface with Ag ("The Silver Searcher")
+
+The Silver Searcher is grep-like program implemented by =C=. An attempt to make something better than =ack-grep=.
+
+It searches pattern about 3–5x faster than ack-grep. It ignores file patterns from your .gitignore and .hgignore. 
+
+[[https://github.com/ggreer/the_silver_searcher][The Silver Searcher]] is a very fast, smart code search tool, similar to
+ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://github.com/Wilfred/ag.el/#agel][described here]].
+
+*** Critical options: 
+
+1. =-n --norecurse= Don't recurse into directories 
+2. =-r --recurse= Recurse into directories when searching. Default it true.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
+;; Originally in starter-kit-bindings.org like this
+;;  (require 'ag)
+;;  (define-key global-map "\C-x\C-a" 'ag) 
+;;  (define-key global-map "\C-x\C-r" 'ag-regexp)
+
+;; new bindings by DGM to try and use 'helm-ag
+;;  (define-key global-map "\C-x\C-a" 'helm-ag) 
+;;  (define-key global-map "\C-x\C-r" 'helm-ag-regexp)
+
+(use-package ag 
+  :ensure t)
+
 (use-package helm-ag
   :ensure t
-  :after helm-mode)
+  :after (helm-mode ag))
 
+(setq helm-ag-base-command "/usr/bin/ag")
+;; (setq helm-ag-use-agignore t) ;; should work with projectile.cache included in .gitignore
+(setq helm-ag-command-option " --hidden") ;; search in hidden files
+
+(setq helm-ag-insert-at-point t)
+(setq helm-ag-fuzzy-match t)
+#+END_SRC
+
+#+RESULTS:
+: t
+ 
+
+** =helm-swoop=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package helm-swoop
   :ensure t
   :after helm-mode
@@ -257,58 +298,6 @@ Disabled as it gives rise to lisp error
 (require 'helm-descbinds)
 (helm-descbinds-mode)
 #+END_SRC
-* Tuhdo's customization of Helm's appearance
-
-From: https://www.reddit.com/r/emacs/comments/2z7nbv/lean_helm_window/
-
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq  helm-display-header-line nil)
-;; Helm window is too big? That's why you have helm-autoresize-mode:
-
-(helm-autoresize-mode -1)
-
-;; The resizing is too annoying and you only want the window to be less varied or even at a different fixed size rather than the default size? It can be done with:
-
-(setq helm-autoresize-max-height 30)
-(setq helm-autoresize-min-height 30)
-
-;; Now, you have a Helm window that always takes 30% of your frame height.
-
-;; One of the thing that annoyed me with Ido is that it is always at the bottom in the minibuffer and raise the mode line. If you are like me, you may want to open Helm window in the current window where point is in, so you don't have to move eyes far away from the upper-half of the window to the minibuffer. This is problematic if you have large monitor (i.e. 24 inches or above).
-
-;; By setting this:
-
-;; (setq helm-split-window-in-side-p t)
-(setq helm-split-window-inside-p t)
-
-;; Now, Helm always opens a small window right inside and at the lower half of current window. No more random Helm window!
-;; You may want to remove the header line for Helm command with only one source. For Helm command with multiple sources, the header line appears as a very thin line. This is fine, but if you want Helm to be a bit smart, that is, keep the full source header line when multiple sources and hidden when there's a single source, you can add the following function to helm-before-initialize-hook:
-;; (Now, Helm appears as usual when there's multiple sources.)
-
-(defvar helm-source-header-default-background (face-attribute 'helm-source-header :background))
-(defvar helm-source-header-default-foreground (face-attribute 'helm-source-header :foreground))
-(defvar helm-source-header-default-box (face-attribute 'helm-source-header :box))
-
-(defun helm-toggle-header-line ()
-  (if (> (length helm-sources) 1)
-      (set-face-attribute 'helm-source-header
-                          nil
-                          :foreground helm-source-header-default-foreground
-                          :background helm-source-header-default-background
-                          :box helm-source-header-default-box
-                          :height 1.0)
-    (set-face-attribute 'helm-source-header
-                        nil
-                        :foreground (face-attribute 'helm-selection :background)
-                        :background (face-attribute 'helm-selection :background)
-                        :box nil
-                        :height 0.1)))
-#+END_SRC
-
-#+RESULTS:
-: helm-toggle-header-line
-
 * Helm and gtags
 
 Further customization of =gtags= with =helm=, from http://tuhdo.github.io/c-ide.html.
@@ -687,6 +676,19 @@ Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs and Tuhdo  
 
 #+RESULTS: projectile
 | ~/.emacs.d/ | ~/texmf/ | ~/Dropbox/gtd/ |
+
+
+** Advice from Tuhdo for ignoring files
+
+From https://github.com/bbatsov/projectile/issues/184
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list 'projectile-globally-ignored-files "*.png")
+(setq projectile-globally-ignored-file-suffixes '(".cache"))
+#+END_SRC
+
+#+RESULTS:
+| .cache |
 
 * EXWM
 

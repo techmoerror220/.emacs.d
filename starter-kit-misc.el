@@ -1,17 +1,62 @@
 ;; dgm added customizations intended for modeline, following https://github.com/bbatsov/solarized-emacs
 
 ;; make the modeline high contrast
- (setq solarized-high-contrast-mode-line t)
+;; (setq solarized-high-contrast-mode-line t)
 
 ;; powerline by milkman
 (require 'powerline)
 (display-time-mode 1)
 (powerline-default-theme)
 
-  (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
+
+;;  add (setq custom-safe-themes t) to your init file before you load your theme. This will treat all themes as safe, which could be a risk in theory, but if ;; you are only installing themes from trusted sources, I don't see any issue 
+;; https://emacs.stackexchange.com/questions/18932/stop-emacs-asking-if-a-theme-is-safe
+ (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
   (setq custom-safe-themes t)
+
+;;(use-package solarized-theme
+;;  :defer 10
+;;  :init
+;;  (setq solarized-use-variable-pitch nil)
+;;  (setq solarized-height-plus-1 1.0)
+;;  :ensure t)
+
+
+;; From https://github.com/andschwa/.emacs.d/blob/master/init.el and https://github.com/bbatsov/solarized-emacs
+
+(use-package solarized-theme
+  :init 
+  (setq solarized-distinct-fringe-background t) ;; make the fringe stand out from the background 
+  (setq solarized-use-variable-pitch nil)       ;; Don't change the font for some headings and titles
+  (setq solarized-high-contrast-mode-line t)    ;; make the modeline high contrast
+  (setq solarized-use-less-bold t)              ;; Use less bolding
+  (setq solarized-use-more-italic t)            ;; Use more italics
+  (setq solarized-emphasize-indicators nil)     ;; Use less colors for indicators such as git:gutter, flycheck and similar
+  (setq solarized-scale-org-headlines nil)      ;; Don't change size of org-mode headlines (but keep other size-changes)
+  ;; Avoid all font-size changes
+  (setq solarized-height-minus-1 1.0)
+  (setq solarized-height-plus-1 1.0)
+  (setq solarized-height-plus-2 1.0)
+  (setq solarized-height-plus-3 1.0)
+  (setq solarized-height-plus-4 1.0)
+  (setq x-underline-at-descent-line t)
+  :config
+  (defun toggle-theme ()
+    "Switch between Solarized variants."
+    (interactive)
+    (cond
+     ((member 'solarized-dark custom-enabled-themes)
+      (disable-theme 'solarized-dark)
+      (load-theme 'solarized-light t))
+     ((member 'solarized-light custom-enabled-themes)
+      (disable-theme 'solarized-light)
+      (load-theme 'solarized-dark t))))
+  (load-theme 'solarized-dark t))
+
+
+
 ;;  (load-theme 'zenburn t)
-(load-theme 'solarized-dark t)
+;; (load-theme 'solarized-dark t)
 ;;  (load-theme 'solarized-light t)
 ;;  (load-theme 'darktooth t)
 ;;  (load-theme 'soothe t)

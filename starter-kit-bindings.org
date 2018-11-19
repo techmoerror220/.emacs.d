@@ -401,30 +401,6 @@ The following function for occur-dwim is taken from Oleh Krehel from his blog po
 #+RESULTS:
 : occur-dwim
 
-** Interface with Ag ("The Silver Searcher")
-
-The Silver Searcher is grep-like program implemented by =C=. An attempt to make something better than =ack-grep=.
-
-It searches pattern about 3–5x faster than ack-grep. It ignores file patterns from your .gitignore and .hgignore. 
-
-[[https://github.com/ggreer/the_silver_searcher][The Silver Searcher]] is a very fast, smart code search tool, similar to
-ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://github.com/Wilfred/ag.el/#agel][described here]].
-
-#+source: ag
-#+begin_src emacs-lisp 
-  (require 'ag)
-  (define-key global-map "\C-x\C-a" 'ag) 
-  (define-key global-map "\C-x\C-r" 'ag-regexp)
-
-;; new bindings by DGM to try and use 'helm-ag
-;;  (define-key global-map "\C-x\C-a" 'helm-ag) 
-;;  (define-key global-map "\C-x\C-r" 'helm-ag-regexp)
-
-#+end_src
-
-#+RESULTS: ag
-: ag-regexp
-
 ** Winner mode
 
 Winner mode allows you to undo/redo changes to window changes in Emacs.
@@ -623,3 +599,7 @@ First mark the word, then add more cursors. To get out of multiple-cursors-mode,
   (message "Starter Kit Bindings loaded.")
 #+end_src
   
+
+
+
+
