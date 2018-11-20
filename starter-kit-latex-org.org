@@ -167,9 +167,7 @@ DGM note: This code calls on the stuff in the =~/texmf= directory that allows us
    #+RESULTS: orgmode-latex-export
    : ox-latex
 
-
 * The  /LaTeX/ route 
-
 ** Set default engine 
 
 Custom variables kludge. Why can't I get these to work via =setq=?
@@ -194,6 +192,8 @@ Watch out! If I want to change to latex (instead of xelatex), and I have a =cust
 ;; )
 #+END_SRC
 
+#+RESULTS:
+: default
 
 ** =pdfLaTeX= Org Export Settings 
 
@@ -238,6 +238,9 @@ Turn off the default toc behavior; deal with it properly in headers to files.
 (setq org-latex-format-toc-function 'org-latex-no-toc)
 #+END_SRC
 
+#+RESULTS:
+: org-latex-no-toc
+
 Originally the package =minted= was not working with /LaTeX/ even though it worked with /XeLaTeX/. I found the solution reading this https://emacs.stackexchange.com/questions/27982/export-code-blocks-in-org-mode-with-minted-environment
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -254,7 +257,6 @@ Originally the package =minted= was not working with /LaTeX/ even though it work
    #+RESULTS:
    | minted | org-preamble-pdflatex | t |
 
-
 * Final message
 #+source: message-line
 #+begin_src emacs-lisp :tangle yes
@@ -263,6 +265,8 @@ Originally the package =minted= was not working with /LaTeX/ even though it work
 
 #+RESULTS: message-line
 : Starter Kit LaTeX-Org loaded.
+
+
 
 
 
