@@ -2091,7 +2091,6 @@ From http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/. Opens
 
 Code originally by Caolan that made shell-pop a read-only buffer
 
-
 *** Using dumb-jump to jump to definitions
 The dumb-jump package provides 'jump to definition' support for multiple languages by simply searching for possible definitions using The Silver Searcher ag, ripgrep rg, or grep. It does not require building stored indexes (TAGS) or background processes etc.
 
