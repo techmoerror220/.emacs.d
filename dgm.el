@@ -1231,19 +1231,6 @@ only if this merge job is part of a group, i.e., was invoked from within
   :commands ace-jump-mode
   :bind ("C-s-s" . ace-jump-mode))
 
-(use-package racket-mode
-  :ensure t
-  :commands racket-mode
-  :config
-  (setq racket-smart-open-bracket-enable t))
-
-(use-package geiser
-  :ensure t
-  :defer t
-  :config
-  (setq geiser-active-implementations '(chicken guile racket scheme))
-  (setq geiser-default-implementation '(racket)))
-
 (use-package smartscan
   :ensure t
   :config (global-smartscan-mode 1))
@@ -1501,7 +1488,8 @@ selects backward.)"
   (diminish 'pandoc-mode) 
   (diminish 'projectile-mode) 
   (diminish 'browse-kill-ring-mode) 
-  (diminish 'auto-fill-mode)
+  (diminish 'auto-fill-mode) 
+  (diminish 'refill-mode)
 
 (setq  helm-display-header-line nil)
 

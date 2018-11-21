@@ -2040,7 +2040,7 @@ Set environment variable so running CHICKEN Scheme suites via the 'test' egg wil
 #+RESULTS:
 : 1
 
-Add my home bin directory to PATH (when I have it)
+Add my home bin directory to PATH (when I have it) (check next section that is currently commented out because I'm using Purcell's package for setting the environment variables.)
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (setenv "PATH" (concat "/home/dgm/bin:" (getenv "PATH")))
@@ -2627,26 +2627,6 @@ See Emacs Rocks Episode 10 for a screencast: http://emacsrocks.com/e10.html
 #+RESULTS:
 : ace-jump-mode
 
-*** Racket
-Starting to use Racket now, mainly for programming paradigms class, though I’m looking forward to some “REPL-driven development” whenever I get the chance.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package racket-mode
-  :ensure t
-  :commands racket-mode
-  :config
-  (setq racket-smart-open-bracket-enable t))
-
-(use-package geiser
-  :ensure t
-  :defer t
-  :config
-  (setq geiser-active-implementations '(chicken guile racket scheme))
-  (setq geiser-default-implementation '(racket)))
-#+END_SRC
-
-#+RESULTS:
-
 *** Smartscan
 Quickly jumps between other symbols found at point in Emacs.
 
@@ -3187,6 +3167,7 @@ PS: recall that the =diminish= package is installed in =starter-kit.org=.
   (diminish 'projectile-mode) 
   (diminish 'browse-kill-ring-mode) 
   (diminish 'auto-fill-mode) 
+  (diminish 'refill-mode) 
 #+END_SRC
 
 #+RESULTS:

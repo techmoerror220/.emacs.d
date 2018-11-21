@@ -122,10 +122,10 @@ The following packages will be downloaded and installed.
                                     'which-key
                                     'eval-in-repl
                                     'ebib
-                                    'helm-bibtex
+                                    ;; 'helm-bibtex
                                     'helm-R
                                     'iedit
-                                    'geiser
+                                    ;; 'geiser
                                     'helm-gtags
                                     'darktooth-theme
                                     'soothe-theme

@@ -418,6 +418,8 @@ If MSG is nil, use message at point."
   (interactive)
   (kill-new (mu4e-message-field (or msg (mu4e-message-at-point)) :message-id)))
 
+(setq mu4e-split-view 'nil)
+
 (provide 'starter-kit-mu4e)
 
 (message "Starter Kit User Mu4e File loaded.")

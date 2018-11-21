@@ -783,6 +783,16 @@ If MSG is nil, use message at point."
 #+RESULTS:
 : ambrevar/mu4e-kill-ring-save-message-id
 
+* Playing with =split-view=
+
+From https://www.djcbsoftware.nl/code/mu/mu4e/Split-view.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-split-view 'nil)
+#+END_SRC
+
+#+RESULTS:
+
 * Provide 
 
 #+BEGIN_SRC emacs-lisp :tangle yes

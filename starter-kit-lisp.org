@@ -182,7 +182,71 @@ idea to extend this feature beyond simply the =fn= function.
 			'(("(\\|)" . 'esk-paren-face)))
 #+end_src
 
+#+RESULTS:
+
+** Racket
+Starting to use Racket now, mainly for programming paradigms class, though I'm looking forward to some “REPL-driven development” whenever I get the chance.
+Turned off as it seems Geiser works better.
+
+#+BEGIN_SRC emacs-lisp 
+(use-package racket-mode
+  :ensure t
+  :commands racket-mode
+  :mode ("\\.rkt\\'" . racket-mode) ;; to enable racket-mode when I open a .rkt file
+  :config
+  (setq racket-smart-open-bracket-enable t))
+
+(add-hook 'racket-mode-hook      #'racket-unicode-input-method-enable)
+(add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
+
+(add-hook 'racket-mode-hook 'run-starter-kit-coding-hook)
+;; (add-hook 'racket-mode-hook 'idle-highlight)
+(font-lock-add-keywords 'lisp-mode
+			'(("(\\|)" . 'esk-paren-face)))
+
+(add-hook 'racket-mode-hook
+          (lambda ()
+            (define-key racket-mode-map (kbd "C-c C-r") 'racket-run)))
+
+;;  (sp-local-pair 'racket-mode "'" nil :actions nil) check this with smartparens instead, so that in lisps I don't get two ' 
+
+;;  (sp-local-pair 'racket-mode "`" nil :actions nil))
+;; from https://github.com/matklad/.emacs.d/blob/master/rc/coding.el
+
+#+END_SRC
+
+#+RESULTS:
+| (lambda nil (define-key racket-mode-map (kbd C-c C-r) 'racket-run)) | (lambda nil (define-key racket-mode-map (kbd C-c r) 'racket-run)) | run-starter-kit-coding-hook | racket-unicode-input-method-enable |
+
+** Geiser
+
+Trying to use racket-mode by default.
+
+#+BEGIN_SRC emacs-lisp
+;;(use-package geiser
+;;  :ensure t
+;;  :defer t
+;;  :config
+;;  (setq geiser-active-implementations '(chicken guile racket scheme)) ;; racket taken out
+;;  (setq geiser-default-implementation '(racket)))
+#+END_SRC
+
+#+RESULTS:
+
+
+* Final message
+
 #+source: message-line
 #+begin_src emacs-lisp
   (message "Starter Kit Lisp loaded.")
 #+end_src
+
+
+
+
+
+
+
+
+
+

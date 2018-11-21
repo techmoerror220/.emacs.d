@@ -140,4 +140,25 @@ Kills existing SLIME session, if any."
 (font-lock-add-keywords 'lisp-mode
 			'(("(\\|)" . 'esk-paren-face)))
 
+(use-package racket-mode
+  :ensure t
+  :commands racket-mode
+  :config
+  (setq racket-smart-open-bracket-enable t))
+
+(add-hook 'racket-mode-hook      #'racket-unicode-input-method-enable)
+(add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
+
+(add-hook 'racket-mode-hook 'run-starter-kit-coding-hook)
+;; (add-hook 'racket-mode-hook 'idle-highlight)
+(font-lock-add-keywords 'lisp-mode
+			'(("(\\|)" . 'esk-paren-face)))
+
+;;(use-package geiser
+;;  :ensure t
+;;  :defer t
+;;  :config
+;;  (setq geiser-active-implementations '(chicken guile racket scheme)) ;; racket taken out
+;;  (setq geiser-default-implementation '(racket)))
+
   (message "Starter Kit Lisp loaded.")
