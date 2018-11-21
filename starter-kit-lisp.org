@@ -55,6 +55,14 @@ I can't recall why I commented this out... previously I had used the option =:ta
 			'(("(\\|)" . 'esk-paren-face)))
 #+end_src
 
+From  https://github.com/matklad/.emacs.d/blob/master/rc/coding.el and https://github.com/Fuco1/smartparens/wiki/Pair-management. Not needed any more given the new =smartparens= implementation.
+
+#+BEGIN_SRC emacs-lisp 
+;;(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
+;;(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil)
+#+END_SRC
+
+
 ** Clojure
 
 #+begin_src emacs-lisp
@@ -166,6 +174,15 @@ idea to extend this feature beyond simply the =fn= function.
 
 ** Scheme
 
+From http://coldnew.github.io/coldnew-emacs/#orgheadline284
+
+#+BEGIN_SRC emacs-lisp
+(use-package scheme
+  :mode ("\\.scm\\'" . scheme-mode)
+
+(add-hook 'scheme-mode-hook 'geiser-mode)
+#+END_SRC
+
 #+begin_src emacs-lisp
 (add-hook 'scheme-mode-hook 'run-starter-kit-coding-hook)
 ;; (add-hook 'scheme-mode-hook 'idle-highlight)
@@ -192,43 +209,57 @@ Turned off as it seems Geiser works better.
 (use-package racket-mode
   :ensure t
   :commands racket-mode
-  :mode ("\\.rkt\\'" . racket-mode) ;; to enable racket-mode when I open a .rkt file
+  :mode ("\\.rkt[dl]\\'" . racket-mode) ;; to enable racket-mode when I open a .rkt file. See http://coldnew.github.io/coldnew-emacs/#orgheadline1
   :config
   (setq racket-smart-open-bracket-enable t))
+#+END_SRC
 
-(add-hook 'racket-mode-hook      #'racket-unicode-input-method-enable)
-(add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
-
+Configuration that I've copied from above and applied to racket
+#+BEGIN_SRC emacs-lisp 
 (add-hook 'racket-mode-hook 'run-starter-kit-coding-hook)
 ;; (add-hook 'racket-mode-hook 'idle-highlight)
 (font-lock-add-keywords 'lisp-mode
 			'(("(\\|)" . 'esk-paren-face)))
 
-(add-hook 'racket-mode-hook
-          (lambda ()
-            (define-key racket-mode-map (kbd "C-c C-r") 'racket-run)))
-
-;;  (sp-local-pair 'racket-mode "'" nil :actions nil) check this with smartparens instead, so that in lisps I don't get two ' 
-
-;;  (sp-local-pair 'racket-mode "`" nil :actions nil))
-;; from https://github.com/matklad/.emacs.d/blob/master/rc/coding.el
-
 #+END_SRC
 
-#+RESULTS:
-| (lambda nil (define-key racket-mode-map (kbd C-c C-r) 'racket-run)) | (lambda nil (define-key racket-mode-map (kbd C-c r) 'racket-run)) | run-starter-kit-coding-hook | racket-unicode-input-method-enable |
+
+Configuration from https://github.com/greghendershott/racket-mode 
+
+#+BEGIN_SRC emacs-lisp 
+(add-hook 'racket-mode-hook      #'racket-unicode-input-method-enable)
+(add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
+#+END_SRC
+
+In the Git of racket-mode at https://github.com/greghendershott/racket-mode they propose this binding, but why? Already =C-c C-c= does the job of =racket-run=.
+
+#+BEGIN_SRC emacs-lisp 
+;;(add-hook 'racket-mode-hook
+;;          (lambda ()
+;;            (define-key racket-mode-map (kbd "C-c r") 'racket-run)))
+#+END_SRC
+
+From  https://github.com/matklad/.emacs.d/blob/master/rc/coding.el and https://github.com/Fuco1/smartparens/wiki/Pair-management but the new implementation of =smartparens= make this redundant. 
+
+#+BEGIN_SRC emacs-lisp 
+;;(sp-local-pair 'racket-mode "'" nil :actions nil) 
+;;(sp-local-pair 'racket-mode "`" nil :actions nil)
+#+END_SRC
+
 
 ** Geiser
 
-Trying to use racket-mode by default.
+On opening a scheme file, Geiser will try to guess its Scheme,  defaulting to the first in the list. Use `C-c C-s' to select the implementation by hand (on a per file basis). From http://coldnew.github.io/coldnew-emacs/#orgheadline284
+
+From http://www.maxxcan.com/racket-en-emacs/ I get it that =geiser= is the way of using racket inside org
 
 #+BEGIN_SRC emacs-lisp
-;;(use-package geiser
-;;  :ensure t
-;;  :defer t
-;;  :config
-;;  (setq geiser-active-implementations '(chicken guile racket scheme)) ;; racket taken out
-;;  (setq geiser-default-implementation '(racket)))
+(use-package geiser
+  :ensure t
+  :defer t
+  :config
+  (setq geiser-active-implementations '(racket chicken guile)) 
+  (setq geiser-default-implementation '(racket)))
 #+END_SRC
 
 #+RESULTS:

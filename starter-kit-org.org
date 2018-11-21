@@ -383,7 +383,7 @@ display a list of the code blocks commands and their related keys.
 ** Code blocks
 This activates a number of widely used languages, you are encouraged
 to activate more languages using the customize interface for the
-=org-babel-load-languages= variable, or with an elisp form like the
+=xorg-babel-load-languages= variable, or with an elisp form like the
 one below.  The customize interface of =org-babel-load-languages=
 contains an up to date list of the currently supported languages.
 
@@ -404,13 +404,12 @@ contains an up to date list of the currently supported languages.
     (stata . t)
     (shell . t)
     (latex . t)
+    (scheme . t)
     ))
 
 
 ;; I am following Ista Zahn here: don't include (stata . t) but do (require 'ob-stata) afterwards. Stil, when I do so, I get the Debugger entered--Lisp error: (void-variable inferior-STA-program-name)
 ;; eval(inferior-STA-program-name) so the problem comes from =ob-stata=.
-
-
 #+end_src
 
 #+RESULTS:
