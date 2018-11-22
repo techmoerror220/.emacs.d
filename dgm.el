@@ -1465,6 +1465,9 @@ selects backward.)"
    (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
    (pdf-tools-install t t t))
 
+(use-package markdown-mode
+  :ensure t)
+
   (diminish 'which-key-mode)
   (diminish 'linum-relative-mode)
   (diminish 'hungry-delete-mode)

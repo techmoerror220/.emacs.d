@@ -231,7 +231,7 @@ When windows get out of order, you can rotate them.
 
 ** Start a regular shell if you prefer that.
 #+begin_src emacs-lisp 
-(global-set-key (kbd "s--") 'shell)
+;;(global-set-key (kbd "s--") 'shell)
 #+end_src
 
 #+RESULTS:

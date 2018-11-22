@@ -96,8 +96,15 @@ Set up AUCTeX to work with the Evince PDF viewer.
 ** Load Support Packages
 *** Prettify Math in Buffers
 #+source: latex-pretty-symbols 
-#+begin_src emacs-lisp :tangle no
-;;  (require 'latex-pretty-symbols)
+#+begin_src emacs-lisp :tangle yes
+(use-package latex-pretty-symbols
+  :ensure t)
+(add-hook 'LaTeX-mode-hook 'latex-unicode-simplified) 
+#+END_SRC
+
+#+RESULTS: latex-pretty-symbols
+| latex-unicode-simplified | TeX-PDF-mode | (lambda nil (local-set-key  v 'ebib-insert-bibtex-key)) | turn-on-reftex |
+
 #+end_src
 
 *** Load RefTeX
@@ -164,8 +171,9 @@ Set up AUCTeX to work with the Evince PDF viewer.
 #+RESULTS: reftex-support
 : t
 
+
 *** Load ebib
-    ebib is a bibtex database manager that works inside emacs. It can
+    =ebib= is a bibtex database manager that works inside emacs. It can
     talk to org-mode. See [[http://ebib.sourceforge.net/][the ebib project page]] for more. When Ebib is
     loaded, you can run it with =M-x ebib=.
   
@@ -249,7 +257,16 @@ Allow AucTeX to use biber as well as/instead of bibtex.
 
 #+end_src
 
+** Bibtex 
+
+From https://tex.stackexchange.com/questions/454966/biblatex-custom-entries-with-emacs-bibtex-mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+#+END_SRC
+
 *** Use Biblatex key template by default in bib files
+
 #+source: bibtex-dialect
 #+begin_src emacs-lisp :tangle yes
 (setq bibtex-dialect "BibTeX")
@@ -257,6 +274,14 @@ Allow AucTeX to use biber as well as/instead of bibtex.
 
 #+RESULTS: bibtex-dialect
 : BibTeX
+*** Keep all entries in sorted order
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq bibtex-maintain-sorted-entries t)
+#+END_SRC
+
+#+RESULTS:
+: t
 
 *** Use '-' as the separator in auto-generated bibtex keys
 We use this (rather than the underscore character) for compatibilty with Pandoc.
@@ -266,6 +291,36 @@ We use this (rather than the underscore character) for compatibilty with Pandoc.
   (setq bibtex-autokey-titleword-separator "_")
   (setq bibtex-autokey-year-title-separator ":_")
 #+end_src
+
+*** Entry cleaning with bibtex
+
+Customize BibTeX bibtex-clean-entry as in https://github.com/higham/dot-emacs/blob/master/.emacs
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq bibtex-entry-format
+      `(page-dashes required-fields
+         numerical-fields whitespace last-comma delimiters
+         unify-case sort-fields))
+
+(setq bibtex-field-delimiters 'double-quotes)
+(setq bibtex-entry-delimiters 'braces)
+#+END_SRC
+
+#+RESULTS:
+: braces
+
+Higham prefers closing brace on its own line after cleaning BibTeX entry. I don't
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq bibtex-clean-entry-hook 'mybibtex-clean-extra)
+(defun mybibtex-clean-extra ()
+  "Move final right brace to a line of its own."
+  (progn (bibtex-end-of-entry) (left-char) (newline-and-indent)
+         (insert "      ")))
+#+END_SRC
+
+
+
 
 ** Configure RefTeX
 *** Default Bibliography

@@ -1638,7 +1638,7 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 #+RESULTS:
 : hrs/rename-file
 
-*** COMMENT Generate scratch buffer
+*** Generate scratch buffer
 Rendered obsolete by =scratch= package.
 
 #+begin_src emacs-lisp :tangle yes
@@ -2009,7 +2009,6 @@ However, I disable it or else the copy/paste emacs bindings won't work in extern
 
 #+RESULTS:
 : t
-
 *** Place cursor at beginning of search matches
 From: http://www.emacswiki.org/emacs/IncrementalSearch#toc4. With this hook, both ‘C-g’ and ‘RET’ exit the search at the begining of the search string rather than the end. To get back to where you started the search, just use ‘C-x C-x’. This works because isearch sets the mark at the search start.
 
@@ -2068,7 +2067,7 @@ However, once I used the script sent from Stata Corp. to make stata work after u
 
 However, I've tangled it up to "no" because I think this is not needed now that I use Purcell's package =exec-path-from-shell=.
 
-*** COMMENT Shell pop-up terminal
+*** Shell pop-up terminal
 
 Its window behavour is crazy, plus I can define an easy shortcut for popping a shell, so I don't see the point.
 
@@ -2079,11 +2078,13 @@ From http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/. Opens
   :ensure t
   :bind (("s--" . shell-pop))
   :config
-  (setq shell-pop-shell-type "ansi-term")
+  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell))))))
+
+;;  (setq shell-pop-shell-type "ansi-term")
   (setq shell-pop-term-shell "/bin/bash")
   (setq shell-pop-universal-key "s--")
   ;; need to do this manually or not picked up by `shell-pop'
-  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
+  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type)
 #+END_SRC
 
 #+RESULTS:
@@ -3128,6 +3129,15 @@ Tweaking from Ambrevar's dot file. However, his original combination of colors w
    (setq pdf-view-midnight-colors '("black" . "#EDD1B9" )) ; peach is the answer.
    (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
    (pdf-tools-install t t t))
+#+END_SRC
+
+#+RESULTS:
+
+** Markdown-mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package markdown-mode
+  :ensure t)
 #+END_SRC
 
 #+RESULTS:

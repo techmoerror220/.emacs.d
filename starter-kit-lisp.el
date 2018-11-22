@@ -143,6 +143,7 @@ Kills existing SLIME session, if any."
 (use-package racket-mode
   :ensure t
   :commands racket-mode
+  :mode ("\\.rkt\\'" . racket-mode) ;; to enable racket-mode when I open a .rkt file
   :config
   (setq racket-smart-open-bracket-enable t))
 
@@ -153,6 +154,15 @@ Kills existing SLIME session, if any."
 ;; (add-hook 'racket-mode-hook 'idle-highlight)
 (font-lock-add-keywords 'lisp-mode
 			'(("(\\|)" . 'esk-paren-face)))
+
+(add-hook 'racket-mode-hook
+          (lambda ()
+            (define-key racket-mode-map (kbd "C-c C-r") 'racket-run)))
+
+;;  (sp-local-pair 'racket-mode "'" nil :actions nil) check this with smartparens instead, so that in lisps I don't get two ' 
+
+;;  (sp-local-pair 'racket-mode "`" nil :actions nil))
+;; from https://github.com/matklad/.emacs.d/blob/master/rc/coding.el
 
 ;;(use-package geiser
 ;;  :ensure t

@@ -71,7 +71,7 @@ A pandoc menu for markdown and tex files.
 #+end_src
 
 #+RESULTS:
-: pandoc-main-hydra/body
+| turn-on-reftex | pandoc-load-default-settings |
 
 *** Export options 
 
