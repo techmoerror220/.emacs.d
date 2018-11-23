@@ -1045,6 +1045,16 @@ only if this merge job is part of a group, i.e., was invoked from within
 
 (setenv "TEST_USE_ANSI" "1")
 
+(use-package shell-pop
+  :ensure t
+  :bind (("s--" . shell-pop))
+  :config
+  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+  (setq shell-pop-term-shell "/bin/bash")
+  (setq shell-pop-universal-key "s--")
+  ;; need to do this manually or not picked up by `shell-pop'
+  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
+
 (use-package dumb-jump
   :ensure t
   :init (lambda ()

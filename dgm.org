@@ -2073,24 +2073,22 @@ Its window behavour is crazy, plus I can define an easy shortcut for popping a s
 
 From http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/. Opens a quick ANSI terminal in the directory of the currently open file.
 
-#+BEGIN_SRC emacs-lisp :tangle no
+Code originally by Caolan that made shell-pop a read-only buffer in https://caolan.org/dotfiles/emacs.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package shell-pop
   :ensure t
   :bind (("s--" . shell-pop))
   :config
-  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell))))))
-
-;;  (setq shell-pop-shell-type "ansi-term")
+  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
   (setq shell-pop-term-shell "/bin/bash")
   (setq shell-pop-universal-key "s--")
   ;; need to do this manually or not picked up by `shell-pop'
-  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type)
+  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
 #+END_SRC
 
 #+RESULTS:
 : shell-pop
-
-Code originally by Caolan that made shell-pop a read-only buffer
 
 *** Using dumb-jump to jump to definitions
 The dumb-jump package provides 'jump to definition' support for multiple languages by simply searching for possible definitions using The Silver Searcher ag, ripgrep rg, or grep. It does not require building stored indexes (TAGS) or background processes etc.
