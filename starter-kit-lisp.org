@@ -178,10 +178,13 @@ From http://coldnew.github.io/coldnew-emacs/#orgheadline284
 
 #+BEGIN_SRC emacs-lisp
 (use-package scheme
-  :mode ("\\.scm\\'" . scheme-mode)
+  :mode ("\\.scm\\'" . scheme-mode))
 
 (add-hook 'scheme-mode-hook 'geiser-mode)
 #+END_SRC
+
+#+RESULTS:
+| geiser-mode | geiser-mode--maybe-activate |
 
 #+begin_src emacs-lisp
 (add-hook 'scheme-mode-hook 'run-starter-kit-coding-hook)
@@ -189,6 +192,8 @@ From http://coldnew.github.io/coldnew-emacs/#orgheadline284
 (font-lock-add-keywords 'scheme-mode
 			'(("(\\|)" . 'esk-paren-face)))
 #+end_src
+
+#+RESULTS:
 
 ** Common Lisp
 
@@ -214,7 +219,8 @@ Turned off as it seems Geiser works better.
   (setq racket-smart-open-bracket-enable t))
 #+END_SRC
 
-Configuration that I've copied from above and applied to racket
+Configuration that I've copied from above and applied to racket:
+
 #+BEGIN_SRC emacs-lisp 
 (add-hook 'racket-mode-hook 'run-starter-kit-coding-hook)
 ;; (add-hook 'racket-mode-hook 'idle-highlight)
@@ -223,6 +229,8 @@ Configuration that I've copied from above and applied to racket
 
 #+END_SRC
 
+#+RESULTS:
+
 
 Configuration from https://github.com/greghendershott/racket-mode 
 
@@ -230,6 +238,9 @@ Configuration from https://github.com/greghendershott/racket-mode
 (add-hook 'racket-mode-hook      #'racket-unicode-input-method-enable)
 (add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
 #+END_SRC
+
+#+RESULTS:
+| racket-unicode-input-method-enable |
 
 In the Git of racket-mode at https://github.com/greghendershott/racket-mode they propose this binding, but why? Already =C-c C-c= does the job of =racket-run=.
 
@@ -248,7 +259,6 @@ From  https://github.com/matklad/.emacs.d/blob/master/rc/coding.el and https://g
 
 
 ** Geiser
-
 On opening a scheme file, Geiser will try to guess its Scheme,  defaulting to the first in the list. Use `C-c C-s' to select the implementation by hand (on a per file basis). From http://coldnew.github.io/coldnew-emacs/#orgheadline284
 
 From http://www.maxxcan.com/racket-en-emacs/ I get it that =geiser= is the way of using racket inside org
@@ -263,6 +273,7 @@ From http://www.maxxcan.com/racket-en-emacs/ I get it that =geiser= is the way o
 #+END_SRC
 
 #+RESULTS:
+: t
 
 
 * Final message

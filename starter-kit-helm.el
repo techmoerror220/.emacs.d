@@ -5,29 +5,6 @@
   (helm-mode 1)
   (require 'helm-config))
 
-;; Originally in starter-kit-bindings.org like this
-;;  (require 'ag)
-;;  (define-key global-map "\C-x\C-a" 'ag) 
-;;  (define-key global-map "\C-x\C-r" 'ag-regexp)
-
-;; new bindings by DGM to try and use 'helm-ag
-;;  (define-key global-map "\C-x\C-a" 'helm-ag) 
-;;  (define-key global-map "\C-x\C-r" 'helm-ag-regexp)
-
-(use-package ag 
-  :ensure t)
-
-(use-package helm-ag
-  :ensure t
-  :after (helm-mode ag))
-
-(setq helm-ag-base-command "/usr/bin/ag")
-;; (setq helm-ag-use-agignore t) ;; should work with projectile.cache included in .gitignore
-(setq helm-ag-command-option " --hidden") ;; search in hidden files
-
-(setq helm-ag-insert-at-point t)
-(setq helm-ag-fuzzy-match t)
-
 (use-package helm-swoop
   :ensure t
   :after helm-mode
@@ -330,7 +307,12 @@ Requires `call-process-to-string' from `functions'."
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z... direct from Tuhdo!
 
     ;; Projectile
-    (require 'projectile)
+    (use-package projectile
+      :ensure t
+      :config (projectile-global-mode t))
+
+    (setq projectile-enable-caching t) ;; update 22 nov 2018. In C-h v projectile-indexing-metho they recommend to have it set to aliena to have this other variable set to true. If it does not work, revert to instructions in emacs's cheatsheet.
+    ;; (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
 
     ;; https://github.com/bbatsov/projectile/issues/1183
     ;; trying to fix slow behaviour of emacs
@@ -338,30 +320,26 @@ Requires `call-process-to-string' from `functions'."
          '(:eval (format " Projectile[%s]"
                         (projectile-project-name))))
 
-    (projectile-global-mode)
-
     ;; from https://github.com/bbatsov/projectile#usage
     ;; (projectile-mode +1) ;; don't know what this does.
     ;; (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
-    ;; nota que todo funciona menos la que usa la =p=, no se por que
-    (define-key projectile-mode-map [?\s-d] 'projectile-find-dir)
-    ;; (define-key projectile-mode-map [?\s-p] 'projectile-switch-project)
-    ;; (define-key projectile-mode-map [?\s-f] 'projectile-find-file) ;; used now with helm-find-files and exwm
-    ;; (define-key projectile-mode-map [?\s-g] 'projectile-grep)      ;; used now with helm-find-files and exwm
+    (define-key projectile-mode-map [?\s-d] 'projectile-switch-project)
+    (define-key projectile-mode-map [?\s-D] 'projectile-find-dir-dwim)
+    (define-key projectile-mode-map [?\s-u] 'helm-projectile-find-file-in-known-projects) 
+    (define-key projectile-mode-map [?\s-y] 'projectile-ag)      
 
-    ;; (setq projectile-enable-caching t)
-    (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
 
     (use-package helm-projectile
       :ensure t
-      :after helm-mode
+      :after helm-mode 
+      :init     
+      (setq projectile-completion-system 'helm)
       :commands helm-projectile
     ;;   :bind ("C-c p h" . helm-projectile)
     )
 
-    (setq projectile-completion-system 'helm)
     (helm-projectile-on)   ;;; creo que no hace falta tras decir =ensure t= in use-package.
     (setq projectile-switch-project-action 'helm-projectile)
 
@@ -369,20 +347,41 @@ Requires `call-process-to-string' from `functions'."
   ;; You can go one step further and set a list of folders which Projectile is automatically going to check for projects:
 
   (setq projectile-project-search-path '("~/.emacs.d/"
-;;                                         "~/.oh-my-zsh/"
                                          "~/texmf/"
-                                         "~/Dropbox/gtd/"))
-;;                                         "/media/dgm/blue/documents/proyectos/mtj/"
-;;                                         "/media/dgm/blue/documents/dropbox/"
-;;                                         "/media/dgm/blue/documents/templates"))
+                                         "~/Dropbox/gtd/"
+                                         "/media/dgm/blue/documents/proyectos/mtj/"
+                                         "/media/dgm/blue/documents/dropbox/"
+                                         "/media/dgm/blue/documents/UNED/"
+                                         "/media/dgm/blue/documents/templates"))
 
 (add-to-list 'projectile-globally-ignored-files "*.png")
 (setq projectile-globally-ignored-file-suffixes '(".cache"))
 
+;; Originally in starter-kit-bindings.org like this
+;;  (require 'ag)
+;;  (define-key global-map "\C-x\C-a" 'ag) 
+;;  (define-key global-map "\C-x\C-r" 'ag-regexp)
+
+;; new bindings by DGM to try and use 'helm-ag
+;;  (define-key global-map "\C-x\C-a" 'helm-ag) 
+;;  (define-key global-map "\C-x\C-r" 'helm-ag-regexp)
+
+(use-package ag 
+  :ensure t)
+
+(use-package helm-ag
+  :ensure t
+  :after (helm-mode ag)
+  :bind ("M-p" . helm-projectile-ag)
+  :init (setq helm-ag-base-command "/usr/bin/ag"
+              helm-ag-insert-at-point t
+              helm-ag-fuzzy-match     t
+              helm-ag-command-option " --hidden" 
+              helm-ag-use-agignore t))
+
 (with-eval-after-load 'helm
   ;; Need `with-eval-after-load' here since 'helm-map is not defined in 'helm-config.
-  (ambrevar/define-keys helm-map
-                        "s-\\" 'helm-toggle-resplit-and-swap-windows)
+  ;;  (ambrevar/define-keys helm-map "s-\\" 'helm-toggle-resplit-and-swap-windows) ;; already used in starter-kit-exwm.org for ambrevar/toggle-window-split
   (exwm-input-set-key (kbd "s-c") #'helm-resume)
   (exwm-input-set-key (kbd "s-b") #'helm-mini)
   (exwm-input-set-key (kbd "s-f") #'helm-find-files)

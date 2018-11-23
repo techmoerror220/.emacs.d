@@ -115,7 +115,7 @@
 
 (global-set-key (kbd "C-x M") (lambda () (interactive) (eshell t)))
 
-(global-set-key (kbd "s--") 'shell)
+;;(global-set-key (kbd "s--") 'shell)
 
  (add-to-list 'display-buffer-alist
               `(,(rx string-start "*shell*" string-end)

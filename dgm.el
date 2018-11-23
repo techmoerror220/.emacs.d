@@ -855,6 +855,12 @@ point reaches the beginning or end of the buffer, stop there."
           (message "Renamed '%s' -> '%s'" filename new-name))
       (message "Buffer '%s' isn't backed by a file!" (buffer-name)))))
 
+(defun hrs/generate-scratch-buffer ()
+  "Create and switch to a temporary scratch buffer with a random
+     name."
+  (interactive)
+  (switch-to-buffer (make-temp-name "scratch-")))
+
 (defun hrs/visit-last-dired-file ()
   "Open the last file in an open dired buffer."
   (interactive)
@@ -1464,6 +1470,9 @@ selects backward.)"
    (setq pdf-view-midnight-colors '("black" . "#EDD1B9" )) ; peach is the answer.
    (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
    (pdf-tools-install t t t))
+
+(use-package markdown-mode
+  :ensure t)
 
   (diminish 'which-key-mode)
   (diminish 'linum-relative-mode)

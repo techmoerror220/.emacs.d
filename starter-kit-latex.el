@@ -33,6 +33,10 @@
 ;;    (shell-command "osascript -e 'tell application \"Emacs\" to activate' &"))
 ;;    (add-hook 'server-switch-hook 'raise-emacs-on-aqua)
 
+(use-package latex-pretty-symbols
+  :ensure t)
+(add-hook 'LaTeX-mode-hook 'latex-unicode-simplified)
+
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
   (add-hook 'pandoc-mode-hook 'turn-on-reftex)  ; with Pandoc mode
   (autoload 'reftex-mode     "reftex" "RefTeX Minor Mode" t)
@@ -138,10 +142,22 @@
     '(add-to-list 'TeX-command-list '("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber"))
     )
 
+
+
 (setq bibtex-dialect "BibTeX")
+
+(setq bibtex-maintain-sorted-entries t)
 
   (setq bibtex-autokey-titleword-separator "_")
   (setq bibtex-autokey-year-title-separator ":_")
+
+(setq bibtex-entry-format
+      `(page-dashes required-fields
+         numerical-fields whitespace last-comma delimiters
+         unify-case sort-fields))
+
+(setq bibtex-field-delimiters 'double-quotes)
+(setq bibtex-entry-delimiters 'braces)
 
   (setq reftex-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
 
