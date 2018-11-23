@@ -78,7 +78,7 @@
 (add-hook 'before-save-hook 'cleanup-buffer-hook)
 
 (setq cleanup-buffer-modes 
-      '(haskell-mode emacs-lisp-mode lisp-mode scheme-mode
+      '(haskell-mode emacs-lisp-mode lisp-mode racket-mode
                      ess-mode erlang-mode clojure-mode ruby-mode))
 
 (defun recentf-ido-find-file () 

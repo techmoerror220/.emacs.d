@@ -1,4 +1,4 @@
-;; -*- emacs-lisp -*- <18/11/13 20:43:39 /home/dgm/.emacs.d/tramp>
+;; -*- emacs-lisp -*- <18/11/23 22:01:51 /home/dgm/.emacs.d/tramp>
 ;; Tramp connection history.  Don't change this file.
 ;; You can delete it, forcing Tramp to reapply the checks.
 
@@ -27,4 +27,6 @@
   ("bzr" nil)
   ("git" "\\git")
   ("hg" nil)
-  ("~root" "/root")))
+  ("~root" "/root"))
+ ((tramp-file-name "sudo" "root" nil "toshiba" nil nil nil)
+  nil))

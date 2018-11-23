@@ -29,8 +29,8 @@
 (font-lock-add-keywords 'emacs-lisp-mode
 			'(("(\\|)" . 'esk-paren-face)))
 
-;;(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
-;;(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil)
+;; (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
+;; (sp-local-pair 'emacs-lisp-mode "`" nil :actions nil)
 
 (add-hook 'clojure-mode-hook 'run-starter-kit-coding-hook)
 ;; (add-hook 'clojure-mode-hook 'idle-highlight)
@@ -133,15 +133,15 @@ Kills existing SLIME session, if any."
          ("\\<partial\\>" ?þ)
          ("\\<complement\\>" ?¬)))))
 
-(use-package scheme
-  :mode ("\\.scm\\'" . scheme-mode))
+;;(use-package scheme
+;;  :mode ("\\.scm\\'" . scheme-mode))
 
-(add-hook 'scheme-mode-hook 'geiser-mode)
+;;(add-hook 'scheme-mode-hook 'geiser-mode)
 
-(add-hook 'scheme-mode-hook 'run-starter-kit-coding-hook)
-;; (add-hook 'scheme-mode-hook 'idle-highlight)
-(font-lock-add-keywords 'scheme-mode
-			'(("(\\|)" . 'esk-paren-face)))
+;;(add-hook 'scheme-mode-hook 'run-starter-kit-coding-hook)
+;; ;; (add-hook 'scheme-mode-hook 'idle-highlight)
+;;(font-lock-add-keywords 'scheme-mode
+;;			'(("(\\|)" . 'esk-paren-face)))
 
 (add-hook 'lisp-mode-hook 'run-starter-kit-coding-hook)
 ;; (add-hook 'lisp-mode-hook 'idle-highlight)
@@ -151,8 +151,9 @@ Kills existing SLIME session, if any."
 (use-package racket-mode
   :ensure t
   :commands racket-mode
-  :mode ("\\.rkt[dl]\\'" . racket-mode) ;; to enable racket-mode when I open a .rkt file. See http://coldnew.github.io/coldnew-emacs/#orgheadline1
-  :config
+  :mode 
+  ("\\.rkt[dl]?\\'" . racket-mode) ;; to enable racket-mode when I open a .rkt file. See http://coldnew.github.io/coldnew-emacs/#orgheadline1
+  :config 
   (setq racket-smart-open-bracket-enable t))
 
 (add-hook 'racket-mode-hook 'run-starter-kit-coding-hook)
@@ -167,14 +168,39 @@ Kills existing SLIME session, if any."
 ;;          (lambda ()
 ;;            (define-key racket-mode-map (kbd "C-c r") 'racket-run)))
 
-;;(sp-local-pair 'racket-mode "'" nil :actions nil) 
-;;(sp-local-pair 'racket-mode "`" nil :actions nil)
+;; (sp-local-pair 'racket-mode "'" nil :actions nil) 
+;; (sp-local-pair 'racket-mode "`" nil :actions nil)
 
-(use-package geiser
+;;(use-package geiser
+;;  :ensure t
+;;  :defer t
+;;  :config
+;;  (setq geiser-active-implementations '(racket chicken guile)) 
+;;  (setq geiser-default-implementation '(racket)))
+
+(use-package smartparens
   :ensure t
-  :defer t
+  :diminish smartparens-mode
   :config
-  (setq geiser-active-implementations '(racket chicken guile)) 
-  (setq geiser-default-implementation '(racket)))
+  (progn
+    (require 'smartparens-config)
+    (smartparens-global-mode 1)
+    (show-smartparens-global-mode +1)
+    (sp-use-paredit-bindings)
+    (setq sp-base-key-bindings 'paredit)
+    (setq sp-autoskip-closing-pair 'always)
+    (setq sp-hybrid-kill-entire-symbol nil)))
+
+(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
+(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil) 
+
+(sp-local-pair 'racket-mode "'" nil :actions nil) 
+(sp-local-pair 'racket-mode "`" nil :actions nil)
+
+(sp-local-pair 'fundamental-mode "'" nil :actions nil) 
+(sp-local-pair 'fundamental-mode "`" nil :actions nil)
+
+;;   (smartparens-global-mode 1)
+;;  (require 'smartparens-config) ;; To use the default configuration that smartparens provides for Lisp modes generally and for racket-mode specifically
 
   (message "Starter Kit Lisp loaded.")

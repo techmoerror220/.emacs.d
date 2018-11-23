@@ -1150,7 +1150,7 @@ only if this merge job is part of a group, i.e., was invoked from within
 (use-package swiper
   :ensure t)
 
-(global-set-key (kbd "<s-return>") 'swiper)
+;; (global-set-key (kbd "<s-return>") 'swiper) ;; I'm gonna use this for helm-projectile
 (setq ivy-display-style 'fancy)
 
 ;;advise swiper to recenter on exit
@@ -1498,7 +1498,7 @@ selects backward.)"
   (diminish 'rainbow-mode)
   (diminish 'undo-tree-mode)
   (diminish 'editorconfig-mode)
-  (diminish 'smartparens-mode)
+;;  (diminish 'smartparens-mode) ;; added in -text.org
   (diminish 'minimal-mode)
   (diminish 'org-mode)
   (diminish 'org-indent-mode)
@@ -1508,7 +1508,8 @@ selects backward.)"
   (diminish 'projectile-mode) 
   (diminish 'browse-kill-ring-mode) 
   (diminish 'auto-fill-mode) 
-  (diminish 'refill-mode)
+  (diminish 'refill-mode) 
+  (diminish 'helm-gtags-mode)
 
 (setq  helm-display-header-line nil)
 

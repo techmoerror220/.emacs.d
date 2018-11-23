@@ -39,17 +39,6 @@
     ;;  (require 'centered-cursor-mode)
     ;;  (global-centered-cursor-mode +1))
 
-  (smartparens-global-mode 1)
-  (require 'smartparens-config) ;; To use the default configuration that smartparens provides for Lisp modes generally and for racket-mode specifically
-  (setq sp-base-key-bindings 'paredit)
-  (setq sp-autoskip-closing-pair 'always)
-  (setq sp-hybrid-kill-entire-symbol nil)
-  (sp-use-paredit-bindings)
-  (show-smartparens-global-mode +1)
-
-(sp-local-pair 'fundamental-mode "'" nil :actions nil) 
-(sp-local-pair 'fundamental-mode "`" nil :actions nil)
-
       (autoload 'markdown-mode "markdown-mode"
       "Major mode for editing Markdown files" t)
       (setq auto-mode-alist

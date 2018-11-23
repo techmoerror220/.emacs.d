@@ -57,9 +57,11 @@ I can't recall why I commented this out... previously I had used the option =:ta
 
 From  https://github.com/matklad/.emacs.d/blob/master/rc/coding.el and https://github.com/Fuco1/smartparens/wiki/Pair-management. Not needed any more given the new =smartparens= implementation.
 
+I move it to -text.org
+
 #+BEGIN_SRC emacs-lisp 
-;;(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
-;;(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil)
+;; (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
+;; (sp-local-pair 'emacs-lisp-mode "`" nil :actions nil) 
 #+END_SRC
 
 
@@ -177,23 +179,20 @@ idea to extend this feature beyond simply the =fn= function.
 From http://coldnew.github.io/coldnew-emacs/#orgheadline284
 
 #+BEGIN_SRC emacs-lisp
-(use-package scheme
-  :mode ("\\.scm\\'" . scheme-mode))
+;;(use-package scheme
+;;  :mode ("\\.scm\\'" . scheme-mode))
 
-(add-hook 'scheme-mode-hook 'geiser-mode)
+;;(add-hook 'scheme-mode-hook 'geiser-mode)
 #+END_SRC
 
-#+RESULTS:
-| geiser-mode | geiser-mode--maybe-activate |
 
 #+begin_src emacs-lisp
-(add-hook 'scheme-mode-hook 'run-starter-kit-coding-hook)
-;; (add-hook 'scheme-mode-hook 'idle-highlight)
-(font-lock-add-keywords 'scheme-mode
-			'(("(\\|)" . 'esk-paren-face)))
+;;(add-hook 'scheme-mode-hook 'run-starter-kit-coding-hook)
+;; ;; (add-hook 'scheme-mode-hook 'idle-highlight)
+;;(font-lock-add-keywords 'scheme-mode
+;;			'(("(\\|)" . 'esk-paren-face)))
 #+end_src
 
-#+RESULTS:
 
 ** Common Lisp
 
@@ -214,10 +213,12 @@ Turned off as it seems Geiser works better.
 (use-package racket-mode
   :ensure t
   :commands racket-mode
-  :mode ("\\.rkt[dl]\\'" . racket-mode) ;; to enable racket-mode when I open a .rkt file. See http://coldnew.github.io/coldnew-emacs/#orgheadline1
-  :config
+  :mode 
+  ("\\.rkt[dl]?\\'" . racket-mode) ;; to enable racket-mode when I open a .rkt file. See http://coldnew.github.io/coldnew-emacs/#orgheadline1
+  :config 
   (setq racket-smart-open-bracket-enable t))
 #+END_SRC
+
 
 Configuration that I've copied from above and applied to racket:
 
@@ -252,9 +253,11 @@ In the Git of racket-mode at https://github.com/greghendershott/racket-mode they
 
 From  https://github.com/matklad/.emacs.d/blob/master/rc/coding.el and https://github.com/Fuco1/smartparens/wiki/Pair-management but the new implementation of =smartparens= make this redundant. 
 
+Moved to -text.org
+
 #+BEGIN_SRC emacs-lisp 
-;;(sp-local-pair 'racket-mode "'" nil :actions nil) 
-;;(sp-local-pair 'racket-mode "`" nil :actions nil)
+;; (sp-local-pair 'racket-mode "'" nil :actions nil) 
+;; (sp-local-pair 'racket-mode "`" nil :actions nil)
 #+END_SRC
 
 
@@ -264,16 +267,52 @@ On opening a scheme file, Geiser will try to guess its Scheme,  defaulting to th
 From http://www.maxxcan.com/racket-en-emacs/ I get it that =geiser= is the way of using racket inside org
 
 #+BEGIN_SRC emacs-lisp
-(use-package geiser
-  :ensure t
-  :defer t
-  :config
-  (setq geiser-active-implementations '(racket chicken guile)) 
-  (setq geiser-default-implementation '(racket)))
+;;(use-package geiser
+;;  :ensure t
+;;  :defer t
+;;  :config
+;;  (setq geiser-active-implementations '(racket chicken guile)) 
+;;  (setq geiser-default-implementation '(racket)))
 #+END_SRC
 
 #+RESULTS:
 : t
+
+
+** Smartparens Mode
+   Smart autopairing of quotes and parentheses. 
+   The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
+#+srcname: smartparens
+#+begin_src emacs-lisp 
+(use-package smartparens
+  :ensure t
+  :diminish smartparens-mode
+  :config
+  (progn
+    (require 'smartparens-config)
+    (smartparens-global-mode 1)
+    (show-smartparens-global-mode +1)
+    (sp-use-paredit-bindings)
+    (setq sp-base-key-bindings 'paredit)
+    (setq sp-autoskip-closing-pair 'always)
+    (setq sp-hybrid-kill-entire-symbol nil)))
+
+(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
+(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil) 
+
+(sp-local-pair 'racket-mode "'" nil :actions nil) 
+(sp-local-pair 'racket-mode "`" nil :actions nil)
+
+(sp-local-pair 'fundamental-mode "'" nil :actions nil) 
+(sp-local-pair 'fundamental-mode "`" nil :actions nil)
+
+;;   (smartparens-global-mode 1)
+;;  (require 'smartparens-config) ;; To use the default configuration that smartparens provides for Lisp modes generally and for racket-mode specifically
+#+end_src
+
+#+RESULTS: smartparens
+: t
+
 
 
 * Final message

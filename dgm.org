@@ -2358,7 +2358,7 @@ I like me some searching, the default search is very meh. In emacs, you mostly u
 From: http://pragmaticemacs.com/emacs/dont-search-swipe/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key (kbd "<s-return>") 'swiper)
+;; (global-set-key (kbd "<s-return>") 'swiper) ;; I'm gonna use this for helm-projectile
 (setq ivy-display-style 'fancy)
 #+END_SRC
 
@@ -3166,7 +3166,7 @@ PS: recall that the =diminish= package is installed in =starter-kit.org=.
   (diminish 'rainbow-mode)
   (diminish 'undo-tree-mode)
   (diminish 'editorconfig-mode)
-  (diminish 'smartparens-mode)
+;;  (diminish 'smartparens-mode) ;; added in -text.org
   (diminish 'minimal-mode)
   (diminish 'org-mode)
   (diminish 'org-indent-mode)
@@ -3177,6 +3177,7 @@ PS: recall that the =diminish= package is installed in =starter-kit.org=.
   (diminish 'browse-kill-ring-mode) 
   (diminish 'auto-fill-mode) 
   (diminish 'refill-mode) 
+  (diminish 'helm-gtags-mode) 
 #+END_SRC
 
 #+RESULTS:

@@ -588,7 +588,7 @@ Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs and Tuhdo  
       :ensure t
       :config (projectile-global-mode t))
 
-    (setq projectile-enable-caching t) ;; update 22 nov 2018. In C-h v projectile-indexing-metho they recommend to have it set to aliena to have this other variable set to true. If it does not work, revert to instructions in emacs's cheatsheet.
+    (setq projectile-enable-caching t) ;; update 22 nov 2018. In C-h v projectile-indexing-method they recommend to have it set to aliena to have this other variable set to true. If it does not work, revert to instructions in emacs's cheatsheet.
     ;; (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
 
     ;; https://github.com/bbatsov/projectile/issues/1183
@@ -604,7 +604,6 @@ Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs and Tuhdo  
 
     (define-key projectile-mode-map [?\s-d] 'projectile-switch-project)
     (define-key projectile-mode-map [?\s-D] 'projectile-find-dir-dwim)
-    (define-key projectile-mode-map [?\s-u] 'helm-projectile-find-file-in-known-projects) 
     (define-key projectile-mode-map [?\s-y] 'projectile-ag)      
 
 
@@ -618,8 +617,9 @@ Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs and Tuhdo  
     )
 
     (helm-projectile-on)   ;;; creo que no hace falta tras decir =ensure t= in use-package.
+    (define-key projectile-mode-map [?\s-u] 'helm-projectile-find-file-in-known-projects) 
     (setq projectile-switch-project-action 'helm-projectile)
-
+    (global-set-key (kbd "<s-return>") 'helm-projectile)
   ;; from https://projectile.readthedocs.io/en/latest/usage/
   ;; You can go one step further and set a list of folders which Projectile is automatically going to check for projects:
 
