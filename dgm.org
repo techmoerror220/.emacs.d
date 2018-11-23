@@ -2,6 +2,7 @@
 #+OPTIONS: toc:nil num:nil ^:nil
 #+PROPERTY: header-args :tangle yes
 
+Adding this line to test magit.
 
 * Starter Kit kjhealy
 This file contains local customizations---ones that in some cases
