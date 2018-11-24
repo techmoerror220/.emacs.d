@@ -178,29 +178,4 @@ Kills existing SLIME session, if any."
 ;;  (setq geiser-active-implementations '(racket chicken guile)) 
 ;;  (setq geiser-default-implementation '(racket)))
 
-(use-package smartparens
-  :ensure t
-  :diminish smartparens-mode
-  :config
-  (progn
-    (require 'smartparens-config)
-    (smartparens-global-mode 1)
-    (show-smartparens-global-mode +1)
-    (sp-use-paredit-bindings)
-    (setq sp-base-key-bindings 'paredit)
-    (setq sp-autoskip-closing-pair 'always)
-    (setq sp-hybrid-kill-entire-symbol nil)))
-
-(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
-(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil) 
-
-(sp-local-pair 'racket-mode "'" nil :actions nil) 
-(sp-local-pair 'racket-mode "`" nil :actions nil)
-
-(sp-local-pair 'fundamental-mode "'" nil :actions nil) 
-(sp-local-pair 'fundamental-mode "`" nil :actions nil)
-
-;;   (smartparens-global-mode 1)
-;;  (require 'smartparens-config) ;; To use the default configuration that smartparens provides for Lisp modes generally and for racket-mode specifically
-
   (message "Starter Kit Lisp loaded.")

@@ -115,12 +115,6 @@
 
 (global-set-key (kbd "C-x M") (lambda () (interactive) (eshell t)))
 
-;;(global-set-key (kbd "s--") 'shell)
-
- (add-to-list 'display-buffer-alist
-              `(,(rx string-start "*shell*" string-end)
-               (display-buffer-below-selected)))
-
 ;;  (require 'smex)
 ;;  (smex-initialize)  
 ;;  (global-set-key (kbd "M-x") 'smex)  ;; I think this is superseded by helm now

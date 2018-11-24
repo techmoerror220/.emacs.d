@@ -173,7 +173,7 @@ Requires `call-process-to-string' from `functions'."
 ;; (setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
 (use-package helm-bibtex
   :ensure t)
-(global-set-key (kbd "<s-escape>") 'helm-bibtex)
+(global-set-key (kbd "<s-backspace>") 'helm-bibtex)
 
 (setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
 
@@ -322,8 +322,8 @@ Requires `call-process-to-string' from `functions'."
 
     ;; from https://github.com/bbatsov/projectile#usage
     ;; (projectile-mode +1) ;; don't know what this does.
-    ;; (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (define-key projectile-mode-map (kbd "s--") 'projectile-command-map)
+    ;;(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
     (define-key projectile-mode-map [?\s-d] 'projectile-switch-project)
     (define-key projectile-mode-map [?\s-D] 'projectile-find-dir-dwim)
@@ -352,7 +352,21 @@ Requires `call-process-to-string' from `functions'."
                                          "/media/dgm/blue/documents/proyectos/mtj/"
                                          "/media/dgm/blue/documents/dropbox/"
                                          "/media/dgm/blue/documents/UNED/"
+                                         "/media/dgm/blue/documents/data/eurostat"
                                          "/media/dgm/blue/documents/templates"))
+
+(add-to-list 'projectile-other-file-alist '("org" "el")) ;; switch from org -> el 
+(add-to-list 'projectile-other-file-alist '("el" "org")) ;; switch from el -> org 
+(add-to-list 'projectile-other-file-alist '("Rnw" "R"))
+(add-to-list 'projectile-other-file-alist '("R" "Rnw"))
+(add-to-list 'projectile-other-file-alist '("Rnw" "tex"))
+(add-to-list 'projectile-other-file-alist '("tex" "Rnw"))
+(add-to-list 'projectile-other-file-alist '("org" "tex"))
+(add-to-list 'projectile-other-file-alist '("tex" "org"))
+(add-to-list 'projectile-other-file-alist '("tex" "log"))
+(add-to-list 'projectile-other-file-alist '("log" "tex"))
+(add-to-list 'projectile-other-file-alist '("org" "html"))
+(add-to-list 'projectile-other-file-alist '("html" "org"))
 
 (add-to-list 'projectile-globally-ignored-files "*.png")
 (setq projectile-globally-ignored-file-suffixes '(".cache"))

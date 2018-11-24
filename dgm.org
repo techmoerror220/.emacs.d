@@ -2074,23 +2074,49 @@ Its window behavour is crazy, plus I can define an easy shortcut for popping a s
 
 From http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/. Opens a quick ANSI terminal in the directory of the currently open file.
 
-Code originally by Caolan that made shell-pop a read-only buffer in https://caolan.org/dotfiles/emacs.html
+Code originally by Caolan that made shell-pop a read-only buffer in https://caolan.org/dotfiles/emacs.html. But it had an erratic window behaviour. In the end, I kind of fixed it by using the code in https://www.emacswiki.org/emacs/ShellPop.
+The only issue remaining is that the first time round I call shell-pop it splits the window wrongly. Afterwards, it does it alright.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package shell-pop
   :ensure t
-  :bind (("s--" . shell-pop))
-  :config
-  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
-  (setq shell-pop-term-shell "/bin/bash")
-  (setq shell-pop-universal-key "s--")
+  :bind ("<s-escape>" . shell-pop))
+
+(setq shell-pop-default-directory "/home/dgm")
+  (setq shell-pop-set-internal-mode "shell")
+  (setq shell-pop-set-internal-mode-shell "/bin/bash")
+  (setq shell-pop-set-window-height 30) ;the number for the percentage of the selected window. if 100, shell-pop use the whole of selected window, not spliting.
+  (setq shell-pop-set-window-position "bottom") ;shell-pop-up position. You can choose "top" or "bottom".
+  ;; (setq shell-pop-window-size 30)
+  ;;(setq shell-pop-full-span t)
+  ;;(setq shell-pop-window-position "bottom")
+  ;;:config
+  ;;(setq shell-pop-shell-type (quote ("shell" "*shell*" (lambda nil (shell shell-pop-term-shell)))))
+  ;;(setq shell-pop-term-shell "/bin/bash")
   ;; need to do this manually or not picked up by `shell-pop'
-  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
+  ;;(shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
 #+END_SRC
 
 #+RESULTS:
-: shell-pop
+: bottom
+*** COMMENT Start a regular shell at the bottom.
+#+begin_src emacs-lisp 
+;;(global-set-key (kbd "s--") 'shell)
+#+end_src
 
+#+RESULTS:
+: shell
+
+And open it at the bottom of current window
+
+
+#+BEGIN_SRC emacs-lisp
+;; (add-to-list 'display-buffer-alist
+;;              `(,(rx string-start "*shell*" string-end)
+;;               (display-buffer-below-selected)))
+#+END_SRC
+
+#+RESULTS:
 *** Using dumb-jump to jump to definitions
 The dumb-jump package provides 'jump to definition' support for multiple languages by simply searching for possible definitions using The Silver Searcher ag, ripgrep rg, or grep. It does not require building stored indexes (TAGS) or background processes etc.
 
@@ -3173,7 +3199,7 @@ PS: recall that the =diminish= package is installed in =starter-kit.org=.
   (diminish 'volatile-highlights-mode) 
   (diminish 'highlight-symbol-mode) 
   (diminish 'pandoc-mode) 
-  (diminish 'projectile-mode) 
+;;  (diminish 'projectile-mode) 
   (diminish 'browse-kill-ring-mode) 
   (diminish 'auto-fill-mode) 
   (diminish 'refill-mode) 
@@ -3181,6 +3207,7 @@ PS: recall that the =diminish= package is installed in =starter-kit.org=.
 #+END_SRC
 
 #+RESULTS:
+|   |
 
 * Tuhdo's customization of Helm's appearance
 
@@ -3262,6 +3289,52 @@ If I place this in the =starter-kit-helm.org= file, for some reason, probably be
 #+END_SRC
 
 #+RESULTS:
+
+* Smartparens Mode
+   Smart autopairing of quotes and parentheses. 
+   The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
+#+srcname: smartparens
+#+begin_src emacs-lisp 
+(use-package smartparens
+  :ensure t
+  :diminish smartparens-mode
+  :config
+  (progn
+    (require 'smartparens-config)
+    (smartparens-global-mode 1)
+    (show-smartparens-global-mode +1)
+    (sp-use-paredit-bindings)
+    (setq sp-base-key-bindings 'paredit)
+    (setq sp-autoskip-closing-pair 'always)
+    (setq sp-hybrid-kill-entire-symbol nil)))
+
+(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
+(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil) 
+
+(sp-local-pair 'racket-mode "'" nil :actions nil) 
+(sp-local-pair 'racket-mode "`" nil :actions nil)
+
+(sp-local-pair 'fundamental-mode "'" nil :actions nil) 
+(sp-local-pair 'fundamental-mode "`" nil :actions nil)
+
+(sp-local-pair 'org-mode "'" nil :actions nil) 
+(sp-local-pair 'org-mode "`" nil :actions nil)
+
+;;   (smartparens-global-mode 1)
+;;  (require 'smartparens-config) ;; To use the default configuration that smartparens provides for Lisp modes generally and for racket-mode specifically
+#+end_src
+
+#+RESULTS: smartparens
+: t
+
+* Bookmark Plus
+
+https://www.emacswiki.org/emacs/BookmarkPlus
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'bookmark+)
+#+END_SRC
+
 
 * Final message
 #+source: message-line

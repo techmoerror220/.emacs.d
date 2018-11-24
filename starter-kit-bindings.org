@@ -223,35 +223,10 @@ When windows get out of order, you can rotate them.
 #+begin_src emacs-lisp 
 (global-set-key (kbd "C-x m") 'eshell)
 #+end_src
-
 ** Start a new eshell even if one is active.
 #+begin_src emacs-lisp 
 (global-set-key (kbd "C-x M") (lambda () (interactive) (eshell t)))
 #+end_src
-
-** Start a regular shell if you prefer that.
-#+begin_src emacs-lisp 
-;;(global-set-key (kbd "s--") 'shell)
-#+end_src
-
-#+RESULTS:
-: shell
-
-And open it at the bottom of current window
-
-
-#+BEGIN_SRC emacs-lisp
- (add-to-list 'display-buffer-alist
-              `(,(rx string-start "*shell*" string-end)
-               (display-buffer-below-selected)))
-#+END_SRC
-
-#+RESULTS:
-| \`\*shell\*\'    | (display-buffer-below-selected) |
-| \`\*Calendar\*\' | (display-buffer-below-selected) |
-| \*Calendar\*     | my-position-calendar-buffer     |
-
-
 ** Smex replaces M-x
 
 - Watch out (14 nov 2018): smex is built on top of ido mode and ido mode may interfere with Helm, so until I clarify this I disable this. 

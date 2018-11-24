@@ -1047,13 +1047,21 @@ only if this merge job is part of a group, i.e., was invoked from within
 
 (use-package shell-pop
   :ensure t
-  :bind (("s--" . shell-pop))
-  :config
-  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
-  (setq shell-pop-term-shell "/bin/bash")
-  (setq shell-pop-universal-key "s--")
+  :bind ("<s-escape>" . shell-pop))
+
+(setq shell-pop-default-directory "/home/dgm")
+  (setq shell-pop-set-internal-mode "shell")
+  (setq shell-pop-set-internal-mode-shell "/bin/bash")
+  (setq shell-pop-set-window-height 30) ;the number for the percentage of the selected window. if 100, shell-pop use the whole of selected window, not spliting.
+  (setq shell-pop-set-window-position "bottom") ;shell-pop-up position. You can choose "top" or "bottom".
+  ;; (setq shell-pop-window-size 30)
+  ;;(setq shell-pop-full-span t)
+  ;;(setq shell-pop-window-position "bottom")
+  ;;:config
+  ;;(setq shell-pop-shell-type (quote ("shell" "*shell*" (lambda nil (shell shell-pop-term-shell)))))
+  ;;(setq shell-pop-term-shell "/bin/bash")
   ;; need to do this manually or not picked up by `shell-pop'
-  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
+  ;;(shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
 
 (use-package dumb-jump
   :ensure t
@@ -1505,7 +1513,7 @@ selects backward.)"
   (diminish 'volatile-highlights-mode) 
   (diminish 'highlight-symbol-mode) 
   (diminish 'pandoc-mode) 
-  (diminish 'projectile-mode) 
+;;  (diminish 'projectile-mode) 
   (diminish 'browse-kill-ring-mode) 
   (diminish 'auto-fill-mode) 
   (diminish 'refill-mode) 
@@ -1538,5 +1546,35 @@ selects backward.)"
                         :background (face-attribute 'helm-selection :background)
                         :box nil
                         :height 0.1)))
+
+(use-package smartparens
+  :ensure t
+  :diminish smartparens-mode
+  :config
+  (progn
+    (require 'smartparens-config)
+    (smartparens-global-mode 1)
+    (show-smartparens-global-mode +1)
+    (sp-use-paredit-bindings)
+    (setq sp-base-key-bindings 'paredit)
+    (setq sp-autoskip-closing-pair 'always)
+    (setq sp-hybrid-kill-entire-symbol nil)))
+
+(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
+(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil) 
+
+(sp-local-pair 'racket-mode "'" nil :actions nil) 
+(sp-local-pair 'racket-mode "`" nil :actions nil)
+
+(sp-local-pair 'fundamental-mode "'" nil :actions nil) 
+(sp-local-pair 'fundamental-mode "`" nil :actions nil)
+
+(sp-local-pair 'org-mode "'" nil :actions nil) 
+(sp-local-pair 'org-mode "`" nil :actions nil)
+
+;;   (smartparens-global-mode 1)
+;;  (require 'smartparens-config) ;; To use the default configuration that smartparens provides for Lisp modes generally and for racket-mode specifically
+
+(require 'bookmark+)
 
 (message "Starter Kit User (DGM) File loaded.")
