@@ -1898,7 +1898,7 @@ Split the windows horizontally instead of vertically as I find it easier to foll
 (setq ediff-split-window-function 'split-window-horizontally)
 #+END_SRC
 
-Restore the windows after Ediff quits. By default, when you quit the Ediff session with q, it just leaves the two diff windows around, instead of restoring the window configuration from when Ediff was started.
+Restore the windows after Ediff quits. By default, when you quit the Ediff session with =q=, it just leaves the two diff windows around, instead of restoring the window configuration from when Ediff was started.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;;(winner-mode)
@@ -2263,14 +2263,15 @@ symon can be toggled on and off with =super+h=.
 #+RESULTS:
 : symon-mode
 
-*** Default shell should be bash
+*** COMMENT Default shell should be bash
 I don’t know why this is a thing, but asking me what shell to launch every single time I open a terminal makes me want to slap babies, this gets rid of it. This goes without saying but you can replace bash with your shell of choice.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+DGM: not needed now that I use =pop-shell= plus I don't know why it's now working 
+#+BEGIN_SRC emacs-lisp :tangle no
 (defvar my-term-shell "/bin/bash")
 (defadvice ansi-term (before force-bash)
   (interactive (list my-term-shell)))
-(ad-activate 'ansi-term)
+(ad-activate 'ansi-shell)
 #+END_SRC
 
 #+RESULTS:
@@ -2347,10 +2348,11 @@ This magnificent package takes care of this issue. It’s unnoticeable if you ha
 #+RESULTS:
 : switch-window
 
-***** Following window splits
+***** COMMENT Following window splits
 After you split a window, your focus remains in the previous one. This annoyed me so much I wrote these two, they take care of it.
+Note: I've commented this out because below I implement the same functionality. See [[split]]
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun split-and-follow-horizontally ()
   (interactive)
   (split-window-below)
@@ -2518,7 +2520,7 @@ Regardless of where your cursor is, this quickly copies a line.
 And this quickly deletes a line.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key (kbd "s-l") 'kill-whole-line)
+(global-set-key (kbd "M-s-k") 'kill-whole-line)
 #+END_SRC
 
 #+RESULTS:
@@ -2601,7 +2603,7 @@ Here we make page-break characters look pretty, instead of appearing as ^L in Em
 
 #+RESULTS:
 
-*** Split window and move to new window
+*** Split window and move to new window <<split>>
 
 Whenever I split windows, I usually do so and also switch to the other window as well, so might as well rebind the splitting key bindings to do just that to reduce the repetition.
 
@@ -2624,11 +2626,12 @@ Whenever I split windows, I usually do so and also switch to the other window as
 #+RESULTS:
 : hsplit-other-window
 
-*** Transpose frame
+*** COMMENT Transpose frame
 
 Check it out here: https://www.emacswiki.org/emacs/TransposeFrame
+Commented out because I don't work with frames and because this functionality is already implemented with =s-\=
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package transpose-frame
   :ensure t
   :bind ("C-c t" . transpose-frame))
@@ -2637,12 +2640,14 @@ Check it out here: https://www.emacswiki.org/emacs/TransposeFrame
 #+RESULTS :
 : transpose-frame
 
-*** Ace-jump 
+*** COMMENT Ace-jump 
 A quick way to jump around text in buffers.
 
 See Emacs Rocks Episode 10 for a screencast: http://emacsrocks.com/e10.html
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Commented out as =C-o= does the same and =s-s= even better as it applies to any letter anywhere in the buffer.
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package ace-jump-mode
   :ensure t
   :diminish ace-jump-mode
@@ -2678,7 +2683,7 @@ http://www.masteringemacs.org/article/smart-scan-jump-symbols-buffer
 : smartscan-symbol-go-backward
 
 *** Smoothscrolling
-This makes it so =C-n-=ing and =C-p-=ing won’t make the buffer jump around so much.
+This makes it so =C-n-=ing and =C-p-= ing won’t make the buffer jump around so much.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package smooth-scrolling
@@ -2779,10 +2784,12 @@ I leave it out as it doesn't work with =exwm=
 #+RESULTS:
 : Testing 2 dashboard chunk is evaluated.
 
-** Mark current word
+** COMMENT Mark current word
 From https://www.emacswiki.org/emacs/MarkCommands#toc7
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Commented out as =s-/= does the same and with a better shortcut, as defined  [[select]]
+
+#+BEGIN_SRC emacs-lisp :tangle no
   (defun my-mark-current-word (&optional arg allow-extend)
     "Put point at beginning of current word, set mark at end."
     (interactive "p\np")
@@ -2879,7 +2886,8 @@ Brackets includes ASCII and Unicode brackets or quotation marks. Deleting one br
         (?\{ . ?\})))
 #+END_SRC
 
-** Select whole word
+** Select whole word <<select>>
+
 From https://emacs.stackexchange.com/questions/35069/best-way-to-select-a-word
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -2973,6 +2981,9 @@ Quickly force rescan. You can avoid auto rescanning big buffers just making it e
 
 #+RESULTS:
 : my-imenu-rescan
+
+
+*** Go to symbol easily 
 
 =.el= file for function =ido-goto-symbol= downloaded from https://www.emacswiki.org/emacs/ImenuMode#toc10
 
@@ -3319,6 +3330,8 @@ If I place this in the =starter-kit-helm.org= file, for some reason, probably be
 
 (sp-local-pair 'org-mode "'" nil :actions nil) 
 (sp-local-pair 'org-mode "`" nil :actions nil)
+
+(sp-local-pair 'latex-mode "=" nil :actions nil) 
 
 ;;   (smartparens-global-mode 1)
 ;;  (require 'smartparens-config) ;; To use the default configuration that smartparens provides for Lisp modes generally and for racket-mode specifically

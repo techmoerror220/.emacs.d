@@ -1,10 +1,12 @@
 *.el~
 *.org~
-backups/*
-auto-save-list/*
+tramp
+backups/
+auto-save-list/
 places
-url
+url/
 session*
+semanticdb/
 ## exported files
 starter-kit*html
 starter-kit*tex
@@ -26,6 +28,7 @@ dgm*out
 dgm*synctex(busy)
 dgm*xdv
 dgm*log
+eshell/
 eshell/lastdir
 eshell/history
 ## org stuff
@@ -43,10 +46,13 @@ recentf
 smex-items
 history
 .org-id-locations
+elpa/archives/
+
+
+
+
+
+projectile.cache
 elpa/archives
-elpa/archives/melpa/archive-contents
-semanticdb/
-
-
-
-
+projectile.cache
+elpa/archives/

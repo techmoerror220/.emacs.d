@@ -285,6 +285,9 @@ Make yasnippet work properly with org-mode.
 
 #+end_src
 
+#+RESULTS:
+| (lambda nil (highlight-symbol-mode)) | org-table-stripes-enable | org-mode-reftex-setup | org-ref-org-menu | (lambda nil (org-bullets-mode)) | turn-off-auto-fill | ambrevar/turn-off-indent-tabs | ambrevar/turn-off-linum | (lambda nil (visual-line-mode 1)) | org-indent-mode | (lambda nil (set-face-attribute 'org-level-1 nil :height 1.5) (set-face-attribute 'org-level-2 nil :height 1.2) (set-face-attribute 'org-level-3 nil :height 1.1) (set-face-attribute 'org-level-4 nil :height 1.1) (set-face-attribute 'org-level-5 nil :height 1.1)) | (lambda nil (local-set-key \216 'outline-next-visible-heading) (local-set-key \220 'outline-previous-visible-heading) (local-set-key \225 'outline-up-heading) (local-set-key \227 'org-table-copy-region) (local-set-key \231 'org-table-paste-rectangle) (local-set-key \214 'org-table-sort-lines) (local-set-key \311 'org-toggle-iimage-in-org)) | (lambda nil (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)) | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | org-eldoc-load |
+
 #+begin_src emacs-lisp :tangle yes
   (add-hook 'org-mode-hook
             (lambda ()
@@ -305,6 +308,9 @@ Make yasnippet work properly with org-mode.
               ))
 #+end_src
 
+#+RESULTS:
+| (lambda nil (highlight-symbol-mode)) | org-table-stripes-enable | org-mode-reftex-setup | org-ref-org-menu | (lambda nil (org-bullets-mode)) | turn-off-auto-fill | ambrevar/turn-off-indent-tabs | ambrevar/turn-off-linum | (lambda nil (visual-line-mode 1)) | org-indent-mode | (lambda nil (set-face-attribute 'org-level-1 nil :height 1.5) (set-face-attribute 'org-level-2 nil :height 1.2) (set-face-attribute 'org-level-3 nil :height 1.1) (set-face-attribute 'org-level-4 nil :height 1.1) (set-face-attribute 'org-level-5 nil :height 1.1)) | (lambda nil (local-set-key \216 'outline-next-visible-heading) (local-set-key \220 'outline-previous-visible-heading) (local-set-key \225 'outline-up-heading) (local-set-key \227 'org-table-copy-region) (local-set-key \231 'org-table-paste-rectangle) (local-set-key \214 'org-table-sort-lines) (local-set-key \311 'org-toggle-iimage-in-org)) | (lambda nil (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)) | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | org-eldoc-load |
+
 
 Original hook from =dgm.org=
 
@@ -319,7 +325,7 @@ Original hook from =dgm.org=
 #+END_SRC
 
 #+RESULTS:
-| er/add-org-mode-expansions | (lambda nil (org-bullets-mode)) | turn-off-auto-fill | ambrevar/turn-off-indent-tabs | ambrevar/turn-off-linum | (lambda nil (visual-line-mode 1)) | org-indent-mode | (lambda nil (highlight-symbol-mode)) | org-table-stripes-enable | (lambda nil (set-face-attribute 'org-level-1 nil :height 1.5) (set-face-attribute 'org-level-2 nil :height 1.2) (set-face-attribute 'org-level-3 nil :height 1.1) (set-face-attribute 'org-level-4 nil :height 1.1) (set-face-attribute 'org-level-5 nil :height 1.1)) | org-mode-reftex-setup | org-ref-org-menu | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | org-eldoc-load |
+| (lambda nil (highlight-symbol-mode)) | org-table-stripes-enable | org-mode-reftex-setup | org-ref-org-menu | (lambda nil (org-bullets-mode)) | turn-off-auto-fill | ambrevar/turn-off-indent-tabs | ambrevar/turn-off-linum | (lambda nil (visual-line-mode 1)) | org-indent-mode | (lambda nil (set-face-attribute 'org-level-1 nil :height 1.5) (set-face-attribute 'org-level-2 nil :height 1.2) (set-face-attribute 'org-level-3 nil :height 1.1) (set-face-attribute 'org-level-4 nil :height 1.1) (set-face-attribute 'org-level-5 nil :height 1.1)) | (lambda nil (local-set-key \216 'outline-next-visible-heading) (local-set-key \220 'outline-previous-visible-heading) (local-set-key \225 'outline-up-heading) (local-set-key \227 'org-table-copy-region) (local-set-key \231 'org-table-paste-rectangle) (local-set-key \214 'org-table-sort-lines) (local-set-key \311 'org-toggle-iimage-in-org)) | (lambda nil (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)) | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | org-eldoc-load |
 
 *** Hooks by Uncle David
 
@@ -342,7 +348,7 @@ Line wrapping from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs.
 #+END_SRC
 
 #+RESULTS:
-| er/add-org-mode-expansions | (lambda nil (org-bullets-mode)) | turn-off-auto-fill | ambrevar/turn-off-indent-tabs | ambrevar/turn-off-linum | (lambda nil (visual-line-mode 1)) | org-indent-mode | (lambda nil (highlight-symbol-mode)) | org-table-stripes-enable | (lambda nil (set-face-attribute 'org-level-1 nil :height 1.5) (set-face-attribute 'org-level-2 nil :height 1.2) (set-face-attribute 'org-level-3 nil :height 1.1) (set-face-attribute 'org-level-4 nil :height 1.1) (set-face-attribute 'org-level-5 nil :height 1.1)) | org-mode-reftex-setup | org-ref-org-menu | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | org-eldoc-load |
+| (lambda nil (highlight-symbol-mode)) | org-table-stripes-enable | org-mode-reftex-setup | org-ref-org-menu | (lambda nil (org-bullets-mode)) | turn-off-auto-fill | ambrevar/turn-off-indent-tabs | ambrevar/turn-off-linum | (lambda nil (visual-line-mode 1)) | org-indent-mode | (lambda nil (set-face-attribute 'org-level-1 nil :height 1.5) (set-face-attribute 'org-level-2 nil :height 1.2) (set-face-attribute 'org-level-3 nil :height 1.1) (set-face-attribute 'org-level-4 nil :height 1.1) (set-face-attribute 'org-level-5 nil :height 1.1)) | (lambda nil (local-set-key \216 'outline-next-visible-heading) (local-set-key \220 'outline-previous-visible-heading) (local-set-key \225 'outline-up-heading) (local-set-key \227 'org-table-copy-region) (local-set-key \231 'org-table-paste-rectangle) (local-set-key \214 'org-table-sort-lines) (local-set-key \311 'org-toggle-iimage-in-org)) | (lambda nil (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)) | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | org-eldoc-load |
 
 
 *** Hooks by Ambrevar
@@ -363,6 +369,8 @@ Line wrapping from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs.
       (setq org-contacts-files (list contacts)))))
 #+END_SRC
 
+#+RESULTS:
+
 ** Speed keys
 Speed commands enable single-letter commands in Org-mode files when
 the point is at the beginning of a headline, or at the beginning of a
@@ -380,10 +388,13 @@ display a list of the code blocks commands and their related keys.
   (setq org-use-speed-commands t)
 #+end_src
 
+#+RESULTS:
+: t
+
 ** Code blocks
 This activates a number of widely used languages, you are encouraged
 to activate more languages using the customize interface for the
-=xorg-babel-load-languages= variable, or with an elisp form like the
+=org-babel-load-languages= variable, or with an elisp form like the
 one below.  The customize interface of =org-babel-load-languages=
 contains an up to date list of the currently supported languages.
 
@@ -460,6 +471,8 @@ Don't ask for confirmation on every =C-c C-c= code-block compile.
   (setq org-confirm-babel-evaluate nil)
 #+end_src
 
+#+RESULTS: turn-off-code-block-confirm
+
 
 *** More on syntax highlighting 
 
@@ -469,6 +482,8 @@ We'll need the =htmlize= package for syntax highlighting of code blocks (in Caol
 (use-package htmlize
   :ensure t)
 #+END_SRC
+
+#+RESULTS:
 
 ** Ensure the Latest Org-mode manual is in the info directory
 
@@ -487,6 +502,9 @@ Org-mode manual is available to the =info= command (bound to =C-h i=).
                 (expand-file-name "src" dotfiles-dir)))
               Info-directory-list))
 #+end_src
+
+#+RESULTS:
+| /home/dgm/.emacs.d/src/org/doc | /home/dgm/.emacs.d/src/org/doc | /home/dgm/.emacs.d/elpa/auctex-12.1.1 | /home/dgm/.emacs.d/elpa/ebib-20180817.1024 | /home/dgm/.emacs.d/elpa/editorconfig-20181025.421 | /home/dgm/.emacs.d/elpa/magit-20180915.1359 | /home/dgm/.emacs.d/elpa/ghub-20180914.802 | /home/dgm/.emacs.d/elpa/magit-popup-20180726.2037 | /home/dgm/.emacs.d/elpa/org-plus-contrib-20180910 | /home/dgm/.emacs.d/elpa/pandoc-mode-20180727.2201 | /home/dgm/.emacs.d/elpa/r-autoyas-20140101.1510 | /home/dgm/.emacs.d/elpa/ess-20180911.2135 | /home/dgm/.emacs.d/elpa/slime-20181031.31 | /home/dgm/.emacs.d/elpa/ivy-20180911.1701 | /home/dgm/.emacs.d/elpa/use-package-20180715.1801 | /home/dgm/.emacs.d/elpa/with-editor-20180726.2044 | /usr/local/share/info/ | /usr/share/info/ | /usr/local/share/info/ |
 
 ** Nice Bulleted Lists
 
@@ -531,20 +549,22 @@ Indentation.
 
 
 ** Local Org-mode Settings
-*** COMMENT Smart-quote binding
+*** Smart-quote binding
 When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by default.
 
 #+source: org-mode-smartquote-key
-#+begin_src emacs-lisp :tangle no
-  (add-hook 'org-mode-hook 'smart-quote-keys)
+#+begin_src emacs-lisp :tangle yes
+(require 'typopunct) ;; I don't have this.
+(typopunct-change-language 'english t)
 
-;;  (defun smart-quote-keys ()
-;;    (require 'typopunct)
-;;    (typopunct-change-language 'english)
-;;    (local-set-key (kbd "\C-c \'") 'typopunct-insert-single-quotation-mark)
-;;    (local-set-key (kbd "\C-c \"") 'typopunct-insert-quotation-mark)
-;;    )
+(defun smart-quote-keys ()
+  (local-set-key (kbd "\C-c \'") 'typopunct-insert-single-quotation-mark)
+  (local-set-key (kbd "\C-c \"") 'typopunct-insert-quotation-mark)
+  )
+
+(add-hook 'org-mode-hook 'smart-quote-keys)
 #+end_src
+
 
 *** Archive Settings
     Where archived projects and tasks go.
@@ -552,6 +572,9 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 #+begin_src emacs-lisp :tangle yes
   (setq org-archive-location "/home/dgm/Dropbox/gtd/archive.org::From %s")
 #+end_src
+
+#+RESULTS: orgmode-archive
+: /home/dgm/Dropbox/gtd/archive.org::From %s
 
 ** Daniel Mai's costumization
 
@@ -561,6 +584,9 @@ From https://github.com/danielmai/.emacs.d/blob/master/config.org
 (setq org-image-actual-width 550)
 (setq org-highlight-latex-and-related '(latex script entities))
 #+END_SRC
+
+#+RESULTS:
+| latex | script | entities |
 
 *** SRC block exectuation, watch out!
 
@@ -572,6 +598,9 @@ The default value is -77, which is weird for smaller width windows. I’d rather
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq org-tags-column 45)
 #+END_SRC
+
+#+RESULTS:
+: 45
 
 ** =org-ref= 
 
@@ -617,19 +646,19 @@ Tangled to no until I understand what is this Pre/Post thingy.
 
 Template Lists from Daniel Mai at https://github.com/danielmai/.emacs.d/blob/master/config.org.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(add-to-list 'org-structure-template-alist
-             '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
-(add-to-list 'org-structure-template-alist
-             '("py" "#+BEGIN_SRC python\n?\n#+END_SRC" ""))
-(add-to-list 'org-structure-template-alist
-             '("sh" "#+BEGIN_SRC sh\n?\n#+END_SRC" ""))
-(add-to-list 'org-structure-template-alist
-             '("md" "#+BEGIN_SRC markdown\n?\n#+END_SRC" ""))
+I don't know why it doesn't work 
+#+BEGIN_SRC emacs-lisp :tangle no
+;; (add-to-list 'org-structure-template-alist
+;;             '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+;; (add-to-list 'org-structure-template-alist
+;;             '("py" "#+BEGIN_SRC python\n?\n#+END_SRC" ""))
+;; (add-to-list 'org-structure-template-alist
+;;             '("sh" "#+BEGIN_SRC sh\n?\n#+END_SRC" ""))
+;; (add-to-list 'org-structure-template-alist
+;;             '("md" "#+BEGIN_SRC markdown\n?\n#+END_SRC" ""))
 #+END_SRC
 
 #+RESULTS:
-| md | #+BEGIN_SRC markdown |
 
 * Agenda 
 ** Shortcuts
@@ -652,7 +681,7 @@ Template Lists from Daniel Mai at https://github.com/danielmai/.emacs.d/blob/mas
 #+RESULTS:
 : org-iswitchb
 
-Shortcuts that should work in Org but do not. Besides, they used to be bound to windmove but no more because I'd rather use =ace-window=
+Shortcuts that should work in Org but do not. Besides, they used to be bound to =windmove= but no more because I'd rather use =ace-window=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (define-key global-map (kbd "S-<left>") 'org-timestamp-down-day)
@@ -711,6 +740,9 @@ Set to the location of your Org files on your local system.
                                "/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org"
                                "/home/dgm/Dropbox/gtd/tickler.org"))
 #+END_SRC
+
+#+RESULTS:
+| /home/dgm/Dropbox/gtd/inbox.org | /home/dgm/Dropbox/gtd/gtd.org | /home/dgm/Dropbox/gtd/journal.org | /media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org | /media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org | /media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org | /home/dgm/Dropbox/gtd/tickler.org |
 
 
 From https://stackoverflow.com/questions/10635989/emacs-org-agenda-list-destroy-my-windows-splits. 
@@ -798,12 +830,7 @@ HOWEVER I am not 100% sure how useful is all this  because I have a nice option 
 #+END_SRC
 
 #+RESULTS:
-| w | Weekly Review          | ((agenda  ((org-agenda-span 7))) (todo STARTED) (todo NEXT) (todo TODO) (todo WAITING))  |                          |        |                                 |
-| f | Fortnight Review       | ((agenda  ((org-agenda-span 14))) (todo STARTED) (todo NEXT) (todo TODO) (todo WAITING)) |                          |        |                                 |
-| r | Monthly Review         | ((agenda  ((org-agenda-span 31))) (todo STARTED) (todo NEXT) (todo TODO) (todo WAITING)) |                          |        |                                 |
-| y | Yearly Review          | ((agenda  ((org-agenda-span 'year))))                                                    |                          |        |                                 |
-| p | Project Review         | ((tags project) (todo STARTED) (todo NEXT) (todo TODO))                                  |                          |        |                                 |
-| o | Office and home agenda | ((agenda  ((org-agenda-ndays 1))) (tags-todo @office                                     | @home) (tags-todo office | home)) | ((org-agenda-compact-blocks t)) |
+: org-current-is-todo
 
 
 Set to the name of the file where new notes will be stored
@@ -824,6 +851,9 @@ Finally, as Carsten Dominik says here: http://thread.gmane.org/gmane.emacs.orgmo
       (let ((org-tags-match-list-sublevels nil))
       (org-tags-view nil "project")))
 #+END_SRC
+
+#+RESULTS:
+: my-org-project-list
 
  And guess what?? It works!!!
 
@@ -866,40 +896,6 @@ Finally, as Carsten Dominik says here: http://thread.gmane.org/gmane.emacs.orgmo
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 From caolan: https://caolan.org/dotfiles/emacs.html#orgd96aeb0
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -924,7 +920,6 @@ Tip from https://lists.gnu.org/archive/html/emacs-orgmode/2007-08/msg00253.html 
 
 *** Respond later
 The 'Respond later' template is a customised TODO which includes some extra email information. This relies on the extended email properties made available in the Org-mode -> Custom Links -> mu4e section of this config.
-
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (push `("r" "Respond later" entry (file+headline "~/Dropbox/gtd/inbox.org" "Email")
@@ -1093,6 +1088,18 @@ Depth of search for =Imenu= in Org buffers. From https://www.reddit.com/r/emacs/
 #+RESULTS:
 : 5
 
+* Initial visibility 
+I want to see properties by default but this is of no help. I'm using =s-h= for visible mode.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;(setq org-startup-folded 'showeverything)
+;;(setq org-inhibit-startup-visibility-stuff t)
+;;(setq org-save-outline-visibility t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1107,4 +1114,33 @@ Depth of search for =Imenu= in Org buffers. From https://www.reddit.com/r/emacs/
 #+begin_src emacs-lisp :tangle yes
   (message "Starter Kit Org loaded.")
 #+end_src
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

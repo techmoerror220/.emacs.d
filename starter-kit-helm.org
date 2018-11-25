@@ -581,60 +581,85 @@ Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs and Tuhdo  
 : helm-select-action
 
 * Projectile 
+
+I kept loosing my projects in external drives upon re-start. My attempt to keep them thru magit is copied from https://emacs.stackexchange.com/questions/32634/how-can-the-list-of-projects-used-by-projectile-be-manually-updated/32635
+
 #+srcname: projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
-    ;; Projectile
-    (use-package projectile
-      :ensure t
-      :config (projectile-global-mode t))
-
-    (setq projectile-enable-caching t) ;; update 22 nov 2018. In C-h v projectile-indexing-method they recommend to have it set to aliena to have this other variable set to true. If it does not work, revert to instructions in emacs's cheatsheet.
-    ;; (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
-
-    ;; https://github.com/bbatsov/projectile/issues/1183
-    ;; trying to fix slow behaviour of emacs
-    (setq projectile-mode-line
-         '(:eval (format " Projectile[%s]"
-                        (projectile-project-name))))
-
-    ;; from https://github.com/bbatsov/projectile#usage
-    ;; (projectile-mode +1) ;; don't know what this does.
-    (define-key projectile-mode-map (kbd "s--") 'projectile-command-map)
-    ;;(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-
-    (define-key projectile-mode-map [?\s-d] 'projectile-switch-project)
-    (define-key projectile-mode-map [?\s-D] 'projectile-find-dir-dwim)
-    (define-key projectile-mode-map [?\s-y] 'projectile-ag)      
-
-
-    (use-package helm-projectile
-      :ensure t
-      :after helm-mode 
-      :init     
-      (setq projectile-completion-system 'helm)
-      :commands helm-projectile
-    ;;   :bind ("C-c p h" . helm-projectile)
-    )
-
-    (helm-projectile-on)   ;;; creo que no hace falta tras decir =ensure t= in use-package.
-    (define-key projectile-mode-map [?\s-u] 'helm-projectile-find-file-in-known-projects) 
-    (setq projectile-switch-project-action 'helm-projectile)
-    (global-set-key (kbd "<s-return>") 'helm-projectile)
-  ;; from https://projectile.readthedocs.io/en/latest/usage/
-  ;; You can go one step further and set a list of folders which Projectile is automatically going to check for projects:
-
+;; Projectile
+(use-package projectile
+  :ensure t
+  :config 
+  (projectile-global-mode t)
   (setq projectile-project-search-path '("~/.emacs.d/"
                                          "~/texmf/"
                                          "~/Dropbox/gtd/"
                                          "/media/dgm/blue/documents/proyectos/mtj/"
                                          "/media/dgm/blue/documents/dropbox/"
                                          "/media/dgm/blue/documents/UNED/"
-                                         "/media/dgm/blue/documents/data/eurostat"
+                                         "/media/dgm/blue/documents/data/eurostat" 
+                                         "/media/dgm/blue/documents/programming"
                                          "/media/dgm/blue/documents/templates"))
+  (projectile-add-known-project "~/.emacs.d/")
+  (projectile-add-known-project  "~/texmf/")
+  (projectile-add-known-project "~/Dropbox/gtd/")
+  (projectile-add-known-project "/media/dgm/blue/documents/proyectos/mtj/")
+  (projectile-add-known-project "/media/dgm/blue/documents/dropbox/")
+  (projectile-add-known-project "/media/dgm/blue/documents/UNED/")
+  (projectile-add-known-project "/media/dgm/blue/documents/data/eurostat")
+  (projectile-add-known-project "/media/dgm/blue/documents/programming")
+  (projectile-add-known-project "/media/dgm/blue/documents/templates")
+  
+  (when (require 'magit nil t)
+    (mapc #'projectile-add-known-project
+          (mapcar #'file-name-as-directory (magit-list-repos)))
+    ;; Optionally write to persistent `projectile-known-projects-file'
+    (projectile-save-known-projects)))
+
+;; from) https://github.com/bbatsov/projectile#usage
+(projectile-mode +1) ;; You now need to explicitly enable projectile and set a prefix. See      https://stackoverflow.com/questions/31421106/why-emacs-project-c-c-p-is-undefined, I guess it's already done with (projectile-global-mode t) in the use-package settings... but just in case.
+(define-key projectile-mode-map (kbd "s--") 'projectile-command-map)
+;;(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+(setq projectile-enable-caching t) ;; update 22 nov 2018. In C-h v projectile-indexing-method they recommend to have it set to aliena to have this other variable set to true. If it does not work, revert to instructions in emacs's cheatsheet.
+;; (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
+;; https://github.com/bbatsov/projectile/issues/1183
+;; trying to fix slow behaviour of emacs
+(setq projectile-mode-line
+      '(:eval (format " Projectile[%s]"
+                      (projectile-project-name))))
+
+(define-key projectile-mode-map [?\s-d] 'projectile-switch-project)
+(define-key projectile-mode-map [?\s-D] 'projectile-find-dir-dwim)
+(define-key projectile-mode-map [?\s-y] 'projectile-ag)      
 #+END_SRC
 
+** Helm-Projectile
+
+#+srcname: helm-projectile
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-projectile
+  :ensure t
+  :after helm-mode 
+  :init     
+  (setq projectile-completion-system 'helm)
+  :commands helm-projectile
+  ;;   :bind ("C-c p h" . helm-projectile)
+  )
+
+(helm-projectile-on)   ;;; creo que no hace falta tras decir =ensure t= in use-package.
+(define-key projectile-mode-map [?\s-u] 'helm-projectile-find-file-in-known-projects) 
+(setq projectile-switch-project-action 'helm-projectile)
+(global-set-key (kbd "<s-return>") 'helm-projectile)
+;; from https://projectile.readthedocs.io/en/latest/usage/
+;; You can go one step further and set a list of folders which Projectile is automatically going to check for projects. But in reality, if I re-start the computer, Projectile does not recall this list. 
+#+END_SRC
+
+#+RESULTS: helm-projectile
+: helm-projectile
+
 #+RESULTS: projectile
-| ~/.emacs.d/ | ~/texmf/ | ~/Dropbox/gtd/ | /media/dgm/blue/documents/proyectos/mtj/ | /media/dgm/blue/documents/dropbox/ | /media/dgm/blue/documents/UNED/ | /media/dgm/blue/documents/data/eurostat | /media/dgm/blue/documents/templates |
+: projectile-ag
 
 
 Need to use =helm-projectile-find-other-file= bound to =s-- a=

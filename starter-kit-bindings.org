@@ -206,6 +206,7 @@ When windows get out of order, you can rotate them.
 
 ** Mark text between parentheses (a sexp) for selection
  Mark text between parentheses. From [[http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-parentheses-in-emacs][this Stackoverflow answer]]. 
+
 #+source: backward-up-sexp
 #+begin_src emacs-lisp
 (defun backward-up-sexp (arg)
@@ -380,10 +381,7 @@ The following function for occur-dwim is taken from Oleh Krehel from his blog po
 
 Winner mode allows you to undo/redo changes to window changes in Emacs.
 
-    Remember the previous window configurations and jump back to them
-    as needed (as when, e.g., some other mode messes with your working
-    layout.) Rebind the default keys to C-c-up and C-c-down as in a moment 
-    we'll assign C-c-right for rotating windows.
+Remember the previous window configurations and jump back to them as needed (as when, e.g., some other mode messes with your working layout.) Rebind the default keys to =C-c-up= and =C-c-down= as in a moment we'll assign =C-c-right= for rotating windows.
 
 #+source: local-winner-mode
 #+begin_src emacs-lisp
@@ -403,7 +401,8 @@ Winner mode allows you to undo/redo changes to window changes in Emacs.
 : winner-undo
 
 Restore the windows after Ediff quits. By default, when you quit the Ediff session with q, it just leaves the two diff windows around, instead of restoring the window configuration from when Ediff was started.
-(tip from https://caolan.org/dotfiles/emacs.html#orgd96aeb0)
+
+(Tip from https://caolan.org/dotfiles/emacs.html#orgd96aeb0)
 
 #+BEGIN_SRC emacs-lisp 
 (add-hook 'ediff-after-quit-hook-internal 'winner-undo)

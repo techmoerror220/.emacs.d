@@ -306,13 +306,6 @@ The next loop will bind =s-<number>= to switch to the corresponding workspace fr
 #+RESULTS:
 
 
-
-
-
-
-
-
-
 * Launchers
 Stuff from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs
 

@@ -281,6 +281,16 @@
 
 (setq org-adapt-indentation nil)
 
+(require 'typopunct) ;; I don't have this.
+(typopunct-change-language 'english t)
+
+(defun smart-quote-keys ()
+  (local-set-key (kbd "\C-c \'") 'typopunct-insert-single-quotation-mark)
+  (local-set-key (kbd "\C-c \"") 'typopunct-insert-quotation-mark)
+  )
+
+(add-hook 'org-mode-hook 'smart-quote-keys)
+
 (setq org-archive-location "/home/dgm/Dropbox/gtd/archive.org::From %s")
 
 (setq org-image-actual-width 550)
@@ -303,15 +313,6 @@
 (require 'org-ref-pubmed)
 
 ;; (add-to-list 'org-ref-bibtex-completion-actions '("Edit notes" . helm-bibtex-edit-notes))
-
-(add-to-list 'org-structure-template-alist
-             '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
-(add-to-list 'org-structure-template-alist
-             '("py" "#+BEGIN_SRC python\n?\n#+END_SRC" ""))
-(add-to-list 'org-structure-template-alist
-             '("sh" "#+BEGIN_SRC sh\n?\n#+END_SRC" ""))
-(add-to-list 'org-structure-template-alist
-             '("md" "#+BEGIN_SRC markdown\n?\n#+END_SRC" ""))
 
 ;;   (setq org-default-notes-file (concat org-directory "/notes.org")) ;; i disable this to see if I can choose between notes and tasks.
 ;;    this is not working for some reason: (define-key global-map "\C-c c" 'org-capture)
@@ -546,6 +547,9 @@
 (autoload 'ambrevar/org-switch-agenda-file-other-window "org")
 
 (setq org-imenu-depth 5)
+
+(setq org-startup-folded 'showeverything)
+(setq org-inhibit-startup-visibility-stuff t)
 
 (provide 'starter-kit-org)
 

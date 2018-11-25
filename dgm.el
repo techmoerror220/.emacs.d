@@ -537,10 +537,10 @@ The app is chosen from your OS's preference."
 ;;       "Just uses the vc-find-root function to figure out the project root.
 ;;        Won't always work for some directory layouts."
 ;;       (let* ((buf-dir (expand-file-name (file-name-directory (buffer-file-name buf))))
-;; 	     (project-root (vc-find-root buf-dir repo-file)))
-;; 	(if project-root
-;; 	    (expand-file-name project-root)
-;; 	  nil)))
+;;       (project-root (vc-find-root buf-dir repo-file)))
+;;  (if project-root
+;;      (expand-file-name project-root)
+;;    nil)))
 ;;
 ;;     ;; Method 2: slightly more robust
 ;;     (defun get-project-root-with-file (buf repo-file &optional init-file)
@@ -806,7 +806,7 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package magit
   :ensure t
   :defer t
-  :bind (("C-x g" . magit-status) 
+  :bind (("C-x g" . magit-status)
          ("C-x M-l" . magit-log-buffer-file)
          ("C-x M-b" . magit-blame)))
 
@@ -876,7 +876,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 (defun my-window-displaying-agenda-p (window)
     (equal (with-current-buffer (window-buffer window) major-mode)
-        'org-agenda-mode)) 
+        'org-agenda-mode))
 
 (defun my-position-calendar-buffer (buffer alist)
   (let ((agenda-window (car (remove-if-not #'my-window-displaying-agenda-p (window-list)))))
@@ -930,7 +930,7 @@ point reaches the beginning or end of the buffer, stop there."
 
   (use-package gpastel
     :ensure t
-    :config 
+    :config
    (gpastel-start-listening))
 
 (setq default-frame-alist '((font . "Pragmata Pro Mono-16")))
@@ -1096,7 +1096,7 @@ only if this merge job is part of a group, i.e., was invoked from within
           (sit-for 1)))
   (message "Cheese!")
   (sit-for 1)
-  (start-process "screenshot" nil "import" "-window" "root" 
+  (start-process "screenshot" nil "import" "-window" "root"
              (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
   (message "Screenshot taken!")))
 (global-set-key (kbd "s-[") 'daedreth/take-screenshot)
@@ -1209,7 +1209,7 @@ only if this merge job is part of a group, i.e., was invoked from within
       (point-at-eol)))))
 (global-set-key (kbd "s-.") 'daedreth/copy-whole-line)
 
-(global-set-key (kbd "s-l") 'kill-whole-line)
+(global-set-key (kbd "M-s-k") 'kill-whole-line)
 
 (global-subword-mode 1)
 
@@ -1483,8 +1483,8 @@ selects backward.)"
 ;; (pdf-tools-install) ;; commented out as I think it gets activated below
 
 (when (require 'pdf-tools nil t)
-   ;; (setq pdf-view-midnight-colors '("#ffffff" . "#000000")) 
-   ;; (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; Amber's original combination. Too agressive for me. 
+   ;; (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
+   ;; (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; Amber's original combination. Too agressive for me.
    (setq pdf-view-midnight-colors '("black" . "#EDD1B9" )) ; peach is the answer.
    (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
    (pdf-tools-install t t t))
@@ -1510,13 +1510,13 @@ selects backward.)"
   (diminish 'minimal-mode)
   (diminish 'org-mode)
   (diminish 'org-indent-mode)
-  (diminish 'volatile-highlights-mode) 
-  (diminish 'highlight-symbol-mode) 
-  (diminish 'pandoc-mode) 
-;;  (diminish 'projectile-mode) 
-  (diminish 'browse-kill-ring-mode) 
-  (diminish 'auto-fill-mode) 
-  (diminish 'refill-mode) 
+  (diminish 'volatile-highlights-mode)
+  (diminish 'highlight-symbol-mode)
+  (diminish 'pandoc-mode)
+;;  (diminish 'projectile-mode)
+  (diminish 'browse-kill-ring-mode)
+  (diminish 'auto-fill-mode)
+  (diminish 'refill-mode)
   (diminish 'helm-gtags-mode)
 
 (setq  helm-display-header-line nil)
@@ -1560,17 +1560,19 @@ selects backward.)"
     (setq sp-autoskip-closing-pair 'always)
     (setq sp-hybrid-kill-entire-symbol nil)))
 
-(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
-(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil) 
+(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
+(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil)
 
-(sp-local-pair 'racket-mode "'" nil :actions nil) 
+(sp-local-pair 'racket-mode "'" nil :actions nil)
 (sp-local-pair 'racket-mode "`" nil :actions nil)
 
-(sp-local-pair 'fundamental-mode "'" nil :actions nil) 
+(sp-local-pair 'fundamental-mode "'" nil :actions nil)
 (sp-local-pair 'fundamental-mode "`" nil :actions nil)
 
-(sp-local-pair 'org-mode "'" nil :actions nil) 
+(sp-local-pair 'org-mode "'" nil :actions nil)
 (sp-local-pair 'org-mode "`" nil :actions nil)
+
+(sp-local-pair 'latex-mode "=" nil :actions nil)
 
 ;;   (smartparens-global-mode 1)
 ;;  (require 'smartparens-config) ;; To use the default configuration that smartparens provides for Lisp modes generally and for racket-mode specifically
