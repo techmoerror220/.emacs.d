@@ -1520,9 +1520,8 @@ selects backward.)"
   :ensure t
   :init
   (setq ledger-clear-whole-transactions 1)
-
-  :config
-  (add-to-list 'ledger-report-mode)
+  ;;:config
+  ;;(add-to-list 'ledger-report-mode) ;; Gives error Compiler-macro error for add-to-list: (wrong-number-of-arguments (3 . 5) 2)
   :mode "\\.dat\\'")
 
 ;;(setq-default indicate-empty-lines t)

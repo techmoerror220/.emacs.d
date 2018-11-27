@@ -3347,9 +3347,8 @@ From
   :ensure t
   :init
   (setq ledger-clear-whole-transactions 1)
-
-  :config
-  (add-to-list 'ledger-report-mode)
+  ;;:config
+  ;;(add-to-list 'ledger-report-mode) ;; Gives error Compiler-macro error for add-to-list: (wrong-number-of-arguments (3 . 5) 2)
   :mode "\\.dat\\'")
 #+END_SRC
 
@@ -3388,7 +3387,6 @@ To turn it on automatically only for programming modes:
 Open the customization group buffer:
 
 =M-x customize-group RET vi-tilde-fringe RET=
-
 
 
 * Final message
