@@ -166,38 +166,37 @@
 
 ;;; for officePC
 (when (string=(system-name) "officePC")
-(require 'exwm-randr)
-;;(setq exwm-randr-workspace-output-plist '(0 "VGA1"))
-(setq exwm-randr-workspace-output-plist '(0 "HDMI-1"))
-(add-hook 'exwm-randr-screen-change-hook
-          (lambda ()
-            (start-process-shell-command
-            ;; "xrandr" nil "xrandr --output HDMI-2 --left-of LVDS1 --auto")))
-             "xrandr" nil "xrandr --output HDMI-1 --auto")))
-(exwm-randr-enable)
+  (require 'exwm-randr)
+  ;;(setq exwm-randr-workspace-output-plist '(0 "VGA1"))
+  (setq exwm-randr-workspace-output-plist '(0 "HDMI-1"))
+  (add-hook 'exwm-randr-screen-change-hook
+            (lambda ()
+              (start-process-shell-command
+               ;; "xrandr" nil "xrandr --output HDMI-2 --left-of LVDS1 --auto")))
+               "xrandr" nil "xrandr --output HDMI-1 --auto")))
+  (exwm-randr-enable)
 
-(defun exwm-change-screen-hook ()
-   (let ((xrandr-output-regexp "\n\\([^ ]+\\) connected ")
-         default-output)
-     (with-temp-buffer
-       (call-process "xrandr" nil t nil)
-       (goto-char (point-min))
-       (re-search-forward xrandr-output-regexp nil 'noerror)
-       (setq default-output (match-string 1))
-       (forward-line)
-       (if (not (re-search-forward xrandr-output-regexp nil 'noerror))
-           (call-process "xrandr" nil nil nil "--output" default-output "--auto")
-         (call-process
-          "xrandr" nil nil nil
-          "--output" (match-string 1) "--primary" "--auto"
-          "--output" default-output "--off")
-         (setq exwm-randr-workspace-output-plist (list 0 (match-string 1))))))))
+  (defun exwm-change-screen-hook ()
+    (let ((xrandr-output-regexp "\n\\([^ ]+\\) connected ")
+          default-output)
+      (with-temp-buffer
+        (call-process "xrandr" nil t nil)
+        (goto-char (point-min))
+        (re-search-forward xrandr-output-regexp nil 'noerror)
+        (setq default-output (match-string 1))
+        (forward-line)
+        (if (not (re-search-forward xrandr-output-regexp nil 'noerror))
+            (call-process "xrandr" nil nil nil "--output" default-output "--auto")
+          (call-process
+           "xrandr" nil nil nil
+           "--output" (match-string 1) "--primary" "--auto"
+           "--output" default-output "--off")
+          (setq exwm-randr-workspace-output-plist (list 0 (match-string 1))))))))
 
 ;;; debug options from https://github.com/ch11ng/exwm/wiki
 (setq debug-on-error t)
 ;; (setq debug-on-quit t)
 (setq edebug-all-forms t)
-
 
 
 ;; Ambrevar's functions
