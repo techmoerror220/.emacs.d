@@ -6,7 +6,7 @@
       (interactive)
       (set-frame-parameter f 'fullscreen
                            (if (frame-parameter f 'fullscreen) nil 'fullboth)))
-    (global-set-key (kbd "C-c f") 'fullscreen)
+    (global-set-key (kbd "C-c f") 'fullscreen)        
     (add-hook 'after-make-frame-functions 'fullscreen)
 
   (load "dired-x")
@@ -30,8 +30,6 @@
     ("s-s" . avy-goto-char))  ;; goes literally to any char
 
 (define-key global-map (kbd "C-o") 'avy-goto-word-1) ;; goes to word that starts with a given char
-
-
 
  (add-hook 'prog-mode-hook 'linum-mode)
 
@@ -391,18 +389,18 @@ The app is chosen from your OS's preference."
 (which-key-mode)
 
 ;; require the main file containing common functions
-(require 'eval-in-repl)
-(setq comint-process-echoes t)
-
-;; truncate lines in comint buffers
-(add-hook 'comint-mode-hook
-          (lambda()
-            (setq truncate-lines 1)))
-
-;; Scroll down for input and output
-(setq comint-scroll-to-bottom-on-input t)
-(setq comint-scroll-to-bottom-on-output t)
-(setq comint-move-point-for-output t)
+(use-package eval-in-repl
+  :ensure t
+  :config 
+  (setq comint-process-echoes t)
+  ;; truncate lines in comint buffers
+  (add-hook 'comint-mode-hook
+            (lambda()
+              (setq truncate-lines 1)))
+  ;; Scroll down for input and output
+  (setq comint-scroll-to-bottom-on-input t)
+  (setq comint-scroll-to-bottom-on-output t)
+  (setq comint-move-point-for-output t))
 
   ;;;  ESS (Emacs Speaks Statistics)
 
@@ -537,10 +535,10 @@ The app is chosen from your OS's preference."
 ;;       "Just uses the vc-find-root function to figure out the project root.
 ;;        Won't always work for some directory layouts."
 ;;       (let* ((buf-dir (expand-file-name (file-name-directory (buffer-file-name buf))))
-;;       (project-root (vc-find-root buf-dir repo-file)))
-;;  (if project-root
-;;      (expand-file-name project-root)
-;;    nil)))
+;; 	     (project-root (vc-find-root buf-dir repo-file)))
+;; 	(if project-root
+;; 	    (expand-file-name project-root)
+;; 	  nil)))
 ;;
 ;;     ;; Method 2: slightly more robust
 ;;     (defun get-project-root-with-file (buf repo-file &optional init-file)
@@ -806,7 +804,7 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package magit
   :ensure t
   :defer t
-  :bind (("C-x g" . magit-status)
+  :bind (("C-x g" . magit-status) 
          ("C-x M-l" . magit-log-buffer-file)
          ("C-x M-b" . magit-blame)))
 
@@ -876,7 +874,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 (defun my-window-displaying-agenda-p (window)
     (equal (with-current-buffer (window-buffer window) major-mode)
-        'org-agenda-mode))
+        'org-agenda-mode)) 
 
 (defun my-position-calendar-buffer (buffer alist)
   (let ((agenda-window (car (remove-if-not #'my-window-displaying-agenda-p (window-list)))))
@@ -930,7 +928,7 @@ point reaches the beginning or end of the buffer, stop there."
 
   (use-package gpastel
     :ensure t
-    :config
+    :config 
    (gpastel-start-listening))
 
 (setq default-frame-alist '((font . "Pragmata Pro Mono-16")))
@@ -1096,7 +1094,7 @@ only if this merge job is part of a group, i.e., was invoked from within
           (sit-for 1)))
   (message "Cheese!")
   (sit-for 1)
-  (start-process "screenshot" nil "import" "-window" "root"
+  (start-process "screenshot" nil "import" "-window" "root" 
              (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
   (message "Screenshot taken!")))
 (global-set-key (kbd "s-[") 'daedreth/take-screenshot)
@@ -1110,11 +1108,6 @@ only if this merge job is part of a group, i.e., was invoked from within
                 (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
   (call-process "rm" nil nil nil ".newScreen.png")))
 (global-set-key (kbd "s-]") 'daedreth/take-screenshot-region)
-
-(defvar my-term-shell "/bin/bash")
-(defadvice ansi-term (before force-bash)
-  (interactive (list my-term-shell)))
-(ad-activate 'ansi-term)
 
 (use-package ivy
   :ensure t)
@@ -1141,20 +1134,6 @@ only if this merge job is part of a group, i.e., was invoked from within
   :bind
     ([remap other-window] . switch-window))
 
-(defun split-and-follow-horizontally ()
-  (interactive)
-  (split-window-below)
-  (balance-windows)
-  (other-window 1))
-(global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
-
-(defun split-and-follow-vertically ()
-  (interactive)
-  (split-window-right)
-  (balance-windows)
-  (other-window 1))
-(global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
-
 (use-package swiper
   :ensure t)
 
@@ -1172,11 +1151,6 @@ only if this merge job is part of a group, i.e., was invoked from within
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
 (global-set-key (kbd "C-M-s-k") 'close-all-buffers)
-
-(use-package avy
-  :ensure t
-  :bind
-    ("s-s" . avy-goto-char))
 
 (use-package mark-multiple
   :ensure t
@@ -1245,16 +1219,6 @@ only if this merge job is part of a group, i.e., was invoked from within
 (bind-key "C-x 2" 'vsplit-other-window)
 (bind-key "C-x 3" 'hsplit-other-window)
 
-(use-package transpose-frame
-  :ensure t
-  :bind ("C-c t" . transpose-frame))
-
-(use-package ace-jump-mode
-  :ensure t
-  :diminish ace-jump-mode
-  :commands ace-jump-mode
-  :bind ("C-s-s" . ace-jump-mode))
-
 (use-package smartscan
   :ensure t
   :config (global-smartscan-mode 1))
@@ -1270,8 +1234,8 @@ only if this merge job is part of a group, i.e., was invoked from within
   :ensure t
   :commands scratch)
 
-(use-package visible-mode
-  :bind (("s-h" . visible-mode)))
+(visible-mode 1)
+(global-set-key (kbd "s-h") 'visible-mode)
 
 (use-package pulseaudio-control
   :ensure t)
@@ -1289,33 +1253,6 @@ only if this merge job is part of a group, i.e., was invoked from within
  (put 'narrow-to-region 'disabled nil)
  (put 'dired-find-alternate-file 'disabled nil)
  (put 'set-goal-column 'disabled nil)
-
-  (defun my-mark-current-word (&optional arg allow-extend)
-    "Put point at beginning of current word, set mark at end."
-    (interactive "p\np")
-    (setq arg (if arg arg 1))
-    (if (and allow-extend
-             (or (and (eq last-command this-command) (mark t))
-                 (region-active-p)))
-        (set-mark
-         (save-excursion
-           (when (< (mark) (point))
-             (setq arg (- arg)))
-           (goto-char (mark))
-           (forward-word arg)
-           (point)))
-      (let ((wbounds (bounds-of-thing-at-point 'word)))
-        (unless (consp wbounds)
-          (error "No word at point"))
-        (if (>= arg 0)
-            (goto-char (car wbounds))
-          (goto-char (cdr wbounds)))
-        (push-mark (save-excursion
-                     (forward-word arg)
-                     (point)))
-        (activate-mark))))
-
-(define-key global-map (kbd "C-c x") 'my-mark-current-word)
 
 ;; connect to irc on invocation but don't autojoin any channels (require 'rcirc)
 ;;  (add-to-list 'rcirc-server-alist
@@ -1483,8 +1420,8 @@ selects backward.)"
 ;; (pdf-tools-install) ;; commented out as I think it gets activated below
 
 (when (require 'pdf-tools nil t)
-   ;; (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
-   ;; (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; Amber's original combination. Too agressive for me.
+   ;; (setq pdf-view-midnight-colors '("#ffffff" . "#000000")) 
+   ;; (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; Amber's original combination. Too agressive for me. 
    (setq pdf-view-midnight-colors '("black" . "#EDD1B9" )) ; peach is the answer.
    (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
    (pdf-tools-install t t t))
@@ -1510,13 +1447,13 @@ selects backward.)"
   (diminish 'minimal-mode)
   (diminish 'org-mode)
   (diminish 'org-indent-mode)
-  (diminish 'volatile-highlights-mode)
-  (diminish 'highlight-symbol-mode)
-  (diminish 'pandoc-mode)
-;;  (diminish 'projectile-mode)
-  (diminish 'browse-kill-ring-mode)
-  (diminish 'auto-fill-mode)
-  (diminish 'refill-mode)
+  (diminish 'volatile-highlights-mode) 
+  (diminish 'highlight-symbol-mode) 
+  (diminish 'pandoc-mode) 
+;;  (diminish 'projectile-mode) 
+  (diminish 'browse-kill-ring-mode) 
+  (diminish 'auto-fill-mode) 
+  (diminish 'refill-mode) 
   (diminish 'helm-gtags-mode)
 
 (setq  helm-display-header-line nil)
@@ -1560,23 +1497,41 @@ selects backward.)"
     (setq sp-autoskip-closing-pair 'always)
     (setq sp-hybrid-kill-entire-symbol nil)))
 
-(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
-(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil)
+(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
+(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil) 
 
-(sp-local-pair 'racket-mode "'" nil :actions nil)
+(sp-local-pair 'racket-mode "'" nil :actions nil) 
 (sp-local-pair 'racket-mode "`" nil :actions nil)
 
-(sp-local-pair 'fundamental-mode "'" nil :actions nil)
+(sp-local-pair 'fundamental-mode "'" nil :actions nil) 
 (sp-local-pair 'fundamental-mode "`" nil :actions nil)
 
-(sp-local-pair 'org-mode "'" nil :actions nil)
+(sp-local-pair 'org-mode "'" nil :actions nil) 
 (sp-local-pair 'org-mode "`" nil :actions nil)
 
-(sp-local-pair 'latex-mode "=" nil :actions nil)
+(sp-local-pair 'latex-mode "=" nil :actions nil) 
 
 ;;   (smartparens-global-mode 1)
 ;;  (require 'smartparens-config) ;; To use the default configuration that smartparens provides for Lisp modes generally and for racket-mode specifically
 
 (require 'bookmark+)
+
+(use-package ledger-mode
+  :ensure t
+  :init
+  (setq ledger-clear-whole-transactions 1)
+
+  :config
+  (add-to-list 'ledger-report-mode)
+  :mode "\\.dat\\'")
+
+;;(setq-default indicate-empty-lines t)
+;;(define-fringe-bitmap 'tilde [0 0 0 113 219 142 0 0] nil nil 'center)
+;;(setcdr (assq 'empty-line fringe-indicator-alist) 'tilde)
+;;(set-fringe-bitmap-face 'tilde 'font-lock-comment-face)
+;;;;;;; (set-fringe-bitmap-face 'tilde 'font-lock-function-name-face) ;; for blue tilde
+
+(require 'vi-tilde-fringe)
+(global-vi-tilde-fringe-mode 1)
 
 (message "Starter Kit User (DGM) File loaded.")

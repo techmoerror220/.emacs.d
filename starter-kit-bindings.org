@@ -75,14 +75,15 @@ Key Bindings.
 Building regular expressions in Emacs is kind of a pain.  The visual-regexp package is a very convenient way to dynamically build regular expressions for searching and replacing. You enter a minibuffer that lets you type the regexp and the prospective matches to the expression you type are highlighted in the main buffer. =M-x vr/replace= gives you global replacement and =M-x vr/query-replace= lets you decide to replace per match. Visual regexp replace is bound to =C-c r= and visual =query-replace-regexp= to =C-c q=. 
 
 #+begin_src emacs-lisp 
-  (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-  (global-set-key (kbd "\C-r") 'isearch-backward-regexp)
-  (global-set-key (kbd "C-M-s") 'isearch-forward)
-  (global-set-key (kbd "C-M-r") 'isearch-backward)
-  
-  (require 'visual-regexp)
-  (define-key global-map (kbd "C-c r") 'vr/replace) ;; note from dgm: now it seems these keys are binded to opening =helm-bibtex=
-  (define-key global-map (kbd "C-c q") 'vr/query-replace)
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-M-s") 'isearch-forward)
+(global-set-key (kbd "C-M-r") 'isearch-backward)
+
+(use-package visual-regexp
+  :ensure t)
+(define-key global-map (kbd "C-c s") 'vr/replace) 
+(define-key global-map (kbd "C-c q") 'vr/query-replace)
 #+end_src
 
 ** Local iBuffer Settings
@@ -548,10 +549,12 @@ First mark the word, then add more cursors. To get out of multiple-cursors-mode,
    scroll bars, and no fringe indicators. Useful in conjunction with running Emacs full-screen.
 #+source: minimal-mode
 #+begin_src emacs-lisp
-  (set-fringe-mode '(5 . 5))
-  (require 'minimal)
-  (global-set-key (kbd "C-c s") 'minimal-mode)
+(set-fringe-mode '(5 . 5))
+(require 'minimal)
 #+end_src
+
+#+RESULTS: minimal-mode
+: minimal
 
 ** DGM bindings 
 #+BEGIN_SRC emacs-lisp

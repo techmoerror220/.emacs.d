@@ -548,8 +548,9 @@
 
 (setq org-imenu-depth 5)
 
-(setq org-startup-folded 'showeverything)
-(setq org-inhibit-startup-visibility-stuff t)
+;;(setq org-startup-folded 'showeverything)
+;;(setq org-inhibit-startup-visibility-stuff t)
+;;(setq org-save-outline-visibility t)
 
 (provide 'starter-kit-org)
 

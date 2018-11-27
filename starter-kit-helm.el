@@ -8,7 +8,7 @@
 (use-package helm-swoop
   :ensure t
   :after helm-mode
-  ;; :bind ("H-w" . helm-swoop)
+  :bind ("<s-backspace>" . helm-swoop)
   )
 
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
@@ -88,9 +88,11 @@ With prefix argument, UPDATE the databases with custom uptions thanks to the
 
 ;; Command: helm-all-mark-rings
 (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+(global-set-key (kbd "s-m") 'helm-all-mark-rings)
 
 ;; Command: helm-register
 (global-set-key (kbd "C-c h x") 'helm-register)
+(global-set-key (kbd "s-v") 'helm-register)
 
 (setq helm-grep-git-grep-command "git --no-pager grep -n%cH --color=always --full-name -e %p -- %f")
 
@@ -124,20 +126,20 @@ Requires `call-process-to-string' from `functions'."
 ;; Command: helm-eshell-history
 (require 'helm-eshell)
 
-(add-hook 'eshell-mode-hook
-          '(lambda ()
-             (define-key eshell-mode-map (kbd "C-c h C-c h")  'helm-eshell-history)))
+;; (add-hook 'eshell-mode-hook
+;;          '(lambda ()
+;;             (define-key eshell-mode-map (kbd "C-c h C-c h")  'helm-eshell-history)))
 
 ;;; Eshell
 (defun ambrevar/helm/eshell-set-keys ()
   (define-key eshell-mode-map [remap eshell-pcomplete] 'helm-esh-pcomplete)
   (define-key eshell-mode-map (kbd "M-p") 'helm-eshell-history)
   (define-key eshell-mode-map (kbd "M-s") nil) ; Useless when we have 'helm-eshell-history.
-  (define-key eshell-mode-map (kbd "M-s f") 'helm-eshell-prompts-all))
+  (define-key eshell-mode-map (kbd "M-s f") 'helm-eshell-prompts-all)) ;; this one doesn't work... I don't know what it'd do.
 (add-hook 'eshell-mode-hook 'ambrevar/helm/eshell-set-keys)
 
 ;; Command: helm-mini-buffer-history
-(define-key minibuffer-local-map (kbd "C-c h C-c h") 'helm-minibuffer-history)
+;; (define-key minibuffer-local-map (kbd "C-c h C-c h") 'helm-minibuffer-history)
 
 (require 'helm-descbinds)
 (helm-descbinds-mode)
@@ -173,7 +175,7 @@ Requires `call-process-to-string' from `functions'."
 ;; (setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
 (use-package helm-bibtex
   :ensure t)
-(global-set-key (kbd "<s-backspace>") 'helm-bibtex)
+;; (global-set-key (kbd "<s-backspace>") 'helm-bibtex) ;; not needed. Already in =C-]=. <s-backspace> relocated to helm-swoop.
 
 (setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
 
@@ -197,9 +199,13 @@ Requires `call-process-to-string' from `functions'."
 ;; (when (require 'helm-descbinds nil t)
 ;;    (helm-descbinds-mode))
 
+
 (when (require 'wgrep-helm nil t)
   (setq wgrep-auto-save-buffer t
         wgrep-enable-key (kbd "C-c h w")))
+
+;; From Ambrevar: wgrep-face is not so pretty.
+(set-face-attribute 'wgrep-face nil :inherit 'ediff-current-diff-C :foreground 'unspecified :background 'unspecified :box nil)
 
 (when (require 'helm-ls-git nil t)
   ;; `helm-source-ls-git' must be defined manually.
@@ -317,7 +323,9 @@ Requires `call-process-to-string' from `functions'."
                                          "/media/dgm/blue/documents/proyectos/mtj/"
                                          "/media/dgm/blue/documents/dropbox/"
                                          "/media/dgm/blue/documents/UNED/"
-                                         "/media/dgm/blue/documents/data/eurostat"
+                                         "/media/dgm/blue/documents/data/eurostat" 
+                                         "/media/dgm/blue/documents/programming"
+                                         "/media/dgm/blue/documents/My-Academic-Stuff"
                                          "/media/dgm/blue/documents/templates"))
   (projectile-add-known-project "~/.emacs.d/")
   (projectile-add-known-project  "~/texmf/")
@@ -326,6 +334,8 @@ Requires `call-process-to-string' from `functions'."
   (projectile-add-known-project "/media/dgm/blue/documents/dropbox/")
   (projectile-add-known-project "/media/dgm/blue/documents/UNED/")
   (projectile-add-known-project "/media/dgm/blue/documents/data/eurostat")
+  (projectile-add-known-project "/media/dgm/blue/documents/programming")
+  (projectile-add-known-project "/media/dgm/blue/documents/My-Academic-Stuff")
   (projectile-add-known-project "/media/dgm/blue/documents/templates")
   
   (when (require 'magit nil t)
@@ -347,9 +357,9 @@ Requires `call-process-to-string' from `functions'."
       '(:eval (format " Projectile[%s]"
                       (projectile-project-name))))
 
-(define-key projectile-mode-map [?\s-d] 'projectile-switch-project)
+(define-key projectile-mode-map [?\s-s] 'projectile-switch-project)
 (define-key projectile-mode-map [?\s-D] 'projectile-find-dir-dwim)
-(define-key projectile-mode-map [?\s-y] 'projectile-ag)
+;;(define-key projectile-mode-map [?\s-y] 'projectile-ag) ;; this is not working. =projectile-ag= is in M-pthe directory structure.
 
 (use-package helm-projectile
   :ensure t
@@ -408,8 +418,8 @@ Requires `call-process-to-string' from `functions'."
 (with-eval-after-load 'helm
   ;; Need `with-eval-after-load' here since 'helm-map is not defined in 'helm-config.
   ;;  (ambrevar/define-keys helm-map "s-\\" 'helm-toggle-resplit-and-swap-windows) ;; already used in starter-kit-exwm.org for ambrevar/toggle-window-split
-  (exwm-input-set-key (kbd "s-c") #'helm-resume)
-  (exwm-input-set-key (kbd "s-b") #'helm-mini)
+  (exwm-input-set-key (kbd "s-c") #'helm-resume)  ;; get the latest helm thing you did!, i.e., reopen the last helm search.
+  ;; (exwm-input-set-key (kbd "s-b") #'helm-mini) ;; not needed as already in =C-x b=
   (exwm-input-set-key (kbd "s-f") #'helm-find-files)
   (exwm-input-set-key (kbd "s-F") #'helm-locate)
   (when (fboundp 'ambrevar/helm-locate-meta)
@@ -441,8 +451,8 @@ Requires `call-process-to-string' from `functions'."
   ;; Launcher
   (exwm-input-set-key (kbd "s-r") 'helm-run-external-command)
   ;; Web browser
-  (exwm-input-set-key (kbd "s-w") #'helm-exwm-switch-browser)
-  (exwm-input-set-key (kbd "s-W") #'helm-exwm-switch-browser-other-window)
+  ;; (exwm-input-set-key (kbd "s-w") #'helm-exwm-switch-browser)               ;; I don't use these two and I don't see the user case.
+  ;; (exwm-input-set-key (kbd "s-W") #'helm-exwm-switch-browser-other-window)
 
 (defun ido-recentf-open ()
   "Use `ido-completing-read' to find a recent file."
@@ -454,6 +464,9 @@ Requires `call-process-to-string' from `functions'."
 (global-set-key (kbd "C-x f") 'ido-recentf-open)
 
 (add-to-list 'helm-completing-read-handlers-alist '(ido-recentf-open  . ido))
+
+(require 'password-store)
+(use-package helm-pass)
 
 (provide 'starter-kit-helm)
 

@@ -15,6 +15,7 @@ See https://github.com/emacs-helm/helm/issues/2085
 ;;(cl-assert (null ido-everywhere)
 ;;             nil "ido-everywhere is incompatible with helm, please disable it")
 #+END_SRC
+
 * Starting out the helm magic
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -34,14 +35,22 @@ See https://github.com/emacs-helm/helm/issues/2085
 From: https://github.com/danielmai/.emacs.d/blob/master/config.org
 
 ** =helm-swoop=
+From https://wikemacs.org/wiki/Helm-swoop
+
+helm-swoop, based on Helm, allows to show interactively lines that match a pattern in another (helm) buffer. It updates while we type, and usually starts with the word at point. When we navigate around this helm list, the cursor in the original buffer jumps to the corresponding line, without loosing the helm session.
+
+Conclusion: it's like a helm-occur bound to =s-;=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package helm-swoop
   :ensure t
   :after helm-mode
-  ;; :bind ("H-w" . helm-swoop)
+  :bind ("<s-backspace>" . helm-swoop)
   )
 #+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23547 50524 462788 646000) :init (23547 50524 462634 659000) :config (23547 50524 462593 680000) :config-secs (0 0 10 173000) :init-secs (0 0 75 23000) :use-package-secs (0 0 317 531000)))
 
 * Key bindings 
 
@@ -140,9 +149,11 @@ With prefix argument, UPDATE the databases with custom uptions thanks to the
 
 ;; Command: helm-all-mark-rings
 (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+(global-set-key (kbd "s-m") 'helm-all-mark-rings)
 
 ;; Command: helm-register
 (global-set-key (kbd "C-c h x") 'helm-register)
+(global-set-key (kbd "s-v") 'helm-register)
 #+END_SRC
 
 #+RESULTS:
@@ -202,6 +213,7 @@ And still more on grep, but they are already defined in the =exwm= shortcuts, so
 #+END_SRC
 
 ** Eldoc 
+*** TODO understand whtat is =eldoc=.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; helm-eval-expression-with-eldoc
@@ -210,14 +222,19 @@ And still more on grep, but they are already defined in the =exwm= shortcuts, so
 
 ** Eshell
 
+Por alguna razon el keybind no se registra, asi que lo quito.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; Command: helm-eshell-history
 (require 'helm-eshell)
 
-(add-hook 'eshell-mode-hook
-          '(lambda ()
-             (define-key eshell-mode-map (kbd "C-c h C-c h")  'helm-eshell-history)))
+;; (add-hook 'eshell-mode-hook
+;;          '(lambda ()
+;;             (define-key eshell-mode-map (kbd "C-c h C-c h")  'helm-eshell-history))) 
 #+END_SRC
+
+#+RESULTS:
+| (lambda nil (define-key eshell-mode-map  'eshell-bol)) | helm-gtags-mode | ambrevar/helm/eshell-set-keys | (lambda nil (define-key eshell-mode-map (kbd C-c h C-c h) 'helm-eshell-history)) | tramp-eshell-directory-change | ess-r-package-activate-directory-tracker |
 
 *** Ambrevar's eshell
 
@@ -227,7 +244,7 @@ And still more on grep, but they are already defined in the =exwm= shortcuts, so
   (define-key eshell-mode-map [remap eshell-pcomplete] 'helm-esh-pcomplete)
   (define-key eshell-mode-map (kbd "M-p") 'helm-eshell-history)
   (define-key eshell-mode-map (kbd "M-s") nil) ; Useless when we have 'helm-eshell-history.
-  (define-key eshell-mode-map (kbd "M-s f") 'helm-eshell-prompts-all))
+  (define-key eshell-mode-map (kbd "M-s f") 'helm-eshell-prompts-all)) ;; this one doesn't work... I don't know what it'd do.
 (add-hook 'eshell-mode-hook 'ambrevar/helm/eshell-set-keys)
 #+END_SRC
 
@@ -235,7 +252,9 @@ And still more on grep, but they are already defined in the =exwm= shortcuts, so
 | ambrevar/helm/eshell-set-keys | (lambda nil (define-key eshell-mode-map (kbd C-c h C-c h) 'helm-eshell-history)) | helm-gtags-mode | tramp-eshell-directory-change | (lambda nil (define-key eshell-mode-map  'eshell-bol)) | ess-r-package-activate-directory-tracker |
 
 ** Comint 
+
 Disabled as it gives rise to lisp error
+
 #+BEGIN_SRC emacs-lisp :tangle no
 ;; Command: helm-comint-input-ring
 ;; (define-key shell-mode-map (kbd "C-c h C-c h") 'helm-comint-input-ring)
@@ -245,9 +264,11 @@ Disabled as it gives rise to lisp error
 
 ** Mini-buffer history 
 
+This keybinding never works so I comment this out until i understand how it could be useful.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; Command: helm-mini-buffer-history
-(define-key minibuffer-local-map (kbd "C-c h C-c h") 'helm-minibuffer-history)
+;; (define-key minibuffer-local-map (kbd "C-c h C-c h") 'helm-minibuffer-history)
 #+END_SRC
 
 * helm-descbinds
@@ -261,6 +282,8 @@ Disabled as it gives rise to lisp error
 Further customization of =gtags= with =helm=, from http://tuhdo.github.io/c-ide.html.
 
 Check out: http://tuhdo.github.io/c-ide.html
+
+** TODO Understand how =gtags= differ from =etags=
 
 #+begin_src emacs-lisp :tangle yes
     ;; Tuhdo says to put this but if I do emacs spits error mesage on start up.
@@ -298,15 +321,17 @@ Check out: http://tuhdo.github.io/c-ide.html
 * Helm-bibtex
 And now the bit by Ista Zahn in tip from: https://github.com/izahn/dotemacs but modified to use helm instead of ivy.
 This allows you to search your BibTeX files for references to insert into the current document. For it to work you will need to set `bibtex-completion-bibliography` to the location of your BibTeX files.
-Initiate a citation search with ivy-bibtex, bound to C-c r.
+Initiate a citation search with ivy-bibtex, bound to =C-c r= (not working, of course. This is the keybinding for revert buffer.)
 
-Commented out by DGM: not sure it is working and i can use ivy with helm
+Commented out by DGM: not sure it is working and I can use ivy with helm
+
+From https://github.com/tmalsburg/helm-bibtex: Helm-bibtex and ivy-bibtex allow you to search and manage your BibTeX bibliography. They both share the same generic backend, bibtex-completion, but one uses the Helm completion framework and the other Ivy as a front-end.
 
 #+begin_src emacs-lisp :tangle yes
 ;; (setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
 (use-package helm-bibtex
   :ensure t)
-(global-set-key (kbd "<s-backspace>") 'helm-bibtex)
+;; (global-set-key (kbd "<s-backspace>") 'helm-bibtex) ;; not needed. Already in =C-]=. <s-backspace> relocated to helm-swoop.
 #+end_src
 
 #+RESULTS:
@@ -316,17 +341,7 @@ Tip from =titus= for =helm-bibtex=: I use the menu key as the prefix key for all
 
 ** Bibtex-completion
 
-Bibtex-completion depends on helm-bibtex. That's why I paste it here.
-
-From https://github.com/tmalsburg/helm-bibtex
-
-Helm-bibtex and ivy-bibtex allow you to search and manage your BibTeX bibliography. They both share the same generic backend, bibtex-completion, but one uses the Helm completion framework and the other Ivy as a front-end.
-
-check titus: https://github.com/tmalsburg/helm-bibtex
-
-A minimal configuration involves telling bibtex-completion where your bibliographies can be found.
-I am leaving it as not a list.
-I am commenting it out now as I am using the variable =helm-bibtex-bibliography= in =starter-kit-helm.org=.
+Bibtex-completion depends on helm-bibtex. That's why I paste it here. A minimal configuration involves telling =bibtex-completion= where your bibliographies can be found. I am leaving it as not a list.
 
 #+BEGIN_EXAMPLE
 (setq bibtex-completion-bibliography 
@@ -340,7 +355,7 @@ I am commenting it out now as I am using the variable =helm-bibtex-bibliography=
 #+RESULTS:
 : /media/dgm/blue/documents/bibs/socbib.bib
 
-Specify where PDFs can be found: Bibtex-completion assumes that the name of a PDF consists of the BibTeX key followed plus a user-defined suffix (.pdf by default). For example, if a BibTeX entry has the key Darwin1859, bibtex-completion searches for Darwin1859.pdf.
+Specify where PDFs can be found: =Bibtex-completion= assumes that the name of a PDF consists of the BibTeX key followed plus a user-defined suffix (.pdf by default). For example, if a BibTeX entry has the key Darwin1859, bibtex-completion searches for Darwin1859.pdf.
 
 I am commenting out as I have the variable =helm-bibtex-library-path= in =starter-kit-helm.org=
 
@@ -387,7 +402,7 @@ Open pdf with system pdf viewer
 
 From: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/
 
-With this setup helm-bibtex points to the same notes file as org-ref. Just run M-x helm-bibtex and select the article you want. Instead of pressing <return>, press <tab>. This opens up helm's alternate action list where you can choose to Edit notes. This opens up the exact notes file created by org-ref.
+With this setup helm-bibtex points to the same notes file as =org-ref=. Just run =M-x helm-bibtex= (=C-]=) and select the article you want. Instead of pressing =<return>=, press =<tab>=. This opens up helm's alternate action list where you can choose to =Edit notes=. This opens up the exact notes file created by org-ref.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
  (setq helm-bibtex-bibliography "/media/dgm/blue/documents/bibs/socbib.bib" 
@@ -400,22 +415,16 @@ With this setup helm-bibtex points to the same notes file as org-ref. Just run M
 
 * Ambrevar's stuff
 
-;;; TODO: helm-ff should allow opening several marks externally, e.g.  sxiv for
-;;; pics. See
-;;; https://github.com/emacs-helm/helm/wiki/Find-Files#open-files-externally.
-;;; What about the default program?  It currently defaults to ~/.mailcap, which is
-;;; not so customizable.  Would ranger's rifle be useful here?  See
-;;; https://github.com/emacs-helm/helm/issues/1796.  There is the `openwith' package.
+TODO: =helm-ff= should allow opening several marks externally, e.g.  sxiv for pics. See https://github.com/emacs-helm/helm/wiki/Find-Files#open-files-externally.
+What about the default program?  It currently defaults to ~/.mailcap, which is not so customizable.  Would ranger's rifle be useful here?  See https://github.com/emacs-helm/helm/issues/1796.  There is the `openwith' package.
 
-;;; TODO: Batch-open torrent files automatically.  Add to mailcap?  Same as
-;;; above, C-c C-x does not allow for opening several files at once.
+TODO: Batch-open torrent files automatically.  Add to mailcap?  Same as above, C-c C-x does not allow for opening several files at once.
 
-;;; TODO: helm-find in big folders sometimes leads bad results, like exact match
-;;; not appearing first. Better sorting?
+TODO: helm-find in big folders sometimes leads bad results, like exact match not appearing first. Better sorting?
 
-;;; TODO: Implement alternating-color multiline lists.
-;;; See https://github.com/emacs-helm/helm/issues/1790.
+TODO: Implement alternating-color multiline lists. See https://github.com/emacs-helm/helm/issues/1790.
 
+Note: =wgrep-helm= allows you to edit a helm-grep-mode buffer and apply those changes to the file buffer.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (when (< emacs-major-version 26)
@@ -425,9 +434,13 @@ With this setup helm-bibtex points to the same notes file as org-ref. Just run M
 ;; (when (require 'helm-descbinds nil t)
 ;;    (helm-descbinds-mode))
 
+
 (when (require 'wgrep-helm nil t)
   (setq wgrep-auto-save-buffer t
         wgrep-enable-key (kbd "C-c h w")))
+
+;; From Ambrevar: wgrep-face is not so pretty.
+(set-face-attribute 'wgrep-face nil :inherit 'ediff-current-diff-C :foreground 'unspecified :background 'unspecified :box nil)
 
 (when (require 'helm-ls-git nil t)
   ;; `helm-source-ls-git' must be defined manually.
@@ -437,6 +450,8 @@ With this setup helm-bibtex points to the same notes file as org-ref. Just run M
              (helm-make-source "Git files" 'helm-ls-git-source
                :fuzzy-match helm-ls-git-fuzzy-match))))
 #+END_SRC
+
+#+RESULTS:
 
 
 ** Generic configuration
@@ -497,9 +512,9 @@ With this setup helm-bibtex points to the same notes file as org-ref. Just run M
 
 ** The =M-s= prefix
 
-Use the =M-s= prefix just like `occur'.
-
+Use the =M-s= prefix just like `occur'. 
 Note that the =s= in the prefix is the letter =s= and not the =super= key.
+Note that I think =M-i= does the same.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (define-key prog-mode-map (kbd "M-s f") 'helm-semantic-or-imenu)
@@ -599,6 +614,7 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
                                          "/media/dgm/blue/documents/UNED/"
                                          "/media/dgm/blue/documents/data/eurostat" 
                                          "/media/dgm/blue/documents/programming"
+                                         "/media/dgm/blue/documents/My-Academic-Stuff"
                                          "/media/dgm/blue/documents/templates"))
   (projectile-add-known-project "~/.emacs.d/")
   (projectile-add-known-project  "~/texmf/")
@@ -608,6 +624,7 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
   (projectile-add-known-project "/media/dgm/blue/documents/UNED/")
   (projectile-add-known-project "/media/dgm/blue/documents/data/eurostat")
   (projectile-add-known-project "/media/dgm/blue/documents/programming")
+  (projectile-add-known-project "/media/dgm/blue/documents/My-Academic-Stuff")
   (projectile-add-known-project "/media/dgm/blue/documents/templates")
   
   (when (require 'magit nil t)
@@ -629,9 +646,9 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
       '(:eval (format " Projectile[%s]"
                       (projectile-project-name))))
 
-(define-key projectile-mode-map [?\s-d] 'projectile-switch-project)
+(define-key projectile-mode-map [?\s-s] 'projectile-switch-project)
 (define-key projectile-mode-map [?\s-D] 'projectile-find-dir-dwim)
-(define-key projectile-mode-map [?\s-y] 'projectile-ag)      
+;;(define-key projectile-mode-map [?\s-y] 'projectile-ag) ;; this is not working. =projectile-ag= is in M-pthe directory structure.
 #+END_SRC
 
 ** Helm-Projectile
@@ -660,7 +677,6 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
 
 #+RESULTS: projectile
 : projectile-ag
-
 
 Need to use =helm-projectile-find-other-file= bound to =s-- a=
 
@@ -692,8 +708,6 @@ Need to use =helm-projectile-find-other-file= bound to =s-- a=
 | Rnw  | R    |     |     |     |     |     |     |     |   |    |
 | el   | org  |     |     |     |     |     |     |     |   |    |
 | org  | el   |     |     |     |     |     |     |     |   |    |
-| R    | Rnw  | tex |     |     |     |     |     |     |   |    |
-| org  | el   | tex | log |     |     |     |     |     |   |    |
 | cpp  | h    | hpp | ipp |     |     |     |     |     |   |    |
 | ipp  | h    | hpp | cpp |     |     |     |     |     |   |    |
 | hpp  | h    | ipp | cpp | cc  |     |     |     |     |   |    |
@@ -711,6 +725,7 @@ Need to use =helm-projectile-find-other-file= bound to =s-- a=
 | nil  | lock | gpg |     |     |     |     |     |     |   |    |
 | lock |      |     |     |     |     |     |     |     |   |    |
 | gpg  |      |     |     |     |     |     |     |     |   |    |
+
 
 ** Advice from Tuhdo for ignoring files
 
@@ -773,8 +788,8 @@ Basic commands with for interfacing with =exwm= with =helm=
 (with-eval-after-load 'helm
   ;; Need `with-eval-after-load' here since 'helm-map is not defined in 'helm-config.
   ;;  (ambrevar/define-keys helm-map "s-\\" 'helm-toggle-resplit-and-swap-windows) ;; already used in starter-kit-exwm.org for ambrevar/toggle-window-split
-  (exwm-input-set-key (kbd "s-c") #'helm-resume)
-  (exwm-input-set-key (kbd "s-b") #'helm-mini)
+  (exwm-input-set-key (kbd "s-c") #'helm-resume)  ;; get the latest helm thing you did!, i.e., reopen the last helm search.
+  ;; (exwm-input-set-key (kbd "s-b") #'helm-mini) ;; not needed as already in =C-x b=
   (exwm-input-set-key (kbd "s-f") #'helm-find-files)
   (exwm-input-set-key (kbd "s-F") #'helm-locate)
   (when (fboundp 'ambrevar/helm-locate-meta)
@@ -810,8 +825,8 @@ Basic commands with for interfacing with =exwm= with =helm=
   ;; Launcher
   (exwm-input-set-key (kbd "s-r") 'helm-run-external-command)
   ;; Web browser
-  (exwm-input-set-key (kbd "s-w") #'helm-exwm-switch-browser)
-  (exwm-input-set-key (kbd "s-W") #'helm-exwm-switch-browser-other-window)
+  ;; (exwm-input-set-key (kbd "s-w") #'helm-exwm-switch-browser)               ;; I don't use these two and I don't see the user case.
+  ;; (exwm-input-set-key (kbd "s-W") #'helm-exwm-switch-browser-other-window) 
 #+END_SRC
 
 #+RESULTS:
@@ -833,6 +848,15 @@ Basic commands with for interfacing with =exwm= with =helm=
 
 #+RESULTS:
 : ((ido-use-virtual-buffers . ido) (ido-recentf-open . ido) (recentf-open-files . ido) (describe-function . helm-completing-read-symbols) (describe-variable . helm-completing-read-symbols) (describe-symbol . helm-completing-read-symbols) (debug-on-entry . helm-completing-read-symbols) (find-function . helm-completing-read-symbols) (disassemble . helm-completing-read-symbols) (trace-function . helm-completing-read-symbols) (trace-function-foreground . helm-completing-read-symbols) (trace-function-background . helm-completing-read-symbols) (find-tag . helm-completing-read-default-find-tag) (org-capture . helm-org-completing-read-tags) (org-set-tags . helm-org-completing-read-tags) (ffap-alternate-file) (tmm-menubar) (find-file) (find-file-at-point . helm-completing-read-sync-default-handler) (ffap . helm-completing-read-sync-default-handler) (execute-extended-command) (dired-do-rename . helm-read-file-name-handler-1) (dired-do-copy . helm-read-file-name-handler-1) (dired-do-symlink . helm-read-file-name-handler-1) (dired-do-relsymlink . helm-read-file-name-handler-1) (dired-do-hardlink . helm-read-file-name-handler-1))
+
+* Helm-pass
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'password-store)
+(use-package helm-pass)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23548 7807 294126 140000) :init (23548 7807 294112 597000) :config (23548 7807 293865 960000) :config-secs (0 0 5 167000) :init-secs (0 0 472 279000) :use-package-secs (0 0 533 843000)))
 
 * Provide
 

@@ -20,14 +20,15 @@
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
 
-  (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-  (global-set-key (kbd "\C-r") 'isearch-backward-regexp)
-  (global-set-key (kbd "C-M-s") 'isearch-forward)
-  (global-set-key (kbd "C-M-r") 'isearch-backward)
-  
-  (require 'visual-regexp)
-  (define-key global-map (kbd "C-c r") 'vr/replace) ;; note from dgm: now it seems these keys are binded to opening =helm-bibtex=
-  (define-key global-map (kbd "C-c q") 'vr/query-replace)
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-M-s") 'isearch-forward)
+(global-set-key (kbd "C-M-r") 'isearch-backward)
+
+(use-package visual-regexp
+  :ensure t)
+(define-key global-map (kbd "C-c s") 'vr/replace) 
+(define-key global-map (kbd "C-c q") 'vr/query-replace)
 
 (setq ibuffer-saved-filter-groups
       '(("home"
@@ -289,9 +290,8 @@
   (global-set-key (kbd "H-S-n") 'mc/mark-more-like-this-extended)
   (global-set-key (kbd "H-S-a") 'mc/mark-all-in-region)
 
-  (set-fringe-mode '(5 . 5))
-  (require 'minimal)
-  (global-set-key (kbd "C-c s") 'minimal-mode)
+(set-fringe-mode '(5 . 5))
+(require 'minimal)
 
 (global-set-key (kbd "C-<escape>") 'cua-set-mark)
 

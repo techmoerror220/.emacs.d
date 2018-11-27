@@ -65,6 +65,12 @@
   (package-install 'use-package)
   (package-install 'diminish))
 
+
+(setq use-package-enable-imenu-support t)
+(setq use-package-minimum-reported-time 0)
+(setq use-package-verbose t)
+(setq use-package-compute-statistics t)
+
 ;; From use-package README
 (eval-when-compile
   (require 'use-package))
@@ -72,11 +78,13 @@
 (setq use-package-minimum-reported-time 0)
 (eval-and-compile (setq-default use-package-verbose t))
 (eval-and-compile (setq use-package-verbose t))
+(setq use-package-always-ensure t) ;; The :ensure keyword causes the package(s) to be installed automatically if not already present on your system
 
-(require 'diminish)                ;; if you use :diminish
-(require 'bind-key)
+(use-package diminish
+  :ensure t)
 
-
+(use-package bind-key
+  :ensure t)
 
 ;; tramp package from
 ;; https://github.com/danielmai/.emacs.d/blob/master/config.org

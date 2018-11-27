@@ -69,7 +69,7 @@ Bind full screen to `C-c f`.
       (interactive)
       (set-frame-parameter f 'fullscreen
                            (if (frame-parameter f 'fullscreen) nil 'fullboth)))
-    (global-set-key (kbd "C-c f") 'fullscreen)
+    (global-set-key (kbd "C-c f") 'fullscreen)        
     (add-hook 'after-make-frame-functions 'fullscreen)
 #+end_src
 
@@ -144,6 +144,13 @@ Here's what you can do now to a word that starts with a "w" and is select-able w
 
 Note I have binded to =C-o= instead of =M-t=:
 
+Further words from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs:
+
+-  avy and why it’s the best thing in existence
+Many times have I pondered how I can move around buffers even quicker. I’m glad to say, that avy is precisely what I needed, and it’s precisely what you need as well. In short, as you invoke one of avy’s functions, you will be prompted for a character that you’d like to jump to in the visible portion of the current buffer. Afterwards you will notice how all instances of said character have additional letter on top of them. Pressing those letters, that are next to your desired character will move your cursor over there. Admittedly, this sounds overly complicated and complex, but in reality takes a split second and improves your life tremendously.
+
+I like M-s for it, same as C-s is for moving by searching string, now M-s is moving by searching characters.
+
 #+name: avy-mode
 #+begin_src emacs-lisp :tangle yes
 (use-package avy
@@ -156,17 +163,6 @@ Note I have binded to =C-o= instead of =M-t=:
 
 #+RESULTS: avy-mode
 : avy-goto-word-1
-
-Further tweak from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs
-
-In his words: 
-
-Many times have I pondered how I can move around buffers even quicker. I’m glad to say, that avy is precisely what I needed, and it’s precisely what you need as well. In short, as you invoke one of avy’s functions, you will be prompted for a character that you’d like to jump to in the visible portion of the current buffer. Afterwards you will notice how all instances of said character have additional letter on top of them. Pressing those letters, that are next to your desired character will move your cursor over there. Admittedly, this sounds overly complicated and complex, but in reality takes a split second and improves your life tremendously.
-
-I like M-s for it, same as C-s is for moving by searching string, now M-s is moving by searching characters.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-#+END_SRC
 
 * dgm's own customizations of emacs appearance
 ** GROUP: Convenience -> Linum
@@ -935,19 +931,22 @@ Load eval-in-repl for bash, elisp, and python interaction.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; require the main file containing common functions
-(require 'eval-in-repl)
-(setq comint-process-echoes t)
-
-;; truncate lines in comint buffers
-(add-hook 'comint-mode-hook
-          (lambda()
-            (setq truncate-lines 1)))
-
-;; Scroll down for input and output
-(setq comint-scroll-to-bottom-on-input t)
-(setq comint-scroll-to-bottom-on-output t)
-(setq comint-move-point-for-output t)
+(use-package eval-in-repl
+  :ensure t
+  :config 
+  (setq comint-process-echoes t)
+  ;; truncate lines in comint buffers
+  (add-hook 'comint-mode-hook
+            (lambda()
+              (setq truncate-lines 1)))
+  ;; Scroll down for input and output
+  (setq comint-scroll-to-bottom-on-input t)
+  (setq comint-scroll-to-bottom-on-output t)
+  (setq comint-move-point-for-output t))
 #+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23547 54059 64969 29000) :init (23547 54059 64933 102000) :config (23547 54059 64322 241000) :config-secs (0 0 1142 991000) :init-secs (0 0 2390 167000) :use-package-secs (0 0 2547 628000)))
 
 *** Run R in emacs (ESS)
 Tip from: https://github.com/izahn/dotemacs
@@ -1019,7 +1018,7 @@ If you want to get the most out of Emacs, you’ll eventually need to learn a li
 #+end_src
 
 #+RESULTS:
-| (lambda nil (require (quote company-elisp)) (setq-local company-backends (delete-dups (cons (quote company-elisp) (cons (quote company-files) company-backends))))) | esk-remove-elc-on-save | run-starter-kit-coding-hook | turn-on-eldoc-mode |
+| (lambda nil (require 'company-elisp) (setq-local company-backends (delete-dups (cons 'company-elisp (cons 'company-files company-backends))))) | (lambda nil (require 'company-elisp) (set (make-local-variable 'company-backends) (delete-dups (cons 'company-elisp (cons 'company-files company-backends))))) | esk-remove-elc-on-save | run-starter-kit-coding-hook | turn-on-eldoc-mode |
 
 *** Demonstration tools (command-log-mode)
     tip from: https://github.com/izahn/dotemacs
@@ -2439,19 +2438,6 @@ Note: I disable this as I find it not very useful and dizzling by way of the mov
 #+RESULTS:
 : t
 
-*** avy and why it’s the best thing in existence
-Many times have I pondered how I can move around buffers even quicker. I’m glad to say, that avy is precisely what I needed, and it’s precisely what you need as well. In short, as you invoke one of avy’s functions, you will be prompted for a character that you’d like to jump to in the visible portion of the current buffer. Afterwards you will notice how all instances of said character have additional letter on top of them. Pressing those letters, that are next to your desired character will move your cursor over there. Admittedly, this sounds overly complicated and complex, but in reality takes a split second and improves your life tremendously.
-
-I like M-s for it, same as C-s is for moving by searching string, now M-s is moving by searching characters.
-
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package avy
-  :ensure t
-  :bind
-    ("s-s" . avy-goto-char))
-#+END_SRC
-
 *** Text manipulation
 Here I shall collect self-made functions that make editing text easier.
 **** Mark-Multiple
@@ -2711,11 +2697,15 @@ Se usa con =M-x scratch= y te crea un scratch buffer of the currently used mode.
 #+RESULTS:
 
 *** Visible mode
-I found out about this mode by looking through simple.el. I use it to see raw org-mode files without going to a different mode like text-mode, which is what I had done in order to see invisible text (with org hyperlinks). The entire buffer contents will be visible while still being in org mode.
+I found out about this mode by looking through =simple.el=. 
+(For the record: =simple.el=  is a grab-bag of basic Emacs commands not specifically related to some major mode or to file-handling.)
+I use it to see raw org-mode files without going to a different mode like text-mode, which is what I had done in order to see invisible text (with org hyperlinks). The entire buffer contents will be visible while still being in org mode.
+
+Make visible mode the default, please. 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package visible-mode
-  :bind (("s-h" . visible-mode)))
+(visible-mode 1)
+(global-set-key (kbd "s-h") 'visible-mode)
 #+END_SRC
 
 #+RESULTS:
@@ -3348,6 +3338,58 @@ https://www.emacswiki.org/emacs/BookmarkPlus
 (require 'bookmark+)
 #+END_SRC
 
+* Ledger
+
+From 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ledger-mode
+  :ensure t
+  :init
+  (setq ledger-clear-whole-transactions 1)
+
+  :config
+  (add-to-list 'ledger-report-mode)
+  :mode "\\.dat\\'")
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23548 17303 871458 855000) :init (23548 17303 871411 289000) :init-secs (0 0 97 698000) :use-package-secs (0 0 314 844000)))
+
+* Nice symbol for end of file lines
+
+From https://www.reddit.com/r/emacs/comments/2kdztw/emacs_in_evil_mode_show_tildes_for_blank_lines/
+
+Originally here:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;(setq-default indicate-empty-lines t)
+;;(define-fringe-bitmap 'tilde [0 0 0 113 219 142 0 0] nil nil 'center)
+;;(setcdr (assq 'empty-line fringe-indicator-alist) 'tilde)
+;;(set-fringe-bitmap-face 'tilde 'font-lock-comment-face)
+;;;;;;; (set-fringe-bitmap-face 'tilde 'font-lock-function-name-face) ;; for blue tilde
+#+END_SRC
+
+But then the guy turned it into a minor mode! See 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'vi-tilde-fringe)
+(global-vi-tilde-fringe-mode 1)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+To turn it on automatically only for programming modes:
+
+=(add-hook 'prog-mode-hook 'vi-tilde-fringe-mode)=
+
+
+Open the customization group buffer:
+
+=M-x customize-group RET vi-tilde-fringe RET=
+
+
 
 * Final message
 #+source: message-line
@@ -3357,11 +3399,4 @@ https://www.emacswiki.org/emacs/BookmarkPlus
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
-
-
-
-
-
-
-
 

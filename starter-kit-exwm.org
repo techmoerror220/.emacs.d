@@ -79,7 +79,6 @@ Allow non-floating resizing with mouse.
 #+RESULTS:
 : t
 
-
 ** System tray
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -87,7 +86,6 @@ Allow non-floating resizing with mouse.
 (exwm-systemtray-enable)
 (setq exwm-systemtray-height 16)
 #+END_SRC
-
 
 ** Shortcuts 
 
@@ -126,8 +124,7 @@ The following can only apply to EXWM buffers, else it could have unexpected effe
 
 #+RESULTS:
 
-
-**  External application shortcuts.
+** External application shortcuts.
 
 I comment out =s-r= because it is already defined for =helm-run-external-command= in =starter-kit-helm.org=.
 
@@ -138,7 +135,6 @@ I comment out =s-r= because it is already defined for =helm-run-external-command
 (exwm-input-set-key (kbd "s-&") #'ambrevar/exwm-start)
 ;; (exwm-input-set-key (kbd "s-r") #'ambrevar/exwm-start) 
 #+END_SRC
-
 
 ** Magit 
 
@@ -206,7 +202,6 @@ Note that with the package =whole-line-or-region-kill-save= these simulation key
 (exwm-input-set-key (kbd "s-<tab>") #'ambrevar/switch-to-last-buffer)
 #+END_SRC
 
-
 ** Lock screen 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -266,7 +261,6 @@ Some programs such as 'emacs' are better off being started in char-mode.
 #+RESULTS:
 | ambrevar/exwm-start-in-char-mode |
 
-
 * Technomancy's customization
 
 ** Workspaces
@@ -289,7 +283,6 @@ The next loop will bind =s-<number>= to switch to the corresponding workspace fr
 #+END_SRC
 
 
-
 ** Making the audio keys work
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -304,7 +297,6 @@ The next loop will bind =s-<number>= to switch to the corresponding workspace fr
 #+END_SRC
 
 #+RESULTS:
-
 
 * Launchers
 Stuff from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs
@@ -331,14 +323,14 @@ I guess this goes without saying but you absolutely have to change the arguments
 #+RESULTS:
 : daedreth/lock-screen
 
-*** Keybindings to start processes
-#+BEGIN_SRC emacs-lisp :tangle yes
+*** COMMENT Keybindings to start processes
+
+Commented out as I already have =s-z= to lock screen and =s-@= is for org's self-insert command.
+
+#+BEGIN_SRC emacs-lisp :tangle no
 ;;(global-set-key (kbd "<s-escape>") 'daedreth/launch-browser) ;; commented out as <s-w> also lunches the browser and <s-W> does so in other window
 (global-set-key (kbd "<s-@>") 'daedreth/lock-screen)
 #+END_SRC
-
-#+RESULTS:
-: daedreth/lock-screen
 
 * Provide
 

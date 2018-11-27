@@ -159,8 +159,10 @@
 ;; (setq browse-url-browser-function 'browse-url-generic
 ;;       browse-url-generic-program "~/src/conkeror/conkeror")
 
+;;(setq browse-url-browser-function 'browse-url-generic
+;;      browse-url-generic-program "chromium")
 (setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "chromium")
+      browse-url-generic-program "eww")
 
 (auto-compression-mode t)
 

@@ -216,13 +216,14 @@ Set this to whatever browser you use e.g...
 ;; (setq browse-url-browser-function 'browse-url-generic
 ;;       browse-url-generic-program "~/src/conkeror/conkeror")
 
+;;(setq browse-url-browser-function 'browse-url-generic
+;;      browse-url-generic-program "chromium")
 (setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "chromium")
+      browse-url-generic-program "eww")
 #+END_SRC
 
 #+RESULTS:
-: chromium
-
+: eww
 
 ** Transparently open compressed files
 #+begin_src emacs-lisp
