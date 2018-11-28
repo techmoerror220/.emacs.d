@@ -3168,48 +3168,6 @@ Tweaking from Ambrevar's dot file. However, his original combination of colors w
 
 #+RESULTS:
 
-** Diminishing modes 
-
-Your modeline is sacred, and if you have a lot of modes enabled, as you will if you use this config, you might end up with a lot of clutter there, the package diminish disables modes on the mode line but keeps them running, it just prevents them from showing up and taking up space.
-
-THIS WILL BE REMOVED SOON AS USE-PACKAGE HAS THE FUNCTIONALITY BUILT IN
-
-Edit this list as you see fit!
-
-PS: recall that the =diminish= package is installed in =starter-kit.org=.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (diminish 'which-key-mode)
-  (diminish 'linum-relative-mode)
-  (diminish 'hungry-delete-mode)
-  (diminish 'visual-line-mode)
-  (diminish 'subword-mode)
-  (diminish 'beacon-mode)
-  (diminish 'irony-mode)
-  (diminish 'page-break-lines-mode)
-  (diminish 'auto-revert-mode)
-  (diminish 'rainbow-delimiters-mode)
-  (diminish 'yas-minor-mode)
-  (diminish 'rainbow-mode)
-  (diminish 'undo-tree-mode)
-  (diminish 'editorconfig-mode)
-;;  (diminish 'smartparens-mode) ;; added in -text.org
-  (diminish 'minimal-mode)
-  (diminish 'org-mode)
-  (diminish 'org-indent-mode)
-  (diminish 'volatile-highlights-mode) 
-  (diminish 'highlight-symbol-mode) 
-  (diminish 'pandoc-mode) 
-;;  (diminish 'projectile-mode) 
-  (diminish 'browse-kill-ring-mode) 
-  (diminish 'auto-fill-mode) 
-  (diminish 'refill-mode) 
-  (diminish 'helm-gtags-mode) 
-#+END_SRC
-
-#+RESULTS:
-|   |
-
 * Tuhdo's customization of Helm's appearance
 
 Sometimes, customization of helm's looks set in =starter-kit-helm.org= gets overriden... that's why I place it here now.
@@ -3388,6 +3346,49 @@ Open the customization group buffer:
 
 =M-x customize-group RET vi-tilde-fringe RET=
 
+* Diminishing modes 
+
+Your modeline is sacred, and if you have a lot of modes enabled, as you will if you use this config, you might end up with a lot of clutter there, the package diminish disables modes on the mode line but keeps them running, it just prevents them from showing up and taking up space.
+
+THIS WILL BE REMOVED SOON AS USE-PACKAGE HAS THE FUNCTIONALITY BUILT IN
+
+Edit this list as you see fit!
+
+PS: recall that the =diminish= package is installed in =starter-kit.org=.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (diminish 'which-key-mode)
+  (diminish 'linum-relative-mode)
+  (diminish 'hungry-delete-mode)
+  (diminish 'visual-line-mode)
+  (diminish 'subword-mode)
+  (diminish 'beacon-mode)
+  (diminish 'irony-mode)
+  (diminish 'page-break-lines-mode)
+  (diminish 'auto-revert-mode)
+  (diminish 'rainbow-delimiters-mode)
+  (diminish 'yas-minor-mode)
+  (diminish 'rainbow-mode)
+  (diminish 'undo-tree-mode)
+  (diminish 'editorconfig-mode)
+;;  (diminish 'smartparens-mode) ;; added in -text.org
+  (diminish 'minimal-mode)
+  (diminish 'org-mode)
+  (diminish 'org-indent-mode)
+  (diminish 'volatile-highlights-mode) 
+  (diminish 'highlight-symbol-mode) 
+  (diminish 'pandoc-mode) 
+;;  (diminish 'projectile-mode) 
+  (diminish 'browse-kill-ring-mode) 
+  (diminish 'auto-fill-mode) 
+  (diminish 'refill-mode) 
+  (diminish 'helm-gtags-mode) 
+  (diminish 'vi-tilde-fringe-mode)
+#+END_SRC
+
+#+RESULTS:
+|   |
+
 
 * Final message
 #+source: message-line
@@ -3397,4 +3398,12 @@ Open the customization group buffer:
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+
+
+
+
+
+
+
+
 

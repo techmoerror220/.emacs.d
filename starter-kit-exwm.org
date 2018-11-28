@@ -117,8 +117,8 @@ The following can only apply to EXWM buffers, else it could have unexpected effe
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (push ?\s-  exwm-input-prefix-keys)
-(exwm-input-set-key (kbd "s-i") #'follow-delete-other-windows-and-split)
-(exwm-input-set-key (kbd "s-o") #'ambrevar/toggle-single-window)
+;; (exwm-input-set-key (kbd "s-i") #'follow-delete-other-windows-and-split) ;; no lo veo claro 
+;; (exwm-input-set-key (kbd "s-o") #'ambrevar/toggle-single-window) ;; not working... =s-o= not recognized, don't know why. 
 (exwm-input-set-key (kbd "s-O") #'exwm-layout-toggle-fullscreen)
 #+END_SRC
 
@@ -263,10 +263,11 @@ Some programs such as 'emacs' are better off being started in char-mode.
 
 * Technomancy's customization
 
-** Workspaces
+** COMMENT Workspaces
 We start out with 1 workspace, as exwm creates workspaces dynamically. (I think Technomancy starts with 9 workspaces really and this setup of 1 is really from Uncle Dave.)
+??? Don't know really. I see three workspaces to start with if I do =s-w= so I disable to see what effect it has
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq exwm-workspace-number 1
       exwm-workspace-show-all-buffers t
       exwm-layout-show-all-buffers t)

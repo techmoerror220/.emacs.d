@@ -33,8 +33,8 @@
   (exwm-input-set-key (kbd "s-L") 'ambrevar/swap-windows-right))
 
 (push ?\s-  exwm-input-prefix-keys)
-(exwm-input-set-key (kbd "s-i") #'follow-delete-other-windows-and-split)
-(exwm-input-set-key (kbd "s-o") #'ambrevar/toggle-single-window)
+;; (exwm-input-set-key (kbd "s-i") #'follow-delete-other-windows-and-split) ;; no lo veo claro 
+;; (exwm-input-set-key (kbd "s-o") #'ambrevar/toggle-single-window) ;; not working... =s-o= not recognized, don't know why. 
 (exwm-input-set-key (kbd "s-O") #'exwm-layout-toggle-fullscreen)
 
 (defun ambrevar/exwm-start (command)
@@ -99,16 +99,6 @@
   (when (string-prefix-p "emacs" exwm-instance-name)
     (exwm-input-release-keyboard (exwm--buffer->id (window-buffer)))))
 (add-hook 'exwm-manage-finish-hook 'ambrevar/exwm-start-in-char-mode)
-
-(setq exwm-workspace-number 1
-      exwm-workspace-show-all-buffers t
-      exwm-layout-show-all-buffers t)
-
-(dotimes (i 10)
-  (exwm-input-set-key (kbd (format "s-%d" i))
-                      `(lambda ()
-                         (interactive)
-                         (exwm-workspace-switch-create ,i))))
 
 (dolist (k '(("<XF86AudioLowerVolume>"
               "amixer sset Master 5%-")
