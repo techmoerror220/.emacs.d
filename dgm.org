@@ -3389,6 +3389,21 @@ PS: recall that the =diminish= package is installed in =starter-kit.org=.
 #+RESULTS:
 |   |
 
+* Euro symbol 
+
+From https://astrofloyd.wordpress.com/2014/08/11/insert-the-euro-symbol-e-in-emacs/
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(fset 'euro
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([24 56 return 35 120 50 48 65 67 return] 0 "%d")) arg)))
+#+END_SRC
+
+#+RESULTS:
+| lambda | (&optional arg) | Keyboard macro. | (interactive p) | (kmacro-exec-ring-item '([24 56 return 35 120 50 48 65 67 return] 0 %d) arg) |
+
+The euro sign can then be inserted by calling the macro:
+
+M-x euro
 
 * Final message
 #+source: message-line
