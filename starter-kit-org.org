@@ -973,6 +973,8 @@ Tip from: https://orgmode.org/manual/Setting-tags.html
 ** Public holidays 
 
 Public holidays in Spain. Tip from: https://www.emacswiki.org/emacs/CalendarLocalization
+And Calendario de fiestas moviles hasta 2100 en http://www.antonioburgos.com/antologia/semana_santa/curiosidades/zzcurioaalmaque.html
+Check another cool customization here: http://www.gnomon.org.uk/diary.html
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (require 'org-agenda)
@@ -981,49 +983,72 @@ Public holidays in Spain. Tip from: https://www.emacswiki.org/emacs/CalendarLoca
   (setq org-agenda-include-diary t)
 
   (setq holiday-other-holidays
-        '((holiday-fixed 1 1 "Año Nuevo")
-          (holiday-fixed 1 6 "Día de Reyes")
-          (holiday-fixed 2 14 "Miércoles de Ceniza")
+        '((holiday-fixed 1 1 "Año Nuevo / New Year's Day")
+          (holiday-fixed 1 6 "Día de Reyes / Epiphany") 
+          (holiday-fixed 2 14 "Valentine's Day")
+;;          (holiday-fixed 3 5 "Martes de Carnaval")
+;;          (holiday-fixed 3 6 "Miércoles de Ceniza")
+          (holiday-easter-etc -47 "Martes de Carnaval / Shrove Tuesday") 
+          (holiday-easter-etc -46 "Miércoles de Ceniza / Ash Friday")
           (holiday-sexp '(calendar-nth-named-day 1 1 3 year 19) "Día de San José")
-          (holiday-easter-etc -7 "Domingo de Ramos")
-          (holiday-easter-etc -3 "Jueves Santo")
-          (holiday-easter-etc -2 "Viernes Santo")
+          (holiday-easter-etc -7 "Domingo de Ramos / Palm Sunday")
+          (holiday-easter-etc -3 "Jueves Santo / Maundy Thursday")
+          (holiday-easter-etc -2 "Viernes Santo / Good Friday")
+          (holiday-easter-etc 0 "Domingo de Resurrección o Pascua / Easter Sunday")
           (holiday-easter-etc +1 "Lunes de Pascua")
           (holiday-fixed 5 1 "Día Internacional del Trabajo")
           (holiday-fixed 5 2 "Día de la Comunidad de Madrid")
           (holiday-fixed 5 6 "Día de la Madre")
           (holiday-fixed 5 15 "Día de San Isidro")
           (holiday-fixed 5 31 "Corpus Christi (Madrid)")
-;;          (holiday-easter-etc +43 "Día de la Ascención")
-          (holiday-easter-etc +64 "Corpus Christi")
+         ;;  (holiday-easter-etc +43 "Día de la Ascención")
+         ;;  (holiday-easter-etc +64 "Corpus Christi")
+          (holiday-easter-etc 60 "Corpus Christi") ;; en http://lists.gnu.org/archive/html/emacs-devel/2004-07/msg00494.html
           (holiday-fixed 10 12 "Día de la Hispanidad")
           (holiday-fixed 11 1  "Todos los santos")
-          (holiday-fixed 12 25 "Navidad")
+          (holiday-fixed 11 9  "Día de la Almudena")
+          (holiday-fixed 12 25 "Natividad del Señor")
           (holiday-fixed 12 6 "Día de la Constitución")
-          (holiday-fixed 12 8 "Inmaculada Concepción")
+          (holiday-fixed 12 8 "Inmaculada Concepción") ;; en 2018. En 2019 se trasladará al lunes 9. Ojo! Cambiar con el nuevo agno!!
           ))
 #+END_SRC
 
 #+RESULTS:
-| holiday-fixed      |                                       1 |                1 | Año Nuevo                     |
-| holiday-fixed      |                                       1 |                6 | Día de Reyes                  |
-| holiday-fixed      |                                       2 |               14 | Miércoles de Ceniza           |
-| holiday-sexp       | '(calendar-nth-named-day 1 1 3 year 19) |  Día de San José |                               |
-| holiday-easter-etc |                                      -7 | Domingo de Ramos |                               |
-| holiday-easter-etc |                                      -3 |     Jueves Santo |                               |
-| holiday-easter-etc |                                      -2 |    Viernes Santo |                               |
-| holiday-easter-etc |                                       1 |  Lunes de Pascua |                               |
-| holiday-fixed      |                                       5 |                1 | Día Internacional del Trabajo |
-| holiday-fixed      |                                       5 |                2 | Día de la Comunidad de Madrid |
-| holiday-fixed      |                                       5 |                6 | Día de la Madre               |
-| holiday-fixed      |                                       5 |               15 | Día de San Isidro             |
-| holiday-fixed      |                                       5 |               31 | Corpus Christi (Madrid)       |
-| holiday-easter-etc |                                      64 |   Corpus Christi |                               |
-| holiday-fixed      |                                      10 |               12 | Día de la Hispanidad          |
-| holiday-fixed      |                                      11 |                1 | Todos los santos              |
-| holiday-fixed      |                                      12 |               25 | Navidad                       |
-| holiday-fixed      |                                      12 |                6 | Día de la Constitución        |
-| holiday-fixed      |                                      12 |                8 | Inmaculada Concepción         |
+| holiday-fixed      |                                       1 |                                                1 | Año Nuevo / New Year's Day    |
+| holiday-fixed      |                                       1 |                                                6 | Día de Reyes / Epiphany       |
+| holiday-fixed      |                                       2 |                                               14 | Valentine's Day               |
+| holiday-easter-etc |                                     -47 |              Martes de Carnaval / Shrove Tuesday |                               |
+| holiday-easter-etc |                                     -46 |                 Miércoles de Ceniza / Ash Friday |                               |
+| holiday-sexp       | '(calendar-nth-named-day 1 1 3 year 19) |                                  Día de San José |                               |
+| holiday-easter-etc |                                      -7 |                   Domingo de Ramos / Palm Sunday |                               |
+| holiday-easter-etc |                                      -3 |                   Jueves Santo / Maundy Thursday |                               |
+| holiday-easter-etc |                                      -2 |                      Viernes Santo / Good Friday |                               |
+| holiday-easter-etc |                                       0 | Domingo de Resurrección o Pascua / Easter Sunday |                               |
+| holiday-easter-etc |                                       1 |                                  Lunes de Pascua |                               |
+| holiday-fixed      |                                       5 |                                                1 | Día Internacional del Trabajo |
+| holiday-fixed      |                                       5 |                                                2 | Día de la Comunidad de Madrid |
+| holiday-fixed      |                                       5 |                                                6 | Día de la Madre               |
+| holiday-fixed      |                                       5 |                                               15 | Día de San Isidro             |
+| holiday-fixed      |                                       5 |                                               31 | Corpus Christi (Madrid)       |
+| holiday-easter-etc |                                      60 |                                   Corpus Christi |                               |
+| holiday-fixed      |                                      10 |                                               12 | Día de la Hispanidad          |
+| holiday-fixed      |                                      11 |                                                1 | Todos los santos              |
+| holiday-fixed      |                                      11 |                                                9 | Día de la Almudena            |
+| holiday-fixed      |                                      12 |                                               25 | Natividad del Señor           |
+| holiday-fixed      |                                      12 |                                                6 | Día de la Constitución        |
+| holiday-fixed      |                                      12 |                                                8 | Inmaculada Concepción         |
+
+
+Thanks to the following declaration, the above holidays show up in my computer's Org Agenda view  (though not in orgzly) Basically you tell agenda to display events from calendar diary:
+
+(Tip from https://emacs.stackexchange.com/questions/10965/easiest-way-to-customize-holidays-that-appear-in-org-agenda.)
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+'(org-agenda-include-diary t) 
+#+END_SRC
+
+#+RESULTS:
+| org-agenda-include-diary | t |
 
 
 *** Make calendar start on Monday instead of Sunday

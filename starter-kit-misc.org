@@ -147,6 +147,17 @@ His explanation: I tend to switch themes more often than normal. For example, sw
 
 ** Window system 
 
+Note: =font-lock-maximum-decoration= was originally set to =t=. But this made emacs way too slow.  In https://www.gnu.org/software/emacs/manual/html_node/efaq/Turning-on-syntax-highlighting.html they say that turning it to =nil= we get the default (usually minimum) decoration (but i take this to mean that there is decoration nonetheless). Originally it was true but dgm turned it off as emacs is way to slow with it.
+In the description of the variable =font-lock-maximum-decoration= they say that if nil, use the default decoration (typically the minimum available).
+- If t, use the maximum decoration available.
+- If a number, use that level of decoration (or if not available the maximum). The higher the number, the more decoration is done.
+- If a list, each element should be a cons pair of the form (MAJOR-MODE . LEVEL),
+where MAJOR-MODE is a symbol or t (meaning the default).  For example:
+ ((c-mode . t) (c++-mode . 2) (t . 1))
+means use the maximum decoration available for buffers in C mode, level 2
+decoration for buffers in C++ mode, and level 1 decoration otherwise.
+
+
 #+srcname: starter-kit-window-view-stuff
 #+begin_src emacs-lisp 
     (when window-system
@@ -170,7 +181,7 @@ His explanation: I tend to switch themes more often than normal. For example, sw
 
     (setq visible-bell t
           echo-keystrokes 0.1
-          font-lock-maximum-decoration t
+          font-lock-maximum-decoration nil  ;; originally it was truel dgm turns this off as emacs is way to slow with it. 
           font-lock-verbose nil
           inhibit-startup-message t
           transient-mark-mode t

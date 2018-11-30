@@ -326,6 +326,7 @@ Requires `call-process-to-string' from `functions'."
                                          "/media/dgm/blue/documents/data/eurostat" 
                                          "/media/dgm/blue/documents/programming"
                                          "/media/dgm/blue/documents/My-Academic-Stuff"
+                                         "/media/dgm/blue/documents/personal"
                                          "/media/dgm/blue/documents/templates"))
   (projectile-add-known-project "~/.emacs.d/")
   (projectile-add-known-project  "~/texmf/")
@@ -336,6 +337,7 @@ Requires `call-process-to-string' from `functions'."
   (projectile-add-known-project "/media/dgm/blue/documents/data/eurostat")
   (projectile-add-known-project "/media/dgm/blue/documents/programming")
   (projectile-add-known-project "/media/dgm/blue/documents/My-Academic-Stuff")
+  (projectile-add-known-project "/media/dgm/blue/documents/personal")
   (projectile-add-known-project "/media/dgm/blue/documents/templates")
   
   (when (require 'magit nil t)

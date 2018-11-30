@@ -130,7 +130,7 @@
 
     (setq visible-bell t
           echo-keystrokes 0.1
-          font-lock-maximum-decoration t
+          font-lock-maximum-decoration nil  ;; originally it was truel dgm turns this off as emacs is way to slow with it. 
           font-lock-verbose nil
           inhibit-startup-message t
           transient-mark-mode t
