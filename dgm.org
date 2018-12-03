@@ -2547,10 +2547,12 @@ Colors parentheses and other delimiters depending on their depth, useful for any
 
 #+RESULTS:
 
-*** Hungry deletion
+*** COMMENT Hungry deletion
 On the list of things I like doing, deleting big whitespaces is pretty close to the bottom. Backspace or Delete will get rid of all whitespace until the next non-whitespace character is encountered. You may not like it, thus disable it if you must, but it’s pretty decent.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+DGM: I am commenting this out as I found it annoying when, for example, editing ledger files and wanting to delete spaces one by one I found the cursor deleting all the white space and thus indening lines in the wrong manner. La sensacion era como si el buffer estuviera tabify when it wasn't... So I wasn't understanding what was going on until I recalled I had this mode enabled.
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package hungry-delete
   :ensure t
   :config
@@ -2558,7 +2560,7 @@ On the list of things I like doing, deleting big whitespaces is pretty close to 
 #+END_SRC
 
 #+RESULTS:
-: t
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23554 33611 672389 982000) :init (23554 33611 672357 93000) :config (23554 33611 672016 76000) :config-secs (0 0 2391 739000) :init-secs (0 0 3160 173000) :use-package-secs (0 0 3365 347000)))
 
 *** popup-kill-ring
 Out of all the packages I tried out, this one, being the simplest, appealed to me most. With a simple M-y you can now browse your kill-ring like browsing autocompletion items. C-n and C-p totally work for this.
@@ -3392,6 +3394,7 @@ PS: recall that the =diminish= package is installed in =starter-kit.org=.
 * Euro symbol 
 
 From https://astrofloyd.wordpress.com/2014/08/11/insert-the-euro-symbol-e-in-emacs/
+But it doesn't work
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (fset 'euro
@@ -3404,6 +3407,16 @@ From https://astrofloyd.wordpress.com/2014/08/11/insert-the-euro-symbol-e-in-ema
 The euro sign can then be inserted by calling the macro:
 
 M-x euro
+
+
+
+* Trying to fix disappearing cursor 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq blink-cursor-delay 0)
+#+END_SRC
+
+#+RESULTS:
+: 0
 
 * Final message
 #+source: message-line

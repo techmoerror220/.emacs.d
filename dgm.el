@@ -1197,11 +1197,6 @@ only if this merge job is part of a group, i.e., was invoked from within
   :init
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
-(use-package hungry-delete
-  :ensure t
-  :config
-    (global-hungry-delete-mode))
-
 (use-package page-break-lines
   :ensure t)
 
@@ -1533,5 +1528,7 @@ selects backward.)"
   (diminish 'refill-mode) 
   (diminish 'helm-gtags-mode) 
   (diminish 'vi-tilde-fringe-mode)
+
+(setq blink-cursor-delay 0)
 
 (message "Starter Kit User (DGM) File loaded.")
