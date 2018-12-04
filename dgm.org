@@ -2645,7 +2645,6 @@ Commented out as =C-o= does the same and =s-s= even better as it applies to any 
 
 #+RESULTS:
 : ace-jump-mode
-
 *** Smartscan
 Quickly jumps between other symbols found at point in Emacs.
 

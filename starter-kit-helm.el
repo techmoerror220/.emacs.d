@@ -351,7 +351,7 @@ Requires `call-process-to-string' from `functions'."
 (define-key projectile-mode-map (kbd "s--") 'projectile-command-map)
 ;;(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
-(setq projectile-enable-caching t) ;; update 22 nov 2018. In C-h v projectile-indexing-method they recommend to have it set to aliena to have this other variable set to true. If it does not work, revert to instructions in emacs's cheatsheet.
+(setq projectile-enable-caching nil) ;; update 22 nov 2018. In C-h v projectile-indexing-method they recommend to have it set to alien to have this other variable set to true. If it does not work, revert to instructions in emacs's cheatsheet.
 ;; (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
 ;; https://github.com/bbatsov/projectile/issues/1183
 ;; trying to fix slow behaviour of emacs
@@ -359,7 +359,7 @@ Requires `call-process-to-string' from `functions'."
       '(:eval (format " Projectile[%s]"
                       (projectile-project-name))))
 
-(define-key projectile-mode-map [?\s-s] 'projectile-switch-project)
+(define-key projectile-mode-map [?\s-d] 'projectile-switch-project)
 (define-key projectile-mode-map [?\s-D] 'projectile-find-dir-dwim)
 ;;(define-key projectile-mode-map [?\s-y] 'projectile-ag) ;; this is not working. =projectile-ag= is in M-pthe directory structure.
 
