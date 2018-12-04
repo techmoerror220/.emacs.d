@@ -1,6 +1,7 @@
 *.el~
 *.el
 !init.el
+!custom.el
 *.org~
 tramp
 backups/

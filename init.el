@@ -1,3 +1,4 @@
+;; test to see if git works on init.el
 ;;; init.el --- Where all the magic begins
 ;;
 ;; Part of the Emacs Starter Kit
