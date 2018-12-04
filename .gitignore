@@ -1,4 +1,6 @@
 *.el~
+*.el
+!init.el
 *.org~
 tramp
 backups/
@@ -42,17 +44,9 @@ ido.last
 ido.last~
 projectile-bookmarks.eld
 projectile.cache
+projectile*
 recentf
 smex-items
 history
 .org-id-locations
-elpa/archives/
-
-
-
-
-
-projectile.cache
-elpa/archives
-projectile.cache
 elpa/archives/
