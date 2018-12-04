@@ -234,7 +234,10 @@ Set this to whatever browser you use e.g...
 ;;;;      browse-url-generic-program "eww")
 
 (setq browse-url-browser-function 'eww-browse-url)  ;; to make eww the default browser (see https://emacs.stackexchange.com/posts/7332/revisions)
-(setq shr-external-browser 'chromium)               ;; to make chromium default when I do =&= from within eww to open external browser
+;;(setq shr-external-browser 'chromium-browser)               ;; to make chromium default when I do =&= from within eww to open external browser
+;;(setq eww-browse-with-external-browser 'shr-external-browser)
+(setq browse-url-generic-program "chromium")
+
 #+END_SRC
 
 #+RESULTS:
