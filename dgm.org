@@ -92,17 +92,96 @@ Bind full screen to `C-c f`.
              )))
 #+end_src
 
+** Dired
 *** Dired-x
 
-Dired extensions
+Dired extensions. Dired-x (Dired Extra) is not like Dired-plus. The former is part of the standard distribution of emacs. 
+
+Modified following the advice in the *info* node on installation of dired-x
 
 #+source: Dired-x
 #+begin_src emacs-lisp :tangle yes
-  (load "dired-x")
+;;  (load "dired-x")
+     (add-hook 'dired-load-hook
+               (lambda ()
+                 (load "dired-x")
+                 ;; Set dired-x global variables here.  For example:
+                 ;; (setq dired-guess-shell-gnutar "gtar")
+                 ;; (setq dired-x-hands-off-my-keys nil)
+                 ))
+     (add-hook 'dired-mode-hook
+               (lambda ()
+                 ;; Set dired-x buffer-local variables here.  For example:
+                 ;; (dired-omit-mode 1)
+                 ))
 #+end_src
 
 #+RESULTS: Dired-x
-: t
+| (lambda nil) | (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
+
+
+Further customization that I originally had within the block on dired plus that I actually do not use!
+
+First I set dired listing options. Originally, among the options there was a =p= in =-alDhp= but in https://www.reddit.com/r/emacs/comments/9flask/dired_mode_move_directory/ they explain that this causes failure when moving directories. The =p= flag to =ls= appends a slash (=/=) indicator to directories.
+
+Then I added to option to list directories first that I found in https://www.emacswiki.org/emacs/DiredSorting
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(if (eq system-type 'gnu/linux)
+    (setq dired-listing-switches "-alDh --group-directories-first")) 
+(defun ensure-buffer-name-ends-in-slash ()
+  "change buffer name to end with slash"
+  (let ((name (buffer-name)))
+    (if (not (string-match "/$" name))
+        (rename-buffer (concat name "/") t))))
+(add-hook 'dired-mode-hook 'ensure-buffer-name-ends-in-slash)
+(add-hook 'dired-mode-hook
+          (lambda()
+             (setq truncate-lines 1)))
+#+END_SRC
+
+Open files in external programs (from http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
+Consider replacing with https://github.com/thamer/runner.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun xah-open-in-external-app (&optional file)
+  "Open the current file or dired marked files in external app.
+The app is chosen from your OS's preference."
+  (interactive)
+  (let (doIt
+        (myFileList
+         (cond
+          ((string-equal major-mode "dired-mode")
+           (dired-get-marked-files))
+          ((not file) (list (buffer-file-name)))
+          (file (list file)))))
+    (setq doIt (if (<= (length myFileList) 5)
+                   t
+                 (y-or-n-p "Open more than 5 files? ")))
+    (when doIt
+      (cond
+       ((string-equal system-type "windows-nt")
+        (mapc
+         (lambda (fPath)
+           (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" fPath t t)))
+         myFileList))
+       ((string-equal system-type "darwin")
+        (mapc
+         (lambda (fPath)
+           (shell-command (format "open \"%s\"" fPath)))
+         myFileList))
+       ((string-equal system-type "gnu/linux")
+        (mapc
+         (lambda (fPath)
+           (let ((process-connection-type nil))
+             (start-process "" nil "xdg-open" fPath))) myFileList))))))
+;; use zip/unzip to compress/uncompress zip archives
+(with-eval-after-load "dired-aux"
+  (add-to-list 'dired-compress-file-suffixes
+               '("\\.zip\\'" "" "unzip"))
+  ;; open files from dired with "E"
+  (define-key dired-mode-map (kbd "E") 'xah-open-in-external-app))
+#+END_SRC
 
 *** Dired open multiple files
 In dired mode, visit all marked files using. Bound to the "F" key.
@@ -122,13 +201,23 @@ In dired mode, visit all marked files using. Bound to the "F" key.
 : my-dired-find-file
 
 *** Stripe Dired buffers
+
+Use different background colors for even and odd lines.
+
 #+name: stripe-dired
 #+begin_src emacs-lisp :tangle yes
 (require 'stripe-buffer)
 (add-hook 'org-mode-hook 'org-table-stripes-enable)
 (add-hook 'dired-mode-hook 'stripe-listify-buffer)
-#+end_src
-*** Avy Mode
+(global-diff-hl-mode)
+(add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+#+END_SRC
+
+#+RESULTS: stripe-dired
+| (lambda nil) | (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
+
+
+** Avy Mode
 From: http://oremacs.com/2016/01/23/avy-0.4.0/
 
 For example, suppose you have:
@@ -539,6 +628,9 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 #+RESULTS: ibuffer-vc
 | mark | modified | read-only | vc-status-mini |   | (name 18 18 :left :elide) |   | (size 9 -1 :right) |   | (mode 16 16 :left :elide) |   | (vc-status 16 16 :left) |   | filename-and-process |
 
+
+*** Dired plus
+
 #+srcname: dired+
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; (require 'dired+)
@@ -571,67 +663,7 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 ;;            (diff-hl-dired-mode)
 ;;            (diff-hl-margin-mode)))
 
-;; set dired listing options
-(if (eq system-type 'gnu/linux)
-    (setq dired-listing-switches "-alDh")) ;; originally with a p as in =-alDh= but in https://www.reddit.com/r/emacs/comments/9flask/dired_mode_move_directory/ they explain that this causes failure when moving directories.
-
-;; make sure dired buffers end in a slash so we can identify them easily
-(defun ensure-buffer-name-ends-in-slash ()
-  "change buffer name to end with slash"
-  (let ((name (buffer-name)))
-    (if (not (string-match "/$" name))
-        (rename-buffer (concat name "/") t))))
-(add-hook 'dired-mode-hook 'ensure-buffer-name-ends-in-slash)
-(add-hook 'dired-mode-hook
-          (lambda()
-             (setq truncate-lines 1)))
-
-;; open files in external programs
-;; (from http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
-;; consider replacing with https://github.com/thamer/runner
-(defun xah-open-in-external-app (&optional file)
-  "Open the current file or dired marked files in external app.
-
-The app is chosen from your OS's preference."
-  (interactive)
-  (let (doIt
-        (myFileList
-         (cond
-          ((string-equal major-mode "dired-mode")
-           (dired-get-marked-files))
-          ((not file) (list (buffer-file-name)))
-          (file (list file)))))
-    (setq doIt (if (<= (length myFileList) 5)
-                   t
-                 (y-or-n-p "Open more than 5 files? ")))
-    (when doIt
-      (cond
-       ((string-equal system-type "windows-nt")
-        (mapc
-         (lambda (fPath)
-           (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" fPath t t)))
-         myFileList))
-       ((string-equal system-type "darwin")
-        (mapc
-         (lambda (fPath)
-           (shell-command (format "open \"%s\"" fPath)))
-         myFileList))
-       ((string-equal system-type "gnu/linux")
-        (mapc
-         (lambda (fPath)
-           (let ((process-connection-type nil))
-             (start-process "" nil "xdg-open" fPath))) myFileList))))))
-;; use zip/unzip to compress/uncompress zip archives
-(with-eval-after-load "dired-aux"
-  (add-to-list 'dired-compress-file-suffixes
-               '("\\.zip\\'" "" "unzip"))
-  ;; open files from dired with "E"
-  (define-key dired-mode-map (kbd "E") 'xah-open-in-external-app))
 #+END_SRC
-
-#+RESULTS: dired+
-: xah-open-in-external-app
-
 
 Set emacs to open Bookmark+ on start. From Xah Emacs. Disabled now that I use =Dashboard=
 
@@ -657,17 +689,6 @@ Set emacs to open Bookmark+ on start. From Xah Emacs. Disabled now that I use =D
 ;; (add-to-list 'load-path "~/.emacs.d/customDir/")
 ;; (require 'setup-programming)
 #+END_SRC
-
-
-
-#+srcname: diff-hl
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (global-diff-hl-mode)
-  (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
-#+END_SRC
-
-#+RESULTS: diff-hl
-| diff-hl-dired-mode |
 
 
 I disable this as flycheck makes emacs too slow.
