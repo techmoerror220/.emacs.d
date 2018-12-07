@@ -202,19 +202,57 @@ In dired mode, visit all marked files using. Bound to the "F" key.
 
 *** Stripe Dired buffers
 
-Use different background colors for even and odd lines.
+Use different background colors for even and odd lines. Info here https://github.com/sabof/stripe-buffer
+
+With the help of library hl-line-mode yet another color can be used for the current line.
+
+**** highlight line
+
+#+BEGIN_SRC emacs-lisp  :tangle yes
+(use-package hl-line)
+;; (global-hl-line-mode t)
+;;(set-face-background 'hl-line "#bebebe")
+#+END_SRC
+
+#+RESULTS:
+
+Use different background colors for even and odd lines. With =(add-hook 'dired-mode-hook 'stripe-listify-buffer)= I could get a horizontal line instead of a cursor. It uses the stripe-hl-line face, which you might wish to customize.
 
 #+name: stripe-dired
 #+begin_src emacs-lisp :tangle yes
-(require 'stripe-buffer)
+(use-package stripe-buffer)
 (add-hook 'org-mode-hook 'org-table-stripes-enable)
-(add-hook 'dired-mode-hook 'stripe-listify-buffer)
-(global-diff-hl-mode)
-(add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+;; (add-hook 'dired-mode-hook 'stripe-listify-buffer)  
 #+END_SRC
 
-#+RESULTS: stripe-dired
-| (lambda nil) | (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
+*** diff-hl 
+Emacs package for highlighting uncommitted changes. See https://github.com/dgutov/diff-hl
+
+diff-hl-mode highlights uncommitted changes on the left side of the window, allows you to jump between and revert them selectively.
+
+For the usage instructions and the list of commands, see the Commentary section inside the file.
+
+Tested with Git, Mercurial, Bazaar and SVN. May work with other VC backends, too.
+
+The package also contains auxiliary modes:
+
+    diff-hl-dired-mode provides similar functionality in Dired.
+    diff-hl-margin-mode changes the highlighting function to use the margin instead of the fringe.
+    diff-hl-amend-mode shifts the reference revision back by one.
+    diff-hl-flydiff-mode implements highlighting changes on the fly. It requires Emacs 24.4 or newer.
+
+Check out the Commentary section in each respective file for the usage instructions.
+
+#+begin_src emacs-lisp :tangle no
+(use-package diff-hl)
+(global-diff-hl-mode)
+;; (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+(remove-hook 'dired-mode-hook 'diff-hl-dired-mode)
+(remove-hook 'dired-mode-hook 'hl-line-mode)
+#+END_SRC
+
+#+RESULTS:
+| (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
 
 
 ** Avy Mode
@@ -286,7 +324,7 @@ Whenever you create useless whitespace, the whitespace is highlighted
 Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-occurrence-editing-in-your-buffer
 
 #+begin_src emacs-lisp :tangle yes
-(require 'iedit)
+(use-package iedit)
 
 ;; activate this function by Mickey Petersen if you wish to use iedit only in current function and not all across the buffer.
 ;; (defun iedit-dwim (arg)
@@ -310,58 +348,6 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 
 #+RESULTS:
 : iedit-dwim
-
-
-
-
-#+srcname: python-customization
-#+begin_src emacs-lisp :tangle yes
-;; dgm's customizations of python
-(elpy-enable)
-(require 'live-py-mode)
-(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-;; (elpy-use-ipython)
-;; (elpy-use-ipython "ipython3") ;; error "elpy-use-ipython is deprecated; see https://elpy.readthedocs.io/en/latest/ide.html#interpreter-setup")
-
-
-;; tip from https://github.com/jorgenschaefer/elpy/issues/992
-;; to correct IPython 5's new prompt behavior that spitted out lots of nonsense and unreadeable characters as if it was a binary file
-(setenv "IPY_TEST_SIMPLE_PROMPT" "1")
-(setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "-i")
-
-
-;; tips from: "Emacs - the Best Python Editor?" at https://realpython.com/blog/python/emacs-the-best-python-editor/
-;; Elpy comes with =flymake= by default to support syntax checking. However =flycheck= gives realtime syntax checking.
-;; But =flycheck= slows emacs to death, so I disable it!
-;; (when (require 'flycheck nil t)
-;;  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-;;  (add-hook 'elpy-mode-hook 'flycheck-mode))
-
-;; Now if we make pep8 errors when we save the file the errors will be corrected automatically
-(require 'py-autopep8)
-(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-
-
-;; https://github.com/jorgenschaefer/elpy/issues/979
-   ;; For elpy
-;; (setq elpy-rpc-python-command "python3")
-;; For interactive shell
-   ;; (setq python-shell-interpreter "python3")
-
-(add-to-list 'exec-path (expand-file-name "~/.local/bin"))
-
-;; Yuksel says there is a bug in =elpy= mode so that it conflicts with yasnippet expansion. He proposes this (see: https://www.youtube.com/watch?v=0kuCeS-mfyc)
-(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
-;; (define-key global-map (kbd "C-;") 'iedit-mode)
-
-;; not sure where this goes, but I guess I need it somewhere
-;; (require 'jedi)
-
-#+end_src
-
-#+RESULTS: python-customization
-: yas-expand
 
 ** =ggtags= customization from tuhdo
 
@@ -494,7 +480,7 @@ Attach multiple files to mu4e email message. (Tip from http://www.djcbsoftware.n
 #+END_SRC
 
 #+RESULTS:
-| turn-on-gnus-dired-mode |
+| diff-hl-dired-mode | stripe-listify-buffer | (lambda nil (setq truncate-lines 1)) | ensure-buffer-name-ends-in-slash | (lambda nil) | turn-on-gnus-dired-mode | helm-gtags-mode |
 
 
 
@@ -503,7 +489,7 @@ See http://tuhdo.github.io/emacs-tutor3.html
 
 #+srcname: volatile
 #+BEGIN_SRC emacs-lisp :tangle yes
-(require 'volatile-highlights)
+(use-package volatile-highlights)
 (volatile-highlights-mode t)
 #+END_SRC
 
@@ -517,7 +503,7 @@ See http://tuhdo.github.io/emacs-tutor3.html
 
 #+srcname: clean-indent
 #+BEGIN_SRC emacs-lisp :tangle yes
-(require 'clean-aindent-mode)
+(use-package clean-aindent-mode)
 (add-hook 'prog-mode-hook 'clean-aindent-mode)
 
  (defun my-pkg-init()
@@ -536,7 +522,7 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 
 #+srcname: undo-tree
 #+BEGIN_SRC emacs-lisp :tangle yes
-(require 'undo-tree)
+(use-package undo-tree)
 ;;turn on everywhere
 (global-undo-tree-mode 1)
 ;; make ctrl-z undo
@@ -564,11 +550,6 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 (setq-default fill-column 72)
 #+END_SRC
 
-#+RESULTS: fill-column
-: 72
-
-#+RESULTS:
-: 39051
 
 #+srcname: ibuffer
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -576,11 +557,6 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 (setq ibuffer-use-other-window t)
 #+END_SRC
 
-#+RESULTS: ibuffer
-: t
-
-#+RESULTS:
-: t
 
 #+srcname: company
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -594,15 +570,9 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 
 #+srcname: duplicate
 #+BEGIN_SRC emacs-lisp :tangle yes
-(require 'duplicate-thing)
+(use-package duplicate-thing)
 (global-set-key (kbd "M-D") 'duplicate-thing)
 #+END_SRC
-
-#+RESULTS: duplicate
-: duplicate-thing
-
-#+RESULTS:
-: duplicate-thing
 
 #+srcname: ibuffer-vc
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -775,15 +745,15 @@ I disable this as it is dealt with in -misc.org
 #+RESULTS: frame-title
 |   | invocation-name | - | (:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) %b)) |
 
-#+RESULTS:
-|   | invocation-name | - | (:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) %b)) |
-
+*** Highlight-numbers-and-symbols
 
 #+srcname: highlight-numbers-and-symbols
 #+BEGIN_SRC emacs-lisp :tangle yes
-(add-hook 'prog-mode-hook 'highlight-numbers-mode)
 
-(require 'highlight-symbol)
+(use-package highlight-numbers)
+(use-package highlight-symbol)
+
+(add-hook 'prog-mode-hook 'highlight-numbers-mode)
 
 (highlight-symbol-nav-mode)
 
@@ -808,13 +778,16 @@ I disable this as it is dealt with in -misc.org
 | lambda | (event) | (interactive e) | (goto-char (posn-point (event-start event))) | (highlight-symbol-at-point) |
 
 
+*** Info Plus
 #+srcname: info+
 #+BEGIN_SRC emacs-lisp :tangle yes
-;; (require 'info+) no longer available in MELPA
+;; (use-package info+) ;;no longer available in MELPA?
 #+END_SRC
 
 #+RESULTS: info+
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23561 13963 178544 695000) :init (23561 13963 178532 465000) :init-secs (0 0 15510 311000) :use-package-secs (0 4 529907 38000)))
 
+*** Discover my major 
 #+srcname: discover-my-major
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; A quick major mode help with discover-my-major
@@ -825,6 +798,7 @@ I disable this as it is dealt with in -misc.org
 #+RESULTS: discover-my-major
 : discover-my-major
 
+*** Rainbow mode
 #+srcname: rainbow-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -832,19 +806,20 @@ I disable this as it is dealt with in -misc.org
 ;;                                    ;;
 ;; GROUP: Help -> Rainbow             ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package rainbow-mode)
 (add-hook 'html-mode-hook 'rainbow-mode)
 (add-hook 'css-mode-hook 'rainbow-mode)
 
 ;;R-mode-hook runs when you open a new source buffer, so anything you put in that will only effect your source buffers.inferior-ess-mode-hook runs when you start an R console, so anything in there should only apply to the console buffer and not the source.
 (add-hook 'R-mode-hook 'rainbow-mode)
 (add-hook 'inferior-ess-mode-hook 'rainbow-mode)
-
 #+END_SRC
 
-#+RESULTS:
-| rainbow-mode | turn-on-auto-fill | (lambda nil (local-set-key [C-up] (quote comint-previous-input)) (local-set-key [C-down] (quote comint-next-input))) | ess-S-mouse-me-menu-commands | turn-on-font-lock |
+#+RESULTS: rainbow-mode
+| rainbow-mode | (lambda nil (local-set-key [C-up] 'comint-previous-input) (local-set-key [C-down] 'comint-next-input)) | ess-S-mouse-me-menu-commands |
 
 
+*** Nyam-mode
 #+srcname: nyan-mode
 #+BEGIN_SRC emacs-lisp :tangle no
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -933,16 +908,16 @@ I disable this as it is dealt with in -misc.org
 #+RESULTS:
 : ado-mode
 
-*** Which-key
+*** Which
+-key
 This mode shows a keymap when an incomplete command is entered. It is especially useful for families of commands with a prefix, e.g., =C-c C-o= for outline-mode commands, or ==C-c C-v= for org-babel commands. Just start typing your command and pause if you want a hint.
 
 tip from: https://github.com/izahn/dotemacs
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(require 'which-key)
+(use-package which-key)
 (which-key-mode)
 #+END_SRC
-
 *** General REPL (comint) config
 Tip from: https://github.com/izahn/dotemacs
 
@@ -1039,10 +1014,11 @@ If you want to get the most out of Emacs, you’ll eventually need to learn a li
 #+end_src
 
 #+RESULTS:
-| (lambda nil (require 'company-elisp) (setq-local company-backends (delete-dups (cons 'company-elisp (cons 'company-files company-backends))))) | (lambda nil (require 'company-elisp) (set (make-local-variable 'company-backends) (delete-dups (cons 'company-elisp (cons 'company-files company-backends))))) | esk-remove-elc-on-save | run-starter-kit-coding-hook | turn-on-eldoc-mode |
+| (lambda nil (require 'company-elisp) (setq-local company-backends (delete-dups (cons 'company-elisp (cons 'company-files company-backends))))) | esk-remove-elc-on-save | run-starter-kit-coding-hook | turn-on-eldoc-mode |
 
 *** Demonstration tools (command-log-mode)
-    tip from: https://github.com/izahn/dotemacs
+
+Tip from: https://github.com/izahn/dotemacs
 
 =command-log-mode= is useful for giving emacs demonstrations/tutorials. It shows the keys you’ve pressed and the commands they called.
 
@@ -1074,196 +1050,9 @@ For now I comment it out because following Drew's advice has meant that I've los
 #+RESULTS:
 : t
 
-*** Jedi configuration from Drew
-Check Drew online: https://www.youtube.com/watch?v=6BlTGPsjGJk
-This is basically his https://github.com/wernerandrew/jedi-starter/blob/master/jedi-starter.el
-
-#+begin_src emacs-lisp :tangle yes
-
-;; (load-file "/home/dgm/.emacs.d/src/jedi-starter.el")
-
-;; ;; Global Jedi config vars
-;;
-;; (defvar jedi-config:use-system-python nil
-;;   "Will use system python and active environment for Jedi server.
-;; May be necessary for some GUI environments (e.g., Mac OS X)")
-;;
-;; (defvar jedi-config:with-virtualenv nil
-;;   "Set to non-nil to point to a particular virtualenv.")
-;;
-;; (defvar jedi-config:vcs-root-sentinel ".git")
-;;
-;; (defvar jedi-config:python-module-sentinel "__init__.py")
-;;
-;; ;; Helper functions
-;;
-;; ;; Small helper to scrape text from shell output
-;; (defun get-shell-output (cmd)
-;;   (replace-regexp-in-string "[ \t\n]*$" "" (shell-command-to-string cmd)))
-;;
-;; ;; Ensure that PATH is taken from shell
-;; ;; Necessary on some environments without virtualenv
-;; ;; Taken from: http://stackoverflow.com/questions/8606954/path-and-exec-path-set-but-emacs-does-not-find-executable
-;;
-;; (defun set-exec-path-from-shell-PATH ()
-;;   "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell."
-;;   (interactive)
-;;   (let ((path-from-shell (get-shell-output "$SHELL --login -i -c 'echo $PATH'")))
-;;     (setenv "PATH" path-from-shell)
-;;     (setq exec-path (split-string path-from-shell path-separator)))
-;;
-;;
-;;   (require 'jedi)
-;;
-;; ;;  Costumization copied from https://www.youtube.com/watch?v=6BlTGPsjGJk
-;; ;;  I think what follows is more robust
-;; ;;  ;; Hook up to auto-complete
-;; ;;  (add-to-list 'ac-sources 'ac-source-jedi-direct)
-;; ;;  ;; Enable for python-mode
-;; ;;  (add-hook 'python-mode-hook 'jedi:setup)
-;;
-;; ;;  (defvar jedi-config:with-virtualenv nil
-;; ;;     "set to non-nil to point to a particular virtualenv.")
-;;
-;;
-;; ;;  ;; Variables to help find the project root
-;; ;;  (defvar jedi-config:vcs-root-sentinel ".git")
-;; ;;  (defvar jedi-config:python-module-sentinel "__init__.py")
-;; ;;
-;; ;;  ;; Function to find project root given a buffer
-;; ;;  (defun get-project-root (buf repo-type init-file)
-;; ;;    (vc-find-root (expand-file-name (buffer-file-name buf)) repo-type))
-;; ;;
-;; ;;  (defvar jedi-config:find-root-function 'get-project-root)
-;; ;;
-;; ;;  ;; And call this on initialization
-;; ;;  (defun current-buffer-project-root ()
-;; ;;      (funcall jedi-config:find-root-function
-;; ;;               (current-buffer)
-;; ;;               jedi-config:vcs-root-sentinel
-;; ;;               jedi-config:python-module-sentinel))
-;;
-;;
-;; ;; costumization copied straight from https://github.com/wernerandrew/jedi-starter/blob/master/jedi-starter.el
-;; ;; Alternative methods of finding the current project root
-;;     ;; Method 1: basic
-;;     (defun get-project-root (buf repo-file &optional init-file)
-;;       "Just uses the vc-find-root function to figure out the project root.
-;;        Won't always work for some directory layouts."
-;;       (let* ((buf-dir (expand-file-name (file-name-directory (buffer-file-name buf))))
-;; 	     (project-root (vc-find-root buf-dir repo-file)))
-;; 	(if project-root
-;; 	    (expand-file-name project-root)
-;; 	  nil)))
-;;
-;;     ;; Method 2: slightly more robust
-;;     (defun get-project-root-with-file (buf repo-file &optional init-file)
-;;       "Guesses that the python root is the less 'deep' of either:
-;;          -- the root directory of the repository, or
-;;          -- the directory before the first directory after the root
-;;             having the init-file file (e.g., '__init__.py'."
-;;
-;;       ;; make list of directories from root, removing empty
-;;       (defun make-dir-list (path)
-;;         (delq nil (mapcar (lambda (x) (and (not (string= x "")) x))
-;;                           (split-string path "/"))))
-;;       ;; convert a list of directories to a path starting at "/"
-;;       (defun dir-list-to-path (dirs)
-;;         (mapconcat 'identity (cons "" dirs) "/"))
-;;       ;; a little something to try to find the "best" root directory
-;;       (defun try-find-best-root (base-dir buffer-dir current)
-;;         (cond
-;;          (base-dir ;; traverse until we reach the base
-;;           (try-find-best-root (cdr base-dir) (cdr buffer-dir)
-;;                               (append current (list (car buffer-dir)))))
-;;
-;;          (buffer-dir ;; try until we hit the current directory
-;;           (let* ((next-dir (append current (list (car buffer-dir))))
-;;                  (file-file (concat (dir-list-to-path next-dir) "/" init-file)))
-;;             (if (file-exists-p file-file)
-;;                 (dir-list-to-path current)
-;;               (try-find-best-root nil (cdr buffer-dir) next-dir))))
-;;
-;;          (t nil)))
-;;
-;;       (let* ((buffer-dir (expand-file-name (file-name-directory (buffer-file-name buf))))
-;;              (vc-root-dir (vc-find-root buffer-dir repo-file)))
-;;         (if (and init-file vc-root-dir)
-;;             (try-find-best-root
-;;              (make-dir-list (expand-file-name vc-root-dir))
-;;              (make-dir-list buffer-dir)
-;;              '())
-;;           vc-root-dir))) ;; default to vc root if init file not given
-;;
-;;     ;; Set this variable to find project root
-;;     (defvar jedi-config:find-root-function 'get-project-root-with-file)
-;;
-;;     (defun current-buffer-project-root ()
-;;       (funcall jedi-config:find-root-function
-;;                (current-buffer)
-;;                jedi-config:vcs-root-sentinel
-;;                jedi-config:python-module-sentinel))
-;;
-;;     (defun jedi-config:setup-server-args ()
-;;       ;; little helper macro for building the arglist
-;;       (defmacro add-args (arg-list arg-name arg-value)
-;;         `(setq ,arg-list (append ,arg-list (list ,arg-name ,arg-value))))
-;;       ;; and now define the args
-;;       (let ((project-root (current-buffer-project-root)))
-;;
-;;         (make-local-variable 'jedi:server-args)
-;;
-;;         (when project-root
-;;           (message (format "Adding system path: %s" project-root))
-;;           (add-args jedi:server-args "--sys-path" project-root))
-;;
-;;         (when jedi-config:with-virtualenv
-;;           (message (format "Adding virtualenv: %s" jedi-config:with-virtualenv))
-;;           (add-args jedi:server-args "--virtual-env" jedi-config:with-virtualenv))))
-;;
-;;     ;; Use system python
-;;     (defun jedi-config:set-python-executable ()
-;;       (set-exec-path-from-shell-PATH)
-;;       (make-local-variable 'jedi:server-command)
-;;       (set 'jedi:server-command
-;;            (list (executable-find "python") ;; may need help if running from GUI
-;;                  (cadr default-jedi-server-command))))
-;;
-;;     ;; Now hook everything up
-;;     ;; Hook up to autocomplete
-;;     (add-to-list 'ac-sources 'ac-source-jedi-direct)
-;;
-;;     ;; Enable Jedi setup on mode start
-;;     (add-hook 'python-mode-hook 'jedi:setup)
-;;
-;;     ;; Buffer-specific server options
-;;     (add-hook 'python-mode-hook
-;;               'jedi-config:setup-server-args)
-;;     (when jedi-config:use-system-python
-;;       (add-hook 'python-mode-hook
-;;                 'jedi-config:set-python-executable))
-;;
-;;     ;; And custom keybindings
-;;     (defun jedi-config:setup-keys ()
-;;       (local-set-key (kbd "M-.") 'jedi:goto-definition)
-;;       (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker)
-;;       (local-set-key (kbd "M-?") 'jedi:show-doc)
-;;       (local-set-key (kbd "M-/") 'jedi:get-in-function-call))
-;;
-;;     ;; Don't let tooltip show up automatically
-;;     (setq jedi:get-in-function-call-delay 10000000)
-;;     ;; Start completion at method dot
-;;     (setq jedi:complete-on-dot t)
-;;     ;; Use custom keybinds
-;;     (add-hook 'python-mode-hook 'jedi-config:setup-keys)
-;; )
-#+end_src
-
-#+RESULTS:
-: jedi
-
 ** Other stuff from Tuhdo
 - Stuff from http://tuhdo.github.io/emacs-tutor3.html
+
 *** New beginning of line
 Sometimes, we want to adjust or improve the behaviours of some commands in certain contexts. Consider this situation: C-a, which runs move-beginning-of-line, always move to the beginning of line. However, sometimes we don't always to move to the beginning of line, but move to the first non-whitespace character of that line.
 
@@ -1332,75 +1121,79 @@ By default, Recentf saves the list of recent files on exiting Emacs (specificall
 #+RESULTS:
 
 
+*** recentf-ext    
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; PACKAGE: recentf-ext    ;;
-;;                         ;;
-;; GROUP: Files -> Recentf ;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
 (use-package recentf-ext
   :ensure t)
+#+END_SRC
 
+*** ztree 
 
-  ;;;;;;;;;;;;;;;;;;;;;
-;; PACKAGE: ztree  ;;
-;;                 ;;
-;; GROUP: No group ;;
-  ;;;;;;;;;;;;;;;;;;;;;
-;; since ztree works with files and directories, let's consider it in
-;; group Files
+Since ztree works with files and directories, let's consider it in group Files
 
-(require 'ztree-diff)
-(require 'ztree-dir)
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ztree)
+;;(use-package ztree-diff)
+;;(use-package ztree-dir)
+#+END_SRC
 
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23561 15887 36543 611000) :init (23561 15887 36504 265000) :config (23561 15887 36024 575000) :config-secs (0 0 20 788000) :init-secs (0 0 911 118000) :use-package-secs (0 0 1056 805000)))
 
-;;,-----------------
-;;| PACKAGE: rebox2
-;;|
-;;| GROUP: No group
-;;`-----------------
+*** rebox2
 
-;; Ojo: solo funciona si se llama M-x rebox-mode
-(require 'rebox2)
+Ojo: solo funciona si se llama M-x rebox-mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package rebox2)
 (global-set-key [(meta q)] 'rebox-dwin-fill)
 (global-set-key [(shift meta q)] 'rebox-dwin-no-fill)
+#+END_SRC
 
 
-;; PACKAGE: helpful
-;; GROUP: No group
+*** helpful 
 
-                                        ;  https://github.com/Wilfred/helpful
+https://github.com/Wilfred/helpful
 
-(require 'helpful)
+Note that the built-in `describe-function' includes both functions and macros. `helpful-function' is functions only, so we provide `helpful-callable' as a drop-in replacement.
 
-;; Note that the built-in `describe-function' includes both functions
-;; and macros. `helpful-function' is functions only, so we provide
-;; `helpful-callable' as a drop-in replacement.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helpful)
+
 (global-set-key (kbd "\C-h f") #'helpful-callable)
 (global-set-key (kbd "\C-h v") #'helpful-variable)
 (global-set-key (kbd "\C-h k") #'helpful-key)
-
-;; Lookup the current symbol at point. C-c C-d is a common keybinding
-;; for this in lisp modes.
-;; (global-set-key (kbd "\C-s d") #'helpful-at-point)
-
-;; Look up *F*unctions (excludes macros).
-;;
-;; By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
-;; already links to the manual, if a function is referenced there.
-;;  (global-set-key (kbd "\C-s-f") #'helpful-function)
-
-;; Look up *C*ommands.
-;;
-;; By default, C-h C is bound to describe `describe-coding-system'. I
-;; don't find this very useful, but it's frequently useful to only
-;; look at interactive functions.
-;; (global-set-key (kbd "\C-s-c") #'helpful-command)
 #+END_SRC
-#+RESULTS:
-: helpful-key
+
+*** Lookup 
+
+**** Lookup the current symbol at point. 
+
+C-c C-d is a common keybinding for this in lisp modes.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(global-set-key (kbd "\C-s d") #'helpful-at-point)
+#+END_SRC
+
+**** Look up *F*unctions (excludes macros). 
+
+By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
+already links to the manual, if a function is referenced there.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(global-set-key (kbd "\C-s-f") #'helpful-function)
+#+END_SRC
+
+**** Look up *C*ommands. 
+
+By default, C-h C is bound to describe `describe-coding-system'. I
+don't find this very useful, but it's frequently useful to only
+look at interactive functions.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(global-set-key (kbd "\C-s-c") #'helpful-command)
+#+END_SRC
 
 *** Peek definition with Emacs frame
 - Stuff from http://tuhdo.github.io/emacs-frame-peek.html
@@ -1877,18 +1670,49 @@ Originally from https://github.com/daedreth/UncleDavesEmacs/blob/master/config.o
 From 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(require 'fortune)
+(use-package fortune)
 (setq fortune-dir "/usr/share/games/fortunes"
       fortune-file "/usr/share/games/fortunes/fortunes")
 #+END_SRC
 
 ** Better defaults
-By the great Technomancy
+
+By the great Technomancy. 
+
+Situation with =uniquify= solved here: https://github.com/jwiegley/use-package/issues/320
+
+Uniquify buffer names is useful for when you have buffers with many similar names, as when there are various open files from different folders named =analysis.R= or similar. 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (require 'uniquify)
-  (setq uniquify-buffer-name-style 'forward)
+(require 'uniquify)
+(setq ;;(setq uniquify-buffer-name-style 'reverse)
+      ;; (setq uniquify-buffer-name-style 'forward) ;; technomancy's default
+      ;;(setq uniquify-separator "|")
+      uniquify-after-kill-buffer-p t
+      uniquify-buffer-name-style 'post-forward-angle-brackets)  ;; default in kieran healy's config
+   ;;(setq uniquify-ignore-buffers-re "^*")
+#+END_SRC  
 
+#+RESULTS:
+: post-forward-angle-brackets
+
+bbatov setup is like this (https://github.com/bbatsov/emacs.d/blob/master/init.el)
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;; (use-package uniquify
+;;  :config
+;;  (setq uniquify-buffer-name-style 'forward)
+;;  (setq uniquify-separator "/")
+;;  ;; rename after killing uniquified
+;;  (setq uniquify-after-kill-buffer-p t)
+;;  ;; don't muck with special buffers
+;; (setq uniquify-ignore-buffers-re "^\\*"))
+#+END_SRC
+
+
+Other stuff from Technomancy's better defaults
+
+#+BEGIN_SRC emacs-lisp :tangle yes
 (autoload 'zap-up-to-char "misc"
     "Kill up to, but not including ARGth occurrence of CHAR." t)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
@@ -3065,7 +2889,7 @@ If you use my code below, you can use C-. to find by file in the TAGS file, like
 I don’t remember if I wrote the code below (or if I simply snarfed it from somewhere and modified it.)
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(require 'etags)
+(use-package etags)
 (defun ido-find-tag ()
   "Find a tag using ido"
   (interactive)
@@ -3301,7 +3125,7 @@ If I place this in the =starter-kit-helm.org= file, for some reason, probably be
 (sp-local-pair 'org-mode "'" nil :actions nil) 
 (sp-local-pair 'org-mode "`" nil :actions nil)
 
-(sp-local-pair 'latex-mode "=" nil :actions nil) 
+;;(sp-local-pair 'latex-mode "=" nil :actions nil) 
 
 ;;   (smartparens-global-mode 1)
 ;;  (require 'smartparens-config) ;; To use the default configuration that smartparens provides for Lisp modes generally and for racket-mode specifically
@@ -3317,6 +3141,9 @@ https://www.emacswiki.org/emacs/BookmarkPlus
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'bookmark+)
 #+END_SRC
+
+#+RESULTS:
+: bookmark+
 
 * Ledger
 
@@ -3352,7 +3179,7 @@ Originally here:
 But then the guy turned it into a minor mode! See 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(require 'vi-tilde-fringe)
+(use-package vi-tilde-fringe)
 (global-vi-tilde-fringe-mode 1)
 #+END_SRC
 

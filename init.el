@@ -55,7 +55,68 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; use-package ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;From https://github.com/danielmai/.emacs.d/blob/master/init.el
+
+
+;;; Set up package. Originally in =starter-kit.org= but when I
+;;; downloaded everything anew from the github repository =use-package=
+;;; didn't work until I moved this here.
+
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives
+             '("gnu" . "http://elpa.gnu.org/packages/") t)
+(when (boundp 'package-pinned-packages)
+  (setq package-pinned-packages
+        '((org-plus-contrib . "org"))))
+;; (package-initialize) ;; Emacs 27: Warning (package): Unnecessary call to ‘package-initialize’ in init file
+
+
+
+;;; Add support to package.el for pre-filtering available packages
+(defvar package-filter-function nil
+  "Optional predicate function used to internally filter packages used by package.el.
+
+The function is called with the arguments PACKAGE VERSION ARCHIVE, where
+PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
+ARCHIVE is the string name of the package archive.")
+
+
+(defadvice package--add-to-archive-contents
+
+  (around filter-packages (package archive) activate)
+
+  "Add filtering of available packages using `package-filter-function', if non-nil."
+
+  (when (or (null package-filter-function)
+
+(funcall package-filter-function
+     (car package)
+     (funcall (if (fboundp 'package-desc-version)
+              'package--ac-desc-version
+            'package-desc-vers)
+          (cdr package))
+     archive))
+    ad-do-it))
+
+
+(defvar melpa-exclude-packages
+;;      '(slime magit)
+      '()
+  "Don't install Melpa versions of these packages.")
+
+;; Don't take Melpa versions of certain packages
+(setq package-filter-function
+      (lambda (package version archive)
+        (and
+         (not (memq package '(eieio)))
+         (or (not (string-equal archive "melpa"))
+             (not (memq package melpa-exclude-packages))))))
+
+
 
 ;;; Bootstrap use-package
 ;; Install use-package if it's not already installed.
@@ -86,7 +147,6 @@
 
 (use-package bind-key
   :ensure t)
-
 ;; tramp package from
 ;; https://github.com/danielmai/.emacs.d/blob/master/config.org
 ;; TRAMP (Transparent Remote Access, Multiple Protocols) is a package for editing remote files, similar to AngeFtp or efs. Whereas the others use FTP to connect to the remote host and to transfer the files, TRAMP uses a remote shell connection (rlogin, telnet, ssh). It can transfer the files using rcp or a similar program, or it can encode the file contents (using uuencode or base64) and transfer them right through the shell connection.

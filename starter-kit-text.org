@@ -147,8 +147,7 @@ Markdown mode support.
 
 #+srcname deft-mode
 #+begin_src emacs-lisp
-
-(require 'deft)
+(use-package deft)
 (setq deft-extensions '("org" "txt" "tex" "Rnw" "md" "markdown"))
 (add-to-list 'auto-mode-alist '("/deft/.*\\.txt\\'" . org))
 (setq deft-directory "/media/dgm/blue/documents/dropbox/notes")
@@ -158,9 +157,7 @@ Markdown mode support.
 (setq deft-org-mode-title-prefix t)
 (global-set-key (kbd "C-x C-g") 'deft-find-file)
 (global-set-key  (kbd "C-c d") 'deft)
-
 #+end_src
-
 
 ** CSV mode
 View and edit CSV files. See [[http://centaur.maths.qmul.ac.uk/Emacs/][the CSV mode homepage]] for more details. From the readme:

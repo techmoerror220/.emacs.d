@@ -1,0 +1,3 @@
+[submodule "src/ob-stata"]
+	path = src/ob-stata
+	url = https://gitlab.com/robhicks/ob-stata.el.git

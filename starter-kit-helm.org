@@ -273,15 +273,25 @@ This keybinding never works so I comment this out until i understand how it coul
 
 * helm-descbinds
 
+List active key bindings:
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-(require 'helm-descbinds)
+(use-package helm-descbinds
+	:ensure t)
 (helm-descbinds-mode)
 #+END_SRC
+
+#+RESULTS:
+: t
+
 * Helm and gtags
 
 Further customization of =gtags= with =helm=, from http://tuhdo.github.io/c-ide.html.
 
-Check out: http://tuhdo.github.io/c-ide.html
+Check out: http://tuhdo.github.io/c-ide.html and https://github.com/syohex/emacs-helm-gtags
+
+Also of interest this setup: https://github.com/tuhdo/emacs-c-ide-demo/blob/master/custom/setup-helm-gtags.el
+and https://github.com/yusekiya/dotfiles/blob/master/.emacs.d/config/packages/my-helm-config.el
 
 ** TODO Understand how =gtags= differ from =etags=
 
@@ -290,14 +300,24 @@ Check out: http://tuhdo.github.io/c-ide.html
     ;;(require 'setup-helm)
     ;;(require 'setup-helm-gtags)
 
-    (require 'helm-gtags)
-
+(use-package helm-gtags
+	:ensure t
+    :init
     ;; Enable helm-gtags-mode
     (add-hook 'dired-mode-hook 'helm-gtags-mode)
     (add-hook 'eshell-mode-hook 'helm-gtags-mode)
     (add-hook 'c-mode-hook 'helm-gtags-mode)
     (add-hook 'c++-mode-hook 'helm-gtags-mode)
     (add-hook 'asm-mode-hook 'helm-gtags-mode)
+    ;; (add-hook 'python-mode-hook 'helm-gtags-mode)
+    :config
+    (setq
+     helm-gtags-ignore-case t
+     helm-gtags-auto-update t
+     helm-gtags-use-input-at-cursor t
+     helm-gtags-pulse-at-cursor t
+     helm-gtags-prefix-key "C-c g"
+     helm-gtags-suggested-key-mapping t))
 
     (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
     (define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
@@ -305,18 +325,10 @@ Check out: http://tuhdo.github.io/c-ide.html
     (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
     (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
     (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
-
-    (setq
-     helm-gtags-ignore-case t
-     helm-gtags-auto-update t
-     helm-gtags-use-input-at-cursor t
-     helm-gtags-pulse-at-cursor t
-     helm-gtags-prefix-key "C-c g"
-     helm-gtags-suggested-key-mapping t)
 #+end_src
 
 #+RESULTS:
-: t
+: helm-gtags-next-history
 
 * Helm-bibtex
 And now the bit by Ista Zahn in tip from: https://github.com/izahn/dotemacs but modified to use helm instead of ivy.
@@ -434,13 +446,12 @@ Note: =wgrep-helm= allows you to edit a helm-grep-mode buffer and apply those ch
 ;; (when (require 'helm-descbinds nil t)
 ;;    (helm-descbinds-mode))
 
-
 (when (require 'wgrep-helm nil t)
   (setq wgrep-auto-save-buffer t
         wgrep-enable-key (kbd "C-c h w")))
 
-;; From Ambrevar: wgrep-face is not so pretty.
-(set-face-attribute 'wgrep-face nil :inherit 'ediff-current-diff-C :foreground 'unspecified :background 'unspecified :box nil)
+;; From Ambrevar: wgrep-face is not so pretty. Commented out as not working
+;; (set-face-attribute 'wgrep-face nil :inherit 'ediff-current-diff-C :foreground 'unspecified :background 'unspecified :box nil)
 
 (when (require 'helm-ls-git nil t)
   ;; `helm-source-ls-git' must be defined manually.
@@ -851,15 +862,14 @@ Basic commands with for interfacing with =exwm= with =helm=
 #+RESULTS:
 : ((ido-use-virtual-buffers . ido) (ido-recentf-open . ido) (recentf-open-files . ido) (describe-function . helm-completing-read-symbols) (describe-variable . helm-completing-read-symbols) (describe-symbol . helm-completing-read-symbols) (debug-on-entry . helm-completing-read-symbols) (find-function . helm-completing-read-symbols) (disassemble . helm-completing-read-symbols) (trace-function . helm-completing-read-symbols) (trace-function-foreground . helm-completing-read-symbols) (trace-function-background . helm-completing-read-symbols) (find-tag . helm-completing-read-default-find-tag) (org-capture . helm-org-completing-read-tags) (org-set-tags . helm-org-completing-read-tags) (ffap-alternate-file) (tmm-menubar) (find-file) (find-file-at-point . helm-completing-read-sync-default-handler) (ffap . helm-completing-read-sync-default-handler) (execute-extended-command) (dired-do-rename . helm-read-file-name-handler-1) (dired-do-copy . helm-read-file-name-handler-1) (dired-do-symlink . helm-read-file-name-handler-1) (dired-do-relsymlink . helm-read-file-name-handler-1) (dired-do-hardlink . helm-read-file-name-handler-1))
 
-* Helm-pass
+* Helm-passx
 #+BEGIN_SRC emacs-lisp :tangle yes
-(require 'password-store)
+(use-package password-store)
 (use-package helm-pass)
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23548 7807 294126 140000) :init (23548 7807 294112 597000) :config (23548 7807 293865 960000) :config-secs (0 0 5 167000) :init-secs (0 0 472 279000) :use-package-secs (0 0 533 843000)))
-
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23561 2421 145456 378000) :init (23561 2421 145411 153000) :config (23561 2421 144875 137000) :config-secs (0 0 81 645000) :init-secs (0 0 927 125000) :use-package-secs (0 0 1190 268000)))
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes

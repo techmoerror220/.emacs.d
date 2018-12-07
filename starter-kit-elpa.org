@@ -186,7 +186,6 @@ Make sure the PATH variable is set properly. (Uses exec-path-from-shell package 
 
 #+RESULTS: fix-path
 
-
 * Final message
 #+source: message-line
 #+begin_src emacs-lisp

@@ -52,10 +52,11 @@ Following Daniel Mai we add the exporter for Pandoc as well (remember to install
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ox-pandoc
-  :no-require t
-  :defer 10
   :ensure t)
 #+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23561 372 145757 865000) :init (23561 372 145716 931000) :init-secs (0 0 1074 531000) :use-package-secs (0 0 1398 100000) :config (23561 372 145174 215000) :config-secs (0 0 33 101000)))
 
 *** Local Pandoc Support
 
@@ -63,15 +64,18 @@ A pandoc menu for markdown and tex files.
 
 #+src-name: pandoc_mode
 #+begin_src emacs-lisp :tangle yes
-  (load "pandoc-mode")
+(use-package pandoc-mode
+	:ensure t
+  :config
   (add-hook 'markdown-mode-hook 'pandoc-mode)
-  (add-hook 'TeX-mode-hook 'pandoc-mode)
-  (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
+  (add-hook 'TeX-mode-hook 'pandoc-mode)  
+  (add-hook 'org-mode-hook 'pandoc-mode)
+  (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings))
   ;; (global-set-key (kbd "C-c C-p") 'pandoc-main-hydra/body) ;; not sure it is taken
 #+end_src
 
 #+RESULTS:
-: pandoc-main-hydra/body
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23561 617 539596 896000) :init (23561 617 539564 637000) :config (23561 617 539347 779000) :config-secs (0 0 432 56000) :init-secs (0 0 824 478000) :use-package-secs (0 0 1011 280000)))
 
 *** Export options 
 
@@ -118,11 +122,12 @@ Create =html= files form the =org= sources, to help with documentation. To set u
 *** =twbs= or html made cool 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(require 'ox-twbs)
+(use-package ox-twbs
+	:ensure t)
 #+END_SRC
 
 #+RESULTS:
-: ox-twbs
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23561 790 48242 633000) :init (23561 790 48205 768000) :config (23561 790 47836 935000) :config-secs (0 0 26 942000) :init-secs (0 0 707 567000) :use-package-secs (0 0 940 130000)))
 
 ***  Configure Org-babel
    - Add LaTeX to the list of languages Org-babel will recognize.
@@ -399,7 +404,10 @@ one below.  The customize interface of =org-babel-load-languages=
 contains an up to date list of the currently supported languages.
 
 #+begin_src emacs-lisp :tangle yes
-(require 'ess) 
+(use-package ess
+	:ensure t)
+;; (require 'ess) 
+
 (require 'ob-stata)
 
 (org-babel-do-load-languages

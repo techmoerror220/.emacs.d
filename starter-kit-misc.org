@@ -23,7 +23,7 @@ loading the =zenburn= and =anti-zenburn= themes.
 ;; (setq solarized-high-contrast-mode-line t)
 
 ;; powerline by milkman
-(require 'powerline)
+(use-package powerline)
 (display-time-mode 1)
 (powerline-default-theme)
 
@@ -110,7 +110,7 @@ loading the =zenburn= and =anti-zenburn= themes.
 #+end_src
 
 #+RESULTS: colors
-: t
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23561 2554 592840 345000) :init (23561 2554 592831 261000) :config (23561 2554 592719 973000) :config-secs (0 0 92350 397000) :init-secs (0 0 127886 765000) :use-package-secs (0 1 207933 536000)))
 
 #+RESULTS:
 : t
@@ -189,7 +189,6 @@ decoration for buffers in C++ mode, and level 1 decoration otherwise.
           delete-by-moving-to-trash t
           shift-select-mode nil
           truncate-partial-width-windows nil
-          uniquify-buffer-name-style 'forward
           whitespace-style '(trailing lines space-before-tab
                                       indentation space-after-tab)
           whitespace-line-column 100
