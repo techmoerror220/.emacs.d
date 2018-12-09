@@ -181,9 +181,10 @@ Here are the conventions for how to define the levels of fontification:
     (when window-system
 ;;      (setq frame-title-format '(buffer-file-name "%f" ("%b")))
       (setq frame-title-format (concat "%b" (unless (daemonp) " [serverless]"))) ;; from ambrevar's main.el
-      (tooltip-mode -1))
+      (tooltip-mode -1)
+      (blink-cursor-mode -1)) ;; I include this blink-cursor-mode again because sometimes it disappears and maybe turning this fixes it.
 ;;      (tool-bar-mode -1)) ;; already in minimal.el
-;;      (blink-cursor-mode -1))  
+
 
     (mouse-wheel-mode t)
 
