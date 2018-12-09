@@ -256,7 +256,6 @@ Check out the Commentary section in each respective file for the usage instructi
 #+RESULTS:
 | (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
 
-
 ** Avy Mode
 From: http://oremacs.com/2016/01/23/avy-0.4.0/
 
@@ -370,6 +369,8 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 
 ** GROUP: Editing -> Editing Basics from http://tuhdo.github.io/emacs-tutor3.html
 
+*** ring-max
+
 #+srcname: ring-max
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq global-mark-ring-max 5000     ; increase mark ring to contain 5000 entries
@@ -397,6 +398,7 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 #+RESULTS:
 : t
 
+*** tab-width
 #+srcname: tab-width
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; default to 4 visible spaces to display a tab
@@ -406,8 +408,7 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 #+RESULTS: tab-width
 : 4
 
-#+RESULTS:
-: newline-and-indent
+*** workgroups
 
 From https://github.com/pashinin/workgroups2 and http://tuhdo.github.io/emacs-tutor3.html
 
@@ -434,6 +435,7 @@ From https://github.com/pashinin/workgroups2 and http://tuhdo.github.io/emacs-tu
 
 #+RESULTS:
 
+*** diff-mode 
 #+srcname: whitespace
 #+BEGIN_SRC emacs-lisp :tangle yes
   (add-hook 'diff-mode-hook (lambda ()
@@ -451,16 +453,10 @@ From https://github.com/pashinin/workgroups2 and http://tuhdo.github.io/emacs-tu
                               (whitespace-mode 1)))
 #+END_SRC
 
-#+RESULTS: whitespace
-| lambda | nil | (setq-local whitespace-style (quote (face tabs tab-mark spaces space-mark trailing indentation::space indentation::tab newline newline-mark)))                        | (whitespace-mode 1) |
-| lambda | nil | (set (make-local-variable (quote whitespace-style)) (quote (face tabs tab-mark spaces space-mark trailing indentation::space indentation::tab newline newline-mark))) | (whitespace-mode 1) |
 
-#+RESULTS:
-| lambda | nil | (setq-local whitespace-style (quote (face tabs tab-mark spaces space-mark trailing indentation::space indentation::tab newline newline-mark))) | (whitespace-mode 1) |
-
+*** Attach multiple files
 
 Attach multiple files to mu4e email message. (Tip from http://www.djcbsoftware.nl/code/mu/mu4e/Attaching-files-with-dired.html).
-
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'gnus-dired)
@@ -484,7 +480,7 @@ Attach multiple files to mu4e email message. (Tip from http://www.djcbsoftware.n
 #+RESULTS:
 | diff-hl-dired-mode | stripe-listify-buffer | (lambda nil (setq truncate-lines 1)) | ensure-buffer-name-ends-in-slash | (lambda nil) | turn-on-gnus-dired-mode | helm-gtags-mode |
 
-
+*** Volatile 
 
 =volatile= makes so that when you yank (paste) something, the yanked (pasted) region will be highlighted.
 See http://tuhdo.github.io/emacs-tutor3.html
@@ -502,6 +498,7 @@ See http://tuhdo.github.io/emacs-tutor3.html
 : t
 
 
+*** Clean-indent
 
 #+srcname: clean-indent
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -519,6 +516,9 @@ See http://tuhdo.github.io/emacs-tutor3.html
 #+RESULTS: clean-indent
 | my-pkg-init | #[0 \303\211\235\203 \304"\301\305!\210\210	\205 \306 \210\307\211\207 [command-line-args desktop-save-mode inhibit-startup-screen --no-desktop delete 0 desktop-read t] 4] | global-company-mode | ambrevar/reset-file-name-handler-alist | ambrevar/reset-gc-cons-threshold | x-wm-set-size-hint | tramp-register-archive-file-name-handler | table--make-cell-map | magit-auto-revert-mode--init-kludge | magit-startup-asserts | magit-version |
 
+
+
+*** Undo-tree 
 
 undo-tree set up from http://pragmaticemacs.com/emacs/advanced-undoredo-with-undo-tree/
 More info here: https://www.emacswiki.org/emacs/UndoTree
@@ -538,6 +538,20 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 #+RESULTS: undo-tree
 : redo
 
+See https://www.reddit.com/r/emacs/comments/5h7k1r/undo_lost_hours_of_work//
+Also read http://ergoemacs.org/emacs/emacs_undo_cult_problem.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq undo-tree-auto-save-history t)
+(setq undo-tree-history-directory-alist
+    (quote (("" . "~/.emacs.d/undo_hist"))))
+#+END_SRC
+
+#+RESULTS:
+: (( . ~/.emacs.d/undo_hist))
+
+
+*** auto-file-revert
 #+srcname: file-revert
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; update any change made on file to the current buffer
@@ -547,12 +561,14 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 #+RESULTS:
 : t
 
+*** fill-column 
 
 #+srcname: fill-column
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq-default fill-column 72)
 #+END_SRC
 
+*** ibuffer-use-other-window
 
 #+srcname: ibuffer
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -560,10 +576,13 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 (setq ibuffer-use-other-window t)
 #+END_SRC
 
+*** COMMENT Company mode 
+
+Included in =starter-kit-completion.org=
 
 #+srcname: company
-#+BEGIN_SRC emacs-lisp :tangle yes
-(add-hook 'after-init-hook 'global-company-mode)
+#+BEGIN_SRC emacs-lisp :tangle no
+;; (add-hook 'after-init-hook 'global-company-mode) 
 #+END_SRC
 
 #+RESULTS: company
@@ -571,6 +590,7 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 
 
 
+*** Duplicate-thing
 
 #+srcname: duplicate
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -749,7 +769,7 @@ I disable this as it is dealt with in -misc.org
 #+RESULTS: frame-title
 |   | invocation-name | - | (:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) %b)) |
 
-*** Highlight-numbers-and-symbols
+*** highlight-numbers-and-symbols
 
 #+srcname: highlight-numbers-and-symbols
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -824,15 +844,11 @@ I disable this as it is dealt with in -misc.org
 
 
 *** Nyam-mode
+
+Only turn on if a window system is available. This prevents error under terminal that does not support X.
+
 #+srcname: nyan-mode
 #+BEGIN_SRC emacs-lisp :tangle no
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; PACKAGE: nyan-mode                    ;;
-;;                                       ;;
-;; GROUP: Environment -> Frames -> Nyan  ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; only turn on if a window system is available
-;; this prevents error under terminal that does not support X
 (case window-system
   ((x w32) (nyan-mode)))
 #+END_SRC
@@ -3408,14 +3424,6 @@ But it doesn't work
 The euro sign can then be inserted by calling the macro:
 
 M-x euro
-
-* Trying to fix disappearing cursor 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq blink-cursor-delay 0)
-#+END_SRC
-
-#+RESULTS:
-: 0
 
 * Font-locking shell prompt
 Tip from 

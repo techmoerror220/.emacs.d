@@ -323,7 +323,6 @@ Higham prefers closing brace on its own line after cleaning BibTeX entry. I don'
 
 
 
-
 ** Configure RefTeX
 *** Default Bibliography
 This is important when editing source code in Org-babel, since the LaTeX source code block being edited probably doesn't include the \bibliography{} command that RefTeX uses to find bibliographic database(s).  Make certain also that RefTeX has a path to the bibliographic databases.  This source-code block is turned off be default as it should be configured by the user in a personal file/directory.
@@ -379,6 +378,19 @@ Tell RefTeX where the bibliography files are. Commented out for now cos the path
 ;;                        (interactive)
 ;;                        (shell-command "vc")))
 #+end_src
+
+
+* Font-lock customization
+In =starter-kit-misc.org= the global font-locking is set to its minimum but in latex this is not nice. So I increase it here to its medium level of 2 (max is 3)
+See https://www.linuxtopia.org/online_books/linux_tool_guides/gnu_emacs_manual/Font-Lock.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq font-lock-maximum-decoration        
+   '((latex-mode . 2)))
+#+END_SRC
+
+#+RESULTS:
+: ((latex-mode . 2))
 
 * Final message
 #+source: message-line

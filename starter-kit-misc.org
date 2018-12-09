@@ -190,7 +190,7 @@ Here are the conventions for how to define the levels of fontification:
     (setq visible-bell t
           echo-keystrokes 0.1
           ;; font-lock-maximum-decoration nil  ;; originally it was true dgm turns this off as emacs is way to slow with it. 
-          font-lock-maximum-decoration 1 ;; originally it was true, then nil and then 1, the minimum level, to see if this speeds up things. And I think it does.
+          font-lock-maximum-decoration 1 ;; originally it was true, then nil and then 1, the minimum level, to see if this speeds up things. And I think it does. 
           font-lock-verbose nil
           inhibit-startup-message t
           transient-mark-mode t

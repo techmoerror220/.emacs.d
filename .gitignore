@@ -51,3 +51,4 @@ history
 .org-id-locations
 elpa/archives
 *.rel
+undo_hist

@@ -386,22 +386,24 @@ Winner mode allows you to undo/redo changes to window changes in Emacs.
 
 Remember the previous window configurations and jump back to them as needed (as when, e.g., some other mode messes with your working layout.) Rebind the default keys to =C-c-up= and =C-c-down= as in a moment we'll assign =C-c-right= for rotating windows.
 
+Winner Mode has been included with GNU Emacs since version 20 (https://www.emacswiki.org/emacs/WinnerMode) so no need for =use-package=.
+
 #+source: local-winner-mode
 #+begin_src emacs-lisp
-(use-package winner
-  :config
-  (winner-mode t)
-  :bind (("C-c <down>" . winner-undo)
-         ("C-c <up>" . winner-redo)))
+;; (use-package winner
+;;  :config
+;;  (winner-mode t)
+;;  :bind (("C-c <down>" . winner-undo)
+;;         ("C-c <up>" . winner-redo)))
 
 ;; Old khj's code
-;;  (winner-mode 1)
-;;  (global-set-key (kbd "C-c <up>") 'winner-undo)
-;;  (global-set-key (kbd "C-c <down>") 'winner-redo)
+(winner-mode 1)
+(global-set-key (kbd "C-c <up>") 'winner-undo)
+(global-set-key (kbd "C-c <down>") 'winner-redo)
 #+end_src
 
 #+RESULTS: local-winner-mode
-: winner-undo
+: winner-redo
 
 Restore the windows after Ediff quits. By default, when you quit the Ediff session with q, it just leaves the two diff windows around, instead of restoring the window configuration from when Ediff was started.
 
@@ -413,7 +415,6 @@ Restore the windows after Ediff quits. By default, when you quit the Ediff sessi
 
 #+RESULTS:
 | winner-undo |
-
 
 ** Don't Use Suspend Frame
 By default C-z is bound to "Suspend Frame", which minimizes Emacs. I find this of no use. Bind it to "Undo" instead. 

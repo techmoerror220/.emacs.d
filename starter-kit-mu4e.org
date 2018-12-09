@@ -795,6 +795,15 @@ From https://www.djcbsoftware.nl/code/mu/mu4e/Split-view.html
 
 #+RESULTS:
 
+* Direct access to =mu4e=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-set-key (kbd "s-i") #'mu4e)
+#+END_SRC
+
+#+RESULTS:
+: mu4e
+
 * Provide 
 
 #+BEGIN_SRC emacs-lisp :tangle yes

@@ -342,13 +342,13 @@ I guess this goes without saying but you absolutely have to change the arguments
   (interactive)
   (exwm-async-run "slock"))
 
-;;(defun daedreth/mu4e ()
-;;  (interactive)
-;;  (exwm-async-run "mu"))
+(defun daedreth/mu4e ()
+  (interactive)
+  (exwm-async-run "emacsclient mu"))
 #+END_SRC
 
 #+RESULTS:
-: daedreth/lock-screen
+: daedreth/mu4e
 
 *** Keybindings to start processes
 

@@ -361,15 +361,20 @@ ARCHIVE is the string name of the package archive.")
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 ;; backwards compatibility as default-buffer-file-coding-system
-;; is deprecated in 23.2.
-(if (boundp 'buffer-file-coding-system)
-    (setq-default buffer-file-coding-system 'utf-8)
-  (setq default-buffer-file-coding-system 'utf-8))
+;; is deprecated in 23.2. (Petersen's way. I commented it out now and
+;; leave it as it was originally)
+;; (if (boundp 'buffer-file-coding-system)
+;;    (setq-default buffer-file-coding-system 'utf-8)
+;;  (setq default-buffer-file-coding-system 'utf-8))
 ;; originally I had (setq buffer-file-coding-system 'utf-8)
+(setq default-buffer-file-coding-system 'utf-8)
+(setq         buffer-file-coding-system 'utf-8)
+(setq-default buffer-file-coding-system 'utf-8)
 ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
-;; Other stuff
+;; UTF-8 as default encoding (permanently choose a encoding system in
+;; emacs for opening and saving). See http://ergoemacs.org/emacs/emacs_encoding_decoding_faq.html
  (set-language-environment 'utf-8)
  (setq locale-coding-system 'utf-8)
  (unless (eq system-type 'windows-nt)
@@ -382,6 +387,11 @@ ARCHIVE is the string name of the package archive.")
  (setq coding-system-for-write 'utf-8)
 
 ;; Note in =starter-kit-org.org= there are two more lines on the coding system for the org mode case.
+
+;; other stuff from
+;; https://superuser.com/questions/410100/how-to-make-emacs-accept-utf-8-from-the-keyboard
+(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+(setq default-sendmail-coding-system 'utf-8-unix)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; PATH ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
