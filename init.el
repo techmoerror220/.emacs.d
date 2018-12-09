@@ -1,4 +1,5 @@
-;; test to see if git works on init.el
+;; -*- coding: utf-8 -*-
+
 ;;; init.el --- Where all the magic begins
 ;;
 ;; Part of the Emacs Starter Kit
@@ -347,38 +348,40 @@ ARCHIVE is the string name of the package archive.")
  ;;; Higher garbage collection threshold
  (setq gc-cons-threshold 20000000)
 
- ;;; init.el ends here
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;; The Power of UTF8 ;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; coding system
-;; from: lopez-ibanez.eu/dotemacs.html
+;; Enable UTF-8 by default. From: lopez-ibanez.eu/dotemacs.html
  (prefer-coding-system 'utf-8)
-;; ;; Enable UTF-8 by default
+;;; other stuff from https://github.com/izahn/emacs-starter-kit
+;;; kjh says that setting this coding system prevents emacs from choking on melpa file listings
+;;; see also https://masteringemacs.org/article/working-coding-systems-unicode-emacs
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+;; backwards compatibility as default-buffer-file-coding-system
+;; is deprecated in 23.2.
+(if (boundp 'buffer-file-coding-system)
+    (setq-default buffer-file-coding-system 'utf-8)
+  (setq default-buffer-file-coding-system 'utf-8))
+;; originally I had (setq buffer-file-coding-system 'utf-8)
+;; Treat clipboard input as UTF-8 string first; compound text next, etc.
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
-;;; other stuff for setting up unicode by: https://github.com/izahn/emacs-starter-kit
-;;; which is a fork of kieran healy's starter kit
-;;; he says that setting this coding system prevents emacs from choking on melpa file listings
+;; Other stuff
  (set-language-environment 'utf-8)
  (setq locale-coding-system 'utf-8)
- (set-default-coding-systems 'utf-8)
- (set-terminal-coding-system 'utf-8)
  (unless (eq system-type 'windows-nt)
    (set-selection-coding-system 'utf-8))
- (prefer-coding-system 'utf-8)
- (set-keyboard-coding-system 'utf-8)
- (setq buffer-file-coding-system 'utf-8)
- (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
-;; Instead, lopez-ibañez says that Emacs < 23 sometimes require setting these directly
- ;; but now they cause more problems than they solve... I leave them on as Kieran and Istha use them but I am not sure...
- ;; (setq locale-coding-system 'utf-8);; ;; (set-terminal-coding-system 'utf-8)
- ;; (set-keyboard-coding-system 'utf-8)
- ;; (set-selection-coding-system 'utf-8)
 
+;; from https://stackoverflow.com/questions/24904208/emacs-windows-org-mode-encoding
+ (modify-coding-system-alist   'file "" 'utf-8-unix)  ;; this is the line that the guys in stackoverflow say fix everything
+ (setq coding-system-for-read  'utf-8)
+ (setq coding-system-for-write 'utf-8)
+
+;; Note in =starter-kit-org.org= there are two more lines on the coding system for the org mode case.
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; PATH ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #+TITLE: EXWM Customizations
 #+OPTIONS: toc:nil num:nil ^:nil
 #+PROPERTY: header-args :tangle yes
@@ -93,8 +95,6 @@ These cannot be set globally: if Emacs were to be run in another WM, the =s-= pr
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (exwm-input-set-key (kbd "s-R") #'exwm-reset)
-;;(exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
-(exwm-input-set-key (kbd "s-x") #'set-input-method)
 (exwm-input-set-key (kbd "s-<left>") #'windmove-left)
 (exwm-input-set-key (kbd "s-<down>") #'windmove-down)
 (exwm-input-set-key (kbd "s-<up>") #'windmove-up)
@@ -124,6 +124,23 @@ The following can only apply to EXWM buffers, else it could have unexpected effe
 #+END_SRC
 
 #+RESULTS:
+
+*** Input method
+
+=defun= defined in Marcel van der Boom's configuration files.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun mrb/set-input-method()
+    (interactive)
+    (setq default-input-method "spanish-prefix")
+    ;; Toggle only if it not active yet
+    (if (not current-input-method)
+        (toggle-input-method)))
+
+;;(exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
+(exwm-input-set-key (kbd "s-z") #'mrb/set-input-method)
+#+END_SRC
+
 
 ** External application shortcuts.
 
@@ -198,24 +215,29 @@ Note that with the package =whole-line-or-region-kill-save= these simulation key
 
 * Ambrevar's functions
 
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; (require 'functions) ;; this is the first thing loaded in the whole process so no need to use it here again
 (exwm-input-set-key (kbd "s-<tab>") #'ambrevar/switch-to-last-buffer)
 #+END_SRC
 
-** Lock screen 
+** COMMENT Lock screen 
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Commented out as I use Daedreth's way because it uses =async=. 
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun ambrevar/exwm-start-lock () (interactive) (start-process "slock" nil "slock"))
-(exwm-input-set-key (kbd "s-z") #'ambrevar/exwm-start-lock)
+(exwm-input-set-key (kbd "s-_") #'ambrevar/exwm-start-lock)
 #+END_SRC
 
 ** Screenshot 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (defun ambrevar/exwm-start-screenshot () (interactive) (start-process-shell-command "scrot" nil "scrot ~/temp/screen-%F-%T.png"))
-(exwm-input-set-key (kbd "<print>") #'ambrevar/exwm-start-screenshot)
+(exwm-input-set-key (kbd "s->") #'ambrevar/exwm-start-screenshot)
 #+END_SRC
+
+#+RESULTS:
 
 * More goodies 
 ** Remote editing
@@ -325,14 +347,17 @@ I guess this goes without saying but you absolutely have to change the arguments
 #+RESULTS:
 : daedreth/lock-screen
 
-*** COMMENT Keybindings to start processes
+*** Keybindings to start processes
 
-Commented out as I already have =s-z= to lock screen and =s-@= is for org's self-insert command.
+I've selected an unlikely combination to avoid locking the screen accidentally. But it is not too hard to type either as I need =super= and =shift= together and the the key with the minus sign ~-~.
 
-#+BEGIN_SRC emacs-lisp :tangle no
-;;(global-set-key (kbd "<s-escape>") 'daedreth/launch-browser) ;; commented out as <s-w> also lunches the browser and <s-W> does so in other window
-(global-set-key (kbd "<s-@>") 'daedreth/lock-screen)
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-set-key (kbd "s-y") 'daedreth/launch-browser) ;; commented out as <s-w> also launches the browser and <s-W> does so in other window
+(global-set-key (kbd "s-_") 'daedreth/lock-screen)
 #+END_SRC
+
+#+RESULTS:
+: daedreth/lock-screen
 
 * Provide
 

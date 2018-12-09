@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #+TITLE: Starter Kit Misc
 #+OPTIONS: toc:nil num:nil ^:nil
 
@@ -147,7 +149,7 @@ His explanation: I tend to switch themes more often than normal. For example, sw
 
 ** Window system 
 
-Note: =font-lock-maximum-decoration= was originally set to =t=. But this made emacs way too slow.  In https://www.gnu.org/software/emacs/manual/html_node/efaq/Turning-on-syntax-highlighting.html they say that turning it to =nil= we get the default (usually minimum) decoration (but i take this to mean that there is decoration nonetheless). Originally it was true but dgm turned it off as emacs is way to slow with it.
+Note: =font-lock-maximum-decoration= was originally set to =t=. But this made emacs way too slow.  In https://www.gnu.org/software/emacs/manual/html_node/efaq/Turning-on-syntax-highlighting.html they say that turning it to =nil= we get the default (usually minimum) decoration (but i take this to mean that there is decoration nonetheless). Originally it was set to true but dgm turned it off as emacs is way to slow with it.
 In the description of the variable =font-lock-maximum-decoration= they say that if nil, use the default decoration (typically the minimum available).
 - If t, use the maximum decoration available.
 - If a number, use that level of decoration (or if not available the maximum). The higher the number, the more decoration is done.
@@ -156,6 +158,22 @@ where MAJOR-MODE is a symbol or t (meaning the default).  For example:
  ((c-mode . t) (c++-mode . 2) (t . 1))
 means use the maximum decoration available for buffers in C mode, level 2
 decoration for buffers in C++ mode, and level 1 decoration otherwise.
+
+From http://el.lisp.se/Levels-of-Font-Lock.html
+
+22.6.5 Levels of Font Lock
+
+Some major modes offer three different levels of fontification. You can define multiple levels by using a list of symbols for keywords in font-lock-defaults. Each symbol specifies one level of fontification; it is up to the user to choose one of these levels, normally by setting font-lock-maximum-decoration (see Font Lock in the GNU Emacs Manual). The chosen level’s symbol value is used to initialize font-lock-keywords. 
+
+Here are the conventions for how to define the levels of fontification: 
+
+- Level 1: highlight function declarations, file directives (such as include or import directives), strings and comments. The idea is speed, so only the most important and top-level
+ components are fontified. 
+- Level 2: in addition to level 1, highlight all language keywords, including type names that act like keywords, as well as named constant values. The idea is that all keywords
+ (either syntactic or semantic) should be fontified appropriately. 
+- Level 3: in addition to level 2, highlight the symbols being defined in function and variable declarations, and all builtin function names, wherever they appear. 
+
+ Tip from http://www.emacs.uniyar.ac.ru/doc/em24h/emacs102.htm: A more advanced method for getting cheap font-lock can be obtained using the minor modes called fast-lock-mode and lazy-lock-mode. Use C-h f (describe-function) for a discussion of what they do. 
 
 
 #+srcname: starter-kit-window-view-stuff
@@ -169,19 +187,10 @@ decoration for buffers in C++ mode, and level 1 decoration otherwise.
 
     (mouse-wheel-mode t)
 
-  ;; dgm comments this out as it is in init.el already
-  ;;  (set-language-environment 'utf-8)
-  ;;  (set-terminal-coding-system 'utf-8)
-  ;;  (set-keyboard-coding-system 'utf-8)
-  ;;
-  ;;  (setq locale-coding-system 'utf-8)
-  ;;  (set-default-coding-systems 'utf-8)
-  ;;  (set-selection-coding-system 'utf-8)
-  ;;  (prefer-coding-system 'utf-8)
-
     (setq visible-bell t
           echo-keystrokes 0.1
-          font-lock-maximum-decoration nil  ;; originally it was truel dgm turns this off as emacs is way to slow with it. 
+          ;; font-lock-maximum-decoration nil  ;; originally it was true dgm turns this off as emacs is way to slow with it. 
+          font-lock-maximum-decoration 1 ;; originally it was true, then nil and then 1, the minimum level, to see if this speeds up things. And I think it does.
           font-lock-verbose nil
           inhibit-startup-message t
           transient-mark-mode t

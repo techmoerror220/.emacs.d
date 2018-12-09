@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #+TITLE: Starter Kit JS
 #+OPTIONS: toc:nil num:nil ^:nil
 

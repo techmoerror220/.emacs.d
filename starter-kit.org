@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #+TITLE: Emacs Starter Kit
 #+SEQ_TODO: PROPOSED TODO STARTED | DONE DEFERRED REJECTED
 #+OPTIONS: H:2 num:nil toc:t

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #+TITLE: mu4e Customizations
 #+OPTIONS: toc:nil num:nil ^:nil
 #+PROPERTY: header-args :tangle yes

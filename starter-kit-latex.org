@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #+TITLE: Starter Kit LaTeX
 #+OPTIONS: toc:nil H:2 num:nil ^:nil
 

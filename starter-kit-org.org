@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #+TITLE: Starter Kit Org
 #+OPTIONS: toc:nil num:nil ^:nil
 
@@ -93,6 +95,14 @@ Remove section numbers, table of contents etc. from =HTML= output plus some othe
 (setq org-html-viewport nil)
 (setq org-export-with-smart-quotes t)
 #+END_SRC
+
+And from https://stackoverflow.com/questions/24904208/emacs-windows-org-mode-encoding this tip to avoid problems with utf-8 encoding in org, though someone says it doesn't do anything.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list
+  'file-coding-system-alist '("\\.org" . utf-8-unix))
+#+END_SRC
+
 
 *** Html export settings
 
