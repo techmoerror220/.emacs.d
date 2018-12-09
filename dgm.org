@@ -540,15 +540,17 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 
 See https://www.reddit.com/r/emacs/comments/5h7k1r/undo_lost_hours_of_work//
 Also read http://ergoemacs.org/emacs/emacs_undo_cult_problem.html
+However, with =helm-ag= I'm getting errors that seem related to undo-tree so I comment this out.
+
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq undo-tree-auto-save-history t)
-(setq undo-tree-history-directory-alist
-    (quote (("" . "~/.emacs.d/undo_hist"))))
+;;(setq undo-tree-history-directory-alist
+;;    (quote (("" . "~/.emacs.d/undo_hist"))))
 #+END_SRC
 
 #+RESULTS:
-: (( . ~/.emacs.d/undo_hist))
+: t
 
 
 *** auto-file-revert
