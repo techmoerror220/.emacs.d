@@ -540,11 +540,11 @@ More info here: https://www.emacswiki.org/emacs/UndoTree
 
 See https://www.reddit.com/r/emacs/comments/5h7k1r/undo_lost_hours_of_work//
 Also read http://ergoemacs.org/emacs/emacs_undo_cult_problem.html
-However, with =helm-ag= I'm getting errors that seem related to undo-tree so I comment this out.
+However, with =helm-ag= I'm getting errors that seem related to undo-tree, plus I got issues with the git repository changing just because of the undo history and it is not worthwhile, so I comment this out.
 
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq undo-tree-auto-save-history t)
+#+BEGIN_SRC emacs-lisp :tangle no
+;;(setq undo-tree-auto-save-history t)
 ;;(setq undo-tree-history-directory-alist
 ;;    (quote (("" . "~/.emacs.d/undo_hist"))))
 #+END_SRC
@@ -2344,10 +2344,12 @@ ace-window is a package that uses the same idea from ace-jump-mode for buffer na
 
 Problema: if I am in an external app within =exwm=, then =ace-window= does not work and I'd rather use =switch-window=.
 
-***** switch-window
+***** COMMENT switch-window
 This magnificent package takes care of this issue. It’s unnoticeable if you have <3 panes open, but with 3 or more, upon pressing C-x o you will notice how your buffers turn a solid color and each buffer is asigned a letter (the list below shows the letters, you can modify them to suit your liking), upon pressing a letter asigned to a window, your will be taken to said window, easy to remember, quick to use and most importantly, it annihilates a big issue I had with emacs. An alternative is ace-window, however by default it also changes the behaviour of C-x o even if only 2 windows are open, this is bad, it also works less well with exwm for some reason.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+DGM: I suspect that this package is responsible for my disappearing-cursor problem because it has always happened when moving across windows... the only other suspect I have is Dired as I think it has involved moving files across windows and directories.
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package switch-window
   :ensure t
   :config
