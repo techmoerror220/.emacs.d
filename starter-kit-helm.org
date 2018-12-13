@@ -822,28 +822,36 @@ Basic commands with for interfacing with =exwm= with =helm=
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'helm-bookmark)
 
-(when (require 'helm-exwm nil t)
-  (add-to-list 'helm-source-names-using-follow "EXWM buffers")
-  (setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
-  (setq helm-exwm-source (helm-exwm-build-source))
-  (setq helm-mini-default-sources `(helm-exwm-emacs-buffers-source
-                                    helm-exwm-source
-                                    helm-source-buffers-list
-                                    helm-source-recentf
-                                    ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
-                                    helm-source-bookmarks
-                                    helm-source-bookmark-set
-                                    helm-source-buffer-not-found)))
+(use-package helm-exwm)
+;; (when (require 'helm-exwm nil t)
+(add-to-list 'helm-source-names-using-follow "EXWM buffers")
+(setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
+(setq helm-exwm-source (helm-exwm-build-source))
+(setq helm-mini-default-sources `(helm-exwm-emacs-buffers-source
+                                  helm-exwm-source
+                                  helm-source-buffers-list
+                                  helm-source-recentf
+                                  ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
+                                  helm-source-bookmarks
+                                  helm-source-bookmark-set
+                                  helm-source-buffer-not-found))
+
 ;; Not sure how this works
-;; (ambrevar/define-keys
-;; helm-exwm-map
-;;   "M-d" 'helm-buffer-run-kill-persistent
-;;   "S-<return>" 'helm-buffer-switch-other-window)
-  ;; Launcher
-  (exwm-input-set-key (kbd "s-r") 'helm-run-external-command)
-  ;; Web browser
-  ;; (exwm-input-set-key (kbd "s-w") #'helm-exwm-switch-browser)               ;; I don't use these two and I don't see the user case.
-  ;; (exwm-input-set-key (kbd "s-W") #'helm-exwm-switch-browser-other-window) 
+;;(ambrevar/define-keys helm-exwm-map
+;;   "s-!" 'helm-buffer-run-kill-persistent
+;;   "s-#" 'helm-buffer-switch-other-window)
+;; The above does not work and I don't know what is meant to do
+
+;; next two lines work in the context of a helm menu like the one triggered with =C-x b=
+(global-set-key (kbd "C-c h w") 'helm-buffer-switch-other-window)
+(global-set-key (kbd "C-c h k") 'helm-buffer-run-kill-persistent)
+
+;; Launcher
+(exwm-input-set-key (kbd "s-r") 'helm-run-external-command)
+
+;; Web browser
+(exwm-input-set-key (kbd "M-s-j") #'helm-exwm-switch-browser)               ;; I don't use these two and I don't see the user case.
+(exwm-input-set-key (kbd "s-j")   #'helm-exwm-switch-browser-other-window) 
 #+END_SRC
 
 #+RESULTS:

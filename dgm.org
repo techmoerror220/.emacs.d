@@ -2329,18 +2329,34 @@ Some of us have large displays, others have tiny netbook screens, but regardless
 ***** =ace-window=
 ace-window is a package that uses the same idea from ace-jump-mode for buffer navigation, but applies it to windows. 
 
+Tips from https://pastebin.com/MnSsUWeZ
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ace-window
   :ensure t
   :config
   (ace-window-display-mode)
+  (setq aw-dispatch-always t)
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  (defvar aw-dispatch-alist
+    '((?x aw-delete-window "Delete Window")
+      (?m aw-swap-window "Swap Windows")
+      (?M aw-move-window "Move Window")
+      (?j aw-switch-buffer-in-window "Select Buffer")
+      (?n aw-flip-window)
+      (?u aw-switch-buffer-other-window "Switch Buffer Other Window")
+      (?c aw-split-window-fair "Split Fair Window")
+      (?v aw-split-window-vert "Split Vert Window")
+      (?b aw-split-window-horz "Split Horz Window")
+      (?o delete-other-windows "Delete Other Windows")
+      (?? aw-show-dispatch-help)))
   :bind ("M-P" . ace-window))
 
 ;; (global-set-key (kbd "M-P") 'ace-window)
 #+END_SRC
 
 #+RESULTS:
-: ace-window
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23569 36355 585435 681000) :init (23569 36355 585136 639000) :config (23569 36355 585104 709000) :config-secs (0 0 1097 931000) :init-secs (0 0 1157 882000) :use-package-secs (0 0 1713 661000)))
 
 Problema: if I am in an external app within =exwm=, then =ace-window= does not work and I'd rather use =switch-window=.
 

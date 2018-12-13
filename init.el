@@ -381,17 +381,18 @@ ARCHIVE is the string name of the package archive.")
    (set-selection-coding-system 'utf-8))
 
 
+;;;;;;; dgm on 13 December 2018 to try and not get the conflict with utf-8-emacs
 ;; from https://stackoverflow.com/questions/24904208/emacs-windows-org-mode-encoding
- (modify-coding-system-alist   'file "" 'utf-8-unix)  ;; this is the line that the guys in stackoverflow say fix everything
- (setq coding-system-for-read  'utf-8)
- (setq coding-system-for-write 'utf-8)
+;; (modify-coding-system-alist   'file "" 'utf-8-unix)  ;; this is the line that the guys in stackoverflow say fix everything
+;; (setq coding-system-for-read  'utf-8)
+;; (setq coding-system-for-write 'utf-8)
 
 ;; Note in =starter-kit-org.org= there are two more lines on the coding system for the org mode case.
 
 ;; other stuff from
 ;; https://superuser.com/questions/410100/how-to-make-emacs-accept-utf-8-from-the-keyboard
-(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
-(setq default-sendmail-coding-system 'utf-8-unix)
+;; (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+;; (setq default-sendmail-coding-system 'utf-8-unix)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; PATH ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
