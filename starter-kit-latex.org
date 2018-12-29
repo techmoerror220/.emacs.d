@@ -379,7 +379,6 @@ Tell RefTeX where the bibliography files are. Commented out for now cos the path
 ;;                        (shell-command "vc")))
 #+end_src
 
-
 * Font-lock customization
 In =starter-kit-misc.org= the global font-locking is set to its minimum but in latex this is not nice. So I increase it here to its medium level of 2 (max is 3)
 See https://www.linuxtopia.org/online_books/linux_tool_guides/gnu_emacs_manual/Font-Lock.html
@@ -390,7 +389,7 @@ See https://www.linuxtopia.org/online_books/linux_tool_guides/gnu_emacs_manual/F
 #+END_SRC
 
 #+RESULTS:
-: ((latex-mode . 2))
+: ((latex-mode . 1))
 
 * Final message
 #+source: message-line

@@ -32,6 +32,33 @@ See https://github.com/emacs-helm/helm/issues/2085
 #+RESULTS:
 |   |
 
+** Limit candidates for speed
+
+- Limit max number of matches displayed for speed. In Pragmatic Emacs's =helm-for-files= and in Sacha Chua's dotfiles.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq helm-candidate-number-limit 100)
+#+END_SRC
+
+#+RESULTS:
+: 100
+
+* Sacha Chua
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+    ;; From https://gist.github.com/antifuchs/9238468
+    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+          helm-input-idle-delay 0.01  ; this actually updates things
+                                        ; reeeelatively quickly.
+          helm-yas-display-key-on-candidate t
+          helm-quick-update t
+          helm-M-x-requires-pattern nil
+          helm-ff-skip-boring-files t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
 * Daniel Mai's stuff 
 
 From: https://github.com/danielmai/.emacs.d/blob/master/config.org
@@ -216,6 +243,7 @@ And still more on grep, but they are already defined in the =exwm= shortcuts, so
 
 ** Eldoc 
 *** TODO understand whtat is =eldoc=.
+In Sacha's dotfiles, she says: "Eldoc provides minibuffer hints when working with Emacs Lisp."
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; helm-eval-expression-with-eldoc
@@ -630,6 +658,7 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
                                          "/media/dgm/blue/documents/My-Academic-Stuff"
                                          "/media/dgm/blue/documents/personal"
                                          "/home/dgm/Dropbox/gtd"
+                                         "/media/dgm/blue/documents/bibs"
                                          "/media/dgm/blue/documents/templates"))
   (projectile-add-known-project "~/.emacs.d/")
   (projectile-add-known-project  "~/texmf/")
@@ -642,6 +671,7 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
   (projectile-add-known-project "/media/dgm/blue/documents/My-Academic-Stuff")
   (projectile-add-known-project "/media/dgm/blue/documents/personal")  
   (projectile-add-known-project "/home/dgm/Dropbox/gtd")  
+  (projectile-add-known-project "/media/dgm/blue/documents/bibs")  
   (projectile-add-known-project "/media/dgm/blue/documents/templates")
   
   (when (require 'magit nil t)
@@ -807,7 +837,8 @@ Basic commands with for interfacing with =exwm= with =helm=
   ;;  (ambrevar/define-keys helm-map "s-\\" 'helm-toggle-resplit-and-swap-windows) ;; already used in starter-kit-exwm.org for ambrevar/toggle-window-split
   (exwm-input-set-key (kbd "s-c") #'helm-resume)  ;; get the latest helm thing you did!, i.e., reopen the last helm search.
   ;; (exwm-input-set-key (kbd "s-b") #'helm-mini) ;; not needed as already in =C-x b=
-  (exwm-input-set-key (kbd "s-f") #'helm-find-files)
+  ;; (exwm-input-set-key (kbd "s-f") #'helm-find-files) ;; already in C-x C-f
+  (exwm-input-set-key (kbd "s-f") #'helm-for-files) 
   (exwm-input-set-key (kbd "s-F") #'helm-locate)
   (when (fboundp 'ambrevar/helm-locate-meta)
     (exwm-input-set-key (kbd "s-F") #'ambrevar/helm-locate-meta))
@@ -816,6 +847,8 @@ Basic commands with for interfacing with =exwm= with =helm=
   (exwm-input-set-key (kbd "s-g") 'ambrevar/helm-grep-git-or-ag)
   (exwm-input-set-key (kbd "s-G") 'ambrevar/helm-grep-git-all-or-ag))
 #+END_SRC
+
+#+RESULTS:
 
 ** EXWM buffers with helm and make =helm-mini= almighty
 

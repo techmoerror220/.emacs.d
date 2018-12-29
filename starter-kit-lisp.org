@@ -9,6 +9,25 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 Support for editing list dialects including [[* Emacs Lisp][Emacs Lisp]], [[* Scheme][Scheme]],
 [[* Common Lisp][Common Lisp]], and [[* Clojure][Clojure]].
 
+** Sacha Chua on Eldoc
+
+Eldoc provides minibuffer hints when working with Emacs Lisp. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package "eldoc"
+  :diminish eldoc-mode
+  :commands turn-on-eldoc-mode
+  :defer t
+  :init
+  (progn
+  (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+  (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+  (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23591 16504 904146 174000) :init (23591 16504 904134 645000) :config (23591 16504 904107 391000) :config-secs (0 0 27 37000) :init-secs (0 0 4442 159000) :use-package-secs (0 0 4784 315000)))
+
 ** Define keys
 #+srcname: starter-kit-define-lisp-keys
 #+begin_src emacs-lisp 
@@ -39,7 +58,7 @@ I can't recall why I commented this out... previously I had used the option =:ta
 ** Emacs Lisp
 
 #+begin_src emacs-lisp
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+;; (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode) ;; already in place. 
 (add-hook 'emacs-lisp-mode-hook 'run-starter-kit-coding-hook)
 (add-hook 'emacs-lisp-mode-hook 'esk-remove-elc-on-save)
 ;; (add-hook 'emacs-lisp-mode-hook 'idle-highlight)

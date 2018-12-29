@@ -306,6 +306,13 @@ It enables linum only in programming modpes
 #+RESULTS: line-numbering
 | linum-mode | (lambda nil (highlight-symbol-mode)) | highlight-numbers-mode | clean-aindent-mode |
 
+Tip from https://www.emacswiki.org/emacs/SmoothScrolling
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Delay updates to give Emacs a chance for other changes
+(setq linum-delay t)
+#+END_SRC
+
 ** GROUP: Convenience -> Whitespace
 
 Whenever you create useless whitespace, the whitespace is highlighted
@@ -399,9 +406,11 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 : t
 
 *** tab-width
+
+Default to 4 visible spaces to display a tab. Sacha has it at 2: =(setq-default tab-width 2)=
+
 #+srcname: tab-width
 #+BEGIN_SRC emacs-lisp :tangle yes
-;; default to 4 visible spaces to display a tab
 (setq-default tab-width 4)
 #+END_SRC
 
@@ -523,11 +532,21 @@ See http://tuhdo.github.io/emacs-tutor3.html
 undo-tree set up from http://pragmaticemacs.com/emacs/advanced-undoredo-with-undo-tree/
 More info here: https://www.emacswiki.org/emacs/UndoTree
 
+Sacha Chua says: People often struggle with the Emacs undo model, where there's really no concept of "redo" - you simply undo the undo. 
+
+This lets you use C-x u (undo-tree-visualize) to visually walk through the changes you've made, undo back to a certain point
+(or redo), and go down different branches. 
+
 #+srcname: undo-tree
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package undo-tree)
-;;turn on everywhere
-(global-undo-tree-mode 1)
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :config
+  (progn
+    (global-undo-tree-mode)
+    (setq undo-tree-visualizer-timestamps t)
+    (setq undo-tree-visualizer-diff t)))
+
 ;; make ctrl-z undo
 (global-set-key (kbd "C-z") 'undo)
 ;; make ctrl-Z redo
@@ -1755,10 +1774,11 @@ https://emacs.stackexchange.com/questions/5603/how-to-quickly-copy-move-file-in-
 #+RESULTS:
 : ((line-spacing . 0.06) (font . Pragmata Pro Mono-16))
  
-** =qutebrowser=
+** COMMENT =qutebrowser=
 Originally from https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org with qutebrowser, but too unstable. Changed to chromium
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+DGM on 29 dic 2018: this is set in =starter-kit-misc.org=
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "chromium")
 ;      browse-url-generic-program "qutebrowser")
@@ -2573,6 +2593,8 @@ While changing buffers or workspaces, the first thing you do is look for your cu
 **** Rainbow delimiters
 Colors parentheses and other delimiters depending on their depth, useful for any language using them, especially lisp.
 
+Note, however, that Sacha Chua doesn't automatically turn this on because she thinks it slows things down a little. So she has =(use-package rainbow-delimiters :disabled t)=. So keep an eye on it.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package rainbow-delimiters
   :ensure t
@@ -2707,15 +2729,42 @@ http://www.masteringemacs.org/article/smart-scan-jump-symbols-buffer
 *** Smoothscrolling
 This makes it so =C-n-=ing and =C-p-= ing won’t make the buffer jump around so much.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package smooth-scrolling
-  :ensure t
-  :config
-  (smooth-scrolling-mode))
+#+BEGIN_SRC emacs-lisp :tangle no
+;; (use-package smooth-scrolling
+;;  :ensure t
+;;  :config
+;;  (smooth-scrolling-mode))
 #+END_SRC
 
 #+RESULTS:
-: t
+: 0.01
+
+More tips from https://www.emacswiki.org/emacs/SmoothScrolling
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; scroll one line at a time (less "jumpy" than defaults)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+(setq scroll-step 1) ;; keyboard scroll one line at a time
+#+END_SRC
+
+#+RESULTS:
+: 1
+
+I was driven crazy by the jumps. I had set scroll-step and scroll-conservatively as suggested here but it was still jumping half-screens at random times when scrolling. FINALLY, after many years of cursing, the suggestion of setting auto-window-vscroll to nil, below on this page, worked - even though Emacs documentation only says it applies to tall lines with large images, which I don’t use. In fact it seems to apply to any scrolling with too-slow terminal and too-fast keyboard repeat rate. So, here’s my tested recipe for civilized scrolling, which works regardless of your screen speed and keyboard speed:
+(https://www.emacswiki.org/emacs/SmoothScrolling)
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq scroll-step 1)
+; Autosave every 500 typed characters. Alternative: try turning off auto save interval altogether.
+(setq auto-save-interval 500)
+; Scroll just one line when hitting bottom of window // ;; scrolling to always be a line at a time
+(setq scroll-conservatively 10000)
+(setq auto-window-vscroll nil)
+#+END_SRC
+
+#+RESULTS:
 
 *** Scratch
 
@@ -3408,7 +3457,7 @@ PS: recall that the =diminish= package is installed in =starter-kit.org=.
   (diminish 'rainbow-delimiters-mode)
   (diminish 'yas-minor-mode)
   (diminish 'rainbow-mode)
-  (diminish 'undo-tree-mode)
+;;  (diminish 'undo-tree-mode)
   (diminish 'editorconfig-mode)
 ;;  (diminish 'smartparens-mode) ;; added in -text.org
   (diminish 'minimal-mode)
@@ -3523,6 +3572,209 @@ Constantly extracts current prompt text and executes and manages applying
 #+RESULTS:
 : hy--shell-font-lock-turn-on
 
+* Sacha Chua
+** Minibuffer editing - more space!
+
+Sometimes you want to be able to do fancy things with the text that you're entering into the minibuffer. Sometimes you just want to be able to read it, especially when it comes to lots of text. This binds C-M-e in a minibuffer) so that you can edit the contents of the minibuffer before submitting it. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package miniedit
+  :commands minibuffer-edit
+  :init (miniedit-install))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23590 41501 916823 836000) :init (23590 41501 916801 519000) :config (23590 41501 916755 365000) :config-secs (0 0 17 403000) :init-secs (0 0 114 111000) :use-package-secs (0 0 212 59000)))
+
+** Copy filename to clipboard
+
+http://emacsredux.com/blog/2013/03/27/copy-filename-to-the-clipboard/ https://github.com/bbatsov/prelude 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun prelude-copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+#+END_SRC
+
+#+RESULTS:
+: prelude-copy-file-name-to-clipboard
+
+** Structure templates
+
+Org makes it easy to insert blocks by typing =<s[TAB]=, etc. I hardly ever use LaTeX, but I insert a lot of Emacs Lisp blocks, so I redefine =<l= to insert a Lisp block instead. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-structure-template-alist
+      '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
+        ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
+        ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
+        ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE" "<verse>\n?\n</verse>")
+        ("c" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
+        ("p" "#+BEGIN_PRACTICE\n?\n#+END_PRACTICE")
+        ("l" "#+begin_src emacs-lisp\n?\n#+end_src" "<src lang=\"emacs-lisp\">\n?\n</src>")
+        ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+        ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
+        ("H" "#+html: " "<literal style=\"html\">?</literal>")
+        ("a" "#+begin_ascii\n?\n#+end_ascii")
+        ("A" "#+ascii: ")
+        ("i" "#+index: ?" "#+index: ?")
+        ("I" "#+include %file ?" "<include file=%file markup=\"?\">")))
+#+END_SRC
+
+** Great for quickly going through the to-do list. Gets rid of one extra keystroke. ;) 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun my/org-agenda-done (&optional arg)
+  "Mark current TODO as done.
+This changes the line at point, all other lines in the agenda referring to
+the same tree node, and the headline of the tree node in the Org-mode file."
+  (interactive "P")
+  (org-agenda-todo "DONE"))
+;; Override the key definition for org-exit
+(define-key org-agenda-mode-map "x" 'my/org-agenda-done)
+#+END_SRC
+
+#+RESULTS:
+: my/org-agenda-done
+
+** Autosave
+
+Could be handy, especially when synchronizing with Orgzly. From
+https://www.reddit.com/r/orgmode/comments/7ke3hv/orgzly_best_practice/ 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(run-with-idle-timer 30 t 'org-save-all-org-buffers)
+#+END_SRC
+
+** Edit list   
+
+=M-x edit-list= makes it easier to edit an Emacs Lisp list. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package edit-list :commands edit-list)
+#+END_SRC
+
+** Weather forecast
+
+Sacha has this but it doesn't work because it doesn't interpret my latitude and longitude as numbers.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package forecast
+  :config
+  (setq forecast-latitude  40.4167
+        forecast-longitude -3.6833
+        forecast-city "Madrid"
+        forecast-country "Spain"
+        forecast-api-key "b580b82a056cdb3f6089f08ece4b2eb6"
+  )
+)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23591 18440 638361 651000) :init (23591 18440 638328 962000) :config (23591 18440 637900 795000) :config-secs (0 0 722 161000) :init-secs (0 0 1566 308000) :use-package-secs (0 0 1656 205000)))
+
+*** Pragmatic Emacs alternative
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package wttrin
+  :ensure t
+  :commands (wttrin)
+  :init
+  (setq wttrin-default-cities '("Madrid"
+                                "Fuengirola")))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23591 21227 872116 387000) :init (23591 21227 872098 805000) :init-secs (0 0 25 82000) :use-package-secs (0 0 96 931000) :config (23591 21227 872087 829000) :config-secs (0 0 3 776000)))
+
+The only problem is that if the Emacs frame is not wide enough and the lines in the wttrin buffer wrap, it becomes unreadable. 
+
+My solution is to save the window and frame configuration, then resize the frame to be big enough for the wttrin buffer. The previous configuration is then restored when exiting wttrin. These functions take care of that for us: 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;advise wttrin to save frame arrangement
+;;requires frame-cmds package
+(defun bjm/wttrin-save-frame ()
+  "Save frame and window configuration and then expand frame for wttrin."
+  ;;save window arrangement to a register
+  (window-configuration-to-register :pre-wttrin)
+  (delete-other-windows)
+  ;;save frame setup and resize
+  (save-frame-config)
+  (set-frame-width (selected-frame) 130)
+  (set-frame-height (selected-frame) 48)
+  )
+(advice-add 'wttrin :before #'bjm/wttrin-save-frame)
+
+(defun bjm/wttrin-restore-frame ()
+  "Restore frame and window configuration saved prior to launching wttrin."
+  (interactive)
+  (jump-to-frame-config-register)
+  (jump-to-register :pre-wttrin)
+  )
+(advice-add 'wttrin-exit :after #'bjm/wttrin-restore-frame)
+#+END_SRC
+
+#+RESULTS:
+
+**** Update: open wttrin with default city
+
+By default wttrin prompts you to chose the city from your list when it starts. This function starts wttrin with the first city on your list. You can always change this by hitting =g=. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; function to open wttrin with first city on list
+(defun bjm/wttrin ()
+    "Open `wttrin' without prompting, using first city in `wttrin-default-cities'"
+    (interactive)
+    ;; save window arrangement to register 
+    (window-configuration-to-register :pre-wttrin)
+    (delete-other-windows)
+    ;; save frame setup
+    (save-frame-config)
+    (set-frame-width (selected-frame) 130)
+    (set-frame-height (selected-frame) 48)
+    ;; call wttrin
+    (wttrin-query (car wttrin-default-cities))
+    )
+#+END_SRC
+
+#+RESULTS:
+: bjm/wttrin
+
+
+** Typing of Emacs
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package typing :disabled t
+  :init
+  (autoload 'typing-of-emacs "typing" nil t)
+  :config
+  (progn
+    (setq toe-starting-length 6)
+    (setq toe-starting-time-per-word 2)
+    (setq toe-max-length 20)))
+#+END_SRC
+
+#+RESULTS:
+
+
+* Provide
+
+Trying this on 28 dic 2018. I don't really know why it is needed or not.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(provide 'dgm)
+#+END_SRC
+
+#+RESULTS:
+: dgm
+
+
 * Final message
 #+source: message-line
 #+begin_src emacs-lisp :tangle yes
@@ -3531,6 +3783,13 @@ Constantly extracts current prompt text and executes and manages applying
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+
+
+
+
+
+
+
 
 
 

@@ -12,10 +12,15 @@ This file provides settings for ESS and R.
  R. 
  
 ** Load ESS 
+
 #+src-name: ess-mode
 #+begin_src emacs-lisp
-  (require 'ess-site)
+(require 'ess-site)
 #+end_src
+
+#+RESULTS:
+: ess-site
+
 ** Coding Hooks
 #+source: ide-ess
 #+begin_src emacs-lisp
@@ -83,7 +88,7 @@ Polymode is a package that supports multiple modes inside a single buffer. It is
  FelipeCsaszar. Adapted to split vertically instead of horizontally. 
 #+src-name: ess-shift-enter
 #+begin_src emacs-lisp
-(setq ess-ask-for-ess-directory nil)
+  (setq ess-ask-for-ess-directory nil)
   (setq ess-local-process-name "R")
   (setq ansi-color-for-comint-mode 'filter)
   (setq comint-scroll-to-bottom-on-input t)

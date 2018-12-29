@@ -171,6 +171,11 @@ ARCHIVE is the string name of the package archive.")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  exwm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Sacha says: (server-start) permits the use of emacsclient,
+;; emacsclientw, and org-protocol.
+;; emacs --daemon, which starts a server automatically but with --daemon, Emacs doesn't start off
+;; in a graphical environment.
+
 (server-start)
 
   (use-package exwm
@@ -371,7 +376,10 @@ ARCHIVE is the string name of the package archive.")
 (setq         buffer-file-coding-system 'utf-8)
 (setq-default buffer-file-coding-system 'utf-8)
 ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
-(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+;; (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+;; next version as in Sacha Chua's dotfiles
+(when (display-graphic-p)
+  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 
 ;; UTF-8 as default encoding (permanently choose a encoding system in
 ;; emacs for opening and saving). See http://ergoemacs.org/emacs/emacs_encoding_decoding_faq.html

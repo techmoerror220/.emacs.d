@@ -568,20 +568,24 @@ Indentation.
 
 ** Local Org-mode Settings
 *** Smart-quote binding
+
 When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by default.
+
+DGM: on 27 dic 2018 I disable the smart-quote-keys function as it was causing C-c ' to not work for editing src block editing in org mode.
 
 #+source: org-mode-smartquote-key
 #+begin_src emacs-lisp :tangle yes
 (require 'typopunct) ;; I don't have this.
 (typopunct-change-language 'english t)
 
-(defun smart-quote-keys ()
-  (local-set-key (kbd "\C-c \'") 'typopunct-insert-single-quotation-mark)
-  (local-set-key (kbd "\C-c \"") 'typopunct-insert-quotation-mark)
-  )
+;; (defun smart-quote-keys () 
+;;  (local-set-key (kbd "\C-c \'") 'typopunct-insert-single-quotation-mark)
+;;  (local-set-key (kbd "\C \"") 'typopunct-insert-quotation-mark))
 
-(add-hook 'org-mode-hook 'smart-quote-keys)
+;; (add-hook 'org-mode-hook 'smart-quote-keys)
 #+end_src
+
+#+RESULTS: org-mode-smartquote-key
 
 
 *** Archive Settings
@@ -993,14 +997,15 @@ Tip from: https://orgmode.org/manual/Setting-tags.html
 Public holidays in Spain. Tip from: https://www.emacswiki.org/emacs/CalendarLocalization
 And Calendario de fiestas moviles hasta 2100 en http://www.antonioburgos.com/antologia/semana_santa/curiosidades/zzcurioaalmaque.html
 Check another cool customization here: http://www.gnomon.org.uk/diary.html
-
 #+BEGIN_SRC emacs-lisp :tangle yes
   (require 'org-agenda)
   (require 'holidays)
   (setq calendar-holidays holiday-other-holidays)
   (setq org-agenda-include-diary t)
 
-  (setq holiday-other-holidays
+  ;; (setq holiday-other-holidays  ;; with this holidays don't show up in agenda.
+  ;; with the following holidays show up in org-agenda but still it does not show up in orgzly so watch out! 
+  (setq calendar-holidays          
         '((holiday-fixed 1 1 "Año Nuevo / New Year's Day")
           (holiday-fixed 1 6 "Día de Reyes / Epiphany") 
           (holiday-fixed 2 14 "Valentine's Day")
@@ -1142,6 +1147,77 @@ I want to see properties by default but this is of no help. I'm using =s-h= for 
 
 #+RESULTS:
 : t
+
+* Inserting graphical ouptut
+- Tip from Erik Riverson's blog on org-mode and R for inserting images generated in code blocks inline in our Emacs buffer.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)   
+  (add-hook 'org-mode-hook 'org-display-inline-images)   
+#+END_SRC
+
+#+RESULTS:
+| org-display-inline-images | (lambda nil (highlight-symbol-mode)) | org-table-stripes-enable | org-mode-reftex-setup | org-ref-org-menu | (lambda nil (org-bullets-mode)) | turn-off-auto-fill | ambrevar/turn-off-indent-tabs | ambrevar/turn-off-linum | (lambda nil (visual-line-mode 1)) | org-indent-mode | (lambda nil (set-face-attribute 'org-level-1 nil :height 1.5) (set-face-attribute 'org-level-2 nil :height 1.2) (set-face-attribute 'org-level-3 nil :height 1.1) (set-face-attribute 'org-level-4 nil :height 1.1) (set-face-attribute 'org-level-5 nil :height 1.1)) | (lambda nil (local-set-key \216 'outline-next-visible-heading) (local-set-key \220 'outline-previous-visible-heading) (local-set-key \225 'outline-up-heading) (local-set-key \227 'org-table-copy-region) (local-set-key \231 'org-table-paste-rectangle) (local-set-key \214 'org-table-sort-lines) (local-set-key \311 'org-toggle-iimage-in-org)) | (lambda nil (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)) | pandoc-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+
+* Font-lock
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq font-lock-maximum-decoration        
+   '((org-mode . 1)))
+#+END_SRC
+
+#+RESULTS:
+: ((org-mode . 1))
+
+** Strike through DONE headlines
+
+From Sacha's dotfiles: I wanted a quick way to visually distinguish DONE tasks from tasks I still need to do. This handy snippet from the Emacs Org-mode mailing list does the trick by striking through the headlines for DONE tasks. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-fontify-done-headline t)
+(custom-set-faces
+ '(org-done ((t (:foreground "PaleGreen"
+                 :weight normal
+                 :strike-through t))))
+ '(org-headline-done
+            ((((class color) (min-colors 16) (background dark))
+               (:foreground "LightSalmon" :strike-through t)))))
+#+END_SRC
+
+#+RESULTS:
+
+* Idle timer
+
+This snippet is from John Wiegley - http://lists.gnu.org/archive/html/emacs-orgmode/2010-03/msg00367.html by way of Sacha Chua. It shows the org agenda when Emacs is idle. 
+
+Thanks to winner-mode, I can get back to my previous buffers with C-c left. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun jump-to-org-agenda ()
+  (interactive)
+  (let ((buf (get-buffer "*Org Agenda*"))
+        wind)
+    (if buf
+        (if (setq wind (get-buffer-window buf))
+            (select-window wind)
+          (if (called-interactively-p 'any)
+              (progn
+                (select-window (display-buffer buf t t))
+                (org-fit-window-to-buffer)
+                ;; (org-agenda-redo)
+                )
+            (with-selected-window (display-buffer buf)
+              (org-fit-window-to-buffer)
+              ;; (org-agenda-redo)
+              )))
+      (call-interactively 'org-agenda-list)))
+  ;;(let ((buf (get-buffer "*Calendar*")))
+  ;;  (unless (get-buffer-window buf)
+  ;;    (org-agenda-goto-calendar)))
+  )
+
+(run-with-idle-timer 300 t 'jump-to-org-agenda)
+#+END_SRC
 
 * Provide
 
