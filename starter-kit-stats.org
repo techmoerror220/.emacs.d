@@ -8,24 +8,65 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 This file provides settings for ESS and R. 
 
 * R and ESS
-   Load ESS: Emacs Speaks Statistics, and several further tweaks for
- R. 
+   Load ESS: Emacs Speaks Statistics, and several further tweaks for R. 
  
 ** Load ESS 
 
 #+src-name: ess-mode
 #+begin_src emacs-lisp
-(require 'ess-site)
+;; (use-package ess
+;;  :ensure t
+;;  :init (require 'ess-site))
+
+(use-package ess
+  :ensure t)
+
+(use-package ess-smart-underscore
+  :ensure t
+  :after ess)
+
+(use-package ess-view
+  :ensure t
+  :after ess)
+
+(use-package ess-R-data-view
+  :ensure t
+  :after ess)
+
+(require 'ob-stata)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (R . t)
+   (perl . t)
+   (ruby . t)
+   (python . t)
+   (js . t)
+   (haskell . t)
+   (stata . t)
+   (shell . t)
+   (latex . t)
+   ))
+
+;; (sh . t)
+;; (scheme . t)
+
+
+;; I am following Ista Zahn here: don't include (stata . t) but do (require 'ob-stata) afterwards. Stil, when I do so, I get the Debugger entered--Lisp error: (void-variable inferior-STA-program-name)
+;; eval(inferior-STA-program-name) so the problem comes from =ob-stata=.
+;;(require 'ess)
+;;(require 'ess-site)
 #+end_src
 
 #+RESULTS:
-: ess-site
 
+* COMMENT Test 
 ** Coding Hooks
 #+source: ide-ess
 #+begin_src emacs-lisp
 (add-hook 'ess-mode-hook 'run-starter-kit-coding-hook)
-  (add-hook 'ess-R-post-run-hook 'smartparens-mode)
+(add-hook 'ess-R-post-run-hook 'smartparens-mode)
 #+end_src
 
 ** Define Rnw-mode and make LaTeX aware of it. 
@@ -81,11 +122,13 @@ Polymode is a package that supports multiple modes inside a single buffer. It is
 #+end_src
 
 ** Make shift-enter to a lot in ESS.
+
  Use shift-enter to split window & launch R (if not running), execute
  highlighted region (if R running & area highlighted), or execute
  current line (and move to next line, skipping comments). Nice. See
  http://www.emacswiki.org/emacs/EmacsSpeaksStatistics,
  FelipeCsaszar. Adapted to split vertically instead of horizontally. 
+
 #+src-name: ess-shift-enter
 #+begin_src emacs-lisp
   (setq ess-ask-for-ess-directory nil)
@@ -128,6 +171,7 @@ Polymode is a package that supports multiple modes inside a single buffer. It is
 [[https://github.com/jimhester/lintr][lintr]] checks your R code for style and syntax errors. It's an R library that integrates with [[http://www.flycheck.org][flycheck]]. You must install lintr from R. Flycheck can also check code in many other languages. You will need to install linters for them separately as well. See the flycheck documentation for details.
 
 dgm disables flycheck as it slows emacs down
+
 #+source: lintr
 #+begin_src emacs-lisp
 ;;  (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -151,6 +195,30 @@ To assign ":" to "<-" and to stop the assignment of underscore (underbar) "_" to
 
 #+RESULTS:
 : ess-smart-S-assign
+
+** R very slow
+
+- See here:  https://stat.ethz.ch/pipermail/ess-help/2011-March/006734.html
+and here: https://stackoverflow.com/questions/13779399/emacs-ess-evaluating-slower-than-normal-r
+
+#+begin_src emacs-lisp
+(setq ess-eval-visibly-p nil)
+(setq ess-use-eldoc nil)
+;;(setq ess-use-eldoc 'script-only)
+#+end_src
+
+#+RESULTS:
+
+* Provide
+
+Trying this on 28 dic 2018. I don't really know why it is needed or not.
+
+#+BEGIN_SRC emacs-lisp
+(provide 'starter-kit-stats)
+#+END_SRC
+
+#+RESULTS:
+: starter-kit-lisp
 
 * Final message
 #+source: message-line

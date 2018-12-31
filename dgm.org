@@ -327,6 +327,15 @@ Whenever you create useless whitespace, the whitespace is highlighted
 #+RESULTS:
 : whitespace-mode
 
+*** speed-type
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package speed-type)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23592 62602 668192 845000) :init (23592 62602 668160 862000) :config (23592 62602 667754 576000) :config-secs (0 0 16 248000) :init-secs (0 0 713 570000) :use-package-secs (0 0 795 338000)))
+
 
 *** iedit mode
 Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-occurrence-editing-in-your-buffer
@@ -462,7 +471,6 @@ From https://github.com/pashinin/workgroups2 and http://tuhdo.github.io/emacs-tu
                               (whitespace-mode 1)))
 #+END_SRC
 
-
 *** Attach multiple files
 
 Attach multiple files to mu4e email message. (Tip from http://www.djcbsoftware.nl/code/mu/mu4e/Attaching-files-with-dired.html).
@@ -506,7 +514,6 @@ See http://tuhdo.github.io/emacs-tutor3.html
 #+RESULTS:
 : t
 
-
 *** Clean-indent
 
 #+srcname: clean-indent
@@ -524,7 +531,6 @@ See http://tuhdo.github.io/emacs-tutor3.html
 
 #+RESULTS: clean-indent
 | my-pkg-init | #[0 \303\211\235\203 \304"\301\305!\210\210	\205 \306 \210\307\211\207 [command-line-args desktop-save-mode inhibit-startup-screen --no-desktop delete 0 desktop-read t] 4] | global-company-mode | ambrevar/reset-file-name-handler-alist | ambrevar/reset-gc-cons-threshold | x-wm-set-size-hint | tramp-register-archive-file-name-handler | table--make-cell-map | magit-auto-revert-mode--init-kludge | magit-startup-asserts | magit-version |
-
 
 
 *** Undo-tree 
@@ -571,7 +577,6 @@ However, with =helm-ag= I'm getting errors that seem related to undo-tree, plus 
 #+RESULTS:
 : t
 
-
 *** auto-file-revert
 #+srcname: file-revert
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -610,7 +615,6 @@ Included in =starter-kit-completion.org=
 | my-pkg-init | #[0 \303\211\235\203 \304"\301\305!\210\210	\205 \306 \210\307\211\207 [command-line-args desktop-save-mode inhibit-startup-screen --no-desktop delete 0 desktop-read t] 4] | global-company-mode | ambrevar/reset-file-name-handler-alist | ambrevar/reset-gc-cons-threshold | x-wm-set-size-hint | tramp-register-archive-file-name-handler | table--make-cell-map | magit-auto-revert-mode--init-kludge | magit-startup-asserts | magit-version |
 
 
-
 *** Duplicate-thing
 
 #+srcname: duplicate
@@ -642,7 +646,6 @@ Included in =starter-kit-completion.org=
 
 #+RESULTS: ibuffer-vc
 | mark | modified | read-only | vc-status-mini |   | (name 18 18 :left :elide) |   | (size 9 -1 :right) |   | (mode 16 16 :left :elide) |   | (vc-status 16 16 :left) |   | filename-and-process |
-
 
 *** Dired plus
 
@@ -822,7 +825,6 @@ I disable this as it is dealt with in -misc.org
 #+RESULTS: highlight-numbers-and-symbols
 | lambda | (event) | (interactive e) | (goto-char (posn-point (event-start event))) | (highlight-symbol-at-point) |
 
-
 *** Info Plus
 #+srcname: info+
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -851,18 +853,38 @@ I disable this as it is dealt with in -misc.org
 ;;                                    ;;
 ;; GROUP: Help -> Rainbow             ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package rainbow-mode)
-(add-hook 'html-mode-hook 'rainbow-mode)
-(add-hook 'css-mode-hook 'rainbow-mode)
+
+(use-package rainbow-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook         #'rainbow-mode)
+  (add-hook 'html-mode-hook         #'rainbow-mode)
+  (add-hook 'css-mode-hook          #'rainbow-mode)
+  (add-hook 'org-mode-hook          #'rainbow-mode)
+  (add-hook 'latex-mode-hook        #'rainbow-mode)
+  (add-hook 'R-mode-hook            #'rainbow-mode)
+  (add-hook 'inferior-ess-mode-hook #'rainbow-mode)
+  (add-hook 'python-mode-hook       #'rainbow-mode)
+ )
 
 ;;R-mode-hook runs when you open a new source buffer, so anything you put in that will only effect your source buffers.inferior-ess-mode-hook runs when you start an R console, so anything in there should only apply to the console buffer and not the source.
-(add-hook 'R-mode-hook 'rainbow-mode)
-(add-hook 'inferior-ess-mode-hook 'rainbow-mode)
 #+END_SRC
 
 #+RESULTS: rainbow-mode
-| rainbow-mode | (lambda nil (local-set-key [C-up] 'comint-previous-input) (local-set-key [C-down] 'comint-next-input)) | ess-S-mouse-me-menu-commands |
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23593 1042 76652 672000) :init (23593 1042 76606 522000) :config (23593 1042 76259 444000) :config-secs (0 0 777 90000) :init-secs (0 0 1377 923000) :use-package-secs (0 0 1502 38000)))
 
+*** Kurecolor
+
+- See this video to watch it live: https://www.youtube.com/watch?v=OMIxZhLU71U
+
+- Documentation here: https://github.com/emacsfodder/kurecolor
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package kurecolor)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23593 3701 118599 80000) :init (23593 3701 118292 444000) :init-secs (0 0 61 29000) :use-package-secs (0 0 537 230000)))
 
 *** Nyam-mode
 
@@ -939,7 +961,6 @@ Only turn on if a window system is available. This prevents error under terminal
 ;;      (add-to-list 'sml/replacer-regexp-list '("^~/.*/lib/ruby/gems" ":GEMS" ))))
 #+end_src
 
-
 *** Stata
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'load-path "/home/dgm/.emacs.d/src/ado-mode-1.15.1.4/lisp")
@@ -949,9 +970,8 @@ Only turn on if a window system is available. This prevents error under terminal
 #+RESULTS:
 : ado-mode
 
-*** Which
--key
-This mode shows a keymap when an incomplete command is entered. It is especially useful for families of commands with a prefix, e.g., =C-c C-o= for outline-mode commands, or ==C-c C-v= for org-babel commands. Just start typing your command and pause if you want a hint.
+*** Which-key
+This mode shows a keymap when an incomplete command is entered. It is especially useful for families of commands with a prefix, e.g., =C-c C-o= for outline-mode commands, or ==C-c C-v= for org-babel commands. Just start ktyping your command and pause if you want a hint.
 
 tip from: https://github.com/izahn/dotemacs
 
@@ -959,6 +979,7 @@ tip from: https://github.com/izahn/dotemacs
 (use-package which-key)
 (which-key-mode)
 #+END_SRC
+
 *** General REPL (comint) config
 Tip from: https://github.com/izahn/dotemacs
 
@@ -1058,7 +1079,6 @@ Alternativa from https://github.com/malb/emacs.d/blob/master/malb.org
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23563 39460 592701 842000) :init (23563 39460 592655 127000) :config (23563 39460 592361 613000) :config-secs (0 0 651 835000) :init-secs (0 0 1187 492000) :use-package-secs (0 0 1286 219000)))
-
 
 *** Run R in emacs (ESS)
 Tip from: https://github.com/izahn/dotemacs
@@ -1236,7 +1256,6 @@ By default, Recentf saves the list of recent files on exiting Emacs (specificall
 
 #+RESULTS:
 
-
 *** recentf-ext    
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1266,7 +1285,6 @@ Ojo: solo funciona si se llama M-x rebox-mode
 (global-set-key [(meta q)] 'rebox-dwin-fill)
 (global-set-key [(shift meta q)] 'rebox-dwin-no-fill)
 #+END_SRC
-
 
 *** helpful 
 
@@ -1957,7 +1975,6 @@ Note, show-all is marked obsolete in Emacs 25.1 in favor of outline-show-all. Bu
 | outline-show-all |
 
 
-
 *** Cut/copy/comment current line if no region selected
 In many programs, like SlickEdit, TextMate and VisualStudio, "cut" and "copy" act on the current line if no text is visually selected. For this, I originally used code from Tim Krones Emacs config, but now I'm using the whole-line-or-region package, which can be customised to use the same line-or-region style for comments too. See comments in whole-line-or-region.el for details.
 
@@ -2136,7 +2153,7 @@ This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try a
 #+END_SRC
 
 *** COMMENT Start a regular shell at the bottom.
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp  :tangle no
 ;;(global-set-key (kbd "s--") 'shell)
 #+end_src
 
@@ -2146,7 +2163,7 @@ This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try a
 And open it at the bottom of current window
 
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; (add-to-list 'display-buffer-alist
 ;;              `(,(rx string-start "*shell*" string-end)
 ;;               (display-buffer-below-selected)))
@@ -3057,7 +3074,6 @@ Quickly force rescan. You can avoid auto rescanning big buffers just making it e
 #+RESULTS:
 : my-imenu-rescan
 
-
 *** Go to symbol easily 
 
 =.el= file for function =ido-goto-symbol= downloaded from https://www.emacswiki.org/emacs/ImenuMode#toc10
@@ -3321,7 +3337,7 @@ If I place this in the =starter-kit-helm.org= file, for some reason, probably be
 #+BEGIN_SRC emacs-lisp :tangle no
 ;; comment out by dgm
 ; (set-face-attribute 'helm-source-header nil :inherit 'header-line :height 'unspecified :background 'unspecified :foreground 'unspecified)
-(set-face-background 'helm-selection "#4f4f4f")
+(set-face-background 'helm-selection "#4f4f4f")  
 (set-face-background 'helm-visible-mark "#2f2f2f")
 (set-face-foreground 'helm-visible-mark nil)
 (set-face-foreground 'helm-match "DarkOrange3")
@@ -3335,23 +3351,89 @@ If I place this in the =starter-kit-helm.org= file, for some reason, probably be
 #+RESULTS:
 
 * Smartparens Mode
-   Smart autopairing of quotes and parentheses. 
-   The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
-#+srcname: smartparens
-#+begin_src emacs-lisp 
+
+   Smart autopairing of quotes and parentheses. The original config was this, but it was too intrusive with org-mode.
+
+#+begin_src emacs-lisp :tangle no
 (use-package smartparens
   :ensure t
   :diminish smartparens-mode
   :config
   (progn
     (require 'smartparens-config)
-    (smartparens-global-mode 1)
+    ;; (smartparens-global-mode 1) ;; disabled by dgm on 29 dic 2019 to try and get bindings in Org mode
     (show-smartparens-global-mode +1)
     (sp-use-paredit-bindings)
     (setq sp-base-key-bindings 'paredit)
     (setq sp-autoskip-closing-pair 'always)
     (setq sp-hybrid-kill-entire-symbol nil)))
+#+end_src
 
+This is Sacha Chua's config (without her keybindings):
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package smartparens
+    :diminish smartparens-mode
+    :config
+    (progn
+      (require 'smartparens-config)
+      ;; http://ivanmalison.github.io/dotfiles/  
+      ;; I reintroduce these two lines so that I can have =sp-local-pair='s defined for org-mode below working
+      ;; Plus =M-up= and =M-down= continue working as they should
+      (smartparens-global-mode 1)
+      (sp-use-smartparens-bindings)
+      ;; back to sacha
+      (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
+      (add-hook 'emacs-lisp-mode-hook 'show-smartparens-mode)
+;;;;;;;;;;;;;;;;;;
+      ;; pair management
+      (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+      (sp-local-pair 'web-mode "<" nil :when '(my/sp-web-mode-is-code-context))
+
+  ;;; markdown-mode
+      (sp-with-modes '(markdown-mode gfm-mode rst-mode)
+        (sp-local-pair "*" "*" :bind "C-*")
+        (sp-local-tag "2" "**" "**")
+        (sp-local-tag "s" "```scheme" "```")
+        (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
+
+  ;;; tex-mode latex-mode
+      (sp-with-modes '(tex-mode plain-tex-mode latex-mode)
+        (sp-local-tag "i" "1d5f8e69396c521f645375107197ea4dfbc7b792quot;<" "1d5f8e69396c521f645375107197ea4dfbc7b792quot;>"))
+
+  ;;; html-mode
+      (sp-with-modes '(html-mode sgml-mode web-mode)
+        (sp-local-pair "<" ">"))
+
+  ;; org-mode
+      (sp-local-pair 'org-mode "~" "~")
+      (sp-local-pair 'org-mode "=" "=") ; select region, hit = then region -> =region= in org-mode
+      (sp-local-pair 'org-mode "*" "*") ; select region, hit * then region -> *region* in org-mode
+      (sp-local-pair 'org-mode "/" "/") ; select region, hit / then region -> /region/ in org-mode
+      (sp-local-pair 'org-mode "_" "_") ; select region, hit _ then region -> _region_ in org-mode
+      (sp-local-pair 'org-mode "+" "+") ; select region, hit + then region -> +region+ in org-mode
+
+  ;;; lisp modes
+      (sp-with-modes sp--lisp-modes
+        (sp-local-pair "(" nil :bind "C-(") 
+        (sp-local-pair "<" ">")) 
+
+  ;; elisp mode
+     (sp-local-pair 'elisp-mode "<" ">") 
+
+  ;;; http://ivanmalison.github.io/dotfiles/
+    (unbind-key "M-D" smartparens-mode-map)          ;; conflicts with duplicate line.
+    (unbind-key "M-<up>" smartparens-mode-map)       ;; conflicts with org-mode commands for moving around rows 
+    (unbind-key "M-<down>" smartparens-mode-map)))   ;; and headings.
+#+END_SRC
+
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23593 2037 453443 494000) :init (23593 2037 453434 974000) :config (23593 2037 453304 789000) :config-secs (0 0 16370 721000) :init-secs (0 0 16909 708000) :use-package-secs (0 0 17109 13000)))
+
+The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
 (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
 (sp-local-pair 'emacs-lisp-mode "`" nil :actions nil) 
 
@@ -3372,6 +3454,22 @@ If I place this in the =starter-kit-helm.org= file, for some reason, probably be
 
 #+RESULTS: smartparens
 : t
+
+
+** COMMENT Hook to avoid clash with =smartparens= keybindings
+
+- Solution inspired here 
+https://www.reddit.com/r/emacs/comments/3dn226/help_with_smartparens_and_overriding_bindings/
+- Otherwise, =M-up= and =M-down= were owned by =smartparens= and could not move around in org tables.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-hook 'org-mode-hook (lambda () 
+                           (setq sp-override-key-bindings '(("M-<up>"   . nil)
+                                                            ("M-D"      . nil)
+                                                            ("M-<down>" . nil)))))
+#+END_SRC
+
+Note of Dic 30, 2018: This worked but the new solution in the prior chunk works too and seems more parsimonious.
 
 * Bookmark Plus
 
@@ -3605,52 +3703,6 @@ http://emacsredux.com/blog/2013/03/27/copy-filename-to-the-clipboard/ https://gi
 #+RESULTS:
 : prelude-copy-file-name-to-clipboard
 
-** Structure templates
-
-Org makes it easy to insert blocks by typing =<s[TAB]=, etc. I hardly ever use LaTeX, but I insert a lot of Emacs Lisp blocks, so I redefine =<l= to insert a Lisp block instead. 
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-structure-template-alist
-      '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
-        ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
-        ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
-        ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE" "<verse>\n?\n</verse>")
-        ("c" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
-        ("p" "#+BEGIN_PRACTICE\n?\n#+END_PRACTICE")
-        ("l" "#+begin_src emacs-lisp\n?\n#+end_src" "<src lang=\"emacs-lisp\">\n?\n</src>")
-        ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
-        ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
-        ("H" "#+html: " "<literal style=\"html\">?</literal>")
-        ("a" "#+begin_ascii\n?\n#+end_ascii")
-        ("A" "#+ascii: ")
-        ("i" "#+index: ?" "#+index: ?")
-        ("I" "#+include %file ?" "<include file=%file markup=\"?\">")))
-#+END_SRC
-
-** Great for quickly going through the to-do list. Gets rid of one extra keystroke. ;) 
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun my/org-agenda-done (&optional arg)
-  "Mark current TODO as done.
-This changes the line at point, all other lines in the agenda referring to
-the same tree node, and the headline of the tree node in the Org-mode file."
-  (interactive "P")
-  (org-agenda-todo "DONE"))
-;; Override the key definition for org-exit
-(define-key org-agenda-mode-map "x" 'my/org-agenda-done)
-#+END_SRC
-
-#+RESULTS:
-: my/org-agenda-done
-
-** Autosave
-
-Could be handy, especially when synchronizing with Orgzly. From
-https://www.reddit.com/r/orgmode/comments/7ke3hv/orgzly_best_practice/ 
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(run-with-idle-timer 30 t 'org-save-all-org-buffers)
-#+END_SRC
 
 ** Edit list   
 
@@ -3676,7 +3728,7 @@ Sacha has this but it doesn't work because it doesn't interpret my latitude and 
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23591 18440 638361 651000) :init (23591 18440 638328 962000) :config (23591 18440 637900 795000) :config-secs (0 0 722 161000) :init-secs (0 0 1566 308000) :use-package-secs (0 0 1656 205000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23591 52763 148197 643000) :init (23591 52763 148164 876000) :config (23591 52763 147796 825000) :config-secs (0 0 664 31000) :init-secs (0 0 1481 469000) :use-package-secs (0 0 1618 638000)))
 
 *** Pragmatic Emacs alternative
 
@@ -3686,17 +3738,22 @@ Sacha has this but it doesn't work because it doesn't interpret my latitude and 
   :commands (wttrin)
   :init
   (setq wttrin-default-cities '("Madrid"
-                                "Fuengirola")))
+                                "Fuengirola"
+                                "Malaga")))
+
+(setq wttrin-default-accept-language '("Accept-Language" . "en-US"))
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23591 21227 872116 387000) :init (23591 21227 872098 805000) :init-secs (0 0 25 82000) :use-package-secs (0 0 96 931000) :config (23591 21227 872087 829000) :config-secs (0 0 3 776000)))
+: (Accept-Language . en-US)
 
 The only problem is that if the Emacs frame is not wide enough and the lines in the wttrin buffer wrap, it becomes unreadable. 
 
 My solution is to save the window and frame configuration, then resize the frame to be big enough for the wttrin buffer. The previous configuration is then restored when exiting wttrin. These functions take care of that for us: 
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Disabled by DGM as it makes wttrin not working.
+
+#+BEGIN_SRC emacs-lisp :tangle no
 ;;advise wttrin to save frame arrangement
 ;;requires frame-cmds package
 (defun bjm/wttrin-save-frame ()
@@ -3750,7 +3807,7 @@ By default wttrin prompts you to chose the city from your list when it starts. T
 ** Typing of Emacs
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package typing :disabled t
+(use-package typing 
   :init
   (autoload 'typing-of-emacs "typing" nil t)
   :config
@@ -3761,7 +3818,185 @@ By default wttrin prompts you to chose the city from your list when it starts. T
 #+END_SRC
 
 #+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23592 62164 535459 40000) :init (23592 62164 535445 976000) :config (23592 62164 535242 82000) :config-secs (0 0 354 294000) :init-secs (0 0 5340 661000) :use-package-secs (0 9 443861 775000)))
 
+** Sentences end with a single space
+
+In my world, sentences end with a single space. This makes
+sentence navigation commands work for me.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq sentence-end-double-space nil)
+#+END_SRC
+
+** Killing text
+
+From https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead."
+  (interactive
+    (if mark-active (list (region-beginning) (region-end))
+      (list (line-beginning-position)
+        (line-beginning-position 2)))))
+#+END_SRC
+
+** Help - guide-key
+
+It's hard to remember keyboard shortcuts. The =guide-key= package pops up help after a short delay.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package guide-key
+  :defer t
+  :diminish guide-key-mode
+  :config
+  (progn
+  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
+  (guide-key-mode 1)))  ; Enable guide-key-mode
+#+END_SRC
+
+** Reading
+
+https://github.com/xahlee/xah_emacs_init/blob/master/xah_emacs_font.el
+From Xah Lee:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun xah-toggle-margin-right ()
+  "Toggle the right margin between `fill-column' or window width.
+This command is convenient when reading novel, documentation."
+  (interactive)
+  (if (eq (cdr (window-margins)) nil)
+      (set-window-margins nil 0 (- (window-body-width) fill-column))
+    (set-window-margins nil 0 0)))
+#+END_SRC
+
+#+RESULTS:
+: xah-toggle-margin-right
+
+** Shuffling lines
+
+Don't really know what this does.
+
+#+begin_src emacs-lisp :tangle yes
+(defun my/shuffle-lines-in-region (beg end)
+  (interactive "r")
+  (let ((list (split-string (buffer-substring beg end) "[\r\n]+")))
+    (delete-region beg end)
+    (insert (mapconcat 'identity (shuffle-list list) "\n"))))
+#+end_src
+
+#+RESULTS:
+: my/shuffle-lines-in-region
+
+** Pop to mark
+
+Handy way of getting back to previous places.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(bind-key "s-:" 'pop-to-mark-command)
+(setq set-mark-command-repeat-pop t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+** Jumping to code
+
+#+begin_src emacs-lisp :tangle yes
+(define-key emacs-lisp-mode-map (kbd "C-c .") 'find-function-at-point)
+(bind-key "C-c f" 'find-function)
+#+end_src
+
+** Sorting
+
+#+begin_src emacs-lisp :tangle yes
+  (defun my/sort-sexps-in-region (beg end)
+    "Can be handy for sorting out duplicates.
+Sorts the sexps from BEG to END. Leaves the point at where it
+couldn't figure things out (ex: syntax errors)."
+    (interactive "r")
+    (let ((input (buffer-substring beg end))
+          list last-point form result)
+      (save-restriction
+        (save-excursion
+          (narrow-to-region beg end)
+          (goto-char (point-min))
+          (setq last-point (point-min))
+          (setq form t)
+          (while (and form (not (eobp)))
+            (setq form (ignore-errors (read (current-buffer))))
+            (when form
+              (add-to-list
+               'list
+               (cons
+                (prin1-to-string form)
+                (buffer-substring last-point (point))))
+              (setq last-point (point))))
+          (setq list (sort list (lambda (a b) (string< (car a) (car b)))))
+          (delete-region (point-min) (point))
+          (insert (mapconcat 'cdr list "\n"))))))
+#+end_src
+
+**** Evaluation
+
+Borrowed from Steve Purcell's config. This pretty-prints the results.
+
+#+begin_src emacs-lisp :tangle yes
+(bind-key "M-:" 'pp-eval-expression)
+
+(defun sanityinc/eval-last-sexp-or-region (prefix)
+  "Eval region from BEG to END if active, otherwise the last sexp."
+  (interactive "P")
+  (if (and (mark) (use-region-p))
+      (eval-region (min (point) (mark)) (max (point) (mark)))
+    (pp-eval-last-sexp prefix)))
+
+(bind-key "C-x C-e" 'sanityinc/eval-last-sexp-or-region emacs-lisp-mode-map)
+#+end_src
+
+*** Enable minibuffer completion
+
+It can be difficult to remember the full names of Emacs commands, so I
+use =icomplete-mode= for minibuffer completion. This also makes it
+easier to discover commands.
+
+#+begin_src emacs-lisp :tangle no
+(icomplete-mode 1)
+#+end_src
+
+#+RESULTS:
+: t
+
+* Skeleton
+
+- Recall to =eval-and-replace= =(org-skeleton)= with =C-c e=. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(define-skeleton org-skeleton
+  "Inserts a Latex letter skeleton into current buffer.
+This only makes sense for empty buffers."
+  "# -*- coding: utf-8 -*-\n"
+  "#+TITLE:\n"
+  "#+SUBTITLE:\n" 
+  "#+AUTHOR:\n" 
+  "#+DATE:\n" 
+  "#+OPTIONS: toc:4\n" 
+  "#+OPTIONS: H:2 num:nil toc:nil \\n:nil @:t ::t |:t ^:{} _:{} *:t TeX:t LaTeX:t\n"
+  "#+PROPERTY: header-args :tangle yes\n"
+  "#+LANGUAGE: "str | "spanish""\n"
+  "#+LATEX_HEADER: \\usepackage["str | "spanish""]{babel}\n"
+  "#+LATEX_HEADER: \\usepackage{sectsty}\n"
+  "#+LATEX_HEADER: \\sectionfont{\\normalfont\\scshape}\n"
+  "#+LATEX_HEADER: \\subsectionfont{\\normalfont\\bfseries}\n"
+  "#+LATEX_HEADER: \\subsubsectionfont{\\normalfont\\itshape}\n"
+  "#+LATEX_HEADER: \\renewcommand*{\\PrelimText}{\\textnormal{\\small\\textcolor{black!40}{author: \\VCAuthor\\ -- date: \\VCDateISO\\ -- time: \\VCTime\\ -- commit: \\texttt{\\VCRevision}}}}\n\n"
+   "" _ "\n\n"
+  "\printbibliography")
+#+END_SRC
+
+#+RESULTS:
+: org-skeleton
 
 * Provide
 
@@ -3774,7 +4009,6 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 #+RESULTS:
 : dgm
 
-
 * Final message
 #+source: message-line
 #+begin_src emacs-lisp :tangle yes
@@ -3783,19 +4017,4 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

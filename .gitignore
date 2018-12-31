@@ -1,5 +1,7 @@
 *#
 *.el~
+*~
+recentf~
 *.el
 !init.el
 *.org~

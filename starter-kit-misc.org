@@ -7,7 +7,6 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 * Starter Kit Misc
 Things that don't fit anywhere else.
-
 ** Color Themes
 Emacs 24 introduces a streamlined theming system that replaces an
 older, messier one. The Starter Kit comes with Ethan Schoonover's
@@ -116,6 +115,26 @@ loading the =zenburn= and =anti-zenburn= themes.
 
 #+RESULTS:
 : t
+
+
+*** Sacha Chua's tweaks 
+
+Some more tweaks to solarized:
+
+#+BEGIN_SRC emacs-lisp 
+(when window-system
+  (custom-set-faces
+   '(erc-input-face ((t (:foreground "antique white"))))
+   '(helm-selection ((t (:background "#4682b4" :foreground "black"))))
+   '(org-agenda-clocking ((t (:inherit secondary-selection :foreground "black"))) t)
+   '(org-agenda-done ((t (:foreground "dim gray" :strike-through nil))))
+   '(org-done ((t (:foreground "PaleGreen" :weight normal :strike-through t))))
+   '(org-clock-overlay ((t (:background "SkyBlue4" :foreground "black"))))
+   '(org-headline-done ((((class color) (min-colors 16) (background dark)) (:foreground "LightSalmon" :strike-through t))))
+   '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "cornflower blue"))))))
+#+END_SRC
+
+#+RESULTS:
 
 *** Theme function for changing theme and disabling temes
 
@@ -303,7 +322,6 @@ Note by dgm on 16 sept 2018: I'm trying to use =exwm= so I am not going to use m
 #+RESULTS:
 : t
 
-   
 ** ido mode and flx-ido
 Ido-mode is like magic pixie dust!
 
@@ -450,11 +468,19 @@ DGM says: yes, but I activate it elsewhere.
 #+end_src
 
 
-
 ** Default to unified diffs
 #+begin_src emacs-lisp
 (setq diff-switches "-u")
 #+end_src
+
+* Provide
+
+#+BEGIN_SRC emacs-lisp
+(provide 'starter-kit-misc)
+#+END_SRC
+
+#+RESULTS:
+: starter-kit-misc
 
 * Final Message
 

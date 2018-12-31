@@ -36,6 +36,12 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
     (add-hook 'markdown-mode-hook 'turn-off-auto-fill)
     (add-hook 'latex-mode-hook 'turn-off-auto-fill)
 
+    ;; from Sacha chua's config
+    ;; she says:  =visual-line-mode= is so much better than =auto-fill-mode=. It doesn't actually break the text into ;; multiple lines - it only looks that way.
+
+    (remove-hook 'text-mode-hook #'turn-on-auto-fill) 
+    (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+
     ;;; unfill paragraph
     (defun unfill-paragraph ()
     (interactive)
