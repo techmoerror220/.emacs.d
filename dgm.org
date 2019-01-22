@@ -1036,7 +1036,21 @@ First tip from https://www.reddit.com/r/emacs/comments/8y144a/avoid_accidental_e
 #+RESULTS:
 | lambda | nil | (end-of-buffer) | (comint-get-old-input-default) |
 
-*** shx
+**** Trying to avoid the error about "ansi-color-process-output("")"
+
+For =(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)= to have an effect, =ansi-color-process-output= must be in =comint-output-filter-functions=. If not, use the following line to add it.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
+#+END_SRC
+
+#+RESULTS:
+| ansi-color-process-output | comint-postoutput-scroll-to-bottom | comint-watch-for-password-prompt |
+
+
+*** COMMENT shx
+
+Commented out in an attempt to speed up evaluation in R and Stata... and BINGO!!! this was the little motherfucker that made R and Stata super slow interactively. It also caused an error on exit.
 
 Enhance comint-mode. See https://github.com/riscy/shx-for-emacsl
 
@@ -1051,7 +1065,7 @@ Enhance comint-mode. See https://github.com/riscy/shx-for-emacsl
 
 Alternativa from https://github.com/malb/emacs.d/blob/master/malb.org
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package shx
   :after comint
   :config (progn
@@ -3336,16 +3350,16 @@ If I place this in the =starter-kit-helm.org= file, for some reason, probably be
 
 #+BEGIN_SRC emacs-lisp :tangle no
 ;; comment out by dgm
-; (set-face-attribute 'helm-source-header nil :inherit 'header-line :height 'unspecified :background 'unspecified :foreground 'unspecified)
-(set-face-background 'helm-selection "#4f4f4f")  
-(set-face-background 'helm-visible-mark "#2f2f2f")
-(set-face-foreground 'helm-visible-mark nil)
-(set-face-foreground 'helm-match "DarkOrange3")
-(set-face-attribute 'helm-buffer-file nil :background 'unspecified :foreground nil :weight 'normal)
-(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)  ;; #1e90ff
-(set-face-attribute 'helm-ff-directory nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-directory)
-(set-face-attribute 'helm-ff-file nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-file)
-(set-face-foreground 'helm-grep-finish "green4")
+;;;;; (set-face-attribute 'helm-source-header nil :inherit 'header-line :height 'unspecified :background 'unspecified :foreground 'unspecified)
+;(set-face-background 'helm-selection "#4f4f4f")  
+;(set-face-background 'helm-visible-mark "#2f2f2f")
+;(set-face-foreground 'helm-visible-mark nil)
+;(set-face-foreground 'helm-match "DarkOrange3")
+;(set-face-attribute 'helm-buffer-file nil :background 'unspecified :foreground nil :weight 'normal)
+;(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)  ;; #1e90ff
+;(set-face-attribute 'helm-ff-directory nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-directory)
+;(set-face-attribute 'helm-ff-file nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-file)
+;(set-face-foreground 'helm-grep-finish "green4")
 #+END_SRC
 
 #+RESULTS:
@@ -3703,7 +3717,6 @@ http://emacsredux.com/blog/2013/03/27/copy-filename-to-the-clipboard/ https://gi
 #+RESULTS:
 : prelude-copy-file-name-to-clipboard
 
-
 ** Edit list   
 
 =M-x edit-list= makes it easier to edit an Emacs Lisp list. 
@@ -3802,7 +3815,6 @@ By default wttrin prompts you to chose the city from your list when it starts. T
 
 #+RESULTS:
 : bjm/wttrin
-
 
 ** Typing of Emacs
 
@@ -3997,6 +4009,24 @@ This only makes sense for empty buffers."
 
 #+RESULTS:
 : org-skeleton
+
+
+* Pragmatic Emacs
+** dired-narrow
+
+Narrow dired to match filter.  From: http://pragmaticemacs.com/emacs/dynamically-filter-directory-listing-with-dired-narrow/
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package dired-narrow
+  :ensure t
+  :bind (:map dired-mode-map
+              ("/" . dired-narrow)))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23623 36409 259307 947000) :init (23623 36409 259186 945000) :init-secs (0 0 37 660000) :use-package-secs (0 0 224 478000)))
+
+
 
 * Provide
 

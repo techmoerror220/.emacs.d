@@ -8,7 +8,6 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 It controls helm and projectile.
 
-
 * First, make sure that =ido-everywhere= is disabled
 
 See https://github.com/emacs-helm/helm/issues/2085
@@ -907,7 +906,7 @@ Basic commands with for interfacing with =exwm= with =helm=
 #+RESULTS:
 : ((ido-use-virtual-buffers . ido) (ido-recentf-open . ido) (recentf-open-files . ido) (describe-function . helm-completing-read-symbols) (describe-variable . helm-completing-read-symbols) (describe-symbol . helm-completing-read-symbols) (debug-on-entry . helm-completing-read-symbols) (find-function . helm-completing-read-symbols) (disassemble . helm-completing-read-symbols) (trace-function . helm-completing-read-symbols) (trace-function-foreground . helm-completing-read-symbols) (trace-function-background . helm-completing-read-symbols) (find-tag . helm-completing-read-default-find-tag) (org-capture . helm-org-completing-read-tags) (org-set-tags . helm-org-completing-read-tags) (ffap-alternate-file) (tmm-menubar) (find-file) (find-file-at-point . helm-completing-read-sync-default-handler) (ffap . helm-completing-read-sync-default-handler) (execute-extended-command) (dired-do-rename . helm-read-file-name-handler-1) (dired-do-copy . helm-read-file-name-handler-1) (dired-do-symlink . helm-read-file-name-handler-1) (dired-do-relsymlink . helm-read-file-name-handler-1) (dired-do-hardlink . helm-read-file-name-handler-1))
 
-* Helm-passx
+* Helm-pass
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package password-store)
 (use-package helm-pass)

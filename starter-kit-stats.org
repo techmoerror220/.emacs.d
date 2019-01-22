@@ -186,15 +186,16 @@ From: http://stackoverflow.com/questions/2531372/how-to-stop-emacs-from-replacin
 
 To assign ":" to "<-" and to stop the assignment of underscore (underbar) "_" to "<-" put the following in .emacs (yes, the repeated line is correct)
 
+DGM: commented out as it is solved now by a package downloaded at the start of this script.
+
 #+BEGIN_SRC emacs-lisp
-(setq ess-smart-S-assign-key ";")
-(ess-toggle-S-assign nil)
-(ess-toggle-S-assign nil)
-(ess-toggle-underscore nil) ; leave underscore key alone!
+;;(setq ess-smart-S-assign-key ";")
+;;(ess-toggle-S-assign nil)
+;;(ess-toggle-S-assign nil)
+;;(ess-toggle-underscore nil) ; leave underscore key alone!
 #+END_SRC
 
 #+RESULTS:
-: ess-smart-S-assign
 
 ** R very slow
 

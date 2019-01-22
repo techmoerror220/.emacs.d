@@ -148,15 +148,24 @@ ARCHIVE is the string name of the package archive.")
 
 (use-package bind-key
   :ensure t)
+
+;; tip from https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=810640
+
+(setq tramp-ssh-controlmaster-options nil)
+(setq-default tramp-ssh-controlmaster-options nil)
+
 ;; tramp package from
 ;; https://github.com/danielmai/.emacs.d/blob/master/config.org
 ;; TRAMP (Transparent Remote Access, Multiple Protocols) is a package for editing remote files, similar to AngeFtp or efs. Whereas the others use FTP to connect to the remote host and to transfer the files, TRAMP uses a remote shell connection (rlogin, telnet, ssh). It can transfer the files using rcp or a similar program, or it can encode the file contents (using uuencode or base64) and transfer them right through the shell connection.
 ;; Tramp was formerly called RCP or rcp.el.
 (use-package tramp)
+
 ;; Do this to quicken startup:
 ;; https://emacs.stackexchange.com/questions/14708/debugging-slowness-in-init-file-not-hostname-related
 ;; because I was getting the startup process tripped until I did this.
-(setq tramp-ssh-controlmaster-options "")
+;;;;;;;;;; commented out by dgm on January the 10th as i rather go for
+;;;;;;;;;;;; the nil option
+;;;;;;;;;;;; (setq tramp-ssh-controlmaster-options "")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; async ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; activate for all packages. Advised in Helm's wiki

@@ -1013,11 +1013,11 @@ Remove =DONE= tasks from agenda view. Tip from: https://stackoverflow.com/questi
 Tip from: https://orgmode.org/manual/Setting-tags.html
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-tag-alist '(("airbnb" . ?a) ("@computer" . ?b) ("course" . ?c)  ("errands" . ?e) ("@home" . ?h) ("medicos" . ?m) ("@office" . ?o)  ("@phone" . ?p) ("project" . ?q) ("teaching" . ?t) ("uned" . ?u)))
+(setq org-tag-alist '(("airbnb" . ?a) ("@computer" . ?b) ("course" . ?c)  ("errands" . ?e) ("@home" . ?h) ("medicos" . ?m) ("@office" . ?o)  ("project" . ?p) ("@phone" . ?q) ("teaching" . ?t) ("uned" . ?u)))
 #+END_SRC
 
 #+RESULTS:
-: ((airbnb . 97) (@computer . 98) (course . 99) (errands . 101) (@home . 104) (medicos . 109) (@office . 111) (@phone . 112) (project . 113) (teaching . 116) (uned . 117))
+: ((airbnb . 97) (@computer . 98) (course . 99) (errands . 101) (@home . 104) (medicos . 109) (@office . 111) (project . 112) (@phone . 113) (teaching . 116) (uned . 117))
 
 ** Public holidays 
 
@@ -1115,23 +1115,33 @@ Thanks to the following declaration, the above holidays show up in my computer's
 From Caolan at https://caolan.org/dotfiles/emacs.html#orgd96aeb0. 
 Provide refile targets as paths, so a level 3 headline will be available as level1/level2/level3. Offer completions in hierarchical steps.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-refile-use-outline-path t)
-(setq org-outline-path-complete-in-steps t)
-#+END_SRC
-
-Targets.
+Targets. (Nota que solo con =maxlevel= I get the refiling to someday's second level---two stars---to work).
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq org-refile-targets '(("/home/dgm/Dropbox/gtd/gtd.org" :maxlevel . 3)
-                             ("/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" :maxlevel . 2)
-                             ("/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org" :maxlevel . 2)
-                             ("/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" :maxlevel . 2)
-                             ("/home/dgm/Dropbox/gtd/someday.org" :level . 2)
+                             ("/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" :level . 2)
+                             ("/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org" :level . 2)
+                             ("/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" :level . 2)
+                             ("/home/dgm/Dropbox/gtd/someday.org" :maxlevel . 2)                    
                              ("/home/dgm/Dropbox/gtd/inbox.org" :level . 2)
-                             ("/home/dgm/Dropbox/gtd/notes.org" :level . 2)
+                             ("/home/dgm/Dropbox/gtd/notes.org" :maxlevel . 2)
                              ("/home/dgm/Dropbox/gtd/tickler.org" :level . 2)))
 #+END_SRC
+
+#+RESULTS:
+: ((/home/dgm/Dropbox/gtd/gtd.org :maxlevel . 3) (/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org :level . 2) (/home/dgm/Dropbox/gtd/someday.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/inbox.org :level . 2) (/home/dgm/Dropbox/gtd/notes.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/tickler.org :level . 2))
+
+New from https://www.reddit.com/r/emacs/comments/4366f9/how_do_orgrefiletargets_work/
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq org-refile-targets '((nil :maxlevel . 9)
+                                (org-agenda-files :maxlevel . 9)))
+#+END_SRC
+
+#+RESULTS:
+: ((nil :maxlevel . 9) (org-agenda-files :maxlevel . 9))
+
+This first element of org-refile-targets decides the heading levels to consider within current file, the second element - within other agenda files. (https://stackoverflow.com/questions/22200312/refile-from-one-file-to-other)
 
 Create any missing parent nodes during refile (after asking for confirmation). (From Caolan at  https://caolan.org/dotfiles/emacs.html#orgd96aeb0.)
 
@@ -1141,6 +1151,17 @@ Create any missing parent nodes during refile (after asking for confirmation). (
 
 #+RESULTS:
 : confirm
+
+The last two variables are useful because I'm using helm. Instead of having to step through the headings Foo, Bar, and Go to the the Store, I just get a giant list of targets in the form Foo/Bar/Go to the Store. Makes it super easy to jump to whatever I'm looking for.
+From: https://www.reddit.com/r/emacs/comments/4366f9/how_do_orgrefiletargets_work/
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-refile-use-outline-path t)          ;; show full paths to refiling
+(setq org-outline-path-complete-in-steps nil) ;; Change to nil to refile in a single go.
+#+END_SRC
+
+#+RESULTS:
+
 
 ** Ambrevar's agenda stuff
 
@@ -1200,7 +1221,9 @@ I want to see properties by default but this is of no help. I'm using =s-h= for 
 
 From Sacha's dotfiles: I wanted a quick way to visually distinguish DONE tasks from tasks I still need to do. This handy snippet from the Emacs Org-mode mailing list does the trick by striking through the headlines for DONE tasks. 
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+DGM: lo he probado pero no me convence.
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq org-fontify-done-headline t)
 (custom-set-faces
  '(org-done ((t (:foreground "PaleGreen"
@@ -1483,7 +1506,6 @@ And sorting:
 
  #+RESULTS:
  : 1
-
 
 *** Modules
 Org has a whole bunch of optional modules. These are the ones I'm
@@ -1773,7 +1795,7 @@ https://www.reddit.com/r/orgmode/comments/7ke3hv/orgzly_best_practice/
      :CUSTOM_ID: project_subtasks
      :END:
 I have quite a few Org files, but I keep my agenda items and TODOs in
-only a few of them them for faster scanning.
+only a few of them for faster scanning.
 
 I like looking at two days at a time when I plan using the Org
 agenda. I want to see my log entries, but I don't want to see
@@ -1790,15 +1812,15 @@ I can get a sense of how appointments are spread out.
 ;;  (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-skip-deadline-if-done t)
   (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-  (setq org-agenda-time-grid
-        '((daily today require-timed)
-         "----------------"
-         (800 1000 1200 1400 1600 1800)))
+;;  (setq org-agenda-time-grid
+;;        '((daily today require-timed)
+;;         "----------------"
+;;         (800 1000 1200 1400 1600 1800)))
   ;; (setq org-columns-default-format "%14SCHEDULED %Effort{:} %1PRIORITY %TODO %50ITEM %TAGS") ;; I don't have some of these
 #+end_src
 
 #+RESULTS:
-| (daily today require-timed) | ---------------- | (800 1000 1200 1400 1600 1800) |
+: pre-scheduled
 
 *** Display projects with associated subtasks
      :PROPERTIES:
