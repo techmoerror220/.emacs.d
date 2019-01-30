@@ -128,6 +128,7 @@ The following can only apply to EXWM buffers, else it could have unexpected effe
 *** Input method
 
 =defun= defined in Marcel van der Boom's configuration files.
+After I change to Spanish with =s-z=, I toggle the input method with =C-\=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (defun mrb/set-input-method()
@@ -137,9 +138,11 @@ The following can only apply to EXWM buffers, else it could have unexpected effe
     (if (not current-input-method)
         (toggle-input-method)))
 
-;;(exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
-(exwm-input-set-key (kbd "s-z") #'mrb/set-input-method)
+ ;;(exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
+  (exwm-input-set-key (kbd "s-z") #'mrb/set-input-method)
 #+END_SRC
+
+#+RESULTS:
 
 
 ** External application shortcuts.

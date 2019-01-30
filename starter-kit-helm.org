@@ -372,7 +372,7 @@ From https://github.com/tmalsburg/helm-bibtex: Helm-bibtex and ivy-bibtex allow 
 ;; (setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
 (use-package helm-bibtex
   :ensure t)
-;; (global-set-key (kbd "<s-backspace>") 'helm-bibtex) ;; not needed. Already in =C-]=. <s-backspace> relocated to helm-swoop.
+;; (global-set-key (kbd "<s-backspace>") 'helm-bibtex) ;; not needed. Already in =C-c ]=. <s-backspace> relocated to helm-swoop. Aunque ojo que en Olivetti mode =C-c ]= esta' bound to another thing.
 #+end_src
 
 #+RESULTS:
@@ -658,7 +658,10 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
                                          "/media/dgm/blue/documents/personal"
                                          "/home/dgm/Dropbox/gtd"
                                          "/media/dgm/blue/documents/bibs"
-                                         "/media/dgm/blue/documents/templates"))
+                                         "/media/dgm/blue/documents/templates"
+                                         "/media/dgm/blue/documents/proyectos/alianza"
+                                         "/media/dgm/blue/documents/elibrary/women-labor-market"))
+
   (projectile-add-known-project "~/.emacs.d/")
   (projectile-add-known-project  "~/texmf/")
   (projectile-add-known-project "~/Dropbox/gtd/")
@@ -672,6 +675,8 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
   (projectile-add-known-project "/home/dgm/Dropbox/gtd")  
   (projectile-add-known-project "/media/dgm/blue/documents/bibs")  
   (projectile-add-known-project "/media/dgm/blue/documents/templates")
+  (projectile-add-known-project "/media/dgm/blue/documents/proyectos/alianza/")
+  (projectile-add-known-project "/media/dgm/blue/documents/elibrary/women-labor-market/")
   
   (when (require 'magit nil t)
     (mapc #'projectile-add-known-project

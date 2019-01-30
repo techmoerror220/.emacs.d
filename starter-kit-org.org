@@ -668,6 +668,19 @@ The default value is -77, which is weird for smaller width windows. I’d rather
 #+RESULTS:
 : org-ref-pubmed
 
+*** Org-ref default citation type
+
+According to https://emacs.stackexchange.com/questions/36430/cant-choose-citation-types-using-org-ref, if I do =C-u C-c ]= I should be able to choose citation type (cite, citep, etc). But I can't. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-ref-default-citation-link "textcite")
+#+END_SRC
+
+#+RESULTS:
+: textcite
+
+
+
 *** Pre/post text support from Kitchin
 - From: https://github.com/jkitchin/org-ref/blob/master/org-ref.org
 org-ref has basic and limited support for pre/post text in citations. You can get pre/post text by using a description in a cite link, with pre/post text separated by ::. For example, See page 20::, for example. It is not easy (maybe not possible) to extend this for the humanities style of citations (e.g. harvard) with nested pre/post text on multiple citations. If anyone knows how to do it, pull requests are welcome! There is an ongoing effort in org-mode for a new citation syntax that may make this more feasible.
@@ -998,7 +1011,7 @@ Set PDF association in Org-mode (original is ='default=).
 
 ** Further customization of agenda
 
-Remove =DONE= tasks from agenda view. Tip from: https://stackoverflow.com/questions/8281604/remove-done-tasks-from-agenda-view
+Remove DONE tasks from agenda view. Tip from: https://stackoverflow.com/questions/8281604/remove-done-tasks-from-agenda-view
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq org-agenda-skip-scheduled-if-done t)
@@ -1013,11 +1026,11 @@ Remove =DONE= tasks from agenda view. Tip from: https://stackoverflow.com/questi
 Tip from: https://orgmode.org/manual/Setting-tags.html
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-tag-alist '(("airbnb" . ?a) ("@computer" . ?b) ("course" . ?c)  ("errands" . ?e) ("@home" . ?h) ("medicos" . ?m) ("@office" . ?o)  ("project" . ?p) ("@phone" . ?q) ("teaching" . ?t) ("uned" . ?u)))
+(setq org-tag-alist '(("airbnb" . ?a) ("@computer" . ?b) ("course" . ?c)  ("errands" . ?e)  ("tfg" . ?g) ("@home" . ?h) ("medicos" . ?m) ("@office" . ?o)  ("project" . ?p) ("@phone" . ?q) ("teaching" . ?t) ("uned" . ?u)))
 #+END_SRC
 
 #+RESULTS:
-: ((airbnb . 97) (@computer . 98) (course . 99) (errands . 101) (@home . 104) (medicos . 109) (@office . 111) (project . 112) (@phone . 113) (teaching . 116) (uned . 117))
+: ((airbnb . 97) (@computer . 98) (course . 99) (errands . 101) (tfg . 103) (@home . 104) (medicos . 109) (@office . 111) (project . 112) (@phone . 113) (teaching . 116) (uned . 117))
 
 ** Public holidays 
 

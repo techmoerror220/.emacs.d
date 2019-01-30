@@ -3436,14 +3436,15 @@ This is Sacha Chua's config (without her keybindings):
      (sp-local-pair 'elisp-mode "<" ">") 
 
   ;;; http://ivanmalison.github.io/dotfiles/
-    (unbind-key "M-D" smartparens-mode-map)          ;; conflicts with duplicate line.
-    (unbind-key "M-<up>" smartparens-mode-map)       ;; conflicts with org-mode commands for moving around rows 
-    (unbind-key "M-<down>" smartparens-mode-map)))   ;; and headings.
+    (unbind-key "M-D" smartparens-mode-map)              ;; conflicts with duplicate line.
+    (unbind-key "M-<up>" smartparens-mode-map)           ;; conflicts with org-mode commands for moving around rows 
+    (unbind-key "M-<backspace>" smartparens-mode-map)    ;; conflicts with basic command for killing last word.
+    (unbind-key "M-<down>" smartparens-mode-map)))       ;; and headings.
 #+END_SRC
 
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23593 2037 453443 494000) :init (23593 2037 453434 974000) :config (23593 2037 453304 789000) :config-secs (0 0 16370 721000) :init-secs (0 0 16909 708000) :use-package-secs (0 0 17109 13000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23631 18800 999044 421000) :init (23631 18800 999034 398000) :config (23631 18800 998859 429000) :config-secs (0 0 270624 986000) :init-secs (0 0 271473 279000) :use-package-secs (0 0 271850 560000)))
 
 The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
 
@@ -3983,6 +3984,7 @@ easier to discover commands.
 * Skeleton
 
 - Recall to =eval-and-replace= =(org-skeleton)= with =C-c e=. 
+- Nota que por alguna razon hace falta las dos declaraciones de Spanish.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (define-skeleton org-skeleton
@@ -4002,9 +4004,12 @@ This only makes sense for empty buffers."
   "#+LATEX_HEADER: \\sectionfont{\\normalfont\\scshape}\n"
   "#+LATEX_HEADER: \\subsectionfont{\\normalfont\\bfseries}\n"
   "#+LATEX_HEADER: \\subsubsectionfont{\\normalfont\\itshape}\n"
+  "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
+  "#+LATEX_HEADER: \\immediate\write18{sh ./vc}\n"
+  "#+LATEX_HEADER: \\input{vc}\n"
   "#+LATEX_HEADER: \\renewcommand*{\\PrelimText}{\\textnormal{\\small\\textcolor{black!40}{author: \\VCAuthor\\ -- date: \\VCDateISO\\ -- time: \\VCTime\\ -- commit: \\texttt{\\VCRevision}}}}\n\n"
    "" _ "\n\n"
-  "\printbibliography")
+  "\\printbibliography")
 #+END_SRC
 
 #+RESULTS:
