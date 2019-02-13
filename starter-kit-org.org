@@ -921,46 +921,54 @@ Finally, as Carsten Dominik says here: http://thread.gmane.org/gmane.emacs.orgmo
 
 ** Capture templates 
 
- Article from The Reddit Workflow, From https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/
+Article from The Reddit Workflow, From https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/
+
+Read this on email handling: http://pragmaticemacs.com/emacs/master-your-inbox-with-mu4e-and-org-mode/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq org-capture-templates '(
-                              ;; ("t" "Todo [inbox]" entry
-                              ;;   (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
-                              ;;   "* TODO %i%? \nEntry added on: %U
-                              ;;                    \nEntry created from this heading or email: %a")
-                              ;; ("a"  "Article"  entry  
-                              ;;  (file+headline "/home/dgm/Dropbox/gtd/bibliography.org" "Bibliography") 
-                              ;;    "* %a %^g
-                              ;;     \n:PROPERTIES: 
-                              ;;     \n:Created: %U
-                              ;;     \n:END:
-                              ;;     \n%i
-                              ;;     \nBrief description:
-                              ;;     \n%?"  
-                              ;;  :empty-lines 1    
-                              ;;  :created t)        
+                              ("t" "Todo [inbox]" entry
+                               (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
+                                 "* TODO %i%? \nEntry added on: %U from %a\n")
                                 ("T" "Tickler" entry
                                  (file+headline "/home/dgm/Dropbox/gtd/tickler.org" "Tickler")
                                  "* %i%?
-                                      \nEntry added on: %U from %a")
+                                      \nEntry added on: %U from %a\n")
                                 ("j" "Journal" entry
                                  (file+datetree "/home/dgm/Dropbox/gtd/journal.org")
                                  "* %?
                                       \n Added on: %U")
                                 ("n" "Note" entry
                                  (file "~/Dropbox/gtd/notes.org")
-                                     "* %?\nCaptured on %U from %a")))
+                                  "* %?\nCaptured on %U from %a\n")
+                                ("a"  "Article"  entry  
+                                 (file+headline "/home/dgm/Dropbox/gtd/bibliography.org" "Bibliography") 
+                                  "* %a %^g
+                                  \n:PROPERTIES: 
+                                  \n:Created: %U
+                                  \n:END:
+                                  \n%i
+                                  \nBrief description:
+                                  \n%?"  
+                                :empty-lines 1    
+                                :created t)))
 #+END_SRC
 
 #+RESULTS:
-| T | Tickler | entry | (file+headline /home/dgm/Dropbox/gtd/tickler.org Tickler) | * %i%? |
+| t | Todo [inbox] | entry | (file+headline /home/dgm/Dropbox/gtd/inbox.org Tasks) | * TODO %i%? |
 
 
+Bits deteled after the Todo "t" capture template: 
+
+#+BEGIN_EXAMPLE
+                               ;;               \nEntry created from this heading or email: %a")
+                               
+#+END_EXAMPLE
 
 From caolan: https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+I've disabled it because it was too cumbersome and i've realized that it doesn't not add the origin file from which I capture in the case of emails! 
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (push `("t" "Todo" entry (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
         ,(string-join
           '("* TODO %^{Description}"
