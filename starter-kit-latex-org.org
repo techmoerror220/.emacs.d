@@ -191,7 +191,7 @@ Taken from Sacha Chua's config files.
 | book    | \documentclass[11pt]{book}           | (\part{%s} . \part*{%s})       | (\chapter{%s} . \chapter*{%s})       | (\section{%s} . \section*{%s})             | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |
 
 
-* The  /LaTeX/ route 
+* The /LaTeX/ route 
 ** Set default engine 
 
 Custom variables kludge. Why can't I get these to work via =setq=?
@@ -280,6 +280,13 @@ Originally the package =minted= was not working with /LaTeX/ even though it work
 
    #+RESULTS:
    | minted | org-preamble-pdflatex | t |
+
+* Provide
+
+#+BEGIN_SRC emacs-lisp
+(provide 'starter-kit-latex-org)
+#+END_SRC
+
 
 * Final message
 #+source: message-line

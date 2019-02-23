@@ -391,6 +391,16 @@ See https://www.linuxtopia.org/online_books/linux_tool_guides/gnu_emacs_manual/F
 #+RESULTS:
 : ((latex-mode . 1))
 
+
+* Provide
+
+#+BEGIN_SRC emacs-lisp
+(provide 'starter-kit-latex)
+#+END_SRC
+
+#+RESULTS:
+: starter-kit-latex
+
 * Final message
 #+source: message-line
 #+begin_src emacs-lisp :tangle yes

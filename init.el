@@ -41,8 +41,6 @@
 
 ;;; Avoid the "loaded old bytecode instead of newer source" pitfall.
 (setq load-prefer-newer t)
-
-
  (setq dotfiles-dir (file-name-directory (or (buffer-file-name) load-file-name)))
  (setq dotfiles-dir (file-name-directory (or load-file-name (buffer-file-name))))
  (setq autoload-file (concat dotfiles-dir "loaddefs.el"))
@@ -76,7 +74,6 @@
 ;; (package-initialize) ;; Emacs 27: Warning (package): Unnecessary call to ‘package-initialize’ in init file
 
 
-
 ;;; Add support to package.el for pre-filtering available packages
 (defvar package-filter-function nil
   "Optional predicate function used to internally filter packages used by package.el.
@@ -87,13 +84,9 @@ ARCHIVE is the string name of the package archive.")
 
 
 (defadvice package--add-to-archive-contents
-
   (around filter-packages (package archive) activate)
-
   "Add filtering of available packages using `package-filter-function', if non-nil."
-
   (when (or (null package-filter-function)
-
 (funcall package-filter-function
      (car package)
      (funcall (if (fboundp 'package-desc-version)
@@ -118,7 +111,6 @@ ARCHIVE is the string name of the package archive.")
              (not (memq package melpa-exclude-packages))))))
 
 
-
 ;;; Bootstrap use-package
 ;; Install use-package if it's not already installed.
 ;; use-package is used to configure the rest of the packages.
@@ -127,7 +119,6 @@ ARCHIVE is the string name of the package archive.")
   (package-refresh-contents)
   (package-install 'use-package)
   (package-install 'diminish))
-
 
 (setq use-package-enable-imenu-support t)
 (setq use-package-minimum-reported-time 0)
@@ -143,8 +134,8 @@ ARCHIVE is the string name of the package archive.")
 (eval-and-compile (setq use-package-verbose t))
 (setq use-package-always-ensure t) ;; The :ensure keyword causes the package(s) to be installed automatically if not already present on your system
 
-(use-package diminish
-  :ensure t)
+;;(use-package diminish
+;;  :ensure t)
 
 (use-package bind-key
   :ensure t)
@@ -190,18 +181,14 @@ ARCHIVE is the string name of the package archive.")
   (use-package exwm
     :ensure t
     :config
-
     ;; necessary to configure exwm manually
     (require 'exwm-config)
-
     ;; fringe size, most people prefer 1 (uncle dave's setup)
     (fringe-mode 3)
-
 ;; dgm comments this as it appears to not be working!! reverts to old (server-star)
 ;;    (require 'server)
 ;;      (unless (server-running-p)
 ;;        (server-start))
-
     (exwm-config-default))
 
     ;; this just enables exwm, it started automatically once everything is ready

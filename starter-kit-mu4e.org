@@ -30,12 +30,31 @@ The following files live In the directory =/usr/share/emacs/site-lisp/mu4e=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'mu4e)
-(require 'org-mu4e)
+(require 'org-mu4e)        ;;store org-mode links to messages
 (require 'mu4e-contrib)
 #+END_SRC
 
 #+RESULTS:
 : mu4e-contrib
+
+* org-capture
+
+See: http://pragmaticemacs.com/emacs/master-your-inbox-with-mu4e-and-org-mode/
+
+Originally, before =(setq org-mu4e-link-query-in-headers-mode nil)= I got the following lines but I'm not sure I want to get rid of the =C-c C-t= shortcut.
+
+#+BEGIN_EXAMPLE
+    ;; ;; Org mode has "C-c C-t" for 'org-todo.
+    ;; (define-key map (kbd "C-c C-t") 'org-mu4e-store-and-capture))
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+ (when (require 'org-mu4e nil t)
+  (dolist (map (list mu4e-view-mode-map mu4e-headers-mode-map)))
+  (setq org-mu4e-link-query-in-headers-mode nil))                 ;;store link to message if in header view, not to header query
+#+END_SRC
+
+#+RESULTS:
 
 * mu4e-conversation
 
@@ -67,7 +86,9 @@ Default to unread messages if the header buffer does not already exist."
 #+RESULTS:
 
 *** make tree view the default
-Tip in "mu4e-conversation: Single buffer full-thread display to make e-mails great again" on Reddit
+Tip in "mu4e-conversation: Single buffer full-thread display to make e-mails great again" on Reddit.
+
+However, I've realized that if I enable this, my =%a= in the capture template stops working on emails... This happened until ambrevar fixed it after I reported the bug. See [[here]]
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq mu4e-conversation-print-function 'mu4e-conversation-print-tree)
@@ -109,18 +130,6 @@ I've tried the following but it is not working.
 
 #+RESULTS:
 
-* org-capture
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(when (require 'org-mu4e nil t)
-  (dolist (map (list mu4e-view-mode-map mu4e-headers-mode-map))
-    ;; Org mode has "C-c C-t" for 'org-todo.
-    (define-key map (kbd "C-c C-t") 'org-mu4e-store-and-capture))
-  (setq org-mu4e-link-query-in-headers-mode nil))
-#+END_SRC
-
-#+RESULTS:
-: ambrevar/mu4e-move-to-trash-patterns
 
 * Setting up the MU mail server
 
@@ -388,7 +397,7 @@ I don't know the use of this but I had it, so...
 : offlineimap
 
 Updating email takes ages because I have many Maildir folders, so I follow the advice here: https://www.djcbsoftware.nl/code/mu/mu4e/General.html
-
+n
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq mu4e-cache-maildir-list t)
 #+END_SRC
@@ -536,7 +545,7 @@ Set default signature to university's
 #+RESULTS:
 : t
 
-* Caolan's costumization 
+* Caolan's costumization <<here>>
 
 From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
 
@@ -554,7 +563,9 @@ From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
   (setq mu4e-view-show-addresses t)
 #+END_SRC
 
-Store a link to a mu4e query or message, setting various properties for use in capture templates. Basic support is provided by 'org-mu4e, but this uses some code from Using org-capture-templates with mu4e to extend the properties available to templates.
+Store a link to a mu4e query or message, setting various properties for use in capture templates. Basic support is provided by =org-mu4e=, but this uses some code from Using =org-capture-templates= with =mu4e= to extend the properties available to templates.
+
+I tangle to no because I am going to introduce a modification following the bug reported here: https://github.com/djcb/mu/issues/1381
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (defun org-mu4e-store-link ()
@@ -591,6 +602,42 @@ Store a link to a mu4e query or message, setting various properties for use in c
 
 #+RESULTS:
 | org-mu4e-store-link |
+
+Basically, A bug in mu4e/mu4e-conversation was reported here:
+
+https://www.reddit.com/r/emacs/comments/aqhtvf/clash_between_tree_view_of_mu4econversation_and_a/
+
+Indeed, `org-mu4e-store-link` won't do anything if current mode is not either `mu4e-headers-mode` or `mu4e-view-mode` (see code above). Because this function will always be called from a "mu4e" point of view, I suggest changing the second condition to `t` so that it always runs:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun org-mu4e-store-link ()
+  "Store a link to a mu4e query or message."
+  (cond
+    ;; storing links to queries
+    ((eq major-mode 'mu4e-headers-mode)
+      (let* ((query (mu4e-last-query))
+	      desc link)
+	(org-store-link-props :type "mu4e" :query query)
+	(setq
+	  desc (concat "mu4e:query:" query)
+	  link desc)
+	(org-add-link-props :link link :description desc)
+	link))
+      ;; storing links to messages
+    (t
+      (let* ((msg  (mu4e-message-at-point))
+	     (msgid   (or (plist-get msg :message-id) "<none>"))
+	     link)
+       (org-store-link-props :type "mu4e" :link link
+			     :message-id msgid)
+       (setq link (concat "mu4e:msgid:" msgid))
+       (org-add-link-props :link link
+			   :description (funcall org-mu4e-link-desc-func msg))
+       link))))
+
+(org-add-link-type "mu4e" 'org-mu4e-open)
+(add-hook 'org-store-link-functions 'org-mu4e-store-link)
+#+END_SRC
 
 * Ambrevar's customization
 
@@ -803,6 +850,98 @@ From https://www.djcbsoftware.nl/code/mu/mu4e/Split-view.html
 
 #+RESULTS:
 : mu4e
+
+
+* Capture templates 
+
+Placed here so that they work with emails
+
+Article from The Reddit Workflow, From https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/
+
+Read this on email handling: http://pragmaticemacs.com/emacs/master-your-inbox-with-mu4e-and-org-mode/
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-capture-templates '(
+                              ("t" "Todo [inbox]" entry
+                               (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
+                                 "* TODO %i%? \nEntry added on: %U from %a\n")
+                                ("T" "Tickler" entry
+                                 (file+headline "/home/dgm/Dropbox/gtd/tickler.org" "Tickler")
+                                 "* %i%?
+                                      \nEntry added on: %U from %a\n")
+                                ("j" "Journal" entry
+                                 (file+datetree "/home/dgm/Dropbox/gtd/journal.org")
+                                 "* %?
+                                      \n Added on: %U")
+                                ("n" "Note" entry
+                                 (file "~/Dropbox/gtd/notes.org")
+                                  "* %?\nCaptured on %U from %a\n")
+                                ("a"  "Article"  entry  
+                                 (file+headline "/home/dgm/Dropbox/gtd/bibliography.org" "Bibliography") 
+                                  "* %a %^g
+                                  \n:PROPERTIES: 
+                                  \n:Created: %U
+                                  \n:END:
+                                  \n%i
+                                  \nBrief description:
+                                  \n%?"  
+                                :immediate-finish t 
+                                :prepend t  
+                                :empty-lines 1  
+                                :created t)))
+#+END_SRC
+
+#+RESULTS:
+| t | Todo [inbox] | entry | (file+headline /home/dgm/Dropbox/gtd/inbox.org Tasks) | * TODO %i%? |
+
+
+Bits deteled after the Todo "t" capture template: 
+
+#+BEGIN_EXAMPLE
+                               ;;               \nEntry created from this heading or email: %a")
+                               
+#+END_EXAMPLE
+
+From caolan: https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+I've disabled it because it was too cumbersome and i've realized that it doesn't not add the origin file from which I capture in the case of emails! 
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;; (push `("t" "Todo" entry (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
+;;        ,(string-join
+;;          '("* TODO %^{Description}"
+;;            "  %?"
+;;            "  %a"
+;;            "  :LOGBOOK:"
+;;            "  - Captured on %U from %a"
+;;            "  :END:")
+;;          "\n"))
+;;      org-capture-templates)
+#+END_SRC
+
+
+As Caolan (https://caolan.org/dotfiles/emacs.html#orgd96aeb0) says, during expansion of the template, =%a= has been replaced by a link to the location from where you called the capture command. This can be extremely useful for deriving tasks from emails, for example. This tip from the Org-mode manual. The =%U= will be replaced with the time of the capture, this is an 'inactive' timestamp meaning it won't show up in the agenda view.
+
+Tip from https://lists.gnu.org/archive/html/emacs-orgmode/2007-08/msg00253.html for having agenda show 30 days: =(setq org-agenda-span (quote month))=
+
+** Respond later
+The 'Respond later' template is a customised TODO which includes some extra email information. This relies on the extended email properties made available in the Org-mode -> Custom Links -> mu4e section of this config.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(push `("r" "Respond later" entry (file+headline "~/Dropbox/gtd/inbox.org" "Email")
+        ,(string-join
+          '("* TODO Respond to %:from on %a"
+            "  %?"
+            "  :LOGBOOK:"
+            "  - Captured on %U from %a"
+            "  :END:")
+          "\n"))
+        org-capture-templates)
+#+END_SRC
+
+#+RESULTS:
+| r | Respond later | entry | (file+headline ~/Dropbox/gtd/inbox.org Email) | * TODO Respond to %:from on %a |
+
+
 
 * Provide 
 
