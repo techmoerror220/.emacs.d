@@ -42,6 +42,9 @@ The default set here does not matter much as I'm asked what command to run every
   (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))  
 #+end_src
 
+#+RESULTS: latemkdefault
+| (lambda nil (setq TeX-command-default latexmk)) | pandoc-mode |
+
 * COMMENT The /XeLaTeX/ route 
 ** Set default engine <<engine>>
 
@@ -99,7 +102,6 @@ Also, if I change to latex instead of xelatex, then change tangle option to no o
 
 #+RESULTS:
 | latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -bibtex -pdf %f |
-
 
 *** XeLaTeX options (Comment out if default latex is used instead)  <<options>>
 
@@ -219,6 +221,38 @@ Watch out! If I want to change to latex (instead of xelatex), and I have a =cust
 #+RESULTS:
 : default
 
+
+** LaTeX options 
+
+Turn off the default toc behavior; deal with it properly in headers to files.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun org-latex-no-toc (depth)  
+  (when depth
+      (format "%% Org-mode is exporting headings to %s levels.\n"
+              depth)))
+(setq org-latex-format-toc-function 'org-latex-no-toc)
+#+END_SRC
+
+#+RESULTS:
+: org-latex-no-toc
+
+Originally the package =minted= was not working with /LaTeX/ even though it worked with /XeLaTeX/. I found the solution reading this https://emacs.stackexchange.com/questions/27982/export-code-blocks-in-org-mode-with-minted-environment
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-latex-listings 'minted
+      org-latex-default-packages-alist nil)     
+(setq org-latex-packages-alist
+        '(("minted" "org-preamble-pdflatex" t)
+          ;;("" "graphicx" t)
+          ;;("" "longtable" nil)
+          ;;("" "float" )
+          ))
+   #+END_SRC
+
+   #+RESULTS:
+   | minted | org-preamble-pdflatex | t |
+
 ** =pdfLaTeX= Org Export Settings 
 
     Configure org-mode to export directly to PDF using xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
@@ -250,40 +284,9 @@ Also, if I change to latex instead of xelatex, then change tangle option to no o
 | latexmk -synctex=1 -shell-escape -bibtex -f -pdf %f |
 
 
-*** LaTeX options 
-
-Turn off the default toc behavior; deal with it properly in headers to files.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun org-latex-no-toc (depth)  
-  (when depth
-      (format "%% Org-mode is exporting headings to %s levels.\n"
-              depth)))
-(setq org-latex-format-toc-function 'org-latex-no-toc)
-#+END_SRC
-
-#+RESULTS:
-: org-latex-no-toc
-
-Originally the package =minted= was not working with /LaTeX/ even though it worked with /XeLaTeX/. I found the solution reading this https://emacs.stackexchange.com/questions/27982/export-code-blocks-in-org-mode-with-minted-environment
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-latex-listings 'minted
-      org-latex-default-packages-alist nil)     
-(setq org-latex-packages-alist
-        '(("minted" "org-preamble-pdflatex" t)
-          ;;("" "graphicx" t)
-          ;;("" "longtable" nil)
-          ;;("" "float" )
-          ))
-   #+END_SRC
-
-   #+RESULTS:
-   | minted | org-preamble-pdflatex | t |
-
 * Provide
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp  :tangle yes
 (provide 'starter-kit-latex-org)
 #+END_SRC
 
@@ -296,9 +299,6 @@ Originally the package =minted= was not working with /LaTeX/ even though it work
 
 #+RESULTS: message-line
 : Starter Kit LaTeX-Org loaded.
-
-
-
 
 
 

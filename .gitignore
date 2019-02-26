@@ -53,6 +53,8 @@ smex-items
 history
 .org-id-locations
 elpa/archives
+elpa/*
+elpa/pdf-tools-20180428.1527/epdfinfo
 *.rel
 undo_hist
 .mc-lists.el

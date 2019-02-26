@@ -394,7 +394,7 @@ See https://www.linuxtopia.org/online_books/linux_tool_guides/gnu_emacs_manual/F
 
 * Provide
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp  :tangle yes
 (provide 'starter-kit-latex)
 #+END_SRC
 

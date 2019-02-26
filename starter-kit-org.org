@@ -42,7 +42,6 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
 | someday.org      | Plans without due date                                                   |
 
 
-
 ** Export Settings and Helpful Packages
 *** Markdown 
 HTML and LaTeX exporters are shown by default. We add the Markdown exporter to the menu.
