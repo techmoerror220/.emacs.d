@@ -3985,6 +3985,7 @@ easier to discover commands.
 
 - Recall to =eval-and-replace= =(org-skeleton)= with =C-c e=. 
 - Nota que por alguna razon hace falta las dos declaraciones de Spanish.
+- Nota que ="#+LATEX_HEADER: \\immediate\write18{sh ./vc}\n"= is gone because now I compile =vc= in the makefile.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (define-skeleton org-skeleton
@@ -4005,7 +4006,6 @@ This only makes sense for empty buffers."
   "#+LATEX_HEADER: \\subsectionfont{\\normalfont\\bfseries}\n"
   "#+LATEX_HEADER: \\subsubsectionfont{\\normalfont\\itshape}\n"
   "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
-  "#+LATEX_HEADER: \\immediate\write18{sh ./vc}\n"
   "#+LATEX_HEADER: \\input{vc}\n"
   "#+LATEX_HEADER: \\renewcommand*{\\PrelimText}{\\textnormal{\\small\\textcolor{black!40}{author: \\VCAuthor\\ -- date: \\VCDateISO\\ -- time: \\VCTime\\ -- commit: \\texttt{\\VCRevision}}}}\n\n"
    "" _ "\n\n"
