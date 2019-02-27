@@ -301,9 +301,3 @@ Also, if I change to latex instead of xelatex, then change tangle option to no o
 : Starter Kit LaTeX-Org loaded.
 
 
-
-
-
-
-
-

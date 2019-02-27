@@ -365,6 +365,15 @@ I've selected an unlikely combination to avoid locking the screen accidentally. 
 #+RESULTS:
 : daedreth/lock-screen
 
+** exwm-edit
+
+From: https://github.com/agzam/exwm-edit
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package exwm-edit)
+#+END_SRC
+
+
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes
