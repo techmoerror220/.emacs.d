@@ -591,10 +591,12 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 
 DGM: on 27 dic 2018 I disable the smart-quote-keys function as it was causing C-c ' to not work for editing src block editing in org mode.
 
+Commented out on 27 feb 2019 as =makefile= complains it doesnt have this program and, in effect, I don't have it on Elpa, so I don't know how it works! Also, I don't even know what it does. 
+
 #+source: org-mode-smartquote-key
-#+begin_src emacs-lisp :tangle yes
-(require 'typopunct) ;; I don't have this.
-(typopunct-change-language 'english t)
+#+begin_src emacs-lisp :tangle no
+;;;;; (require 'typopunct) ;; I don't have this.
+;;;;; (typopunct-change-language 'english t)
 
 ;; (defun smart-quote-keys () 
 ;;  (local-set-key (kbd "\C-c \'") 'typopunct-insert-single-quotation-mark)
