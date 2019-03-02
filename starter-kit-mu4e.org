@@ -8,7 +8,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 * Path to installation
 
-This is the path where =mu4e= got installed when I did the installation of mu and mu4e thru the Debian repository with =maildir-utils=.
+This is the path where =mu4e= got installed when I did the installation of =mu= and =mu4e= thru the Debian repository with =maildir-utils=.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
@@ -37,89 +37,6 @@ The following files live In the directory =/usr/share/emacs/site-lisp/mu4e=
 #+RESULTS:
 : mu4e-contrib
 
-* org-capture
-
-See: http://pragmaticemacs.com/emacs/master-your-inbox-with-mu4e-and-org-mode/
-
-Originally, before =(setq org-mu4e-link-query-in-headers-mode nil)= I got the following lines but I'm not sure I want to get rid of the =C-c C-t= shortcut.
-
-#+BEGIN_EXAMPLE
-    ;; ;; Org mode has "C-c C-t" for 'org-todo.
-    ;; (define-key map (kbd "C-c C-t") 'org-mu4e-store-and-capture))
-#+END_EXAMPLE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
- (when (require 'org-mu4e nil t)
-  (dolist (map (list mu4e-view-mode-map mu4e-headers-mode-map)))
-  (setq org-mu4e-link-query-in-headers-mode nil))                 ;;store link to message if in header view, not to header query
-#+END_SRC
-
-#+RESULTS:
-
-* mu4e-conversation
-
-Check this as well: http://cestlaz.github.io/posts/using-emacs-49-mu4e-conversation/#.W4xUEK0yreQ
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun ambrevar/mu4e-headers ()
-  "Like `mu4e' but show the header view.
-Default to unread messages if the header buffer does not already exist."
-  (interactive)
-  (mu4e~start)
-  (if (get-buffer "*mu4e-headers*" )
-      (switch-to-buffer "*mu4e-headers*")
-    (mu4e-headers-search "flag:unread AND NOT flag:trashed")))
-
-(with-eval-after-load 'mu4e
-  ;; mu4e-conversation must be enabled here.
-  ;; REVIEW: https://github.com/djcb/mu/issues/1258
-  (when (require 'mu4e-conversation nil t)
-    (global-mu4e-conversation-mode)
-    (add-hook
-     'mu4e-conversation-after-send-hook
-     (lambda ()
-       (let ((mu4e-get-mail-command "offlineimap"))
-         (mu4e-update-mail-and-index 'run-in-background))))
-    (add-hook 'mu4e-view-mode-hook 'auto-fill-mode)))
-(autoload 'ambrevar/mu4e-headers "mu4e")
-#+END_SRC
-#+RESULTS:
-
-*** make tree view the default
-Tip in "mu4e-conversation: Single buffer full-thread display to make e-mails great again" on Reddit.
-
-However, I've realized that if I enable this, my =%a= in the capture template stops working on emails... This happened until ambrevar fixed it after I reported the bug. See [[here]]
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-conversation-print-function 'mu4e-conversation-print-tree)
-#+END_SRC
-
-#+RESULTS:
-: mu4e-conversation-print-tree
-
-** Headers
-
-Don't refresh so that we don't lose the current filter upon, e.g. reading e-mails.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq  mu4e-headers-auto-update nil)
-;; (add-hook 'mu4e-index-updated-hook 'mu4e-headers-do-auto-update) ;; updated it says...
-#+END_SRC
-
-#+RESULTS:
-
-** Default reply addresses
-
-Currently, by default =mu4e-conversation= replies to all. I want to be more conservative. Ideally, I would like to be able to choose whether to reply to all or not and never to reply to self but I don't know how to accomplish it.
-
-I've tried the following but it is not working.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq mu4e-conversation--draft-reply-all nil)
-#+END_SRC
-
-#+RESULTS:
-
 * helm
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -130,10 +47,56 @@ I've tried the following but it is not working.
 
 #+RESULTS:
 
-
 * Setting up the MU mail server
 
 Mostly copied from http://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html#Gmail-configuration
+
+** Get emails with =offlineimap=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-get-mail-command "offlineimap")   
+(setq mu4e-update-mail-and-index 'run-in-background)
+#+END_SRC
+
+#+RESULTS:
+: offlineimap
+
+Updating email takes ages because I have many Maildir folders, so I follow the advice here: https://www.djcbsoftware.nl/code/mu/mu4e/General.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-cache-maildir-list t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+** Cache list of maildirs
+
+Notes by https://github.com/djcb/mu/blob/master/mu4e/mu4e-utils.el. The variable  =mu4e-cache-maildir-list= "Whether to cache the list of maildirs; set it to =t= if you find that generating the list on the fly is too slow. If you do, you can set =mu4e-maildir-list= to =nil= to force regenerating the cache the next time =mu4e-get-maildirs= gets called.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-maildir-list nil)   
+#+END_SRC
+
+#+RESULTS:
+
+** Indexing 
+
+From https://github.com/djcb/mu/blob/master/NEWS.org, indexing
+(1) Allow for indexing in the background; see =mu4e-index-update-in-background=.
+(2) Better handle mbsync output in the update buffer
+(3) Add variables mu4e-index-cleanup and mu4e-index-lazy to enable lazy checking from mu4e; you can sit from mu4e using something like:
+
+DGM sets this to no on 2 march 2019 in an attempt to make things more thorough and read emails in mu4e that I could not originally and that, nonetheless, appeared in mu.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq
+  mu4e-index-cleanup nil      ;; don't do a full cleanup check
+  mu4e-index-lazy-check t)    ;; don't consider up-to-date dirs
+#+END_SRC
+
+#+RESULTS:
+: t
 
 ** Viewing images 
 
@@ -154,6 +117,7 @@ Finally, I adopted the solution by Caolan, who thinks the included =mu4e-shr2tex
 ;; (setq mu4e-html2text-command 'mu4e-shr2text)
 (setq mu4e-html2text-command "w3m -dump -s -T text/html -o display_link_number=true")
 #+END_SRC
+
 ** Costumization
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -264,8 +228,9 @@ Because default completion can be extended (e.g. Helm, Ivy).
  ;; can help to change the luminosity, e.g.:
  shr-color-visible-luminance-min 80
 
- ;; Gmail-style threading.
- mu4e-headers-include-related t)
+ ;; Gmail-style threading. https://groups.google.com/forum/#!topic/mu-discuss/ZG0trF0reZk say setting it up to "true" causes the "problem" of mu4e not finding emails that mu finds
+ mu4e-headers-include-related 'nil)
+ ;; mu4e-headers-include-related t)
 #+END_SRC
 
 #+RESULTS:
@@ -287,7 +252,6 @@ Press =aV= to view in browser.
 
 #+RESULTS:
 : ((capture message . mu4e-action-capture-message) (view as pdf . mu4e-action-view-as-pdf) (show this thread . mu4e-action-show-thread) (ViewInBrowser . mu4e-action-view-in-browser))
-
 
 ** GPG encryption
 
@@ -386,53 +350,6 @@ I don't know the use of this but I had it, so...
   (setq gnus-dired-mail-mode 'mu4e-user-agent)
   (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
 #+END_SRC
-
-** Get emails with =offlineimap=
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-get-mail-command "offlineimap")   
-#+END_SRC
-
-#+RESULTS:
-: offlineimap
-
-Updating email takes ages because I have many Maildir folders, so I follow the advice here: https://www.djcbsoftware.nl/code/mu/mu4e/General.html
-n
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-cache-maildir-list t)
-#+END_SRC
-
-#+RESULTS:
-: t
-
-** Cache list of maildirs
-
-Notes by https://github.com/djcb/mu/blob/master/mu4e/mu4e-utils.el. The variable  =mu4e-cache-maildir-list= "Whether to cache the list of maildirs; set it to =t= if you find that generating the list on the fly is too slow. If you do, you can set =mu4e-maildir-list= to =nil= to force regenerating the cache the next time =mu4e-get-maildirs= gets called.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-maildir-list nil)   
-#+END_SRC
-
-#+RESULTS:
-
-
-** Indexing 
-
-From https://github.com/djcb/mu/blob/master/NEWS.org, indexing
-(1) Allow for indexing in the background; see =mu4e-index-update-in-background=.
-(2) Better handle mbsync output in the update buffer
-(3) Add variables mu4e-index-cleanup and mu4e-index-lazy to enable lazy checking from mu4e; you can sit from mu4e using something like:
-
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq
-  mu4e-index-cleanup nil      ;; don't do a full cleanup check
-  mu4e-index-lazy-check t)    ;; don't consider up-to-date dirs
-#+END_SRC
-
-#+RESULTS:
-: t
-
 
 ** Smartly choose the email address from where to reply
 
@@ -851,7 +768,6 @@ From https://www.djcbsoftware.nl/code/mu/mu4e/Split-view.html
 #+RESULTS:
 : mu4e
 
-
 * Capture templates 
 
 Placed here so that they work with emails
@@ -941,6 +857,88 @@ The 'Respond later' template is a customised TODO which includes some extra emai
 #+RESULTS:
 | r | Respond later | entry | (file+headline ~/Dropbox/gtd/inbox.org Email) | * TODO Respond to %:from on %a |
 
+* org-capture
+
+See: http://pragmaticemacs.com/emacs/master-your-inbox-with-mu4e-and-org-mode/
+
+Originally, before =(setq org-mu4e-link-query-in-headers-mode nil)= I got the following lines but I'm not sure I want to get rid of the =C-c C-t= shortcut.
+
+#+BEGIN_EXAMPLE
+    ;; ;; Org mode has "C-c C-t" for 'org-todo.
+    ;; (define-key map (kbd "C-c C-t") 'org-mu4e-store-and-capture))
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+ (when (require 'org-mu4e nil t)
+  (dolist (map (list mu4e-view-mode-map mu4e-headers-mode-map)))
+  (setq org-mu4e-link-query-in-headers-mode nil))                 ;;store link to message if in header view, not to header query
+#+END_SRC
+
+#+RESULTS:
+
+* mu4e-conversation
+
+Check this as well: http://cestlaz.github.io/posts/using-emacs-49-mu4e-conversation/#.W4xUEK0yreQ
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun ambrevar/mu4e-headers ()
+  "Like `mu4e' but show the header view.
+Default to unread messages if the header buffer does not already exist."
+  (interactive)
+  (mu4e~start)
+  (if (get-buffer "*mu4e-headers*" )
+      (switch-to-buffer "*mu4e-headers*")
+    (mu4e-headers-search "flag:unread AND NOT flag:trashed")))
+
+(with-eval-after-load 'mu4e
+  ;; mu4e-conversation must be enabled here.
+  ;; REVIEW: https://github.com/djcb/mu/issues/1258
+  (when (require 'mu4e-conversation nil t)
+    (global-mu4e-conversation-mode)
+    (add-hook
+     'mu4e-conversation-after-send-hook
+     (lambda ()
+       (let ((mu4e-get-mail-command "offlineimap"))
+         (mu4e-update-mail-and-index 'run-in-background))))
+    (add-hook 'mu4e-view-mode-hook 'auto-fill-mode)))
+(autoload 'ambrevar/mu4e-headers "mu4e")
+#+END_SRC
+#+RESULTS:
+
+*** make tree view the default
+Tip in "mu4e-conversation: Single buffer full-thread display to make e-mails great again" on Reddit.
+
+However, I've realized that if I enable this, my =%a= in the capture template stops working on emails... This happened until ambrevar fixed it after I reported the bug. See [[here]]
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-conversation-print-function 'mu4e-conversation-print-tree)
+#+END_SRC
+
+#+RESULTS:
+: mu4e-conversation-print-tree
+
+** Headers
+
+Don't refresh so that we don't lose the current filter upon, e.g. reading e-mails.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq  mu4e-headers-auto-update nil)
+;; (add-hook 'mu4e-index-updated-hook 'mu4e-headers-do-auto-update) ;; updated it says...
+#+END_SRC
+
+#+RESULTS:
+
+** Default reply addresses
+
+Currently, by default =mu4e-conversation= replies to all. I want to be more conservative. Ideally, I would like to be able to choose whether to reply to all or not and never to reply to self but I don't know how to accomplish it.
+
+I've tried the following but it is not working.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq mu4e-conversation--draft-reply-all nil)
+#+END_SRC
+
+#+RESULTS:
 
 
 * Provide 
