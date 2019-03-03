@@ -284,7 +284,7 @@ I like M-s for it, same as C-s is for moving by searching string, now M-s is mov
 (use-package avy
   :ensure t
   :bind
-    ("s-s" . avy-goto-char))  ;; goes literally to any char
+    ("s-z" . avy-goto-char))  ;; goes literally to any char
 
 (define-key global-map (kbd "C-o") 'avy-goto-word-1) ;; goes to word that starts with a given char
 #+end_src
@@ -4050,13 +4050,16 @@ I'd rather have Spanish prefix as the default. Tips from: https://emacs.stackexc
     (inactivate-input-method)))
 (add-hook 'after-change-major-mode-hook 'activate-default-input-method)
 (add-hook 'minibuffer-setup-hook 'activate-default-input-method)
+(add-hook 'org-mode-hook 'activate-default-input-method)
+(add-hook 'LaTeX-mode-hook 'activate-default-input-method)
+(add-hook 'latex-mode-hook 'activate-default-input-method)
 ;(defun inactivate-default-input-method ()
 ;  (setq use-default-input-method nil))
 ;(add-hook 'c-mode-hook 'inactivate-default-input-method)
 #+END_SRC
 
 #+RESULTS:
-| activate-default-input-method | savehist-minibuffer-hook | pl/minibuffer-setup | winner-save-unconditionally | vr--minibuffer-setup | ido-minibuffer-setup | rfn-eshadow-setup-minibuffer | minibuffer-history-isearch-setup | minibuffer-history-initialize | exwm-layout--on-minibuffer-setup |
+| activate-default-input-method | rainbow-mode | turn-off-auto-fill | turn-on-reftex | latex-unicode-simplified | (lambda nil (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground #b58900) (set-face-attribute 'font-latex-sectioning-0-face nil :height 3) (set-face-attribute 'font-latex-sectioning-1-face nil :height 2) (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5) (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2) (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)) |
 
 
 The variable =use-default-input-method= and the function =inactivate-default-input-method= provide a way to turn off the input method (it may be annoying e.g. in programming modes). If you want to turn off the default method in some modes, you register the function =inactivate-default-input-method= in that mode's startup hook, as in the example above for C mode and derived modes (C++, Java, etc.).
@@ -4110,4 +4113,5 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+
 

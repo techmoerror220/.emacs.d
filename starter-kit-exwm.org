@@ -130,7 +130,9 @@ The following can only apply to EXWM buffers, else it could have unexpected effe
 =defun= defined in Marcel van der Boom's configuration files.
 After I change to Spanish with =s-z=, I toggle the input method with =C-\=
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+DGM on march, 3rd: I've made spanish-prefix the default so this is not needed
+
+#+BEGIN_SRC emacs-lisp :tangle no
   (defun mrb/set-input-method()
     (interactive)
     (setq default-input-method "spanish-prefix")
