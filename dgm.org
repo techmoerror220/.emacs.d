@@ -3426,7 +3426,10 @@ This is Sacha Chua's config (without her keybindings):
       (sp-local-pair 'org-mode "/" "/") ; select region, hit / then region -> /region/ in org-mode
       (sp-local-pair 'org-mode "_" "_") ; select region, hit _ then region -> _region_ in org-mode
       (sp-local-pair 'org-mode "+" "+") ; select region, hit + then region -> +region+ in org-mode
-
+      (sp-local-pair 'org-mode "$" "$") ; 
+      ;; (sp-local-pair 'org-mode "`" "'") ; not working, as it waits for second `
+      (sp-local-pair 'org-mode "``" "''") 
+    
   ;;; lisp modes
       (sp-with-modes sp--lisp-modes
         (sp-local-pair "(" nil :bind "C-(") 
@@ -3444,7 +3447,7 @@ This is Sacha Chua's config (without her keybindings):
 
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23631 18800 999044 421000) :init (23631 18800 999034 398000) :config (23631 18800 998859 429000) :config-secs (0 0 270624 986000) :init-secs (0 0 271473 279000) :use-package-secs (0 0 271850 560000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23674 39181 325289 735000) :init (23674 39181 325280 112000) :config (23674 39181 325122 105000) :config-secs (0 0 230446 267000) :init-secs (0 0 230829 136000) :use-package-secs (0 0 230890 36000)))
 
 The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
 
@@ -4016,7 +4019,6 @@ This only makes sense for empty buffers."
 #+RESULTS:
 : org-skeleton
 
-
 * Pragmatic Emacs
 ** dired-narrow
 
@@ -4032,7 +4034,62 @@ Narrow dired to match filter.  From: http://pragmaticemacs.com/emacs/dynamically
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23623 36409 259307 947000) :init (23623 36409 259186 945000) :init-secs (0 0 37 660000) :use-package-secs (0 0 224 478000)))
 
+* Input method
 
+I'd rather have Spanish prefix as the default. Tips from: https://emacs.stackexchange.com/questions/418/setting-and-activating-the-default-input-method
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq default-input-method "spanish-prefix")
+
+(defvar use-default-input-method t)
+(make-variable-buffer-local 'use-default-input-method)
+(defun activate-default-input-method ()
+  (interactive)
+  (if use-default-input-method
+      (activate-input-method default-input-method)
+    (inactivate-input-method)))
+(add-hook 'after-change-major-mode-hook 'activate-default-input-method)
+(add-hook 'minibuffer-setup-hook 'activate-default-input-method)
+;(defun inactivate-default-input-method ()
+;  (setq use-default-input-method nil))
+;(add-hook 'c-mode-hook 'inactivate-default-input-method)
+#+END_SRC
+
+#+RESULTS:
+| activate-default-input-method | savehist-minibuffer-hook | pl/minibuffer-setup | winner-save-unconditionally | vr--minibuffer-setup | ido-minibuffer-setup | rfn-eshadow-setup-minibuffer | minibuffer-history-isearch-setup | minibuffer-history-initialize | exwm-layout--on-minibuffer-setup |
+
+
+The variable =use-default-input-method= and the function =inactivate-default-input-method= provide a way to turn off the input method (it may be annoying e.g. in programming modes). If you want to turn off the default method in some modes, you register the function =inactivate-default-input-method= in that mode's startup hook, as in the example above for C mode and derived modes (C++, Java, etc.).
+
+The code above systematically turns on the default input method in the minibuffer (comment out that line to have it off by default). Smarter code might use the same input method or lack thereof as the buffer that was previously active, or might choose an input method depending on what the minibuffer is prompted for (e.g. used for search strings but not for file names), but I declare this beyond the scope of this answer.
+
+If you prefer to whitelist modes where the input method is automatically activated, add the function =activate-default-input-method= below to these modes' startup hook, as in the example below for Text mode and derived modes.
+
+#+BEGIN_EXAMPLE
+(defun activate-default-input-method ()
+  (interactive)
+  (activate-input-method default-input-method))
+(add-hook 'text-mode-hook 'activate-default-input-method)
+#+END_EXAMPLE
+
+* undo-propose
+
+To use undo-propose, call "M-x undo-propose" in the buffer you are editing.
+This will send you to a new temporary buffer, which is read-only except
+for allowing `undo' commands.  Cycle through the list of undo's as normal.
+When you are finished, type "C-c C-c" to add the chain of undo's as a
+single edit to the undo history.  To cancel, type "C-c C-k".  You can also
+ediff the proposed chain of undo's by typing "C-c C-d".
+
+Read: 
+
+- https://www.reddit.com/r/emacs/comments/awj96h/undopropose_published_in_melpa/
+- https://github.com/jackkamm/undo-propose-el
+- https://www.reddit.com/r/emacs/comments/atykf9/undopropose_simple_and_safe_undo_in_emacs/
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package undo-propose)
+#+END_SRC
 
 * Provide
 
