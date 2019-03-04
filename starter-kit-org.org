@@ -680,8 +680,6 @@ According to https://emacs.stackexchange.com/questions/36430/cant-choose-citatio
 #+RESULTS:
 : textcite
 
-
-
 *** Pre/post text support from Kitchin
 - From: https://github.com/jkitchin/org-ref/blob/master/org-ref.org
 org-ref has basic and limited support for pre/post text in citations. You can get pre/post text by using a description in a cite link, with pre/post text separated by ::. For example, See page 20::, for example. It is not easy (maybe not possible) to extend this for the humanities style of citations (e.g. harvard) with nested pre/post text on multiple citations. If anyone knows how to do it, pull requests are welcome! There is an ongoing effort in org-mode for a new citation syntax that may make this more feasible.
@@ -696,6 +694,15 @@ Tangled to no until I understand what is this Pre/Post thingy.
 
 #+RESULTS:
 : org-ref-format-citation
+
+*** For internal citation of labels
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-latex-prefer-user-labels t)
+#+END_SRC
+
+#+RESULTS:
+: t
 
 ** Goodies
 

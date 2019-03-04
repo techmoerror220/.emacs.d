@@ -4049,17 +4049,18 @@ I'd rather have Spanish prefix as the default. Tips from: https://emacs.stackexc
       (activate-input-method default-input-method)
     (inactivate-input-method)))
 (add-hook 'after-change-major-mode-hook 'activate-default-input-method)
-(add-hook 'minibuffer-setup-hook 'activate-default-input-method)
+;; (add-hook 'minibuffer-setup-hook 'activate-default-input-method)
 (add-hook 'org-mode-hook 'activate-default-input-method)
 (add-hook 'LaTeX-mode-hook 'activate-default-input-method)
 (add-hook 'latex-mode-hook 'activate-default-input-method)
+(add-hook 'mu4e-compose-mode-hook 'activate-default-input-method)
 ;(defun inactivate-default-input-method ()
 ;  (setq use-default-input-method nil))
 ;(add-hook 'c-mode-hook 'inactivate-default-input-method)
 #+END_SRC
 
 #+RESULTS:
-| activate-default-input-method | rainbow-mode | turn-off-auto-fill | turn-on-reftex | latex-unicode-simplified | (lambda nil (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground #b58900) (set-face-attribute 'font-latex-sectioning-0-face nil :height 3) (set-face-attribute 'font-latex-sectioning-1-face nil :height 2) (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5) (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2) (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)) |
+| activate-default-input-method | ambrevar/message-github | (lambda nil (set-fill-column 72) (auto-fill-mode 0) (visual-fill-column-mode) (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow)) (visual-line-mode)) | (lambda nil (local-set-key (kbd C-c C-w) #'my-mu4e-choose-signature)) |
 
 
 The variable =use-default-input-method= and the function =inactivate-default-input-method= provide a way to turn off the input method (it may be annoying e.g. in programming modes). If you want to turn off the default method in some modes, you register the function =inactivate-default-input-method= in that mode's startup hook, as in the example above for C mode and derived modes (C++, Java, etc.).
