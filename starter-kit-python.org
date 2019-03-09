@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Starter Kit Python
 #+OPTIONS: toc:nil num:nil ^:nil
@@ -20,36 +21,44 @@ install them.
       (package-install package)))
 #+end_src
 
+#+RESULTS:
+
 ** Use Python's python-mode.el instead of Emacs' python.el
    :PROPERTIES:
    :CUSTOM_ID: python
    :END:
+
 Replace the Python mode that comes with Emacs by the Python mode
 supplied by the Python distribution itself.
+
 #+begin_src emacs-lisp
-    
   (autoload 'python-mode "python-mode" "Python Mode." t)
   (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
   (add-to-list 'interpreter-mode-alist '("python" . python-mode))
     
-  (setq
+  (setq python-shell-interpreter "ipython3")
+;  (setq python-shell-interpreter "ipython")
+;  (setq python-shell-interpreter-args "--simple-prompt -i")
+  (setq python-shell-interpreter-args "--simple-prompt -pprint")
 ;;   python-shell-interpreter "ipython"
-   python-shell-interpreter "python3"
-   python-shell-interpreter-args ""
-   python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-   python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-   python-shell-completion-setup-code
-     "from IPython.core.completerlib import module_completion"
+;;   python-shell-interpreter "python3"
+
+;;   python-shell-interpreter-args ""
+;;   python-shell-interpreter-args "--simple-prompt --pprint")
+   
+;;;;   python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+;;;;   python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+;;;;   python-shell-completion-setup-code
+;;;;;     "from IPython.core.completerlib import module_completion"
 ;;   python-shell-completion-module-string-code
-   python-shell-completion-string-code
-   "';'.join(module_completion('''%s'''))\n"
-   python-shell-completion-string-code
-     "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
-    
+;;;;   python-shell-completion-string-code
+;;;;   "';'.join(module_completion('''%s'''))\n"
+;;;;   python-shell-completion-string-code
+;;;;     "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 #+end_src
 
 #+RESULTS:
-: ';'.join(get_ipython().Completer.all_completions('''%s'''))
+: --simple-prompt -pprint
 
 ** Use Cython mode
    :PROPERTIES:
@@ -62,10 +71,6 @@ supplied by the Python distribution itself.
     (add-to-list 'auto-mode-alist '("\\.pxi\\'" . cython-mode)))
 #+end_src
 
-#+source: message-line
-#+begin_src emacs-lisp
-  (message "Starter Kit Python loaded.")
-#+end_src
 
 ** Tip from Ista Zahn
 tip from: https://github.com/izahn/dotemacs
@@ -77,7 +82,7 @@ I commment it out until i discover what modification is preventing auto-completi
 #+begin_src emacs-lisp
   (with-eval-after-load "python"
     ;; try to get indent/completion working nicely
-    (setq python-indent-trigger-commands '(company-indent-for-tab-command indent-for-tab-command yas-expand yas/expand))
+    ;;;;;;; dgm on 9 march 2019: (setq python-indent-trigger-commands '(company-indent-for-tab-command indent-for-tab-command yas-expand yas/expand))
     ;; readline support is wonky at the moment
     (setq python-shell-completion-native-enable nil))
 
@@ -126,7 +131,7 @@ Ideally this segment belongs at lisp/progmodes/python.el:3292
 ** dgm's customizations of python
 
 #+srcname: python-customization
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
 (use-package elpy)
 (elpy-enable)
 (use-package live-py-mode)
@@ -137,8 +142,9 @@ Ideally this segment belongs at lisp/progmodes/python.el:3292
 
 ;; tip from https://github.com/jorgenschaefer/elpy/issues/992
 ;; to correct IPython 5's new prompt behavior that spitted out lots of nonsense and unreadeable characters as if it was a binary file
+;; See also https://emacs.stackexchange.com/questions/16637/how-to-set-up-elpy-to-use-python3
 (setenv "IPY_TEST_SIMPLE_PROMPT" "1")
-(setq python-shell-interpreter "ipython"
+(setq python-shell-interpreter "ipython3"
       python-shell-interpreter-args "-i")
 
 
@@ -156,7 +162,7 @@ Ideally this segment belongs at lisp/progmodes/python.el:3292
 
 ;; https://github.com/jorgenschaefer/elpy/issues/979
    ;; For elpy
-;; (setq elpy-rpc-python-command "python3")
+(setq elpy-rpc-python-command "python3")
 ;; For interactive shell
    ;; (setq python-shell-interpreter "python3")
 
@@ -178,7 +184,7 @@ Ideally this segment belongs at lisp/progmodes/python.el:3292
 Check Drew online: https://www.youtube.com/watch?v=6BlTGPsjGJk
 This is basically his https://github.com/wernerandrew/jedi-starter/blob/master/jedi-starter.el
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
 
 ;; (load-file "/home/dgm/.emacs.d/src/jedi-starter.el")
 
@@ -362,9 +368,46 @@ This is basically his https://github.com/wernerandrew/jedi-starter/blob/master/j
 #+RESULTS:
 : jedi
 
+* Chao on Jedi
+
+See: https://www.seas.upenn.edu/~chaoliu/2017/09/01/python-programming-in-emacs/
+Then we need to configure Jedi in Emacs. The basic configuration is shown in the following:
+
+#+BEGIN_SRC emacs-lisp 
+;;(setq jedi:setup-keys t)
+;;(setq jedi:complete-on-dot t)
+;;(add-hook 'python-mode-hook 'jedi:setup)
+#+END_SRC
+
+#+RESULTS:
+| jedi:setup | #[0  |
+
+When jedi:setup-keys is non-nil, recommended keybinds are set in jedi-mode-map when loading Jedi in Emacs. Setting jedi:complete-on-dot non-nil enables completion to start automatically after inserting a dot. If you want to append some command line arguments to jedi:server-command, use variable jedi:server-args. In my configuration, user can make a file named .emacs.d/jedi-custom.el to customize Jedi configuration and, if this file exists, Emacs will load this file automatically using the following code:
+
+#+BEGIN_SRC emacs-lisp
+;;(setq jedi-custom-file (expand-file-name "jedi-custom.el" user-emacs-directory))
+;;(when (file-exists-p jedi-custom-file)
+;;  (load jedi-custom-file))
+#+END_SRC
+
+#+RESULTS:
+
+
+* Provide
+
+Trying this on 9 march 2019. I don't really know why it is needed or not.
+
+#+BEGIN_SRC emacs-lisp
+(provide 'starter-kit-python)
+#+END_SRC
+
+#+RESULTS:
+: starter-kit-python
+
+
 * Final message
 #+source: message-line
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
 (message "Starter Kit Python File loaded.")
 #+end_src
 

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Starter Kit Perl
 #+OPTIONS: toc:nil num:nil ^:nil
@@ -21,6 +22,18 @@ Helpers for the [[http://www.perl.org/][Perl]] programming language.
 (add-to-list 'auto-mode-alist '("\\.tt$" . tt-mode))
 #+end_src
 
+* Provide 
+
+#+BEGIN_SRC emacs-lisp 
+(provide 'starter-kit-perl)
+#+END_SRC
+
+#+RESULTS:
+: starter-kit-perl
+
+
+
+* Final message
 #+source: message-line
 #+begin_src emacs-lisp
   (message "Starter Kit Perl loaded.")

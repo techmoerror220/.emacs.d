@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Starter Kit Text Editing
 #+OPTIONS: toc:nil num:nil ^:nil
@@ -210,6 +211,14 @@ In CSV mode, the following commands are available:
 
 #+RESULTS:
 | text-mode-hook-identify |
+
+* Provide 
+
+#+BEGIN_SRC emacs-lisp 
+(provide 'starter-kit-text)
+#+END_SRC
+
+
 
 * Final message
 #+source: message-line

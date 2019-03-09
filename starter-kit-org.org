@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Starter Kit Org
 #+OPTIONS: toc:nil num:nil ^:nil
@@ -2124,4 +2125,3 @@ Handy for collecting items together.
 #+begin_src emacs-lisp :tangle yes
   (message "Starter Kit Org loaded.")
 #+end_src
-

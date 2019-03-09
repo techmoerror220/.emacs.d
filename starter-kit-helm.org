@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Helm Customizations
 #+OPTIONS: toc:nil num:nil ^:nil
@@ -129,7 +130,7 @@ Helm offers an interface to both Semantic and Imenu at the same time: If `semant
         helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f"))
 
 ;; Command: helm-semantic-or-imenu
-(semantic-mode 1)
+;; recall I have ==(semantic-mode 1)= in =starter-kit-completion.org=
 (setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t)
 

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Local User Customizations
 #+OPTIONS: toc:nil num:nil ^:nil
@@ -2160,11 +2161,24 @@ However, to actually get the colors, I followed  http://amitp.blogspot.com/2007/
 #+RESULTS:
 | ansi-color-for-comint-mode-on | company-mode | flycheck-mode | yas-minor-mode | shell-mode-company-init | ess-r-package-activate-directory-tracker |
 
-This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try and get the shell at the bottom of the screen 
+This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try and get the shell and IPython at the bottom of the screen 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*IPython3\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*IPython\\*" display-buffer--same-window-action) display-buffer-alist)
 #+END_SRC
+
+#+RESULTS:
+| \*IPython\*      | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython3\*     | display-buffer-same-window      | (inhibit-same-window) |
+| \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython3\*     | display-buffer-same-window      | (inhibit-same-window) |
+| \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython3\*     | display-buffer-same-window      | (inhibit-same-window) |
+| \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \`\*Calendar\*\' | (display-buffer-below-selected) |                       |
+| \*Calendar\*     | my-position-calendar-buffer     |                       |
 
 *** COMMENT Start a regular shell at the bottom.
 #+begin_src emacs-lisp  :tangle no

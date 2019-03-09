@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Starter Kit aspell
 #+OPTIONS: toc:nil num:nil ^:nil
@@ -41,7 +42,21 @@ flyspell doesn't start properly. Putting this customization in
 #+RESULTS:
 : flyspell-region
 
+
+* Provide 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(provide 'starter-kit-aspell)
+#+END_SRC
+
+#+RESULTS:
+: starter-kit-aspell
+
+* Final message
 #+source: message-line
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (message "Starter Kit Aspell loaded.")
 #+end_src
+
+#+RESULTS: message-line
+: Starter Kit Aspell loaded.

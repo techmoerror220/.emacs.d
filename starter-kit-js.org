@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Starter Kit JS
 #+OPTIONS: toc:nil num:nil ^:nil
@@ -47,6 +48,18 @@ Java-script Helpers
 #+RESULTS:
 : starter-kit-pp-json
 
+* Provide 
+
+#+BEGIN_SRC emacs-lisp 
+(provide 'starter-kit-js)
+#+END_SRC
+
+#+RESULTS:
+: starter-kit-js
+
+
+
+* Final message
 #+source: message-line
 #+begin_src emacs-lisp
   (message "Starter Kit JS loaded.")

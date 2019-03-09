@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
+
 #+TITLE: Starter Kit Completions
 #+OPTIONS: toc:nil num:nil ^:nil
 
@@ -113,7 +115,7 @@ Auto-completion of text and code.
 We use the `:with` keyword to include dabbrev in every backend, which gives us completion from everything that's in the buffer (and other open buffers).
 
 #+source: company-mode
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 ;;Use C-TAB to complete. We put this in eval-after-load 
 ;; because otherwise some modes will try to override our settings.
 ;;;;;;; (require 'company) ;; commented out by dgm in favor of uncle dave's use-package from https://github.com/daedreth/UncleDavesEmacs
@@ -122,12 +124,12 @@ We use the `:with` keyword to include dabbrev in every backend, which gives us c
   :ensure t
   :config
   (setq company-tooltip-limit 20)
-  (setq company-idle-delay .3)
+;;  (setq company-idle-delay 0.01)
   (setq company-ech-delay 0)
   (setq company-minimum-prefix-length 3))
 
 ;; set to 0 to prevent completion starting automatically 
-;; (setq company-idle-delay 0)
+(setq company-idle-delay 0)
 ;; cancel if input doesn't match
 (setq company-require-match nil)
 ;; complete using C-TAB
@@ -163,6 +165,18 @@ We use the `:with` keyword to include dabbrev in every backend, which gives us c
 
 #+RESULTS: company-mode
 : yank-pop
+
+Now that I have =company-capf= above, I turn on =semantic-mode=. See https://github.com/syl20bnr/spacemacs/issues/1907
+Tuhdo says that =company-capf= is the expected backend to be used: ``I had no slowness [due to semantic-mode] with it [turned off] (...) And even without semantic-mode enabled, in Emacs Lisp company should use company-capf. Do you set =company-idle-delay= to very small value?''
+
+On Semantic read also this: https://www.reddit.com/r/emacs/comments/5yxxrl/what_is_that_status_of_semantic/ and http://alexott.net/en/writings/emacs-devenv/EmacsCedet.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(semantic-mode 1)
+#+END_SRC
+
+#+RESULTS:
+: t
 
 ** Autocomplete
 We use company mode, as initiated above, but here's a working auto-complete setup as an alternative. Don't use company mode and autocomplete together. To switch from company-mode to autocomplete, move the `tangle: no` from the `begin_src` line below up to the corresponding line in the `company-mode` section above. Then open the `starter-kit-elpa.org` file, uncomment the `autocomplete` and `ac-` extensions there, and restart Emacs.
@@ -239,17 +253,26 @@ Requires libclang to be installed.
 (with-eval-after-load 'company
     (add-hook 'python-mode-hook 'company-mode))
 
-(use-package company-jedi
-  :ensure t
-  :config
-    (require 'company)
-    (add-to-list 'company-backends 'company-jedi)
-    (add-hook 'python-mode-hook 'python-mode-company-init))
+;;(use-package company-jedi
+;;  :ensure t
+;;  :config
+;;    (require 'company)
+;;    (add-to-list 'company-backends 'company-jedi)
+;;    ;(add-hook 'python-mode-hook 'python-mode-company-init)
+;;    (add-hook 'python-mode-hook 'company-jedi-setup))
 
-(defun python-mode-company-init ()
-  (setq-local company-backends '((company-jedi
-                                  company-etags
-                                  company-dabbrev-code))))
+;;(defun python-mode-company-init ()
+;; company-jedi and company-etags taken out
+;;  (setq-local company-backends '((company-dabbrev-code))))
+#+END_SRC
+
+Set up: https://github.com/syohex/emacs-company-jedi#installation
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun my/python-mode-hook ()
+  (add-to-list 'company-backends 'company-jedi))
+
+(add-hook 'python-mode-hook 'my/python-mode-hook)
 #+END_SRC
 
 *** COMMENT emacs-lisp
@@ -291,15 +314,26 @@ I comment this out for the time being as it seems to use a keybinding that confl
 (add-hook 'shell-mode-hook 'flycheck-mode)
 (add-hook 'shell-mode-hook 'company-mode)
 
+;; company-etags
 (defun shell-mode-company-init ()
   (setq-local company-backends '((company-shell
                                   company-shell-env
-                                  company-etags
                                   company-dabbrev-code))))
 #+END_SRC
 
 #+RESULTS:
 : t
+
+
+* Provide 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(provide 'starter-kit-completion)
+#+END_SRC
+
+#+RESULTS:
+: starter-kit-completion
+
 
 * Final message
 #+source: message-line

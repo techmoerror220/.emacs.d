@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Starter Kit LaTeX
 #+OPTIONS: toc:nil H:2 num:nil ^:nil

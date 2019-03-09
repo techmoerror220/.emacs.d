@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Starter Kit ELPA
 #+OPTIONS: toc:nil num:nil ^:nil
@@ -62,8 +63,8 @@ The following packages will be downloaded and installed.
                                     'ein  ;; Emacs ipython notebook
                                     'py-autopep8
                                     ;; 'ipython
-                                    'jedi
-                                    'jedi-core
+                                    ;;'jedi
+                                    ;;'jedi-core
                                     'live-py-mode
                                     ;; 'redo+
                                     ;; 'ruby-mode
@@ -187,6 +188,16 @@ Make sure the PATH variable is set properly. (Uses exec-path-from-shell package 
 #+end_src
 
 #+RESULTS: fix-path
+
+* Provide 
+
+#+BEGIN_SRC emacs-lisp 
+(provide 'starter-kit-elpa)
+#+END_SRC
+
+#+RESULTS:
+: starter-kit-elpa
+
 
 * Final message
 #+source: message-line

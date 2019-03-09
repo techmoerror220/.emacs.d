@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Starter Kit Eshell
 #+OPTIONS: toc:nil num:nil ^:nil
@@ -56,6 +57,14 @@ From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
 
 #+RESULTS:
 : t
+
+* Provide 
+
+#+BEGIN_SRC emacs-lisp 
+(provide 'starter-kit-eshell)
+#+END_SRC
+
+
 
 * Final message 
 #+source: message-line

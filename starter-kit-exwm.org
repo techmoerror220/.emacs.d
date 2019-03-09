@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: EXWM Customizations
 #+OPTIONS: toc:nil num:nil ^:nil

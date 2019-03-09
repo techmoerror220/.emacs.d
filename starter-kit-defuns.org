@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Starter Kit Defuns
 #+OPTIONS: toc:nil num:nil ^:nil
@@ -195,7 +196,14 @@ Useful when a large block of text is required (e.g. for testing)
           "culpa qui officia deserunt mollit anim id est laborum."))
 #+end_src
 
+* Provide 
 
+#+BEGIN_SRC emacs-lisp 
+(provide 'starter-kit-defuns)
+#+END_SRC
+
+
+* Message
 #+source: message-line
 #+begin_src emacs-lisp
   (message "Starter Kit Defuns loaded.")
