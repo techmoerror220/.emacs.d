@@ -2167,14 +2167,21 @@ This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try a
 (push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
 (push (cons "\\*IPython3\\*" display-buffer--same-window-action) display-buffer-alist)
 (push (cons "\\*IPython\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*stata\\*" display-buffer--same-window-action) display-buffer-alist)
 #+END_SRC
 
 #+RESULTS:
+| \*stata\*        | display-buffer-same-window      | (inhibit-same-window) |
 | \*IPython\*      | display-buffer-same-window      | (inhibit-same-window) |
 | \*IPython3\*     | display-buffer-same-window      | (inhibit-same-window) |
 | \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*stata\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*stata\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython\*      | display-buffer-same-window      | (inhibit-same-window) |
 | \*IPython3\*     | display-buffer-same-window      | (inhibit-same-window) |
 | \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*stata\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython\*      | display-buffer-same-window      | (inhibit-same-window) |
 | \*IPython3\*     | display-buffer-same-window      | (inhibit-same-window) |
 | \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
 | \`\*Calendar\*\' | (display-buffer-below-selected) |                       |
@@ -4023,6 +4030,7 @@ This only makes sense for empty buffers."
   "#+LATEX_HEADER: \\sectionfont{\\normalfont\\scshape}\n"
   "#+LATEX_HEADER: \\subsectionfont{\\normalfont\\bfseries}\n"
   "#+LATEX_HEADER: \\subsubsectionfont{\\normalfont\\itshape}\n"
+  "#+LATEX_HEADER: \\pdfoptionpdfminorversion=6\n"
   "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
   "#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"
   "#+LATEX_HEADER: \\input{vc}\n"
