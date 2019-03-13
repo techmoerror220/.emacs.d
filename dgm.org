@@ -4150,7 +4150,6 @@ But now that I've changed some lines in the bit on input method in =dgm.org= thi
 #+RESULTS:
 
 
-
 * undo-propose
 
 To use undo-propose, call "M-x undo-propose" in the buffer you are editing.

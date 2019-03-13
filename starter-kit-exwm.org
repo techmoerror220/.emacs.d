@@ -355,7 +355,6 @@ From: https://github.com/agzam/exwm-edit
 (use-package exwm-edit)
 #+END_SRC
 
-
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes
