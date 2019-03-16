@@ -922,6 +922,24 @@ Basic commands with for interfacing with =exwm= with =helm=
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23561 2421 145456 378000) :init (23561 2421 145411 153000) :config (23561 2421 144875 137000) :config-secs (0 0 81 645000) :init-secs (0 0 927 125000) :use-package-secs (0 0 1190 268000)))
+
+* Quit Helm with one key stroke
+
+Often when invoking helm and wanting to cancel, I have to press =C-g= multiple times. Trying here to reduce it to one time.
+
+From: https://www.reddit.com/r/emacs/comments/7eboyr/closing_helmmx_with_single_key_press/
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'helm-after-initialize-hook
+          (lambda()
+            (define-key helm-buffer-map (kbd "ESC") 'helm-keyboard-quit)
+            (define-key helm-M-x-map (kbd "ESC") 'helm-keyboard-quit)
+            (define-key helm-map (kbd "ESC") 'helm-keyboard-quit)))
+#+END_SRC
+
+#+RESULTS:
+| (lambda nil (define-key helm-buffer-map (kbd ESC) 'helm-keyboard-quit) (define-key helm-M-x-map (kbd ESC) 'helm-keyboard-quit) (define-key helm-map (kbd ESC) 'helm-keyboard-quit)) | helm-reset-yank-point |
+
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes

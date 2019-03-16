@@ -41,7 +41,7 @@ OS X ships with BSD's ls command which doesn't have all the features of GNU ls (
 
 #+source: gnu-ls
 #+begin_src emacs-lisp :tangle yes
-  (setq insert-directory-program (executable-find "ls"))
+(setq insert-directory-program (executable-find "ls"))
 #+end_src
 
 #+RESULTS: gnu-ls
@@ -96,6 +96,23 @@ Bind full screen to `C-c f`.
 #+end_src
 
 ** Dired
+*** Date format
+
+From: https://stackoverflow.com/questions/11269897/emacs-dired-how-to-set-date-time-format
+
+Pero parece que esto no ha afectado al formato de Dired. En cambio, el secreto lo ha dado la definición aquí: [[dired-date]]
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq ls-lisp-format-time-list  '("%d.%m.%Y %H:%M" "%d.%m.%Y %H:%M")
+      ls-lisp-use-localized-time-format t)
+
+(defun ls-lisp-format-time (file-attr time-index now)
+  "%d.%m.%Y %H:%M" "%d.%m.%Y %H:%M")
+#+END_SRC
+
+#+RESULTS:
+: ls-lisp-format-time
+
 *** Dired-x
 
 Dired extensions. Dired-x (Dired Extra) is not like Dired-plus. The former is part of the standard distribution of emacs. 
@@ -129,9 +146,11 @@ First I set dired listing options. Originally, among the options there was a =p=
 
 Then I added to option to list directories first that I found in https://www.emacswiki.org/emacs/DiredSorting
 
+Also, from https://emacs.stackexchange.com/questions/2722/dired-listing-switches-time-style-format-with-a-space I have added =--time-style \"+%m-%d-%Y %H:%M:%S\""=. Esta ha sido la clave para que Dired me de la fecha completa. <<dired-date>>
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (if (eq system-type 'gnu/linux)
-    (setq dired-listing-switches "-alDh --group-directories-first")) 
+    (setq dired-listing-switches "-alDh --group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\"")) 
 (defun ensure-buffer-name-ends-in-slash ()
   "change buffer name to end with slash"
   (let ((name (buffer-name)))
@@ -142,6 +161,9 @@ Then I added to option to list directories first that I found in https://www.ema
           (lambda()
              (setq truncate-lines 1)))
 #+END_SRC
+
+#+RESULTS:
+| (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
 
 Open files in external programs (from http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
 Consider replacing with https://github.com/thamer/runner.
@@ -880,12 +902,15 @@ I disable this as it is dealt with in -misc.org
 
 - Documentation here: https://github.com/emacsfodder/kurecolor
 
+- Currently not working. Need to revisit in future.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package kurecolor)
+(use-package kurecolor
+   :ensure t)
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23593 3701 118599 80000) :init (23593 3701 118292 444000) :init-secs (0 0 61 29000) :use-package-secs (0 0 537 230000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23692 57023 62709 930000) :init (23692 57023 62697 750000) :config (23692 57023 62080 799000) :config-secs (0 0 26 151000) :init-secs (0 0 1129 806000) :use-package-secs (0 0 1239 736000)))
 
 *** Nyam-mode
 
@@ -3336,10 +3361,13 @@ By setting this:
 
 Now, Helm always opens a small window right inside and at the lower half of current window. No more random Helm window! 
 
-You may want to remove the header line for Helm command with only one source.  (Note: No entiendo que' es esto de one vs. multiple sources.)
+You may want to remove the header line for Helm command with only one source. 
 
 For Helm command with multiple sources, the header line appears as a very thin line. This is fine, but if you want Helm to be a bit smart, that is, keep the full source header line when multiple sources and hidden when there's a single source, you can add the following function to =helm-before-initialize-hook=:
 (Now, Helm appears as usual when there's multiple sources.)
+
+From https://emacs.stackexchange.com/questions/5772/how-to-change-helms-highlight-color 
+I try to change helm selection in minibuffer so that it is highlighted.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (defvar helm-source-header-default-background (face-attribute 'helm-source-header :background))
@@ -3360,10 +3388,23 @@ For Helm command with multiple sources, the header line appears as a very thin l
                         :background (face-attribute 'helm-selection :background)
                         :box nil
                         :height 0.1)))
+;;(when window-system
+;;  (custom-set-faces
+;;   '(helm-selection ((t (:background "#4682b4" :foreground "black"))))))
+;; Change Helm's selection color
+;; Orange3: "#Cd8500"
+(set-face-attribute 'helm-selection nil 
+                    :background nil
+                    :foreground "Orange4") 
+;; Change Helm's color of Source!!
+(set-face-attribute 'helm-source-header nil 
+                    :background "DeepSkyBlue4"
+                    :foreground "black")
+
+(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)  ;; #1e90ff
 #+END_SRC
 
 #+RESULTS:
-: helm-toggle-header-line
 
 ** Further customization of helm's looks, mainly colors
 
@@ -4168,6 +4209,20 @@ Read:
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package undo-propose)
 #+END_SRC
+
+* suspend-frame off
+I kept bumping into =C-x C-z= when I wanted to undo something and this binding means =suspend-frame=. So I disable the command.
+
+From https://stackoverflow.com/questions/7243155/cant-seem-to-get-rid-of-ctrl-x-ctrl-z-key-binding-in-emacs-for-minimizing-windo
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-set-key "\C-x\C-z" nil)
+(global-set-key (kbd "C-x C-z") nil)
+(put 'suspend-frame 'disabled t)
+#+END_SRC
+
+#+RESULTS:
+: t
 
 * Provide
 
