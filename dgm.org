@@ -3395,7 +3395,7 @@ I try to change helm selection in minibuffer so that it is highlighted.
 ;; Orange3: "#Cd8500"
 (set-face-attribute 'helm-selection nil 
                     :background nil
-                    :foreground "Orange4") 
+                    :foreground "Orange3") 
 ;; Change Helm's color of Source!!
 (set-face-attribute 'helm-source-header nil 
                     :background "DeepSkyBlue4"
@@ -3500,6 +3500,9 @@ This is Sacha Chua's config (without her keybindings):
   ;; elisp mode
      (sp-local-pair 'elisp-mode "<" ">") 
 
+  ;; ado-mode
+     (sp-local-pair 'ado-mode "`" "'")
+
   ;;; http://ivanmalison.github.io/dotfiles/
     (unbind-key "M-D" smartparens-mode-map)              ;; conflicts with duplicate line.
     (unbind-key "M-<up>" smartparens-mode-map)           ;; conflicts with org-mode commands for moving around rows 
@@ -3509,7 +3512,7 @@ This is Sacha Chua's config (without her keybindings):
 
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23674 39181 325289 735000) :init (23674 39181 325280 112000) :config (23674 39181 325122 105000) :config-secs (0 0 230446 267000) :init-secs (0 0 230829 136000) :use-package-secs (0 0 230890 36000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23693 10867 839103 424000) :init (23693 10867 839089 19000) :config (23693 10867 838863 410000) :config-secs (0 0 248521 784000) :init-secs (0 0 249123 852000) :use-package-secs (0 0 249387 239000)))
 
 The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
 
