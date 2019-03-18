@@ -359,7 +359,6 @@ Whenever you create useless whitespace, the whitespace is highlighted
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23592 62602 668192 845000) :init (23592 62602 668160 862000) :config (23592 62602 667754 576000) :config-secs (0 0 16 248000) :init-secs (0 0 713 570000) :use-package-secs (0 0 795 338000)))
 
-
 *** iedit mode
 Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-occurrence-editing-in-your-buffer
 
@@ -555,7 +554,6 @@ See http://tuhdo.github.io/emacs-tutor3.html
 #+RESULTS: clean-indent
 | my-pkg-init | #[0 \303\211\235\203 \304"\301\305!\210\210	\205 \306 \210\307\211\207 [command-line-args desktop-save-mode inhibit-startup-screen --no-desktop delete 0 desktop-read t] 4] | global-company-mode | ambrevar/reset-file-name-handler-alist | ambrevar/reset-gc-cons-threshold | x-wm-set-size-hint | tramp-register-archive-file-name-handler | table--make-cell-map | magit-auto-revert-mode--init-kludge | magit-startup-asserts | magit-version |
 
-
 *** Undo-tree 
 
 undo-tree set up from http://pragmaticemacs.com/emacs/advanced-undoredo-with-undo-tree/
@@ -636,7 +634,6 @@ Included in =starter-kit-completion.org=
 
 #+RESULTS: company
 | my-pkg-init | #[0 \303\211\235\203 \304"\301\305!\210\210	\205 \306 \210\307\211\207 [command-line-args desktop-save-mode inhibit-startup-screen --no-desktop delete 0 desktop-read t] 4] | global-company-mode | ambrevar/reset-file-name-handler-alist | ambrevar/reset-gc-cons-threshold | x-wm-set-size-hint | tramp-register-archive-file-name-handler | table--make-cell-map | magit-auto-revert-mode--init-kludge | magit-startup-asserts | magit-version |
-
 
 *** Duplicate-thing
 
@@ -1072,7 +1069,6 @@ For =(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)= to have an effe
 
 #+RESULTS:
 | ansi-color-process-output | comint-postoutput-scroll-to-bottom | comint-watch-for-password-prompt |
-
 
 *** COMMENT shx
 
@@ -2013,7 +2009,6 @@ Note, show-all is marked obsolete in Emacs 25.1 in favor of outline-show-all. Bu
 
 #+RESULTS:
 | outline-show-all |
-
 
 *** Cut/copy/comment current line if no region selected
 In many programs, like SlickEdit, TextMate and VisualStudio, "cut" and "copy" act on the current line if no text is visually selected. For this, I originally used code from Tim Krones Emacs config, but now I'm using the whole-line-or-region package, which can be customised to use the same line-or-region style for comments too. See comments in whole-line-or-region.el for details.
@@ -3538,7 +3533,6 @@ The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
 #+RESULTS: smartparens
 : t
 
-
 ** COMMENT Hook to avoid clash with =smartparens= keybindings
 
 - Solution inspired here 
@@ -3653,10 +3647,10 @@ PS: recall that the =diminish= package is installed in =starter-kit.org=.
   (diminish 'refill-mode) 
   (diminish 'helm-gtags-mode) 
   (diminish 'vi-tilde-fringe-mode)
+  (diminish 'dired)
 #+END_SRC
 
 #+RESULTS:
-|   |
 
 * Euro symbol 
 
