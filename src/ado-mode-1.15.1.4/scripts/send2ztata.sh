@@ -83,7 +83,8 @@ if [ $(pstree $theStata | wc -l) -eq 1 ]; then
 	exit 4
 else
    ## not finding consoles because there is no consistent name
-   xdotool search --name --onlyvisible "Stata(/SE|/MP)* 1[1-5]" windowactivate
+   ## xdotool search --name --onlyvisible "Stata(/SE|/MP)* 1[1-5]" windowactivate
+   xdotool search --name --onlyvisible "stata" windowactivate
 fi
 
 ## make do-file if dothis is anything but command
@@ -127,4 +128,3 @@ xdotool key Return
 if [ -n "$comeback" ]; then
 	xdotool search --name --onlyvisible "$winid" windowactivate
 fi
-

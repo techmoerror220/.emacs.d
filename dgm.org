@@ -985,7 +985,10 @@ Only turn on if a window system is available. This prevents error under terminal
 #+end_src
 
 *** Stata
-#+BEGIN_SRC emacs-lisp :tangle yes
+
+Disabled in order to use ESS default stata mode because this =ado= mode does not allow interacting with Stata (only does for MacOs and Windows).
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (add-to-list 'load-path "/home/dgm/.emacs.d/src/ado-mode-1.15.1.4/lisp")
 (require 'ado-mode)
 #+END_SRC
@@ -4221,6 +4224,76 @@ From https://stackoverflow.com/questions/7243155/cant-seem-to-get-rid-of-ctrl-x-
 #+RESULTS:
 : t
 
+* Reverse paragraphs
+
+Very useful for, for example, changing the order of the Makefile from bottom up to up-bottom.
+
+See https://www.emacswiki.org/emacs/ReverseParagraphs
+
+Got: 
+
+#+BEGIN_EXAMPLE
+* foo is bar
+  and bar is expensive.
+
+* foo is quux
+  and quux is useful.
+#+END_EXAMPLE
+
+Result:
+
+#+BEGIN_EXAMPLE
+* foo is quux
+  and quux is useful.
+
+* foo is bar
+  and bar is expensive.
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun reverse-paragraphs (beg end)
+  "Reverse the order of paragraphs in a region.
+From a program takes two point or marker arguments, BEG and END."
+  (interactive "r")
+  (when (> beg end)
+    (let (mid) (setq mid end end beg beg mid)))
+  (save-excursion
+    ;; the last paragraph might be missing a trailing newline
+    (goto-char end)
+    (setq end (point-marker))
+    ;; the real work.
+    (goto-char beg)
+    (let (paragraphs fix-newline)
+      (while (< beg end)
+	;; skip to the beginning of the next paragraph instead of
+	;; remaining on the position separating the two paragraphs
+	(when (= 0 (forward-paragraph 1))
+	  (goto-char (1+ (match-end 0))))
+	(when (> (point) end)
+	  (goto-char end))
+	(setq paragraphs (cons (buffer-substring beg (point))
+			       paragraphs))
+	(delete-region beg (point)))
+      ;; if all but the last paragraph end with two newlines, add a
+      ;; newline to the last paragraph
+      (when (and (null (delete 2 (mapcar (lambda (s)
+					   (when (string-match "\n+$" s -2)
+					     (length (match-string 0 s))))
+					 (cdr paragraphs))))
+		 (when (string-match "\n+$" (car paragraphs) -2)
+		   (= 1 (length (match-string 0 (car paragraphs))))))
+	(setq fix-newline t)
+	(setcar paragraphs (concat (car paragraphs) "\n")))
+      ;; insert paragraphs
+      (dolist (par paragraphs)
+	(insert par))
+      (when fix-newline
+	(delete-char -1)))))
+#+END_SRC
+
+#+RESULTS:
+: reverse-paragraphs
+
 * Provide
 
 Trying this on 28 dic 2018. I don't really know why it is needed or not.
@@ -4240,5 +4313,3 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
-
-
