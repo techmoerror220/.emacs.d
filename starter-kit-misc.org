@@ -193,7 +193,7 @@ Here are the conventions for how to define the levels of fontification:
  (either syntactic or semantic) should be fontified appropriately. 
 - Level 3: in addition to level 2, highlight the symbols being defined in function and variable declarations, and all builtin function names, wherever they appear. 
 
- Tip from http://www.emacs.uniyar.ac.ru/doc/em24h/emacs102.htm: A more advanced method for getting cheap font-lock can be obtained using the minor modes called fast-lock-mode and lazy-lock-mode. Use C-h f (describe-function) for a discussion of what they do. 
+ Tip from http://www.emacs.uniyar.ac.ru/doc/em24h/emacs102.htm: A more advanced method for getting cheap font-lock can be obtained using the minor modes called fast-lock-mode and lazy-lock-mode. Use =C-h f= (=describe-function=) for a discussion of what they do. 
 
 
 #+srcname: starter-kit-window-view-stuff
@@ -210,8 +210,8 @@ Here are the conventions for how to define the levels of fontification:
 
     (setq visible-bell t
           echo-keystrokes 0.1
-          ;; font-lock-maximum-decoration nil  ;; originally it was true dgm turns this off as emacs is way to slow with it. 
-          font-lock-maximum-decoration 1 ;; originally it was true, then nil and then 1, the minimum level, to see if this speeds up things. And I think it does. 
+          font-lock-maximum-decoration t  ;; dgm turned this off as emacs wass way to slow with it but now, with my new EXWM setting I want to give it a chance
+;;          font-lock-maximum-decoration 1 ;; originally it was true, then nil and then 1, the minimum level, to see if this speeds up things. And I think it does. 
           font-lock-verbose nil
           inhibit-startup-message t
           transient-mark-mode t
