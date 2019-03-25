@@ -203,6 +203,9 @@ When windows get out of order, you can rotate them.
   (global-set-key (kbd "C-c m") 'rotate-windows)
 #+end_src
 
+#+RESULTS: rotate-windows
+: rotate-windows
+
 ** Indentation help
 #+begin_src emacs-lisp 
 (global-set-key (kbd "C-x a") 'join-line)
@@ -351,6 +354,9 @@ and I copy it below because it is awesome.
 ;;  (global-set-key (kbd "C-x g") 'magit-status) ;; now in dgm.org
 #+end_src
 
+#+RESULTS:
+: jabber-disconnect
+
 ** Activate occur easily inside isearch
 #+begin_src emacs-lisp 
 (define-key isearch-mode-map (kbd "C-o")
@@ -418,6 +424,20 @@ Restore the windows after Ediff quits. By default, when you quit the Ediff sessi
 | winner-undo |
 
 ** Don't Use Suspend Frame
+
+I (DGM) kept bumping into =C-x C-z= when I wanted to undo something and this binding means =suspend-frame=. So I disable the command.
+
+From https://stackoverflow.com/questions/7243155/cant-seem-to-get-rid-of-ctrl-x-ctrl-z-key-binding-in-emacs-for-minimizing-windo
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key "\C-x\C-z" nil)
+(global-set-key (kbd "C-x C-z") nil)
+(put 'suspend-frame 'disabled t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
 By default C-z is bound to "Suspend Frame", which minimizes Emacs. I find this of no use. Bind it to "Undo" instead. 
 
 #+source: disable-suspend-frame

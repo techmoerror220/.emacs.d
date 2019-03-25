@@ -1923,9 +1923,13 @@ Split the windows horizontally instead of vertically as I find it easier to foll
 Restore the windows after Ediff quits. By default, when you quit the Ediff session with =q=, it just leaves the two diff windows around, instead of restoring the window configuration from when Ediff was started.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-;;(winner-mode)
-;;(add-hook 'ediff-after-quit-hook-internal 'winner-undo)
+;; winner-mode is activated in starter-kit-bindings.org
+;; (winner-mode)
+(add-hook 'ediff-after-quit-hook-internal 'winner-undo)
 #+END_SRC
+
+#+RESULTS:
+| winner-undo |
 
 (Above code in =starter-kit-binding.org=)
 
@@ -4210,19 +4214,7 @@ Read:
 (use-package undo-propose)
 #+END_SRC
 
-* suspend-frame off
-I kept bumping into =C-x C-z= when I wanted to undo something and this binding means =suspend-frame=. So I disable the command.
 
-From https://stackoverflow.com/questions/7243155/cant-seem-to-get-rid-of-ctrl-x-ctrl-z-key-binding-in-emacs-for-minimizing-windo
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key "\C-x\C-z" nil)
-(global-set-key (kbd "C-x C-z") nil)
-(put 'suspend-frame 'disabled t)
-#+END_SRC
-
-#+RESULTS:
-: t
 
 * Reverse paragraphs
 
@@ -4288,11 +4280,21 @@ From a program takes two point or marker arguments, BEG and END."
       (dolist (par paragraphs)
 	(insert par))
       (when fix-newline
-	(delete-char -1)))))
+	    (delete-char -1)))))
 #+END_SRC
 
 #+RESULTS:
 : reverse-paragraphs
+
+
+* Autoloads: Dropbox
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Autostart Dropbox
+(call-process-shell-command "(sleep 10s && ~/.dropbox-dist/dropboxd) &" nil 0)
+#+END_SRC
+
+#+RESULTS:
 
 * Provide
 

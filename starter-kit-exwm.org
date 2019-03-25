@@ -355,6 +355,22 @@ From: https://github.com/agzam/exwm-edit
 (use-package exwm-edit)
 #+END_SRC
 
+* Redshift
+
+ Great for using the computer at night
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Redshift off
+(exwm-input-set-key (kbd "s-x")
+(lambda () (interactive) (start-process "" nil "redshift" "-x" )))
+
+;; Redshift on
+(exwm-input-set-key (kbd "s-t")
+(lambda () (interactive) (start-process "" nil "redshift" "-O" "3500")))
+#+END_SRC
+
+#+RESULTS:
+
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes

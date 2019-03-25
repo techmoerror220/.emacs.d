@@ -110,12 +110,13 @@ These are some functions defined in the old configuration that I leave as they m
 : tab-indent-or-complete
 
 ** Company Mode
+
 Auto-completion of text and code. 
 
 We use the `:with` keyword to include dabbrev in every backend, which gives us completion from everything that's in the buffer (and other open buffers).
 
 #+source: company-mode
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
 ;;Use C-TAB to complete. We put this in eval-after-load 
 ;; because otherwise some modes will try to override our settings.
 ;;;;;;; (require 'company) ;; commented out by dgm in favor of uncle dave's use-package from https://github.com/daedreth/UncleDavesEmacs
@@ -161,10 +162,13 @@ We use the `:with` keyword to include dabbrev in every backend, which gives us c
 ;; completion for kill ring history
 (use-package browse-kill-ring)
 (browse-kill-ring-default-keybindings)
+
+;; From https://stackoverflow.com/questions/34652692/how-to-turn-off-company-mode-in-org-mode
+(setq company-global-modes '(not python-mode))
 #+end_src
 
 #+RESULTS: company-mode
-: yank-pop
+| not | python-mode |
 
 Now that I have =company-capf= above, I turn on =semantic-mode=. See https://github.com/syl20bnr/spacemacs/issues/1907
 Tuhdo says that =company-capf= is the expected backend to be used: ``I had no slowness [due to semantic-mode] with it [turned off] (...) And even without semantic-mode enabled, in Emacs Lisp company should use company-capf. Do you set =company-idle-delay= to very small value?''
@@ -252,8 +256,9 @@ This is currently tangled to =yes=.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-hook 'python-mode-hook 'yas-minor-mode)
 (add-hook 'python-mode-hook 'flycheck-mode)
-(with-eval-after-load 'company
-    (add-hook 'python-mode-hook 'company-mode))
+;;;;;; Disabled by DGM so that I don't use company with Python
+;;(with-eval-after-load 'company
+;;    (add-hook 'python-mode-hook 'company-mode))
 
 ;;(use-package company-jedi
 ;;  :ensure t
