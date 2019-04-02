@@ -1099,6 +1099,10 @@ Create any missing parent nodes during refile (after asking for confirmation). (
 The last two variables are useful because I'm using helm. Instead of having to step through the headings Foo, Bar, and Go to the the Store, I just get a giant list of targets in the form Foo/Bar/Go to the Store. Makes it super easy to jump to whatever I'm looking for.
 From: https://www.reddit.com/r/emacs/comments/4366f9/how_do_orgrefiletargets_work/
 
+Also, https://emacs.stackexchange.com/questions/32617/how-to-jump-directly-to-an-org-headline
+notes that 
+"Users of completion packages like ido/ivy/helm will probably want to change the following setting in order to see the whole target path at once:"
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq org-refile-use-outline-path t)          ;; show full paths to refiling
 (setq org-outline-path-complete-in-steps nil) ;; Change to nil to refile in a single go.
@@ -1258,8 +1262,19 @@ DGM: but they're not working for me.
 
 From http://stackoverflow.com/questions/15011703/is-there-an-emacs-org-mode-command-to-jump-to-an-org-heading
 
+DGM 28 march changes first line following 
+https://emacs.stackexchange.com/questions/32617/how-to-jump-directly-to-an-org-headline
+
+Note that
+"Setting org-goto-interface to one of the two recognised values does not mean sacrificing the alternative interface. Calling org-goto with a prefix argument (i.e. C-u C-c C-j or C-u M-x org-goto RET) automatically selects the alternative interface for the current completion. This way, you can set org-goto-interface to the interface you are likely to use most often and use the prefix argument when you wish to temporarily switch behaviour. If even this does not suit your needs, you can always write your own wrapper around org-goto, as per Att Righ's example."
+
+See 
+https://irreal.org/blog/?p=4170
+for another presentation of =org-goto=.
+
 #+begin_src emacs-lisp  :tangle yes
-  (setq org-goto-interface 'outline
+;;  (setq org-goto-interface 'outline
+  (setq org-goto-interface 'outline-path-completion
         org-goto-max-level 10)
   (require 'imenu)
   (setq org-startup-folded nil)
@@ -1267,6 +1282,9 @@ From http://stackoverflow.com/questions/15011703/is-there-an-emacs-org-mode-comm
   (bind-key "C-c C-w" 'org-refile)
   (setq org-cycle-include-plain-lists 'integrate)
 #+end_src
+
+#+RESULTS:
+: integrate
 
 *** Link Org subtrees and navigate between them
  The following code makes it easier for me to link trees with entries, as in http://sachachua.com/evil-plans

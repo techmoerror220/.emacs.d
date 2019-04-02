@@ -285,6 +285,21 @@ Also, if I change to latex instead of xelatex, then change tangle option to no o
 | latexmk -synctex=1 -shell-escape -bibtex -f -pdf %f |
 
 
+* org-export
+
+From: https://orgmode.org/worg/org-tutorials/org-latex-export.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun org-export-latex-no-toc (depth)
+    (when depth
+      (format "%% Org-mode is exporting headings to %s levels.\n"
+              depth)))
+  (setq org-export-latex-format-toc-function 'org-export-latex-no-toc)
+#+END_SRC
+
+#+RESULTS:
+: org-export-latex-no-toc
+
 * Provide
 
 #+BEGIN_SRC emacs-lisp  :tangle yes

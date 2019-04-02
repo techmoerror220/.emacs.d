@@ -359,6 +359,11 @@ From: https://github.com/agzam/exwm-edit
 
  Great for using the computer at night
 
+#+BEGIN_EXAMPLE
+sudo apt install redshift redshift-gtk
+#+END_EXAMPLE
+
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; Redshift off
 (exwm-input-set-key (kbd "s-x")
@@ -366,7 +371,7 @@ From: https://github.com/agzam/exwm-edit
 
 ;; Redshift on
 (exwm-input-set-key (kbd "s-t")
-(lambda () (interactive) (start-process "" nil "redshift" "-O" "3500")))
+                    (lambda () (interactive) (start-process "" nil "redshift" "-O" "3500")))
 #+END_SRC
 
 #+RESULTS:

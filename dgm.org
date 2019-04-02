@@ -1002,9 +1002,14 @@ This mode shows a keymap when an incomplete command is entered. It is especially
 tip from: https://github.com/izahn/dotemacs
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package which-key)
-(which-key-mode)
+(use-package which-key
+:ensure t
+:config
+(which-key-mode))
 #+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23710 39126 376820 348000) :init (23710 39126 376764 98000) :config (23710 39126 376103 227000) :config-secs (0 0 1005 744000) :init-secs (0 0 2188 552000) :use-package-secs (0 0 2389 726000)))
 
 *** General REPL (comint) config
 Tip from: https://github.com/izahn/dotemacs
@@ -4350,6 +4355,17 @@ From a program takes two point or marker arguments, BEG and END."
 #+RESULTS:
 : reverse-paragraphs
 
+* Try 
+Recommended by the great Mike Zamansky at https://www.youtube.com/watch?v=49kBWM3RQQ8&list=PL1J8_tSSqnK4yrmlxd1ArVpP5ZgnPIeKZ&index=13&t=0s
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package try
+  :ensure t)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23710 38257 96833 110000) :init (23710 38257 96735 587000) :config (23710 38257 94764 845000) :config-secs (0 0 42 340000) :init-secs (0 0 9704 337000) :use-package-secs (0 10 384370 599000)))
+ 
 
 * Provide
 
