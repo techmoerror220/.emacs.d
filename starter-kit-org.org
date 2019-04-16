@@ -957,11 +957,11 @@ Remove DONE tasks from agenda view. Tip from: https://stackoverflow.com/question
 Tip from: https://orgmode.org/manual/Setting-tags.html
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-tag-alist '(("airbnb" . ?a) ("@computer" . ?b) ("course" . ?c)  ("errands" . ?e)  ("tfg" . ?g) ("@home" . ?h) ("medicos" . ?m) ("@office" . ?o)  ("project" . ?p) ("@phone" . ?q) ("teaching" . ?t) ("uned" . ?u)))
+(setq org-tag-alist '(("airbnb" . ?a) ("@computer" . ?b) ("course" . ?c)  ("errands" . ?e)  ("tfg" . ?g) ("@home" . ?h) ("kenedy" . ?k) ("leo" . ?l) ("medicos" . ?m) ("@office" . ?o)  ("project" . ?p) ("@phone" . ?q) ("teaching" . ?t) ("uned" . ?u) ("writing" . ?w)))
 #+END_SRC
 
 #+RESULTS:
-: ((airbnb . 97) (@computer . 98) (course . 99) (errands . 101) (tfg . 103) (@home . 104) (medicos . 109) (@office . 111) (project . 112) (@phone . 113) (teaching . 116) (uned . 117))
+: ((airbnb . 97) (@computer . 98) (course . 99) (errands . 101) (tfg . 103) (@home . 104) (kenedy . 107) (leo . 108) (medicos . 109) (@office . 111) (project . 112) (@phone . 113) (teaching . 116) (uned . 117) (writing . 119))
 
 ** Public holidays 
 
