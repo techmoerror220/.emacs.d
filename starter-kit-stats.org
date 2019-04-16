@@ -68,7 +68,12 @@ This file provides settings for ESS and R.
 #+begin_src emacs-lisp
 (add-hook 'ess-mode-hook 'run-starter-kit-coding-hook)
 (add-hook 'ess-R-post-run-hook 'smartparens-mode)
+(add-hook 'ess-stata-post-run-hook 'smartparens-mode)
+(add-hook 'ess-stata-mode-hook 'smartparens-mode)
 #+end_src
+
+#+RESULTS: ide-ess
+| smartparens-mode | show-smartparens-mode |
 
 ** Define Rnw-mode and make LaTeX aware of it. 
 
@@ -227,3 +232,11 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 #+begin_src emacs-lisp
   (message "Starter Kit STATS file loaded.")
 #+end_src
+
+
+
+
+
+
+
+

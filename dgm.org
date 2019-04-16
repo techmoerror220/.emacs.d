@@ -3468,6 +3468,11 @@ This is Sacha Chua's config (without her keybindings):
       ;; back to sacha
       (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
       (add-hook 'emacs-lisp-mode-hook 'show-smartparens-mode)
+      ;; dgm
+      (add-hook 'ess-R-post-run-hook 'smartparens-mode)
+      ;;(add-hook 'ess-stata-post-run-hook 'smartparens-mode)
+      ;; (add-hook 'ess-stata-mode-hook 'smartparens-mode)
+
 ;;;;;;;;;;;;;;;;;;
       ;; pair management
       (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
@@ -3507,8 +3512,9 @@ This is Sacha Chua's config (without her keybindings):
   ;; elisp mode
      (sp-local-pair 'elisp-mode "<" ">") 
 
-  ;; ado-mode
-     (sp-local-pair 'ado-mode "`" "'")
+  ;; ess-stata-mode (not working)
+  ;; (sp-local-pair 'ess-stata-mode-hook "`" "'")
+
 
   ;;; http://ivanmalison.github.io/dotfiles/
     (unbind-key "M-D" smartparens-mode-map)              ;; conflicts with duplicate line.
@@ -3519,7 +3525,7 @@ This is Sacha Chua's config (without her keybindings):
 
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23693 10867 839103 424000) :init (23693 10867 839089 19000) :config (23693 10867 838863 410000) :config-secs (0 0 248521 784000) :init-secs (0 0 249123 852000) :use-package-secs (0 0 249387 239000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23717 10372 337914 669000) :init (23717 10372 337906 975000) :config (23717 10372 337773 366000) :config-secs (0 0 134187 29000) :init-secs (0 0 134675 570000) :use-package-secs (0 0 134839 248000)))
 
 The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
 

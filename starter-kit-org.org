@@ -1061,6 +1061,12 @@ Provide refile targets as paths, so a level 3 headline will be available as leve
 
 Targets. (Nota que solo con =maxlevel= I get the refiling to someday's second level---two stars---to work).
 
+Explanation: 
+
+Take for example =("/home/dgm/Dropbox/gtd/tickler.org" :level . 2)=. This gave lots of low level headings but not the overall =tickler= heading. So if I wanted to refile something to this upper-level heading I could not. 
+
+When I changed this to =("/home/dgm/Dropbox/gtd/tickler.org" :maxlevel . 2)= I got it working for low-level headings and for the upper-level heading =tickler=.s
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq org-refile-targets '(("/home/dgm/Dropbox/gtd/gtd.org" :maxlevel . 3)
                              ("/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" :level . 2)
@@ -1069,11 +1075,11 @@ Targets. (Nota que solo con =maxlevel= I get the refiling to someday's second le
                              ("/home/dgm/Dropbox/gtd/someday.org" :maxlevel . 2)                    
                              ("/home/dgm/Dropbox/gtd/inbox.org" :level . 2)
                              ("/home/dgm/Dropbox/gtd/notes.org" :maxlevel . 2)
-                             ("/home/dgm/Dropbox/gtd/tickler.org" :level . 2)))
+                             ("/home/dgm/Dropbox/gtd/tickler.org" :maxlevel . 2)))
 #+END_SRC
 
 #+RESULTS:
-: ((/home/dgm/Dropbox/gtd/gtd.org :maxlevel . 3) (/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org :level . 2) (/home/dgm/Dropbox/gtd/someday.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/inbox.org :level . 2) (/home/dgm/Dropbox/gtd/notes.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/tickler.org :level . 2))
+: ((/home/dgm/Dropbox/gtd/gtd.org :maxlevel . 3) (/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org :level . 2) (/home/dgm/Dropbox/gtd/someday.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/inbox.org :level . 2) (/home/dgm/Dropbox/gtd/notes.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/tickler.org :maxlevel . 2))
 
 New from https://www.reddit.com/r/emacs/comments/4366f9/how_do_orgrefiletargets_work/
 

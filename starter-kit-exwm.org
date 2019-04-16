@@ -367,7 +367,7 @@ sudo apt install redshift redshift-gtk
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; Redshift off
 (exwm-input-set-key (kbd "s-x")
-(lambda () (interactive) (start-process "" nil "redshift" "-x" )))
+(lambda () (interactive) (start-process "" nil "redshift" "-x")))
 
 ;; Redshift on
 (exwm-input-set-key (kbd "s-t")
