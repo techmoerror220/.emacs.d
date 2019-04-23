@@ -598,15 +598,31 @@ However, with =helm-ag= I'm getting errors that seem related to undo-tree, plus 
 #+RESULTS:
 : t
 
-*** auto-file-revert
-#+srcname: file-revert
-#+BEGIN_SRC emacs-lisp :tangle yes
+*** COMMENT auto-file-revert
+
+See: http://pragmaticemacs.com/emacs/automatically-revert-buffers/
+
+If you want Emacs to automatically update a buffer if a file changes on disk, then add the following to your config:
+
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; update any change made on file to the current buffer
-(global-auto-revert-mode)
+(global-auto-revert-mode t)
 #+END_SRC
 
 #+RESULTS:
 : t
+
+Of course, if your buffer has unsaved changes when the file changes on disk, then Emacs will prompt you and your changes won’t be lost.
+
+This mode only applies to buffers associated with files on the disk, but I like to have my dired view updated if the contents of a directory change. This is accomplished with the following code:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;; auto refresh dired when file changes
+(add-hook 'dired-mode-hook 'auto-revert-mode)
+#+END_SRC
+
+#+RESULTS:
+| auto-revert-mode | (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
 
 *** fill-column 
 
@@ -3469,8 +3485,8 @@ This is Sacha Chua's config (without her keybindings):
       (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
       (add-hook 'emacs-lisp-mode-hook 'show-smartparens-mode)
       ;; dgm
-      (add-hook 'ess-R-post-run-hook 'smartparens-mode)
-      ;;(add-hook 'ess-stata-post-run-hook 'smartparens-mode)
+      ;; (add-hook 'ess-R-post-run-hook 'smartparens-mode)
+      ;; (add-hook 'ess-stata-post-run-hook 'smartparens-mode)
       ;; (add-hook 'ess-stata-mode-hook 'smartparens-mode)
 
 ;;;;;;;;;;;;;;;;;;
@@ -3646,7 +3662,7 @@ PS: recall that the =diminish= package is installed in =starter-kit.org=.
   (diminish 'beacon-mode)
   (diminish 'irony-mode)
   (diminish 'page-break-lines-mode)
-  (diminish 'auto-revert-mode)
+;;  (diminish 'auto-revert-mode)
   (diminish 'rainbow-delimiters-mode)
   (diminish 'yas-minor-mode)
   (diminish 'rainbow-mode)
@@ -3809,11 +3825,12 @@ http://emacsredux.com/blog/2013/03/27/copy-filename-to-the-clipboard/ https://gi
 ** Weather forecast
 
 Sacha has this but it doesn't work because it doesn't interpret my latitude and longitude as numbers.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package forecast
   :config
-  (setq forecast-latitude  40.4167
-        forecast-longitude -3.6833
+  (setq forecast-latitude  40.4
+        forecast-longitude -3.7
         forecast-city "Madrid"
         forecast-country "Spain"
         forecast-api-key "b580b82a056cdb3f6089f08ece4b2eb6"
@@ -3822,7 +3839,70 @@ Sacha has this but it doesn't work because it doesn't interpret my latitude and 
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23591 52763 148197 643000) :init (23591 52763 148164 876000) :config (23591 52763 147796 825000) :config-secs (0 0 664 31000) :init-secs (0 0 1481 469000) :use-package-secs (0 0 1618 638000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23735 33070 905741 448000) :init (23735 33070 905733 834000) :config (23735 33070 905590 741000) :config-secs (0 0 254 799000) :init-secs (0 0 543 959000) :use-package-secs (0 0 599 374000)))
+
+** Sunrise/sunset
+
+Special calendar commands can tell you, to within a minute or two, the times of sunrise
+and sunset for any date. 
+
+mouse-3 Sunrise/sunset
+S
+ Display times of sunrise and sunset for the selected date (calendar-sunrise-sunset).
+=M-x sunrise-sunset=
+ Display times of sunrise and sunset for today's date. 
+=C-u M-x sunrise-sunset=
+ Display times of sunrise and sunset for a specified date. 
+=M-x calendar-sunrise-sunset-month=
+ Display times of sunrise and sunset for the selected month. 
+
+Within the calendar, to display the local times of sunrise and sunset in the echo area,
+move point to the date you want, and type S. Alternatively, click mouse-3 on the date,
+then choose ‘Sunrise/sunset’ from the menu that appears. The command M-x
+sunrise-sunset is available outside the calendar to display this information for today's
+date or a specified date. To specify a date other than today, use C-u M-x
+sunrise-sunset, which prompts for the year, month, and day. 
+
+You can display the times of sunrise and sunset for any location and any date with C-u
+=C-u M-x sunrise-sunset=. This asks you for a longitude, latitude, number of minutes
+difference from Coordinated Universal Time, and date, and then tells you the times of
+sunrise and sunset for that location on that date. 
+
+Because the times of sunrise and sunset depend on the location on earth, you need to tell Emacs your latitude, longitude, and location name before using these commands.
+
+Here is an example of what to set: 
+
+#+BEGIN_EXAMPLE
+     (setq calendar-latitude 40.1)
+     (setq calendar-longitude -88.2)
+     (setq calendar-location-name "Urbana, IL")
+#+END_EXAMPLE
+
+Use one decimal place in the values of calendar-latitude and calendar-longitude. 
+
+Your time zone also affects the local time of sunrise and sunset. Emacs usually gets time zone information from the operating system, but if these values are not what you want (or if the operating system does not supply them), you must set them yourself. Here is an example: 
+
+#+BEGIN_EXAMPLE
+     (setq calendar-time-zone -360)
+     (setq calendar-standard-time-zone-name "CST")
+     (setq calendar-daylight-time-zone-name "CDT")
+#+END_EXAMPLE
+
+The value of calendar-time-zone is the number of minutes difference between your
+local standard time and Coordinated Universal Time (Greenwich time). The values of
+calendar-standard-time-zone-name and calendar-daylight-time-zone-name are the
+abbreviations used in your time zone. Emacs displays the times of sunrise and sunset corrected for daylight saving time. See Daylight Saving, for how daylight saving time is determined. 
+
+As a user, you might find it convenient to set the calendar location variables for your usual physical location in your .emacs file. If you are a system administrator, you may want to set these variables for all users in a default.el file. See Init File. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq calendar-latitude 40.4)
+(setq calendar-longitude -3.7)
+(setq calendar-location-name "Madrid, Spain")
+#+END_SRC
+
+#+RESULTS:
+: Madrid, Spain
 
 *** Pragmatic Emacs alternative
 
@@ -4362,6 +4442,7 @@ From a program takes two point or marker arguments, BEG and END."
 : reverse-paragraphs
 
 * Try 
+
 Recommended by the great Mike Zamansky at https://www.youtube.com/watch?v=49kBWM3RQQ8&list=PL1J8_tSSqnK4yrmlxd1ArVpP5ZgnPIeKZ&index=13&t=0s
 
 #+BEGIN_SRC emacs-lisp :tangle yes

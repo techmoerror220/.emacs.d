@@ -96,6 +96,27 @@ Set up AUCTeX to work with the Evince PDF viewer.
 #+RESULTS: sync
 | PDF Viewer | /usr/bin/evince -b -g %n %o %b |
 
+*** Prettify symbols
+
+https://www.gnu.org/software/auctex/manual/auctex/Prettifying.html
+
+... not sure this is how it works. Plus I think it was already on.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-hook 'TeX-mode-hook
+    (lambda ()
+      (add-to-list 'prettify-symbols-mode)))
+#+END_SRC
+
+Trying the next bit from https://yoo2080.wordpress.com/2016/11/15/how-to-make-prettify-symbols-mode-work-with-auctex/
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'TeX-mode-hook 'prettify-symbols-mode)
+#+END_SRC
+
+#+RESULTS:
+| prettify-symbols-mode | (lambda nil (add-to-list 'prettify-symbols-mode)) | (lambda nil (setq TeX-command-default latexmk)) | (lambda nil (add-to-list 'TeX-output-view-style '(^pdf$ . /usr/bin/evince  %n %o %b))) | pandoc-mode |
+
 ** Load Support Packages
 *** Prettify Math in Buffers
 #+source: latex-pretty-symbols 
@@ -106,9 +127,10 @@ Set up AUCTeX to work with the Evince PDF viewer.
 #+END_SRC
 
 #+RESULTS: latex-pretty-symbols
-| latex-unicode-simplified | TeX-PDF-mode | (lambda nil (local-set-key  v 'ebib-insert-bibtex-key)) | turn-on-reftex |
+| preview-mode-setup | TeX-PDF-mode | (lambda nil (local-set-key  v 'ebib-insert-bibtex-key)) | turn-on-reftex | latex-unicode-simplified |
 
 #+end_src
+
 
 *** Load RefTeX
 #+srcname: reftex-support
@@ -392,6 +414,13 @@ See https://www.linuxtopia.org/online_books/linux_tool_guides/gnu_emacs_manual/F
 #+RESULTS:
 : ((latex-mode . 1))
 
+** Math notation
+
+With the solarized-dark theme, math notation is too dark to see.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (setq font-latex-math-face :foreground grey)
+#+END_SRC
 
 * Provide
 

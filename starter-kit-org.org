@@ -957,11 +957,11 @@ Remove DONE tasks from agenda view. Tip from: https://stackoverflow.com/question
 Tip from: https://orgmode.org/manual/Setting-tags.html
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-tag-alist '(("airbnb" . ?a) ("@computer" . ?b) ("course" . ?c)  ("errands" . ?e)  ("tfg" . ?g) ("@home" . ?h) ("kenedy" . ?k) ("leo" . ?l) ("medicos" . ?m) ("@office" . ?o)  ("project" . ?p) ("@phone" . ?q) ("teaching" . ?t) ("uned" . ?u) ("writing" . ?w)))
+(setq org-tag-alist '(("airbnb" . ?a) ("algebra" . ?b) ("calculus" . ?c) ("errands" . ?e) ("drill" . ?d)  ("tfg" . ?g) ("@home" . ?h) ("informatica" . ?i) ("kenedy" . ?k) ("leo" . ?l)  ("maths" . ?m) ("@office" . ?o)  ("probability" . ?o) ("project" . ?p) ("reading" . ?r) ("salud" . ?s) ("@telefono" . ?t) ("uned" . ?u) ("writing" . ?w)))
 #+END_SRC
 
 #+RESULTS:
-: ((airbnb . 97) (@computer . 98) (course . 99) (errands . 101) (tfg . 103) (@home . 104) (kenedy . 107) (leo . 108) (medicos . 109) (@office . 111) (project . 112) (@phone . 113) (teaching . 116) (uned . 117) (writing . 119))
+: ((airbnb . 97) (algebra . 98) (calculus . 99) (errands . 101) (drill . 100) (tfg . 103) (@home . 104) (informatica . 105) (kenedy . 107) (leo . 108) (maths . 109) (@office . 111) (probability . 111) (project . 112) (reading . 114) (salud . 115) (@telefono . 116) (uned . 117) (writing . 119))
 
 ** Public holidays 
 
@@ -1482,7 +1482,7 @@ currently experimenting with.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq org-modules '(;;org-bbdb
                       ;;org-gnus
-                      ;;org-drill
+                      org-drill
                       ;;org-info
                       ;;org-jsinfo
                       ;;org-irc
@@ -1501,6 +1501,19 @@ currently experimenting with.
 (eval-after-load 'org
  '(org-load-modules-maybe t))
 #+END_SRC
+
+#+RESULTS:
+: t
+
+On the other hand, https://www.youtube.com/watch?v=wwW_1BQKGZ0 recommends using =use-package= for =org-drill= but if I try to download it, it doesn't exist!
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package org-drill
+  :ensure t)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23740 30446 277086 757000) :init (23740 30446 277078 344000) :config (23740 30446 276902 462000) :config-secs (0 0 65 157000) :init-secs (0 0 497 24000) :use-package-secs (0 4 248697 983000)))
 
 *** Habits
 
