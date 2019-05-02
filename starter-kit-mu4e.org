@@ -794,7 +794,7 @@ The 'Respond later' template is a customised TODO which includes some extra emai
                                   \n%?"  
                                 :immediate-finish t 
                                 :prepend t  
-                                :empty-lines 1  
+                                :empty-lines 0 
                                 :created t)
                               ("j" "Journal" entry
                                  (file+datetree "/home/dgm/Dropbox/gtd/journal.org")
@@ -805,7 +805,7 @@ The 'Respond later' template is a customised TODO which includes some extra emai
                               ("r" "Respond later" entry 
                                 (file+headline "~/Dropbox/gtd/inbox.org" "Email")
                                  "* TODO Respond to %a, email by %:from \nEntry added on: %U \n"
-                                 :empty-lines 1
+                                 :empty-lines 0
                                  :immediate-finish t)
                               ("t" "Todo [inbox]" entry
                                 (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
@@ -816,17 +816,24 @@ The 'Respond later' template is a customised TODO which includes some extra emai
                               ("u" "URLs to remember" entry
                                 (file+headline  "/home/dgm/Dropbox/gtd/URLs.org" "URLs")
                                  ,(concat "* TODO Read this URL: '%:description'\nURL: %l\nDate:%U\n\n")
-                                 :empty-lines 1
+                                 :empty-lines 0
                                  :immediate-finish t)
                               ("w" "Capture web snippet" entry
-                                (file+headline "~/Dropbox/gtd/notes.org" "Notes")
-                                 ,(concat "* Title: '%:description'\n\nURL: %l\nTime:%U\n\nContents:\n\n %i\n")
-                                 :empty-lines 1
+                                (file+headline "~/Dropbox/gtd/notes.org" "Webs")
+                                 ,(concat "* Web: '%:description'\n\nURL: %l\nTime:%U\n\nContents:\n\n %i\n")
+                                 :empty-lines 0
                                  :immediate-finish t)))
 #+END_SRC
 
 #+RESULTS:
 | a | Article | entry | (file+headline /home/dgm/Dropbox/gtd/bibliography.org Bibliography) | * %a %^g |
+
+
+
+
+
+
+
 
 
 
