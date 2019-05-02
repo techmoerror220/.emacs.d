@@ -799,8 +799,14 @@ The 'Respond later' template is a customised TODO which includes some extra emai
                               ("j" "Journal" entry
                                  (file+datetree "/home/dgm/Dropbox/gtd/journal.org")
                                  "* %? \n Added on: %U")
+                              ("l" "Life-related Idea" entry
+                                (file+headline "~/Dropbox/gtd/notes.org" "Life-related Ideas")
+                                 "* %?\nCaptured on %U from %a\n")
                               ("n" "Note" entry
                                 (file+headline "~/Dropbox/gtd/notes.org" "Notes")
+                                 "* %?\nCaptured on %U from %a\n")
+                              ("p" "Project-related Idea" entry
+                                (file+headline "~/Dropbox/gtd/notes.org" "Project-related Ideas")
                                  "* %?\nCaptured on %U from %a\n")
                               ("r" "Respond later" entry 
                                 (file+headline "~/Dropbox/gtd/inbox.org" "Email")
@@ -827,6 +833,9 @@ The 'Respond later' template is a customised TODO which includes some extra emai
 
 #+RESULTS:
 | a | Article | entry | (file+headline /home/dgm/Dropbox/gtd/bibliography.org Bibliography) | * %a %^g |
+
+
+
 
 
 
