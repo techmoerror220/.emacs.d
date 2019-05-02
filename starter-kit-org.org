@@ -2167,6 +2167,15 @@ Handy for collecting items together.
         string)))
 #+end_src
 
+* Org-web-tools
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package org-web-tools
+  :ensure t)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23755 232 222653 744000) :init (23755 232 222644 807000) :config (23755 232 222456 56000) :config-secs (0 0 4 907000) :init-secs (0 0 10147 497000) :use-package-secs (0 6 598165 48000)))
 
 * Provide
 

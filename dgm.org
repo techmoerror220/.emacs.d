@@ -4515,6 +4515,27 @@ searches all buffers."
 : search-all-buffers
  
 
+* Copy name of current file to kill ring
+
+From: https://emacsredux.com/blog/2013/03/27/copy-filename-to-the-clipboard/
+
+Note that it only works with files and not with buffers without any connection to a file.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun er-copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the kill ring."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the kill ring." filename))))
+#+END_SRC
+
+#+RESULTS:
+: er-copy-file-name-to-clipboard
+
 * Provide
 
 Trying this on 28 dic 2018. I don't really know why it is needed or not.

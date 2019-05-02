@@ -779,38 +779,12 @@ Read this on email handling: http://pragmaticemacs.com/emacs/master-your-inbox-w
 
 Templates with shortcuts =u= and =w= taken from =org-drill= manual.
 
+The 'Respond later' template is a customised TODO which includes some extra email information. This relies on the extended email properties made available in the Org-mode -> Custom Links -> mu4e section of this config.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq org-capture-templates `(
-                              ("u"
-                               "Task: Read this URL" entry
-                              (file+headline  "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
-                              ,(concat "* TODO Read article: '%:description'\nURL: %c\n\n")
-                              :empty-lines 1
-                              :immediate-finish t)
-                              ("w"
-                               "Capture web snippet" entry
-                              (file+headline "~/Dropbox/gtd/notes.org" "Notes")
-                              ,(concat "* Fact: '%:description' :" 
-                               (format "%s" org-drill-question-tag)    
-                                       ":\n:PROPERTIES:\n:DATE_ADDED: %u\n:SOURCE_URL: %c\n:END:\n\n")
-                               :empty-lines 1
-                               :immediate-finish t)
-                               ("t" "Todo [inbox]" entry
-                               (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
-                                 "* TODO %i%? \nEntry added on: %U from %a\n")
-                                ("T" "Tickler" entry
-                                 (file+headline "/home/dgm/Dropbox/gtd/tickler.org" "Tickler")
-                                 "* %i%?
-                                      \nEntry added on: %U from %a\n")
-                                ("j" "Journal" entry
-                                 (file+datetree "/home/dgm/Dropbox/gtd/journal.org")
-                                 "* %?
-                                      \n Added on: %U")
-                                ("n" "Note" entry
-                                 (file "~/Dropbox/gtd/notes.org")
-                                  "* %?\nCaptured on %U from %a\n")
-                                ("a"  "Article"  entry  
-                                 (file+headline "/home/dgm/Dropbox/gtd/bibliography.org" "Bibliography") 
+                              ("a"  "Article"  entry  
+                               (file+headline "/home/dgm/Dropbox/gtd/bibliography.org" "Bibliography") 
                                   "* %a %^g
                                   \n:PROPERTIES: 
                                   \n:Created: %U
@@ -821,11 +795,40 @@ Templates with shortcuts =u= and =w= taken from =org-drill= manual.
                                 :immediate-finish t 
                                 :prepend t  
                                 :empty-lines 1  
-                                :created t)))
+                                :created t)
+                              ("j" "Journal" entry
+                                 (file+datetree "/home/dgm/Dropbox/gtd/journal.org")
+                                 "* %? \n Added on: %U")
+                              ("n" "Note" entry
+                                (file+headline "~/Dropbox/gtd/notes.org" "Notes")
+                                 "* %?\nCaptured on %U from %a\n")
+                              ("r" "Respond later" entry 
+                                (file+headline "~/Dropbox/gtd/inbox.org" "Email")
+                                 "* TODO Respond to %a, email by %:from \nEntry added on: %U \n"
+                                 :empty-lines 1
+                                 :immediate-finish t)
+                              ("t" "Todo [inbox]" entry
+                                (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
+                                 "* TODO %i%? \nEntry added on: %U from %a\n")
+                              ("T" "Tickler" entry
+                                (file+headline "/home/dgm/Dropbox/gtd/tickler.org" "Tickler")
+                                 "* %i%? \nEntry added on: %U from %a\n")
+                              ("u" "URLs to remember" entry
+                                (file+headline  "/home/dgm/Dropbox/gtd/URLs.org" "URLs")
+                                 ,(concat "* TODO Read this URL: '%:description'\nURL: %l\nDate:%U\n\n")
+                                 :empty-lines 1
+                                 :immediate-finish t)
+                              ("w" "Capture web snippet" entry
+                                (file+headline "~/Dropbox/gtd/notes.org" "Notes")
+                                 ,(concat "* Title: '%:description'\n\nURL: %l\nTime:%U\n\nContents:\n\n %i\n")
+                                 :empty-lines 1
+                                 :immediate-finish t)))
 #+END_SRC
 
 #+RESULTS:
-| u | Task: Read this URL | entry | (file+headline /home/dgm/Dropbox/gtd/inbox.org Tasks) | * TODO Read article: '%:description' |
+| a | Article | entry | (file+headline /home/dgm/Dropbox/gtd/bibliography.org Bibliography) | * %a %^g |
+
+
 
 Original template: 
 
@@ -892,23 +895,6 @@ As Caolan (https://caolan.org/dotfiles/emacs.html#orgd96aeb0) says, during expan
 
 Tip from https://lists.gnu.org/archive/html/emacs-orgmode/2007-08/msg00253.html for having agenda show 30 days: =(setq org-agenda-span (quote month))=
 
-** Respond later
-The 'Respond later' template is a customised TODO which includes some extra email information. This relies on the extended email properties made available in the Org-mode -> Custom Links -> mu4e section of this config.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(push `("r" "Respond later" entry (file+headline "~/Dropbox/gtd/inbox.org" "Email")
-        ,(string-join
-          '("* TODO Respond to %:from on %a"
-            "  %?"
-            "  :LOGBOOK:"
-            "  - Captured on %U from %a"
-            "  :END:")
-          "\n"))
-        org-capture-templates)
-#+END_SRC
-
-#+RESULTS:
-| r | Respond later | entry | (file+headline ~/Dropbox/gtd/inbox.org Email) | * TODO Respond to %:from on %a |
 
 * org-capture
 
