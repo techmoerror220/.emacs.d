@@ -777,9 +777,25 @@ Article from The Reddit Workflow, From https://www.reddit.com/r/emacs/comments/4
 
 Read this on email handling: http://pragmaticemacs.com/emacs/master-your-inbox-with-mu4e-and-org-mode/
 
+Templates with shortcuts =u= and =w= taken from =org-drill= manual.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-capture-templates '(
-                              ("t" "Todo [inbox]" entry
+(setq org-capture-templates `(
+                              ("u"
+                               "Task: Read this URL" entry
+                              (file+headline  "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
+                              ,(concat "* TODO Read article: '%:description'\nURL: %c\n\n")
+                              :empty-lines 1
+                              :immediate-finish t)
+                              ("w"
+                               "Capture web snippet" entry
+                              (file+headline "~/Dropbox/gtd/notes.org" "Notes")
+                              ,(concat "* Fact: '%:description' :" 
+                               (format "%s" org-drill-question-tag)    
+                                       ":\n:PROPERTIES:\n:DATE_ADDED: %u\n:SOURCE_URL: %c\n:END:\n\n")
+                               :empty-lines 1
+                               :immediate-finish t)
+                               ("t" "Todo [inbox]" entry
                                (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
                                  "* TODO %i%? \nEntry added on: %U from %a\n")
                                 ("T" "Tickler" entry
@@ -809,7 +825,43 @@ Read this on email handling: http://pragmaticemacs.com/emacs/master-your-inbox-w
 #+END_SRC
 
 #+RESULTS:
-| t | Todo [inbox] | entry | (file+headline /home/dgm/Dropbox/gtd/inbox.org Tasks) | * TODO %i%? |
+| u | Task: Read this URL | entry | (file+headline /home/dgm/Dropbox/gtd/inbox.org Tasks) | * TODO Read article: '%:description' |
+
+Original template: 
+
+#+BEGIN_EXAMPLE
+(setq org-capture-templates '(
+                              ("t" "Todo [inbox]" entry
+                               (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
+                                 "* TODO %i%? \nEntry added on: %U from %a\n")
+                                ("T" "Tickler" entry
+                                 (file+headline "/home/dgm/Dropbox/gtd/tickler.org" "Tickler")
+                                 "* %i%?
+                                      \nEntry added on: %U from %a\n")
+                                ("j" "Journal" entry
+                                 (file+datetree "/home/dgm/Dropbox/gtd/journal.org")
+                                 "* %?
+                                      \n Added on: %U")
+                                ("n" "Note" entry
+                                 (file "~/Dropbox/gtd/notes.org")
+                                  "* %?\nCaptured on %U from %a\n")
+                                ("a"  "Article"  entry  
+                                 (file+headline "/home/dgm/Dropbox/gtd/bibliography.org" "Bibliography") 
+                                  "* %a %^g
+                                  \n:PROPERTIES: 
+                                  \n:Created: %U
+                                  \n:END:
+                                  \n%i
+                                  \nBrief description:
+                                  \n%?"  
+                                :immediate-finish t 
+                                :prepend t  
+                                :empty-lines 1  
+                                :created t)))
+#+END_EXAMPLE
+
+
+
 
 
 Bits deteled after the Todo "t" capture template: 

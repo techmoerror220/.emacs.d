@@ -300,6 +300,14 @@ Use org-protocol to trigger org-mode interactions from external programs. Useful
 #+RESULTS:
 : org-protocol
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (use-package org-protocol
+      :ensure nil)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23753 63985 355912 309000) :init (23753 63985 355860 329000) :config (23753 63985 354999 573000) :config-secs (0 0 25 970000) :init-secs (0 0 1586 604000) :use-package-secs (0 0 1654 354000)))
+
 ** Org-Mode Hooks
 Make yasnippet work properly with org-mode.
 
@@ -1487,7 +1495,8 @@ currently experimenting with.
                       ;;org-jsinfo
                       ;;org-irc
                       ;;org-mouse
-                      ;;org-protocol
+                      org-protocol
+                      org-eww
                       ;;org-annotate-file
                       ;;org-eval
                       ;;org-expiry
@@ -1514,6 +1523,17 @@ On the other hand, https://www.youtube.com/watch?v=wwW_1BQKGZ0 recommends using 
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23740 30446 277086 757000) :init (23740 30446 277078 344000) :config (23740 30446 276902 462000) :config-secs (0 0 65 157000) :init-secs (0 0 497 24000) :use-package-secs (0 4 248697 983000)))
+
+**** Org-drill customization
+
+Enable random "noise" for item itervals.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-drill-add-random-noise-to-intervals-p t)
+#+END_SRC
+
+#+RESULTS:
+: t
 
 *** Habits
 
