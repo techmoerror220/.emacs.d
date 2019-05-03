@@ -300,6 +300,23 @@ From http://www.maxxcan.com/racket-en-emacs/ I get it that =geiser= is the way o
 #+RESULTS:
 : t
 
+* Minor mode for highlighting the current sexp in LISP modes.
+
+From https://zzamboni.org/post/my-emacs-configuration-with-commentary/
+but the program is no longer in MELPA!!
+#+BEGIN_SRC emacs-lisp
+;;(use-package hl-sexp
+;;  :hook
+;;  ((clojure-mode 
+;;    lisp-mode 
+;;    emacs-lisp-mode
+;;    racket-mode
+;;    ess-mode) . hl-sexp-mode))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23756 3559 269553 284000) :init (23756 3559 269515 910000) :init-secs (0 0 104 910000) :use-package-secs (0 9 670617 415000)))
+
 
 * Provide
 
