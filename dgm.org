@@ -3575,10 +3575,14 @@ This is Sacha Chua's config (without her keybindings) customized with https://zz
         (sp-local-tag "s" "```scheme" "```")
         (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
 
-  ;;; trying this again. It works for org-mode but it doesn't for tex modes... uhmm
+  ;;; trying this again. It works for org-mode but it doesn't for tex modes... uhmm Now it is not working with org-mode either. ahhhgggg!!
       (sp-with-modes '(tex-mode plain-tex-mode latex-mode org-mode)
         (sp-local-pair "`" "'")
-        (sp-local-pair "``" "''"))
+        (sp-local-pair "``" "''")
+    ;;  (sp-local-pair """ """) ;; with this I get error on startup
+    ;;  (sp-local-pair "'" "'")
+        (sp-local-pair "$" "$")              ;; these last two seem to not be working
+        (sp-local-pair "\left(" "\right)")) 
 
   ;;; tex-mode latex-mode
       (sp-with-modes '(tex-mode plain-tex-mode latex-mode)
@@ -3609,7 +3613,7 @@ This is Sacha Chua's config (without her keybindings) customized with https://zz
 
   ;; ess-stata-mode. This seems to not work
   (sp-local-pair 'ess-stata-mode-hook "`" "'")
-  
+
   ;; este parece el bueno para hacerlo funcionar en stata! 
   (sp-local-pair 'ess-stata-mode "`" "'")
   ;; (sp-local-pair 'ess-mode "`" "'")
@@ -3622,20 +3626,20 @@ This is Sacha Chua's config (without her keybindings) customized with https://zz
     (unbind-key "M-D" smartparens-mode-map)              ;; conflicts with duplicate line.
     (unbind-key "M-<up>" smartparens-mode-map)           ;; conflicts with org-mode commands for moving around rows 
     (unbind-key "M-<backspace>" smartparens-mode-map)    ;; conflicts with basic command for killing last word.
-    (unbind-key "M-<down>" smartparens-mode-map)
+    (unbind-key "M-<down>" smartparens-mode-map))
 
   ;; if ess-mode included here, then I get error in Stata
-  :hook 
-      ((emacs-lisp-mode
-        lisp-mode
-        racket-mode
-        racket-repl-mode
-        org-mode) . smartparens-strict-mode))       ;; and headings.
+  ;; also, originally, I had org-mode included but that meant that I could not delete one parenthesis.
+;;  :hook 
+;;      ((emacs-lisp-mode
+;;        lisp-mode
+;;        racket-mode
+;;        racket-repl-mode) . smartparens-strict-mode))       ;; and headings.
 #+END_SRC
 
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23756 21943 448030 781000) :init (23756 21943 448015 532000) :init-secs (0 0 9564 446000) :use-package-secs (0 0 9748 966000) :config (23756 21943 447997 674000) :config-secs (0 0 9516 847000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23759 947 450588 784000) :init (23759 947 450576 819000) :init-secs (0 0 10000 107000) :use-package-secs (0 0 10192 946000) :config (23759 947 450565 561000) :config-secs (0 0 9974 236000)))
 
 The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
 
