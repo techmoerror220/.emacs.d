@@ -46,7 +46,7 @@ The default set here does not matter much as I'm asked what command to run every
 #+RESULTS: latemkdefault
 | (lambda nil (setq TeX-command-default latexmk)) | pandoc-mode |
 
-* COMMENT The /XeLaTeX/ route 
+* The /XeLaTeX/ route 
 ** Set default engine <<engine>>
 
 Custom variables kludge. Why can't I get these to work via =setq=?
@@ -159,15 +159,18 @@ Now I define the style of memoir-class articles and others. Note the insertion o
 
 Default packages included in the tex file. As before, =org-preamble-xelatex= is part of =latex-custom-kjh=. There's =org-preamble-pdflatex= as well, if you wish to use that instead.
 DGM note: This code calls on the stuff in the =~/texmf= directory that allows using fonts a la MinionPro etc. Specifically, it uses the =org-preamble-xelatex= style file. 
+DGM note on 13 may: I'ved tangled to no as this conflicted with my export to beamer. Now I have included these lines in the =org-skeleton= code.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
  (setq org-latex-default-packages-alist nil)     
- (setq org-latex-packages-alist
-        '(("minted" "org-preamble-xelatex" t)
-          ("" "graphicx" t)
-          ("" "longtable" nil)
-          ("" "float" ))) 
+;; (setq org-latex-packages-alist
+;;        '(("minted" "org-preamble-xelatex" t)
+;;          ("" "graphicx" t)
+;;          ("" "longtable" nil)
+;;          ("" "float" ))) 
    #+END_SRC
+
+   #+RESULTS:
 
    #+RESULTS: orgmode-latex-export
    : ox-latex
@@ -177,16 +180,26 @@ DGM note: This code calls on the stuff in the =~/texmf= directory that allows us
 Taken from Sacha Chua's config files. 
 Reading https://orgmode.org/worg/exporters/beamer/ox-beamer.html I think as of Orgmode 8.0.3 this setup is not necessary anymore.
 
+Deleted:               "\\documentclass\[presentation\]\{beamer\}"
 #+BEGIN_SRC emacs-lisp :tangle no
 (with-eval-after-load 'org
   (require 'ox-latex)
   (add-to-list 'org-latex-classes
-             '("beamer"
-               "\\documentclass\[presentation\]\{beamer\}"
+             '("beamer
+               "\\documentclass\[xcolor=x11names,compress\]\{beamer\}"
+               "\\mode<presentation> \{"
+               "    \\usetheme\{Hannover\}"
+               "    \\usecolortheme\{beaver\}" 
+               "\}"
                ("\\section\{%s\}" . "\\section*\{%s\}")
                ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
                ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}"))))
 #+END_SRC
+
+#+RESULTS:
+| beamer  | \documentclass[xcolor=x11names,compress]{beamer}\n | \mode<presentation> {\n | \usetheme{Hannover}\n | \usecolortheme{beaver}\n | }\n | (\section{%s} . \section*{%s}) | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |
+| beamer  | \documentclass[xcolor=x11names,compress]{beamer}   | \mode<presentation> {   | \usetheme{Hannover}   | \usecolortheme{beaver}   | }   | (\section{%s} . \section*{%s}) | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |
+| membook | \documentclass[11pt,oneside]{memoir}               |                         |                       |                          |     |                                |                                      |                                            |
 
 Of course we need to load  =beamer= for it to show up in the menu after =C-c C-e=.
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -197,7 +210,7 @@ Of course we need to load  =beamer= for it to show up in the menu after =C-c C-e
 : ox-beamer
 
 
-* The /LaTeX/ route 
+* COMMENT The /LaTeX/ route 
 ** Set default engine 
 
 Custom variables kludge. Why can't I get these to work via =setq=?
