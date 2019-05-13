@@ -3538,6 +3538,10 @@ If I place this in the =starter-kit-helm.org= file, for some reason, probably be
 
 This is Sacha Chua's config (without her keybindings) customized with https://zzamboni.org/post/my-emacs-configuration-with-commentary/
 
+Issue: 
+
+With =(smartparens-global-mode 1)= everything works wonderfully except for Stata's do files where I get an error I don't get without this =global-mode=. However, if I get rid of of the =global-mode=, then, for some reason I don't get the double =equaly sign= in org-mode and, I imagine, other goodies. So it is not worthwhile... I keep the =global-mode= until I read the =smartparens= instructions for good.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package smartparens
     :ensure t
@@ -3548,8 +3552,7 @@ This is Sacha Chua's config (without her keybindings) customized with https://zz
       ;; I reintroduce these two lines so that I can have =sp-local-pair='s defined for org-mode below working
       ;; Plus =M-up= and =M-down= continue working as they should
       ;;;;;;;;;;;;;;; disabled by dgm on 2 may 2019. This move is what makes stata.do's work without error. However, now I don't have smartparens in org-mode.
-      ;;;;;;;;;;;;;;; (smartparens-global-mode 1)
-      ;;;;;;;;;;;;;;; (sp-use-smartparens-bindings)
+      (smartparens-global-mode 1)
       ;;;;;;;;;;;;;;; tuhdo setup
       (setq sp-base-key-bindings 'paredit)
       (setq sp-autoskip-closing-pair 'always)
@@ -3612,15 +3615,15 @@ This is Sacha Chua's config (without her keybindings) customized with https://zz
      (sp-local-pair 'elisp-mode "<" ">") 
 
   ;; ess-stata-mode. This seems to not work
-  (sp-local-pair 'ess-stata-mode-hook "`" "'")
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; (sp-local-pair 'ess-stata-mode-hook "`" "'")
 
   ;; este parece el bueno para hacerlo funcionar en stata! 
-  (sp-local-pair 'ess-stata-mode "`" "'")
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; (sp-local-pair 'ess-stata-mode "`" "'")
   ;; (sp-local-pair 'ess-mode "`" "'")
   ;; (sp-local-pair 'ess-stata-mode-hook "'" "'") ;; if I include this, the above two lines don't work, why??s
 
-  (sp-with-modes '(ess-stata-mode ess-stata-mode-hook)
-    (sp-local-pair "`" "'"))
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; (sp-with-modes '(ess-stata-mode ess-stata-mode-hook)
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    (sp-local-pair "`" "'"))
 
   ;;; http://ivanmalison.github.io/dotfiles/
     (unbind-key "M-D" smartparens-mode-map)              ;; conflicts with duplicate line.
@@ -3639,7 +3642,7 @@ This is Sacha Chua's config (without her keybindings) customized with https://zz
 
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23759 947 450588 784000) :init (23759 947 450576 819000) :init-secs (0 0 10000 107000) :use-package-secs (0 0 10192 946000) :config (23759 947 450565 561000) :config-secs (0 0 9974 236000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23766 29242 626765 328000) :init (23766 29242 626756 564000) :config (23766 29242 626625 205000) :config-secs (0 0 14730 852000) :init-secs (0 0 14997 576000) :use-package-secs (0 0 15055 623000)))
 
 The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
 
