@@ -1184,11 +1184,12 @@ I want to see properties by default but this is of no help. I'm using =s-h= for 
 From Sacha's dotfiles: I wanted a quick way to visually distinguish DONE tasks from tasks I still need to do. This handy snippet from the Emacs Org-mode mailing list does the trick by striking through the headlines for DONE tasks. 
 
 DGM: lo he probado pero no me convence.
+Alternative for =org-done=: "PaleGreen"
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (setq org-fontify-done-headline t)
 (custom-set-faces
- '(org-done ((t (:foreground "PaleGreen"
+ '(org-done ((t (:foreground "#66aa9baa32aa"
                  :weight normal
                  :strike-through t))))
  '(org-headline-done

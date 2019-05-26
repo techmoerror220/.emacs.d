@@ -4243,12 +4243,14 @@ easier to discover commands.
 
 * Skeleton
 
-- Recall to =eval-and-replace= =(org-skeleton)= with =C-c e=. 
+** Latex
+
+- Recall to =eval-and-replace= =(latex-skeleton)= with =C-c e=. 
 - Nota que por alguna razon hace falta las dos declaraciones de Spanish.
 - Nota que ="#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"= is gone because now I compile =vc= in the makefile.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(define-skeleton org-skeleton
+(define-skeleton latex-skeleton
   "Inserts a Latex letter skeleton into current buffer.
 This only makes sense for empty buffers."
   "# -*- coding: utf-8 -*-\n"
@@ -4260,7 +4262,7 @@ This only makes sense for empty buffers."
   "#+OPTIONS: toc:4\n" 
   "#+OPTIONS: H:2 num:nil toc:nil \\n:nil @:t ::t |:t ^:{} _:{} *:t TeX:t LaTeX:t\n"
   "#+PROPERTY: header-args :tangle yes\n"
-  "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
+  "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-pdflatex}\n"
   "#+LATEX_HEADER: \\usepackage{graphicx}\n"
   "#+LATEX_HEADER: \\usepackage{longtable}\n"
   "#+LATEX_HEADER: \\usepackage{float}\n"
@@ -4280,7 +4282,11 @@ This only makes sense for empty buffers."
 #+END_SRC
 
 #+RESULTS:
-: org-skeleton
+: latex-skeleton
+
+** Beamer
+
+
 
 * Pragmatic Emacs
 ** dired-narrow

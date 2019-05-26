@@ -46,7 +46,7 @@ The default set here does not matter much as I'm asked what command to run every
 #+RESULTS: latemkdefault
 | (lambda nil (setq TeX-command-default latexmk)) | pandoc-mode |
 
-* The /XeLaTeX/ route 
+* COMMENT The /XeLaTeX/ route 
 ** Set default engine <<engine>>
 
 Custom variables kludge. Why can't I get these to work via =setq=?
@@ -160,6 +160,9 @@ Now I define the style of memoir-class articles and others. Note the insertion o
 Default packages included in the tex file. As before, =org-preamble-xelatex= is part of =latex-custom-kjh=. There's =org-preamble-pdflatex= as well, if you wish to use that instead.
 DGM note: This code calls on the stuff in the =~/texmf= directory that allows using fonts a la MinionPro etc. Specifically, it uses the =org-preamble-xelatex= style file. 
 DGM note on 13 may: I'ved tangled to no as this conflicted with my export to beamer. Now I have included these lines in the =org-skeleton= code.
+Things I've learnt today that are key: =org export=  inputs a whole bunch of packages that maybe it's not what you wanted and some of them may conflict with packages you do want to have. To get rid of them you need =(setq org-latex-default-packages-alist nil)=
+
+Then, if I uncomment the rest I'll have the call to =org-preamble-xelatex= in every latex file but it happens that this call is great for articles but not for beamer presentations. So I have disabled it here and I have added to the skeleton template. By the way, I also need a beamer skeleton!
 
 #+BEGIN_SRC emacs-lisp :tangle yes
  (setq org-latex-default-packages-alist nil)     
@@ -210,7 +213,7 @@ Of course we need to load  =beamer= for it to show up in the menu after =C-c C-e
 : ox-beamer
 
 
-* COMMENT The /LaTeX/ route 
+* The /LaTeX/ route 
 ** Set default engine 
 
 Custom variables kludge. Why can't I get these to work via =setq=?
@@ -260,7 +263,7 @@ Originally the package =minted= was not working with /LaTeX/ even though it work
 (setq org-latex-listings 'minted
       org-latex-default-packages-alist nil)     
 (setq org-latex-packages-alist
-        '(("minted" "org-preamble-pdflatex" t)
+        '(("minted"p "org-preamble-pdflatex" t)
           ;;("" "graphicx" t)
           ;;("" "longtable" nil)
           ;;("" "float" )
@@ -347,6 +350,27 @@ or look for =change foreground in "org-format-latex-options"= in google.
 
 Pending: how to change font locking for formulas with this preview. 
 
+* Setting =hyperref= in org-mode
+
+From https://emacs.stackexchange.com/questions/12878/how-to-change-style-of-hyperlinks-within-pdf-published-from-org-mode-document
+
+By default, Org mode adds a rather unhelpful hypersetup section. You can prevent this addition by adding the following line to your .emacs file:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(customize-set-value 'org-latex-with-hyperref nil)
+#+END_SRC
+
+#+RESULTS:
+
+In addition, if you want to pass any options to hyperref or url (which is loaded
+automically by hyperref), then you can use a command of the form (notice the escaped
+backslash):
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list 'org-latex-default-packages-alist "\\PassOptionsToPackage{hyphens}{url}")
+#+END_SRC
+
+
 * Provide
 
 #+BEGIN_SRC emacs-lisp  :tangle yes
@@ -362,5 +386,3 @@ Pending: how to change font locking for formulas with this preview.
 
 #+RESULTS: message-line
 : Starter Kit LaTeX-Org loaded.
-
-
