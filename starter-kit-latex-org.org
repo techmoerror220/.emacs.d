@@ -106,6 +106,8 @@ Also, if I change to latex instead of xelatex, then change tangle option to no o
 
 *** XeLaTeX options (Comment out if default latex is used instead)  <<options>>
 
+**** Listings and Minted
+
 Choose either listings or minted for exporting source code blocks. Using minted (as here) requires pygments be installed. 
 I don't tangle it now because I set the default to =minted= in =/home/dgm/texmf/tex/generic/latex-custom-kjh/needs-org-mode/org-preamble-xelatex.sty=
 
@@ -125,6 +127,30 @@ Default settings for minted code blocks. =bg= will need to be defined in the pre
 ;;        ))
 #+END_SRC
 
+My new option comes from here: https://emacs.stackexchange.com/questions/33010/how-to-word-wrap-within-code-blocks
+
+A commonly used environment for source code is lstlisting, provided by the LaTeX package listings. To get Org-mode to use it, add it to org-latex-packages-alist and set the variable org-latex-listings to t:
+
+And to then get listings to wrap, the breaklines=true option needs to be supplied to listings. Org-mode can do this:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list 'org-latex-packages-alist '("" "listings" nil))
+(setq org-latex-listings t)
+(setq org-latex-listings-options '(("breaklines" "true")))
+#+END_SRC
+
+#+RESULTS:
+| breaklines | true |
+
+The equivalente in =minted= would be: 
+
+#+BEGIN_EXAMPLE
+(setq org-latex-minted-options '(("breaklines" "true")
+                                 ("breakanywhere" "true")))
+#+END_EXAMPLE
+
+
+**** TOC 
 Turn off the default toc behavior; deal with it properly in headers to files.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -178,40 +204,6 @@ Then, if I uncomment the rest I'll have the call to =org-preamble-xelatex= in ev
    #+RESULTS: orgmode-latex-export
    : ox-latex
 
-* Beamer
-
-Taken from Sacha Chua's config files. 
-Reading https://orgmode.org/worg/exporters/beamer/ox-beamer.html I think as of Orgmode 8.0.3 this setup is not necessary anymore.
-
-Deleted:               "\\documentclass\[presentation\]\{beamer\}"
-#+BEGIN_SRC emacs-lisp :tangle no
-(with-eval-after-load 'org
-  (require 'ox-latex)
-  (add-to-list 'org-latex-classes
-             '("beamer
-               "\\documentclass\[xcolor=x11names,compress\]\{beamer\}"
-               "\\mode<presentation> \{"
-               "    \\usetheme\{Hannover\}"
-               "    \\usecolortheme\{beaver\}" 
-               "\}"
-               ("\\section\{%s\}" . "\\section*\{%s\}")
-               ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
-               ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}"))))
-#+END_SRC
-
-#+RESULTS:
-| beamer  | \documentclass[xcolor=x11names,compress]{beamer}\n | \mode<presentation> {\n | \usetheme{Hannover}\n | \usecolortheme{beaver}\n | }\n | (\section{%s} . \section*{%s}) | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |
-| beamer  | \documentclass[xcolor=x11names,compress]{beamer}   | \mode<presentation> {   | \usetheme{Hannover}   | \usecolortheme{beaver}   | }   | (\section{%s} . \section*{%s}) | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |
-| membook | \documentclass[11pt,oneside]{memoir}               |                         |                       |                          |     |                                |                                      |                                            |
-
-Of course we need to load  =beamer= for it to show up in the menu after =C-c C-e=.
-#+BEGIN_SRC emacs-lisp :tangle yes
-(require 'ox-beamer)
-#+END_SRC
-
-#+RESULTS:
-: ox-beamer
-
 
 * The /LaTeX/ route 
 ** Set default engine 
@@ -257,21 +249,79 @@ Turn off the default toc behavior; deal with it properly in headers to files.
 #+RESULTS:
 : org-latex-no-toc
 
-Originally the package =minted= was not working with /LaTeX/ even though it worked with /XeLaTeX/. I found the solution reading this https://emacs.stackexchange.com/questions/27982/export-code-blocks-in-org-mode-with-minted-environment
+*** Disable default list of packages
+
+The reason is that my style files have a list of their own. If not, in  Beamer, for example, I got this list of packages automatically included:
+
+#+BEGIN_EXAMPLE2
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{listings}
+#+END_EXAMPLE
+
+which  then my style file duplicated.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-latex-default-packages-alist nil)     
+;; (setq org-latex-packages-alist
+;;        '(("minted" "org-preamble-xelatex" t)
+;;          ("" "graphicx" t)
+;;          ("" "longtable" nil)
+;;          ("" "float" ))) 
+   #+END_SRC
+
+   #+RESULTS:
+
+
+*** Listings vs Minted for Code Higlighting
+Originally the package =minted= was not working with /LaTeX/ even though it worked with /XeLaTeX/. I found the solution reading this https://emacs.stackexchange.com/questions/27982/export-code-blocks-in-org-mode-with-minted-environment
+
+Now I've tangled it to "no" because I have created the =sanchez-dgm.sty= where I want to use =listings= and I think this code may interfere with it.
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq org-latex-listings 'minted
       org-latex-default-packages-alist nil)     
 (setq org-latex-packages-alist
-        '(("minted"p "org-preamble-pdflatex" t)
+        '(("minted" "org-preamble-pdflatex" t)
           ;;("" "graphicx" t)
           ;;("" "longtable" nil)
           ;;("" "float" )
           ))
    #+END_SRC
 
-   #+RESULTS:
-   | minted | org-preamble-pdflatex | t |
+My new option comes from here: https://emacs.stackexchange.com/questions/33010/how-to-word-wrap-within-code-blocks
+
+A commonly used environment for source code is lstlisting, provided by the LaTeX package listings. To get Org-mode to use it, add it to org-latex-packages-alist and set the variable org-latex-listings to t:
+
+And to then get listings to wrap, the breaklines=true option needs to be supplied to listings. Org-mode can do this:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list 'org-latex-packages-alist '("" "listings" nil))
+(setq org-latex-listings t)
+(setq org-latex-listings-options '(("breaklines" "true")))
+#+END_SRC
+
+#+RESULTS:
+| breaklines | true |
+
+The equivalente in =minted= would be: 
+
+#+BEGIN_EXAMPLE
+(setq org-latex-minted-options '(("breaklines" "true")
+                                 ("breakanywhere" "true")))
+#+END_EXAMPLE
+
 
 ** =pdfLaTeX= Org Export Settings 
 
@@ -302,6 +352,41 @@ Also, if I change to latex instead of xelatex, then change tangle option to no o
 
 #+RESULTS:
 | latexmk -synctex=1 -shell-escape -bibtex -f -pdf %f |
+
+
+* Beamer
+
+Taken from Sacha Chua's config files. 
+Reading https://orgmode.org/worg/exporters/beamer/ox-beamer.html I think as of Orgmode 8.0.3 this setup is not necessary anymore.
+
+Deleted:               "\\documentclass\[presentation\]\{beamer\}"
+#+BEGIN_SRC emacs-lisp :tangle no
+(with-eval-after-load 'org
+  (require 'ox-latex)
+  (add-to-list 'org-latex-classes
+             '("beamer
+               "\\documentclass\[xcolor=x11names,compress\]\{beamer\}"
+               "\\mode<presentation> \{"
+               "    \\usetheme\{Hannover\}"
+               "    \\usecolortheme\{beaver\}" 
+               "\}"
+               ("\\section\{%s\}" . "\\section*\{%s\}")
+               ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+               ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}"))))
+#+END_SRC
+
+#+RESULTS:
+| beamer  | \documentclass[xcolor=x11names,compress]{beamer}\n | \mode<presentation> {\n | \usetheme{Hannover}\n | \usecolortheme{beaver}\n | }\n | (\section{%s} . \section*{%s}) | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |
+| beamer  | \documentclass[xcolor=x11names,compress]{beamer}   | \mode<presentation> {   | \usetheme{Hannover}   | \usecolortheme{beaver}   | }   | (\section{%s} . \section*{%s}) | (\subsection{%s} . \subsection*{%s}) | (\subsubsection{%s} . \subsubsection*{%s}) |
+| membook | \documentclass[11pt,oneside]{memoir}               |                         |                       |                          |     |                                |                                      |                                            |
+
+Of course we need to load  =beamer= for it to show up in the menu after =C-c C-e=.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'ox-beamer)
+#+END_SRC
+
+#+RESULTS:
+: ox-beamer
 
 
 * org-export

@@ -4250,9 +4250,10 @@ easier to discover commands.
 - Nota que ="#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"= is gone because now I compile =vc= in the makefile.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(define-skeleton latex-skeleton
-  "Inserts a Latex letter skeleton into current buffer.
+(define-skeleton article-skeleton
+  "Inserts a Latex article skeleton into current buffer.
 This only makes sense for empty buffers."
+  "\n"
   "# -*- coding: utf-8 -*-\n"
   "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
   "#+TITLE:\n"
@@ -4262,7 +4263,7 @@ This only makes sense for empty buffers."
   "#+OPTIONS: toc:4\n" 
   "#+OPTIONS: H:2 num:nil toc:nil \\n:nil @:t ::t |:t ^:{} _:{} *:t TeX:t LaTeX:t\n"
   "#+PROPERTY: header-args :tangle yes\n"
-  "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-pdflatex}\n"
+  "#+LATEX_HEADER: \\usepackage{org-preamble-pdflatex}\n"
   "#+LATEX_HEADER: \\usepackage{graphicx}\n"
   "#+LATEX_HEADER: \\usepackage{longtable}\n"
   "#+LATEX_HEADER: \\usepackage{float}\n"
@@ -4286,6 +4287,30 @@ This only makes sense for empty buffers."
 
 ** Beamer
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(define-skeleton beamer-skeleton
+  "Inserts a Latex beamer skeleton into current buffer.
+This only makes sense for empty buffers."
+  "\n"
+  "# -*- coding: utf-8 -*-\n"
+  "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
+  "#+TITLE:Fake title\n"
+  "#+BEAMER_HEADER: \\title[Short Title]{Long Title}\n"
+  "#+BEAMER_HEADER: \\author[\\textcolor{lightgray}{DGM \\& Mora}]{Daniel Guinea-Martin\\inst{1} and Ricardo Mora\\inst{2}\n"
+  "#+BEAMER_HEADER: \\institute[]{\\inst{1} Dept.Sociology I, UNED  \\and \\inst{2} Dept. Economics, UC3M}\n"
+  "#+DATE:\n"
+  "#+LaTeX_CLASS: beamer\n"
+  "#+LaTeX_CLASS_OPTIONS: [xcolor={svgnames,x11names},compress]\n"
+  "#+LATEX_HEADER: \\usepackage{sanchez-dgm}\n"
+  "#+BEAMER_THEME:\n"
+  "#+BEAMER_FONT_THEME: professionalfonts\n"
+  "#+OPTIONS: H:2 num:t\n"
+  "\n\n"
+  "" _ "")
+#+END_SRC
+
+#+RESULTS:
+: beamer-skeleton
 
 
 * Pragmatic Emacs
