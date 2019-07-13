@@ -23,7 +23,6 @@ Also see https://emacs.stackexchange.com/questions/41332/how-to-automatically-in
 
 #+RESULTS:
 
-
 ** Set a Path to Executables (optional)
 The location of the LaTeX excecutables is system dependent. AUCTeX calls everything through a shell, so you may or may not need this.  This source-code block is turned off by default as it should be added to the user's personal configuration as needed.
 
@@ -131,7 +130,6 @@ Trying the next bit from https://yoo2080.wordpress.com/2016/11/15/how-to-make-pr
 
 #+end_src
 
-
 *** Load RefTeX
 #+srcname: reftex-support
 #+begin_src emacs-lisp :tangle yes
@@ -195,7 +193,6 @@ Trying the next bit from https://yoo2080.wordpress.com/2016/11/15/how-to-make-pr
 
 #+RESULTS: reftex-support
 : t
-
 
 *** Load ebib
     =ebib= is a bibtex database manager that works inside emacs. It can

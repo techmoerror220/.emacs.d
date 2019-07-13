@@ -18,7 +18,6 @@ loading the =zenburn= and =anti-zenburn= themes.
 
 #+source: colors
 #+begin_src emacs-lisp
-
 ;; dgm added customizations intended for modeline, following https://github.com/bbatsov/solarized-emacs
 
 ;; make the modeline high contrast
@@ -72,7 +71,8 @@ loading the =zenburn= and =anti-zenburn= themes.
      ((member 'solarized-light custom-enabled-themes)
       (disable-theme 'solarized-light)
       (load-theme 'solarized-dark t))))
-  (load-theme 'solarized-dark t))
+  (load-theme 'solarized-light t))
+;;  (load-theme 'solarized-dark t))
 
 ;;  (load-theme 'zenburn t)
 ;;  (load-theme 'solarized-dark t)

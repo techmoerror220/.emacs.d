@@ -149,7 +149,6 @@ The equivalente in =minted= would be:
                                  ("breakanywhere" "true")))
 #+END_EXAMPLE
 
-
 **** TOC 
 Turn off the default toc behavior; deal with it properly in headers to files.
 
@@ -160,6 +159,9 @@ Turn off the default toc behavior; deal with it properly in headers to files.
               depth)))
 (setq org-latex-format-toc-function 'org-latex-no-toc)
 #+END_SRC
+
+#+RESULTS:
+: org-latex-no-toc
 
 Now I define the style of memoir-class articles and others. Note the insertion of the =\input= statement for the vc information 
 
@@ -181,6 +183,9 @@ Now I define the style of memoir-class articles and others. Note the insertion o
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
  #+END_SRC
+
+ #+RESULTS:
+ | membook | \documentclass[11pt,oneside]{memoir} |
 
 
 Default packages included in the tex file. As before, =org-preamble-xelatex= is part of =latex-custom-kjh=. There's =org-preamble-pdflatex= as well, if you wish to use that instead.
@@ -283,7 +288,6 @@ which  then my style file duplicated.
 
    #+RESULTS:
 
-
 *** Listings vs Minted for Code Higlighting
 Originally the package =minted= was not working with /LaTeX/ even though it worked with /XeLaTeX/. I found the solution reading this https://emacs.stackexchange.com/questions/27982/export-code-blocks-in-org-mode-with-minted-environment
 
@@ -299,6 +303,9 @@ Now I've tangled it to "no" because I have created the =sanchez-dgm.sty= where I
           ;;("" "float" )
           ))
    #+END_SRC
+
+   #+RESULTS:
+   | minted | org-preamble-pdflatex | t |
 
 My new option comes from here: https://emacs.stackexchange.com/questions/33010/how-to-word-wrap-within-code-blocks
 
@@ -482,3 +489,4 @@ backslash):
 
 #+RESULTS: message-line
 : Starter Kit LaTeX-Org loaded.
+
