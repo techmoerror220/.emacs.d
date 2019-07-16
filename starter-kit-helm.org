@@ -494,7 +494,6 @@ Note: =wgrep-helm= allows you to edit a helm-grep-mode buffer and apply those ch
 
 #+RESULTS:
 
-
 ** Generic configuration
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -551,13 +550,16 @@ Note: =wgrep-helm= allows you to edit a helm-grep-mode buffer and apply those ch
 #+RESULTS:
 : ambrevar/helm-def-source--emacs-commands
 
-** The =M-s= prefix
+** COMMENT The =M-s= prefix
 
 Use the =M-s= prefix just like `occur'. 
 Note that the =s= in the prefix is the letter =s= and not the =super= key.
 Note that I think =M-i= does the same.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+DGM, 16 july: I disable this as the prefix =M-s= is not working. Don't know why. 
+
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (define-key prog-mode-map (kbd "M-s f") 'helm-semantic-or-imenu)
 ;;; The text-mode-map binding targets structured text modes like Markdown.
 (define-key text-mode-map (kbd "M-s f") 'helm-semantic-or-imenu)

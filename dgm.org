@@ -245,10 +245,14 @@ Use different background colors for even and odd lines. With =(add-hook 'dired-m
 
 #+name: stripe-dired
 #+begin_src emacs-lisp :tangle yes
-(use-package stripe-buffer)
+(use-package stripe-buffer
+  :config (progn
+            (add-hook 'dired-mode-hook #'turn-on-stripe-buffer-mode)))
+
 (add-hook 'org-mode-hook 'org-table-stripes-enable)
 ;; (add-hook 'dired-mode-hook 'stripe-listify-buffer)  
 #+END_SRC
+
 
 *** diff-hl 
 Emacs package for highlighting uncommitted changes. See https://github.com/dgutov/diff-hl
@@ -3519,7 +3523,7 @@ If I place this in the =starter-kit-helm.org= file, for some reason, probably be
 
 * Smartparens Mode
 
-   Smart autopairing of quotes and parentheses. The original config was this, but it was too intrusive with org-mode.
+Smart autopairing of quotes and parentheses. The original config was this, but it was too intrusive with org-mode.
 
 #+begin_src emacs-lisp :tangle no
 (use-package smartparens
@@ -3681,6 +3685,41 @@ https://www.reddit.com/r/emacs/comments/3dn226/help_with_smartparens_and_overrid
 #+END_SRC
 
 Note of Dic 30, 2018: This worked but the new solution in the prior chunk works too and seems more parsimonious.
+
+
+** Add / remove parenthesis / bracket / single or double quotation marks around a marked region
+
+From:  https://stackoverflow.com/questions/25097278/how-to-add-remove-parenthesis-around-a-marked-region-in-emacs
+Read also:  https://www.emacswiki.org/emacs/InsertPair
+
+Notice that now that I use =smartparens=,  for enclosing marked region in =()=, I do =M-(= (for =sp-wrap-round=) and =M-x unwrap-sexp= to unwrap (marked region not including the parenthesis).
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun insert-quotations (&optional arg)
+  "Enclose following ARG sexps in quotation marks.
+Leave point after open-paren."
+  (interactive "*P")
+  (insert-pair arg ?\' ?\'))
+
+(defun insert-quotes (&optional arg)
+  "Enclose following ARG sexps in quotes.
+Leave point after open-quote."
+  (interactive "*P")
+  (insert-pair arg ?\" ?\"))
+
+(defun insert-backquote (&optional arg)
+  "Enclose following ARG sexps in quotations with backquote.
+Leave point after open-quotation."
+  (interactive "*P")
+  (insert-pair arg ?\` ?\'))
+
+(global-set-key "\M-'" 'insert-quotations)
+(global-set-key "\M-\"" 'insert-quotes)
+(global-set-key (kbd "C-'") 'insert-backquote)
+#+END_SRC
+
+#+RESULTS:
+: insert-backquote
 
 * Bookmark Plus
 
@@ -4312,7 +4351,6 @@ This only makes sense for empty buffers."
 #+RESULTS:
 : beamer-skeleton
 
-
 * Pragmatic Emacs
 ** dired-narrow
 
@@ -4420,7 +4458,6 @@ But now that I've changed some lines in the bit on input method in =dgm.org= thi
 
 #+RESULTS:
 
-
 * undo-propose
 
 To use undo-propose, call "M-x undo-propose" in the buffer you are editing.
@@ -4440,8 +4477,6 @@ Read:
 (use-package undo-propose)
 #+END_SRC
 
-
-
 * Reverse paragraphs
 
 Very useful for, for example, changing the order of the Makefile from bottom up to up-bottom.
@@ -4451,20 +4486,20 @@ See https://www.emacswiki.org/emacs/ReverseParagraphs
 Got: 
 
 #+BEGIN_EXAMPLE
-* foo is bar
+- foo is bar
   and bar is expensive.
 
-* foo is quux
+- foo is quux
   and quux is useful.
 #+END_EXAMPLE
 
 Result:
 
 #+BEGIN_EXAMPLE
-* foo is quux
+- foo is quux
   and quux is useful.
 
-* foo is bar
+- foo is bar
   and bar is expensive.
 #+END_EXAMPLE
 
@@ -4512,7 +4547,6 @@ From a program takes two point or marker arguments, BEG and END."
 #+RESULTS:
 : reverse-paragraphs
 
-
 * Autoloads: Dropbox
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -4524,7 +4558,6 @@ From a program takes two point or marker arguments, BEG and END."
 
 ;; This buffer is for text that is not saved, and for Lisp evaluation.
 ;; To create a file, visit it with <open> and enter text in its buffer.
-
 
 * Reverse paragraphs
 
@@ -4622,7 +4655,6 @@ searches all buffers."
 #+RESULTS:
 : search-all-buffers
  
-
 * Copy name of current file to kill ring
 
 From: https://emacsredux.com/blog/2013/03/27/copy-filename-to-the-clipboard/
@@ -4656,6 +4688,65 @@ From: https://zzamboni.org/post/my-emacs-configuration-with-commentary/
 #+RESULTS:
 : zz/sp-enclose-next-sexp
 
+* Create column of alphabet's digits
+
+- From http://ergoemacs.org/emacs/emacs_insert-alphabets.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun xah-insert-column-az ()
+  "Insert letters A to Z vertically, similar to `rectangle-number-lines'.
+The commpand will prompt for a start char, and number of chars to insert.
+The start char can be any char in Unicode.
+URL `http://ergoemacs.org/emacs/emacs_insert-alphabets.html'
+Version 2019-03-07"
+  (interactive)
+  (let (
+        ($startChar (string-to-char (read-string "Start char: " "a")))
+        ($howmany (string-to-number (read-string "How many: " "26")))
+        ($colpos (- (point) (line-beginning-position))))
+    (dotimes ($i $howmany )
+      (progn
+        (insert-char (+ $i $startChar))
+        (forward-line)
+        (beginning-of-line)
+        (forward-char $colpos)))))
+#+END_SRC
+
+#+RESULTS:
+: xah-insert-column-az
+
+Usage: 
+- Select column where you want to place the letters. 
+- Do =C-u= (the universal argument) 
+- and then =C-x r N= (for inserting list of numbers). 
+- Type =65= (unicode codepoint of letter =A=. =a= is =97=). 
+- Remove the default =%2d=, type =%c=.  (the =%c= is for character format).
+
+* Better line numbers
+Joe di Castro says: Display a more appealing line numbers. I don't use them too much because is a very slow feature, but sometimes it comes
+handy.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+; 2014-04-04: Holy moly its effort to get line numbers like vim!
+; http://www.emacswiki.org/emacs/LineNumbers#toc6
+(unless window-system
+  (add-hook 'linum-before-numbering-hook
+            (lambda ()
+              (setq-local linum-format-fmt
+                          (let ((w (length (number-to-string
+                                            (count-lines (point-min) (point-max))))))
+                            (concat "%" (number-to-string w) "d"))))))
+
+(defun joe-linum-format-func (line)
+   (concat
+    (propertize (format linum-format-fmt line) 'face 'linum)
+    (propertize " " 'face 'linum)))
+
+(unless window-system
+  (setq linum-format 'joe-linum-format-func))
+#+END_SRC
+
+#+RESULTS:
 
 * Provide
 
@@ -4676,3 +4767,4 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+

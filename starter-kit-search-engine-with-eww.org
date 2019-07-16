@@ -5,7 +5,65 @@
 #+OPTIONS: toc:nil num:nil ^:nil
 #+PROPERTY: header-args :tangle yes
 
-* Introduction
+
+* Set browser
+Set this to whatever browser you use e.g...
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (setq browse-url-browser-function 'browse-url-firefox)
+;; (setq browse-url-browser-function 'browse-default-macosx-browser)
+;; (setq browse-url-browser-function 'browse-default-windows-browser)
+;; (setq browse-url-browser-function 'browse-default-kde)
+;; (setq browse-url-browser-function 'browse-default-epiphany)
+;; (setq browse-url-browser-function 'browse-default-w3m)
+;; (setq browse-url-browser-function 'browse-url-generic
+;;       browse-url-generic-program "~/src/conkeror/conkeror")
+
+;;(setq browse-url-browser-function 'browse-url-generic
+;;      browse-url-generic-program "chromium")
+
+;;;; (setq browse-url-browser-function 'browse-url-generic
+;;;;      browse-url-generic-program "eww")
+
+;;;;;;;;;;;;;;;;;  has the code that worked prior to modification based on sacha chua's format
+;;;;;;;;;;;;;;;;;  (setq browse-url-browser-function 'eww-browse-url)  ;; to make eww the default browser (see https://emacs.stackexchange.com/posts/7332/revisions)
+;;(setq shr-external-browser 'chromium-browser)               ;; to make chromium default when I do =&= from within eww to open external browser
+;;(setq eww-browse-with-external-browser 'shr-external-browser)
+;;;;;;;;;;;;;;;;;  (setq browse-url-generic-program "chromium")
+
+(setq browse-url-browser-function 'eww-browse-url)
+#+END_SRC
+
+#+RESULTS:
+: eww-browse-url
+
+
+** EWWW browser customization
+
+- Don't know where I found this. Might try it later. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (setq browse-url-browser-function #'eww-browse-url)
+
+(defun my-eww-scale-adjust ()
+  "Slightly bigger font but text shorter than text."
+  (interactive)
+  (text-scale-adjust 0)
+  (text-scale-adjust 1)
+  (eww-toggle-fonts)
+  (split-window-right)
+  (eww-toggle-fonts)
+  (other-window 1)
+  (sleep-for 1)
+  (delete-window))
+#+END_SRC
+
+#+RESULTS:
+: my-eww-scale-adjust
+
+
+
+* Introduction to search engine
 
 File originally in: https://gist.github.com/brenns10/69d39f6c46170093f73d
 Forked in: https://gist.githubusercontent.com/tashrifsanil/0207579d7f8c00235ab32a66c2c256a9/raw/02c7701ef12452766752a5e7c4f2d87067b87be4/search.org    
@@ -16,7 +74,7 @@ Forked in: https://gist.githubusercontent.com/tashrifsanil/0207579d7f8c00235ab32
   Emacs.  Sure, I could switch over to a different workspace and open a browser,
   but I'd much rather do it in Emacs if possible.  =eww= will let you search
   instead of enter a URL, but you only get one search engine (which is, by
-  default, Duck Duck Go).  I'm used to the wonderful interface of Chrome, which
+  default, =Duck Duck Go=).  I'm used to the wonderful interface of Chrome, which
   allows you to use a keyword to specify your search engine, right within the
   "Omnibox".  Anything else feels crude.  So, I decided I would implement my own
   search solution!
@@ -33,7 +91,7 @@ Forked in: https://gist.githubusercontent.com/tashrifsanil/0207579d7f8c00235ab32
     =search-web=, but maybe you'd prefer to be prompted!  Who am I to judge?
 
   Both functions will give you an error message if you provide a bad search
-  engine.q
+  engine.
 
 * Installation
 
@@ -41,7 +99,8 @@ Forked in: https://gist.githubusercontent.com/tashrifsanil/0207579d7f8c00235ab32
   to your =.emacs=.  Or, if you happen to use an Org-Babel init system [[https://github.com/brenns10/emacs][like I
   do]], you can just drop this file in there and add it to your list of modules.
 
-* Implementation
+
+* COMMENT Implementation
 
   So, first we need a list of search engines.  I define search engines to be a
   list containing the following items:
@@ -56,7 +115,7 @@ Forked in: https://gist.githubusercontent.com/tashrifsanil/0207579d7f8c00235ab32
 DGM: I added Google Scholar by copying and adapting from https://github.com/tomoya/search-web.el/blob/master/search-web.el
 Demo here: https://github.com/tomoya/search-web.el/blob/master/README.md
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (setq search-engines
         '(
           (("google" "g") "https://google.com/search?q=%s")
@@ -89,7 +148,7 @@ Demo here: https://github.com/tomoya/search-web.el/blob/master/README.md
   for an engine, followed by a search term.  If the search term is unknown,
   we'll print an error message in the minibuffer, and fail.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (defun search-engine (engine-name term)
     "Search for a term using an engine."
     (interactive "MEngine: \nMTerm: ")
@@ -106,7 +165,7 @@ Demo here: https://github.com/tomoya/search-web.el/blob/master/README.md
   have to explicitly specify your search engine (even if you'd like to use the
   default).
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (defun search-web (term)
     "Search the web using google or a specified engine."
     (interactive "MQuery: ")
@@ -120,12 +179,139 @@ Demo here: https://github.com/tomoya/search-web.el/blob/master/README.md
   To use this, you can always use =M-x search-web=.  However, you may want to do
   it quicker.  In that case, I think =C-c w= is a good choice for a shortcut:
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 (global-set-key (kbd "s-b") 'search-web)
 #+end_src
 
 #+RESULTS:
 : search-web
+
+
+* Alternative with the MELPA package =engine-mode=
+
+Text from MELPA:
+
+=engine-mode= is a global minor mode for Emacs. It enables you to
+easily define search engines, bind them to keybindings, and query
+them from the comfort of your editor.
+
+For example, suppose we want to be able to easily search GitHub:
+
+#+BEGIN_EXAMPLE
+(defengine github
+  "https://github.com/search?ref=simplesearch&q=%s")
+#+END_EXAMPLE
+
+This defines an interactive function =engine/search-github=. When
+executed it will take the selected region (or prompt for input, if
+no region is selected) and search GitHub for it, displaying the
+results in your default browser.
+
+The =defengine= macro can also take an optional key combination,
+prefixed with =C-x /=:
+
+#+BEGIN_EXAMPLE
+(defengine duckduckgo
+  "https://duckduckgo.com/?q=%s"
+  :keybinding "d")
+#+END_EXAMPLE
+
+=C-x / d= is now bound to the new function =engine/search-duckduckgo=! Nifty.
+
+- More information in: https://github.com/hrs/engine-mode
+
+- Alternatives:
+
+#+BEGIN_EXAMPLE
+(use-package engine-mode
+  :ensure t
+  :commands (engine/search-github engine/search-google)
+  :config
+  (engine-mode t)
+  (defengine github
+    "https://github.com/search?ref=simplesearch&q=%s")
+  (defengine google
+    "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+    :keybinding "g"))
+#+END_EXAMPLE
+
+
+#+BEGIN_EXAMPLE
+(use-package engine-mode
+  :config
+  (engine-mode t)
+  (defengine duckduckgo
+    "https://duckduckgo.com/?q=%s"
+    :keybinding "d")
+  (defengine google
+    "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+    :keybinding "g"))
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+(use-package engine-mode
+  :config
+  (progn
+    (defengine my-blog "https://www.google.ca/search?q=site:sachachua.com+%s" :keybinding "b")
+    (defengine mail "https://mail.google.com/mail/u/0/#search/%s" :keybinding "m")
+    (defengine google "http://google.com/search?q=%s" :keybinding "g")
+    (defengine emacswiki "http://google.com/search?q=site:emacswiki.org+%s" :keybinding "e")
+    (bind-key* "C-c s" 'my/engine-mode-hydra/body)
+    (engine-mode)))
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package engine-mode
+  :config (engine-mode t))
+
+; The default keymap prefix for engine-mode is C-x /. If you'd like to bind the keymap to an additional prefix (say, C-c s), you totally can:
+
+(engine/set-keymap-prefix (kbd "s-b"))
+
+(defengine amazon
+  "http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=%s"
+  :keybinding "a"
+  :browser 'browse-url-chromium)
+
+(defengine duckduckgo
+  "https://duckduckgo.com/?q=%s"
+  :keybinding "d")
+
+(defengine google
+  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+  :keybinding "g")
+
+(defengine google-maps
+  "http://maps.google.com/maps?q=%s"
+  :keybinding "m"
+  :browser 'browse-url-chromium
+  :docstring "Mappin' it up.")
+
+(defengine stack-overflow
+  "https://stackoverflow.com/search?q=%s"
+  :keybinding "s")
+
+(defengine wikipedia
+  "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
+  :keybinding "w"
+  :docstring "Searchin' the wikis.")
+
+(defengine wiktionary
+  "https://www.wikipedia.org/search-redirect.php?family=wiktionary&language=en&go=Go&search=%s")
+
+(defengine wolfram-alpha
+  "http://www.wolframalpha.com/input/?i=%s"
+  :browser 'browse-url-chromium)
+
+(defengine youtube
+  "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
+  :keybinding "y"
+  :browser 'browse-url-chromium)
+#+END_SRC
+
+#+RESULTS:
+: engine/search-youtube
+
 
 * Provide
 

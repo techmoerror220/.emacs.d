@@ -61,3 +61,8 @@ undo_hist
 no.
 org-clock-save.el
 .#recentf
+.statahistory
+_minted-starter-kit-completion/
+_minted-starter-kit-python/
+elpa/smartparens-*
+

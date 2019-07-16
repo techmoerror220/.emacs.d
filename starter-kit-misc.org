@@ -72,6 +72,9 @@ loading the =zenburn= and =anti-zenburn= themes.
       (disable-theme 'solarized-light)
       (load-theme 'solarized-dark t))))
   (load-theme 'solarized-light t))
+
+(bind-key "s-SPC" 'toggle-theme)
+
 ;;  (load-theme 'solarized-dark t))
 
 ;;  (load-theme 'zenburn t)
@@ -112,11 +115,27 @@ loading the =zenburn= and =anti-zenburn= themes.
 #+end_src
 
 #+RESULTS: colors
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23561 2554 592840 345000) :init (23561 2554 592831 261000) :config (23561 2554 592719 973000) :config-secs (0 0 92350 397000) :init-secs (0 0 127886 765000) :use-package-secs (0 1 207933 536000)))
+: toggle-theme
 
 #+RESULTS:
 : t
+*** Joe Di Castro bit
 
+- Objective: to make toggling themes smoother.
+- Joe says: This another code is to provide a hook to do some things after loading a theme, like overwriting a face in a particular theme or
+always reload the smart-mode-line theme.
+
+#+BEGIN_SRC emacs-lisp
+(defvar after-load-theme-hook nil
+   "Hook run after a color theme is loaded using `load-theme'.")
+
+(defadvice load-theme (after run-after-load-theme-hook activate)
+   "Run `after-load-theme-hook'."
+   (run-hooks 'after-load-theme-hook))
+#+END_SRC
+
+#+RESULTS:
+: load-theme
 
 *** Sacha Chua's tweaks 
 
@@ -137,7 +156,7 @@ Some more tweaks to solarized:
 
 #+RESULTS:
 
-*** Theme function for changing theme and disabling temes
+*** Theme function for changing theme and disabling themes
 
 From https://github.com/danielmai/.emacs.d/blob/master/config.org
 His explanation: I tend to switch themes more often than normal. For example, switching to a lighter theme (such as the default) or to a different theme depending on the time of day or my mood. Normally, switching themes is a multi-step process with disable-theme and load-theme. The switch-theme function will do that in one swoop. I just choose which theme I want to go to.
@@ -166,6 +185,61 @@ His explanation: I tend to switch themes more often than normal. For example, sw
 
 #+RESULTS:
 : disable-active-themes
+
+*** Another try for switching themes neatly
+
+- From https://emacs.stackexchange.com/questions/3112/how-to-reset-color-theme
+... but I see no difference
+
+#+BEGIN_SRC emacs-lisp 
+(defadvice load-theme (before theme-dont-propagate activate)
+ (mapc #'disable-theme custom-enabled-themes))
+;; (mapcar #'disable-theme custom-enabled-themes)) ;; asked by emacs on initialization to change mapcar to either mapc or dolist
+
+(defun enab-theme (theme) 
+ (if current-t43m3 (disable-theme current-t43m3))
+ (setq current-t43m3 theme) 
+ (load-theme theme t)) 
+#+END_SRC
+
+#+RESULTS:
+: enab-theme
+
+*** Change theme depending on hour of day
+- From 9 am to 8 pm, light theme. Otherwise, dark theme.
+- https://blog.jft.rocks/emacs/time-based-theme.html
+
+#+BEGIN_SRC emacs-lisp 
+(defun set-light-theme ()
+  "Set the light theme with some customization if needed."
+  (interactive)
+  (load-theme 'solarized-light t))
+
+(defun set-dark-theme ()
+  "Set the dark theme with some customization if needed."
+  (interactive)
+  (load-theme 'solarized-dark t))
+
+(let ((current-hour (string-to-number (format-time-string "%H"))))
+  (if (or (< current-hour 6) (> current-hour 20)) (set-dark-theme) (set-light-theme)))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+If you want your Emacs automatically switch between the color schemes when the time come, you can use run-with-timer function to do the check every hour:
+
+#+BEGIN_SRC emacs-lisp 
+(defun theme-switcher ()
+  (let ((current-hour (string-to-number (format-time-string "%H"))))
+    (if (or (< current-hour 6) (> current-hour 20)) (set-dark-theme) (set-light-theme))))
+
+;; Run at every 3600 seconds, after 0s delay
+(run-with-timer 0 3600 'theme-switcher)
+#+END_SRC
+
+#+RESULTS:
+: [nil 23850 19113 988873 3600 theme-switcher nil nil 883000]
 
 ** Window system 
 
@@ -205,6 +279,11 @@ Here are the conventions for how to define the levels of fontification:
       (blink-cursor-mode -1)) ;; I include this blink-cursor-mode again because sometimes it disappears and maybe turning this fixes it.
 ;;      (tool-bar-mode -1)) ;; already in minimal.el
 
+;; alternative de malb dot files to display buffer name in frame titles
+;; (setq frame-title-format
+;;      '("" (:eval (replace-regexp-in-string "^ +" "" (buffer-name)))
+;;        " - " invocation-name))
+
 
     (mouse-wheel-mode t)
 
@@ -242,37 +321,6 @@ Thin window dividers and no scroll bars. Toggle with `C-c C-s`.
 
 #+RESULTS: minimal-mode-on
 : t
-
-** Set browser
-Set this to whatever browser you use e.g...
-
-#+BEGIN_SRC emacs-lisp 
-;; (setq browse-url-browser-function 'browse-url-firefox)
-;; (setq browse-url-browser-function 'browse-default-macosx-browser)
-;; (setq browse-url-browser-function 'browse-default-windows-browser)
-;; (setq browse-url-browser-function 'browse-default-kde)
-;; (setq browse-url-browser-function 'browse-default-epiphany)
-;; (setq browse-url-browser-function 'browse-default-w3m)
-;; (setq browse-url-browser-function 'browse-url-generic
-;;       browse-url-generic-program "~/src/conkeror/conkeror")
-
-;;(setq browse-url-browser-function 'browse-url-generic
-;;      browse-url-generic-program "chromium")
-
-;;;; (setq browse-url-browser-function 'browse-url-generic
-;;;;      browse-url-generic-program "eww")
-
-;;;;;;;;;;;;;;;;;  has the code that worked prior to modification based on sacha chua's format
-;;;;;;;;;;;;;;;;;  (setq browse-url-browser-function 'eww-browse-url)  ;; to make eww the default browser (see https://emacs.stackexchange.com/posts/7332/revisions)
-;;(setq shr-external-browser 'chromium-browser)               ;; to make chromium default when I do =&= from within eww to open external browser
-;;(setq eww-browse-with-external-browser 'shr-external-browser)
-;;;;;;;;;;;;;;;;;  (setq browse-url-generic-program "chromium")
-
-(setq browse-url-browser-function 'eww-browse-url)
-#+END_SRC
-
-#+RESULTS:
-: eww-browse-url
 
 ** Transparently open compressed files
 #+begin_src emacs-lisp
@@ -314,7 +362,6 @@ Note by dgm on 16 sept 2018: I'm trying to use =exwm= so I am not going to use m
 ;; Note that saveplace is auto-loaded by save-place-mode. So you do not need to explicitly require it.
 
   (save-place-mode 1)
-
 #+end_src
 
 #+RESULTS: starter-kit-saveplace
