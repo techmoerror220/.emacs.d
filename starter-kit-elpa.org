@@ -54,7 +54,7 @@ The following packages will be downloaded and installed.
                                     'poly-noweb
                                     'poly-markdown
                                     'pos-tip
-                                    'powerline
+                                    ;; 'powerline
                                     'python
                                     'python-mode
                                     'python-x

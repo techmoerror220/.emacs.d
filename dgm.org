@@ -117,7 +117,7 @@ Pero parece que esto no ha afectado al formato de Dired. En cambio, el secreto l
 
 Dired extensions. Dired-x (Dired Extra) is not like Dired-plus. The former is part of the standard distribution of emacs. 
 
-Modified following the advice in the *info* node on installation of dired-x
+Modified following the advice in the *info* node on installation of =dired-x=.
 
 #+source: Dired-x
 #+begin_src emacs-lisp :tangle yes
@@ -146,24 +146,29 @@ First I set dired listing options. Originally, among the options there was a =p=
 
 Then I added to option to list directories first that I found in https://www.emacswiki.org/emacs/DiredSorting
 
-Also, from https://emacs.stackexchange.com/questions/2722/dired-listing-switches-time-style-format-with-a-space I have added =--time-style \"+%m-%d-%Y %H:%M:%S\""=. Esta ha sido la clave para que Dired me de la fecha completa. <<dired-date>>
+Also, from https://emacs.stackexchange.com/questions/2722/dired-listing-switches-time-style-format-with-a-space I have added =--time-style \"+%m-%d-%Y %H:%M:%S\""=. Esta ha sido la clave para que Dired me dé la fecha completa. <<dired-date>>
+
+DGM 16 july 2019: Ojo: when Dired buffer sorted alphabetically, my powermode bar includes =-alDh --group-directories-first --time-style "+-Dired -alDh --group-directories-first= for some reason. This is meaningless there and leaves no room for time information, etc. It does not occur if I sort by date. Why?
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (if (eq system-type 'gnu/linux)
     (setq dired-listing-switches "-alDh --group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\"")) 
+
 (defun ensure-buffer-name-ends-in-slash ()
   "change buffer name to end with slash"
   (let ((name (buffer-name)))
     (if (not (string-match "/$" name))
         (rename-buffer (concat name "/") t))))
+
 (add-hook 'dired-mode-hook 'ensure-buffer-name-ends-in-slash)
+
 (add-hook 'dired-mode-hook
           (lambda()
              (setq truncate-lines 1)))
 #+END_SRC
 
 #+RESULTS:
-| (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
+| (lambda nil (setq truncate-lines 1)) | ensure-buffer-name-ends-in-slash | (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
 
 Open files in external programs (from http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
 Consider replacing with https://github.com/thamer/runner.
@@ -210,6 +215,7 @@ The app is chosen from your OS's preference."
 
 *** Dired open multiple files
 In dired mode, visit all marked files using. Bound to the "F" key.
+
 #+source: dired-F
 #+begin_src emacs-lisp :tangle yes
   (eval-after-load "dired"
