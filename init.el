@@ -843,3 +843,10 @@ ARCHIVE is the string name of the package archive.")
 ;;; Org-mode
 ;;(nconc package-selected-packages '(org-plus-contrib org-bullets helm-org-contacts)) ; org-plus contains latest Org mode.
 ;;(with-eval-after-load 'org (require 'init-org))
+
+
+;;;;;;;;;;;;;;;;;;; mu4e ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Following advice for reading advanced emails (with complicated
+;; images) from /media/dgm/blue/documents/elibrary/computing/Linux/linuxFormat/tips/emacs2-email-video-246February2019.pdf
+
+;; (setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")

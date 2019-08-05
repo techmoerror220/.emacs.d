@@ -38,12 +38,15 @@ The following files live In the directory =/usr/share/emacs/site-lisp/mu4e=
 #+RESULTS:
 : mu4e-contrib
 
-* helm
+* =helm-mu=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-mu
+  :ensure t)
+
 (when (require 'helm-mu nil t)
   (dolist (map (list mu4e-headers-mode-map mu4e-main-mode-map mu4e-view-mode-map))
-    (define-key map "s" 'helm-mu)))
+    (define-key map "m" 'helm-mu)))
 #+END_SRC
 
 #+RESULTS:
@@ -52,9 +55,9 @@ The following files live In the directory =/usr/share/emacs/site-lisp/mu4e=
 
 Mostly copied from http://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html#Gmail-configuration
 
-** Get emails with =offlineimap=
+** COMMENT Get emails with =offlineimap=
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq mu4e-get-mail-command "offlineimap")   
 (setq mu4e-update-mail-and-index 'run-in-background)
 #+END_SRC
@@ -64,31 +67,69 @@ Mostly copied from http://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.h
 
 Updating email takes ages because I have many Maildir folders, so I follow the advice here: https://www.djcbsoftware.nl/code/mu/mu4e/General.html
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+DGM disactivates this on 4 august 2019 because I am trying the new method that seems to be quicker, based on =mbsync=.
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq mu4e-cache-maildir-list t)
 #+END_SRC
 
 #+RESULTS:
 : t
 
+** New method of getting emails: =mbsync=
+
+Introduced by DGM on 4 august 2019 following https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/
+
+Note that Set format=flowed: 
+- mu4e sets up =visual-line-mode= and also fill (=M-q=) to do the right thing. Each paragraph is a single long line; at sending, emacs will add the special line continuation characters.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a"
+  ;; mu4e-html2text-command "w3m -T text/html" ;;using the default mu4e-shr2text
+  ;; mu4e-update-interval 300  ; 300/60 = 5 minutes.
+  ;; mu4e-headers-auto-update t
+  ;; mu4e-compose-signature-auto-include nil
+  mu4e-compose-format-flowed t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+**  Rename files when moving
+
+https://irreal.org/blog/?p=6122 says it is needed for MBSYNC
+
+ #+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-change-filenames-when-moving t)
+ #+END_SRC
+
+ #+RESULTS:
+ : t
+
 ** Cache list of maildirs
 
 Notes by https://github.com/djcb/mu/blob/master/mu4e/mu4e-utils.el. The variable  =mu4e-cache-maildir-list= "Whether to cache the list of maildirs; set it to =t= if you find that generating the list on the fly is too slow. If you do, you can set =mu4e-maildir-list= to =nil= to force regenerating the cache the next time =mu4e-get-maildirs= gets called.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq mu4e-maildir-list nil)   
 #+END_SRC
 
 #+RESULTS:
+
+DGM on 4 august 2019 comments out this code in favour of the next one, following https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-maildir (expand-file-name "~/Maildir"))
+#+END_SRC
 
 ** Indexing 
 
 From https://github.com/djcb/mu/blob/master/NEWS.org, indexing
 (1) Allow for indexing in the background; see =mu4e-index-update-in-background=.
 (2) Better handle mbsync output in the update buffer
-(3) Add variables mu4e-index-cleanup and mu4e-index-lazy to enable lazy checking from mu4e; you can sit from mu4e using something like:
+(3) Add variables =mu4e-index-cleanup= and =mu4e-index-lazy= to enable lazy checking from mu4e; you can sit from mu4e using something like:
 
-DGM sets this to no on 2 march 2019 in an attempt to make things more thorough and read emails in mu4e that I could not originally and that, nonetheless, appeared in mu.
+DGM sets this to no on 2 march 2019 in an attempt to make things more thorough and read emails in mu4e that I could not originally and that, nonetheless, appeared in =mu=.
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (setq
@@ -105,9 +146,12 @@ Viewing images is not trivial. See  https://groups.google.com/forum/#!topic/mu-d
 
 Finally, I adopted the solution by Caolan, who thinks the included =mu4e-shr2text= command, which uses the =shr= package (also used by =eww=) to render =HTML= too slow and have switched to using =w3m= with the =display_link_number= option.
 
+On 4 august I comment out the line =(setq mu4e-html2text-command "w3m -dump -s -T text/html -o display_link_number=true")= because I think this is cared for in the =init.el=
+
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq mu4e-view-show-images t
+      mu4e-show-images t
       mu4e-view-image-max-width 800)
 
 (when (fboundp 'imagemagick-register-types)
@@ -116,35 +160,172 @@ Finally, I adopted the solution by Caolan, who thinks the included =mu4e-shr2tex
 (setq mu4e-view-prefer-html t)
 
 ;; (setq mu4e-html2text-command 'mu4e-shr2text)
-(setq mu4e-html2text-command "w3m -dump -s -T text/html -o display_link_number=true")
+;; (setq mu4e-html2text-command "w3m -dump -s -T text/html -o display_link_number=true")
 #+END_SRC
+
+As I said, now I have the following as suggested by 
+[[/media/dgm/blue/documents/elibrary/computing/Linux/linuxFormat/tips/emacs2-email-video-246February2019.pdf]]
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
+#+END_SRC
+
+#+RESULTS:
+: iconv -c -t utf-8 | pandoc -f html -t plain
+
+Alternative from https://etienne.depar.is/emacs.d/mu4e.html that works worse: 
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq mu4e-html2text-command "w3m -dump -T text/html -cols 72 -o display_link_number=true -o auto_image=false -o display_image=false -o ignore_null_img_alt=true")
+#+END_SRC
+
+** Display current mail in browser
+The following  function is called as a mu4e Action, to display the current email body in your external browser. This is useful when event W3M fails at rendering an HTML soup.
+From https://etienne.depar.is/emacs.d/mu4e.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun mu4e-msgv-action-view-in-browser (msg)
+  "View the body of the message in a web browser."
+  (interactive)
+  (let ((html (mu4e-msg-field (mu4e-message-at-point t) :body-html))
+        (tmpfile (format "%s/%d.html" temporary-file-directory (random))))
+    (unless html (error "No html part for this message"))
+    (with-temp-file tmpfile
+      (insert
+       "<html>"
+       "<head><meta http-equiv=\"content-type\""
+       "content=\"text/html;charset=UTF-8\">"
+       html))
+    (browse-url (concat "file://" tmpfile))))
+
+(add-to-list 'mu4e-view-actions
+             '("View in browser" . mu4e-msgv-action-view-in-browser) t)
+#+END_SRC
+
+#+RESULTS:
+: ((capture message . mu4e-action-capture-message) (view as pdf . mu4e-action-view-as-pdf) (show this thread . mu4e-action-show-thread) (ViewInBrowser . mu4e-action-view-in-browser) (View in browser . mu4e-msgv-action-view-in-browser))
 
 ** Costumization
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; Don't bother me with context on startup.
-(setq mu4e-context-policy nil)
+;; (setq mu4e-context-policy nil)
 
-(setq mu4e-user-mail-address-list (list "daniel.guinea.uned@gmail.com" "daniel.guinea.martin@gmail.com"))
+;; alternative from DGM on 4 august 2019, https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/
+;; start with the first (default) context;
+(setq mu4e-context-policy 'pick-first) 
+;; whether to compose with the current context if no context matched (nil option. In this case I say "ask always")
+(setq mu4e-compose-context-policy 'always-ask)
 
-(setq mail-user-agent 'mu4e-user-agent)
+;; (setq mu4e-user-mail-address-list (list "daniel.guinea.uned@gmail.com" "daniel.guinea.martin@gmail.com"))
 
-;; these are actually the defaults
-    (setq
-      mu4e-maildir       "~/Maildir"               ;; top-level Maildir
-      mu4e-sent-folder   "/[Gmail].Enviados"       ;; folder for sent messages
-      mu4e-drafts-folder "/[Gmail].Borradores"     ;; unfinished messages
-      mu4e-trash-folder  "/[Gmail].Papelera"       ;; trashed messages
-      mu4e-refile-folder "/[Gmail].Destacados")    ;; saved messages
+;; (setq mail-user-agent 'mu4e-user-agent)
 
+;; ;; these are actually the defaults
+;;    (setq
+;;      mu4e-maildir       "~/Maildir"               ;; top-level Maildir
+;;      mu4e-sent-folder   "/[Gmail].Enviados"       ;; folder for sent messages
+;;      mu4e-drafts-folder "/[Gmail].Borradores"     ;; unfinished messages
+;;      mu4e-trash-folder  "/[Gmail].Papelera"       ;; trashed messages
+;;      mu4e-refile-folder "/[Gmail].Destacados")    ;; saved messages
 #+END_SRC
 
 #+RESULTS:
-: /[Gmail].Destacados
+: always-ask
 
-Note, mu4e-maildir takes an actual filesystem-path, the other folder names are all relative to mu4e-maildir. Also note that this must not be a symbolic link.
+Note, =mu4e-maildir= takes an actual =filesystem-path=, the other folder names are all relative to =mu4e-maildir=. Also note that this must not be a symbolic link.
 
-Don't save message to Sent Messages, Gmail/IMAP takes care of this.
+** Contexts  
+- DGM on 4 august has commented all the lines above because we are trying the following from https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/
+
+- NB: on 5 August I comment out all =smtp= references, as I am using =msmtp= to send emails.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-contexts
+  (list
+   (make-mu4e-context
+    :name "personal" ;;for personal
+    :enter-func (lambda () (mu4e-message "Entering context personal"))
+    :leave-func (lambda () (mu4e-message "Leaving context personal"))
+    :match-func (lambda (msg)
+          (when msg
+        (mu4e-message-contact-field-matches
+         msg '(:from :to :cc :bcc) "daniel.guinea.martin@gmail.com")))
+    :vars '((user-mail-address . "daniel.guinea.martin@gmail.com")
+        (user-full-name . "Daniel")
+        (mu4e-sent-folder . "/personal/[personal].Sent Mail")
+        (mu4e-drafts-folder . "/personal/[personal].Drafts")
+        (mu4e-trash-folder . "/personal/[personal].Trash")
+        (mu4e-compose-signature . (concat "Informal Signature\n" "Daniel\n"))
+        (mu4e-compose-format-flowed . t)
+        ;; (smtpmail-queue-dir . "~/Maildir/personal/queue/cur")
+        ;; (message-send-mail-function . smtpmail-send-it)
+        ;; (smtpmail-smtp-user . "personal")
+        ;; (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
+        ;; (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
+        ;; (smtpmail-default-smtp-server . "smtp.gmail.com")
+        ;; (smtpmail-smtp-server . "smtp.gmail.com")
+        ;; (smtpmail-smtp-service . 587)
+        ;; (smtpmail-debug-info . t)
+        ;; (smtpmail-debug-verbose . t)
+        (mu4e-maildir-shortcuts . ( ("/personal/INBOX"                . ?i)
+                                    ("/personal/[personal].Sent Mail" . ?s)
+                                    ("/personal/[personal].Drafts"    . ?d)
+                                    ("/personal/[personal].Trash"     . ?t)
+                                    ("/personal/[personal].Spam"      . ?b)
+      ;;                            ("/personal/[personal].All Mail"  . ?a)
+                                                                   ))))
+   (make-mu4e-context
+    :name "work" ;;for work
+    :enter-func (lambda () (mu4e-message "Entering context work"))
+    :leave-func (lambda () (mu4e-message "Leaving context work"))
+    :match-func (lambda (msg)
+          (when msg
+        (mu4e-message-contact-field-matches
+         msg '(:from :to :cc :bcc) "daniel.guinea.uned@gmail.com")))
+    :vars '((user-mail-address . "daniel.guinea.uned@gmail.com")
+        (user-full-name . "Daniel Guinea")
+        (mu4e-sent-folder . "/work/[work].Sent Mail")
+        (mu4e-drafts-folder . "/work/[work].Drafts")
+        (mu4e-trash-folder . "/work/[work].Trash")
+        (mu4e-compose-signature . (concat "Formal Signature\n" "Daniel Guinea\n Dept. Sociología I\nFacultad de CC.PP. y Sociología\nUniversidad Nacional de Educación a Distancia (UNED)\nCalle Obispo Trejo 2, Madrid\nemail: daniel.guinea@poli.uned.es\nTel. +34 91 398 9441\n"))
+        (mu4e-compose-format-flowed . t)
+        ;; (smtpmail-queue-dir . "~/Maildir/work/queue/cur")
+        ;; (message-send-mail-function . smtpmail-send-it)
+        ;; (smtpmail-smtp-user . "work")
+        ;; (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
+        ;; (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
+        ;; (smtpmail-default-smtp-server . "smtp.gmail.com")
+        ;; (smtpmail-smtp-server . "smtp.gmail.com")
+        ;; (smtpmail-smtp-service . 587)
+        ;; (smtpmail-debug-info . t)
+        ;; (smtpmail-debug-verbose . t)
+        (mu4e-maildir-shortcuts . ( ("/work/INBOX"            . ?i)
+                                    ("/work/[work].Sent Mail" . ?s)
+                                    ("/work/[work].Drafts"    . ?d)
+                                    ("/work/[work].Trash"     . ?t)
+                                    ("/work/[work].Spam"      . ?b)
+      ;;                            ("/work/[work].All Mail"  . ?a)
+                                                                  ))))))
+#+END_SRC
+
+#+RESULTS:
+| #s(mu4e-context personal (lambda nil (mu4e-message Entering context work)) (lambda nil (mu4e-message Leaving context work)) (lambda (msg) (when msg (mu4e-message-contact-field-matches msg '(:from :to :cc :bcc) daniel.guinea.martin@gmail.com))) ((user-mail-address . daniel.guinea.martin@gmail.com) (user-full-name . Daniel) (mu4e-sent-folder . /personal/[personal].Sent Mail) (mu4e-drafts-folder . /personal/[personal].Drafts) (mu4e-trash-folder . /personal/[personal].Trash) (mu4e-compose-signature concat Informal Signature |
+
+Preferably use context names starting with different letters, because the first letter is automatically used as a short-cut, so you will be able to switch between the two contexts simply using =;w= and =;p=.
+
+** Archiving
+
+I think that with this messages from both personal and work accounts that I want to be archived are savely archived.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-refile-folder "/archive")       ;; saved messages. Its location is relative to `mu4e-maildir'
+#+END_SRC
+
+#+RESULTS:
+: /archive
+
+** Don't save message to Sent Messages, Gmail/IMAP takes care of this.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq mu4e-sent-messages-behavior 'delete)
@@ -170,12 +351,6 @@ Don't keep sent e-mail buffer.
 #+RESULTS:
 : t
 
-Don't keep message buffers around
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq message-kill-buffer-on-exit t)
-#+END_SRC
-
 Save attachments in the Downloads folder.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -187,7 +362,7 @@ Save attachments in the Downloads folder.
 
 Confirmation on every mark execution is too slow to Ambrevar's taste.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun ambrevar/mu4e-mark-execute-all-no-confirm ()
   (interactive)
   (mu4e-mark-execute-all t))
@@ -210,17 +385,33 @@ Because default completion can be extended (e.g. Helm, Ivy).
 
 ** Display 
 
+Toggle per name/full address with =M-RET=. 
+
+https://irreal.org/blog/?p=6122 says:
+
+ These are the headers to show in the headers list -- a pair of a field and its width, with `nil' meaning 'unlimited'.  (Better only use that for the last field.)
+
+These are the defaults:
+
+#+BEGIN_EXAMPLE
+(setq mu4e-headers-fields
+     '( (:date          .  25)    ;; alternatively, use :human-date
+        (:flags         .   6)
+        (:from          .  22)
+        (:subject       .  nil))) ;; alternatively, use :thread-subject
+#+END_EXAMPLE
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq 
  mu4e-headers-date-format "%F %R"
- mu4e-headers-fields '((:human-date . 16)
-                       (:flags . 6)
-                       (:size . 6)
+ mu4e-headers-fields '((:human-date   . 16)
+                       (:flags        .  6)
+                       (:size         .  6)
                        (:mailing-list . 10)
-                       (:from . 22)
+                       (:from         . 22)
                        (:subject))
  mu4e-headers-time-format "%R"
- mu4e-view-show-addresses t
+ mu4e-view-show-addresses t 
  ;; mu4e-view-show-images t
  ;; mu4e-view-image-max-width 800
  mu4e-hide-index-messages t
@@ -274,10 +465,10 @@ Crypt to self so that we can read sent e-mails.
 #+RESULTS:
 : t
 
-** Shortcuts 
+** COMMENT Shortcuts 
 Setup some handy shortcuts. You can quickly switch to your Inbox -- press =ji=.  Then, when you want archive some messages, move them to the 'All Mail' folder by pressing =ma=.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
   (setq mu4e-maildir-shortcuts
       '( ("/INBOX"                     . ?i)
          ("/[Gmail].Enviados"          . ?s)
@@ -288,23 +479,46 @@ Setup some handy shortcuts. You can quickly switch to your Inbox -- press =ji=. 
          ("/personal/[Gmail].Papelera" . ?f)))
 #+END_SRC
 
-** Sending email with =msmtp=
+** COMMENT =smtpmail=
 
-Sending mail with =msmtp= rather than =smtp=, copied from http://zmalltalker.com/linux/mu.html#
+#+BEGIN_SRC emacs-lisp :tangle no
+(require 'smtpmail)
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq message-send-mail-function 'message-send-mail-with-sendmail
-        sendmail-program "/usr/bin/msmtp"
-        user-full-name "Daniel Guinea"
-        user-mail-address "daniel.guinea.uned@gmail.com")
+;;rename files when moving
+;;NEEDED FOR MBSYNC
+(setq mu4e-change-filenames-when-moving t)
+
+;;set up queue for offline email
+;;use mu mkdir  ~/Maildir/personal/queue and ~/Maildir/work/queue to set up first.. but then, how does it choose one? 
+(setq smtpmail-queue-mail nil)   ;; start in normal mode
+;; (setq smtpmail-queue-mail nil ;; start in normal mode
+;;       smtpmail-queue-dir  "~/Maildir/queue/cur") 
 #+END_SRC
 
 #+RESULTS:
-: daniel.guinea.uned@gmail.com
 
-Next is borrowed from http://ionrock.org/emacs-email-and-mu.html (and included in http://zmalltalker.com/linux/mu.html#).  Choose account label to feed msmtp -a option based on =From= header in Message buffer; This function must be added to =message-send-mail-hook= for on-the-fly change of =From= address before sending message since =message-send-mail-hook= is processed right  before sending message.
+** Sending email with =msmtp=
+
+- Sending mail with =msmtp= rather than =smtp=, copied from http://zmalltalker.com/linux/mu.html#
+- See description of =msmtp= and how to use it with encrypted passwords here: https://wiki.debian.org/msmtp
+- More info here: https://marlam.de/msmtp/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+  (setq message-send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "/usr/bin/msmtp")
+;; Commented out by DGM on 4 august because I am trying to be able to choose where to send from.
+;;        user-full-name "Daniel Guinea"
+;;        user-mail-address "daniel.guinea.uned@gmail.com")
+#+END_SRC
+
+#+RESULTS:
+: /usr/bin/msmtp
+
+Next is borrowed from http://ionrock.org/emacs-email-and-mu.html (and included in http://zmalltalker.com/linux/mu.html#).  Choose account label to feed =msmtp -a= option based on =From= header in Message buffer; This function must be added to =message-send-mail-hook= for on-the-fly change of =From= address before sending message since =message-send-mail-hook= is processed right  before sending message.
+
+Commented out by DGM on 4 august because I am going to try and use the tips from Linux Magazine.
+
+#+BEGIN_SRC emacs-lisp :tangle no
   (defun choose-msmtp-account ()
     (if (message-mail-p)
         (save-excursion
@@ -329,7 +543,6 @@ Next is borrowed from http://ionrock.org/emacs-email-and-mu.html (and included i
 | date:today..now                                       | Today's messages     | 116 |
 | date:7d..now                                          | Last 7 days          | 119 |
 | mime:image/*                                          | Messages with images | 112 |
-
 ** Gnus
 I don't know the use of this but I had it, so...
 
@@ -352,7 +565,9 @@ I don't know the use of this but I had it, so...
   (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
 #+END_SRC
 
-** Smartly choose the email address from where to reply
+** COMMENT Smartly choose the email address from where to reply
+
+DGM on August 5th: not needed anymore with the =context= setup (I think).
 
 1) messages to =me@foo.example.com= should be replied with =From:me@foo.example.com=
 2) messages to =me@bar.example.com= should be replied with =From:me@bar.example.com=
@@ -379,14 +594,6 @@ I don't know the use of this but I had it, so...
 
 #+RESULTS:
 | my-set-from-address |
-
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-compose-dont-reply-to-self t)
-#+END_SRC
-
-#+RESULTS:
-: t
 
 ** Avoid hard wrapping or email content
 
@@ -478,7 +685,7 @@ From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
 
 
   ;; I want to see full From header, not only name
-  (setq mu4e-view-show-addresses t)
+  ;; (setq mu4e-view-show-addresses t)
 #+END_SRC
 
 Store a link to a mu4e query or message, setting various properties for use in capture templates. Basic support is provided by =org-mu4e=, but this uses some code from Using =org-capture-templates= with =mu4e= to extend the properties available to templates.
@@ -518,7 +725,7 @@ I tangle to no because I am going to introduce a modification following the bug 
 (add-hook 'org-store-link-functions 'org-mu4e-store-link)
 #+END_SRC
 
-#+RESULTS:
+#+results:
 | org-mu4e-store-link |
 
 Basically, A bug in mu4e/mu4e-conversation was reported here:
@@ -694,7 +901,6 @@ This function could be useful in `mu4e-compose-mode-hook'."
 #+RESULTS:
 | ambrevar/message-github | (lambda nil (local-set-key (kbd C-c C-w) #'my-mu4e-choose-signature)) |
 
-
 ** Contacts
 
 *** TODO Don't duplicate contacts.
@@ -835,17 +1041,6 @@ The 'Respond later' template is a customised TODO which includes some extra emai
 | a | Article | entry | (file+headline /home/dgm/Dropbox/gtd/bibliography.org Bibliography) | * %a %^g |
 
 
-
-
-
-
-
-
-
-
-
-
-
 Original template: 
 
 #+BEGIN_EXAMPLE
@@ -879,10 +1074,6 @@ Original template:
                                 :created t)))
 #+END_EXAMPLE
 
-
-
-
-
 Bits deteled after the Todo "t" capture template: 
 
 #+BEGIN_EXAMPLE
@@ -911,8 +1102,7 @@ As Caolan (https://caolan.org/dotfiles/emacs.html#orgd96aeb0) says, during expan
 
 Tip from https://lists.gnu.org/archive/html/emacs-orgmode/2007-08/msg00253.html for having agenda show 30 days: =(setq org-agenda-span (quote month))=
 
-
-* org-capture
+** org-capture
 
 See: http://pragmaticemacs.com/emacs/master-your-inbox-with-mu4e-and-org-mode/
 
@@ -923,19 +1113,23 @@ Originally, before =(setq org-mu4e-link-query-in-headers-mode nil)= I got the fo
     ;; (define-key map (kbd "C-c C-t") 'org-mu4e-store-and-capture))
 #+END_EXAMPLE
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+DGM turns it to "off" on 2 august 2019 to try configuration from Linux Magazine
+
+#+BEGIN_SRC emacs-lisp :tangle no
  (when (require 'org-mu4e nil t)
   (dolist (map (list mu4e-view-mode-map mu4e-headers-mode-map)))
-  (setq org-mu4e-link-query-in-headers-mode nil))                 ;;store link to message if in header view, not to header query
+  (setq org-mu4e-link-query-in-headers-mode nil))         store link to message if in header view, not to header query
 #+END_SRC
 
 #+RESULTS:
 
-* mu4e-conversation
+* COMMENT mu4e-conversation
 
+De-activated on 4 august by DGM as =mu4e-conversation= was already giving me problems. Plus my new setup with  =mbsync= might be incompatible with this.
+ 
 Check this as well: http://cestlaz.github.io/posts/using-emacs-49-mu4e-conversation/#.W4xUEK0yreQ
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun ambrevar/mu4e-headers ()
   "Like `mu4e' but show the header view.
 Default to unread messages if the header buffer does not already exist."
@@ -995,6 +1189,278 @@ I've tried the following but it is not working.
 
 #+RESULTS:
 
+* Linux Magazine 246, Feb 2019 tips
+
+Check it out here [[/media/dgm/blue/documents/elibrary/computing/Linux/linuxFormat/tips/emacs2-email-video-246February2019.pdf]]
+
+** COMMENT Configure your system for several accounts
+
+- First, list your accounts.
+- Similar instructions here: https://www.djcbsoftware.nl/code/mu/mu4e/Multiple-accounts.html
+- Lo comento porque creo que la seccion Context hace esto. 
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defvar my-mu4e-account-alist
+       '(("personal"
+            (mu4e-sent-folder "/personal/Sent")
+            ;;(mu4e-drafts-folder "/personal/Drafts")
+            (user-mail-address "daniel.guinea.martin@gmail.com")
+            (smtpmail-default-smtp-server "smtp.gmail.com")
+            (smtpmail-local-domain "mail.gmail.com")
+            (smtpmail-smtp-user "daniel.guinea.martin")
+            (smtpmail-smtp-server "smtp.gmail.com")
+            (smtpmail-stream-type starttls)
+            (smtpmail-smtp-service 25))
+        ("work"
+            (mu4e-sent-folder "/work/Sent")
+            ;; (mu4e-drafts-folder "/work/Drafts")
+            (user-mail-address "daniel.guinea.uned@gmail.com")
+            (smtpmail-default-smtp-server "smtp.gmail.com")
+            (smtpmail-local-domain "gmail.com")
+            (smtpmail-smtp-user "daniel.guinea.uned")
+            (smtpmail-smtp-server "smtp.gmail.com")
+            (smtpmail-stream-type starttls)
+            (smtpmail-smtp-service 587))))
+#+END_SRC
+
+- Call the above function by asking which account you want to send email from.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun my-mu4e-set-account ()
+"Set the account for composing a message."
+(let* ((account
+     (if mu4e-compose-parent-message
+      (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
+        (string-match "/\\(.*?\\)/" maildir)
+        (match-string 1 maildir))
+       (completing-read (format "Compose with account: (%s) "
+                  (mapconcat #’(lambda (var) (car var))
+                      my-mu4e-account-alist "/"))
+              (mapcar #’(lambda (var) (car var)) my-mu4e-account-alist)
+               nil t nil nil (caar my-mu4e-account-alist))))
+       (account-vars (cdr (assoc account my-mu4e-account-alist))))
+   (if account-vars
+      (mapc #’(lambda (var)
+         (set (car var) (cadr var))) account-vars)
+   (error "No email account found"))))
+#+END_SRC
+
+For this code to run you add a hook for when you want to send an email. This results in Emacs asking you which account to use before you send:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-hook ‘mu4e-compose-pre-hook ‘my-mu4e-set-account)
+#+END_SRC
+
+* Configuring =mu4e= to work with =org=
+- Following [[/media/dgm/blue/documents/elibrary/computing/Linux/linuxFormat/tips/emacs2-email-video-246February2019.pdf]]
+
+The following sets up the connections in our config: 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(define-key mu4e-headers-mode-map (kbd "C-c c") 'org-mu4e-store-and-capture)
+(define-key mu4e-view-mode-map (kbd "C-c c") 'org-mu4e-store-and-capture)
+;; store org-mode links to messages
+;; store links to message if in header view, not  to header query
+(setq org-mu4e-link-query-in-headers-mode nil) 
+#+END_SRC
+
+#+RESULTS:
+
+With this, the keys are available in headers-mode and view-mode so you can plan. 
+
+* Sending =html= email
+
+=org-mime= can be used to send HTML email using Org-mode HTML export.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package org-mime
+   :ensure t)
+
+;; convert org mode to HTML automatically
+(setq org-mu4e-convert-to-html t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* Every new email composition gets its own frame!
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-compose-in-new-frame t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* Link behavior
+
+From: https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/
+
+=<tab>= to navigate to links, =<RET>= to open them in browser
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'mu4e-view-mode-hook
+  (lambda()
+;; try to emulate some of the eww key-bindings
+(local-set-key (kbd "<RET>") 'mu4e~view-browse-url-from-binding)
+(local-set-key (kbd "<tab>") 'shr-next-link)
+(local-set-key (kbd "<backtab>") 'shr-previous-link)))
+#+END_SRC
+
+#+RESULTS:
+| (lambda nil (local-set-key (kbd <RET>) 'mu4e~view-browse-url-from-binding) (local-set-key (kbd <tab>) 'shr-next-link) (local-set-key (kbd <backtab>) 'shr-previous-link)) | auto-fill-mode | (lambda nil (set (make-local-variable 'bookmark-make-record-function) 'mu4e-view-bookmark-make-record)) |
+
+* Header behaviour
+
+from https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/elgoumx via https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'mu4e-headers-mode-hook
+      (defun my/mu4e-change-headers ()
+	(interactive)
+	(setq mu4e-headers-fields
+	      `((:human-date . 25) ;; alternatively, use :date
+		(:flags . 6)
+		(:from . 22)
+		(:thread-subject . ,(- (window-body-width) 70)) ;; alternatively, use :subject
+		(:size . 7)))))
+
+;; if you use date instead of human-date in the above, use this setting
+;; give me ISO(ish) format date-time stamps in the header list
+;(setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
+#+END_SRC
+
+* Spell check
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'mu4e-compose-mode-hook
+    (defun my-do-compose-stuff ()
+       "My settings for message composition."
+       (visual-line-mode)
+       (org-mu4e-compose-org-mode)
+           (use-hard-newlines -1)
+       (flyspell-mode)))
+#+END_SRC
+
+* Don't ask when quitting
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-confirm-quit nil)
+#+END_SRC
+
+#+RESULTS:
+
+* Don't reply to self
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-compose-dont-reply-to-self t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* Adding bookmark to menu or =Main view=
+- Read https://www.djcbsoftware.nl/code/mu/mu4e/Bookmarks.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list 'mu4e-bookmarks
+  (make-mu4e-bookmark
+    :name  "Messages with attachments"
+    :query "flag:attach"
+    :key ?a) t)
+
+(add-to-list 'mu4e-bookmarks
+  (make-mu4e-bookmark
+    :name  "Archived messages"
+    :query "maildir:/archive" 
+    :key ?r) t)
+#+END_SRC
+
+#+RESULTS:
+| #s(mu4e-bookmark Archived messages maildir:/archive 114) | #s(mu4e-bookmark Messages with attachments flag:attach 97) | (flag:unread AND NOT flag:trashed Unread messages 117) | (date:today..now Today's messages 116) | (date:7d..now Last 7 days 119) | (mime:image/* Messages with images 112) |
+
+* Call EWW to display HTML messages
+
+I still can't see HTML messages okay. Trying this tip from https://irreal.org/blog/?p=6122
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun jcs-view-in-eww (msg)
+    (eww-browse-url (concat "file://" (mu4e~write-body-to-html msg))))
+#+END_SRC
+
+#+RESULTS:
+: jcs-view-in-eww
+
+* Org functionality in compose buffer
+
+From https://irreal.org/blog/?p=6122
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'message-mode-hook 'turn-on-orgtbl)
+(add-hook 'message-mode-hook 'turn-on-orgstruct++)
+#+END_SRC
+
+#+RESULTS:
+| turn-on-orgstruct++ | turn-on-orgtbl | org-contacts-setup-completion-at-point |
+
+* COMMENT New item in Bacisc (Main View): =helm-mu=
+
+Not working. 
+
+Tip from https://www.djcbsoftware.nl/code/mu/mu4e/Defining-actions.html
+and 
+http://djcbsoftware.nl/code/mu/mu4e/Adding-an-action-in-the-message-view.html
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun my-call-to-helm-mu ()
+  "Calls helm-mu."
+  (helm-mu)
+  )
+
+;; Define 'x' as the shortcut
+(add-to-list 'mu4e-view-actions
+             '("Mmu search" . my-call-to-helm-mu) t)
+#+END_SRC
+
+#+RESULTS:
+: ((capture message . mu4e-action-capture-message) (view as pdf . mu4e-action-view-as-pdf) (show this thread . mu4e-action-show-thread) (ViewInBrowser . mu4e-action-view-in-browser) (Mmu search . my-call-to-helm-mu))
+
+* Preview mail file in a new buffer
+This function may be called externally to display an email content when we know its file path.
+From: https://etienne.depar.is/emacs.d/mu4e.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun ed/preview-some-mail-at (path)
+  (interactive "fPath: ")
+  (call-process
+   "mu" nil
+   (switch-to-buffer (generate-new-buffer "*mail preview*") t)
+   t "view" (expand-file-name path))
+  (with-current-buffer "*mail preview*"
+    (goto-char (point-min))
+    (mu4e~fontify-cited)
+    (mu4e~fontify-signature)
+    (while (re-search-forward "^\\(\\w+:\\) \\(.*\\)$" nil t)
+      (let ((key (match-string 1))
+            (value (match-string 2)))
+        (beginning-of-line)
+        (delete-region (point) (line-end-position))
+        (insert (concat (propertize key 'face 'mu4e-header-key-face) " "))
+        (if (or (string= key "From:")
+                (string= key "To:"))
+            (insert (propertize value 'face 'mu4e-special-header-value-face))
+          (insert (propertize value 'face 'mu4e-header-value-face)))))
+    (forward-line)
+    (beginning-of-line)
+    (insert "\n")
+    (read-only-mode)
+    (local-set-key (kbd "q") #'kill-this-buffer)))
+#+END_SRC
+
+#+RESULTS:
+: ed/preview-some-mail-at
+
+
 
 * Provide 
 
@@ -1013,5 +1479,8 @@ I've tried the following but it is not working.
 
 #+RESULTS: message-line
 : Starter Kit User Mu4e File loaded.
+
+
+
 
 

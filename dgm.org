@@ -4754,6 +4754,17 @@ handy.
 
 #+RESULTS:
 
+* Twitter
+
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package twittering-mode)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23876 24572 365881 952000) :init (23876 24572 365873 813000) :config (23876 24572 365671 940000) :config-secs (0 0 5 73000) :init-secs (0 0 20833 634000) :use-package-secs (0 0 20886 646000)))
+
+
 * Provide
 
 Trying this on 28 dic 2018. I don't really know why it is needed or not.
