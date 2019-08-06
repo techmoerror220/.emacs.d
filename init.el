@@ -19,6 +19,14 @@
 (require 'ffap)
 (require 'ansi-color)
 
+;;; DGM on 5th August 2019 trying to fix <(file-error
+;;; "https://elpa.gnu.org/packages/archive-contents" "Bad Request")>
+;;; Tip from:
+;;; https://www.reddit.com/r/emacs/comments/cdei4p/failed_to_download_gnu_archive_bad_request/
+;;; Apparently it is a bug in emacs
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
+
 ;;; Tip 1 from Ambrevar's init.el
 
 ;;; Speed up init.

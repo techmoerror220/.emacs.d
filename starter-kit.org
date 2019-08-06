@@ -469,15 +469,6 @@ Located in [[file:starter-kit-completion.org][starter-kit-completion]].
   (starter-kit-load "starter-kit-completion.org")
 #+end_src
 
-*** Starter kit =mu4e=
-
-#+BEGIN_SRC emacs-lisp
-  (starter-kit-load "starter-kit-mu4e.org")
-#+END_SRC
-
-#+RESULTS:
-: Loaded /home/dgm/.emacs.d/starter-kit-mu4e.el
-
 *** Starter kit =search-engine=
 
 #+BEGIN_SRC emacs-lisp
@@ -558,6 +549,16 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 #+begin_src emacs-lisp
   (starter-kit-load "starter-kit-text.org")
 #+end_src
+
+*** Starter kit =mu4e=
+
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-load "starter-kit-mu4e.org")
+#+END_SRC
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-mu4e.el
+
 
 ** Load User/System Specific Files
 *** Settings from M-x customize

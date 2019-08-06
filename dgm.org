@@ -1842,7 +1842,9 @@ https://emacs.stackexchange.com/questions/5603/how-to-quickly-copy-move-file-in-
 
 ** gpastel
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+After updating packages, this returns error.
+
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package gpastel
     :ensure t
     :config 
@@ -1850,7 +1852,7 @@ https://emacs.stackexchange.com/questions/5603/how-to-quickly-copy-move-file-in-
 #+END_SRC
 
 #+RESULTS:
-: t
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23880 21520 898702 207000) :init (23880 21520 898685 670000) :config (23880 21520 898328 707000) :config-secs (0 0 743 952000) :init-secs (0 0 1485 396000) :use-package-secs (0 0 1735 521000)))
 
 ** Customize =emacsclient=
 
