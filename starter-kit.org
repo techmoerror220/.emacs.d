@@ -550,6 +550,18 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
   (starter-kit-load "starter-kit-text.org")
 #+end_src
 
+*** Starter Kit Parens
+Located in [[file:starter-kit-text.org][starter-kit-text]]
+
+#+begin_src emacs-lisp
+  (starter-kit-load "starter-kit-parens.org")
+#+end_src
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-parens.el
+
+
+
 *** Starter kit =mu4e=
 
 #+BEGIN_SRC emacs-lisp

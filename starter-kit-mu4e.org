@@ -544,7 +544,7 @@ I don't know the use of this but I had it, so...
 #+END_SRC
 
 #+RESULTS:
-| #s(mu4e-bookmark Archived messages maildir:/archive 114) | #s(mu4e-bookmark Messages with attachments flag:attach 97) | (flag:unread AND NOT flag:trashed Unread messages 117) | (date:today..now Today's messages 116) | (date:7d..now Last 7 days 119) | (mime:image/* Messages with images 112) |
+| (flag:unread AND NOT flag:trashed Unread messages 117) | (date:today..now Today's messages 116) | (date:7d..now Last 7 days 119) | (mime:image/* Messages with images 112) | #s(mu4e-bookmark Messages with attachments flag:attach 97) | #s(mu4e-bookmark Archived messages maildir:/archive 114) |
 
 ** COMMENT New item in Basics (Main View): =helm-mu=
 
@@ -786,8 +786,9 @@ And from below I have deleted the following because this is all set in the previ
 
 Gmail-style threading. 
 
-https://groups.google.com/forum/#!topic/mu-discuss/ZG0trF0reZk say setting it up to "true" causes the "problem" of mu4e not finding emails that =mu= finds
+https://groups.google.com/forum/#!topic/mu-discuss/ZG0trF0reZk say setting it up to "true" causes the "problem" of mu4e not finding emails that =mu= finds.
 
+Also, by turning it off, I don't see the same message multiple times. If I wouldn't set this option here, in headers view I should toggle it with =W=.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq mu4e-headers-include-related 'nil)
 ;;(setq mu4e-headers-include-related t)
@@ -1066,8 +1067,6 @@ This is what made Composition go bunkers! Adding the scroll bar and loosing conn
 #+RESULTS:
 : t
 
-
-
 ** COMMENT Configure your system for several accounts
 Check it out here [[/media/dgm/blue/documents/elibrary/computing/Linux/linuxFormat/tips/emacs2-email-video-246February2019.pdf]]
 
@@ -1342,7 +1341,7 @@ Duplicates are removed."
 #+RESULTS:
 : ambrevar/message-fetch-addresses
 
-*** COMMENT Trash
+*** COMMENT Trash by Ambrevar
 
 Gmail trash fix.
 
@@ -1381,8 +1380,6 @@ point.  See `ambrevar/mu4e-headers-move-to-trash' and
                                            ambrevar/mu4e-trash-folders "")
                                 (car bookmark))))
 #+END_SRC
-
-#+RESULTS:
 
 *** COMMENT Github
 
@@ -1496,7 +1493,6 @@ If MSG is nil, use message at point."
 : ambrevar/mu4e-kill-ring-save-message-id
 
 
-
 *** COMMENT mu4e-conversation
 
 De-activated on 4 august by DGM as =mu4e-conversation= was already giving me problems. Plus my new setup with  =mbsync= might be incompatible with this.
@@ -1581,6 +1577,13 @@ I've tried the following but it is not working.
 
 #+RESULTS: message-line
 : Starter Kit User Mu4e File loaded.
+
+
+
+
+
+
+
 
 
 

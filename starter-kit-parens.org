@@ -1,0 +1,446 @@
+# -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
+
+#+TITLE: Parens costumization
+#+OPTIONS: toc:nil num:nil ^:nil
+#+PROPERTY: header-args :tangle yes
+
+Adding this line to test magit.
+
+* COMMENT Smartparens Mode
+
+I have commented this out as I am going to test the config in [[/media/dgm/blue/documents/programming/emacs/smartparens/Emacs and Pairs2.pdf]]
+
+Smart autopairing of quotes and parentheses. The original config was this, but it was too intrusive with org-mode.
+
+#+begin_src emacs-lisp :tangle no
+(use-package smartparens
+  :ensure t
+  :diminish smartparens-mode
+  :config
+  (progn
+    (require 'smartparens-config)
+    ;; (smartparens-global-mode 1) ;; disabled by dgm on 29 dic 2019 to try and get bindings in Org mode
+    (show-smartparens-global-mode +1)
+    (sp-use-paredit-bindings)
+    (setq sp-base-key-bindings 'paredit)
+    (setq sp-autoskip-closing-pair 'always)
+    (setq sp-hybrid-kill-entire-symbol nil)))
+#+end_src
+
+This is Sacha Chua's config (without her keybindings) customized with https://zzamboni.org/post/my-emacs-configuration-with-commentary/
+
+Issue: 
+
+With =(smartparens-global-mode 1)= everything works wonderfully except for Stata's do files where I get an error I don't get without this =global-mode=. However, if I get rid of of the =global-mode=, then, for some reason I don't get the double =equaly sign= in org-mode and, I imagine, other goodies. So it is not worthwhile... I keep the =global-mode= until I read the =smartparens= instructions for good.
+
+Disabled by DGM on 7 august 2019
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package smartparens
+    :ensure t
+    :diminish smartparens-mode
+    :config
+      (require 'smartparens-config)
+      ;; http://ivanmalison.github.io/dotfiles/  
+      ;; I reintroduce these two lines so that I can have =sp-local-pair='s defined for org-mode below working
+      ;; Plus =M-up= and =M-down= continue working as they should
+      ;;;;;;;;;;;;;;; disabled by dgm on 2 may 2019. This move is what makes stata.do's work without error. However, now I don't have smartparens in org-mode.
+      (smartparens-global-mode 1)
+      ;;;;;;;;;;;;;;; tuhdo setup
+      (setq sp-base-key-bindings 'paredit)
+      (setq sp-autoskip-closing-pair 'always)
+      (setq sp-hybrid-kill-entire-symbol nil)
+      (sp-use-paredit-bindings)
+      ;; back to sacha... Commented out in favor of the hook: option
+      ;; (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
+      ;; (add-hook 'emacs-lisp-mode-hook 'show-smartparens-mode)
+      ;; dgm
+      ;; (add-hook 'ess-R-post-run-hook 'smartparens-mode)
+      ;; (add-hook 'ess-stata-post-run-hook 'smartparens-mode)
+      ;; (add-hook 'ess-stata-mode-hook 'smartparens-mode)
+
+;;;;;;;;;;;;;;;;;;
+      ;; pair management
+      (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+      (sp-local-pair 'web-mode "<" nil :when '(my/sp-web-mode-is-code-context))
+
+  ;;; markdown-mode
+      (sp-with-modes '(markdown-mode gfm-mode rst-mode)
+        (sp-local-pair "*" "*" :bind "C-*")
+        (sp-local-tag "2" "**" "**")
+        (sp-local-tag "s" "```scheme" "```")
+        (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
+
+  ;;; trying this again. It works for org-mode but it doesn't for tex modes... uhmm Now it is not working with org-mode either. ahhhgggg!!
+      (sp-with-modes '(tex-mode plain-tex-mode latex-mode org-mode)
+        (sp-local-pair "`" "'")
+        (sp-local-pair "``" "''")
+    ;;  (sp-local-pair """ """) ;; with this I get error on startup
+    ;;  (sp-local-pair "'" "'")
+        (sp-local-pair "$" "$")              ;; these last two seem to not be working
+        (sp-local-pair "\left(" "\right)")) 
+
+  ;;; tex-mode latex-mode
+      (sp-with-modes '(tex-mode plain-tex-mode latex-mode)
+        (sp-local-tag "i" "1d5f8e69396c521f645375107197ea4dfbc7b792quot;<" "1d5f8e69396c521f645375107197ea4dfbc7b792quot;>"))
+
+  ;;; html-mode
+      (sp-with-modes '(html-mode sgml-mode web-mode)
+        (sp-local-pair "<" ">"))
+
+  ;; org-mode. This is not working though..
+  ;;    (sp-local-pair 'org-mode "~" "~")
+  ;; (sp-local-pair 'org-mode-hook "=" "=") ; select region, hit = then region -> =region= in org-mode
+  ;;    (sp-local-pair 'org-mode "*" "*") ; select region, hit * then region -> *region* in org-mode
+  ;;    (sp-local-pair 'org-mode "/" "/") ; select region, hit / then region -> /region/ in org-mode
+  ;;    (sp-local-pair 'org-mode "_" "_") ; select region, hit _ then region -> _region_ in org-mode
+  ;;    (sp-local-pair 'org-mode "+" "+") ; select region, hit + then region -> +region+ in org-mode
+  ;;    (sp-local-pair 'org-mode "$" "$") ; 
+  ;;    ;; (sp-local-pair 'org-mode "`" "'") ; not working, as it waits for second `
+  ;;   (sp-local-pair 'org-mode "``" "''") 
+    
+  ;;; lisp modes
+      (sp-with-modes sp--lisp-modes
+        (sp-local-pair "(" nil :bind "C-(")  ;; remember that C-[ does the same.]
+        (sp-local-pair "<" ">")) 
+
+  ;; elisp mode
+     (sp-local-pair 'elisp-mode "<" ">") 
+
+  ;; ess-stata-mode. This seems to not work
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; (sp-local-pair 'ess-stata-mode-hook "`" "'")
+
+  ;; este parece el bueno para hacerlo funcionar en stata! 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; (sp-local-pair 'ess-stata-mode "`" "'")
+  ;; (sp-local-pair 'ess-mode "`" "'")
+  ;; (sp-local-pair 'ess-stata-mode-hook "'" "'") ;; if I include this, the above two lines don't work, why??s
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; (sp-with-modes '(ess-stata-mode ess-stata-mode-hook)
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    (sp-local-pair "`" "'"))
+
+  ;;; http://ivanmalison.github.io/dotfiles/
+    (unbind-key "M-D" smartparens-mode-map)              ;; conflicts with duplicate line.
+    (unbind-key "M-<up>" smartparens-mode-map)           ;; conflicts with org-mode commands for moving around rows 
+    (unbind-key "M-<backspace>" smartparens-mode-map)    ;; conflicts with basic command for killing last word.
+    (unbind-key "M-<down>" smartparens-mode-map))
+
+  ;; if ess-mode included here, then I get error in Stata
+  ;; also, originally, I had org-mode included but that meant that I could not delete one parenthesis.
+;;  :hook 
+;;      ((emacs-lisp-mode
+;;        lisp-mode
+;;        racket-mode
+;;        racket-repl-mode) . smartparens-strict-mode))       ;; and headings.
+#+END_SRC
+
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23766 29242 626765 328000) :init (23766 29242 626756 564000) :config (23766 29242 626625 205000) :config-secs (0 0 14730 852000) :init-secs (0 0 14997 576000) :use-package-secs (0 0 15055 623000)))
+
+The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
+
+Disabled as I got =(void-function sp-local-pair)=.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
+(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil) 
+
+(sp-local-pair 'racket-mode "'" nil :actions nil) 
+(sp-local-pair 'racket-mode "`" nil :actions nil)
+
+(sp-local-pair 'fundamental-mode "'" nil :actions nil) 
+(sp-local-pair 'fundamental-mode "`" nil :actions nil)
+
+(sp-local-pair 'org-mode "'" nil :actions nil) 
+(sp-local-pair 'org-mode "`" nil :actions nil)
+
+;;(sp-local-pair 'latex-mode "=" nil :actions nil) 
+
+;;   (smartparens-global-mode 1)
+;;  (require 'smartparens-config) ;; To use the default configuration that smartparens provides for Lisp modes generally and for racket-mode specifically
+#+end_src
+                                                                                         
+** COMMENT Hook to avoid clash with =smartparens= keybindings
+
+- Solution inspired here 
+https://www.reddit.com/r/emacs/comments/3dn226/help_with_smartparens_and_overriding_bindings/
+- Otherwise, =M-up= and =M-down= were owned by =smartparens= and could not move around in org tables.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-hook 'org-mode-hook (lambda () 
+                           (setq sp-override-key-bindings '(("M-<up>"   . nil)
+                                                            ("M-D"      . nil)
+                                                            ("M-<down>" . nil)))))
+#+END_SRC
+
+Note of Dic 30, 2018: This worked but the new solution in the prior chunk works too and seems more parsimonious.
+
+
+** Add / remove parenthesis / bracket / single or double quotation marks around a marked region
+
+From:  https://stackoverflow.com/questions/25097278/how-to-add-remove-parenthesis-around-a-marked-region-in-emacs
+Read also:  https://www.emacswiki.org/emacs/InsertPair
+
+Notice that now that I use =smartparens=,  for enclosing marked region in =()=, I do =M-(= (for =sp-wrap-round=) and =M-x unwrap-sexp= to unwrap (marked region not including the parenthesis).
+
+Disabled by DGM on 7 august 2019 
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun insert-quotations (&optional arg)
+  "Enclose following ARG sexps in quotation marks.
+Leave point after open-paren."
+  (interactive "*P")
+  (insert-pair arg ?\' ?\'))
+
+(defun insert-quotes (&optional arg)
+  "Enclose following ARG sexps in quotes.
+Leave point after open-quote."
+  (interactive "*P")
+  (insert-pair arg ?\" ?\"))
+
+(defun insert-backquote (&optional arg)
+  "Enclose following ARG sexps in quotations with backquote.
+Leave point after open-quotation."
+  (interactive "*P")
+  (insert-pair arg ?\` ?\'))
+
+(global-set-key "\M-'" 'insert-quotations)
+(global-set-key "\M-\"" 'insert-quotes)
+(global-set-key (kbd "C-'") 'insert-backquote)
+#+END_SRC
+
+#+RESULTS:
+: insert-backquote
+
+* New trial taken from article
+
+Trying the setup here:
+[[/media/dgm/blue/documents/programming/emacs/smartparens/Emacs and Pairs2.pdf]]
+
+Take note, though, that the name is a misnomer, as it not only handles parentheses. It handles just about anything that pairs
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package smartparens-config
+  :ensure smartparens
+  :config (progn (show-smartparens-global-mode t)))
+
+(add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
+(add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
+#+END_SRC
+
+** Keybindings
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defmacro def-pairs (pairs)
+  "Define functions for pairing. PAIRS is an alist of (NAME . STRING)
+conses, where NAME is the function name that will be created and
+STRING is a single-character string that marks the opening character.
+
+  (def-pairs ((paren . \"(\")
+              (bracket . \"[\"))
+
+defines the functions WRAP-WITH-PAREN and WRAP-WITH-BRACKET,
+respectively."
+  `(progn
+     ,@(loop for (key . val) in pairs
+             collect
+             `(defun ,(read (concat
+                             "wrap-with-"
+                             (prin1-to-string key)
+                             "s"))
+                  (&optional arg)
+                (interactive "p")
+                (sp-wrap-with-pair ,val)))))
+
+(def-pairs ((paren . "(")
+            (bracket . "[")
+            (brace . "{")
+            (single-quote . "'")
+            (double-quote . "\"")
+            (back-quote . "`")))
+
+(bind-keys
+ :map smartparens-mode-map
+ ("C-M-a" . sp-beginning-of-sexp)
+ ("C-M-e" . sp-end-of-sexp)
+
+ ("C-<down>" . sp-down-sexp)
+ ("C-<up>"   . sp-up-sexp)
+ ("M-<down>" . sp-backward-down-sexp)
+ ("M-<up>"   . sp-backward-up-sexp)
+
+ ("C-M-f" . sp-forward-sexp)
+ ("C-M-b" . sp-backward-sexp)
+
+ ("C-M-n" . sp-next-sexp)
+ ("C-M-p" . sp-previous-sexp)
+
+ ("C-S-f" . sp-forward-symbol)
+ ("C-S-b" . sp-backward-symbol)
+
+ ("C-<right>" . sp-forward-slurp-sexp)
+ ("M-<right>" . sp-forward-barf-sexp)
+ ("C-<left>"  . sp-backward-slurp-sexp)
+ ("M-<left>"  . sp-backward-barf-sexp)
+
+ ("C-M-t" . sp-transpose-sexp)
+ ("C-M-k" . sp-kill-sexp)
+ ("C-k"   . sp-kill-hybrid-sexp)
+ ("M-k"   . sp-backward-kill-sexp)
+ ("C-M-w" . sp-copy-sexp)
+ ("C-M-d" . delete-sexp)
+
+ ("M-<backspace>" . backward-kill-word)
+ ("C-<backspace>" . sp-backward-kill-word)
+ ([remap sp-backward-kill-word] . backward-kill-word)
+
+ ("M-[" . sp-backward-unwrap-sexp)
+ ("M-]" . sp-unwrap-sexp)
+
+ ("C-x C-t" . sp-transpose-hybrid-sexp)
+
+ ("C-c ("  . wrap-with-parens)
+ ("C-c ["  . wrap-with-brackets)
+ ("C-c {"  . wrap-with-braces)
+ ("C-c '"  . wrap-with-single-quotes)
+ ("C-c \"" . wrap-with-double-quotes)
+ ("C-c _"  . wrap-with-underscores)
+ ("C-c `"  . wrap-with-back-quotes))
+#+END_SRC
+
+#+RESULTS:
+: wrap-with-back-quotes
+
+
+** Map 
+*** Starts and ends
+- =C-M-a=: =sp-beginning-of-sexp=.
+- =C-M-e=: =sp-end-of-sexp=.
+
+*** Traversing lists
+
+- =C-down=: =sp-down-sexp=
+
+From 
+#+BEGIN_EXAMPLE
+(defun format-date (format)
+  "Insert date with FORMAT specification using a specific locale."
+  (let ((system-time-locale "en_US.UTF-8"))^
+    (insert (format-time-string format)))) 
+#+END_EXAMPLE
+
+To
+#+BEGIN_EXAMPLE
+(defun format-date (format)
+  "Insert date with FORMAT specification using a specific locale."
+  (let ((system-time-locale "en_US.UTF-8"))
+    (^insert (format-time-string format))))
+#+END_EXAMPLE
+
+- =C-up=: =sp-up-sexp=: from =(str ^"foo" "bar baz qux")= to =(str "foo" "bar baz qux")^=
+- =M-down=: =sp-backward-down-sexp=: from =(defn foo [bar] ^(let [x 0] x))= to =(defn foo [bar^] (let [x 0] x))=
+- =M-up=: =sp-backward-up-sexp=: from =(insert (format-time-string^ format))= to =(insert ^(format-time-string format))=
+
+*** Block movements
+- =C-M-f=: =sp-forward-sexp=: from =(:require ^[clojure.string :as s])= to =(:require [clojure.string :as s]^)=
+- =C-M-b=: =sp-forward-sexp=: from =(:require [clojure.string :as s]^)= to =(:require ^[clojure.string :as s])=
+
+*** Top-level-ish traversal
+- =C-M-n=: =sp-next-sexp=
+
+From
+#+BEGIN_EXAMPLE
+(defn blah
+  "Returns blah of foo."^
+  [foo]                 
+  )
+#+END_EXAMPLE
+
+To
+#+BEGIN_EXAMPLE
+(defn blah
+  "Returns blah of foo."
+  ^[foo]                 
+  )
+#+END_EXAMPLE
+
+- =C-M-p=: =sp-previous-sexp=
+
+*** Free-form movements
+They navigate around expressions as if delimiters, like parens, brackets, and braces do not exist.
+
+- =C-S-b=: =sp-backward-symbol=: from =(defn blah [] (^let [x 0 y 1] (+ x 1)))= to =(defn ^blah [] (let [x 0 y 1] (+ x 1)))=
+- =C-S-f=: =sp-forward-symbol=: from =(defn blah [^] (let [x 0 y 1] (+ x 1)))= to =(defn blah [] (let^ [x 0 y 1] (+ x 1)))=
+
+*** Wrapping
+
+- =C-M-Space= selects region and then =[= surrounds whole region with matching [ and ]
+- It also applies to keys like (, {, ", ', *, _, etc, depending on the mode that you’re using.
+- =C-c (=
+- =C-c [=
+- =C-c {=
+
+**** In Org-mode
+- =s-~=  
+- ="s-="=
+
+*** Unwrapping
+- =M-[=: =sp-backward-unwrap-sexp=: from =(foo ^(bar x y z))= to =foo ^(bar x y z)=
+- =M-]=: =sp-unwrap-sexp=: from =(foo ^(bar x y z))= to =(foo bar x y z)=
+
+*** Slurp and barf
+- =C-right=: =sp-forward-slurp-sexp=: from =[foo bar^] baz= to =[foo bar ^baz]=. NB: critical that ^ be inside ] for this to work.
+  + Conversly, =M-right=: =sp-forward-barf-sexp=: from =[foo bar ^baz]= to =[foo bar^] baz= 
+- =C-left=: =sp-backward-slurp-sexp=: from =blah [foo bar^]= to =[blah foo bar^]=
+  + =M-left=: =sp-backward-barf-sexp= from =[blah foo bar^]= to =blah [foo bar^]= 
+
+*** Swapping
+- =C-M-t=: =sp-transpose-sexp=: from ="foo" ^"bar"= to ="bar" ^"foo"=
+
+*** Killing
+- =C-M-k=: =sp-kill-sexp=: from =(let [x "xxx" y ^"y yy yyy" z 0])= to =(let [x "xxx" y ^ z 0])=
+- =C-k=: =sp-kill-hybrid-sexp=: from =(let [x "xxx" y ^"y yy yyy" z 0])= to ==(let [x "xxx" y])= 
+- =M-k=: =sp-backward-kill-sexp=: from =(:require [clojure.string :as s]^)= to =(:require ^)=
+
+
+
+** Smartparens for different minor modes
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+ (require 'smartparens-text)
+ (require 'smartparens-org)
+ (require 'smartparens-ess)
+ (require 'smartparens-markdown)
+ (require 'smartparens-racket)
+ (require 'smartparens-latex)
+ #+END_SRC
+
+#+RESULTS:
+: smartparens-text
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(sp-with-modes 'org-mode
+  (sp-local-pair "~" "~" :bind "s-~")
+  (sp-local-pair "=" "=" :bind "s-="))
+#+END_SRC
+
+
+
+* Provide
+
+Trying this on 28 dic 2018. I don't really know why it is needed or not.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(provide 'starter-kit-parens)
+#+END_SRC
+
+#+RESULTS:
+: dgm
+
+
+
+* Final message
+#+source: message-line
+#+begin_src emacs-lisp :tangle yes
+(message "Starter Kit Parens File loaded.")
+#+end_src
