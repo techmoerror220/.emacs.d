@@ -1054,6 +1054,67 @@ From: https://etienne.depar.is/emacs.d/mu4e.html
 #+RESULTS:
 
 
+** Caolan's costumization <<here>>
+!!here: commented out in search of culprit.
+
+From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'mu4e-compose-mode-hook
+          (lambda ()
+            (set-fill-column 72)
+            (auto-fill-mode 0)
+            (visual-fill-column-mode)
+            (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+            (visual-line-mode)))
+
+
+  ;; I want to see full From header, not only name
+  (setq mu4e-view-show-addresses t)
+#+END_SRC
+
+#+RESULTS:
+| my-do-compose-stuff | ambrevar/message-github | (lambda nil (set-fill-column 72) (auto-fill-mode 0) (visual-fill-column-mode) (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow)) (visual-line-mode)) |
+
+Store a link to a mu4e query or message, setting various properties for use in capture templates. Basic support is provided by =org-mu4e=, but this uses some code from Using =org-capture-templates= with =mu4e= to extend the properties available to templates.
+
+I tangle to no because I am going to introduce a modification following the bug reported here: https://github.com/djcb/mu/issues/1381
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun org-mu4e-store-link ()
+  "Store a link to a mu4e query or message."
+  (cond
+    ;; storing links to queries
+    ((eq major-mode 'mu4e-headers-mode)
+     (let* ((query (mu4e-last-query))
+             desc link)
+       (org-store-link-props :type "mu4e" :query query)
+       (setq link (concat "mu4e:query:" query))
+       (org-add-link-props :link link :description link)
+       link))
+    ;; storing links to messages
+    ((eq major-mode 'mu4e-view-mode)
+     (let* ((msg (mu4e-message-at-point))
+            (msgid (or (plist-get msg :message-id) "<none>"))
+            (from (car (car (mu4e-message-field msg :from))))
+            (to (car (car (mu4e-message-field msg :to))))
+            (subject (mu4e-message-field msg :subject))
+            link)
+       (setq link (concat "mu4e:msgid:" msgid))
+       (org-store-link-props
+          :type "mu4e" :from from :to to :subject subject
+          :message-id msgid)
+       (org-add-link-props
+          :link link
+          :description (funcall org-mu4e-link-desc-func msg))
+   link))))
+
+(org-add-link-type "mu4e" 'org-mu4e-open)
+(add-hook 'org-store-link-functions 'org-mu4e-store-link)
+#+END_SRC
+
+#+results:
+| org-mu4e-store-link |
 
 * COMMENT Miscellanea commented out
 ** COMMENT Every new email composition gets its own frame and screws everything up!
@@ -1203,104 +1264,6 @@ The following sets up the connections in our config:
 #+RESULTS:
 
 With this, the keys are available in headers-mode and view-mode so you can plan. 
-
-** COMMENT Caolan's costumization <<here>>
-!!here: commented out in search of culprit.
-
-From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(add-hook 'mu4e-compose-mode-hook
-          (lambda ()
-            (set-fill-column 72)
-            (auto-fill-mode 0)
-            (visual-fill-column-mode)
-            (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
-            (visual-line-mode)))
-
-
-  ;; I want to see full From header, not only name
-  (setq mu4e-view-show-addresses t)
-#+END_SRC
-
-#+RESULTS:
-| my-do-compose-stuff | ambrevar/message-github | (lambda nil (set-fill-column 72) (auto-fill-mode 0) (visual-fill-column-mode) (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow)) (visual-line-mode)) |
-
-Store a link to a mu4e query or message, setting various properties for use in capture templates. Basic support is provided by =org-mu4e=, but this uses some code from Using =org-capture-templates= with =mu4e= to extend the properties available to templates.
-
-I tangle to no because I am going to introduce a modification following the bug reported here: https://github.com/djcb/mu/issues/1381
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun org-mu4e-store-link ()
-  "Store a link to a mu4e query or message."
-  (cond
-    ;; storing links to queries
-    ((eq major-mode 'mu4e-headers-mode)
-     (let* ((query (mu4e-last-query))
-             desc link)
-       (org-store-link-props :type "mu4e" :query query)
-       (setq link (concat "mu4e:query:" query))
-       (org-add-link-props :link link :description link)
-       link))
-    ;; storing links to messages
-    ((eq major-mode 'mu4e-view-mode)
-     (let* ((msg (mu4e-message-at-point))
-            (msgid (or (plist-get msg :message-id) "<none>"))
-            (from (car (car (mu4e-message-field msg :from))))
-            (to (car (car (mu4e-message-field msg :to))))
-            (subject (mu4e-message-field msg :subject))
-            link)
-       (setq link (concat "mu4e:msgid:" msgid))
-       (org-store-link-props
-          :type "mu4e" :from from :to to :subject subject
-          :message-id msgid)
-       (org-add-link-props
-          :link link
-          :description (funcall org-mu4e-link-desc-func msg))
-   link))))
-
-(org-add-link-type "mu4e" 'org-mu4e-open)
-(add-hook 'org-store-link-functions 'org-mu4e-store-link)
-#+END_SRC
-
-#+results:
-| org-mu4e-store-link |
-
-Basically, A bug in mu4e/mu4e-conversation was reported here:
-
-https://www.reddit.com/r/emacs/comments/aqhtvf/clash_between_tree_view_of_mu4econversation_and_a/
-
-Indeed, `org-mu4e-store-link` won't do anything if current mode is not either `mu4e-headers-mode` or `mu4e-view-mode` (see code above). Because this function will always be called from a "mu4e" point of view, I suggest changing the second condition to `t` so that it always runs:
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun org-mu4e-store-link ()
-  "Store a link to a mu4e query or message."
-  (cond
-    ;; storing links to queries
-    ((eq major-mode 'mu4e-headers-mode)
-      (let* ((query (mu4e-last-query))
-	      desc link)
-	(org-store-link-props :type "mu4e" :query query)
-	(setq
-	  desc (concat "mu4e:query:" query)
-	  link desc)
-	(org-add-link-props :link link :description desc)
-	link))
-      ;; storing links to messages
-    (t
-      (let* ((msg  (mu4e-message-at-point))
-	     (msgid   (or (plist-get msg :message-id) "<none>"))
-	     link)
-       (org-store-link-props :type "mu4e" :link link
-			     :message-id msgid)
-       (setq link (concat "mu4e:msgid:" msgid))
-       (org-add-link-props :link link
-			   :description (funcall org-mu4e-link-desc-func msg))
-       link))))
-
-(org-add-link-type "mu4e" 'org-mu4e-open)
-(add-hook 'org-store-link-functions 'org-mu4e-store-link)
-#+END_SRC
 
 ** COMMENT Ambrevar's customization
 
@@ -1492,7 +1455,6 @@ If MSG is nil, use message at point."
 #+RESULTS:
 : ambrevar/mu4e-kill-ring-save-message-id
 
-
 *** COMMENT mu4e-conversation
 
 De-activated on 4 august by DGM as =mu4e-conversation= was already giving me problems. Plus my new setup with  =mbsync= might be incompatible with this.
@@ -1559,6 +1521,44 @@ I've tried the following but it is not working.
 
 #+RESULTS:
 
+**** A bug in mu4e/mu4e-conversation
+
+Reported here:
+
+https://www.reddit.com/r/emacs/comments/aqhtvf/clash_between_tree_view_of_mu4econversation_and_a/
+
+Indeed, `org-mu4e-store-link` won't do anything if current mode is not either `mu4e-headers-mode` or `mu4e-view-mode` (see code above). Because this function will always be called from a "mu4e" point of view, I suggest changing the second condition to `t` so that it always runs:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun org-mu4e-store-link ()
+  "Store a link to a mu4e query or message."
+  (cond
+    ;; storing links to queries
+    ((eq major-mode 'mu4e-headers-mode)
+      (let* ((query (mu4e-last-query))
+	      desc link)
+	(org-store-link-props :type "mu4e" :query query)
+	(setq
+	  desc (concat "mu4e:query:" query)
+	  link desc)
+	(org-add-link-props :link link :description desc)
+	link))
+      ;; storing links to messages
+    (t
+      (let* ((msg  (mu4e-message-at-point))
+	     (msgid   (or (plist-get msg :message-id) "<none>"))
+	     link)
+       (org-store-link-props :type "mu4e" :link link
+			     :message-id msgid)
+       (setq link (concat "mu4e:msgid:" msgid))
+       (org-add-link-props :link link
+			   :description (funcall org-mu4e-link-desc-func msg))
+       link))))
+
+(org-add-link-type "mu4e" 'org-mu4e-open)
+(add-hook 'org-store-link-functions 'org-mu4e-store-link)
+#+END_SRC
+
 
 * Provide 
 
@@ -1577,6 +1577,11 @@ I've tried the following but it is not working.
 
 #+RESULTS: message-line
 : Starter Kit User Mu4e File loaded.
+
+
+
+
+
 
 
 
