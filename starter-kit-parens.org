@@ -420,7 +420,20 @@ They navigate around expressions as if delimiters, like parens, brackets, and br
 (sp-with-modes 'org-mode
   (sp-local-pair "~" "~" :bind "s-~")
   (sp-local-pair "=" "=" :bind "s-="))
+
+(sp-local-pair 'org-mode-hook "=" "=")
+  ;; org-mode. This is not working though...
+  ;;    (sp-local-pair 'org-mode "~" "~")
+  ;; (sp-local-pair 'org-mode-hook "=" "=") ; =select= region, hit = then region -> =region= in org-mode
+  ;;    (sp-local-pair 'org-mode "*" "*") ; select region, hit * then region -> *region* in org-mode
+  ;;    (sp-local-pair 'org-mode "/" "/") ; select region, hit / then region -> /region/ in org-mode
+  ;;    (sp-local-pair 'org-mode "_" "_") ; select region, hit _ then region -> _region_ in org-mode
+  ;;    (sp-local-pair 'org-mode "+" "+") ; select region, hit + then region -> +region+ in org-mode
+  ;;    (sp-local-pair 'org-mode "$" "$") ; 
+  ;;    ;; (sp-local-pair 'org-mode "`" "'") ; not working, as it waits for second `
+  ;;   (sp-local-pair 'org-mode "``" "''") 
 #+END_SRC
+
 
 * Provide
 

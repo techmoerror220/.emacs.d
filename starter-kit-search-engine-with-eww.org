@@ -312,6 +312,134 @@ prefixed with =C-x /=:
 #+RESULTS:
 : engine/search-youtube
 
+* Instant Stackoverflow solutions in emacs (without external browser) 
+
+https://www.reddit.com/r/emacs/comments/cs6cb4/instant_stackoverflow_solutions_in_emacs_without/
+
+First a demo gif: https://i.imgur.com/dDvHfOn.gif
+
+It works with and without Helm. Helm is needed for typing suggestions.
+
+First here's the core part which can be used without Helm:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'json)
+
+(defun my-get-stackoverflow-answers (query)
+  (interactive "sQuestion: ")
+  (let* ((question_ids
+          (with-current-buffer
+              (url-retrieve-synchronously
+               (concat "https://google.com/search?ie=utf-8&oe=utf-8&hl=en&as_qdr=all&q="
+                       (url-hexify-string (concat query " site:stackoverflow.com"))))
+            (let (ids)
+              (while (re-search-forward "https://stackoverflow.com/questions/\\([0-9]+\\)" nil t)
+                (push (match-string-no-properties 1) ids))
+              (setq ids (reverse ids))
+              (if (> (length ids) 5)
+                  (subseq ids 0 5)
+                ids))))
+
+         (url_template (format "https://api.stackexchange.com/2.2/questions/%s%%s?site=stackoverflow.com"
+                               (string-join question_ids ";")))
+
+         (questions (with-current-buffer                      
+                        (url-retrieve-synchronously
+                         (format url_template ""))
+                      (goto-char (point-min))
+                      (search-forward "\n\n")
+                      (append (assoc-default 'items (json-read)) nil)))
+
+         (answers (with-current-buffer
+                      (url-retrieve-synchronously
+                       (concat (format url_template "/answers")
+                               "&order=desc&sort=activity&filter=withbody"))
+                    (goto-char (point-min))
+                    (search-forward "\n\n")
+                    (sort (append (assoc-default 'items (json-read)) nil)
+                          (lambda (x y)
+                            (> (assoc-default 'score x)
+                               (assoc-default 'score y)))))))
+
+    (switch-to-buffer "*stackexchange*")
+    (erase-buffer)
+
+    (dolist (question_id (mapcar 'string-to-number question_ids))
+      (let ((question (some (lambda (question)
+                              (if (equal (assoc-default 'question_id question)
+                                         question_id)
+                                  question))
+                            questions)))
+(insert "<hr><h2 style='background-color:paleturquoise'>Question: "
+                (format "<a href='%s'>%s</a>"
+                        (assoc-default 'link question)
+                        (assoc-default 'title question))
+                "</h2>"
+                "\n"
+                (mapconcat
+                 'identity
+                 (let ((rendered
+                        (remove-if
+                         'null
+                         (mapcar (lambda (answer)
+                                   (if (and (equal question_id
+                                                   (assoc-default 'question_id answer))
+                                            (>= (assoc-default 'score answer) 0))
+                                       (concat "<hr><h2 style='background-color:"
+                                               "#c1ffc1'>Answer - score: "
+                                               (number-to-string (assoc-default 'score answer))
+                                               "</h2>"
+                                               (assoc-default 'body answer))))
+                                 answers))))
+                   (if (> (length rendered) 5)
+                       (append (subseq rendered 0 5)
+                               (list (format "<br><br><a href='%s'>%s</a>"
+                                             (assoc-default 'link question)
+                                             "More answers...")))
+                     rendered))
+                 "\n")
+                )))
+    (shr-render-region (point-min) (point-max))
+    (goto-char (point-min))
+    (save-excursion
+      (while (search-forward "^M" nil t)
+        (replace-match "")))))
+#+END_SRC
+
+#+RESULTS:
+: my-get-stackoverflow-answers
+
+
+And here's the Helm wrapper which provides typing suggestions:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; install helm via packages and then:
+
+(require 'helm-net)
+
+(defun my-helm-stackoverflow-lookup ()
+  (interactive)
+  ;; set debug-on-error to swallow potential network errors
+  ;; idea taken from: https://blog.johnregner.com/post/78877988910/fixing-helm-spotify#_=_
+  (let ((debug-on-error t)
+        (helm-google-suggest-actions '(("Stackoverflow" . my-get-stackoverflow-answers))))
+    (helm-google-suggest))) 
+#+END_SRC
+
+#+RESULTS:
+: my-helm-stackoverflow-lookup
+
+** Alternative: =emacs-sos=
+
+https://github.com/rudolfolah/emacs-sos
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package sos
+  :ensure t)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23900 63992 577507 866000) :init (23900 63992 577495 788000) :config (23900 63992 577238 382000) :config-secs (0 0 8 294000) :init-secs (0 0 9505 780000) :use-package-secs (0 1 666875 886000)))
 
 * Provide
 

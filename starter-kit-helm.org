@@ -242,7 +242,7 @@ And still more on grep, but they are already defined in the =exwm= shortcuts, so
 #+END_SRC
 
 ** Eldoc 
-*** TODO understand whtat is =eldoc=.
+*** TODO understand what =eldoc= is
 In Sacha's dotfiles, she says: "Eldoc provides minibuffer hints when working with Emacs Lisp."
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -895,9 +895,9 @@ Basic commands with for interfacing with =exwm= with =helm=
 ;; Launcher
 (exwm-input-set-key (kbd "s-r") 'helm-run-external-command)
 
-;; Web browser
-(exwm-input-set-key (kbd "M-s-j") #'helm-exwm-switch-browser)               ;; I don't use these two and I don't see the user case.
-(exwm-input-set-key (kbd "s-j")   #'helm-exwm-switch-browser-other-window) 
+;; Web browser. Turned off by DGM on 22 august 2019
+;; (exwm-input-set-key (kbd "M-s-j") #'helm-exwm-switch-browser)               ;; I don't use these two and I don't see the user case.
+;; (exwm-input-set-key (kbd "s-j")   #'helm-exwm-switch-browser-other-window)  ;; not using it
 #+END_SRC
 
 #+RESULTS:
@@ -947,6 +947,82 @@ Originally i had also =(define-key helm-M-x-map (kbd "ESC") 'helm-keyboard-quit)
 
 #+RESULTS:
 | (lambda nil (define-key helm-buffer-map (kbd C-g) 'helm-keyboard-quit) (define-key helm-map (kbd C-g) 'helm-keyboard-quit)) | (lambda nil (define-key helm-buffer-map (kbd ESC) 'helm-keyboard-quit) (define-key helm-map (kbd ESC) 'helm-keyboard-quit)) | helm-reset-yank-point |
+
+* =org-rifle=
+
+See https://github.com/alphapapa/org-rifle
+
+=org-rifle= searches in your notes as you type and it finds the search words in any order which makes it very easy and quick to find a given note.
+
+What does my rifle do? It searches rapidly through my Org files. It searches both headings and contents of entries in Org buffers, and it displays entries that match all search terms, whether the terms appear in the heading, the contents, or both. Matching portions of entries’ contents are displayed with surrounding context and grouped by buffer to make it easy to acquire your target.'
+
+In contrast with org-occur and similar commands, helm-org-rifle is entry-based (i.e. a heading and all of its contents, not including subheadings), while org-occur is line-based. So org-occur will show you entire lines that contain matching words, without any reference to the heading the line is under, while helm-org-rifle will show the heading of the entry that matches, followed by context around each matching word in the entry. In other words, helm-org-rifle is sort of like Google, while org-occur is sort of like grep.
+
+Entries are fontified by default to match the appearance of an Org buffer, and optionally the entire path can be displayed for each entry, rather than just its own heading.
+
+** Usage
+
+Run one of the rifle commands, type some words, and results will be displayed, grouped by buffer. Hit RET to show the selected entry, or <C-return> to show it in an indirect buffer.
+
+*** Helm commands: show results in a Helm buffer
+
+- helm-org-rifle: Show results from all open Org buffers
+- helm-org-rifle-agenda-files: Show results from Org agenda files
+- helm-org-rifle-current-buffer: Show results from current buffer
+- helm-org-rifle-directories: Show results from selected directories; with prefix, recursively
+- helm-org-rifle-files: Show results from selected files
+- helm-org-rifle-org-directory: Show results from Org files in org-directory
+
+*** Occur commands: show results in an occur-like, persistent buffer
+
+- helm-org-rifle-occur: Show results from all open Org buffers
+- helm-org-rifle-occur-agenda-files: Show results from Org agenda files
+- helm-org-rifle-occur-current-buffer: Show results from current buffer
+- helm-org-rifle-occur-directories: Show results from selected directories; with prefix, recursively
+- helm-org-rifle-occur-files: Show results from selected files
+- helm-org-rifle-occur-org-directory: Show results from Org files in org-directory
+
+*** Tips
+- Select multiple entries in the Helm buffer to display selected entries in a read-only, occur-style buffer.
+- Save all results in a Helm buffer to a helm-org-rifle-occur buffer by pressing C-s (like helm-grep-save-results).
+- Show results from certain buffers by typing the name of the buffer (usually the filename).
+- Show headings with certain to-do keywords by typing the keyword, e.g. TODO or DONE.
+- Multiple to-do keywords are matched with boolean OR.
+- Show headings with certain priorities by typing, e.g. #A or [#A].
+- Show headings with certain tags by searching for, e.g. :tag1:tag2:.
+- Negate matches with a !, e.g. pepperoni !anchovies.
+- Sort results by timestamp or buffer-order (the default) by calling commands with a universal prefix (C-u).
+- Show entries in an indirect buffer by selecting that action from the Helm actions list, or by pressing <C-return>.
+- The keymap for helm-org-rifle-occur results buffers imitates the org-speed keys, making it quicker to navigate. You can also collapse and expand headings and drawers with TAB and S-TAB, just like in regular Org buffers. Results buffers are marked read-only so you cannot modify them by accidental keypresses.
+ - Delete the result at point in helm-org-rifle-occur buffers by pressing d. This does not alter the source buffers but simply removes uninteresting results from view.
+- You can customize the helm-org-rifle group if you like.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-org-rifle
+  :ensure t
+  :bind ("s-w" . helm-org-rifle))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23904 2416 473789 40000) :init (23904 2416 473492 686000) :init-secs (0 0 130 631000) :use-package-secs (0 0 667 779000)))
+
+* Look at the Emacs or Elisp manual with helm
+
+From: https://www.reddit.com/r/emacs/comments/cuc8hl/how_do_you_remember_various_features_of_emacs/
+
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun ap/helm-info-emacs-elisp-cl ()
+  "Helm for Emacs, Elisp, and CL-library info pages."
+  (interactive)
+  (helm :sources '(helm-source-info-emacs
+                   helm-source-info-elisp
+                   helm-source-info-cl)))
+#+END_SRC
+
+#+RESULTS:
+: ap/helm-info-emacs-elisp-cl
+
 
 * Provide
 

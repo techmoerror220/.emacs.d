@@ -2898,11 +2898,11 @@ I found out about this mode by looking through =simple.el=.
 (For the record: =simple.el=  is a grab-bag of basic Emacs commands not specifically related to some major mode or to file-handling.)
 I use it to see raw org-mode files without going to a different mode like text-mode, which is what I had done in order to see invisible text (with org hyperlinks). The entire buffer contents will be visible while still being in org mode.
 
-Make visible mode the default, please. 
+Make visible mode the default, please. I don't use a key binding for this because I don't use it that much and I prefer saving =s-h= for =electric= buffer management.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (visible-mode 1)
-(global-set-key (kbd "s-h") 'visible-mode)
+;; (global-set-key (kbd "s-h") 'visible-mode)
 #+END_SRC
 
 #+RESULTS:
@@ -3493,23 +3493,23 @@ I try to change helm selection in minibuffer so that it is highlighted.
                         :height 0.1)))
 ;;(when window-system
 ;;  (custom-set-faces
-;;   '(helm-selection ((t (:background "#4682b4" :foreground "black"))))))
+;;   '(helm-selection ((t (:background "#4682b4" :foreground "#F5f5f5"))))))
 ;; Change Helm's selection color
 ;; Orange3: "#Cd8500"
 (set-face-attribute 'helm-selection nil 
                     :background nil
                     :foreground "Orange3") 
-;; Change Helm's color of Source!!
-(set-face-attribute 'helm-source-header nil 
-                    :background "DeepSkyBlue4"
-                    :foreground "black")
+;; ;; Change Helm's color of Source!!
+;; (set-face-attribute 'helm-source-header nil 
+;;                    :background "DeepSkyBlue4"
+;;                    :foreground "black")
 
-(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)  ;; #1e90ff
+(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)  
 #+END_SRC
 
 #+RESULTS:
 
-** Further customization of helm's looks, mainly colors
+** COMMENT Further customization of helm's looks, mainly colors
 
 If I place this in the =starter-kit-helm.org= file, for some reason, probably because some code in the way overlaps the following, it does not work.
 
@@ -4567,6 +4567,60 @@ handy.
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23876 24572 365881 952000) :init (23876 24572 365873 813000) :config (23876 24572 365671 940000) :config-secs (0 0 5 73000) :init-secs (0 0 20833 634000) :use-package-secs (0 0 20886 646000)))
 
+* Browser switching
+
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-set-key (kbd "s-j") 'ivy-switch-buffer)
+
+(global-set-key (kbd "s-h") 'electric-buffer-list)
+ ; This hook run after buffer formatted, so it is necessary to re-fontify it...
+ (add-hook 'electric-buffer-menu-mode-hook
+	   '(lambda ()
+	      (font-lock-mode 1)
+	      (font-lock-fontify-buffer)))
+
+(setq ido-default-buffer-method 'selected-window)
+(unless ido-mode
+  (ido-mode 1))
+(global-set-key (kbd "C-c b") 'ido-switch-buffer)
+#+END_SRC
+
+#+RESULTS:
+: ido-switch-buffer
+
+* Cheatsheet
+
+See https://github.com/darksmile/cheatsheet/blob/master/cheatsheet.el
+
+Add your first cheat:
+
+#+BEGIN_EXAMPLE
+(cheatsheet-add :group 'Common
+                 :key "C-x C-c"
+                 :description "leave Emacs.")
+#+END_EXAMPLE
+
+Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package cheatsheet
+  :ensure t)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23904 3341 86409 9000) :init (23904 3341 86394 305000) :config (23904 3341 86098 775000) :config-secs (0 0 7 582000) :init-secs (0 0 6863 295000) :use-package-secs (0 2 57384 454000)))
+
+** Cheatsheets
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(cheatsheet-add :group 'Common
+                 :key "C-x C-c"
+                 :description "leave Emacs.")
+#+END_SRC
+
+#+RESULTS:
+| :group | Common | :key | C-x C-c | :description | leave Emacs. |
 
 * Provide
 

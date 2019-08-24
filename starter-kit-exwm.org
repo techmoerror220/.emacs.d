@@ -7,7 +7,7 @@
 
 This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
-* COMMENT Set up of  EXWM: emacs as desktop manager!
+* COMMENT Set up of EXWM: emacs as desktop manager!
 
 First step with =use-package= moved to init.
 

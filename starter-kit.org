@@ -439,6 +439,7 @@ Located in [[file:starter-kit-org.org][starter-kit-org]].
 
 #+RESULTS:
 : Loaded /home/dgm/.emacs.d/starter-kit-org.el
+
 *** Starter kit =helm=
 
 #+BEGIN_SRC emacs-lisp
