@@ -434,6 +434,29 @@ They navigate around expressions as if delimiters, like parens, brackets, and br
   ;;   (sp-local-pair 'org-mode "``" "''") 
 #+END_SRC
 
+* Electric Pair for Org-Mode
+
+From: https://ipfs-sec.stackexchange.cloudflare-ipfs.com/emacs/A/question/2538.html 
+and https://tgro.neocities.org/init.html
+
+I dunno why some pairs work (//, ==)and some don't (~, *, _)...
+
+#+begin_src emacs-lisp :tangle yes
+(defvar org-electric-pairs '(
+                             (?* . ?*) 
+                             (?/ . ?/) 
+                             (?_ . ?_) 
+                             (?= . ?=) 
+                             (?~ . ?~)
+                             ) 
+  "Electric pairs for Org-mode.")
+
+(defun org-add-electric-pairs ()
+  (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
+  (setq-local electric-pair-text-pairs electric-pair-pairs))
+
+(add-hook 'org-mode-hook 'org-add-electric-pairs)
+#+end_src
 
 * Provide
 

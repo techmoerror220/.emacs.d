@@ -7,6 +7,7 @@
 * Starter kit yasnippet
 
 Yasnippet is a snippet expansion system for Emacs. It uses short phrases and the tab key to trigger the insertion of frequently-used snippets of code or text in your document. 
+
 ** Load the yasnippet bundle
 
 Load the snippets defined in the package's =./snippets/= directory, and local snippets from the =./local-snippets/= directory. 
@@ -16,7 +17,7 @@ Added tips from Uncle Dave and Daniel Mai (https://github.com/danielmai/.emacs.d
 This is the old configuration.
 
 #+begin_src emacs-lisp :tangle no
-  (add-to-list 'load-path
+(add-to-list 'load-path
                (expand-file-name  "yasnippet"
                                   (expand-file-name "elpa"
                                                     dotfiles-dir)))
@@ -45,15 +46,15 @@ This is the old configuration.
                            "~/.emacs.d/elpa/yasnippet-snippets-20181107.2203/snippets"
                            "~/.emacs.d/elpa/"))
 
-  ;;   (yas-load-directory (expand-file-name "snippets" dotfiles-dir))  ;; original line from kieran healy
+(yas/load-directory "~/.emacs.d/mysnippets")
+(yas-load-directory (expand-file-name "snippets" dotfiles-dir)) ;; original line from kieran healy
 #+end_src
 
 #+RESULTS:
-| ~/.emacs.d/mysnippets | ~/.emacs.d/snippets | ~/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets | ~/.emacs.d/elpa/yasnippet-snippets-20180909.1015/snippets | ~/.emacs.d/elpa/ |
 
 The new config from Daniel Mai's config files is this:
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package yasnippet
   :ensure t
   :diminish yas-minor-mode
@@ -61,7 +62,7 @@ The new config from Daniel Mai's config files is this:
 (setq yas-snippet-dirs '("~/.emacs.d/mysnippets"
                          "~/.emacs.d/snippets"
                          "~/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets"
-                         "~/.emacs.d/elpa/yasnippet-snippets-20180909.1015/snippets"
+                         "~/.emacs.d/elpa/yasnippet-snippets-20190725.1049/snippets"
                          "~/.emacs.d/elpa/"))
   (setq yas-indent-line 'fixed)
   (yas-global-mode))
@@ -77,10 +78,9 @@ It takes a few seconds to load and I don’t need them immediately when Emacs st
 
 Setting yas-indent-line to =’fixed= fixes Python indentation behavior when typing a templated snippet.
 
-
 These are some functions defined in the old configuration that I leave as they might be useful or required somewhere.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (defun check-expansion ()
     (save-excursion
       (if (looking-at "\\_>") t
@@ -108,6 +108,73 @@ These are some functions defined in the old configuration that I leave as they m
 
 #+RESULTS:
 : tab-indent-or-complete
+
+** Diego Vicente
+
+This package is a template and snippet system for Emacs, inspired by the syntax
+of TextMate.
+
+Originally had 
+
+#+BEGIN_EXAMPLE
+; (add-to-list 'yas-snippet-dirs (concat "~/.emacs.d/snippets")) 
+#+END_EXAMPLE
+
+Creo que no hace falta esto: 
+
+#+BEGIN_EXAMPLE
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets"
+                           "~/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets"
+                           "~/.emacs.d/elpa/yasnippet-snippets-20190725.1049/snippets"
+                           "~/.emacs.d/elpa/"))
+#+END_EXAMPLE
+
+Another: 
+
+#+BEGIN_EXAMPLE
+  (setq yas-snippet-dirs (append yas-snippet-dirs                                 '("/home/dgm/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets"
+    "/home/dgm/.emacs.d/elpa/yasnippet-snippets-20190725.1049/snippets")))
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1)
+  (advice-add 'yas--auto-fill-wrapper :override #'ignore))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23906 18314 433888 496000) :init (23906 18314 433879 973000) :config (23906 18314 433768 65000) :config-secs (0 3 561713 354000) :init-secs (0 3 562016 50000) :use-package-secs (0 3 562120 514000)))
+
+In the =/snippets= folder in this repository you can see my snippets
+collection. A good guide to understand the syntax used is in [[https://joaotavora.github.io/yasnippet/snippet-development.html][the manual for
+YASnippet]]. All the snippets are local to a certain mode (delimited by the name
+of the folder in the collection) and their keys can be expanded using =TAB=.
+
+** More snippets 
+
+#+begin_src emacs-lisp :tangle yes
+(use-package yasnippet-snippets
+  :ensure t)
+
+(use-package yasnippet-classic-snippets
+  :ensure t)
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23905 44885 837704 349000) :init (23905 44885 837689 505000) :config (23905 44885 837342 945000) :config-secs (0 0 10 698000) :init-secs (0 0 750 889000) :use-package-secs (0 0 4708 89000)))
+
+** Ivy for Yasnippets
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ivy-yasnippet
+  :ensure t
+  :bind ("s-o" . ivy-yasnippet))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23905 41549 462893 51000) :init (23905 41549 462621 703000) :config (23905 41549 462556 464000) :config-secs (0 0 18 333000) :init-secs (0 0 150 409000) :use-package-secs (0 0 599 676000)))
 
 ** Company Mode
 
@@ -284,7 +351,7 @@ This is currently tangled to =no=.
 (add-hook 'python-mode-hook 'my/python-mode-hook)
 #+END_SRC
 
-*** COMMENT emacs-lisp
+*** emacs-lisp 
 
 Watch out: you have to install in your system =sbcl=. 
 I comment this out for the time being as it seems to use a keybinding that conflicts with others (I get this warning =Error (use-package): slime-company/:catch: Key sequence C-x C-a C-l starts with non-prefix key C-x C-a=)
@@ -308,7 +375,7 @@ I comment this out for the time being as it seems to use a keybinding that confl
 #+END_SRC
 
 #+RESULTS:
-| (lambda nil (require 'company-elisp) (set (make-local-variable 'company-backends) (delete-dups (cons 'company-elisp (cons 'company-files company-backends))))) | esk-remove-elc-on-save | run-starter-kit-coding-hook | turn-on-eldoc-mode | company-mode | yas-minor-mode | eldoc-mode |
+| company-mode | yas-minor-mode | eldoc-mode | (lambda nil (require 'company-elisp) (set (make-local-variable 'company-backends) (delete-dups (cons 'company-elisp (cons 'company-files company-backends))))) | esk-remove-elc-on-save | run-starter-kit-coding-hook | turn-on-eldoc-mode |
 
 *** bash
 

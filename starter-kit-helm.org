@@ -1023,6 +1023,77 @@ From: https://www.reddit.com/r/emacs/comments/cuc8hl/how_do_you_remember_various
 #+RESULTS:
 : ap/helm-info-emacs-elisp-cl
 
+* COMMENT Worf and hydra
+
+=worf= needs =hydra=
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package hydra)
+(use-package worf)
+#+END_SRC
+
+** COMMENT Worf costumization to work as a search engine across org headers
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;; ——— WORF Utilities ———————————————————————————————————————————————————————————————
+;; https://github.com/abo-abo/worf/blob/master/worf.el
+(defun worf--pretty-heading (str lvl)
+  "Prettify heading STR or level LVL."
+  (setq str (or str ""))
+  (setq str (propertize str 'face (nth (1- lvl) org-level-faces)))
+  (let (desc)
+    (while (and (string-match org-bracket-link-regexp str)
+                (stringp (setq desc (match-string 3 str))))
+      (setq str (replace-match
+                 (propertize desc 'face 'org-link)
+                 nil nil str)))
+    str))
+(defun worf--pattern-transformer (x)
+  "Transform X to make 1-9 select the heading level in `worf-goto'."
+  (if (string-match "^[1-9]" x)
+      (setq x (format "^%s" x))
+    x))
+
+(defun worf-goto ()
+  "Jump to a heading with `helm'."
+  (interactive)
+  (require 'helm-match-plugin) ;; commented out by DGM as I think it is not needed. See https://stackoverflow.com/questions/19098272/initialization-error-caused-by-helm-match-plugin
+  (let ((candidates
+         (org-map-entries
+          (lambda ()
+            (let ((comp (org-heading-components))
+                  (h (org-get-heading)))
+              (cons (format "%d%s%s" (car comp)
+                            (make-string (1+ (* 2 (1- (car comp)))) ?\ )
+                            (if (get-text-property 0 'fontified h)
+                                h
+                              (worf--pretty-heading (nth 4 comp) (car comp))))
+                    (point))))))
+        helm-update-blacklist-regexps
+        helm-candidate-number-limit)
+    (helm :sources
+          `((name . "Headings")
+            (candidates . ,candidates)
+            (action . (lambda (x) (goto-char x)
+                        (call-interactively 'show-branches)
+                        (worf-more)))
+            (pattern-transformer . worf--pattern-transformer)))))
+
+(global-set-key (kbd "C-=") 'worf-goto)
+#+END_SRC
+
+#+RESULTS:
+: worf-goto
+
+
+* Org in buffer heading search
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-set-key (kbd "C-=") 'helm-org-in-buffer-headings)
+#+END_SRC
+
+#+RESULTS:
+: helm-org-in-buffer-headings
 
 * Provide
 

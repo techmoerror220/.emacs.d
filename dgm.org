@@ -4593,34 +4593,41 @@ handy.
 
 See https://github.com/darksmile/cheatsheet/blob/master/cheatsheet.el
 
-Add your first cheat:
-
-#+BEGIN_EXAMPLE
-(cheatsheet-add :group 'Common
-                 :key "C-x C-c"
-                 :description "leave Emacs.")
-#+END_EXAMPLE
-
 Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package cheatsheet
-  :ensure t)
+  :ensure t
+  :config 
+  (cheatsheet-add :group 'Common
+                  :key "C-x C-c"
+                  :description "leave Emacs.")
+  (cheatsheet-add  :group 'Find
+                   :key "s-w"
+                   :description "Rifle search in Org files")
+  (cheatsheet-add  :group 'Find
+                   :key "C-="
+                   :description "Helm find Org heading")  
+  :bind ("C-c C-s" . cheatsheet-show))
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23904 3341 86409 9000) :init (23904 3341 86394 305000) :config (23904 3341 86098 775000) :config-secs (0 0 7 582000) :init-secs (0 0 6863 295000) :use-package-secs (0 2 57384 454000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23905 41609 973310 753000) :init (23905 41609 972904 436000) :init-secs (0 0 965 120000) :use-package-secs (0 0 1583 82000) :config (23905 41609 972836 689000) :config-secs (0 0 881 683000)))
 
 ** Cheatsheets
 
+Add your first cheat:
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-(cheatsheet-add :group 'Common
-                 :key "C-x C-c"
-                 :description "leave Emacs.")
+
 #+END_SRC
 
 #+RESULTS:
-| :group | Common | :key | C-x C-c | :description | leave Emacs. |
+| :group | Find   | :key | s-w     | :description | Rifle search in Org files |        |      |      |     |              |                           |
+| :group | Common | :key | C-x C-c | :description | leave Emacs.              | :group | Find | :key | s-w | :description | Rifle search in Org files |
+| :group | Common | :key | C-x C-c | :description | leave Emacs.              |        |      |      |     |              |                           |
+
+
 
 * Provide
 
