@@ -2128,6 +2128,7 @@ However, I've tangled it up to "no" because I think this is not needed now that 
 *** Flyspell and flycheck
 When I start the shell I get a backtrace error related to not finding flyspell, so I get it here. The message is:
 
+#+BEGIN_EXAMPLE
 Debugger entered--Lisp error: (void-function flycheck-mode)
   flycheck-mode()
   run-hooks(change-major-mode-after-body-hook comint-mode-hook shell-mode-hook)
@@ -2142,6 +2143,8 @@ Debugger entered--Lisp error: (void-function flycheck-mode)
   funcall-interactively(shell-pop nil)
   call-interactively(shell-pop nil nil)
   command-execute(shell-pop)
+#+END_EXAMPLE
+
 
 Note =flyspell= is part of emacs so you don't need =use-package=.
 
@@ -4598,21 +4601,58 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package cheatsheet
   :ensure t
-  :config 
+  :config
+  (cheatsheet-add :group 'Bindings
+                  :key "describe-personal-keybinding"
+                  :description "Personal bindings")
+  (cheatsheet-add :group 'Bindings
+                  :key "C-h m"
+                  :description "View bindings for all modes active in buffer")
   (cheatsheet-add :group 'Common
                   :key "C-x C-c"
                   :description "leave Emacs.")
-  (cheatsheet-add  :group 'Find
-                   :key "s-w"
-                   :description "Rifle search in Org files")
-  (cheatsheet-add  :group 'Find
-                   :key "C-="
-                   :description "Helm find Org heading")  
-  :bind ("C-c C-s" . cheatsheet-show))
+  (cheatsheet-add :group 'Find
+                  :key "C-="
+                  :description "Find Org heading")
+  (cheatsheet-add :group 'Find
+                  :key "s-w"
+                  :description "Rifle search in Org files")
+  (cheatsheet-add :group 'Find
+                  :key "C-x f"
+                  :description "Find recent file")
+  (cheatsheet-add :group 'Helm
+                  :key "C-c h"
+                  :description "Helm prefix / If in C-x C-f session, list visited files/dirs")
+  (cheatsheet-add :group 'Helm
+                  :key "C-c C-i"
+                  :description "Insert selection (columns)")
+  (cheatsheet-add :group 'Helm
+                  :key "C-w"
+                  :description "Yank word at point into Helm prompt")
+  (cheatsheet-add :group 'Helm
+                  :key "M-n"
+                  :description "Yank symbol at point into Helm prompt")
+  (cheatsheet-add :group 'Help
+                  :key "C-c ?"
+                  :description "Help in a Helm session")
+  (cheatsheet-add :group 'Programming
+                  :key "C-M a"
+                  :description "Begin of function")
+  (cheatsheet-add :group 'Programming
+                  :key "C-M e"
+                  :description "End of function")
+  (cheatsheet-add :group 'Spelling
+                  :key "C-M-$"
+                  :description "Change dictionary")
+  (cheatsheet-add :group 'Spelling
+                  :key "M-$"
+                  :description "Spellcheck word or region")
+  :bind ("C-c C-s" . cheatsheet-show)
+  )
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23905 41609 973310 753000) :init (23905 41609 972904 436000) :init-secs (0 0 965 120000) :use-package-secs (0 0 1583 82000) :config (23905 41609 972836 689000) :config-secs (0 0 881 683000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23910 22309 392230 736000) :init (23910 22309 392000 277000) :init-secs (0 0 60 520000) :use-package-secs (0 0 566 233000)))
 
 ** Cheatsheets
 

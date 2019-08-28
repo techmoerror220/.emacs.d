@@ -441,11 +441,9 @@ and https://tgro.neocities.org/init.html
 
 I dunno why some pairs work (//, ==)and some don't (~, *, _)...
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes :results silent 
 (defvar org-electric-pairs '(
-                             (?* . ?*) 
                              (?/ . ?/) 
-                             (?_ . ?_) 
                              (?= . ?=) 
                              (?~ . ?~)
                              ) 
@@ -457,6 +455,16 @@ I dunno why some pairs work (//, ==)and some don't (~, *, _)...
 
 (add-hook 'org-mode-hook 'org-add-electric-pairs)
 #+end_src
+
+These pairs 
+
+#+BEGIN_EXAMPLE
+                             ;; (?* . ?*) 
+                             ;; (?_ . ?_) 
+#+END_EXAMPLE
+
+not included as they were obstrusive.
+
 
 * Provide
 

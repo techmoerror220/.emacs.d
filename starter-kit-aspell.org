@@ -6,7 +6,7 @@
 
 This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
-* Starter Kit aspell
+* COMMENT Kieran Healy's Starter Kit aspell
 Hackish file to accommodate having aspell installed on your Mac. Otherwise
 flyspell doesn't start properly. Putting this customization in
 <username>.org initiates it too late. 
@@ -18,13 +18,13 @@ flyspell doesn't start properly. Putting this customization in
 #+begin_src emacs-lisp :tangle no
   (require 'flyspell)
   (setq ispell-program-name "aspell"
-        ispell-dictionary "english"
+        ispell-dictionary "american"
         ispell-dictionary-alist
         (let ((default '("[A-Za-z]" "[^A-Za-z]" "[']" nil
-                         ("-B" "-d" "english")
+                         ("-B" "-d" "american")
                          nil iso-8859-1)))
           `((nil ,@default)
-            ("english" ,@default))))
+            ("american" ,@default))))
   (setq ispell-extra-args '("--sug-mode=ultra"))
   (setq ispell-personal-dictionary "~/.aspell.en.pws")
   (setq flyspell-issue-message-flag nil)
@@ -42,6 +42,152 @@ flyspell doesn't start properly. Putting this customization in
 #+RESULTS:
 : flyspell-region
 
+* My Spelling set up 
+
+** Wiki 
+
+Emacs has an ispell package that interfaces to a range of spelling programs which do the heavy lifting. So =ispell.el= acts as a facade for various command line spelling utilities like =ispell=, =aspell= and =hunspell=. 
+
+=ispell.el= has built-in support for detecting Hunspell's default dictionary so it should work out fo the box with no Emacs configuration.
+
+Note the key variable: 
+
+#+BEGIN_EXAMPLE
+ispell-hunspell-dict-paths-alist is a variable defined in
+ispell.el.gz.
+
+Value
+(("american" "/usr/share/hunspell/en_US.aff")
+ ("castellano" "/usr/share/hunspell/es_ES.aff")
+ ("castellano8" "/usr/share/hunspell/es_ES.aff")
+ ("english" "/usr/share/hunspell/en_US.aff")
+ ("es_CR" "/usr/share/hunspell/es_CR.aff")
+ ("es_PA" "/usr/share/hunspell/es_PA.aff")
+ ("es_CL" "/usr/share/hunspell/es_CL.aff")
+ ("en_US" "/usr/share/hunspell/en_US.aff")
+ ("es_PY" "/usr/share/hunspell/es_PY.aff")
+ ("es_US" "/usr/share/hunspell/es_US.aff")
+ ("es_VE" "/usr/share/hunspell/es_VE.aff")
+ ("es_MX" "/usr/share/hunspell/es_MX.aff")
+ ("es_GT" "/usr/share/hunspell/es_GT.aff")
+ ("es_NI" "/usr/share/hunspell/es_NI.aff")
+ ("es_BO" "/usr/share/hunspell/es_BO.aff")
+ ("es_PE" "/usr/share/hunspell/es_PE.aff")
+ ("es_AR" "/usr/share/hunspell/es_AR.aff")
+ ("es_CO" "/usr/share/hunspell/es_CO.aff")
+ ("es_HN" "/usr/share/hunspell/es_HN.aff")
+ ("es_EC" "/usr/share/hunspell/es_EC.aff")
+ ("es_UY" "/usr/share/hunspell/es_UY.aff")
+ ("es_PR" "/usr/share/hunspell/es_PR.aff")
+ ("es_DO" "/usr/share/hunspell/es_DO.aff")
+ ("es_ES" "/usr/share/hunspell/es_ES.aff")
+ ("es_SV" "/usr/share/hunspell/es_SV.aff")
+ ("es_CU" "/usr/share/hunspell/es_CU.aff"))
+
+Set
+
+Documentation
+Alist of parsed Hunspell dicts and associated affix files.
+
+Will be used to parse corresponding .aff file and create associated
+parameters to be inserted into ispell-hunspell-dictionary-alist.
+Internal use.
+
+References
+References in ispell.el.gz:
+(defvar ispell-hunspell-dict-paths-alist ...) 1 reference
+(defun ispell-parse-hunspell-affix-file ...)  1 reference
+(defun ispell-find-hunspell-dictionaries ...) 8 references
+
+Find all references
+
+Debugging
+Forget
+
+Source Code
+;; Defined in /usr/local/share/emacs/27.0.50/lisp/textmodes/ispell.el.gz
+;; Make ispell.el work better with hunspell.
+
+(defvar ispell-hunspell-dict-paths-alist nil
+  "Alist of parsed Hunspell dicts and associated affix files.
+Will be used to parse corresponding .aff file and create associated
+parameters to be inserted into `ispell-hunspell-dictionary-alist'.
+Internal use.")
+
+Symbol Properties
+variable-documentation
+  ("/usr/local/share/emacs/27.0.50/lisp/textmodes/ispell.elc" . 31619)
+#+END_EXAMPLE
+
+Tell ispell that apostrophes are part of words and select American English dictionary (nil). DGM changed spanish to "Castellano"
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq ispell-local-dictionary-alist
+      `((nil
+         "[[:alpha:]]"
+         "[^[:alpha:]]"
+         "[']"
+         t
+         ("-d" "en_US")
+         nil
+         utf-8)
+        ("american"
+         "[[:alpha:]]"
+         "[^[:alpha:]]"
+         "[']"
+         t
+         ("-d" "en_US")
+         nil
+         utf-8)
+ 	    ("castellano"
+         "[[:alpha:]]"
+         "[^[:alpha:]]"
+         "[']"
+         t
+         ("-d" "es_ES")
+         nil
+         utf-8)
+	    ))
+
+;; (setq ispell-program-name "hunspell")
+;; It works!  It works!  After two hours of slogging, it works!
+(if (file-exists-p "/usr/bin/hunspell")
+    (progn
+      (setq-default ispell-program-name "hunspell")
+      (setq ispell-program-name         "hunspell"
+            ispell-dictionary           "american"
+            ispell-local-dictionary     "american")
+      (eval-after-load "ispell"
+        '(progn (defun ispell-get-coding-system () 'utf-8)))))
+
+(setq ispell-really-hunspell t)
+
+(global-set-key (kbd "C-M-$") #'ispell-change-dictionary)
+#+END_SRC
+
+#+RESULTS:
+: ispell-change-dictionary
+
+=rw-hunspell.el= provides useful extensions to =ispell.el= for Hunspell.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(require 'rw-language-and-country-codes) 
+(require 'rw-ispell)
+(require 'rw-hunspell)
+#+END_SRC
+
+Customization:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq rw-hunspell-default-dictionary "american"
+      rw-hunspell-dicpath-list (quote ("/usr/share/hunspell"))
+      rw-hunspell-make-dictionary-menu t
+      rw-hunspell-use-rw-ispell t
+      )
+#+END_SRC
+
+#+RESULTS:
+: t
 
 * Provide 
 
@@ -60,3 +206,8 @@ flyspell doesn't start properly. Putting this customization in
 
 #+RESULTS: message-line
 : Starter Kit Aspell loaded.
+
+
+
+
+

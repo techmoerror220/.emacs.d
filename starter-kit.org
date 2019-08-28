@@ -301,17 +301,18 @@ source may already be found in the load path.
                (list (concat dotfiles-dir user-login-name) dotfiles-dir))))))
 #+end_src
 
-*** COMMENT Starter Kit aspell (Spell checking with flyspell)
+*** Starter Kit aspell (Spell checking with flyspell)
 
 Aspell workaround in [[file:starter-kit-aspell.org][starter-kit-aspell]]
 
 DGM: I can't recall now how it is not run... 
 
 #+begin_src emacs-lisp
-;;  (starter-kit-load "starter-kit-aspell.org")
+(starter-kit-load "starter-kit-aspell.org")
 #+end_src
 
 #+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-aspell.el
 
 *** ELPA (Emacs Lisp Package Manager)
 

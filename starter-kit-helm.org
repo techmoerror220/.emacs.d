@@ -110,7 +110,7 @@ cannot change `helm-command-prefix-key' once `helm-config' is loaded.
 ** Fuzzy matching 
 To enable fuzzy matching, add the following settings:
 
-On semantic, read https://tuhdo.github.io/helm-intro.html: Semantic is a package that provides language-aware editing commands based on 'source-code parsers'. When enabled, each file you visit is automatically parsed. Semantic provides execellent support for C/C++. To enable Semantic mode, execute (semantic-mode 1).
+On semantic, read https://tuhdo.github.io/helm-intro.html: Semantic is a package that provides language-aware editing commands based on 'source-code parsers'. When enabled, each file you visit is automatically parsed. Semantic provides execellent support for C/C++. To enable Semantic mode, execute =(semantic-mode 1)= (done in =starter-kit-completion.org=).
 
 Helm offers an interface to both Semantic and Imenu at the same time: If `semantic-mode' is active in the current buffer, then use semantic for generating tags, otherwise fall back to imenu. If point is on a symbol, helm feeds the symbol into input prompt by default.
 
@@ -122,12 +122,6 @@ Helm offers an interface to both Semantic and Imenu at the same time: If `semant
     ;; helm-find-files is file navigation on steroids:
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 ;;(global-set-key (kbd "<s-escape>") 'helm-recentf)
-
-;; =C-x C-f= you start a =helm-find-files= session. There you can do =C-s= to recursively grep a selected directory.  Every time you type a character, helm updates grep result immediately. You can use ack-grep to replace grep with this configuration:
-
-(when (executable-find "ack-grep")
-  (setq helm-grep-default-command "ack-grep -Hn --no-group --no-color %e %p %f"
-        helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f"))
 
 ;; Command: helm-semantic-or-imenu
 ;; recall I have ==(semantic-mode 1)= in =starter-kit-completion.org=
@@ -626,7 +620,6 @@ DGM, 16 july: I disable this as the prefix =M-s= is not working. Don't know why.
 
 Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs and Tuhdo  https://tuhdo.github.io/helm-intro.html
 
-
 #+BEGIN_SRC emacs-lisp :tangle yes
 (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
 ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
@@ -840,6 +833,21 @@ ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://githu
 #+RESULTS:
 : helm-projectile-ag
  
+* =helm-ack=
+
+=C-x C-f= you start a =helm-find-files= session. There you can do =C-s= to recursively grep a selected directory.  Every time you type a character, helm updates grep result immediately. You can use ack-grep to replace grep with this configuration:
+
+
+#+begin_src emacs-lisp :tangle yes
+(use-package helm-ack)
+
+(when (executable-find "ack-grep")
+  (setq helm-grep-default-command "ack-grep -Hn --no-group --no-color %e %p %f"
+        helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f"))
+#+end_src
+
+#+RESULTS:
+
 * EXWM
 
 Basic commands with for interfacing with =exwm= with =helm=

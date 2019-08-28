@@ -242,9 +242,11 @@ Tuhdo says that =company-capf= is the expected backend to be used: ``I had no sl
 
 On Semantic read also this: https://www.reddit.com/r/emacs/comments/5yxxrl/what_is_that_status_of_semantic/ and http://alexott.net/en/writings/emacs-devenv/EmacsCedet.html
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (semantic-mode 1)
-#+END_SRC
+;;(setq helm-semantic-fuzzy-match t
+;;      helm-imenu-fuzzy-match t)
+#+end_src
 
 #+RESULTS:
 : t
@@ -266,7 +268,6 @@ We use company mode, as initiated above, but here's a working auto-complete setu
   (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
   (define-key ac-completing-map (kbd "C-c h") 'ac-quick-help)  
   (add-hook 'html-mode-hook 'ac-html-enable)
-
 #+end_src 
 
 ** Specific languages 
