@@ -4608,9 +4608,27 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Bindings
                   :key "C-h m"
                   :description "View bindings for all modes active in buffer")
+  (cheatsheet-add :group 'Browsing
+                  :key "C-c h g"
+                  :description "helm-google-suggest" gives Google results in Helm buffer. Type slow)
+  (cheatsheet-add :group 'Browsing
+                  :key "C-$"
+                  :description "helm-surfraw")
+  (cheatsheet-add :group 'Browsing
+                  :key "s-b"
+                  :description "Web browsing: Maps included")
+  (cheatsheet-add :group 'Browsing
+                  :key "M-x sos"
+                  :description "StackOverflow only")
+  (cheatsheet-add :group 'Browsing
+                  :key "M-x my-helm-stackoverflow-lookup"
+                  :description "Alternative for StackOverflow only")
   (cheatsheet-add :group 'Common
                   :key "C-x C-c"
                   :description "leave Emacs.")
+  (cheatsheet-add :group 'Dired
+                  :key "C-x d and then TAB to select"
+                  :description "helm-mode-dired")
   (cheatsheet-add :group 'Find
                   :key "C-="
                   :description "Find Org heading")
@@ -4618,8 +4636,26 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "s-w"
                   :description "Rifle search in Org files")
   (cheatsheet-add :group 'Find
+                  :key "C-c h / (current dir) or C-u C-c h / (choose dir)"
+                  :description "helm-find front-end for *nix FIND command")
+  (cheatsheet-add :group 'Find
+                  :key "C-c h l"
+                  :description "helm-locate front-end of *unix LOCATE command")
+  (cheatsheet-add :group 'Find
+                  :key "s-:"
+                  :description "helm-occur (TAB to temporarily move to highlighted match)")
+  (cheatsheet-add :group 'Find
+                  :key "C-h SP"
+                  :description "helm-all-mark-rings (local and global)")
+  (cheatsheet-add :group 'Find
+                  :key "C-c h x (then TAB or RET to insert)"
+                  :description "helm-register (equivalent to C-x r i)")
+  (cheatsheet-add :group 'Find
                   :key "C-x f"
                   :description "Find recent file")
+  (cheatsheet-add :group 'Find
+                  :key "C-c h r"
+                  :description "helm-regexp to test regexp interactively and save it (actions on C-z)")
   (cheatsheet-add :group 'Helm
                   :key "C-c h"
                   :description "Helm prefix / If in C-x C-f session, list visited files/dirs")
@@ -4633,26 +4669,57 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "M-n"
                   :description "Yank symbol at point into Helm prompt")
   (cheatsheet-add :group 'Help
+                  :key "helm-descbinds"
+                  :description "Currently active key bindings are searcheable")
+  (cheatsheet-add :group 'Help
                   :key "C-c ?"
                   :description "Help in a Helm session")
+  (cheatsheet-add :group 'Help
+                  :key "helm-man-woman"
+                  :description "Manual entries for *nix commands")
+  (cheatsheet-add :group 'Help
+                  :key "C-c h a"
+                  :description "helm-apropos for commands, functions, variables and faces")
+  (cheatsheet-add :group 'Help
+                  :key "helm-info-*"
+                  :description "Search info nodes for various topics like elisp, gdb, etc (TAB to view)")
+  (cheatsheet-add :group 'History
+                  :key "C-c C-l"
+                  :description "helm-eshell-history, helm-comint-input-ring, helm-minibuffer-history so get history in Eshell, Shell and Minibuffer")
+  (cheatsheet-add :group 'Lisp
+                  :key "C-c h TAB"
+                  :description "helm-lisp-completion-at-point for elisp")
+  (cheatsheet-add :group 'Lisp
+                  :key "C-c h M-:"
+                  :description "helm-eval-expression-with-eldo" interactively evaluates elisp exp)
   (cheatsheet-add :group 'Programming
                   :key "C-M a"
                   :description "Begin of function")
   (cheatsheet-add :group 'Programming
                   :key "C-M e"
                   :description "End of function")
+  (cheatsheet-add :group 'Projectile
+                  :key "s-h"
+                  :description "helm-projectile" and select files in your project)
+  (cheatsheet-add :group 'Recent
+                  :key "C-c h b (with C-u you choose among existing Helm buffers)"
+                  :description "helm-resume previous Helm session, inputs included")
   (cheatsheet-add :group 'Spelling
                   :key "C-M-$"
                   :description "Change dictionary")
   (cheatsheet-add :group 'Spelling
                   :key "M-$"
                   :description "Spellcheck word or region")
+  (cheatsheet-add :group 'System
+                  :key "C-c h t"
+                  :description "helm-top for TOP program to display Linux processes")
   :bind ("C-c C-s" . cheatsheet-show)
   )
+
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23910 22309 392230 736000) :init (23910 22309 392000 277000) :init-secs (0 0 60 520000) :use-package-secs (0 0 566 233000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23910 53016 626861 581000) :init (23910 53016 626662 925000) :init-secs (0 0 74 455000) :use-package-secs (0 0 474 284000)))
 
 ** Cheatsheets
 

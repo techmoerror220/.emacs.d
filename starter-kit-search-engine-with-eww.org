@@ -441,6 +441,12 @@ https://github.com/rudolfolah/emacs-sos
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23900 63992 577507 866000) :init (23900 63992 577495 788000) :config (23900 63992 577238 382000) :config-secs (0 0 8 294000) :init-secs (0 0 9505 780000) :use-package-secs (0 1 666875 886000)))
 
+** Another alternative comes from =surfraw=
+
+#+begin_src emacs-lisp :tangle yes
+(global-set-key (kbd "C-$") 'helm-surfraw)
+#+end_src
+
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes

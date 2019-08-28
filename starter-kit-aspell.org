@@ -44,7 +44,7 @@ flyspell doesn't start properly. Putting this customization in
 
 * My Spelling set up 
 
-** Wiki 
+** Emacs Wiki tips
 
 Emacs has an ispell package that interfaces to a range of spelling programs which do the heavy lifting. So =ispell.el= acts as a facade for various command line spelling utilities like =ispell=, =aspell= and =hunspell=. 
 
@@ -62,64 +62,27 @@ Value
  ("castellano8" "/usr/share/hunspell/es_ES.aff")
  ("english" "/usr/share/hunspell/en_US.aff")
  ("es_CR" "/usr/share/hunspell/es_CR.aff")
- ("es_PA" "/usr/share/hunspell/es_PA.aff")
- ("es_CL" "/usr/share/hunspell/es_CL.aff")
+...
  ("en_US" "/usr/share/hunspell/en_US.aff")
- ("es_PY" "/usr/share/hunspell/es_PY.aff")
- ("es_US" "/usr/share/hunspell/es_US.aff")
- ("es_VE" "/usr/share/hunspell/es_VE.aff")
- ("es_MX" "/usr/share/hunspell/es_MX.aff")
- ("es_GT" "/usr/share/hunspell/es_GT.aff")
- ("es_NI" "/usr/share/hunspell/es_NI.aff")
- ("es_BO" "/usr/share/hunspell/es_BO.aff")
- ("es_PE" "/usr/share/hunspell/es_PE.aff")
- ("es_AR" "/usr/share/hunspell/es_AR.aff")
- ("es_CO" "/usr/share/hunspell/es_CO.aff")
- ("es_HN" "/usr/share/hunspell/es_HN.aff")
- ("es_EC" "/usr/share/hunspell/es_EC.aff")
- ("es_UY" "/usr/share/hunspell/es_UY.aff")
- ("es_PR" "/usr/share/hunspell/es_PR.aff")
+...
  ("es_DO" "/usr/share/hunspell/es_DO.aff")
  ("es_ES" "/usr/share/hunspell/es_ES.aff")
- ("es_SV" "/usr/share/hunspell/es_SV.aff")
- ("es_CU" "/usr/share/hunspell/es_CU.aff"))
-
-Set
-
-Documentation
-Alist of parsed Hunspell dicts and associated affix files.
-
-Will be used to parse corresponding .aff file and create associated
-parameters to be inserted into ispell-hunspell-dictionary-alist.
-Internal use.
-
-References
-References in ispell.el.gz:
-(defvar ispell-hunspell-dict-paths-alist ...) 1 reference
-(defun ispell-parse-hunspell-affix-file ...)  1 reference
-(defun ispell-find-hunspell-dictionaries ...) 8 references
-
-Find all references
-
-Debugging
-Forget
-
-Source Code
-;; Defined in /usr/local/share/emacs/27.0.50/lisp/textmodes/ispell.el.gz
-;; Make ispell.el work better with hunspell.
-
-(defvar ispell-hunspell-dict-paths-alist nil
-  "Alist of parsed Hunspell dicts and associated affix files.
-Will be used to parse corresponding .aff file and create associated
-parameters to be inserted into `ispell-hunspell-dictionary-alist'.
-Internal use.")
-
-Symbol Properties
-variable-documentation
-  ("/usr/local/share/emacs/27.0.50/lisp/textmodes/ispell.elc" . 31619)
+  ("es_CU" "/usr/share/hunspell/es_CU.aff"))
 #+END_EXAMPLE
 
-Tell ispell that apostrophes are part of words and select American English dictionary (nil). DGM changed spanish to "Castellano"
+Tell ispell that apostrophes are part of words and select American English dictionary (nil). DGM changed spanish to "Castellano". And deleted this 
+
+#+BEGIN_EXAMPLE
+        ("american"
+         "[[:alpha:]]"
+         "[^[:alpha:]]"
+         "[']"
+         t
+         ("-d" "en_US")
+         nil
+         utf-8)
+#+END_EXAMPLE
+
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq ispell-local-dictionary-alist

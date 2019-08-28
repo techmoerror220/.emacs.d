@@ -288,12 +288,15 @@ Disabled as it gives rise to lisp error
 
 ** Mini-buffer history 
 
-This keybinding never works so I comment this out until i understand how it could be useful.
+If you get into the minibuffer (=C-x b= for =helm-mini=), then you get its history with =C-c C-l=.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; Command: helm-mini-buffer-history
-;; (define-key minibuffer-local-map (kbd "C-c h C-c h") 'helm-minibuffer-history)
+(define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
 #+END_SRC
+
+#+RESULTS:
+: helm-minibuffer-history
 
 * helm-descbinds
 
@@ -847,6 +850,17 @@ ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://githu
 #+end_src
 
 #+RESULTS:
+
+* helm-man-woman
+
+With helm-man-woman, you can quickly jump to any man entry using the Helm interface, either by typing in Helm prompt or if the point is on a symbol, opening the man page at point. To enable man page at point, add the following code: 
+
+#+begin_src emacs-lisp :tangle yes
+(add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
+#+end_src
+
+#+RESULTS:
+| helm-source-imenu | helm-source-imenu-all | helm-source-info-elisp | helm-source-etags-select | helm-source-man-pages | helm-source-occur | helm-source-moccur | helm-source-grep-ag | helm-source-grep-git | helm-source-grep |
 
 * EXWM
 
