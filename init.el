@@ -421,6 +421,16 @@ ARCHIVE is the string name of the package archive.")
   (exec-path-from-shell-initialize))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;
+;; Autoloads: Dropbox ;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Autostart Dropbox
+(call-process-shell-command "(sleep 10s && ~/.dropbox-dist/dropboxd) &" nil 0)
+
+
+;; This buffer is for text that is not saved, and for Lisp evaluation.
+;; To create a file, visit it with <open> and enter text in its buffer.
 
 
 

@@ -734,6 +734,7 @@ I don't know why it doesn't work
 
 * Agenda 
 ** Shortcuts
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;;   (setq org-default-notes-file (concat org-directory "/notes.org")) ;; i disable this to see if I can choose between notes and tasks.
 ;;    this is not working for some reason: (define-key global-map "\C-c c" 'org-capture)

@@ -180,7 +180,7 @@ Demo here: https://github.com/tomoya/search-web.el/blob/master/README.md
   it quicker.  In that case, I think =C-c w= is a good choice for a shortcut:
 
 #+begin_src emacs-lisp :tangle no
-(global-set-key (kbd "s-b") 'search-web)
+;; (global-set-key (kbd "s-b") 'search-web)
 #+end_src
 
 #+RESULTS:
@@ -266,7 +266,8 @@ prefixed with =C-x /=:
 
 ; The default keymap prefix for engine-mode is C-x /. If you'd like to bind the keymap to an additional prefix (say, C-c s), you totally can:
 
-(engine/set-keymap-prefix (kbd "s-b"))
+;; Todo: activate when something available
+;; (engine/set-keymap-prefix (kbd "s-b"))
 
 (defengine amazon
   "http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=%s"
@@ -301,6 +302,7 @@ prefixed with =C-x /=:
 
 (defengine wolfram-alpha
   "http://www.wolframalpha.com/input/?i=%s"
+  :keybinding "z"
   :browser 'browse-url-chromium)
 
 (defengine youtube
@@ -437,14 +439,16 @@ https://github.com/rudolfolah/emacs-sos
 (use-package sos
   :ensure t)
 #+END_SRC
-
+g
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23900 63992 577507 866000) :init (23900 63992 577495 788000) :config (23900 63992 577238 382000) :config-secs (0 0 8 294000) :init-secs (0 0 9505 780000) :use-package-secs (0 1 666875 886000)))
 
 ** Another alternative comes from =surfraw=
 
+From Julian Assange: 
+
 #+begin_src emacs-lisp :tangle yes
-(global-set-key (kbd "C-$") 'helm-surfraw)
+(global-set-key (kbd "s-b") 'helm-surfraw)
 #+end_src
 
 * Provide

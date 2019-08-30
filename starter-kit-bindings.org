@@ -46,6 +46,8 @@ Key Bindings.
 #+end_src
 
 ** Completion that uses many different methods to find options.
+
+
 #+begin_src emacs-lisp 
 (global-set-key (kbd "M-/") 'hippie-expand) ;; replace dabbrev-expand
 (setq
@@ -55,7 +57,7 @@ Key Bindings.
    try-expand-dabbrev-from-kill            ;; try to expand word "dynamically", searching the kill ring.
    try-complete-file-name-partially        ;; try to complete text as a file name, as many characters as unique.
    try-complete-file-name                  ;; try to complete text as a file name.
-   try-complete-all-abbrevs                ;; try to expand word before point accoriding to all abbrev tables.
+   try-complete-all-abbrevs                ;; try to expand word before point according to all abbrev tables.
    try-expand-list                         ;; try to complete the current line to an entire line in the buffer.
    try-expand-line                         ;; try to complete the current line to an entire line in the buffer.
    try-complete-lisp-symbol-partially      ;; try to complete as an Emacs Lisp symbol, as many characters as unique.
@@ -75,7 +77,7 @@ Key Bindings.
 #+end_src
 
 ** Use Regex searches by default, and use Visual Regexp to construct them.
-Building regular expressions in Emacs is kind of a pain.  The visual-regexp package is a very convenient way to dynamically build regular expressions for searching and replacing. You enter a minibuffer that lets you type the regexp and the prospective matches to the expression you type are highlighted in the main buffer. =M-x vr/replace= gives you global replacement and =M-x vr/query-replace= lets you decide to replace per match. Visual regexp replace is bound to =C-c r= and visual =query-replace-regexp= to =C-c q=. 
+Building regular expressions in Emacs is kind of a pain.  The visual-regexp package is a very convenient way to dynamically build regular expressions for searching and replacing. You enter a minibuffer that lets you type the regexp and the prospective matches to the expression you type are highlighted in the main buffer. =M-x vr/replace= gives you global replacement and =M-x vr/query-replace= lets you decide to replace per match. Visual regexp replace is bound to =C-c s= and visual =query-replace-regexp= to =C-c q=. 
 
 #+begin_src emacs-lisp 
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
@@ -142,17 +144,17 @@ Manage a lot of buffers easily with C-x C-b. Already set up elsewhere in the sta
 ** File finding
 #+begin_src emacs-lisp 
 ;;  (global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
-  (global-set-key (kbd "C-x C-p") 'find-file-at-point)
+;;  (global-set-key (kbd "C-x C-p") 'find-file-at-point) ;; I use helm and projectile for this
   (global-set-key (kbd "C-c y") 'bury-buffer)
   (global-set-key (kbd "C-c r") 'revert-buffer)
-  (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete)
+;;  (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete) ;; Key used somewhere else
   (global-set-key (kbd "C-x C-b") 'ibuffer)
 ;;  (global-set-key (kbd "C-x f") 'recentf-ido-find-file) ;; commented out until helm and ido are made to work together
 #+end_src
 
 ** Browse the Kill Ring
-    Conveniently navigate the kill-ring (ie, the cut/copy clipboard
-    history) in a pop-up buffer.
+Conveniently navigate the kill-ring (ie, the cut/copy clipboard history) in a pop-up buffer.
+
 #+srcname: kill-ring
 #+begin_src emacs-lisp 
   (when (require 'browse-kill-ring nil 'noerror)
@@ -225,22 +227,6 @@ When windows get out of order, you can rotate them.
 (global-set-key (kbd "C-x a") 'join-line)
 #+end_src
 
-** Mark text between parentheses (a sexp) for selection
- Mark text between parentheses. From [[http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-parentheses-in-emacs][this Stackoverflow answer]]. 
-
-#+source: backward-up-sexp
-#+begin_src emacs-lisp
-(defun backward-up-sexp (arg)
-  (interactive "p")
-  (let ((ppss (syntax-ppss)))
-    (cond ((elt ppss 3)
-           (goto-char (elt ppss 8))
-           (backward-up-sexp (1- arg)))
-          ((backward-up-list arg)))))
-
-(global-set-key [remap backward-up-list] 'backward-up-sexp)  
-#+end_src
-
 ** Start eshell or switch to it if it's active.
 #+begin_src emacs-lisp 
 (global-set-key (kbd "C-x m") 'eshell)
@@ -249,12 +235,9 @@ When windows get out of order, you can rotate them.
 #+begin_src emacs-lisp 
 (global-set-key (kbd "C-x M") (lambda () (interactive) (eshell t)))
 #+end_src
-** Smex replaces M-x
-
+** COMMENT Smex replaces M-x
 - Watch out (14 nov 2018): smex is built on top of ido mode and ido mode may interfere with Helm, so until I clarify this I disable this. 
-
 - Original notes:
-
     Smex replaces M-x, and is built on top of ido-mode. See
     http://github.com/nonsequitur/smex or
     http://www.emacswiki.org/emacs/Smex for details.  
@@ -264,7 +247,6 @@ The commands are displayed in an Ido completion buffer, ordered by relevance. Th
 Ido completion in 10 seconds: Typing selects matching commands: e.g. 'lnmd' matches 'line-number-mode'. C-s/C-r switches to the next/previous match. Enter executes the selected command.
 
 =smex-major-mode-commands= runs Smex, limited to commands that are relevant to the active major mode. Try it with Dired or Magit.
-
 =smex-show-unbound-commands= shows frequently used commands that have no key bindings.
 
 *** Command help
@@ -557,12 +539,42 @@ The reason is that in many data science programs, the great ista zahn binds the 
 
 See also http://pragmaticemacs.com/emacs/multiple-cursors/ and http://pragmaticemacs.com/emacs/add-multiple-cursors-with-mouse-clicks/
 
+
+M-x mc/insert-numbers: By default, it inserts 0 for the first cursor, 1 for the second cursor etc, but you can change this by using a numeric prefix argument. So to get 1, 2, 3 as in your example, use C-u 1 M-x mc/insert-numbers.
+
 #+source: multiple-cursors
 #+begin_src emacs-lisp
-  (use-package multiple-cursors)
+(use-package multiple-cursors
+  :ensure t
+  :bind
+  ("C-c C-m l"   . mc/edit-lines) ; When you have an active region that spans multiple lines, add a cursor to each line
+  ("C-c C-m d"   . mc/mark-all-dwim)
+  ("C-c C-m A"   . mc/mark-all-like-this)
+  ("C-c C-m a"   . mc/edit-beginnings-of-lines)
+  ("C-c C-m e"   . mc/edit-ends-of-lines)
+  ("C-c C-m E"   . mc/mark-more-like-this-extended)
+  ("C-c C-m p"   . mc/mark-previous-lines)
+  ("C-c C-m n"   . mc/mark-next-lines)
+  ("C-c C-m P"   . mc/mark-previous-like-this)
+  ("C-c C-m N"   . mc/mark-next-like-this) ;; works on same line! Cool! Warning: have to mark region first.
+  ("C-c C-m h"   . mc-hide-unmatched-lines-mode)
+  ("C-c C-m z"   . mc/insert-numbers)
+  ("C-c C-m u"   . mc/unmark-next-like-this)
+  ("C-c C-m U"   . mc/unmark-previous-like-this)
+  ("C-c C-m r"   . mc/mark-all-in-region)
+  )
+#+end_src  
+
+#+RESULTS: multiple-cursors
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23913 40233 583591 570000) :init (23913 40233 582472 937000) :config (23913 40233 582421 924000) :config-secs (0 0 17 1000) :init-secs (0 0 118 611000) :use-package-secs (0 0 1469 621000)))
+
+Previous code: 
+
+#+BEGIN_EXAMPLE
   ;; When you have an active region that spans multiple lines, the following will add a cursor to each line:
   ; (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-  (global-set-key (kbd "s-{") 'mc/edit-lines)  ; esto no se' que' hace
+
+    (global-set-key (kbd "s-{") 'mc/edit-lines)  ; esto no se' que' hace
   
   ;(global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
   ;(global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
@@ -590,10 +602,7 @@ See also http://pragmaticemacs.com/emacs/multiple-cursors/ and http://pragmatice
   ;(global-set-key (kbd "H-n") 'mc/mark-next-like-this)
   ;(global-set-key (kbd "H-S-n") 'mc/mark-more-like-this-extended)
   ;(global-set-key (kbd "H-S-a") 'mc/mark-all-in-region)
-#+end_src
-
-#+RESULTS: multiple-cursors
-: mc/mark-all-like-this
+#+END_EXAMPLE
 
 First mark the word, then add more cursors. To get out of multiple-cursors-mode, press <return> or C-g. The latter will first disable multiple regions before disabling multiple cursors. If you want to insert a newline in multiple-cursors-mode, use C-j.
 

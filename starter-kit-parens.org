@@ -212,6 +212,36 @@ Leave point after open-quotation."
 #+RESULTS:
 : insert-backquote
 
+
+* COMMENT Enclose next =sexp= in parentheses
+
+From: https://zzamboni.org/post/my-emacs-configuration-with-commentary/
+Disabled by DGM as it probably interferes with smartparens
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun zz/sp-enclose-next-sexp (num) (interactive "p") (insert-parentheses (or num 1)))
+(global-set-key (kbd "M-[") 'zz/sp-enclose-next-sexp)
+#+END_SRC
+
+#+RESULTS:
+: zz/sp-enclose-next-sexp
+
+** COMMENT Mark text between parentheses (a =sexp=) for selection
+ Mark text between parentheses. From [[http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-parentheses-in-emacs][this Stackoverflow answer]]. But I think it might conflict with smartparens, so I disable it. 
+
+#+source: backward-up-sexp
+#+begin_src emacs-lisp :tangle no
+(defun backward-up-sexp (arg)
+  (interactive "p")
+  (let ((ppss (syntax-ppss)))
+    (cond ((elt ppss 3)
+           (goto-char (elt ppss 8))
+           (backward-up-sexp (1- arg)))
+          ((backward-up-list arg)))))
+
+(global-set-key [remap backward-up-list] 'backward-up-sexp)  
+#+end_src
+
 * New trial taken from article
 
 Trying the setup here:
@@ -434,7 +464,30 @@ They navigate around expressions as if delimiters, like parens, brackets, and br
   ;;   (sp-local-pair 'org-mode "``" "''") 
 #+END_SRC
 
-* Electric Pair for Org-Mode
+* Electric pair mode
+
+From http://ergoemacs.org/emacs/emacs_insert_brackets_by_pair.html
+
+Emacs 24 has a new minor mode electric-pair-mode. When on, typing any left bracket automatically insert the right matching bracket. You can have it on always. Put this in your emacs init:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; auto close bracket insertion. New in emacs 24
+(electric-pair-mode 1)
+#+END_SRC
+
+Brackets includes ASCII and Unicode brackets or quotation marks. Deleting one bracket doesn't delete the other. Exactly which brackets are auto-closed depends on the current major mode's syntax table. If you always want certain brackets be inserted in pairs, you can customize the variable electric-pair-pairs. Its value should be a Association List. For example, the curly bracket ={}= isn't auto-closed when in emacs-lisp-mode. You can make it do so, like this:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;; make electric-pair-mode work on more brackets
+(setq electric-pair-pairs
+      '(
+        (?\" . ?\")
+        (?\{ . ?\})))
+#+END_SRC
+
+** Electric Pair for Org-Mode
+
+And now on to Org mode: 
 
 From: https://ipfs-sec.stackexchange.cloudflare-ipfs.com/emacs/A/question/2538.html 
 and https://tgro.neocities.org/init.html
