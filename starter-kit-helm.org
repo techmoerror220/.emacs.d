@@ -931,7 +931,7 @@ Basic commands with for interfacing with =exwm= with =helm=
 
 #+RESULTS:
 
-** EXWM buffers with helm and make =helm-mini= almighty
+** EXWM buffers with helm. Also: make =helm-mini= almighty
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'helm-bookmark)

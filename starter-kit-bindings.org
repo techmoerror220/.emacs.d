@@ -637,8 +637,3 @@ First mark the word, then add more cursors. To get out of multiple-cursors-mode,
 #+begin_src emacs-lisp
   (message "Starter Kit Bindings loaded.")
 #+end_src
-  
-
-
-
-
