@@ -72,7 +72,7 @@ loading the =zenburn= and =anti-zenburn= themes.
                            :foreground "#F5f5f5"))))
   (load-theme 'solarized-light t))
 
-(bind-key "s-SPC" 'toggle-theme)
+(bind-key "s-!" 'toggle-theme)
 
 ;;  (load-theme 'solarized-dark t))
 

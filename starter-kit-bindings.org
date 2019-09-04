@@ -42,8 +42,20 @@ Key Bindings.
 
 ** Align your code in a pretty way.
 #+begin_src emacs-lisp 
-(global-set-key (kbd "C-x \\") 'align-regexp)
+;;(global-set-key (kbd "C-x \\") 'align-regexp)
+(global-set-key (kbd "s-\\") 'align-regexp)
 #+end_src
+
+#+RESULTS:
+: align-regexp
+
+** Indent region
+#+begin_src emacs-lisp
+(global-set-key (kbd "s-/") 'indent-region)
+#+end_src
+
+#+RESULTS:
+: indent-region
 
 ** Completion that uses many different methods to find options.
 
@@ -216,7 +228,8 @@ When windows get out of order, you can rotate them.
        (set-window-start w2 s1)
        (setq i (1+ i)))))))
 
-  (global-set-key (kbd "C-c m") 'rotate-windows)
+  ;; (global-set-key (kbd "C-c m") 'rotate-windows)
+  (global-set-key (kbd "C-&") 'rotate-windows)
 #+end_src
 
 #+RESULTS: rotate-windows

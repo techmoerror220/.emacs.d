@@ -954,7 +954,7 @@ Don't do any splitting of the frame when opening a message. It will simply occup
 ** Direct access to =mu4e=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key (kbd "s-i") #'mu4e)
+(global-set-key (kbd "C-*") #'mu4e)
 #+END_SRC
 
 #+RESULTS:

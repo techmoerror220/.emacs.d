@@ -170,11 +170,11 @@ of the folder in the collection) and their keys can be expanded using =TAB=.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ivy-yasnippet
   :ensure t
-  :bind ("s-o" . ivy-yasnippet))
+  :bind ("s-y" . ivy-yasnippet))
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23905 41549 462893 51000) :init (23905 41549 462621 703000) :config (23905 41549 462556 464000) :config-secs (0 0 18 333000) :init-secs (0 0 150 409000) :use-package-secs (0 0 599 676000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23919 48575 779998 364000) :init (23919 48575 779693 39000) :init-secs (0 0 131 542000) :use-package-secs (0 0 718 47000) :config (23919 48575 779626 765000) :config-secs (0 0 14 959000)))
 
 ** Company Mode
 

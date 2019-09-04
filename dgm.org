@@ -2548,18 +2548,20 @@ I like me some searching, the default search is very meh. In emacs, you mostly u
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package swiper
-  :ensure t)
+  :ensure t
+  :bind ("s-i" . 'swiper))
 #+END_SRC
 
 #+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23919 51355 179006 615000) :init (23919 51355 178791 891000) :config (23919 51355 178416 764000) :config-secs (0 0 17 871000) :init-secs (0 0 713 525000) :use-package-secs (0 0 1105 560000)))
 
 *****  Further customization from Pragmatic Emacs
 
 From: http://pragmaticemacs.com/emacs/dont-search-swipe/
 
 #+BEGIN_SRC emacs-lisp :tangle no
-;; (global-set-key (kbd "<s-return>") 'swiper) ;; I'm gonna use this for helm-projectile
-;; (setq ivy-display-style 'fancy)
+;;(global-set-key (kbd "s-i") 'swiper) ;; I'm gonna use this for helm-projectile
+(setq ivy-display-style 'fancy)
 #+END_SRC
 
 #+RESULTS:
@@ -2652,7 +2654,7 @@ And again, the same as above but we make sure to not delete the source word.
     (backward-word)
     (kill-word 1)
     (yank)))
-(global-set-key (kbd "s-,") 'daedreth/copy-whole-word) 
+(global-set-key (kbd "s-w") 'daedreth/copy-whole-word) 
 #+END_SRC
 
 #+RESULTS:
@@ -2669,7 +2671,7 @@ Regardless of where your cursor is, this quickly copies a line.
      (buffer-substring
       (point-at-bol)
       (point-at-eol)))))
-(global-set-key (kbd "s-.") 'daedreth/copy-whole-line)
+(global-set-key (kbd "s-@") 'daedreth/copy-whole-line)
 #+END_SRC
 
 #+RESULTS:
@@ -2679,7 +2681,8 @@ Regardless of where your cursor is, this quickly copies a line.
 And this quickly deletes a line.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key (kbd "M-s-k") 'kill-whole-line)
+;;(global-set-key (kbd "M-s-k") 'kill-whole-line)
+(global-set-key (kbd "s-%") 'kill-whole-line)
 #+END_SRC
 
 #+RESULTS:
@@ -2908,7 +2911,7 @@ Make visible mode the default, please. I don't use a key binding for this becaus
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (visible-mode 1)
-;; (global-set-key (kbd "s-h") 'visible-mode)
+(global-set-key (kbd "s-v") 'visible-mode)
 #+END_SRC
 
 #+RESULTS:
@@ -3088,7 +3091,7 @@ selects backward.)"
         (right-word)))
     (mark-word arg allow-extend)))
 
-(global-set-key (kbd "s-/") 'mark-whole-word) 
+;; (global-set-key (kbd "s-/") 'mark-whole-word) !!here TODO. REBIND.
 #+END_SRC
 
 #+RESULTS:
@@ -4448,13 +4451,14 @@ DGM: not sure it is better.
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23876 24572 365881 952000) :init (23876 24572 365873 813000) :config (23876 24572 365671 940000) :config-secs (0 0 5 73000) :init-secs (0 0 20833 634000) :use-package-secs (0 0 20886 646000)))
 
-* Browser switching
+* TODO Browser switching
 
+!!here  update this
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key (kbd "s-j") 'ivy-switch-buffer)
+(global-set-key (kbd "s-+") 'ivy-switch-buffer)
 
-(global-set-key (kbd "s-h") 'electric-buffer-lists)
+(global-set-key (kbd "s-*") 'electric-buffer-list)
  ; This hook run after buffer formatted, so it is necessary to re-fontify it...
  (add-hook 'electric-buffer-menu-mode-hook
 	   '(lambda ()
@@ -4469,6 +4473,15 @@ DGM: not sure it is better.
 
 #+RESULTS:
 : ido-switch-buffer
+
+* =helm-resume=
+
+#+begin_src emacs-lisp :tangle yes
+(global-set-key (kbd "s--") #'helm-resume)
+#+end_src
+
+#+RESULTS:
+: helm-resume
 
 * Cheatsheet
 
@@ -4499,35 +4512,44 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "a"
                   :description "Read note on bookmark where point is")
   (cheatsheet-add :group 'Buffer-Cycling
+                  :key "s-<tab>"
+                  :description "ambrevar/switch-to-last-buffer")
+  (cheatsheet-add :group 'Buffer-Cycling
                   :key "C-x b"
                   :description "helm-mini. Cycles EXWM buffers")
   (cheatsheet-add :group 'Buffer-Cycling
                   :key "C-c b"
                   :description "ido-switch-buffer")
   (cheatsheet-add :group 'Buffer-Cycling
-                  :key "C-$"
+                  :key "s-l"
                   :description "helm-projectile-switch-to-buffer. Includes current P's and EXWM buffers")
   (cheatsheet-add :group 'Buffer-Cycling
                   :key "C-c y"
                   :description "bury-buffer")
   (cheatsheet-add :group 'Buffer-List
-                  :key "s-h"
+                  :key "s-*"
                   :description "electric-buffer-list")
   (cheatsheet-add :group 'Buffer-List
                   :key "C-x C-b"
                   :description "iBuffer. List of buffers for editing")
   (cheatsheet-add :group 'Buffer-List
-                  :key "s-j"
+                  :key "s-+"
                   :description "ivy-switch-buffer. Like iBuffer: list of buffers for editing")
   (cheatsheet-add :group 'Buffer-Closing
                   :key "C-M-s-k"
-                  :description "Close-all-buffers. s is the function key")
+                  :description "Close-all-buffers. s is the super key")
+  (cheatsheet-add :group 'Browsing
+                  :key "&"
+                  :description "Open eww url in Chromium")
   (cheatsheet-add :group 'Browsing
                   :key "C-c h g"
                   :description "helm-google-suggest gives Google results in Helm buffer. Type slow")
   (cheatsheet-add :group 'Browsing
                   :key "s-b"
                   :description "helm-surfraw")
+  (cheatsheet-add :group 'Browsing
+                  :key "C-\{"
+                  :description "daedreth/launch-browser")
   (cheatsheet-add :group 'Browsing
                   :key "here"
                   :description "Web browsing: Maps and Wolfram included")
@@ -4539,7 +4561,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "Alternative for StackOverflow only")
   (cheatsheet-add :group 'Common
                   :key "C-x C-c"
-                  :description "leave Emacs.")
+                  :description "save-buffers-kill-emacs")
   (cheatsheet-add :group 'Dired
                   :key "C-x d"
                   :description "helm-mode-dired. TAB to select; RET to jump to selection")
@@ -4565,8 +4587,8 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-c d"
                   :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
   (cheatsheet-add :group 'Editing
-                  :key "M-x visible-mode"
-                  :description "See raw contents in org-mode buffer that usually are invisible (like hyperlinks)")
+                  :key "s-v"
+                  :description "See raw contents that usually are invisible (like hyperlinks)")
   (cheatsheet-add :group 'Editing
                   :key "comment-box"
                   :description "Puts region inside a box")
@@ -4577,13 +4599,16 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "s-k"
                   :description "Kills the entire word your cursor is in")
   (cheatsheet-add :group 'Editing
-                  :key "s-,"
+                  :key "M-z"
+                  :description "zap-up-to-char")
+  (cheatsheet-add :group 'Editing
+                  :key "s-w"
                   :description "Copy whole word")
   (cheatsheet-add :group 'Editing
-                  :key "s-."
+                  :key "s-@"
                   :description "Copies a line where your cursor is in")
   (cheatsheet-add :group 'Editing
-                  :key "M-s-k"
+                  :key "s-%"
                   :description "Kills whole line where your cursor is in")
   (cheatsheet-add :group 'Editing
                   :key "yank-file-name"
@@ -4601,11 +4626,29 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-x a"
                   :description "Join this line to previous and fix up whitespace at join")
   (cheatsheet-add :group 'Editing
-                  :key "C-x \\"
+                  :key "s-\\"
                   :description "align-regexp")
+  (cheatsheet-add :group 'Editing
+                  :key "s-/"
+                  :description "indent-region")
   (cheatsheet-add :group 'Editing
                   :key "M-/"
                   :description "hippie-expand")
+  (cheatsheet-add :group 'Editing
+                  :key "s-c"
+                  :description "helm-colors")
+  (cheatsheet-add :group 'Editing
+                  :key "s-!"
+                  :description "toggle-theme")
+  (cheatsheet-add :group 'Editing
+                  :key "s-/"
+                  :description "indent-region")
+  (cheatsheet-add :group 'Editing
+                  :key "s-y"
+                  :description "ivy-yasnippet")
+  (cheatsheet-add :group 'Editing
+                  :key "s-#"
+                  :description "sudo-edit")
   (cheatsheet-add :group 'Editing-MultipleRegions
                   :key "s-q"
                   :description "Mark next occurence of a region and edit all al once")
@@ -4645,9 +4688,15 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Editing-MultipleCursors
                   :key "C-c C-m h"
                   :description "mc-hide-unmatched-lines-mode")
+  (cheatsheet-add :group 'Email
+                  :key "C-*"
+                  :description "mu4e")
   (cheatsheet-add :group 'Expressions-Eval
                   :key "C-x C-e"
                   :description "sanityinc/eval-last-sexp-or-region")
+  (cheatsheet-add :group 'Expressions-Copying
+                  :key "C-M w"
+                  :description "sp-copy-sexp: Copies next bit of the sexp")
   (cheatsheet-add :group 'Expressions-Find
                   :key "C-c f"
                   :description "find-function")
@@ -4682,13 +4731,13 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-M p"
                   :description "sp-previous-sexp: Top-level-ish transversal")
   (cheatsheet-add :group 'Expressions-Movement
-                  :key "s-n"
-                  :description "smartscan-symbol-go-forward. Set in smartscan.el")
+                  :key "s-N"
+                  :description "smartscan-symbol-go-forward. Set in elpa/smartscan.el")
   (cheatsheet-add :group 'Expressions-Movement
-                  :key "s-p"
-                  :description "smartscan-symbol-go-backward. Set in smartscan.el")
+                  :key "s-P"
+                  :description "smartscan-symbol-go-backward. Set in elpa/smartscan.el")
   (cheatsheet-add :group 'Expressions-Movement
-                  :key "s-'"
+                  :key "s-R"
                   :description "smartscan-symbol-replace. Set in smartscan.el")
   (cheatsheet-add :group 'Expressions-Movement
                   :key "C-<down>"
@@ -4760,8 +4809,17 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-M t"
                   :description "sp-transpose-sexp")
   (cheatsheet-add :group 'EXWM
-                  :key "s-r"
+                  :key "s-e"
                   :description "helm-run-external-command")
+(cheatsheet-add :group 'EXWM
+                  :key "s-r"
+                  :description "exwm-reset: Reset the state of the selected window: non-fullscreen, line-mode, etc")
+  (cheatsheet-add :group 'EXWM
+                  :key "C-q"
+                  :description "exwm-input-send-next-key: the next key is sent literally to the application")
+  (cheatsheet-add :group 'EXWM
+                  :key "s-&"
+                  :description "ambrevar/exwm-start: Open in external application")
   (cheatsheet-add :group 'Find-char
                   :key "C-o"
                   :description "avy-goto-word-1: Jump to char at word start")
@@ -4775,79 +4833,76 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-x C-f"
                   :description "helm-find-files")
   (cheatsheet-add :group 'Find-Files
-                  :key "s-f"
-                  :description "helm-for-files: Preconfigured helm for opening files")
+                  :key "M-x helm-for-filess"
+                  :description "Find in opened, recent, bookmarked files; files in current dir; files anywhere with locate")
   (cheatsheet-add :group 'Find-Files
                   :key "C-x C-g"
                   :description "deft-find-file")
   (cheatsheet-add :group 'Find-Files
-                  :key "C-c h /"
+                  :key "s-d"
                   :description "helm-find frontend for *nix FIND command in current dir; C-u chooses dir")
   (cheatsheet-add :group 'Find-Files
-                  :key "C-c h l"
+                  :key "s-D"
                   :description "helm-locate frontend of *unix LOCATE command")
   (cheatsheet-add :group 'Find-Files
                   :key "s-F"
                   :description "ambrevar/helm-locate-meta:Like helm-locate but also use the databases found in /media and /run/media")
   (cheatsheet-add :group 'Find-Dirs-Projectile
-                  :key "s-D"
+                  :key "s-;"
                   :description "helm-projectile-find-dir: Find dirs in current P project")
   (cheatsheet-add :group 'Find-Files-Projectile
                   :key "C-c p a"
                   :description "List files with same name, different extensions in current P project")
   (cheatsheet-add :group 'Find-Files-Projectile
-                  :key "s-u"
+                  :key "s-j"
                   :description "helm-projectile-find-file: Powerful P session for file management")
   (cheatsheet-add :group 'Find-Files-Projectile
-                  :key "s-d"
+                  :key "s-$"
                   :description "helm-projectile-find-file-dwim: Find file in P project based on context at point")
   (cheatsheet-add :group 'Find-Files-Projectile
                   :key "C-c p e"
                   :description "List recently visited files in current P project")
+  (cheatsheet-add :group 'Find-Files-Projectile
+                  :key "s-\`"
+                  :description "helm-projectile-find-other-file: Same name, different extension")
   (cheatsheet-add :group 'Find-Occurrences
-                  :key "s-:"
+                  :key "s-o"
                   :description "helm-occur: TAB to temporarily move to highlighted match")
+  (cheatsheet-add :group 'Find-Occurrences
+                  :key "s-i"
+                  :description "swiper")
   (cheatsheet-add :group 'Find-Occurences
-                  :key "C-c h r"
+                  :key "s-\'"
                   :description "helm-regexp to test regexp interactively and save it. Actions on C-z")
   (cheatsheet-add :group 'Find-Ocurrences
-                  :key "M-x swiper"
+                  :key "s-y"
                   :description "Ivy replacement for isearch. Supports regexp. Spaces are wild cards")
   (cheatsheet-add :group 'Find-Ocurrences
-                  :key "s-BACKSPACE"
-                  :description "helm-swoop:Show lines matching a pattern; cursor jumps to the line we go to")
+                  :key "M-x helm-swoop"
+                  :description "Show lines matching a pattern; cursor jumps to the line we go to")
   (cheatsheet-add :group 'Find-Org
-                  :key "s-v"
+                  :key "s-p"
                   :description "helm-org-in-buffer-headings: Find Org heading")
   (cheatsheet-add :group 'Find-Org
-                  :key "s-w"
+                  :key "s-u"
                   :description "Rifle search in Org files")
   (cheatsheet-add :group 'Grep
                   :key "search-all-buffers"
                   :description "Greps all opened buffers")
   (cheatsheet-add :group 'Grep
                   :key "s-g"
-                  :description "ambrevar/helm-grep-git-or-ag: Run grep if possible; fallback to ag otherwise")
-  (cheatsheet-add :group 'Grep
-                  :key "s-G"
-                  :description "ambrevar/helm-grep-git-all-or-ag: Grep over all git files")
-  (cheatsheet-add :group 'Grep
-                  :key "s-a"
-                  :description "helm-ag")
-  (cheatsheet-add :group 'Grep
-                  :key "s-A"
-                  :description "helm-do-grep-ag: grepping with AG in default-directory")
+                  :description "helm-projectile-grep")
   (cheatsheet-add :group 'Grep-Helm
-                  :key "M-p"
+                  :key "s-f"
                   :description "helm-projectile-ag: Helm version of projectile-ag.")
   (cheatsheet-add :group 'Grep-Helm
                   :key "C-c h w"
                   :description "wgrep-helm: Edit a helm-grep-mode buffer and apply those changes to the file buffer")
   (cheatsheet-add :group 'Grep-Projectile
-                  :key "s-m"
+                  :key "s-g"
                   :description "helm-projectile-grep: Search symbol at point. If region active, searches region")
   (cheatsheet-add :group 'Grep-Projectile
-                  :key "C-c p s s"
+                  :key "s-f"
                   :description "helm-projectile-ag: Search symbol at point. Can't work on region")
   (cheatsheet-add :group 'Grep-Projectile
                   :key "C-s"
@@ -4880,14 +4935,17 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-c ?"
                   :description "Help in a Helm session")
   (cheatsheet-add :group 'Help
-                  :key "helm-man-woman"
-                  :description "Manual entries for *nix commands")
+                  :key "s-m"
+                  :description "helm-man-woman: Manual entries for *nix commands")
   (cheatsheet-add :group 'Help
-                  :key "C-c h a"
+                  :key "s-a"
                   :description "helm-apropos for commands, functions, variables and faces. Original in C-h d")
   (cheatsheet-add :group 'Help
+                  :key "s-8"
+                  :description "Search emacs, elisp and CL info pages")
+  (cheatsheet-add :group 'Help
                   :key "helm-info-*"
-                  :description "Search info nodes for various topics like elisp, gdb, etc. TAB to view")
+                  :description "Search info nodes for various topics like emacs, elisp, gdb, etc. TAB to view")
   (cheatsheet-add :group 'Help
                   :key "ap/helm-info-emacs-elisp-cl"
                   :description "Emacs and eLisp manual with Helm")
@@ -4928,7 +4986,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "M-:"
                   :description "Evaluate EXPRESSION and pretty-print its value.")
   (cheatsheet-add :group 'Lisp
-                  :key "C-c h M-:"
+                  :key "s-\("
                   :description "helm-eval-expression-with-eldoc interactively evaluates elisp exp")
   (cheatsheet-add :group 'Mark
                   :key "C-."
@@ -4940,8 +4998,14 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "M-`"
                   :description "Jumps to the local mark, respecting the mark-ring order")
   (cheatsheet-add :group 'Mark
-                  :key "C-h SP"
+                  :key "s-RET"
                   :description "helm-all-mark-rings: Find mark in local and global rings")
+  (cheatsheet-add :group 'Mark
+                  :key "s-SPC"
+                  :description "er/expand-region")
+  (cheatsheet-add :group 'Mark
+                  :key "s-BKSPC"
+                  :description "er/contract-region")
   (cheatsheet-add :group 'Mark
                   :key "C-x C-x"
                   :description "Exchange point and mark without activating region")
@@ -4954,12 +5018,24 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Minibuffer
                   :key "C-c C-c"
                   :description "Miniedit: exit minibuffer edit")
+  (cheatsheet-add :group 'Movement
+                  :key "s-,"
+                  :description "beginning-of-buffer")
+  (cheatsheet-add :group 'Movement
+                  :key "s-."
+                  :description "end-of-buffer")
   (cheatsheet-add :group 'Org
                   :key "C-c @"
                   :description "Insert as Org link current highlighted file in P session")
   (cheatsheet-add :group 'Packages
                   :key "M-x try"
                   :description "Try a package before installing for good")
+  (cheatsheet-add :group 'Password
+                  :key "M-x password-store"
+                  :description "password-store")
+  (cheatsheet-add :group 'Password
+                  :key "M-x helm-pass"
+                  :description "helm-pass")
   (cheatsheet-add :group 'Prefixes
                   :key "C-x r"
                   :description "Registers and bookmarks")
@@ -4970,17 +5046,23 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-x r"
                   :description "Registers and bookmarks")
   (cheatsheet-add :group 'Projectile
-                  :key "s-RET"
+                  :key "s-h"
                   :description "helm-projectile: select project and buffers/files")
   (cheatsheet-add :group 'Reading
                   :key "xah-toggle-margin-right"
                   :description "For reading novel or documentation: Toggle right margin")
   (cheatsheet-add :group 'Recent
-                  :key "s-c"
+                  :key "s--"
                   :description "helm-resume previous H session, inputs included. C-u lets choose Helm buffer")
   (cheatsheet-add :group 'Register
-                  :key "C-c h x"
+                  :key "s-x"
                   :description "helm-register. Then TAB or RET to insert. Equivalent to C-x r i")
+  (cheatsheet-add :group 'Redshift
+                  :key "C-\("
+                  :description "Redshift on")
+  (cheatsheet-add :group 'Redshift
+                  :key "C-\)"
+                  :description "Redshift off")
   (cheatsheet-add :group 'Replace
                   :key "C-c s"
                   :description "Global replacement by dynamically building regular expressions")
@@ -4999,6 +5081,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Screenshot
                   :key "s-]"
                   :description "Takes a screenshot of a region selected by the user")
+  (cheatsheet-add :group 'Security
+                  :key "s-_"
+                  :description "daedreth/lock-screen")
   (cheatsheet-add :group 'Shell
                   :key "C-x m"
                   :description "Open eshell")
@@ -5021,7 +5106,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "M-$"
                   :description "Spellcheck word or region")
   (cheatsheet-add :group 'System
-                  :key "C-c h t"
+                  :key "s-t"
                   :description "helm-top for TOP program to display Linux processes")
   (cheatsheet-add :group 'Typing
                   :key "M-x typing-of-emacs"
@@ -5063,8 +5148,11 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-x 3"
                   :description "Horizontal split windows and move to new window")
   (cheatsheet-add :group 'Windows
-                  :key "s-\\"
-                  :description "Transpose windows")
+                  :key "C-$" 
+                  :description "ambrevar/toggle-window-split: Transpose windows")
+  (cheatsheet-add :group 'Windows
+                  :key "C-&"
+                  :description "rotate-windows")
   (cheatsheet-add :group 'Windows
                   :key "s-M-<left>"
                   :description "shrink-window-horizontally")
@@ -5077,15 +5165,24 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Windows
                   :key "s-M-<up>"
                   :description "enlarge-window")
-  (cheatsheet-add :group 'Windows
-                  :key "C-c m"
-                  :description "rotate-windows")
+  (cheatsheet-add :group 'Window-Movement
+                  :key "s-<left>"
+                  :description "windmove-left")
+  (cheatsheet-add :group 'Window-Movement
+                  :key "s-<right>"
+                  :description "windmove-right")
+  (cheatsheet-add :group 'Window-Movement
+                  :key "s-<up>"
+                  :description "windmove-up")
+  (cheatsheet-add :group 'Window-Movement
+                  :key "s-<down>"
+                  :description "windmove-down")
   :bind ("C-c C-s" . cheatsheet-show)
   )
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23914 37005 255660 442000) :init (23914 37005 255570 295000) :init-secs (0 0 1482 912000) :use-package-secs (0 0 1636 821000) :config (23914 37005 255556 396000) :config-secs (0 0 1461 749000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23920 13076 89565 179000) :init (23920 13076 89491 22000) :init-secs (0 0 31 93000) :use-package-secs (0 0 161 271000)))
 
 
 ** Cheatsheets
@@ -5102,6 +5199,25 @@ Add your first cheat:
 | :group | Common | :key | C-x C-c | :description | leave Emacs.              |        |      |      |     |              |                           |
 
 
+* Remapping =M-<= and =M->=
+
+#+begin_src emacs-lisp :tangle yes
+(global-set-key (kbd "s-,") 'beginning-of-buffer)
+(global-set-key (kbd "s-.") 'end-of-buffer)
+#+end_src
+
+#+RESULTS:
+: end-of-buffer
+
+* Remapping =er/expand-region=
+
+#+begin_src emacs-lisp :tangle yes
+(global-set-key (kbd "<s-SPC>") 'er/expand-region)
+(global-set-key (kbd "<s-backspace>") 'er/contract-region)
+#+end_src
+
+#+RESULTS:
+: er/contract-region
 
 * Provide
 
@@ -5122,5 +5238,3 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
-
-.
