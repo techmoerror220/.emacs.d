@@ -1,3 +1,6 @@
 [submodule "src/ob-stata"]
 	path = src/ob-stata
 	url = https://gitlab.com/robhicks/ob-stata.el.git
+[submodule "src/org-recipes"]
+	path = src/org-recipes
+	url = https://github.com/tuhdo/org-recipes.git
