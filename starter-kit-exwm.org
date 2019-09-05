@@ -93,13 +93,14 @@ Allow non-floating resizing with mouse.
 
 These cannot be set globally: if Emacs were to be run in another WM, the =s-= prefix would conflict with the WM bindings.
 
-;; (exwm-input-set-key (kbd "s-R") #'exwm-reset) ;; commented out by DGM on 4 sept 2019
+
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (exwm-input-set-key (kbd "s-<left>") #'windmove-left)
 (exwm-input-set-key (kbd "s-<down>") #'windmove-down)
 (exwm-input-set-key (kbd "s-<up>") #'windmove-up)
 (exwm-input-set-key (kbd "s-<right>") #'windmove-right)
+(exwm-input-set-key (kbd "s-r") #'exwm-reset) 
 ;; (exwm-input-set-key (kbd "s-b") #'eww) ;; commented out as I now use starter-kit-search-engine-with-eww.org
 ;; (exwm-input-set-key (kbd "s-D") #'kill-this-buffer) I don't need a shortcut for this
 ;; (exwm-input-set-key (kbd "s-b") #'list-buffers)   "s-b" mapped to helm-mini in starter-kit-helm.org

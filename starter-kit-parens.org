@@ -258,7 +258,7 @@ Take note, though, that the name is a misnomer, as it not only handles parenthes
 (add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
 #+END_SRC
 
-** Keybindings
+** Bindings
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (defmacro def-pairs (pairs)
@@ -332,7 +332,7 @@ respectively."
  ("C-c ("  . wrap-with-parens)
  ("C-c ["  . wrap-with-brackets)
  ("C-c {"  . wrap-with-braces)
- ("C-c '"  . wrap-with-single-quotes)
+ ;; ("C-c '"  . wrap-with-single-quotes)  ;; messes around with this binding needed by =org-edit-src-exit=
  ("C-c \"" . wrap-with-double-quotes)
  ("C-c _"  . wrap-with-underscores)
  ("C-c `"  . wrap-with-back-quotes))

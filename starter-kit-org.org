@@ -743,14 +743,14 @@ I don't know why it doesn't work
 ;; other bindings from http://orgmode.org/manual/Activation.html
 ;;     (global-set-key "\C-c l" 'org-store-link)  este binding ya estaba listo
 ;;     (global-set-key "\C-c a" 'org-agenda) ;; este binding puesto así no funcionaba
-;;    (global-set-key "\C-c b" 'org-iswitchb);; este binding puesto así no funcionaba
+;;    (global-set-key "\C-c b" 'org-iswitch);; este binding puesto así no funcionaba
 
 (define-key global-map (kbd "C-c a") 'org-agenda)
-(define-key global-map (kbd "C-c b") 'org-iswitchb)
+;;(define-key global-map (kbd "C-c b") 'org-iswitch) ;; I need C-c b for ido-switch-buffer
 #+END_SRC
 
 #+RESULTS:
-: org-iswitchb
+: org-agenda
 
 Shortcuts that should work in Org but do not. Besides, they used to be bound to =windmove= but no more because I'd rather use =ace-window=
 
@@ -2178,6 +2178,27 @@ Handy for collecting items together.
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23755 232 222653 744000) :init (23755 232 222644 807000) :config (23755 232 222456 56000) :config-secs (0 0 4 907000) :init-secs (0 0 10147 497000) :use-package-secs (0 6 598165 48000)))
+
+* Org-wiki
+
+#+begin_src emacs-lisp :tangle yes
+(require 'org-wiki)
+(setq org-wiki-location "/media/dgm/blue/documents/dropbox/notes/org-wiki")
+#+end_src
+
+#+RESULTS:
+: /media/dgm/blue/documents/dropbox/notes/org-wiki
+
+* Tuhdo's =org-recipes=
+
+#+begin_src emacs-lisp :tangle yes
+(add-to-list 'load-path "/home/dgm/.emacs.d/src/org-recipes")
+(require 'org-recipes)
+(setq org-recipes-file-list '("/media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org"))
+#+end_src
+
+#+RESULTS:
+| /media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org |
 
 * Provide
 

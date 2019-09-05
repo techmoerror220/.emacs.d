@@ -539,12 +539,17 @@ The reason is that in many data science programs, the great ista zahn binds the 
 #+begin_src emacs-lisp
 (use-package expand-region
   :ensure t
-  :bind (("C-*" . er/expand-region)
-         ("M-*" . er/contract-region)))
+  :bind (("s-<SPC>"       . er/expand-region)
+         ("s-<backspace>" . er/contract-region)))
 #+end_src
 
-#+RESULTS: expand-region
-: er/contract-region
+*** COMMENT Remapping =er/expand-region=
+
+Old code
+#+begin_src emacs-lisp :tangle no
+(global-set-key (kbd "<s-SPC>") 'er/expand-region)
+(global-set-key (kbd "<s-backspace>") 'er/contract-region)
+#+end_src
 
 ** Multiple Cursors
    Use multiple cursors for search, replace, and text-cleaning tasks. For a demonstration, see http://emacsrocks.com/e13.html

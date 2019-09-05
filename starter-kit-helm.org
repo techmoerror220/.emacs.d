@@ -316,18 +316,18 @@ Note: =wgrep-helm= allows you to edit a helm-grep-mode buffer and apply those ch
 ;;; Add bindings to `helm-apropos`. TODO: Does not work most of the times.
 ;;; https://github.com/emacs-helm/helm/issues/1140
 ;;; Commented out by DGM on 4 sept 2019
-;; (defun ambrevar/helm-def-source--emacs-commands (&optional default)
-;;   (helm-build-in-buffer-source "Commands"
-;;     :init `(lambda ()
-;;              (helm-apropos-init 'commandp ,default))
-;;     :fuzzy-match helm-apropos-fuzzy-match
-;;     :filtered-candidate-transformer (and (null helm-apropos-fuzzy-match)
-;;                                          'helm-apropos-default-sort-fn)
-;;     :candidate-transformer 'helm-M-x-transformer-1
-;;     :nomark t
-;;     :action '(("Describe Function" . helm-describe-function)
-;;               ("Find Function" . helm-find-function)
-;;               ("Info lookup" . helm-info-lookup-symbol))))
+(defun ambrevar/helm-def-source--emacs-commands (&optional default)
+  (helm-build-in-buffer-source "Commands"
+    :init `(lambda ()
+             (helm-apropos-init 'commandp ,default))
+    :fuzzy-match helm-apropos-fuzzy-match
+    :filtered-candidate-transformer (and (null helm-apropos-fuzzy-match)
+                                         'helm-apropos-default-sort-fn)
+    :candidate-transformer 'helm-M-x-transformer-1
+    :nomark t
+    :action '(("Describe Function" . helm-describe-function)
+              ("Find Function" . helm-find-function)
+              ("Info lookup" . helm-info-lookup-symbol))))
 
 (global-set-key (kbd "s-a") 'helm-apropos)
 #+END_SRC
@@ -841,9 +841,9 @@ From https://github.com/bbatsov/projectile/issues/184
 
 #+begin_src emacs-lisp :tangle yes
 ;; (define-key projectile-mode-map [?\s-d] 'projectile-switch-project)
-(define-key projectile-mode-map [?\s-\$] 'helm-projectile-find-file-dwim)
+(define-key projectile-mode-map [?\s-\|] 'helm-projectile-find-file-dwim)
 (define-key projectile-mode-map [?\s-\`] 'helm-projectile-find-other-file)
-(define-key projectile-mode-map [?\s-\;] 'helm-projectile-find-dir)
+(define-key projectile-mode-map [?\s-\+] 'helm-projectile-find-dir)
 (define-key projectile-mode-map [?\s-j] 'helm-projectile-find-file)
 (define-key projectile-mode-map [?\s-l] 'helm-projectile-switch-to-buffer)
 ;;(define-key projectile-mode-map [?\s-y] 'projectile-ag) ;; this is not working. 
@@ -891,14 +891,29 @@ DGM, 4 sept 2019: not sure ack is better than grep.
 #+RESULTS:
 : helm-projectile-grep
 
+*** Customization
+https://github.com/emacs-helm/helm/wiki/Grep
+
+#+begin_src emacs-lisp :tangle yes
+(setq helm-grep-default-command
+      "grep --color=always -d skip %e -n%cH -e %p %f"
+      helm-grep-default-recurse-command
+      "grep --color=always -d recurse %e -n%cH -e %p %f")
+#+end_src
+
+#+RESULTS:
+: grep --color=always -d recurse %e -n%cH -e %p %f
+
 * =helm-ag=:  Interface with Ag ("The Silver Searcher")
 
 The Silver Searcher is grep-like program implemented by =C=. An attempt to make something better than =ack-grep=.
 
 It searches pattern about 3–5x faster than ack-grep. It ignores file patterns from your .gitignore and .hgignore. 
 
-[[https://github.com/ggreer/the_silver_searcher][The Silver Searcher]] is a very fast, smart code search tool, similar to
-ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://github.com/Wilfred/ag.el/#agel][described here]].
+[[https://github.com/ggreer/the_silver_searcher][The Silver Searcher]] is a very fast, smart code search tool, similar to ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://github.com/Wilfred/ag.el/#agel][described here]].
+
+
+NB: =helm-projectile-ag= resulta en un formato ilegible. =helm-ag= resulta en un formato legible, luego uso esta.
 
 ** Critical options: 
 
@@ -921,7 +936,7 @@ ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://githu
 (use-package helm-ag
   :ensure t
   :after (helm-mode ag)
-  :bind ("s-f" . helm-projectile-ag)
+  :bind ("s-f" . helm-ag)
   :init (setq helm-ag-base-command "/usr/bin/ag"
               helm-ag-insert-at-point t
               helm-ag-fuzzy-match     t
@@ -932,6 +947,18 @@ ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://githu
 #+RESULTS:
 : helm-projectile-ag
 
+
+** Customization
+
+https://github.com/emacs-helm/helm/wiki/Grep
+
+#+begin_src emacs-lisp :tangle yes
+(setq helm-grep-ag-command "ag --line-numbers -S --hidden --color --color-match '31;43' --nogroup %s %s %s")
+(setq helm-grep-ag-pipe-cmd-switches '("--color-match '31;43'"))
+#+end_src
+
+#+RESULTS:
+| --color-match '31;43' |
 
 * EXWM
 
@@ -1113,7 +1140,7 @@ From: https://www.reddit.com/r/emacs/comments/cuc8hl/how_do_you_remember_various
                    helm-source-info-elisp
                    helm-source-info-cl)))
 
-(global-set-key (kbd "s-8") 'ap/helm-info-emacs-elisp-cl)
+(global-set-key (kbd "s-\)") 'ap/helm-info-emacs-elisp-cl)
 #+END_SRC
 
 #+RESULTS:
