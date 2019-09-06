@@ -1531,6 +1531,17 @@ I'm not sure if including this package in the =elpa.org= file will get this =ggt
 ;; sudo apt-get install global
 #+end_src
 
+** Ghub
+Magit depends on this
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ghub
+  :ensure t)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23922 34577 264844 942000) :init (23922 34577 264840 357000) :config (23922 34577 264773 363000) :config-secs (0 0 4 150000) :init-secs (0 0 174 560000) :use-package-secs (0 5 255993 327000)))
+
 ** Magit
 
 https://magit.vc/manual/magit.html#Installation
@@ -1540,6 +1551,7 @@ Key binding to get the Magit menu
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package magit
   :ensure t
+  :after (ghub)
   :defer t
   :bind (("C-x g" . magit-status) 
          ("C-x M-l" . magit-log-buffer-file)
