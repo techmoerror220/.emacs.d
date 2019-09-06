@@ -1,0 +1,298 @@
+;;  add (setq custom-safe-themes t) to your init file before you load your theme. This will treat all themes as safe, which could be a risk in theory, but if ;; you are only installing themes from trusted sources, I don't see any issue 
+;; https://emacs.stackexchange.com/questions/18932/stop-emacs-asking-if-a-theme-is-safe
+(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
+(setq custom-safe-themes t)
+
+;;(use-package solarized-theme
+;;  :defer 10
+;;  :init
+;;  (setq solarized-use-variable-pitch nil)
+;;  (setq solarized-height-plus-1 1.0)
+;;  :ensure t)
+
+
+;; From https://github.com/andschwa/.emacs.d/blob/master/init.el and https://github.com/bbatsov/solarized-emacs
+
+(use-package solarized-theme
+  :init 
+  (setq solarized-distinct-fringe-background t) ;; make the fringe stand out from the background 
+  (setq solarized-use-variable-pitch nil)       ;; Don't change the font for some headings and titles
+  (setq solarized-high-contrast-mode-line nil)    ;; make the modeline high contrast (change to t if you want it)
+  ;;  (setq solarized-use-less-bold t)              ;; Use less bolding
+  ;;  (setq solarized-use-more-italic t)            ;; Use more italics
+  (setq solarized-emphasize-indicators nil)     ;; Use less colors for indicators such as git: gutter, flycheck and similar
+  (setq solarized-scale-org-headlines nil)      ;; Don't change size of org-mode headlines (but keep other size-changes)
+  ;; Avoid all font-size changes
+  (setq solarized-height-minus-1 1.0)
+  (setq solarized-height-plus-1 1.0)
+  (setq solarized-height-plus-2 1.0)
+  (setq solarized-height-plus-3 1.0)
+  (setq solarized-height-plus-4 1.0)
+  (setq x-underline-at-descent-line t)
+  :config
+  (defun toggle-theme ()
+    "Switch between Solarized variants."
+    (interactive)
+    (cond
+     ((member 'solarized-dark custom-enabled-themes)
+      (disable-theme 'solarized-dark)
+      (load-theme 'solarized-light t)
+      (set-face-attribute 'helm-selection nil 
+                          :background nil
+                          :foreground "Orange3"))
+     ((member 'solarized-light custom-enabled-themes)
+      (disable-theme 'solarized-light)
+      (load-theme 'solarized-dark t)
+      (set-face-attribute 'helm-selection nil 
+                          :background nil
+                          :foreground "Orange3")
+      (set-face-attribute 'helm-source-header
+                           nil
+                           :foreground "#F5f5f5"))))
+  (load-theme 'solarized-light t))
+
+(bind-key "s-!" 'toggle-theme)
+
+;;  (load-theme 'solarized-dark t))
+
+;;  (load-theme 'zenburn t)
+;;  (load-theme 'solarized-dark t)
+;;  (load-theme 'solarized-light t)
+;;  (load-theme 'darktooth t)
+;;  (load-theme 'soothe t)
+;;  (load-theme 'clues t)
+
+;; from https://github.com/kuanyui/moe-theme.el
+;;    (require 'moe-theme)
+;;    (powerline-moe-theme)
+
+;; Show highlighted buffer-id as decoration. (Default: nil)
+;;    (setq moe-theme-highlight-buffer-id t)
+
+;; Resize titles (optional).
+;;    (setq moe-theme-resize-markdown-title '(1.5 1.4 1.3 1.2 1.0 1.0))
+;;    (setq moe-theme-resize-org-title '(1.5 1.4 1.3 1.2 1.1 1.0 1.0 1.0 1.0))
+;;    (setq moe-theme-resize-rst-title '(1.5 1.4 1.3 1.2 1.1 1.0))
+
+;;    Choose a color for mode-line.(Default: blue)
+;;    (moe-theme-set-color 'orange)
+
+;; Finally, apply moe-theme now.
+;; Choose what you like, (moe-light) or (moe-dark)
+;;    (moe-dark)    
+
+;; If you use Emacs build-in show-paren-mode, I recommend set the value of show-paren-style to expression for optimized visual experience:
+
+;;    (show-paren-mode t)
+;;    (setq show-paren-style 'expression)
+
+;; trying to improve the looks of dired+ with solarized dark: http://unix.stackexchange.com/questions/20519/dired-on-dark-color-themes
+;; (add-to-list 'default-frame-alist '(background-mode . dark))
+;;  (load-theme 'spacemacs-dark t)
+;;  (load-theme 'misterioso t)
+
+(defun set-light-theme ()
+  "Set the light theme with some customization if needed."
+  (interactive)
+  (load-theme 'solarized-light t))
+
+(defun set-dark-theme ()
+  "Set the dark theme with some customization if needed."
+  (interactive)
+  (load-theme 'solarized-dark t))
+
+(let ((current-hour (string-to-number (format-time-string "%H"))))
+  (if (or (< current-hour 6) (> current-hour 20)) (set-dark-theme) (set-light-theme)))
+
+(defun theme-switcher ()
+  (let ((current-hour (string-to-number (format-time-string "%H"))))
+    (if (or (< current-hour 6) (> current-hour 20)) (set-dark-theme) (set-light-theme))))
+
+;; Run at every 3600 seconds, after 0s delay; DGM comments this out on 24 august 2019 so if I switch theme manually, theme is not switched back to what it was after one hour.
+;; (run-with-timer 0 3600 'theme-switcher)
+
+(use-package minions
+  :ensure t
+  :config
+  (setq minions-mode-line-lighter "[+]")
+  (minions-mode))
+
+(use-package moody
+  :ensure t
+  :config
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+
+  (defun set-moody-face (frame)
+    (let ((line (face-attribute 'mode-line :underline frame)))
+      (set-face-attribute 'mode-line          frame :overline   line)
+      (set-face-attribute 'mode-line-inactive frame :overline   line)
+      (set-face-attribute 'mode-line-inactive frame :underline  line)
+      (set-face-attribute 'mode-line          frame :box        nil)
+      (set-face-attribute 'mode-line-inactive frame :box        nil)))
+
+  ;; (defun set-current-moody-face (&optional args)
+  ;;   (interactive)
+  ;;   (set-moody-face (selected-frame)))
+
+  (setq-default x-underline-at-descent-line t
+                column-number-mode t)
+
+  (add-to-list 'after-make-frame-functions 'set-moody-face t))
+  ;; (add-to-list 'after-make-frame-functions 'set-current-moody-face t))
+
+(setq display-time-24hr-format t)
+(setq display-time-default-load-average t)
+(setq display-time-mail-string "") ;; no mail alert
+(display-time-mode 1)
+
+    (when window-system
+;;      (setq frame-title-format '(buffer-file-name "%f" ("%b")))
+      (setq frame-title-format (concat "%b" (unless (daemonp) " [serverless]"))) ;; from ambrevar's main.el
+      (tooltip-mode -1)
+      (blink-cursor-mode -1)) ;; I include this blink-cursor-mode again because sometimes it disappears and maybe turning this fixes it.
+;;      (tool-bar-mode -1)) ;; already in minimal.el
+
+;; alternative de malb dot files to display buffer name in frame titles
+;; (setq frame-title-format
+;;      '("" (:eval (replace-regexp-in-string "^ +" "" (buffer-name)))
+;;        " - " invocation-name))
+
+
+    (mouse-wheel-mode t)
+
+    (setq visible-bell t
+          echo-keystrokes 0.1
+;;          font-lock-maximum-decoration t  ;; dgm turned this off as emacs was way too slow with it but now, with my new EXWM setting I want to give it a chance
+          font-lock-maximum-decoration 1 ;; originally it was true, then nil and then 1, the minimum level, to see if this speeds up things. And I think it does. 
+          font-lock-verbose nil
+          inhibit-startup-message t
+          transient-mark-mode t
+        ;;  color-theme-is-global t
+          delete-by-moving-to-trash t
+          shift-select-mode nil
+          truncate-partial-width-windows nil
+          whitespace-style '(trailing lines space-before-tab
+                                      indentation space-after-tab)
+          whitespace-line-column 100
+          ediff-window-setup-function 'ediff-setup-windows-plain
+          ediff-split-window-function 'split-window-horizontally
+          oddmuse-directory (concat dotfiles-dir "oddmuse")
+          xterm-mouse-mode t
+          save-place-file (concat dotfiles-dir "places"))
+
+(minimal-mode)
+
+(auto-compression-mode t)
+
+;;(global-font-lock-mode t)
+
+;;  (if window-system
+;      (menu-bar-mode t)
+;;      (menu-bar-mode -1)
+;;      )
+
+;; Code by Kieran Healy:
+;; saveplace remembers your location in a file when saving files
+;;  (require 'saveplace)
+;;  (setq-default save-place t) for Emacs below 24.4
+;;  (toggle-save-place-globally 1) ;; in Emacs above 24.4
+
+;; My code
+;; (require 'saveplace)
+;; I comment saveplace out because in the documentation it says: "For GNU Emacs 25.1 and newer versions
+;; Note that saveplace is auto-loaded by save-place-mode. So you do not need to explicitly require it.
+
+  (save-place-mode 1)
+
+;;  (when (> emacs-major-version 21)
+;;    (require 'flx-ido) 
+;;    (ido-mode t)
+;;    (ido-everywhere 1)
+;;    (setq ido-enable-prefix nil
+;;          ido-enable-flex-matching t
+;;          ido-create-new-buffer 'always
+;;          ido-use-filename-at-point nil
+;;          ido-use-faces nil
+;;          ido-max-prospects 10))
+
+;;(use-package ido
+;;  :ensure t
+;;  :init
+;;  (setq ido-enable-prefix nil
+;;        ido-enable-flex-matching t
+;;        ido-create-new-buffer 'always
+;;        ido-use-filename-at-point 'guess ;; changed from nil. If intrusive, revert to nil
+;;        ido-use-faces nil             
+;;        ido-max-prospects 10
+;;        ido-everywhere nil ;; t conflicts with helm sometimes. See https://github.com/emacs-helm/helm/issues/2085
+;;        ido-mode t)
+;;  (use-package flx-ido
+;;    :ensure t) 
+(use-package ido-vertical-mode
+    :ensure t
+    :defer t
+    :init (ido-vertical-mode 1)
+    (setq ido-vertical-define-keys 'C-n-and-C-p-only)
+    (setq ido-vertical-show-count t))
+
+(set-face-attribute 'ido-vertical-first-match-face nil
+                    :background nil
+                    :foreground "#b58900")
+(set-face-attribute 'ido-vertical-only-match-face nil
+                    :background nil
+                    :foreground nil)
+(set-face-attribute 'ido-vertical-match-face nil
+                    :foreground nil)
+
+  (set-default 'indent-tabs-mode nil)
+  (set-default 'indicate-empty-lines t)
+  (set-default 'imenu-auto-rescan t)
+  
+  (add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+;; dgm, 1 july 2017: turn flyspell off
+;;  (add-hook 'text-mode-hook 'turn-on-flyspell)
+;;  (add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
+;;  (add-hook 'markdown-mode-hook 'turn-on-flyspell)
+;;  (add-hook 'org-mode-hook 'turn-on-flyspell)
+  
+  (defvar starter-kit-coding-hook nil
+    "Hook that gets run on activation of any programming mode.")
+  
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  ;; Seed the random-number generator
+  (random t)
+
+;; Istan Zahn uses this instea: (https://github.com/izahn/dotemacs)
+;; Use y/n instead of yes/no
+;; (fset 'yes-or-no-p 'y-or-n-p)
+
+(defun starter-kit-pretty-lambdas ()
+  (font-lock-add-keywords
+   nil `(("(\\(lambda\\>\\)"
+          (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                    ,(make-char 'greek-iso8859-7 107))
+                    nil))))))
+
+;;  (require 'powerline)
+;;  (powerline-default-theme)
+
+(delete 'try-expand-line hippie-expand-try-functions-list)
+(delete 'try-expand-list hippie-expand-try-functions-list)
+
+(setq backup-directory-alist `(("." . ,(expand-file-name
+                                        (concat dotfiles-dir "backups")))))
+
+(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
+(add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
+;; (require 'yaml-mode) ;; dgm comments out as I don't know what it is for
+;; (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
+
+(setq diff-switches "-u")
+
+(provide 'starter-kit-misc)
+
+  (message "Starter Kit Misc loaded.")

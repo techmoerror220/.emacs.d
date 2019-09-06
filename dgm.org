@@ -4759,13 +4759,13 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-M p"
                   :description "sp-previous-sexp: Top-level-ish transversal")
   (cheatsheet-add :group 'Expressions-Movement
-                  :key "s-N"
+                  :key "M-n"
                   :description "smartscan-symbol-go-forward. Set in elpa/smartscan.el")
   (cheatsheet-add :group 'Expressions-Movement
-                  :key "s-P"
+                  :key "M-p"
                   :description "smartscan-symbol-go-backward. Set in elpa/smartscan.el")
   (cheatsheet-add :group 'Expressions-Movement
-                  :key "s-R"
+                  :key "M-'"
                   :description "smartscan-symbol-replace. Set in smartscan.el")
   (cheatsheet-add :group 'Expressions-Movement
                   :key "C-<down>"
