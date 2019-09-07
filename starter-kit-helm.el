@@ -3,7 +3,64 @@
   :diminish helm-mode
   :init 
   (helm-mode 1)
-  (require 'helm-config))
+  (require 'helm-config)
+  (require 'helm-grep))
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action but this gives rise to problems. See https://github.com/jkitchin/org-ref/issues/527
+(define-key helm-map (kbd "C-i")   'helm-execute-persistent-action) ; make TAB work in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+(define-key helm-grep-mode-map (kbd "<return>")  'helm-grep-mode-jump-other-window)
+(define-key helm-grep-mode-map (kbd "n")  'helm-grep-mode-jump-other-window-forward)
+(define-key helm-grep-mode-map (kbd "p")  'helm-grep-mode-jump-other-window-backward)
+
+(when (executable-find "curl")
+  (setq helm-google-suggest-use-curl-p t))
+
+(setq helm-google-suggest-use-curl-p t
+      helm-scroll-amount 4 ; scroll 4 lines other window using M-<next>/M-<prior>
+      ;; helm-quick-update t ; do not display invisible candidates
+      helm-ff-search-library-in-sexp t ; search for library in `require' and `declare-function' sexp.
+
+      ;; you can customize helm-do-grep to execute ack-grep
+      ;; helm-grep-default-command "ack-grep -Hn --smart-case --no-group --no-color %e %p %f"
+      ;; helm-grep-default-recurse-command "ack-grep -H --smart-case --no-group --no-color %e %p %f"
+      helm-split-window-in-side-p t ;; open helm buffer inside current window, not occupy whole other window
+
+      helm-echo-input-in-header-line t
+
+      ;; helm-candidate-number-limit 500 ; limit the number of displayed canidates
+      helm-ff-file-name-history-use-recentf t
+      helm-move-to-line-cycle-in-source t ; move to end or beginning of source when reaching top or bottom of source.
+      helm-buffer-skip-remote-checking t
+
+      helm-mode-fuzzy-match t
+
+      helm-buffers-fuzzy-matching t ; fuzzy matching buffer names when non-nil
+                                        ; useful in helm-mini that lists buffers
+      helm-org-headings-fontify t
+      ;; helm-find-files-sort-directories t
+      ;; ido-use-virtual-buffers t
+      helm-semantic-fuzzy-match t
+      ;; helm-M-x-fuzzy-match t
+      ;; helm-imenu-fuzzy-match t
+      ;; helm-lisp-fuzzy-completion t
+      ;; helm-apropos-fuzzy-match t
+      ;; helm-locate-fuzzy-match t
+      helm-display-header-line nil)
+
+;;    (global-set-key (kbd "C-x b") 'helm-buffers-list)
+;;    (global-set-key (kbd "C-c r") 'helm-recentf)
+;;    (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+;;    (define-key 'help-command (kbd "C-l") 'helm-locate-library)
+
+(add-hook 'helm-goto-line-before-hook 'helm-save-current-pos-to-mark-ring)
+
+;; Command: helm-mini-buffer-history
+(define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
+
+(define-key minibuffer-local-map (kbd "M-p") 'helm-minibuffer-history)
+(define-key minibuffer-local-map (kbd "M-n") 'helm-minibuffer-history)
 
 (setq helm-candidate-number-limit 100)
 
@@ -19,8 +76,26 @@
 (use-package helm-swoop
   :ensure t
   :after helm-mode
-  ;; :bind ("<s-backspace>" . helm-swoop)
-  )
+  :bind (("C-c h o" . helm-swoop)
+         ("C-c s" . helm-multi-swoop-all))
+  :config
+  ;; When doing isearch, hand the word over to helm-swoop
+  (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+
+  ;; From helm-swoop to helm-multi-swoop-all
+  (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+
+  ;; Save buffer when helm-multi-swoop-edit complete
+  (setq helm-multi-swoop-edit-save t)
+
+  ;; If this value is t, split window inside the current window
+  (setq helm-swoop-split-with-multiple-windows t)
+
+  ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
+  (setq helm-swoop-split-direction 'split-window-vertically)
+
+  ;; If nil, you can slightly boost invoke speed in exchange for text color
+  (setq helm-swoop-speed-or-color t))
 
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
@@ -36,8 +111,7 @@
     ;; Command: helm-mini
 (global-set-key (kbd "C-x b") 'helm-mini)
 
-(setq helm-buffers-fuzzy-matching t
-      helm-recentf-fuzzy-match    t)
+(setq helm-recentf-fuzzy-match    t)
 
 ;; Command: helm-find-files
 ;; helm-find-files is file navigation on steroids:
@@ -46,8 +120,7 @@
 
 ;; Command: helm-semantic-or-imenu
 ;; recall I have ==(semantic-mode 1)= in =starter-kit-completion.org=
-(setq helm-semantic-fuzzy-match t
-      helm-imenu-fuzzy-match    t)
+(setq helm-imenu-fuzzy-match    t)
 
 (global-set-key (kbd "M-i") 'helm-semantic-or-imenu)
 
@@ -85,7 +158,7 @@
 
 ;; Command: helm-occur
 ;; search for patterns in current buffer
-(global-set-key (kbd "C-c h o") 'helm-occur)
+;; (global-set-key (kbd "C-c h o") 'helm-occur)
 (global-set-key (kbd "s-o") 'helm-occur)
 
 ;; helm-resume: taken to dgm.org or else it didn't replace <exwm-reset>
@@ -139,7 +212,7 @@
  helm-show-completion-display-function nil
  helm-completion-mode-string ""
  helm-dwim-target 'completion
- helm-echo-input-in-header-line t
+ ;; helm-echo-input-in-header-line t
  helm-use-frame-when-more-than-two-windows nil
  ;; helm-apropos-fuzzy-match t
  ;; helm-buffers-fuzzy-matching t
@@ -183,6 +256,7 @@
 
 ;; helm-google-suggest
 (global-set-key (kbd "C-c h g") 'helm-google-suggest)
+(global-set-key (kbd "C-c h w") 'helm-wikipedia-suggest)
 
 ;; helm-eval-expression-with-eldoc
 ;; (global-set-key (kbd "C-c h M-:") 'helm-eval-expression-with-eldoc)
@@ -193,7 +267,10 @@
 
 ;; (add-hook 'eshell-mode-hook
 ;;          '(lambda ()
-;;             (define-key eshell-mode-map (kbd "C-c h C-c h")  'helm-eshell-history)))
+;;             (define-key eshell-mode-map (kbd "C-c h C-c h")  'helm-eshell-history))) 
+    (add-hook 'eshell-mode-hook
+              #'(lambda ()
+                  (define-key eshell-mode-map (kbd "M-l")  'helm-eshell-history)))
 
 ;;; Eshell
 (defun ambrevar/helm/eshell-set-keys ()
@@ -204,42 +281,64 @@
   ;;(define-key eshell-mode-map (kbd "M-s f") 'helm-eshell-prompts-all)) ;; this one doesn't work... I don't know what it'd do.
 (add-hook 'eshell-mode-hook 'ambrevar/helm/eshell-set-keys)
 
-;; Command: helm-mini-buffer-history
-(define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
-
 (use-package helm-descbinds
 	:ensure t)
 (helm-descbinds-mode)
 
-    ;; Tuhdo says to put this but if I do emacs spits error mesage on start up.
-    ;;(require 'setup-helm)
-    ;;(require 'setup-helm-gtags)
+(define-key global-map [remap find-tag] 'helm-etags-select)
+
+(use-package ggtags
+  :ensure t)
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+              (ggtags-mode 1))))
+
+(define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+(define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+(define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+(define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+(define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+(define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
+
+(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
+
+;; this variable must be set before load helm-gtags
+;; you can change to any prefix key of your choice
+(setq helm-gtags-prefix-key "\C-cg")
 
 (use-package helm-gtags
-	:ensure t
-    :init
-    ;; Enable helm-gtags-mode
+  :init
+  (progn
+    (setq helm-gtags-ignore-case t
+          helm-gtags-auto-update t
+          helm-gtags-use-input-at-cursor t
+          helm-gtags-pulse-at-cursor t
+          helm-gtags-prefix-key "\C-cg"
+          helm-gtags-suggested-key-mapping t)
+
+    ;; Enable helm-gtags-mode in Dired so you can jump to any tag
+    ;; when navigate project tree with Dired
     (add-hook 'dired-mode-hook 'helm-gtags-mode)
+
+    ;; Enable helm-gtags-mode in Eshell for the same reason as above
     (add-hook 'eshell-mode-hook 'helm-gtags-mode)
+
+    ;; Enable helm-gtags-mode in languages that GNU Global supports
     (add-hook 'c-mode-hook 'helm-gtags-mode)
     (add-hook 'c++-mode-hook 'helm-gtags-mode)
+    (add-hook 'java-mode-hook 'helm-gtags-mode)
     (add-hook 'asm-mode-hook 'helm-gtags-mode)
-    ;; (add-hook 'python-mode-hook 'helm-gtags-mode)
-    :config
-    (setq
-     helm-gtags-ignore-case t
-     helm-gtags-auto-update t
-     helm-gtags-use-input-at-cursor t
-     helm-gtags-pulse-at-cursor t
-     helm-gtags-prefix-key "C-c g"
-     helm-gtags-suggested-key-mapping t))
 
-    (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-    (define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
-    (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-    (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
-    (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-    (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+    ;; key bindings
+    (with-eval-after-load 'helm-gtags
+      (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+      (define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+      (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+      (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+      (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+      (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history))))
 
 ;; (setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
 (use-package helm-bibtex
@@ -263,9 +362,6 @@
 
 (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
 ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action but this gives rise to problems. See https://github.com/jkitchin/org-ref/issues/527
-(define-key helm-map (kbd "C-i")   'helm-execute-persistent-action) ; make TAB work in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z... direct from Tuhdo!
 
 ;; Projectile
 (use-package projectile
@@ -333,12 +429,12 @@
   :ensure t
   :after helm-mode 
   :init     
+  (helm-projectile-on)
   (setq projectile-completion-system 'helm)
   :commands helm-projectile
   ;;   :bind ("C-c p h" . helm-projectile)
   )
 
-(helm-projectile-on)   ;;; creo que no hace falta tras decir =ensure t= in use-package.
 ;; (define-key projectile-mode-map [?\s-u] 'helm-projectile-find-file-in-known-projects) 
 (setq projectile-switch-project-action 'helm-projectile)
 (global-set-key (kbd "s-h") 'helm-projectile)

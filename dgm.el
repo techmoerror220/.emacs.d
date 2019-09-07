@@ -115,7 +115,12 @@ The app is chosen from your OS's preference."
 
 (use-package speed-type)
 
-(use-package iedit)
+(use-package iedit
+  :bind (("C-;" . iedit-mode))
+  :init
+  (setq iedit-toggle-key-default nil))
+
+;; (use-package iedit)
 
 ;; activate this function by Mickey Petersen if you wish to use iedit only in current function and not all across the buffer.
 ;; (defun iedit-dwim (arg)
@@ -134,7 +139,7 @@ The app is chosen from your OS's preference."
 ;;           (narrow-to-defun)
 ;;           (iedit-start (current-word) (point-min) (point-max)))))))
 
-(global-set-key (kbd "C-;") 'iedit-dwim)
+;; (global-set-key (kbd "C-;") 'iedit-dwim)
 
 (add-hook 'c-mode-common-hook
     (lambda ()
@@ -147,10 +152,13 @@ The app is chosen from your OS's preference."
 
 (setq
  kill-ring-max 5000 ; increase kill-ring capacity
-;; kill-whole-line t  ; if NIL, killwhole line and move the next line up / commented out by dgm as it might interere with kill-whole-line-or-region mode
+;; kill-whole-line t  ; if NIL, killwhole line and move the next line up / commented out by dgm as it might interfere with kill-whole-line-or-region mode
 )
 
 (setq-default tab-width 4)
+
+(add-hook 'sh-mode-hook (lambda ()
+                          (setq tab-width 4)))
 
   ;; (require 'workgroups2)
 
@@ -215,11 +223,22 @@ The app is chosen from your OS's preference."
    (define-key global-map (kbd "RET") 'newline-and-indent))
  (add-hook 'after-init-hook 'my-pkg-init)
 
+(use-package dtrt-indent
+  :init
+  (dtrt-indent-mode 1)
+  (setq dtrt-indent-verbosity 0))
+
+(use-package ws-butler
+  :init
+  (add-hook 'prog-mode-hook 'ws-butler-mode)
+  (add-hook 'text-mode 'ws-butler-mode)
+  (add-hook 'fundamental-mode 'ws-butler-mode))
+
 (use-package undo-tree
   :diminish undo-tree-mode
   :config
   (progn
-    (global-undo-tree-mode)
+    (global-undo-tree-mode 1)
     (setq undo-tree-visualizer-timestamps t)
     (setq undo-tree-visualizer-diff t)))
 
@@ -319,7 +338,7 @@ The app is chosen from your OS's preference."
   (add-hook 'python-mode-hook       #'rainbow-mode)
  )
 
-;;R-mode-hook runs when you open a new source buffer, so anything you put in that will only effect your source buffers.inferior-ess-mode-hook runs when you start an R console, so anything in there should only apply to the console buffer and not the source.
+;;R-mode-hook runs when you open a new source buffer, so anything you put in that will only affect your source buffers.inferior-ess-mode-hook runs when you start an R console, so anything in there should only apply to the console buffer and not the source.
 
 (use-package kurecolor
    :ensure t)
@@ -564,8 +583,12 @@ point reaches the beginning or end of the buffer, stop there."
 
 (global-set-key (kbd "M-s-p") 'rtags-peek-definition)
 
+(use-package ghub
+  :ensure t)
+
 (use-package magit
   :ensure t
+  :after (ghub)
   :defer t
   :bind (("C-x g" . magit-status) 
          ("C-x M-l" . magit-log-buffer-file)
@@ -632,9 +655,6 @@ point reaches the beginning or end of the buffer, stop there."
   (end-of-buffer)
   (previous-line)
   (dired-find-file))
-
-;; (require 'r-autoyas)
-;; (add-hook 'ess-mode-hook 'r-autoyas-ess-activate)
 
 ;; (setq org-agenda-window-setup 'only-window)
 ;; (setq org-export-dispatch 'only-window)
@@ -1258,6 +1278,176 @@ to previous page only on typing DEL (ARG is nil)."
 (use-package markdown-mode
   :ensure t)
 
+;; Compilation
+(global-set-key (kbd "<f5>") (lambda ()
+                               (interactive)
+                               (setq-local compilation-read-command nil)
+                               (call-interactively 'compile)))
+
+(use-package zygospore
+  :bind (("C-x 1" . zygospore-toggle-delete-other-windows)
+         ("RET" .   newline-and-indent)))
+
+;; setup GDB
+(setq
+ ;; use gdb-many-windows by default
+ gdb-many-windows t
+
+ ;; Non-nil means display source file containing the main routine at startup
+ gdb-show-main t
+ )
+
+(delete-selection-mode)
+(global-set-key (kbd "RET") 'newline-and-indent)
+
+(use-package anzu
+  :init
+  (global-anzu-mode)
+  (global-set-key (kbd "M-%") 'anzu-query-replace)
+  (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp))
+
+(defadvice kill-ring-save (before slick-copy activate compile)
+  "When called interactively with no active region, copy a single
+line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (message "Copied line")
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single
+  line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+
+;; kill a line, including whitespace characters until next non-whitespace character of next line
+(defadvice kill-line (before check-position activate)
+  (if (member major-mode
+              '(emacs-lisp-mode scheme-mode lisp-mode
+                                c-mode c++-mode objc-mode
+                                latex-mode plain-tex-mode))
+      (if (and (eolp) (not (bolp)))
+          (progn (forward-char 1)
+                 (just-one-space 0)
+                 (backward-char 1)))))
+
+;; DGM adds this as C-k is bound to both kill-line and kill-visual-line
+(defadvice kill-visual-line (before check-position activate)
+  (if (member major-mode
+              '(emacs-lisp-mode scheme-mode lisp-mode
+                                c-mode c++-mode objc-mode
+                                latex-mode plain-tex-mode))
+      (if (and (eolp) (not (bolp)))
+          (progn (forward-char 1)
+                 (just-one-space 0)
+                 (backward-char 1)))))
+
+(defvar yank-indent-modes
+  '(LaTeX-mode TeX-mode)
+  "Modes in which to indent regions that are yanked (or yank-popped).
+Only modes that don't derive from `prog-mode' should be listed here.")
+
+(defvar yank-indent-blacklisted-modes
+  '(python-mode slim-mode haml-mode)
+  "Modes for which auto-indenting is suppressed.")
+
+(defvar yank-advised-indent-threshold 1000
+  "Threshold (# chars) over which indentation does not automatically occur.")
+
+(defun yank-advised-indent-function (beg end)
+  "Do indentation, as long as the region isn't too large."
+  (if (<= (- end beg) yank-advised-indent-threshold)
+      (indent-region beg end nil)))
+
+(defadvice yank (after yank-indent activate)
+  "If current mode is one of 'yank-indent-modes,
+indent yanked text (with prefix arg don't indent)."
+  (if (and (not (ad-get-arg 0))
+           (not (member major-mode yank-indent-blacklisted-modes))
+           (or (derived-mode-p 'prog-mode)
+               (member major-mode yank-indent-modes)))
+      (let ((transient-mark-mode nil))
+        (yank-advised-indent-function (region-beginning) (region-end)))))
+
+(defadvice yank-pop (after yank-pop-indent activate)
+  "If current mode is one of `yank-indent-modes',
+indent yanked text (with prefix arg don't indent)."
+  (when (and (not (ad-get-arg 0))
+             (not (member major-mode yank-indent-blacklisted-modes))
+             (or (derived-mode-p 'prog-mode)
+                 (member major-mode yank-indent-modes)))
+    (let ((transient-mark-mode nil))
+      (yank-advised-indent-function (region-beginning) (region-end)))))
+
+;; prelude-core.el
+(defun indent-buffer ()
+  "Indent the currently visited buffer."
+  (interactive)
+  (indent-region (point-min) (point-max)))
+
+;; prelude-editing.el
+(defcustom prelude-indent-sensitive-modes
+  '(coffee-mode python-mode slim-mode haml-mode yaml-mode)
+  "Modes for which auto-indenting is suppressed."
+  :type 'list)
+
+(defun indent-region-or-buffer ()
+  "Indent a region if selected, otherwise the whole buffer."
+  (interactive)
+  (unless (member major-mode prelude-indent-sensitive-modes)
+    (save-excursion
+      (if (region-active-p)
+          (progn
+            (indent-region (region-beginning) (region-end))
+            (message "Indented selected region."))
+        (progn
+          (indent-buffer)
+          (message "Indented buffer.")))
+      (whitespace-cleanup))))
+
+(global-set-key (kbd "C-c i") 'indent-region-or-buffer)
+
+(defun prelude-get-positions-of-line-or-region ()
+  "Return positions (beg . end) of the current line
+or region."
+  (let (beg end)
+    (if (and mark-active (> (point) (mark)))
+        (exchange-point-and-mark))
+    (setq beg (line-beginning-position))
+    (if mark-active
+        (exchange-point-and-mark))
+    (setq end (line-end-position))
+    (cons beg end)))
+
+;; smart openline
+(defun prelude-smart-open-line (arg)
+  "Insert an empty line after the current line.
+Position the cursor at its beginning, according to the current mode.
+With a prefix ARG open line above the current line."
+  (interactive "P")
+  (if arg
+      (prelude-smart-open-line-above)
+    (progn
+      (move-end-of-line nil)
+      (newline-and-indent))))
+
+(defun prelude-smart-open-line-above ()
+  "Insert an empty line above the current line.
+Position the cursor at it's beginning, according to the current mode."
+  (interactive)
+  (move-beginning-of-line nil)
+  (newline-and-indent)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(global-set-key (kbd "s-@") 'prelude-smart-open-line)
+(global-set-key (kbd "s-@") 'open-line)
+
+(require 'setup-cedet)
+
 (setq  helm-display-header-line nil)
 
 (helm-autoresize-mode -1)
@@ -1799,6 +1989,9 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Common
                   :key "C-x C-c"
                   :description "save-buffers-kill-emacs")
+  (cheatsheet-add :group 'Debugging
+                  :key "M-x gdb"
+                  :description "IDE-like interface, with specialized buffers for controlling breakpoints, stack frames, and other aspects of the debugger state.")
   (cheatsheet-add :group 'Dired
                   :key "C-x d"
                   :description "helm-mode-dired. TAB to select; RET to jump to selection")
@@ -1823,6 +2016,9 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Dired-Projectile
                   :key "C-c d"
                   :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
+  (cheatsheet-add :group 'Editing
+                  :key "s-@"
+                  :description "open-line and prelude-smart-open-line. Insert an empty line after the current line.")
   (cheatsheet-add :group 'Editing
                   :key "C-x C-q"
                   :description "read-only-mode")
@@ -1895,9 +2091,21 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Editing
                   :key "s-#"
                   :description "sudo-edit")
+  (cheatsheet-add :group 'Editing-Killing
+                  :key "M-w"
+                  :description "kill-ring-save: Save the region as if killed, but don’t kill it. When no active region, copy a single line instead")
+  (cheatsheet-add :group 'Editing-Killing
+                  :key "C-w"
+                  :description "kill-region: Kill text between point and mark. When no active region, kill single line instead")
+  (cheatsheet-add :group 'Editing-Killing
+                  :key "C-k"
+                  :description "kill-line and kill-visual-line. kill a line, including whitespace characters until next non-whitespace character of next line")
   (cheatsheet-add :group 'Editing-MultipleRegions
                   :key "s-q"
                   :description "Mark next occurence of a region and edit all al once")
+  (cheatsheet-add :group 'Editing-MultipleRegions
+                  :key "C-;"
+                  :description "iedit: Edit multiple regions in the same way simultaneously")
   (cheatsheet-add :group 'Editing-MultipleCursors
                   :key "C-c C-m l"
                   :description "mc/edit-lines: When active region spans multiple lines, add cursor to each line")
@@ -1980,13 +2188,13 @@ Version 2019-03-07"
                   :key "C-M p"
                   :description "sp-previous-sexp: Top-level-ish transversal")
   (cheatsheet-add :group 'Expressions-Movement
-                  :key "s-N"
+                  :key "M-n"
                   :description "smartscan-symbol-go-forward. Set in elpa/smartscan.el")
   (cheatsheet-add :group 'Expressions-Movement
-                  :key "s-P"
+                  :key "M-p"
                   :description "smartscan-symbol-go-backward. Set in elpa/smartscan.el")
   (cheatsheet-add :group 'Expressions-Movement
-                  :key "s-R"
+                  :key "M-'"
                   :description "smartscan-symbol-replace. Set in smartscan.el")
   (cheatsheet-add :group 'Expressions-Movement
                   :key "C-<down>"
@@ -2267,6 +2475,15 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Org
                   :key "C-c C-o"
                   :description "org-open-at-point: Open links")
+  (cheatsheet-add :group 'Org
+                  :key "C-c C-x M-w"
+                  :description "org-copy-subtree. Copy subtree to kill ring. With a numeric prefix argument N, copy the N sequential subtrees")
+  (cheatsheet-add :group 'Org
+                  :key "C-c C-n"
+                  :description "Move to next heading")
+  (cheatsheet-add :group 'Org-recipes
+                  :key "C-c i"
+                  :description "Insert raw code under a heading")
   (cheatsheet-add :group 'Packages
                   :key "M-x try"
                   :description "Try a package before installing for good")
@@ -2312,6 +2529,12 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Replace
                   :key "C-c q"
                   :description "Decide to replace per match by dynamically building regular expressions")
+  (cheatsheet-add :group 'Replace
+                  :key "M-%"
+                  :description "anzu-query-replace")
+  (cheatsheet-add :group 'Replace
+                  :key "C-M-%"
+                  :description "anzu-query-replace-regexp")
   (cheatsheet-add :group 'Revert
                   :key "C-c r"
                   :description "Replace buffer text visited file on disk. C-u offers to revert from latest auto-save file")
@@ -2382,6 +2605,9 @@ Version 2019-03-07"
                   :key "M-x sunrise-sunset"
                   :description "Shows times for sunrise and sunset in minibuffer. More settings in dgm.org")
   (cheatsheet-add :group 'Windows
+                  :key "C-x 1"
+                  :description "zygospore-toggle-delete-other-windows RET: lets you revert C-x 1-delete-other-window-by pressing C-x 1 again")
+  (cheatsheet-add :group 'Windows
                   :key "M-P"
                   :description "ace-window")
   (cheatsheet-add :group 'Windows
@@ -2422,8 +2648,6 @@ Version 2019-03-07"
                   :description "windmove-down")
   :bind ("C-c C-s" . cheatsheet-show)
   )
-
-
 
 (global-set-key (kbd "s-,") 'beginning-of-buffer)
 (global-set-key (kbd "s-.") 'end-of-buffer)

@@ -328,9 +328,9 @@
  ;; org-todo-keyword-faces '(("REVIEW" :inherit org-done))
  ;; Priorities.
  org-priority-start-cycle-with-default nil
- org-default-priority 67
- ;; Org-mode aligns text.
- indent-tabs-mode nil)
+ org-default-priority 67)
+ ;; Org-mode aligns text. But already defined elsewhere (in starter-misc.)
+ ;; indent-tabs-mode nil)
 
 (setq org-directory "/home/dgm/Dropbox/gtd")
 ;; Set to <your Dropbox root directory>/MobileOrg.
@@ -1078,7 +1078,7 @@ Probably should make this a dblock someday."
 
 (add-to-list 'load-path "/home/dgm/.emacs.d/src/org-recipes")
 (require 'org-recipes)
-(setq org-recipes-file-list '("/media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org"))
+(setq org-recipes-file-list '("/media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org" "/media/dgm/blue/documents/dropbox/notes/org-recipes/newPython.org" "/media/dgm/blue/documents/dropbox/notes/org-recipes/helloworld.org"))
 
 (provide 'starter-kit-org)
 

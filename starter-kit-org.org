@@ -784,12 +784,13 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
  ;; org-todo-keyword-faces '(("REVIEW" :inherit org-done))
  ;; Priorities.
  org-priority-start-cycle-with-default nil
- org-default-priority 67
- ;; Org-mode aligns text.
- indent-tabs-mode nil)
+ org-default-priority 67)
+ ;; Org-mode aligns text. But already defined elsewhere (in starter-misc.)
+ ;; indent-tabs-mode nil)
 #+END_SRC
 
 #+RESULTS:
+: 67
 
 *** Sacha Chua's config for faces
 
@@ -1539,9 +1540,7 @@ Enable random "noise" for item itervals.
 
 *** Habits
 
-I like using org-habits to track consistency. My task names tend
-to be a bit long, though, so I've configured the graph column to
-show a little bit more to the right.
+I like using =org-habits= to track consistency. My task names tend to be a bit long, though, so I've configured the graph column to show a little bit more to the right.
 
 #+begin_src emacs-lisp :tangle yes
 (setq org-habit-graph-column 80)
@@ -2194,11 +2193,21 @@ Handy for collecting items together.
 #+begin_src emacs-lisp :tangle yes
 (add-to-list 'load-path "/home/dgm/.emacs.d/src/org-recipes")
 (require 'org-recipes)
-(setq org-recipes-file-list '("/media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org"))
+(setq org-recipes-file-list '("/media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org" "/media/dgm/blue/documents/dropbox/notes/org-recipes/newPython.org" "/media/dgm/blue/documents/dropbox/notes/org-recipes/helloworld.org"))
 #+end_src
 
 #+RESULTS:
-| /media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org |
+| /media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org | /media/dgm/blue/documents/dropbox/notes/org-recipes/newPython.org | /media/dgm/blue/documents/dropbox/notes/org-recipes/helloworld.org |
+
+* COMMENT Disabling bindings that are used elsewhere
+
+#+begin_src emacs-lisp :tangle no
+(with-eval-after-load 'org
+    (define-key org-mode-map (kbd "s-<SPC>") nil)
+    (define-key org-mode-map (kbd "s-<backspace>") nil))
+#+end_src
+
+#+RESULTS:
 
 * Provide
 

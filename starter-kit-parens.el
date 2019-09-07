@@ -1,9 +1,9 @@
 (use-package smartparens-config
-  :ensure smartparens
-  :config (progn (show-smartparens-global-mode t)))
+  :ensure smartparens)
+  ;; :config (progn (show-smartparens-global-mode nil)))
 
-(add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
-(add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
+;; (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
+;; (add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
 
 (defmacro def-pairs (pairs)
   "Define functions for pairing. PAIRS is an alist of (NAME . STRING)
@@ -108,7 +108,7 @@ respectively."
 (electric-pair-mode 1)
 
 (defvar org-electric-pairs '(
-                             (?/ . ?/) 
+                             ;; (?/ . ?/) 
                              (?= . ?=) 
                              (?~ . ?~)
                              ) 

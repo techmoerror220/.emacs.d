@@ -18,33 +18,35 @@ This is the old configuration.
 
 #+begin_src emacs-lisp :tangle no
 (add-to-list 'load-path
-               (expand-file-name  "yasnippet"
-                                  (expand-file-name "elpa"
-                                                    dotfiles-dir)))
-  ;;    (require 'yasnippet)
-  ;; above line replaced with the following use-package from uncle dave
-  ;; https://github.com/daedreth/UncleDavesEmacs
-  (use-package yasnippet
-    :ensure t)
+             (expand-file-name  "yasnippet"
+                                (expand-file-name "elpa"
+                                                  dotfiles-dir)))
+;;    (require 'yasnippet)
+;; above line replaced with the following use-package from uncle dave
+;; https://github.com/daedreth/UncleDavesEmacs
+(use-package yasnippet
+  :ensure t
+  :init
+  (add-hook 'prog-mode-hook 'yas-minor-mode))
 
-  (use-package yasnippet-snippets
-    :ensure t)
+(use-package yasnippet-snippets
+  :ensure t)
 
-  (use-package yasnippet-classic-snippets
-    :ensure t)
+(use-package yasnippet-classic-snippets
+  :ensure t)
 
-  ;; Setting yas-indent-line to =’fixed= fixes Python indentation behavior when typing a templated snippet. 
-  ;; Tip from https://github.com/danielmai/.emacs.d/blob/master/config.org
-  (setq yas-indent-line 'fixed)
+;; Setting yas-indent-line to =’fixed= fixes Python indentation behavior when typing a templated snippet. 
+;; Tip from https://github.com/danielmai/.emacs.d/blob/master/config.org
+(setq yas-indent-line 'fixed)
 
-  ;;  (yas-set-ac-modes)
-  ;;  (yas-enable-emacs-lisp-paren-hack)
-  (yas-global-mode 1)
-  (setq yas-snippet-dirs '("~/.emacs.d/mysnippets"
-                           "~/.emacs.d/snippets"
-                           "~/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets"
-                           "~/.emacs.d/elpa/yasnippet-snippets-20181107.2203/snippets"
-                           "~/.emacs.d/elpa/"))
+;;  (yas-set-ac-modes)
+;;  (yas-enable-emacs-lisp-paren-hack)
+(yas-global-mode 1)
+(setq yas-snippet-dirs '("~/.emacs.d/mysnippets"
+                         "~/.emacs.d/snippets"
+                         "~/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets"
+                         "~/.emacs.d/elpa/yasnippet-snippets-20181107.2203/snippets"
+                         "~/.emacs.d/elpa/"))
 
 (yas/load-directory "~/.emacs.d/mysnippets")
 (yas-load-directory (expand-file-name "snippets" dotfiles-dir)) ;; original line from kieran healy
@@ -139,13 +141,15 @@ Another:
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package yasnippet
   :ensure t
+  :init
+  (add-hook 'prog-mode-hook 'yas-minor-mode)
   :config
   (yas-global-mode 1)
   (advice-add 'yas--auto-fill-wrapper :override #'ignore))
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23906 18314 433888 496000) :init (23906 18314 433879 973000) :config (23906 18314 433768 65000) :config-secs (0 3 561713 354000) :init-secs (0 3 562016 50000) :use-package-secs (0 3 562120 514000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23923 32537 660264 971000) :init (23923 32537 660257 748000) :config (23923 32537 660130 30000) :config-secs (0 2 377979 308000) :init-secs (0 2 378602 627000) :use-package-secs (0 2 378691 775000)))
 
 In the =/snippets= folder in this repository you can see my snippets
 collection. A good guide to understand the syntax used is in [[https://joaotavora.github.io/yasnippet/snippet-development.html][the manual for
@@ -175,6 +179,14 @@ of the folder in the collection) and their keys can be expanded using =TAB=.
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23919 48575 779998 364000) :init (23919 48575 779693 39000) :init-secs (0 0 131 542000) :use-package-secs (0 0 718 47000) :config (23919 48575 779626 765000) :config-secs (0 0 14 959000)))
+
+*** Yasnippet for R
+See https://github.com/mattfidler/r-autoyas.el
+
+#+begin_src emacs-lisp :tangle no
+;; (require 'r-autoyas)
+;; (add-hook 'ess-mode-hook 'r-autoyas-ess-activate)
+#+end_src
 
 ** Company Mode
 
@@ -242,14 +254,28 @@ Tuhdo says that =company-capf= is the expected backend to be used: ``I had no sl
 
 On Semantic read also this: https://www.reddit.com/r/emacs/comments/5yxxrl/what_is_that_status_of_semantic/ and http://alexott.net/en/writings/emacs-devenv/EmacsCedet.html
 
+
+Commented out as it is activated in =src/setup-cedet.el=
+
 #+begin_src emacs-lisp :tangle yes
-(semantic-mode 1)
+;; (semantic-mode 1)
 ;;(setq helm-semantic-fuzzy-match t
 ;;      helm-imenu-fuzzy-match t)
 #+end_src
 
 #+RESULTS:
 : t
+
+*** Tuhdo's setup
+
+#+begin_src emacs-lisp :tangle no
+(use-package company
+  :init
+  (global-company-mode 1)
+  (delete 'company-semantic company-backends))
+;; (define-key c-mode-map  [(control tab)] 'company-complete)
+;; (define-key c++-mode-map  [(control tab)] 'company-complete)
+#+end_src
 
 ** Autocomplete
 We use company mode, as initiated above, but here's a working auto-complete setup as an alternative. Don't use company mode and autocomplete together. To switch from company-mode to autocomplete, move the `tangle: no` from the `begin_src` line below up to the corresponding line in the `company-mode` section above. Then open the `starter-kit-elpa.org` file, uncomment the `autocomplete` and `ac-` extensions there, and restart Emacs.
@@ -308,7 +334,6 @@ Requires libclang to be installed.
   (setq company-backends '((company-c-headers
                             company-dabbrev-code
                             company-irony))))
-
 (use-package irony
   :ensure t
   :config
@@ -316,6 +341,39 @@ Requires libclang to be installed.
   (add-hook 'c-mode-hook 'irony-mode)
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 #+END_SRC
+**** Tuhdo setup
+
+#+begin_src emacs-lisp :tangle yes
+;; company-c-headers
+(use-package company-c-headers
+  :init
+  (add-to-list 'company-backends 'company-c-headers))
+
+;; hs-minor-mode for folding source code
+(add-hook 'c-mode-common-hook 'hs-minor-mode)
+
+;; Available C style:
+;; “gnu”: The default style for GNU projects
+;; “k&r”: What Kernighan and Ritchie, the authors of C used in their book
+;; “bsd”: What BSD developers use, aka “Allman style” after Eric Allman.
+;; “whitesmith”: Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
+;; “stroustrup”: What Stroustrup, the author of C++ used in his book
+;; “ellemtel”: Popular C++ coding standards as defined by “Programming in C++, Rules and Recommendations,” Erik Nyquist and Mats Henricson, Ellemtel
+;; “linux”: What the Linux developers use for kernel development
+;; “python”: What Python developers use for extension modules
+;; “java”: The default style for java-mode (see below)
+;; “user”: When you want to define your own style
+(setq c-default-style "linux") ;; set style to "linux"
+
+;; dgm comments out as c-mode-map is reported to be a void variable.
+(use-package cc-mode)
+;;  :init
+;;  (define-key c-mode-map  [(tab)] 'company-complete)
+;;  (define-key c++-mode-map  [(tab)] 'company-complete))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23923 44987 590289 75000) :init (23923 44987 590278 489000) :config (23923 44987 590110 198000) :config-secs (0 0 5 830000) :init-secs (0 0 167411 98000) :use-package-secs (0 0 167573 237000)))
 
 *** Python
 **** yasnippet

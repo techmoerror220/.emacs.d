@@ -543,6 +543,9 @@ The reason is that in many data science programs, the great ista zahn binds the 
          ("s-<backspace>" . er/contract-region)))
 #+end_src
 
+#+RESULTS: expand-region
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23923 46858 528074 957000) :init (23923 46858 527722 124000) :init-secs (0 0 165 330000) :use-package-secs (0 0 746 505000) :config (23923 46858 527627 336000) :config-secs (0 0 18 314000)))
+
 *** COMMENT Remapping =er/expand-region=
 
 Old code

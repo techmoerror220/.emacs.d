@@ -45,7 +45,8 @@ Disabled by DGM on 7 august 2019
       ;; I reintroduce these two lines so that I can have =sp-local-pair='s defined for org-mode below working
       ;; Plus =M-up= and =M-down= continue working as they should
       ;;;;;;;;;;;;;;; disabled by dgm on 2 may 2019. This move is what makes stata.do's work without error. However, now I don't have smartparens in org-mode.
-      (smartparens-global-mode 1)
+      ;;;;;;;;;;;;;;; disabled again by dgm on 7 sept 2019 to try and get kill-region mapped to C-w again.
+      ;; (smartparens-global-mode 1)
       ;;;;;;;;;;;;;;; tuhdo setup
       (setq sp-base-key-bindings 'paredit)
       (setq sp-autoskip-closing-pair 'always)
@@ -249,13 +250,15 @@ Trying the setup here:
 
 Take note, though, that the name is a misnomer, as it not only handles parentheses. It handles just about anything that pairs
 
+Changed =show-smartparens-global-mode t= to =nil= on 7 sept 2019 to try and make =kill-region= work. I have commented the rest as well.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package smartparens-config
-  :ensure smartparens
-  :config (progn (show-smartparens-global-mode t)))
+  :ensure smartparens)
+  ;; :config (progn (show-smartparens-global-mode nil)))
 
-(add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
-(add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
+;; (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
+;; (add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
 #+END_SRC
 
 ** Bindings
@@ -496,7 +499,7 @@ I dunno why some pairs work (//, ==)and some don't (~, *, _)...
 
 #+begin_src emacs-lisp :tangle yes :results silent 
 (defvar org-electric-pairs '(
-                             (?/ . ?/) 
+                             ;; (?/ . ?/) 
                              (?= . ?=) 
                              (?~ . ?~)
                              ) 

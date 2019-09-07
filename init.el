@@ -399,6 +399,14 @@ ARCHIVE is the string name of the package archive.")
 ;; (setq coding-system-for-read  'utf-8)
 ;; (setq coding-system-for-write 'utf-8)
 
+;;; Tuhdo's setup for the records
+;; (set-terminal-coding-system 'utf-8)
+;; (set-keyboard-coding-system 'utf-8)
+;; (set-language-environment "UTF-8")
+;; (prefer-coding-system 'utf-8)
+
+
+
 ;; Note in =starter-kit-org.org= there are two more lines on the coding system for the org mode case.
 
 ;; other stuff from
