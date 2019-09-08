@@ -5411,6 +5411,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-agenda
                   :key "T or < C-c a t"
                   :description "my/org-agenda-for-subtree")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "K"
+                  :description "Toggle org-habits")
   (cheatsheet-add :group 'Org-clock
                   :key "I"
                   :description "In org-agenda, clock in highlighted task or clock-in to a different task")
@@ -5422,7 +5425,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "org-clock-modify-effort-estimate. Manually set the effort for a particular headline")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x e"
-                  :description "and you are prompted for an effort estimation")
+                  :description "Prompted for an effort estimation")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-c"
                   :description "Turn on org-columns reporting your time use-Quit with q")
@@ -5462,6 +5465,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-clock
                   :key "Shift-<left><right>"
                   :description "On block line will shift the time interval for org-clock")
+  (cheatsheet-add :group 'Org-latex
+                  :key "C-c C-x C-l"
+                  :description "org-toggle-latex-fragment. C-c C-c to show the equation code")
   (cheatsheet-add :group 'Org-recipes
                   :key "C-c i"
                   :description "Insert raw code under a heading")

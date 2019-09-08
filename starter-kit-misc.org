@@ -326,7 +326,6 @@ editor thing not to use the mouse?", just notice that the previous setup used
 effort of writing =:delight= in most package declarations and provides a nice
 menu if I need to check the minor modes at some points.
 
-NB: Diego Vicente defines chunks with =#+BEGIN_SRC emacs-lisp :results silent=
 
 #+begin_src emacs-lisp
 (use-package minions
