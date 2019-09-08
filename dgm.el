@@ -2277,6 +2277,9 @@ Version 2019-03-07"
   (cheatsheet-add :group 'EXWM
                   :key "s-&"
                   :description "ambrevar/exwm-start: Open in external application")
+(cheatsheet-add :group 'EXWM
+                  :key "C-c-t-f"
+                  :description "Resize frame from external app-Usually when saving something")
   (cheatsheet-add :group 'Find-char
                   :key "C-o"
                   :description "avy-goto-word-1: Jump to char at word start")
@@ -2349,6 +2352,15 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Grep-Projectile
                   :key "C-s"
                   :description "Grep in project when using P. C-u for recursive grep")
+(cheatsheet-add :group 'Helm
+                  :key "C-c TAB"
+                  :description "Yank selected candidate in Helm session at point")
+(cheatsheet-add :group 'Helm
+                  :key "s--"
+                  :description "helm-resume previous H session, inputs included. C-u lets choose Helm buffer. C-c n inside Helm session")
+(cheatsheet-add :group 'Helm
+                  :key "C-c o"
+                  :description "In H session, open selected candidate in another window")
   (cheatsheet-add :group 'Helm
                   :key "C-c h"
                   :description "Helm prefix / If in C-x C-f session, list visited files/dirs")
@@ -2463,7 +2475,10 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Movement
                   :key "s-."
                   :description "end-of-buffer")
-  (cheatsheet-add :group 'Org
+(cheatsheet-add :group 'Org
+                  :key "C-c k"
+                  :description "org-cut-subtree: cut tree and paste it elsewhere in the hierarchy.")
+(cheatsheet-add :group 'Org
                   :key "C-c @"
                   :description "Insert as Org link current highlighted file in P session")
   (cheatsheet-add :group 'Org
@@ -2481,6 +2496,27 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Org
                   :key "C-c C-n"
                   :description "Move to next heading")
+(cheatsheet-add :group 'Org
+                  :key "C-c C-w"
+                  :description "org-refile")
+(cheatsheet-add :group 'Org
+                  :key "N"
+                  :description "org-narrow-to-subtree")
+(cheatsheet-add :group 'Org
+                  :key "W"
+                  :description "Widen") 
+(cheatsheet-add :group 'Org
+                  :key "S"
+                  :description "org-sort")
+(cheatsheet-add :group 'Org-agenda
+                  :key "T or < C-c a t"
+                  :description "my/org-agenda-for-subtree")
+  (cheatsheet-add :group 'Org-clock
+                  :key "i"
+                  :description "org-agenda-mode-map")
+(cheatsheet-add :group 'Org-clock
+                  :key "C-c C-x C-j"
+                  :description "org-clock-goto: jump to current task from anywhere")
   (cheatsheet-add :group 'Org-recipes
                   :key "C-c i"
                   :description "Insert raw code under a heading")
@@ -2511,10 +2547,7 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Reading
                   :key "xah-toggle-margin-right"
                   :description "For reading novel or documentation: Toggle right margin")
-  (cheatsheet-add :group 'Recent
-                  :key "s--"
-                  :description "helm-resume previous H session, inputs included. C-u lets choose Helm buffer")
-  (cheatsheet-add :group 'Register
+    (cheatsheet-add :group 'Register
                   :key "s-x"
                   :description "helm-register. Then TAB or RET to insert. Equivalent to C-x r i")
   (cheatsheet-add :group 'Redshift
@@ -2577,6 +2610,9 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Typing
                   :key "M-x typing-of-emacs"
                   :description "Practise typing")
+(cheatsheet-add :group 'Typing
+                  :key "my/org-entry-wpm"
+                  :description "Curious about how fast I type")
   (cheatsheet-add :group 'Undo-Propose
                   :key "M-x undo-propose"
                   :description "Cycle through the list of undo's as normal in a new temporary buffer")
@@ -2634,6 +2670,9 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Windows
                   :key "s-M-<up>"
                   :description "enlarge-window")
+(cheatsheet-add :group 'Windows
+                  :key "C-c <left>"
+                  :description "winner-undo: Switch back to earlier window config; undo changes in window config")
   (cheatsheet-add :group 'Window-Movement
                   :key "s-<left>"
                   :description "windmove-left")
