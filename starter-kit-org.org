@@ -961,7 +961,7 @@ Remove DONE tasks from agenda view. Tip from: https://stackoverflow.com/question
 Tip from: https://orgmode.org/manual/Setting-tags.html
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-tag-alist '(("econometrics" . ?a) ("web-browsing" . ?b)  ("cooking" . ?c) ("divorcio" . ?d) ("emacs" . ?e) ("lisp" . ?g) ("@home" . ?h) ("kenedy" . ?k) ("leo" . ?l)  ("maths" . ?m) ("@office" . ?o)  ("project" . ?p) ("reading" . ?r) ("salud" . ?s) ("@mail-tel" . ?t) ("uned-admin" . ?u)  ("python" . ?y) ("uned-teaching" . ?v)  ("writing" . ?w)  ("@errands" . ?z)))
+(setq org-tag-alist '(("econometrics" . ?a) ("web-browsing" . ?b)  ("computing" . ?c) ("divorcio" . ?d) ("emacs" . ?e) ("lisp" . ?g) ("@home" . ?h) ("kenedy" . ?k) ("leo" . ?l)  ("maths" . ?m) ("@office" . ?o)  ("project" . ?p) ("reading" . ?r) ("salud" . ?s) ("@mail-tel" . ?t) ("uned-admin" . ?u)  ("python" . ?y) ("uned-teaching" . ?v)  ("writing" . ?w)  ("@errands" . ?z)))
 #+END_SRC
 
 #+RESULTS:
@@ -1489,13 +1489,14 @@ We need to define some columns to see, I like to define mine as the task, then t
 #+RESULTS:
 : %50ITEM(Task) %2PRIORITY %10Effort(Effort){:} %10CLOCKSUM
 
-You can now turn on org-columns with C-c C-x C-c, you should see something like the following screenshots.
+You can now turn on org-columns with =C-c C-x C-c=, you should see something like the following screenshots.
 
 Also, you can move to the "Effort" column and hit 0-9 to fast-choose the amount of effort for a task also, instead of adding effort to each individual headline one at a time. 
 
 **** History of tasks to pick from
 
-I like to have a helpful history of tasks to pick from when I clock in to things. Which is what this does. I bind it to =C-c I= and =C-c O= so they can be invoked globally (not just in org-mode files). 
+I like to have a helpful history of tasks to pick from when I clock in to things. Which is what this does. 
+I bind it to =C-c I= and =C-c O= so they can be invoked globally (not just in org-mode files). 
 
 #+begin_src emacs-lisp :tangle yes
 ;; Show lot of clocking history so it's easy to pick items off the `C-c I` list
@@ -1582,7 +1583,8 @@ currently experimenting with.
                     ;;org-panel
                     ;;org-screen
                     ;;org-toc
-                    org-habit))
+                    org-habit
+                    org-clock))
 (eval-after-load 'org
   '(org-load-modules-maybe t))
 #+END_SRC
@@ -1611,7 +1613,7 @@ Enable random "noise" for item itervals.
 #+RESULTS:
 : t
 
-*** Habits
+*** org-habit
 
 What's really useful about habits is that they are displayed along with a consistency graph, to show how consistent you’ve been at getting that task done in the past.
 
@@ -1619,12 +1621,14 @@ I like using =org-habits= to track consistency. My task names tend to be a bit l
 
 #+begin_src emacs-lisp :tangle yes
 ;;(setq org-habit-show-habits-only-for-today nil)
+(require 'org-habit) ;; yiufung includes this line
 
 (setq org-habit-preceding-days 7
       org-habit-following-days 1
       org-habit-graph-column 75
       org-habit-show-habits-only-for-today t
       org-habit-show-all-today t)
+;;(setq org-habit-show-done-always-green t)
 #+end_src
 
 #+RESULTS:

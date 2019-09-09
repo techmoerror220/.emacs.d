@@ -44,12 +44,11 @@
             ;; 's-r': Reset (to line-mode).
             ([?\s-r] . exwm-reset)
             ;; 's-w': Switch workspace.
-            ;; ([?\s-w] . exwm-workspace-switch) ;; dgm commments out on
-            ;; 23 august 2019
+            ([?\s-w] . exwm-workspace-switch)
             ;; 's-&': Launch application.
             ([?\s-&] . (lambda (command)
-                 (interactive (list (read-shell-command "$ ")))
-                 (start-process-shell-command command nil command)))
+		         (interactive (list (read-shell-command "$ ")))
+		         (start-process-shell-command command nil command)))
             ;; 's-N': Switch to certain workspace.
             ,@(mapcar (lambda (i)
                         `(,(kbd (format "s-%d" i)) .

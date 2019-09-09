@@ -1,33 +1,33 @@
 ;; Autocomplete for orgmode
-  ;; (require 'org-ac)
-  ;; (org-ac/config-default)
+;; (require 'org-ac)
+;; (org-ac/config-default)
 
-  ;; Markdown exporter
-  (require 'ox-md)
+;; Markdown exporter
+(require 'ox-md)
 
-  ;; (setq org-completion-use-ido t)  ;; dgm disables in case it interferes with helm
-  ;; (require 'org-special-blocks)
-  ;; (if window-system (require 'org-mouse))
+;; (setq org-completion-use-ido t)  ;; dgm disables in case it interferes with helm
+;; (require 'org-special-blocks)
+;; (if window-system (require 'org-mouse))
 
-  ;; Compatibility with WindMove
-  ;; Make windmove work in org-mode:
+;; Compatibility with WindMove
+;; Make windmove work in org-mode:
 ;;  (add-hook 'org-shiftup-final-hook 'windmove-up)
 ;;  (add-hook 'org-shiftleft-final-hook 'windmove-left)
 ;;  (add-hook 'org-shiftdown-final-hook 'windmove-down)
 ;;  (add-hook 'org-shiftright-final-hook 'windmove-right)
-  ;; (if window-system (require 'org-mouse))
+;; (if window-system (require 'org-mouse))
 
 (use-package ox-pandoc
   :ensure t)
 
 (use-package pandoc-mode
-	:ensure t
+  :ensure t
   :config
   (add-hook 'markdown-mode-hook 'pandoc-mode)
   (add-hook 'TeX-mode-hook 'pandoc-mode)  
   (add-hook 'org-mode-hook 'pandoc-mode)
   (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings))
-  ;; (global-set-key (kbd "C-c C-p") 'pandoc-main-hydra/body) ;; not sure it is taken
+;; (global-set-key (kbd "C-c C-p") 'pandoc-main-hydra/body) ;; not sure it is taken
 
 (setq org-export-with-section-numbers nil)
 (setq org-html-include-timestamps nil)
@@ -436,7 +436,7 @@
 (setq org-agenda-skip-scheduled-if-done t)
 (setq org-agenda-skip-deadline-if-done t)
 
-(setq org-tag-alist '(("airbnb" . ?a) ("algebra" . ?b) ("calculus" . ?c) ("errands" . ?e) ("drill" . ?d)  ("tfg" . ?g) ("@home" . ?h) ("informatica" . ?i) ("kenedy" . ?k) ("leo" . ?l)  ("maths" . ?m) ("@office" . ?o)  ("probability" . ?o) ("project" . ?p) ("reading" . ?r) ("salud" . ?s) ("@telefono" . ?t) ("uned" . ?u) ("writing" . ?w)))
+(setq org-tag-alist '(("econometrics" . ?a) ("web-browsing" . ?b)  ("cooking" . ?c) ("divorcio" . ?d) ("emacs" . ?e) ("lisp" . ?g) ("@home" . ?h) ("kenedy" . ?k) ("leo" . ?l)  ("maths" . ?m) ("@office" . ?o)  ("project" . ?p) ("reading" . ?r) ("salud" . ?s) ("@mail-tel" . ?t) ("uned-admin" . ?u)  ("python" . ?y) ("uned-teaching" . ?v)  ("writing" . ?w)  ("@errands" . ?z)))
 
 (require 'org-agenda)
 (require 'holidays)
@@ -513,7 +513,7 @@
       org-goto-max-level 10)
 (require 'imenu)
 (setq org-startup-folded nil)
-;;(bind-key "C-c j" 'org-clock-goto) ;; jump to current task from anywhere
+;;(bind-key "C-c j" 'org-clock-goto) ;; jump to current task from anywhere;; DGM: doesn't work and C-c C-x C-j does the job already
 (bind-key "C-c C-w" 'org-refile)
 (setq org-cycle-include-plain-lists 'integrate)
 
@@ -597,9 +597,6 @@
 
 (add-to-list 'org-speed-commands-user '("S" call-interactively 'org-sort))
 
-(with-eval-after-load 'org-agenda
-  (bind-key "i" 'org-agenda-clock-in org-agenda-mode-map))
-
 (use-package org
   :init
   (progn
@@ -607,16 +604,53 @@
     (setq org-clock-idle-time nil)
     (setq org-log-done 'time)
     (setq org-clock-continuously nil)
-    (setq org-clock-persist t)
+    (setq org-clock-persist t)  ;; Save the running clock and all clock history when exiting Emacs, load it on startup
     (setq org-clock-in-switch-to-state "STARTED")
-    (setq org-clock-in-resume nil)
+    (setq org-clock-in-resume nil)  ;; t to Resume clocking task on clock-in if the clock is open
     (setq org-show-notification-handler 'message)
+    (setq org-time-stamp-rounding-minutes (quote (0 5)))
     (setq org-clock-report-include-clocking-task t))
   :config
-  (org-clock-persistence-insinuate))
+  (org-clock-persistence-insinuate)) ;; Resume clocking task when emacs is restarted
 
 (setq org-log-into-drawer "LOGBOOK")
-(setq org-clock-into-drawer 1)
+(setq org-clock-into-drawer t)
+
+;; Agenda clock report parameters
+(setq org-agenda-clockreport-parameter-plist
+      '(:link t :maxlevel 6 :fileskip0 t :compact t :narrow 60 :score 0))
+
+;; global Effort estimate values
+(setq org-global-properties
+      '(("Effort_ALL" .
+         "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")))
+;;        1    2    3    4    5    6    7    8    9    0
+;; These are the hotkeys ^^
+
+;; Set default column view headings: Task Priority Effort Clock_Summary
+(setq org-columns-default-format "%50ITEM(Task) %2PRIORITY %10Effort(Effort){:} %10CLOCKSUM")
+
+;; Show lot of clocking history so it's easy to pick items off the `C-c I` list
+(setq org-clock-history-length 23)
+
+(defun eos/org-clock-in ()
+  (interactive)
+  (org-clock-in '(4)))
+
+(global-set-key (kbd "C-c I") #'eos/org-clock-in)
+(global-set-key (kbd "C-c O") #'org-clock-out)
+
+;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks
+;; with 0:00 duration
+(setq org-clock-out-remove-zero-time-clocks t)
+;; Clock out when moving task to a done state
+(setq org-clock-out-when-done t)
+;; Enable auto clock resolution for finding open clocks
+(setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+;; Include current clocking task in clock reports (already included)
+;; (setq org-clock-report-include-clocking-task t)
+;; use pretty things for the clocktable
+(setq org-pretty-entities t)
 
 (setq org-use-effective-time t)
 
@@ -656,14 +690,22 @@
                     ;;org-panel
                     ;;org-screen
                     ;;org-toc
-                    org-habit))
+                    org-habit
+                    org-clock))
 (eval-after-load 'org
   '(org-load-modules-maybe t))
 
 (setq org-drill-add-random-noise-to-intervals-p t)
 
-(setq org-habit-graph-column 80)
-(setq org-habit-show-habits-only-for-today nil)
+;;(setq org-habit-show-habits-only-for-today nil)
+(require 'org-habit) ;; yiufung includes this line
+
+(setq org-habit-preceding-days 7
+      org-habit-following-days 1
+      org-habit-graph-column 75
+      org-habit-show-habits-only-for-today t
+      org-habit-show-all-today t)
+;;(setq org-habit-show-done-always-green t)
 
 (defvar my/org-agenda-limit-items nil "Number of items to show in agenda to-do views; nil if unlimited.")
 (eval-after-load 'org

@@ -2091,6 +2091,9 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Editing
                   :key "s-#"
                   :description "sudo-edit")
+  (cheatsheet-add :group 'Editing
+                  :key "C-x C-i"
+                  :description "indent-rigidly. Indent all lines starting in the region.")
   (cheatsheet-add :group 'Editing-Killing
                   :key "M-w"
                   :description "kill-ring-save: Save the region as if killed, but don’t kill it. When no active region, copy a single line instead")
@@ -2277,7 +2280,7 @@ Version 2019-03-07"
   (cheatsheet-add :group 'EXWM
                   :key "s-&"
                   :description "ambrevar/exwm-start: Open in external application")
-(cheatsheet-add :group 'EXWM
+  (cheatsheet-add :group 'EXWM
                   :key "C-c-t-f"
                   :description "Resize frame from external app-Usually when saving something")
   (cheatsheet-add :group 'Find-char
@@ -2352,13 +2355,13 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Grep-Projectile
                   :key "C-s"
                   :description "Grep in project when using P. C-u for recursive grep")
-(cheatsheet-add :group 'Helm
+  (cheatsheet-add :group 'Helm
                   :key "C-c TAB"
                   :description "Yank selected candidate in Helm session at point")
-(cheatsheet-add :group 'Helm
+  (cheatsheet-add :group 'Helm
                   :key "s--"
                   :description "helm-resume previous H session, inputs included. C-u lets choose Helm buffer. C-c n inside Helm session")
-(cheatsheet-add :group 'Helm
+  (cheatsheet-add :group 'Helm
                   :key "C-c o"
                   :description "In H session, open selected candidate in another window")
   (cheatsheet-add :group 'Helm
@@ -2382,7 +2385,10 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Helm-Menu
                   :key "C-c h k"
                   :description "helm-buffer-run-kill-persistent: Works on a helm menu like the one by C-x b")
-  (cheatsheet-add :group 'Help
+(cheatsheet-add :group 'Help
+                  :key "C-h C-a"
+                  :description "about-emacs: For information about GNU Emacs and the GNU system")  
+(cheatsheet-add :group 'Help
                   :key "helm-descbinds"
                   :description "Currently active key bindings are searcheable")
   (cheatsheet-add :group 'Help
@@ -2475,10 +2481,37 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Movement
                   :key "s-."
                   :description "end-of-buffer")
-(cheatsheet-add :group 'Org
+  (cheatsheet-add :group 'Narrowing
+                  :key "C-x n b"
+                  :description "Narrows to block in org-src block, for example")
+  (cheatsheet-add :group 'Narrowing
+                  :key "C-x n d"
+                  :description "Narrows to defun")
+  (cheatsheet-add :group 'Narrowing
+                  :key "C-x n e"
+                  :description "Narrows to element-A line, for ex.")
+  (cheatsheet-add :group 'Narrowing
+                  :key "C-x n n"
+                  :description "Narrows to region")
+  (cheatsheet-add :group 'Narrowing
+                  :key "C-x n p"
+                  :description "Narrows to page")
+  (cheatsheet-add :group 'Narrowing
+                  :key "C-x n s"
+                  :description "Narrows to subtree in Org")
+  (cheatsheet-add :group 'Narrowing
+                  :key "C-x n w"
+                  :description "Widens ")
+  (cheatsheet-add :group 'Narrowing
+                  :key "N"
+                  :description "org-narrow-to-subtree")
+  (cheatsheet-add :group 'Narrowing
+                  :key "W"
+                  :description "Widen in Org subtree") 
+  (cheatsheet-add :group 'Org
                   :key "C-c k"
                   :description "org-cut-subtree: cut tree and paste it elsewhere in the hierarchy.")
-(cheatsheet-add :group 'Org
+  (cheatsheet-add :group 'Org
                   :key "C-c @"
                   :description "Insert as Org link current highlighted file in P session")
   (cheatsheet-add :group 'Org
@@ -2496,30 +2529,87 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Org
                   :key "C-c C-n"
                   :description "Move to next heading")
-(cheatsheet-add :group 'Org
+  (cheatsheet-add :group 'Org
                   :key "C-c C-w"
                   :description "org-refile")
-(cheatsheet-add :group 'Org
+  (cheatsheet-add :group 'Org
+                  :key "C-c C-x p"
+                  :description "org-set-property. Edit a task's properties,e.g.,set STYLE to habit")
+  (cheatsheet-add :group 'Org
                   :key "N"
                   :description "org-narrow-to-subtree")
-(cheatsheet-add :group 'Org
+  (cheatsheet-add :group 'Org
                   :key "W"
                   :description "Widen") 
-(cheatsheet-add :group 'Org
+  (cheatsheet-add :group 'Org
                   :key "S"
                   :description "org-sort")
-(cheatsheet-add :group 'Org-agenda
+  (cheatsheet-add :group 'Org-agenda
                   :key "T or < C-c a t"
                   :description "my/org-agenda-for-subtree")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "K"
+                  :description "Toggle org-habits")
   (cheatsheet-add :group 'Org-clock
-                  :key "i"
-                  :description "org-agenda-mode-map")
-(cheatsheet-add :group 'Org-clock
+                  :key "I"
+                  :description "In org-agenda, clock in highlighted task or clock-in to a different task")
+  (cheatsheet-add :group 'Org-clock
+                  :key "O"
+                  :description "In org-agenda, clock out of highlighted task")
+  (cheatsheet-add :group 'Org-clock
+                  :key "C-c C-x C-e"
+                  :description "org-clock-modify-effort-estimate. Manually set the effort for a particular headline")
+  (cheatsheet-add :group 'Org-clock
+                  :key "C-c C-x e"
+                  :description "Prompted for an effort estimation")
+  (cheatsheet-add :group 'Org-clock
+                  :key "C-c C-x C-c"
+                  :description "Turn on org-columns reporting your time use-Quit with q")
+  (cheatsheet-add :group 'Org-clock
+                  :key "C-c C-x i"
+                  :description "Generate a local column view-Quit with q")
+  (cheatsheet-add :group 'Org-clock
+                  :key "C-c C-x C-i"
+                  :description "org-clock-in. Clock in to the section you're currently in or clock-in to a different task")
+  (cheatsheet-add :group 'Org-clock
+                  :key "C-c C-x C-o"
+                  :description "org-clock-out. Clock out of whatever you're clocked in to")
+  (cheatsheet-add :group 'Org-clock
+                  :key "C-c C-x C-x"
+                  :description "org-clock-in-last. Clock in to the last clocked task")
+  (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-j"
-                  :description "org-clock-goto: jump to current task from anywhere")
+                  :description "org-clock-goto. Jump to whatever headline you are currently clocked in to ")
+  (cheatsheet-add :group 'Org-clock
+                  :key "C-c C-x C-q"
+                  :description "org-clock-cancel. Cancel the current clock-removes all of its current time ")
+  (cheatsheet-add :group 'Org-clock
+                  :key "C-c C-x C-d"
+                  :description "org-clock-display. Display clock times for headlines in current file")
+  (cheatsheet-add :group 'Org-clock
+                  :key "C-c C-x C-r"
+                  :description "org-clock-report. Generate a report for clock activity")
+  (cheatsheet-add :group 'Org-clock
+                  :key "C-c C-x C-z"
+                  :description "org-resolve-clocks. Resolve any half-open clocks")
+  (cheatsheet-add :group 'Org-clock
+                  :key "v R"
+                  :description "Clock table in the Agend. Same key to turn off")
+  (cheatsheet-add :group 'Org-clock
+                  :key "v c"
+                  :description "view clockcheck in org agenda: show clock gaps and overlaps-Use b to go back one day")
+  (cheatsheet-add :group 'Org-clock
+                  :key "Shift-<left><right>"
+                  :description "On block line will shift the time interval for org-clock")
+  (cheatsheet-add :group 'Org-latex
+                  :key "C-c C-x C-l"
+                  :description "org-toggle-latex-fragment. C-c C-c to show the equation code")
   (cheatsheet-add :group 'Org-recipes
                   :key "C-c i"
                   :description "Insert raw code under a heading")
+  (cheatsheet-add :group 'Org-timestamps
+                  :key "Shift-M-<up><down>"
+                  :description "Increment/decrement stamp")
   (cheatsheet-add :group 'Packages
                   :key "M-x try"
                   :description "Try a package before installing for good")
@@ -2547,7 +2637,7 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Reading
                   :key "xah-toggle-margin-right"
                   :description "For reading novel or documentation: Toggle right margin")
-    (cheatsheet-add :group 'Register
+  (cheatsheet-add :group 'Register
                   :key "s-x"
                   :description "helm-register. Then TAB or RET to insert. Equivalent to C-x r i")
   (cheatsheet-add :group 'Redshift
@@ -2610,7 +2700,7 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Typing
                   :key "M-x typing-of-emacs"
                   :description "Practise typing")
-(cheatsheet-add :group 'Typing
+  (cheatsheet-add :group 'Typing
                   :key "my/org-entry-wpm"
                   :description "Curious about how fast I type")
   (cheatsheet-add :group 'Undo-Propose
@@ -2670,7 +2760,7 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Windows
                   :key "s-M-<up>"
                   :description "enlarge-window")
-(cheatsheet-add :group 'Windows
+  (cheatsheet-add :group 'Windows
                   :key "C-c <left>"
                   :description "winner-undo: Switch back to earlier window config; undo changes in window config")
   (cheatsheet-add :group 'Window-Movement
