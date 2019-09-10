@@ -270,7 +270,7 @@
 ;;             (define-key eshell-mode-map (kbd "C-c h C-c h")  'helm-eshell-history))) 
     (add-hook 'eshell-mode-hook
               #'(lambda ()
-                  (define-key eshell-mode-map (kbd "M-l")  'helm-eshell-history)))
+                  (define-key eshell-mode-map (kbd "M-p")  'helm-eshell-history)))
 
 ;;; Eshell
 (defun ambrevar/helm/eshell-set-keys ()

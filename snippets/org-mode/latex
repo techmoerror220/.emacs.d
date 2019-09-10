@@ -1,6 +1,6 @@
 #name : LATEX
-#contributor : Rick Moynihan <rick@sourcesmouth.co.uk>
+#contributor : dgm
 # --
-#+BEGIN_LATEX
+#+begin_src latex
 ${0}
-#+END_LATEX
+#+end_src

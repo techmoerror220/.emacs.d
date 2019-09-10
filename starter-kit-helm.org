@@ -559,6 +559,8 @@ In Sacha's dotfiles, she says: "Eldoc provides minibuffer hints when working wit
 
 Por alguna razon el keybind no se registra, asi que lo quito.
 
+DMG on 9 sept changes M-l binding to M-p but it doesn't work... don't know why
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; Command: helm-eshell-history
 (require 'helm-eshell)
@@ -568,13 +570,15 @@ Por alguna razon el keybind no se registra, asi que lo quito.
 ;;             (define-key eshell-mode-map (kbd "C-c h C-c h")  'helm-eshell-history))) 
     (add-hook 'eshell-mode-hook
               #'(lambda ()
-                  (define-key eshell-mode-map (kbd "M-l")  'helm-eshell-history)))
+                  (define-key eshell-mode-map (kbd "M-p")  'helm-eshell-history)))
 #+END_SRC
 
 #+RESULTS:
-| (lambda nil (define-key eshell-mode-map (kbd M-l) 'helm-eshell-history)) | (lambda nil (define-key eshell-mode-map  'eshell-bol)) | helm-gtags-mode | ambrevar/helm/eshell-set-keys | tramp-eshell-directory-change | ess-r-package-activate-directory-tracker |
+| (lambda nil (define-key eshell-mode-map (kbd M-l) 'helm-eshell-history)) | (lambda nil (define-key eshell-mode-map  'eshell-bol)) | helm-gtags-mode | ambrevar/helm/eshell-set-keys | (lambda nil (define-key eshell-mode-map (kbd M-p) 'helm-eshell-history)) | tramp-eshell-directory-change | ess-r-package-activate-directory-tracker |
 
 ** Ambrevar's eshell
+
+This doesn't work either...
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;;; Eshell
@@ -588,7 +592,7 @@ Por alguna razon el keybind no se registra, asi que lo quito.
 #+END_SRC
 
 #+RESULTS:
-| (lambda nil (define-key eshell-mode-map  'eshell-bol)) | helm-gtags-mode | ambrevar/helm/eshell-set-keys | tramp-eshell-directory-change | ess-r-package-activate-directory-tracker |
+| (lambda nil (define-key eshell-mode-map (kbd M-l) 'helm-eshell-history)) | (lambda nil (define-key eshell-mode-map  'eshell-bol)) | helm-gtags-mode | ambrevar/helm/eshell-set-keys | (lambda nil (define-key eshell-mode-map (kbd M-p) 'helm-eshell-history)) | tramp-eshell-directory-change | ess-r-package-activate-directory-tracker |
 
 * Comint 
 

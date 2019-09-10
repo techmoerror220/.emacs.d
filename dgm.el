@@ -343,6 +343,11 @@ The app is chosen from your OS's preference."
 (use-package kurecolor
    :ensure t)
 
+(use-package nyan-mode)
+
+(case window-system
+  ((x w32) (nyan-mode)))
+
 ;; (require 'spaceline-config)
 ;; (spaceline-emacs-theme)
 ;; (spaceline-helm-mode)
@@ -1762,6 +1767,7 @@ This only makes sense for empty buffers."
   "#+LATEX_HEADER: \\usepackage{graphicx}\n"
   "#+LATEX_HEADER: \\usepackage{longtable}\n"
   "#+LATEX_HEADER: \\usepackage{float}\n"
+  "#+LATEX_HEADER: \\usepackage{url}\n"
   "#+LANGUAGE: "str | "spanish""\n"
   "#+LATEX_HEADER: \\usepackage["str | "spanish""]{babel}\n"
   "#+LATEX_HEADER: \\usepackage{sectsty}\n"
@@ -2385,10 +2391,13 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Helm-Menu
                   :key "C-c h k"
                   :description "helm-buffer-run-kill-persistent: Works on a helm menu like the one by C-x b")
-(cheatsheet-add :group 'Help
+  (cheatsheet-add :group 'Help
                   :key "C-h C-a"
                   :description "about-emacs: For information about GNU Emacs and the GNU system")  
 (cheatsheet-add :group 'Help
+                  :key "C-h m"
+                  :description "describe-mode")  
+  (cheatsheet-add :group 'Help
                   :key "helm-descbinds"
                   :description "Currently active key bindings are searcheable")
   (cheatsheet-add :group 'Help
@@ -2550,12 +2559,9 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Org-agenda
                   :key "K"
                   :description "Toggle org-habits")
-  (cheatsheet-add :group 'Org-clock
-                  :key "I"
-                  :description "In org-agenda, clock in highlighted task or clock-in to a different task")
-  (cheatsheet-add :group 'Org-clock
-                  :key "O"
-                  :description "In org-agenda, clock out of highlighted task")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "C-, and C-'"
+                  :description "org-cycle-agenda-files")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-e"
                   :description "org-clock-modify-effort-estimate. Manually set the effort for a particular headline")
@@ -2567,13 +2573,25 @@ Version 2019-03-07"
                   :description "Turn on org-columns reporting your time use-Quit with q")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x i"
-                  :description "Generate a local column view-Quit with q")
+                  :description "Generate a local column view-Quit with q-Not working!")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-i"
                   :description "org-clock-in. Clock in to the section you're currently in or clock-in to a different task")
   (cheatsheet-add :group 'Org-clock
+                  :key "C-c I"
+                  :description "eos/org-clock-in. History of tasks to pick from when I clock in to thing")
+  (cheatsheet-add :group 'Org-clock
+                  :key "I"
+                  :description "In org-agenda, clock in highlighted task or clock-in to a different task")
+  (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-o"
                   :description "org-clock-out. Clock out of whatever you're clocked in to")
+  (cheatsheet-add :group 'Org-clock
+                  :key "C-c O"
+                  :description "org-clock-out. Clock out of whatever you're clocked in to")
+  (cheatsheet-add :group 'Org-clock
+                  :key "O"
+                  :description "In org-agenda, clock out of highlighted task")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-x"
                   :description "org-clock-in-last. Clock in to the last clocked task")
@@ -2610,6 +2628,9 @@ Version 2019-03-07"
   (cheatsheet-add :group 'Org-timestamps
                   :key "Shift-M-<up><down>"
                   :description "Increment/decrement stamp")
+  (cheatsheet-add :group 'Magit
+                  :key "f a X h"
+                  :description "Force pull from remote: f a, then move point to remote head, X h")
   (cheatsheet-add :group 'Packages
                   :key "M-x try"
                   :description "Try a package before installing for good")

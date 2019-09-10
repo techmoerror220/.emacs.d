@@ -42,8 +42,7 @@ This is the old configuration.
 ;;  (yas-set-ac-modes)
 ;;  (yas-enable-emacs-lisp-paren-hack)
 (yas-global-mode 1)
-(setq yas-snippet-dirs '("~/.emacs.d/mysnippets"
-                         "~/.emacs.d/snippets"
+(setq yas-snippet-dirs '("~/.emacs.d/snippets"
                          "~/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets"
                          "~/.emacs.d/elpa/yasnippet-snippets-20181107.2203/snippets"
                          "~/.emacs.d/elpa/"))

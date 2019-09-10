@@ -436,7 +436,7 @@
 (setq org-agenda-skip-scheduled-if-done t)
 (setq org-agenda-skip-deadline-if-done t)
 
-(setq org-tag-alist '(("econometrics" . ?a) ("web-browsing" . ?b)  ("cooking" . ?c) ("divorcio" . ?d) ("emacs" . ?e) ("lisp" . ?g) ("@home" . ?h) ("kenedy" . ?k) ("leo" . ?l)  ("maths" . ?m) ("@office" . ?o)  ("project" . ?p) ("reading" . ?r) ("salud" . ?s) ("@mail-tel" . ?t) ("uned-admin" . ?u)  ("python" . ?y) ("uned-teaching" . ?v)  ("writing" . ?w)  ("@errands" . ?z)))
+(setq org-tag-alist '(("econometrics" . ?a) ("web-browsing" . ?b)  ("computing" . ?c) ("divorcio" . ?d) ("emacs" . ?e) ("lisp" . ?g) ("@home" . ?h) ("kenedy" . ?k) ("leo" . ?l)  ("maths" . ?m) ("@office" . ?o)  ("project" . ?p) ("reading" . ?r) ("salud" . ?s) ("@mail-tel" . ?t) ("uned-admin" . ?u)  ("python" . ?y) ("uned-teaching" . ?v)  ("writing" . ?w)  ("@errands" . ?z)))
 
 (require 'org-agenda)
 (require 'holidays)
@@ -698,14 +698,45 @@
 (setq org-drill-add-random-noise-to-intervals-p t)
 
 ;;(setq org-habit-show-habits-only-for-today nil)
-(require 'org-habit) ;; yiufung includes this line
+;; (require 'org-habit) ;; yiufung includes this line
 
 (setq org-habit-preceding-days 7
       org-habit-following-days 1
-      org-habit-graph-column 75
+      org-habit-graph-column 70
       org-habit-show-habits-only-for-today t
       org-habit-show-all-today t)
-;;(setq org-habit-show-done-always-green t)
+;; (setq org-habit-show-done-always-green t)
+
+(defun org-repair-property-drawers ()
+  "Fix properties drawers in current buffer.
+ Ignore non Org buffers."
+  (interactive)
+  (when (eq major-mode 'org-mode)
+    (org-with-wide-buffer
+     (goto-char (point-min))
+     (let ((case-fold-search t)
+           (inline-re (and (featurep 'org-inlinetask)
+                           (concat (org-inlinetask-outline-regexp)
+                                   "END[ \t]*$"))))
+       (org-map-entries
+        (lambda ()
+          (unless (and inline-re (org-looking-at-p inline-re))
+            (save-excursion
+              (let ((end (save-excursion (outline-next-heading) (point))))
+                (forward-line)
+                (when (org-looking-at-p org-planning-line-re) (forward-line))
+                (when (and (< (point) end)
+                           (not (org-looking-at-p org-property-drawer-re))
+                           (save-excursion
+                             (and (re-search-forward org-property-drawer-re end t)
+                                  (eq (org-element-type
+                                       (save-match-data (org-element-at-point)))
+                                      'drawer))))
+                  (insert (delete-and-extract-region
+                           (match-beginning 0)
+                           (min (1+ (match-end 0)) end)))
+                  (unless (bolp) (insert "\n"))))))))))))
+;; (global-set-key (kbd "C-c i") 'org-repair-property-drawers)
 
 (defvar my/org-agenda-limit-items nil "Number of items to show in agenda to-do views; nil if unlimited.")
 (eval-after-load 'org

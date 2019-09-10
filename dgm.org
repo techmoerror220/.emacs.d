@@ -984,7 +984,9 @@ I disable this as it is dealt with in -misc.org
 Only turn on if a window system is available. This prevents error under terminal that does not support X.
 
 #+srcname: nyan-mode
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package nyan-mode)
+
 (case window-system
   ((x w32) (nyan-mode)))
 #+END_SRC
@@ -5019,6 +5021,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Email
                   :key "a"
                   :description "Lists possible actions when inside message like Show In Browser or Show Thread")
+  (cheatsheet-add :group 'Email
+                  :key "e"
+                  :description "mu4e-view-save-attachmen. Offer to save multiple email attachments from the current message.")
+  (cheatsheet-add :group 'Email
+                  :key "A"
+                  :description "mu4e-view-attachment-action")
   (cheatsheet-add :group 'Expressions-Eval
                   :key "C-x C-e"
                   :description "sanityinc/eval-last-sexp-or-region")
@@ -5031,6 +5039,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Expressions-Find
                   :key "C-c ."
                   :description "find-function-at-point")
+  (cheatsheet-add :group 'Expressions-Find
+                  :key "M-."
+                  :description "xref-find-definitions. See function in source file; jump to nodes in Texinfo, if etags has recorded the nodes")
+  (cheatsheet-add :group 'Expressions-Find
+                  :key "M-,"
+                  :description "Go back from xref-find-definitions")
   (cheatsheet-add :group 'Expressions-Killing
                   :key "C-M k"
                   :description "sp-kill-sexp: Kills next bit of the sexp")
@@ -5253,10 +5267,16 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Helm-Menu
                   :key "C-c h k"
                   :description "helm-buffer-run-kill-persistent: Works on a helm menu like the one by C-x b")
-(cheatsheet-add :group 'Help
+  (cheatsheet-add :group 'Help
+                  :key "C-h p"
+                  :description "Search the standard Emacs Lisp libraries by topic keywords")  
+  (cheatsheet-add :group 'Help
                   :key "C-h C-a"
                   :description "about-emacs: For information about GNU Emacs and the GNU system")  
-(cheatsheet-add :group 'Help
+  (cheatsheet-add :group 'Help
+                  :key "C-h m"
+                  :description "describe-mode")  
+  (cheatsheet-add :group 'Help
                   :key "helm-descbinds"
                   :description "Currently active key bindings are searcheable")
   (cheatsheet-add :group 'Help
@@ -5317,6 +5337,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "s-\)"
                   :description "ap/helm-info-emacs-elisp-cl: Emacs and eLisp manual with Helm")
   (cheatsheet-add :group 'Mark
+                  :key "C-x C-x"
+                  :description "cua-exchange-point-and-mark")
+  (cheatsheet-add :group 'Mark
+                  :key "C-x h"
+                  :description "mark-whole-buffer")
+  (cheatsheet-add :group 'Mark
                   :key "C-."
                   :description "Pushes point to mark-ring and does not activate the region")
   (cheatsheet-add :group 'Mark
@@ -5324,7 +5350,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "cua-set-mark: Set mark at where point is, clear mark, or jump to mark.")
   (cheatsheet-add :group 'Mark
                   :key "M-`"
-                  :description "Jumps to the local mark, respecting the mark-ring order")
+                  :description "Jumps to the local mark, respecting the mark-ring order. C-u C-SPC does it too")
   (cheatsheet-add :group 'Mark
                   :key "s-RET"
                   :description "helm-all-mark-rings: Find mark in local and global rings")
@@ -5412,12 +5438,27 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org
                   :key "S"
                   :description "org-sort")
+  (cheatsheet-add :group 'Org
+                  :key "S-<up><down>"
+                  :description "On heading, add priority tag")
+  (cheatsheet-add :group 'Org
+                  :key "M-<up><down>"
+                  :description "org-move-subtree-up or -down. On heading, move it up or down in hierarchy")
+  (cheatsheet-add :group 'Org
+                  :key "M-<left><right>"
+                  :description "Demote all headings in a region")
+  (cheatsheet-add :group 'Org
+                  :key "S-<left><right>"
+                  :description "On heading, add or change TODO status")
   (cheatsheet-add :group 'Org-agenda
                   :key "T or < C-c a t"
                   :description "my/org-agenda-for-subtree")
   (cheatsheet-add :group 'Org-agenda
                   :key "K"
                   :description "Toggle org-habits")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "C-, and C-'"
+                  :description "org-cycle-agenda-files")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-e"
                   :description "org-clock-modify-effort-estimate. Manually set the effort for a particular headline")
@@ -5433,7 +5474,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-i"
                   :description "org-clock-in. Clock in to the section you're currently in or clock-in to a different task")
-(cheatsheet-add :group 'Org-clock
+  (cheatsheet-add :group 'Org-clock
                   :key "C-c I"
                   :description "eos/org-clock-in. History of tasks to pick from when I clock in to thing")
   (cheatsheet-add :group 'Org-clock
@@ -5442,7 +5483,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-o"
                   :description "org-clock-out. Clock out of whatever you're clocked in to")
-(cheatsheet-add :group 'Org-clock
+  (cheatsheet-add :group 'Org-clock
                   :key "C-c O"
                   :description "org-clock-out. Clock out of whatever you're clocked in to")
   (cheatsheet-add :group 'Org-clock
@@ -5462,19 +5503,22 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "org-clock-display. Display clock times for headlines in current file")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-r"
-                  :description "org-clock-report. Generate a report for clock activity")
+                  :description "org-clock-report. Generate a report for clock activity.NOT WORKING")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-z"
                   :description "org-resolve-clocks. Resolve any half-open clocks")
   (cheatsheet-add :group 'Org-clock
                   :key "v R"
-                  :description "Clock table in the Agend. Same key to turn off")
+                  :description "Clock table in the Agenda. Same key to turn off. It's a quick report on time usage")
   (cheatsheet-add :group 'Org-clock
                   :key "v c"
                   :description "view clockcheck in org agenda: show clock gaps and overlaps-Use b to go back one day")
   (cheatsheet-add :group 'Org-clock
-                  :key "Shift-<left><right>"
-                  :description "On block line will shift the time interval for org-clock")
+                  :key "Fn-Shift-<left><right>"
+                  :description "On date entry will shift the days; On brackets will change them to <>")
+  (cheatsheet-add :group 'Org-clock
+                  :key "Fn-Shift-<up><down>"
+                  :description "On clock entry will shift the time")
   (cheatsheet-add :group 'Org-latex
                   :key "C-c C-x C-l"
                   :description "org-toggle-latex-fragment. C-c C-c to show the equation code")
@@ -5482,8 +5526,11 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-c i"
                   :description "Insert raw code under a heading")
   (cheatsheet-add :group 'Org-timestamps
-                  :key "Shift-M-<up><down>"
+                  :key "Shift-<up><down>"
                   :description "Increment/decrement stamp")
+  (cheatsheet-add :group 'Magit
+                  :key "f a X h"
+                  :description "Force pull from remote: f a, then move point to remote head, X h")
   (cheatsheet-add :group 'Packages
                   :key "M-x try"
                   :description "Try a package before installing for good")
@@ -5556,12 +5603,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Shell
                   :key "M-e"
                   :description "Open Eshell when in P session")
-  (cheatsheet-add :group 'Skeleton
+  (cheatsheet-add :group 'Org-Skeleton
                   :key "M-x article-skeleton"
-                  :description "Inserts a Latex article skeleton into buffer")
-  (cheatsheet-add :group 'Skeleton
+                  :description "Inserts a skeleton for Org-export to LaTeX")
+  (cheatsheet-add :group 'OrgSkeleton
                   :key "M-x beamer-skeleton"
-                  :description "Inserts a Latex beamer skeleton into current buffer")
+                  :description "Inserts a  for Org-export to Beamer")
   (cheatsheet-add :group 'Spelling
                   :key "C-M-$"
                   :description "Change dictionary")
@@ -5654,7 +5701,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23925 7209 761775 400000) :init (23925 7209 761610 884000) :init-secs (0 0 48 22000) :use-package-secs (0 0 345 662000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23927 16669 616797 489000) :init (23927 16669 616710 544000) :init-secs (0 0 28 570000) :use-package-secs (0 0 191 471000)))
 
 * Remapping =M-<= and =M->=
 
