@@ -1409,6 +1409,18 @@ And sorting:
 (add-to-list 'org-speed-commands-user '("S" call-interactively 'org-sort))
 #+end_src
 
+*** Alphabetical lists
+This variable needs to be set before org.el is loaded.  
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-list-allow-alphabetical t)
+;;(setq org-alphabetical-lists t)
+#+end_src
+
+#+RESULTS:
+: t
+
+
 *** Track time
 
 I use the clock a lot says Sacha. Okay, but I think =I= in agenda does this.
@@ -2381,14 +2393,6 @@ Handy for collecting items together.
 
 #+RESULTS:
 
-* Alphabetical lists
-
-#+begin_src emacs-lisp :tangle yes
-(setq org-list-allow-alphabetical t)
-#+end_src
-
-#+RESULTS:
-: t
 
 * Provide
 

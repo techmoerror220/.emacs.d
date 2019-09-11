@@ -1,5 +1,8 @@
 ,*#
 *.el~
+starter-kit-*.el
+dgm.el
+transient/history.el
 *~
 recentf~
 !init.el

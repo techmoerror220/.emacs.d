@@ -4796,6 +4796,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Bindings
                   :key "C-h m"
                   :description "Bindings for all modes active in buffer")
+  (cheatsheet-add :group 'Bindings-Free
+                  :key "s-:"
+                  :description "")
   (cheatsheet-add :group 'Bookmarks
                   :key "C-x r m"
                   :description "Create bookmark")
@@ -4886,6 +4889,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Dired-Projectile
                   :key "C-c d"
                   :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
+  (cheatsheet-add :group 'Editing
+                  :key "M--c"
+                  :description "Upper case last word: Mientras haces M-- dale a la c")
   (cheatsheet-add :group 'Editing
                   :key "s-@"
                   :description "open-line and prelude-smart-open-line. Insert an empty line after the current line.")
@@ -5459,6 +5465,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-agenda
                   :key "C-, and C-'"
                   :description "org-cycle-agenda-files")
+  (cheatsheet-add :group 'Org-capture
+                  :key "C-c C-c"
+                  :description "On heading of Org-captured entry, choose tag")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-e"
                   :description "org-clock-modify-effort-estimate. Manually set the effort for a particular headline")
