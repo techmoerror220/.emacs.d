@@ -205,15 +205,15 @@ actual work."
         (message "Smart Scan replaced %d matches" counter))))
 
 
-;;; Default Keybindings
+;;; Default Keybindings. Tweaked by DGM
 (defvar smartscan-map
   (let ((m (make-sparse-keymap)))
-    (define-key m (kbd "M-n") 'smartscan-symbol-go-forward)
-    ;;(define-key m (kbd "s-N") 'smartscan-symbol-go-forward)
-    (define-key m (kbd "M-p") 'smartscan-symbol-go-backward)
-    ;;(define-key m (kbd "s-P") 'smartscan-symbol-go-backward)
-    (define-key m (kbd "M-'") 'smartscan-symbol-replace)
-    ;;(define-key m (kbd "s-R") 'smartscan-symbol-replace)
+;;    (define-key m (kbd "M-n") 'smartscan-symbol-go-forward)
+    (define-key m (kbd "C-M-+") 'smartscan-symbol-go-forward)
+;;    (define-key m (kbd "M-p") 'smartscan-symbol-go-backward)
+    (define-key m (kbd "C-M-*") 'smartscan-symbol-go-backward)
+;;    (define-key m (kbd "M-'") 'smartscan-symbol-replace)
+    (define-key m (kbd "C-M-'") 'smartscan-symbol-replace)
     m)
   "Keymap for `smartscan'.")
 

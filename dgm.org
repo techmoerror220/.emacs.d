@@ -2272,31 +2272,6 @@ However, to actually get the colors, I followed  http://amitp.blogspot.com/2007/
 #+RESULTS:
 | ansi-color-for-comint-mode-on | company-mode | flycheck-mode | yas-minor-mode | shell-mode-company-init | ess-r-package-activate-directory-tracker |
 
-This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try and get the shell and IPython at the bottom of the screen 
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
-(push (cons "\\*IPython3\\*" display-buffer--same-window-action) display-buffer-alist)
-(push (cons "\\*IPython\\*" display-buffer--same-window-action) display-buffer-alist)
-(push (cons "\\*stata\\*" display-buffer--same-window-action) display-buffer-alist)
-#+END_SRC
-
-#+RESULTS:
-| \*stata\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython\*      | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython3\*     | display-buffer-same-window      | (inhibit-same-window) |
-| \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \*stata\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \*stata\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython\*      | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython3\*     | display-buffer-same-window      | (inhibit-same-window) |
-| \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \*stata\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython\*      | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython3\*     | display-buffer-same-window      | (inhibit-same-window) |
-| \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \`\*Calendar\*\' | (display-buffer-below-selected) |                       |
-| \*Calendar\*     | my-position-calendar-buffer     |                       |
 
 *** COMMENT Start a regular shell at the bottom.
 #+begin_src emacs-lisp  :tangle no
@@ -2879,24 +2854,19 @@ Quickly jumps between other symbols found at point in Emacs.
 
 Originally, I tried to bind it to =s-p= and =s-n= here, but smartscan kept using =M-p= and =M-n= so now I have changed it at =smartscan.el=. So remember to do this everytime I install .emacs.d anew. 
 
-Now the mapping is as follows:
-
-- =s-n= smartscan-symbol-go-forward
-- =s-p= smartscan-symbol-go-backward
-- =s-'= smartscan-symbol-replace
-
 http://www.masteringemacs.org/article/smart-scan-jump-symbols-buffer
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package smartscan
   :ensure t
-  :config (global-smartscan-mode 1))
-;;  :bind (("s-n" . smartscan-symbol-go-forward)
-;;         ("s-p" . smartscan-symbol-go-backward)))
+  :config (global-smartscan-mode 1)
+  :bind (("C-M-+" . smartscan-symbol-go-forward)
+         ("C-M-*" . smartscan-symbol-go-backward))
+         ("C-M-'" . smartscan-symbol-replace))
 #+END_SRC
 
 #+RESULTS:
-: smartscan-symbol-go-backward
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23932 61038 299198 455000) :init (23932 61038 299059 616000) :config (23932 61038 299043 758000) :config-secs (0 0 3819 895000) :init-secs (0 0 3860 798000) :use-package-secs (0 0 4289 188000)))
 
 *** Smoothscrolling
 This makes it so =C-n-=ing and =C-p-= ing won’t make the buffer jump around so much.
@@ -4874,6 +4844,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Dired-Projectile
                   :key "C-d"
                   :description "Open dired when in P session")
+  (cheatsheet-add :group 'Dired
+                  :key "$"
+                  :description "dired-hide-subdir. Hide or unhide the current subdirectory and move to next directory")
+  (cheatsheet-add :group 'Dired
+                  :key "&"
+                  :description "dired-do-async-shell-command. Run a shell command COMMAND on the marked files asynchronously")
   (cheatsheet-add :group 'Dired-Projectile
                   :key "M-C"
                   :description "Copy marked files in P session to another opened Dired dir")
@@ -4889,6 +4865,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Dired-Projectile
                   :key "C-c d"
                   :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
+  (cheatsheet-add :group 'Editing
+                  :key "C-x l"
+                  :description "count-lines-page")
   (cheatsheet-add :group 'Editing
                   :key "M--c"
                   :description "Upper case last word: Mientras haces M-- dale a la c")
@@ -4981,7 +4960,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "kill-line and kill-visual-line. kill a line, including whitespace characters until next non-whitespace character of next line")
   (cheatsheet-add :group 'Editing-MultipleRegions
                   :key "s-q"
-                  :description "Mark next occurence of a region and edit all al once")
+                  :description "mark-next-like-this. Mark next occurence of a region and edit all at once")
   (cheatsheet-add :group 'Editing-MultipleRegions
                   :key "C-;"
                   :description "iedit: Edit multiple regions in the same way simultaneously")
@@ -5079,10 +5058,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-M p"
                   :description "sp-previous-sexp: Top-level-ish transversal")
   (cheatsheet-add :group 'Expressions-Movement
-                  :key "M-n"
+                  :key "C-M-+"
                   :description "smartscan-symbol-go-forward. Set in elpa/smartscan.el")
   (cheatsheet-add :group 'Expressions-Movement
-                  :key "M-p"
+                  :key "C-M-*"
                   :description "smartscan-symbol-go-backward. Set in elpa/smartscan.el")
   (cheatsheet-add :group 'Expressions-Movement
                   :key "M-'"
@@ -5564,6 +5543,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Projectile
                   :key "s-j"
                   :description "helm-projectile-find-file: Powerful P session for file management")
+  (cheatsheet-add :group 'Python
+                  :key "M-x run-python"
+                  :description "Launch iPython")
   (cheatsheet-add :group 'Reading
                   :key "xah-toggle-margin-right"
                   :description "For reading novel or documentation: Toggle right margin")
@@ -5705,12 +5687,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Window-Movement
                   :key "s-<down>"
                   :description "windmove-down")
-  :bind ("C-c C-s" . cheatsheet-show)
+  :bind ("s-:" . cheatsheet-show)
   )
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23927 16669 616797 489000) :init (23927 16669 616710 544000) :init-secs (0 0 28 570000) :use-package-secs (0 0 191 471000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23932 60710 408964 419000) :init (23932 60710 408869 147000) :init-secs (0 0 2740 759000) :use-package-secs (0 0 2922 568000) :config (23932 60710 408846 828000) :config-secs (0 0 2713 687000)))
 
 * Remapping =M-<= and =M->=
 
@@ -5721,6 +5703,33 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 
 #+RESULTS:
 : end-of-buffer
+
+* Get various new windows at the bottom of the screen 
+
+This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try and get the shell and IPython at the bottom of the screen 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*IPython3\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*IPython\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*Python\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*stata\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*cheatsheet\\*" display-buffer--same-window-action) display-buffer-alist)
+#+END_SRC
+
+#+RESULTS:
+| \*cheatsheet\*   | display-buffer-same-window      | (inhibit-same-window) |
+| \*stata\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython\*      | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython3\*     | display-buffer-same-window      | (inhibit-same-window) |
+| \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*stata\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython\*      | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython3\*     | display-buffer-same-window      | (inhibit-same-window) |
+| \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \`\*Calendar\*\' | (display-buffer-below-selected) |                       |
+| \*Calendar\*     | my-position-calendar-buffer     |                       |
+
 
 * Provide
 
@@ -5741,3 +5750,4 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+.
