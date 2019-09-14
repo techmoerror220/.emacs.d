@@ -4734,7 +4734,7 @@ DGM: not sure it is better.
 (setq ido-default-buffer-method 'selected-window)
 (unless ido-mode
   (ido-mode 1))
-(global-set-key (kbd "s-n") 'ido-switch-buffer)
+(global-set-key (kbd "s-l") 'ido-switch-buffer)
 (global-set-key (kbd "C-c b") 'ido-switch-buffer)
 #+END_SRC
 
@@ -4744,7 +4744,7 @@ DGM: not sure it is better.
 * =helm-resume=
 
 #+begin_src emacs-lisp :tangle yes
-(global-set-key (kbd "s--") #'helm-resume)
+(global-set-key (kbd "s-r") #'helm-resume)
 #+end_src
 
 #+RESULTS:
@@ -4788,10 +4788,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-x b"
                   :description "helm-mini. Cycles EXWM buffers")
   (cheatsheet-add :group 'Buffer-Cycling
-                  :key "s-n"
+                  :key "s-l"
                   :description "ido-switch-buffer: C-c b when in an external app")
   (cheatsheet-add :group 'Buffer-Cycling
-                  :key "s-l"
+                  :key "s-n"
                   :description "helm-projectile-switch-to-buffer. Includes current P's and EXWM buffers")
   (cheatsheet-add :group 'Buffer-Cycling
                   :key "C-c y"
@@ -4829,6 +4829,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Browsing
                   :key "M-x my-helm-stackoverflow-lookup"
                   :description "Alternative for StackOverflow only")
+  (cheatsheet-add :group 'Chromium
+                  :key "C-l"
+                  :description "Mark url")
   (cheatsheet-add :group 'Common
                   :key "C-x C-c"
                   :description "save-buffers-kill-emacs")
@@ -4899,7 +4902,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "M-z"
                   :description "zap-up-to-char")
   (cheatsheet-add :group 'Editing
-                  :key "s-w"
+                  :key "gs-w"
                   :description "Copy whole word")
   (cheatsheet-add :group 'Editing
                   :key "s-@"
@@ -5160,6 +5163,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-x f"
                   :description "ido-recentf-open: Find recent file")
   (cheatsheet-add :group 'Find-Files
+                  :key "C-x C-r"
+                  :description "recentf-open-files. Long list of recent files")
+  (cheatsheet-add :group 'Find-Files
                   :key "C-x C-f"
                   :description "helm-find-files")
   (cheatsheet-add :group 'Find-Files
@@ -5226,7 +5232,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-c TAB"
                   :description "Yank selected candidate in Helm session at point")
   (cheatsheet-add :group 'Helm
-                  :key "s--"
+                  :key "s-r"
                   :description "helm-resume previous H session, inputs included. C-u lets choose Helm buffer. C-c n inside Helm session")
   (cheatsheet-add :group 'Helm
                   :key "C-c o"
@@ -5513,6 +5519,18 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-recipes
                   :key "C-c i"
                   :description "Insert raw code under a heading")
+  (cheatsheet-add :group 'Org-table
+                  :key "M-Shift-<down>"
+                  :description "Insert a new row above the current row. With a prefix argument, the line is created below the current one")
+  (cheatsheet-add :group 'Org-table
+                  :key "Shift-TAB"
+                  :description "Re-align, move to previous field-like previous cell")
+  (cheatsheet-add :group 'Org-table
+                  :key "Shift-TAB"
+                  :description "Re-align, move to previous field-like previous cell")
+  (cheatsheet-add :group 'Org-table
+                  :key "TAB"
+                  :description "Re-align the table, move to the next field. Creates a new row if necessary")
   (cheatsheet-add :group 'Org-timestamps
                   :key "Shift-<up><down>"
                   :description "Increment/decrement stamp")
@@ -5692,7 +5710,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23932 60710 408964 419000) :init (23932 60710 408869 147000) :init-secs (0 0 2740 759000) :use-package-secs (0 0 2922 568000) :config (23932 60710 408846 828000) :config-secs (0 0 2713 687000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23933 16422 329805 76000) :init (23933 16422 329716 75000) :init-secs (0 0 2605 201000) :use-package-secs (0 0 2785 195000) :config (23933 16422 329700 831000) :config-secs (0 0 2586 474000)))
 
 * Remapping =M-<= and =M->=
 

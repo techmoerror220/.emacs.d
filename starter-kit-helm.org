@@ -1036,7 +1036,7 @@ From https://github.com/bbatsov/projectile/issues/184
 (define-key projectile-mode-map [?\s-\`] 'helm-projectile-find-other-file)
 (define-key projectile-mode-map [?\s-\+] 'helm-projectile-find-dir)
 (define-key projectile-mode-map [?\s-j] 'helm-projectile-find-file)
-(define-key projectile-mode-map [?\s-l] 'helm-projectile-switch-to-buffer)
+(define-key projectile-mode-map [?\s-n] 'helm-projectile-switch-to-buffer)
 ;;(define-key projectile-mode-map [?\s-y] 'projectile-ag) ;; this is not working. 
 #+end_src
 

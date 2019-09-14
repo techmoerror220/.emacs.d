@@ -42,13 +42,14 @@
     (setq exwm-input-global-keys
           `(
             ;; 's-r': Reset (to line-mode).
-            ([?\s-r] . exwm-reset)
+            ;; ([?\s-r] . exwm-reset) ;; dgm comments out
+            ([?\s-{] . exwm-reset)
             ;; 's-w': Switch workspace.
-            ([?\s-w] . exwm-workspace-switch)
+            ;; ([?\s-w] . exwm-workspace-switch) ;; dgm comments out
             ;; 's-&': Launch application.
             ([?\s-&] . (lambda (command)
-		         (interactive (list (read-shell-command "$ ")))
-		         (start-process-shell-command command nil command)))
+                 (interactive (list (read-shell-command "$ ")))
+                 (start-process-shell-command command nil command)))
             ;; 's-N': Switch to certain workspace.
             ,@(mapcar (lambda (i)
                         `(,(kbd (format "s-%d" i)) .
