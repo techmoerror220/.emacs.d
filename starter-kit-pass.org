@@ -1,0 +1,150 @@
+# -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
+
+#+TITLE: Emacs Starter Kit Pass
+#+OPTIONS: toc:nil num:nil ^:nil
+
+This is part of the [[file:starter-kit.org][Emacs Starter Kit]]. 
+
+This file provides settings for password management.
+
+* John Wigley's Setup 
+
+From https://github.com/jwiegley/dot-emacs/blob/master/init.el
+
+** Preliminaries
+
+I don't really need this function
+
+#+begin_src emacs-lisp :tangle no
+  (defun lookup-password (host user port)
+    (require 'auth-source)
+    (require 'auth-source-pass)
+    (let ((auth (auth-source-search :host host :user user :port port)))
+      (if auth
+          (let ((secretf (plist-get (car auth) :secret)))
+            (if secretf
+                (funcall secretf)
+              (error "Auth entry for %s@%s:%s has no secret!"
+                     user host port)))
+        (error "No auth entry found for %s@%s:%s" user host port))))
+#+end_src
+
+#+RESULTS:
+: lookup-password
+
+** =auth-source-pass=
+
+#+begin_src emacs-lisp :tangle yes
+(use-package auth-source-pass
+  :config
+  (auth-source-pass-enable))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23934 46038 172662 386000) :init (23934 46038 172654 725000) :config (23934 46038 172544 20000) :config-secs (0 0 287 617000) :init-secs (0 0 25912 681000) :use-package-secs (0 0 26166 6000)))
+
+#+begin_src emacs-lisp :tangle no
+  (defvar auth-source-pass--cache (make-hash-table :test #'equal))
+
+  (defun auth-source-pass--reset-cache ()
+    (setq auth-source-pass--cache (make-hash-table :test #'equal)))
+
+  (defun auth-source-pass--read-entry (entry)
+    "Return a string with the file content of ENTRY."
+    (run-at-time 45 nil #'auth-source-pass--reset-cache)
+    (let ((cached (gethash entry auth-source-pass--cache)))
+      (or cached
+          (puthash
+           entry
+           (with-temp-buffer
+             (insert-file-contents (expand-file-name
+                                    (format "%s.gpg" entry)
+                                    (getenv "PASSWORD_STORE_DIR")))
+             (buffer-substring-no-properties (point-min) (point-max)))
+           auth-source-pass--cache))))
+
+  (defun auth-source-pass-entries ()
+    "Return a list of all password store entries."
+    (let ((store-dir (getenv "PASSWORD_STORE_DIR")))
+      (mapcar
+       (lambda (file) (file-name-sans-extension (file-relative-name file store-dir)))
+       (directory-files-recursively store-dir "\.gpg$")))))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23934 32027 782050 318000) :init (23934 32027 782003 647000) :config (23934 32027 781175 550000) :config-secs (0 0 1398 800000) :init-secs (0 0 2833 237000) :use-package-secs (0 0 3163 623000)))
+
+
+** =pass= and =password-store=
+
+#+begin_src emacs-lisp :tangle yes
+(use-package pass
+  :commands (pass pass-view-mode)
+  :mode ("\\.passwords/.*\\.gpg\\'" . pass-view-mode)
+  :preface
+  (defun insert-password ()
+    (interactive)
+    (shell-command "apg -m24 -x24 -a1 -n1" t)))
+
+(use-package password-store
+  :defer 5
+  :commands (password-store-insert
+             password-store-copy
+             password-store-get)
+  :config
+  (defun password-store--run-edit (entry)
+    (require 'pass)
+    (find-file (concat (expand-file-name entry (password-store-dir)) ".gpg")))
+
+  (defun password-store-insert (entry login password)
+    "Insert a new ENTRY containing PASSWORD."
+    (interactive (list (read-string "Password entry: ")
+                       (read-string "Login: ")
+                       (read-passwd "Password: " t)))
+    (message "%s" (shell-command-to-string
+                   (if (string= "" login)
+                       (format "echo %s | %s insert -m -f %s"
+                               (shell-quote-argument password)
+                               password-store-executable
+                               (shell-quote-argument entry))
+                     (format "echo -e '%s\nlogin: %s' | %s insert -m -f %s"
+                             password login password-store-executable
+                             (shell-quote-argument entry)))))))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23934 46023 197969 499000) :init (23934 46023 197952 805000) :init-secs (0 0 131 773000) :use-package-secs (0 0 281 803000)))
+
+** Helm and Ivy interfaces
+
+#+begin_src emacs-lisp :tangle yes
+(use-package helm-pass)
+(use-package ivy-pass
+  :commands ivy-pass)
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23934 32022 884678 697000) :init (23934 32022 884650 298000) :config (23934 32022 884318 656000) :config-secs (0 0 16 188000) :init-secs (0 0 684 229000) :use-package-secs (0 0 910 716000)))
+
+
+* Provide
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(provide 'starter-kit-pass)
+#+END_SRC
+
+#+RESULTS:
+: starter-kit-pass
+
+* Final message
+
+#+begin_src emacs-lisp :tangle yes
+  (message "Starter Kit Pass loaded.")
+#+end_src
+
+#+RESULTS:
+: Starter Kit Pass loaded.
+
+
+

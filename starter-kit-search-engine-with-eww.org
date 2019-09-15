@@ -454,7 +454,7 @@ From Julian Assange:
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(provide 'starter-kit-search-engine-with-eww.org)
+(provide 'starter-kit-search-engine-with-eww)
 #+END_SRC
 
 #+RESULTS:

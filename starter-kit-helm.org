@@ -1229,17 +1229,6 @@ Basic commands with for interfacing with =exwm= with =helm=
 (add-to-list 'helm-completing-read-handlers-alist '(ido-recentf-open  . ido))
 #+END_SRC
 
-#+RESULTS:
-: ((ido-use-virtual-buffers . ido) (ido-recentf-open . ido) (recentf-open-files . ido) (describe-function . helm-completing-read-symbols) (describe-variable . helm-completing-read-symbols) (describe-symbol . helm-completing-read-symbols) (debug-on-entry . helm-completing-read-symbols) (find-function . helm-completing-read-symbols) (disassemble . helm-completing-read-symbols) (trace-function . helm-completing-read-symbols) (trace-function-foreground . helm-completing-read-symbols) (trace-function-background . helm-completing-read-symbols) (find-tag . helm-completing-read-default-find-tag) (org-capture . helm-org-completing-read-tags) (org-set-tags . helm-org-completing-read-tags) (ffap-alternate-file) (tmm-menubar) (find-file) (find-file-at-point . helm-completing-read-sync-default-handler) (ffap . helm-completing-read-sync-default-handler) (execute-extended-command) (dired-do-rename . helm-read-file-name-handler-1) (dired-do-copy . helm-read-file-name-handler-1) (dired-do-symlink . helm-read-file-name-handler-1) (dired-do-relsymlink . helm-read-file-name-handler-1) (dired-do-hardlink . helm-read-file-name-handler-1))
-
-* Helm-pass
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package password-store)
-(use-package helm-pass)
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23561 2421 145456 378000) :init (23561 2421 145411 153000) :config (23561 2421 144875 137000) :config-secs (0 0 81 645000) :init-secs (0 0 927 125000) :use-package-secs (0 0 1190 268000)))
 
 * Quit Helm with one key stroke
 
@@ -1434,4 +1423,3 @@ From: https://www.reddit.com/r/emacs/comments/cuc8hl/how_do_you_remember_various
 #+RESULTS: message-line
 : Starter Kit User File loaded.
 
-.

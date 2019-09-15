@@ -562,8 +562,6 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 #+RESULTS:
 : Loaded /home/dgm/.emacs.d/starter-kit-parens.el
 
-
-
 *** Starter kit =mu4e=
 
 #+BEGIN_SRC emacs-lisp
@@ -573,6 +571,14 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 #+RESULTS:
 : Loaded /home/dgm/.emacs.d/starter-kit-mu4e.el
 
+*** Starter kit =pass=
+
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-load "starter-kit-pass.org")
+#+END_SRC
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-pass.el
 
 ** Load User/System Specific Files
 *** Settings from M-x customize

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+,# -*- coding: utf-8 -*-
 # -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Starter Kit Misc
@@ -50,7 +50,19 @@ loading the =zenburn= and =anti-zenburn= themes.
   (setq solarized-height-plus-3 1.0)
   (setq solarized-height-plus-4 1.0)
   (setq x-underline-at-descent-line t)
+  (set-face-attribute 'helm-selection nil 
+                      :background nil
+                      :foreground "Orange3")
+  (set-face-attribute 'helm-source-header
+                      nil
+                      :foreground "#dcdcdc")
   :config
+  (set-face-attribute 'helm-selection nil 
+                      :background nil
+                      :foreground "Orange3")
+  (set-face-attribute 'helm-source-header
+                      nil
+                      :foreground "#dcdcdc")
   (defun toggle-theme ()
     "Switch between Solarized variants."
     (interactive)
@@ -68,8 +80,8 @@ loading the =zenburn= and =anti-zenburn= themes.
                           :background nil
                           :foreground "Orange3")
       (set-face-attribute 'helm-source-header
-                           nil
-                           :foreground "#F5f5f5"))))
+                          nil
+                          :foreground "#dcdcdc"))))
   (load-theme 'solarized-light t))
 
 (bind-key "s-!" 'toggle-theme)
@@ -215,19 +227,19 @@ His explanation: I tend to switch themes more often than normal. For example, sw
 #+RESULTS:
 : t
 
-If you want your Emacs automatically switch between the color schemes when the time come, you can use run-with-timer function to do the check every hour:
+If you want your Emacs automatically switch between the color schemes when the time come, you can use run-with-timer function to do the check every hour. But hey, if if I switch theme manually, theme is switched back to what it was after one hour.
 
 #+BEGIN_SRC emacs-lisp 
 (defun theme-switcher ()
   (let ((current-hour (string-to-number (format-time-string "%H"))))
-    (if (or (< current-hour 6) (> current-hour 20)) (set-dark-theme) (set-light-theme))))
+    (if (or (< current-hour 9) (> current-hour 19)) (set-dark-theme) (set-light-theme))))
 
-;; Run at every 3600 seconds, after 0s delay; DGM comments this out on 24 august 2019 so if I switch theme manually, theme is not switched back to what it was after one hour.
-;; (run-with-timer 0 3600 'theme-switcher)
+;; Run at every 3600 seconds, after 0s delay; DGM commented this out on 24 august 2019 so it did not switch back by itself 
+(run-with-timer 0 3600 'theme-switcher)
 #+END_SRC
 
 #+RESULTS:
-: [nil 23850 19113 988873 3600 theme-switcher nil nil 883000]
+: [nil 23933 17573 196111 3600 theme-switcher nil nil 721000]
 
 ** Mode-line customization
 

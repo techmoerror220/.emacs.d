@@ -1578,15 +1578,27 @@ I'm not sure if including this package in the =elpa.org= file will get this =ggt
 #+end_src
 
 ** Ghub
-Magit depends on this
+Magit depends on this. Copied from https://github.com/jwiegley/dot-emacs/blob/master/init.el
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ghub
-  :ensure t)
-#+END_SRC
+  :defer t
+  :config
+  (require 'auth-source-pass)
+  (defvar my-ghub-token-cache nil)
+
+  (advice-add
+   'ghub--token :around
+   #'(lambda (orig-func host username package &optional nocreate forge)
+       (or my-ghub-token-cache
+           (setq my-ghub-token-cache
+                 (funcall orig-func host username package nocreate forge))))))
+
+(use-package ghub+         :defer t)
+  #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23922 49927 606494 960000) :init (23922 49927 606434 947000) :config (23922 49927 605862 206000) :config-secs (0 0 15 862000) :init-secs (0 0 987 204000) :use-package-secs (0 0 1269 432000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23934 36110 255342 77000) :init (23934 36110 255333 707000) :init-secs (0 0 74 895000) :use-package-secs (0 8 388250 299000)))
 
 ** Magit
 
@@ -3712,7 +3724,7 @@ By setting this:
 (setq helm-split-window-inside-p t)
 #+END_SRC
 
-Now, Helm always opens a small window right inside and at the lower half of current window. No more random Helm window! 
+Now, Helgm always opens a small window right inside and at the lower half of current window. No more random Helm window! 
 
 You may want to remove the header line for Helm command with only one source. 
 
@@ -3746,9 +3758,14 @@ I try to change helm selection in minibuffer so that it is highlighted.
 ;;   '(helm-selection ((t (:background "#4682b4" :foreground "#F5f5f5"))))))
 ;; Change Helm's selection color
 ;; Orange3: "#Cd8500"
-(set-face-attribute 'helm-selection nil 
-                    :background nil
-                    :foreground "Orange3") 
+;;(set-face-attribute 'helm-selection nil 
+;;                    :background nil
+;;                    :foreground "#Cd8500") 
+  (set-face-attribute 'helm-selection nil 
+                      :background nil
+                      :foreground "Orange3")
+  (set-face-attribute 'helm-source-header  nil
+                      :foreground "#dcdcdc")
 ;; ;; Change Helm's color of Source!!
 ;; (set-face-attribute 'helm-source-header nil 
 ;;                    :background "DeepSkyBlue4"
@@ -5546,6 +5563,15 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Password
                   :key "M-x helm-pass"
                   :description "helm-pass")
+  (cheatsheet-add :group 'Password
+                  :key "C-x #"
+                  :description "Save and exit")
+  (cheatsheet-add :group 'Password-Ivy
+                  :key "M-i"
+                  :description "Select entry in Ivy-Pass")
+  (cheatsheet-add :group 'Password-Ivy
+                  :key "RET"
+                  :description "Copy password in kill ring")
   (cheatsheet-add :group 'Prefixes
                   :key "C-x r"
                   :description "Registers and bookmarks")
