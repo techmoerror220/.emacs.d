@@ -47,11 +47,12 @@ This is the old configuration.
                          "~/.emacs.d/elpa/yasnippet-snippets-20181107.2203/snippets"
                          "~/.emacs.d/elpa/"))
 
-(yas/load-directory "~/.emacs.d/mysnippets")
-(yas-load-directory (expand-file-name "snippets" dotfiles-dir)) ;; original line from kieran healy
+;;(yas/load-directory "~/.emacs.d/snippets")
+;;(yas-load-directory (expand-file-name "snippets" dotfiles-dir)) ;; original line from kieran healy
 #+end_src
 
 #+RESULTS:
+| ~/.emacs.d/snippets | ~/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets | ~/.emacs.d/elpa/yasnippet-snippets-20181107.2203/snippets | ~/.emacs.d/elpa/ |
 
 The new config from Daniel Mai's config files is this:
 

@@ -1,4 +1,4 @@
-1# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Local User Customizations
@@ -1582,7 +1582,7 @@ Magit depends on this. Copied from https://github.com/jwiegley/dot-emacs/blob/ma
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ghub
-  :defer t
+  :ensure t
   :config
   (require 'auth-source-pass)
   (defvar my-ghub-token-cache nil)
@@ -1594,11 +1594,12 @@ Magit depends on this. Copied from https://github.com/jwiegley/dot-emacs/blob/ma
            (setq my-ghub-token-cache
                  (funcall orig-func host username package nocreate forge))))))
 
-(use-package ghub+         :defer t)
+(use-package ghub+         
+  :defer t)
   #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23934 36110 255342 77000) :init (23934 36110 255333 707000) :init-secs (0 0 74 895000) :use-package-secs (0 8 388250 299000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23934 47113 548749 897000) :init (23934 47113 548708 930000) :init-secs (0 0 173 741000) :use-package-secs (0 0 452 911000)))
 
 ** Magit
 
@@ -4838,6 +4839,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-\{"
                   :description "daedreth/launch-browser")
   (cheatsheet-add :group 'Browsing
+                  :key "R"
+                  :description "eww-readable. Find text, leaving out navigation menus and the like.")
+  (cheatsheet-add :group 'Browsing
                   :key "here"
                   :description "Web browsing: Maps and Wolfram included")
   (cheatsheet-add :group 'Browsing
@@ -5020,6 +5024,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Editing-MultipleCursors
                   :key "C-c C-m h"
                   :description "mc-hide-unmatched-lines-mode")
+  (cheatsheet-add :group 'Emacs
+                  :key "C-<digit>"
+                  :description "digit-argument. No need to do C-u <digit>. Could do M-<digit> too.")
   (cheatsheet-add :group 'Email
                   :key "C-*"
                   :description "mu4e")
@@ -5378,10 +5385,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-c C-c"
                   :description "Miniedit: exit minibuffer edit")
   (cheatsheet-add :group 'Movement
-                  :key "s-,"
+                  :key "s-<"
                   :description "beginning-of-buffer")
   (cheatsheet-add :group 'Movement
-                  :key "s-."
+                  :key "s->"
                   :description "end-of-buffer")
   (cheatsheet-add :group 'Narrowing
                   :key "C-x n b"
@@ -5470,6 +5477,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-capture
                   :key "C-c C-c"
                   :description "On heading of Org-captured entry, choose tag")
+  (cheatsheet-add :group 'Org-capture
+                  :key "SPC"
+                  :description "Clear tag selection")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-e"
                   :description "org-clock-modify-effort-estimate. Manually set the effort for a particular headline")
@@ -5741,8 +5751,8 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 * Remapping =M-<= and =M->=
 
 #+begin_src emacs-lisp :tangle yes
-(global-set-key (kbd "s-,") 'beginning-of-buffer)
-(global-set-key (kbd "s-.") 'end-of-buffer)
+(global-set-key (kbd "s-<") 'beginning-of-buffer)
+(global-set-key (kbd "s->") 'end-of-buffer)
 #+end_src
 
 #+RESULTS:
@@ -5794,4 +5804,3 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
-.

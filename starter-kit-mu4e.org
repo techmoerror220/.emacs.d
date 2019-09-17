@@ -576,6 +576,8 @@ Article from The Reddit Workflow, accessible at https://www.reddit.com/r/emacs/c
 
 Read this on email handling: http://pragmaticemacs.com/emacs/master-your-inbox-with-mu4e-and-org-mode/
 
+On capturing URLs and content from  web pages (and drilling org-drill items from these), read https://orgmode.org/worg/org-contrib/org-drill.html.
+
 Templates with shortcuts =u= and =w= taken from =org-drill= manual.
 
 The 'Respond later' template is a customised TODO which includes some extra email information. This relies on the extended email properties made available in the Org-mode -> Custom Links -> mu4e section of this config.
@@ -584,55 +586,60 @@ The 'Respond later' template is a customised TODO which includes some extra emai
 (setq org-capture-templates `(
                               ("a"  "Article"  entry  
                                (file+headline "/home/dgm/Dropbox/gtd/bibliography.org" "Bibliography") 
-                                  "* %a %^g
+                               "* %a %^g
                                   \n:PROPERTIES: 
                                   \n:Created: %U
                                   \n:END:
                                   \n%i
                                   \nBrief description:
                                   \n%?"  
-                                :immediate-finish t 
-                                :prepend t  
-                                :empty-lines 0 
-                                :created t)
+                               :immediate-finish t 
+                               :prepend t  
+                               :empty-lines 0 
+                               :created t)
                               ("j" "Journal" entry
-                                 (file+datetree "/home/dgm/Dropbox/gtd/journal.org")
-                                 "* %? \n Added on: %U")
+                               (file+datetree "/home/dgm/Dropbox/gtd/journal.org")
+                               "* %? \n Added on: %U")
                               ("l" "Life-related Idea" entry
-                                (file+headline "~/Dropbox/gtd/notes.org" "Life-related Ideas")
-                                 "* %?\nCaptured on %U from %a\n")
+                               (file+headline "~/Dropbox/gtd/notes.org" "Life-related Ideas")
+                               "* %?\nCaptured on %U from %a\n")
                               ("n" "Note" entry
-                                (file+headline "~/Dropbox/gtd/notes.org" "Notes")
-                                 "* %?\nCaptured on %U from %a\n")
+                               (file+headline "~/Dropbox/gtd/notes.org" "Notes")
+                               "* %?\nCaptured on %U from %a\n")
                               ("p" "Project-related Idea" entry
-                                (file+headline "~/Dropbox/gtd/notes.org" "Project-related Ideas")
-                                 "* %?\nCaptured on %U from %a\n")
+                               (file+headline "~/Dropbox/gtd/notes.org" "Project-related Ideas")
+                               "* %?\nCaptured on %U from %a\n")
                               ("r" "Respond later" entry 
-                                (file+headline "~/Dropbox/gtd/inbox.org" "Email")
-                                 "* TODO Respond to %a, email by %:from \nEntry added on: %U \n"
-                                 :empty-lines 0
-                                 :immediate-finish t)
+                               (file+headline "~/Dropbox/gtd/inbox.org" "Email")
+                               "* TODO Respond to %a, email by %:from \nEntry added on: %U \n"
+                               :empty-lines 0
+                               :immediate-finish t)
                               ("t" "Todo [inbox]" entry
-                                (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
-                                 "* TODO %i%? \nEntry added on: %U from %a\n")
+                               (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
+                               "* TODO %i%? \nEntry added on: %U from %a\n")
                               ("T" "Tickler" entry
-                                (file+headline "/home/dgm/Dropbox/gtd/tickler.org" "Tickler")
-                                 "* %i%? \nEntry added on: %U from %a\n")
+                               (file+headline "/home/dgm/Dropbox/gtd/tickler.org" "Tickler")
+                               "* %i%? \nEntry added on: %U from %a\n")
                               ("u" "URLs to remember" entry
-                                (file+headline  "/home/dgm/Dropbox/gtd/URLs.org" "URLs")
-                                 ,(concat "* TODO Read this URL: '%:description'\nURL: %l\nDate:%U\n\n")
-                                 :empty-lines 0
-                                 :immediate-finish t)
+                               (file+headline  "/home/dgm/Dropbox/gtd/URLs.org" "URLs")
+                               ,(concat "* TODO Read this URL: '%:description'\nURL: %l\nDate:%U\n\n")
+                               :empty-lines 0
+                               :immediate-finish t)
                               ("w" "Capture web snippet" entry
-                                (file+headline "~/Dropbox/gtd/notes.org" "Webs")
-                                 ,(concat "* Web: '%:description'\n\nURL: %l\nTime:%U\n\nContents:\n\n %i\n")
-                                 :empty-lines 0
-                                 :immediate-finish t)))
+                               (file+headline "~/Dropbox/gtd/notes.org" "Webs")
+                               ,(concat "* Web: '%:description'\n\nURL: %l\nTime:%U\n\nContents:\n\n %i\n")
+                               :empty-lines 1
+                               :immediate-finish t)
+                              ;;("w"
+                              ;;"Capture web snippet"
+                              ;;entry
+                              ;;(file+headline "~/Dropbox/gtd/notes.org" "Webs")
+                              ;; ,(concat "* Web: '%:description'        :"
+                              ;;          ":\n:PROPERTIES:\n:DATE_ADDED: %u\n:SOURCE_URL: %c\n:END:\n\n%i\n%?\n")
+                              ;; :empty-lines 1
+                              ;; :immediate-finish t)
+                              ))
 #+END_SRC
-
-#+RESULTS:
-| a | Article | entry | (file+headline /home/dgm/Dropbox/gtd/bibliography.org Bibliography) | * %a %^g |
-
 
 Original template: 
 

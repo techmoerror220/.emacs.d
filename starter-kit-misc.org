@@ -213,19 +213,30 @@ His explanation: I tend to switch themes more often than normal. For example, sw
 (defun set-light-theme ()
   "Set the light theme with some customization if needed."
   (interactive)
-  (load-theme 'solarized-light t))
+  (load-theme 'solarized-light t)
+  (set-face-attribute 'helm-selection nil 
+                      :background nil
+                      :foreground "Orange3")
+  (set-face-attribute 'helm-source-header
+                      nil
+                      :foreground "#dcdcdc"))
 
 (defun set-dark-theme ()
   "Set the dark theme with some customization if needed."
   (interactive)
-  (load-theme 'solarized-dark t))
+  (load-theme 'solarized-dark t)
+  (set-face-attribute 'helm-selection nil 
+                      :background nil
+                      :foreground "Orange3")
+  (set-face-attribute 'helm-source-header
+                      nil
+                      :foreground "#dcdcdc"))
 
 (let ((current-hour (string-to-number (format-time-string "%H"))))
   (if (or (< current-hour 6) (> current-hour 20)) (set-dark-theme) (set-light-theme)))
 #+END_SRC
 
 #+RESULTS:
-: t
 
 If you want your Emacs automatically switch between the color schemes when the time come, you can use run-with-timer function to do the check every hour. But hey, if if I switch theme manually, theme is switched back to what it was after one hour.
 

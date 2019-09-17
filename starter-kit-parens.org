@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+,# -*- coding: utf-8 -*-
 # -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Parens costumization
@@ -212,7 +212,6 @@ Leave point after open-quotation."
 
 #+RESULTS:
 : insert-backquote
-
 
 * COMMENT Enclose next =sexp= in parentheses
 
@@ -521,6 +520,8 @@ These pairs
 
 not included as they were obstrusive.
 
+* Alternative: autopair
+- https://github.com/joaotavora/autopair
 
 * Provide
 
@@ -538,6 +539,4 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 #+begin_src emacs-lisp :tangle yes
 (message "Starter Kit Parens File loaded.")
 #+end_src
-
-
-
+ 

@@ -1574,6 +1574,21 @@ DGM: but they're not working for me.
 #+RESULTS:
 : my/org-clock-in-and-track
 
+*** Overlaps
+
+From: http://doc.norang.ca/org-mode.html
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-agenda-clock-consistency-checks
+      (quote (:max-duration "4:00"
+              :min-duration 0
+              :max-gap 0
+              :gap-ok-around ("4:00"))))
+#+end_src
+
+#+RESULTS:
+| :max-duration | 4:00 | :min-duration | 0 | :max-gap | 0 | :gap-ok-around | (4:00) |
+
 *** Modules
 Org has a whole bunch of optional modules. These are the ones I'm
 currently experimenting with.
@@ -1626,6 +1641,9 @@ Enable random "noise" for item itervals.
 
 #+RESULTS:
 : t
+
+***** TODO Read this webpage on org-drill
+- https://orgmode.org/worg/org-contrib/org-drill.html
 
 *** org-habit
 
@@ -2377,11 +2395,11 @@ Handy for collecting items together.
 #+begin_src emacs-lisp :tangle yes
 (add-to-list 'load-path "/home/dgm/.emacs.d/src/org-recipes")
 (require 'org-recipes)
-(setq org-recipes-file-list '("/media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org" "/media/dgm/blue/documents/dropbox/notes/org-recipes/newPython.org" "/media/dgm/blue/documents/dropbox/notes/org-recipes/helloworld.org"))
+(setq org-recipes-file-list '("/media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org" "/media/dgm/blue/documents/dropbox/notes/cheatSheets/emacsCheatSheet.org"))
 #+end_src
 
 #+RESULTS:
-| /media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org | /media/dgm/blue/documents/dropbox/notes/org-recipes/newPython.org | /media/dgm/blue/documents/dropbox/notes/org-recipes/helloworld.org |
+| /media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org | /media/dgm/blue/documents/dropbox/notes/cheatSheets/emacsCheatSheet.org |
 
 * COMMENT Disabling bindings that are used elsewhere
 

@@ -209,7 +209,6 @@ Then, if I uncomment the rest I'll have the call to =org-preamble-xelatex= in ev
    #+RESULTS: orgmode-latex-export
    : ox-latex
 
-
 * The /LaTeX/ route 
 ** Set default engine 
 
@@ -237,7 +236,6 @@ Watch out! If I want to change to latex (instead of xelatex), and I have a =cust
 
 #+RESULTS:
 : default
-
 
 ** LaTeX options 
 
@@ -329,7 +327,6 @@ The equivalente in =minted= would be:
                                  ("breakanywhere" "true")))
 #+END_EXAMPLE
 
-
 ** =pdfLaTeX= Org Export Settings 
 
     Configure org-mode to export directly to PDF using xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
@@ -359,7 +356,6 @@ Also, if I change to latex instead of xelatex, then change tangle option to no o
 
 #+RESULTS:
 | latexmk -synctex=1 -shell-escape -bibtex -f -pdf %f |
-
 
 * Beamer
 
@@ -422,7 +418,6 @@ From: https://orgmode.org/worg/org-tutorials/org-latex-export.html
 #+RESULTS:
 : org-export-latex-no-toc
 
-
 * Math notation in Latex in Org
 
 From https://tex.stackexchange.com/questions/78501/change-size-of-the-inline-image-for-latex-fragment-in-emacs-org-mode and  https://www.youtube.com/watch?v=88Mid7B31YQ&list=PLKNjNbxhXaeA57E5uJldm-vW_qfxeF6Gy&index=3
@@ -473,13 +468,11 @@ backslash):
 (add-to-list 'org-latex-default-packages-alist "\\PassOptionsToPackage{hyphens}{url}")
 #+END_SRC
 
-
 * Provide
 
 #+BEGIN_SRC emacs-lisp  :tangle yes
 (provide 'starter-kit-latex-org)
 #+END_SRC
-
 
 * Final message
 #+source: message-line
