@@ -5039,6 +5039,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Email
                   :key "A"
                   :description "mu4e-view-attachment-action")
+  (cheatsheet-add :group 'Email
+                  :key "g"
+                  :description "mu4e-view-go-to-url. Open URL")
   (cheatsheet-add :group 'Expressions-Eval
                   :key "C-x C-e"
                   :description "sanityinc/eval-last-sexp-or-region")
@@ -5746,7 +5749,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23933 16422 329805 76000) :init (23933 16422 329716 75000) :init-secs (0 0 2605 201000) :use-package-secs (0 0 2785 195000) :config (23933 16422 329700 831000) :config-secs (0 0 2586 474000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23938 1927 936055 124000) :init (23938 1927 936017 69000) :init-secs (0 0 1064 956000) :use-package-secs (0 0 1144 421000) :config (23938 1927 936011 264000) :config-secs (0 0 1055 219000)))
 
 * Remapping =M-<= and =M->=
 
