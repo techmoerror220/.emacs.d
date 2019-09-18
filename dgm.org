@@ -5388,10 +5388,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-c C-c"
                   :description "Miniedit: exit minibuffer edit")
   (cheatsheet-add :group 'Movement
-                  :key "s-<"
+                  :key "s-,"
                   :description "beginning-of-buffer")
   (cheatsheet-add :group 'Movement
-                  :key "s->"
+                  :key "s-.>"
                   :description "end-of-buffer")
   (cheatsheet-add :group 'Narrowing
                   :key "C-x n b"
@@ -5754,8 +5754,8 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 * Remapping =M-<= and =M->=
 
 #+begin_src emacs-lisp :tangle yes
-(global-set-key (kbd "s-<") 'beginning-of-buffer)
-(global-set-key (kbd "s->") 'end-of-buffer)
+(global-set-key (kbd "s-,") 'beginning-of-buffer)
+(global-set-key (kbd "s-.") 'end-of-buffer)
 #+end_src
 
 #+RESULTS:
