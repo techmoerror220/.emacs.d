@@ -841,7 +841,15 @@ HOWEVER I am not 100% sure how useful is all this because I have a nice option i
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq org-agenda-custom-commands
-      '(("w" "Weekly Review"
+      '(("d" "Daily Review"
+         ((agenda "" ((org-agenda-span 1))) ;; review upcoming deadlines and appointments
+          ;; type "l" in the agenda to review logged items
+          ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+          (todo "STARTED") ;; review  actions that have started
+          (todo "NEXT") ;; review next actions
+          (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
+          (todo "WAITING"))) ;; review waiting items
+        ("w" "Weekly Review"
          ((agenda "" ((org-agenda-span 7)))  ;; review upcoming deadlines and appointments
           ;; old code ((org-agenda-fortnight-view)))
           ;; type "l" in the agenda to review logged items
@@ -869,17 +877,21 @@ HOWEVER I am not 100% sure how useful is all this because I have a nice option i
         ("y" "Yearly Review"
          ((agenda "" ((org-agenda-span (quote year))))))
         ("p" "Project Review"
-         ((tags "project")
-          (todo "STARTED") ;; review  actions that have started
-          (todo "NEXT") ;; review next actions
-          (todo "TODO")))  ;; review pending actions waiting for "next actions" to be fulfilled
+         ((tags "+project+LEVEL=1")               
+          (tags "+project+LEVEL=2")               ;; it'd be tags-todo if the :project: tag had a TODO keyword. See https://emacs.stackexchange.com/questions/41150/top-level-heading-in-the-org-mode-agenda
+          (tags "+project+TODO=\"STARTED\"")
+          (tags "+project+TODO=\"NEXT\"")
+          (tags "+project+TODO=\"TODO\"")
+          (tags "+project+TODO=\"WAITING\"")
+          (tags "+project+TODO=\"DONE\"")))
+        ;;(todo "NEXT") ;; review next actions
+        ;;(todo "TODO")))  ;; review pending actions waiting for "next actions" to be fulfilled
         ;;          ("l" "Monthly (Long-Term) Review"
         ;;           ((agenda "" ((org-agenda-span (quote month))))))
         ("o" "Office and home agenda"
          ((agenda "" ((org-agenda-ndays 1))) ;; esto no me funciona... debe ser que (setq org-agenda-span (quote month)) en starter-kit-org.org tiene prioridad
           ;; limits the agenda display to a single day
           (tags-todo "@office|@home")
-          (tags-todo "office|home")
           ;;            (tags "project+CATEGORY=\"elephants\"")
           ;;            (tags "review" ((org-agenda-files '("~/org/circuspeanuts.org"))))
           ;; limits the tag search to the file circuspeanuts.org
@@ -908,6 +920,16 @@ HOWEVER I am not 100% sure how useful is all this because I have a nice option i
 
 #+RESULTS:
 : org-current-is-todo
+
+From: https://stackoverflow.com/questions/31639086/emacs-org-mode-how-can-i-filter-on-tags-and-todo-status-simultaneously
+
+The tag search view is poorly named. It actually searches tags and properties. tag-todo adds an extra condition that only matches todo headlines. Use "+" to indicated that a condition is required (and "-" that it's forbidden). So +PROJECT+TODO=\"TODO\" will match headlines with the tag :PROJECT: and a todo keyword of TODO. Putting into a custom command looks like
+
+#+BEGIN_EXAMPLE
+(setq org-agenda-custom-commands
+      '(("p" "List Non-done projects"
+          tags "+PROJECT+TODO=\"TODO\"")))
+#+END_EXAMPLE
 
 
 Set to the name of the file where new notes will be stored
@@ -962,11 +984,11 @@ Remove DONE tasks from agenda view. Tip from: https://stackoverflow.com/question
 Tip from: https://orgmode.org/manual/Setting-tags.html
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-tag-alist '(("econometrics" . ?a) ("web-browsing" . ?b)  ("computing" . ?c) ("divorcio" . ?d) ("emacs" . ?e) ("lisp" . ?g) ("@home" . ?h) ("kenedy" . ?k) ("leo" . ?l)  ("maths" . ?m) ("@office" . ?o)  ("project" . ?p) ("reading" . ?r) ("salud" . ?s) ("@mail-tel" . ?t) ("uned-admin" . ?u)  ("python" . ?y) ("uned-teaching" . ?v)  ("writing" . ?w)  ("@errands" . ?z)))
+(setq org-tag-alist '(("project" . ?a) ("@errands" . ?e) ("@home" . ?h) ("@laptop" . ?l) ("@office" . ?o) ("@PC" . ?p) ("reading" . ?r) ("salud" . ?s) ("@tel" . ?t) ("writing" . ?w)))
 #+END_SRC
 
 #+RESULTS:
-: ((econometrics . 97) (R . 98) (python . 99) (stata . 100) (emacs . 101) (lisp . 108) (@home . 104) (leo . 108) (maths . 109) (@office . 111) (project . 112) (reading . 114) (salud . 115) (@mail-tel . 116) (uned-admin . 117) (uned-teaching . 118) (web-browsing . 119) (errands . 122))
+: ((project . 97) (@errands . 101) (@home . 104) (@laptop . 108) (@office . 111) (@PC . 112) (reading . 114) (salud . 115) (@tel . 116) (writing . 119))
 
 ** Public holidays 
 
@@ -1250,7 +1272,7 @@ for another presentation of =org-goto=.
       org-goto-max-level 10)
 (require 'imenu)
 (setq org-startup-folded nil)
-;;(bind-key "C-c j" 'org-clock-goto) ;; jump to current task from anywhere;; DGM: doesn't work and C-c C-x C-j does the job already
+(bind-key "C-c j" 'org-clock-goto) ;; jump to current task from anywhere;; C-c C-x C-j does the job already
 (bind-key "C-c C-w" 'org-refile)
 (setq org-cycle-include-plain-lists 'integrate)
 #+end_src
@@ -1282,13 +1304,16 @@ The following code makes it easier for me to link trees with entries, as in http
     (org-set-property "LINK" link2)))
 #+end_src
 
+#+RESULTS:
+: my/org-link-projects
+
 *** Viewing, navigating, and editing the Org tree
 
 I often cut and paste subtrees. This makes it easier to cut something and paste it elsewhere in the hierarchy.
 
 #+begin_src emacs-lisp  :tangle yes
 (with-eval-after-load 'org
-  (bind-key "C-c k" 'org-cut-subtree org-mode-map)
+  (bind-key "s-<" 'org-cut-subtree org-mode-map)
   (setq org-yank-adjusted-subtrees t))
 #+end_src
 
@@ -1382,8 +1407,10 @@ Projects are headings with the =:project:= tag, so we generally don't
 want that tag inherited, except when we display unscheduled tasks that
 don't belong to any projects.
 
-#+begin_src emacs-lisp :tangle yes
-(setq org-tags-exclude-from-inheritance '("project"))
+- DGM comments this out to try and get a nice overview of projects and their actions
+
+#+begin_src emacs-lisp :tangle no
+;;(setq org-tags-exclude-from-inheritance '("project"))
 #+end_src
 
 This code makes it easy for me to focus on one project and its tasks.
@@ -1423,7 +1450,7 @@ This variable needs to be set before org.el is loaded.
 
 *** Track time
 
-I use the clock a lot says Sacha. Okay, but I think =I= in agenda does this.
+I use the clock a lot, says Sacha. Okay, but I think =I= in agenda does this.
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (with-eval-after-load 'org-agenda
@@ -1439,7 +1466,7 @@ I use the clock a lot says Sacha. Okay, but I think =I= in agenda does this.
   (progn
     (setq org-expiry-inactive-timestamps t)
     (setq org-clock-idle-time nil)
-    (setq org-log-done 'time)
+    (setq org-log-done 'time)          ;; explained here: https://www.gnu.org/software/emacs/manual/html_node/org/Closing-items.html
     (setq org-clock-continuously nil)
     (setq org-clock-persist t)  ;; Save the running clock and all clock history when exiting Emacs, load it on startup
     (setq org-clock-in-switch-to-state "STARTED")
@@ -1469,16 +1496,23 @@ Too many clock entries clutter up a heading.
 
 My agenda org clock report settings show 6 levels of detail with links to the tasks. I like wider reports than the default compact setting so I override the :narrow value. 
 
+Read: https://orgmode.org/manual/The-clock-table.html
+Org mode can produce quite complex reports based on the time clocking information. Such a report is called a clock table, because it is formatted as one or several Org tables.
+
+NB: I could try with =:block today=? Objective: to show only time spent today.
+
 #+begin_src emacs-lisp :tangle yes
 ;; Agenda clock report parameters
 (setq org-agenda-clockreport-parameter-plist
       '(:link t :maxlevel 6 :fileskip0 t :compact t :narrow 60 :score 0))
 #+end_src
 
+#+RESULTS:
+| :link | t | :maxlevel | 6 | :block | today | :fileskip0 | t | :compact | t | :narrow | 60 | :score | 0 |
+
 **** Effort estimation
 
-Then, you can hit C-c C-x e on a headline and be prompted for the "quick" efforts. So C-c C-x e 3 would select 45 minutes. 
-
+Then, you can hit =C-c C-x e= on a headline and be prompted for the "quick" efforts. So C-c C-x e 3 would select 45 minutes. 
 #+begin_src emacs-lisp :tangle yes
 ;; global Effort estimate values
 (setq org-global-properties
@@ -1492,18 +1526,39 @@ Then, you can hit C-c C-x e on a headline and be prompted for the "quick" effort
 : ((Effort_ALL . 0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00))
 
 **** Column-based presentation of results
+  
+The column view turns each outline item into a table row displaying some of its properties.
+Column view is normally used to view and edit properties embedded in the hierarchical structure of an Org file.
+In fact, you can edit properties from the column view. It lets you access and edit any property very quickly.
+
+    - Use =v= to display the field value in the minibuffer.
+    - Use =e= to interactively select/edit the value in the minibuffer.
+    - Use =S-left/right= to cycle through the allowed values in a field.
+    - Use =a= to edit the allowed values for this property.
+
+***** Column-view from the agenda
+It can be quite useful to use column view also from the agenda, where entries are collected by certain criteria.
+The first headline is now a row of browsable columns displaying properties. The first highlighted line of the buffer briefly tells you what property is displayed in each columns. 
 
 We need to define some columns to see, I like to define mine as the task, then the priority, the effort, and finally the sum of time taken for the task: 
 
+={:}= means: display a summary (total) of effort field, by adding all the time values found in the property "Effort".
+
+When the column view in the agenda shows the CLOCKSUM_T, that is always today’s clocked time for this item. So even in the weekly agenda, the clocksum listed in column view only originates from today. This lets you compare the time you spent on a task for today, with the time already spent —via CLOCKSUM—and with the planned total effort for it. (info from: https://orgmode.org/manual/Agenda-column-view.html)
+
+When the column view in the agenda shows the CLOCKSUM, that is always the entire clocked time for this item. So even in the daily/weekly agenda, the clocksum listed in column view may originate from times outside the current view. This has the advantage that you can compare these values with a column listing the planned total effort for a task—one of the major applications for column view in the agenda.
+
+If you want information about clocked time in the displayed period use clock table mode (press R in the agenda).
+
 #+begin_src emacs-lisp :tangle yes
 ;; Set default column view headings: Task Priority Effort Clock_Summary
-(setq org-columns-default-format "%50ITEM(Task) %2PRIORITY %10Effort(Effort){:} %10CLOCKSUM")
+(setq org-columns-default-format "%50ITEM(Task) %15TAGS(Context) %2PRIORITY %7TODO(State) %20SCHEDULED %6Effort(Effort){:} %CLOCKSUM_T{:} %CLOCKSUM{:}")  
 #+end_src
 
 #+RESULTS:
-: %50ITEM(Task) %2PRIORITY %10Effort(Effort){:} %10CLOCKSUM
+: %50ITEM(Task) %15TAGS(Context) %2PRIORITY %7TODO(State) %20SCHEDULED %6Effort(Effort){:} %CLOCKSUM_T{:} %CLOCKSUM{:}
 
-You can now turn on org-columns with =C-c C-x C-c=, you should see something like the following screenshots.
+You can now turn on org-columns with =C-c C-x C-c=, you should see something like the following screenshots. =q= to quit.
 
 Also, you can move to the "Effort" column and hit 0-9 to fast-choose the amount of effort for a task also, instead of adding effort to each individual headline one at a time. 
 
@@ -1537,7 +1592,7 @@ I bind it to =C-c I= and =C-c O= so they can be invoked globally (not just in or
 (setq org-clock-out-when-done t)
 ;; Enable auto clock resolution for finding open clocks
 (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
-;; Include current clocking task in clock reports (already included)
+;; Include current clocking task (unfinished clocks) in clock reports without clocking out (line already included)
 ;; (setq org-clock-report-include-clocking-task t)
 ;; use pretty things for the clocktable
 (setq org-pretty-entities t)
@@ -1558,17 +1613,17 @@ DGM: but they're not working for me.
       (save-excursion (and (looking-at (org-item-re)) (looking-back "^[ \t]*")))))
 (setq org-use-speed-commands 'my/org-use-speed-commands-for-headings-and-lists)
 
-(with-eval-after-load 'org
+;;(with-eval-after-load 'org
   ;; (add-to-list 'org-speed-commands-user '("x" org-todo "DONE"))
   ;; (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
-  (add-to-list 'org-speed-commands-user '("!" my/org-clock-in-and-track))
-  (add-to-list 'org-speed-commands-user '("s" call-interactively 'org-schedule))
+  ;; (add-to-list 'org-speed-commands-user '("!" my/org-clock-in-and-track)) ;; I don't use quantified-awesome
+  ;; (add-to-list 'org-speed-commands-user '("s" call-interactively 'org-schedule)) ;; s saves all buffers for me
   ;; (add-to-list 'org-speed-commands-user '("d" my/org-move-line-to-destination))
-  (add-to-list 'org-speed-commands-user '("i" call-interactively 'org-clock-in))
+  ;; (add-to-list 'org-speed-commands-user '("i" call-interactively 'org-clock-in))
   ;;   (add-to-list 'org-speed-commands-user '("P" call-interactively 'org2blog/wp-post-subtree))
-  (add-to-list 'org-speed-commands-user '("o" call-interactively 'org-clock-out))
+  ;; (add-to-list 'org-speed-commands-user '("o" call-interactively 'org-clock-out))
   ;; (add-to-list 'org-speed-commands-user '("$" call-interactively 'org-archive-subtree))
-  (bind-key "!" 'my/org-clock-in-and-track org-agenda-mode-map))
+  ;; (bind-key "!" 'my/org-clock-in-and-track org-agenda-mode-map))
 #+END_SRC
 
 #+RESULTS:
@@ -1701,7 +1756,7 @@ Entry added on: [2019-09-08 Sun 21:57] from [[file:~/Dropbox/gtd/inbox.org::*Dat
 #+END_EXAMPLE
 
 I have the habit for the current day and its graph but not an entry for this TODO every day in my calendar. Now I am thinking this is probably the point of it all.
-Notice also that I only get habits in the org-habit graph for today when they have an scheduled date. I even get habits that are not scheduled for today but for way into the future. If I don't scheduled the habit, I don't get the graph for the today.
+Notice also that I only get habits in the org-habit graph for today when they have an scheduled date. I even get habits that are not scheduled for today but for way into the future. If I don't scheduled the habit, I don't get the graph for it today.
 
 For the scheduled task to show every day I have to leave a space between =Scheduled= and =Properties= but in that case I don't get this entry in the list of habits.
 
@@ -1787,11 +1842,13 @@ decide what I feel like doing the most.
 (setq org-agenda-dim-blocked-tasks t)
 #+end_src
 
-*** Structure templates
+*** COMMENT Structure templates
 
 Org makes it easy to insert blocks by typing =<s[TAB]=, etc. I hardly ever use LaTeX, but I insert a lot of Emacs Lisp blocks, so I redefine =<l= to insert a Lisp block instead. 
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+DGM: Commented out as I use yasnippet for this.
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq org-structure-template-alist
       '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
         ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
@@ -1811,7 +1868,9 @@ Org makes it easy to insert blocks by typing =<s[TAB]=, etc. I hardly ever use L
 
 *** Great for quickly going through the to-do list. Gets rid of one extra keystroke. ;) 
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+DGM: I don't need it. Kept typing it by mistake!
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun my/org-agenda-done (&optional arg)
   "Mark current TODO as done.
 This changes the line at point, all other lines in the agenda referring to
@@ -1825,9 +1884,18 @@ the same tree node, and the headline of the tree node in the Org-mode file."
 #+RESULTS:
 : my/org-agenda-done
 
-*** Make it easy to mark a task as done and create a follow-up task
-
+However, DGM realized after disabling "x" above that, by default, "x" is bound to exiting the org-agenda!
 #+begin_src emacs-lisp :tangle yes
+(define-key org-agenda-mode-map "x" nil)
+#+end_src
+
+#+RESULTS:
+
+*** COMMENT Make it easy to mark a task as done and create a follow-up task
+
+DGM: Idem.
+
+#+begin_src emacs-lisp :tangle no
 (defun my/org-agenda-mark-done-and-add-followup ()
   "Mark the current TODO as done and add another task after it.
 Creates it at the same level as the previous task, so it's better to use
@@ -1845,7 +1913,8 @@ this with to-do items than with projects or headings."
 
 *** Capture something based on the agenda
 
-#+begin_src emacs-lisp :tangle yes
+DGM: idem
+#+begin_src emacs-lisp :tangle no
 (defun my/org-agenda-new ()
   "Create a new note or task at the current agenda item.
 Creates it at the same level as the previous task, so it's better to use
@@ -1862,6 +1931,8 @@ this with to-do items than with projects or headings."
 This helps me keep track of unscheduled tasks, because I sometimes
 forget to assign tasks a date. I also want to keep track of stuck projects.
 
+DGM: I don't find this function... ahh, it's not interactive!
+
 #+begin_src emacs-lisp :tangle yes
 (defun my/org-agenda-list-unscheduled (&rest ignore)
   "Create agenda view for tasks that are unscheduled and not done."
@@ -1875,9 +1946,13 @@ forget to assign tasks a date. I also want to keep track of stuck projects.
         "\\<IGNORE\\>"))
 #+end_src
 
-*** Projects
+#+RESULTS:
+| +PROJECT-MAYBE-DONE | (TODO) | nil | \<IGNORE\> |
 
-#+begin_src emacs-lisp :tangle yes
+*** Projects
+DGM: no need for this, as I have a Project overview in Org-agenda
+
+#+begin_src emacs-lisp :tangle no
 (defun my/org-show-active-projects ()
   "Show my current projects."
   (interactive)
@@ -1894,7 +1969,9 @@ seems to be promising. I made it a speed command (see the value of
 =org-use-speed-commands= elsewhere in my config) so that I can easily
 refile. 
 
-#+begin_src emacs-lisp :tangle yes
+DGM: turning this off, as I don't understand it.
+
+#+begin_src emacs-lisp :tangle no
 (defvar my/org-last-refile-marker nil "Marker for last refile")
 (defun my/org-refile-in-file (&optional prefix)
   "Refile to a target within the current file."
@@ -1953,6 +2030,7 @@ appropriate level.
     (insert "#+begin_src emacs-lisp :tangle yes\n" definition "#+end_src\n")))
 #+end_src
 
+
 *** Counting
 
 Good way to remind myself that I have lots of STARTED tasks.
@@ -1983,6 +2061,8 @@ Probably should make this a dblock someday."
   (- (calendar-absolute-from-gregorian (org-date-to-gregorian end))
      (calendar-absolute-from-gregorian (org-date-to-gregorian start))))
 #+end_src
+
+How to use it? =(my/org-days-between <2019-01-01 Tue> <2019-09-21 Sat>)=? 
 
 *** Autosave
 
@@ -2220,6 +2300,7 @@ Also, don't ask me for confirmation:
 :END:
 <<clock-in>>
 
+
 #+begin_src emacs-lisp :tangle yes
 (defmacro my/org-with-current-task (&rest body)
   "Execute BODY with the point at the subtree of the current task."
@@ -2294,7 +2375,9 @@ Also, don't ask me for confirmation:
 (require 'quantified nil t)
 #+end_src
 
-**** Compare times and effort estimates
+#+RESULTS:
+
+**** COMMENT Compare times and effort estimates
 :PROPERTIES:
 :CUSTOM_ID: compare-time
 :END:
@@ -2302,7 +2385,9 @@ Also, don't ask me for confirmation:
 
 This is for comparing times in column view and in tables.
 
-#+begin_src emacs-lisp :tangle yes
+DGM: not using it. 
+
+#+begin_src emacs-lisp :tangle no
 (defun my/compare-times (clocked estimated)
   (if (and (> (length clocked) 0) estimated)
       (format "%.2f"
@@ -2336,9 +2421,229 @@ Handy for collecting items together.
 #+RESULTS:
 : my/org-send-to-bottom-of-list
 
-*** List upcoming tasks so that I can see if I'm overloaded
+*** COMMENT Reviews
+DGM: way too complicted for me
+**** Weekly review
+ :PROPERTIES:
+ :CUSTOM_ID: weekly-review
+ :END:
 
-#+begin_src emacs-lisp :tangle yes
+ <<weekly-review>>
+
+ I regularly post [[http://sachachua.com/blog/category/weekly][weekly reviews]] to keep track of what I'm done,
+ remind me to plan for the upcoming week, and list blog posts,
+ sketches, and links. I want to try out grouping tasks by topic first,
+ then breaking it down into previous/next week.
+
+ #+begin_src emacs-lisp :tangle no
+   (defvar my/weekly-review-line-regexp
+     "^  \\([^:]+\\): +\\(Sched[^:]+: +\\)?TODO \\(.*?\\)\\(?:[      ]+\\(:[[:alnum:]_@#%:]+:\\)\\)?[        ]*$"
+     "Regular expression matching lines to include.")
+   (defvar my/weekly-done-line-regexp
+     "^  \\([^:]+\\): +.*?\\(?:Clocked\\|Closed\\):.*?\\(TODO\\|DONE\\) \\(.*?\\)\\(?:[       ]+\\(:[[:alnum:]_@#%:]+:\\)\\)?[        ]*$"
+     "Regular expression matching lines to include as completed tasks.")
+
+   (defun my/quantified-get-hours (category time-summary)
+     "Return the number of hours based on the time summary."
+     (if (stringp category)
+         (if (assoc category time-summary) (/ (cdr (assoc category time-summary)) 3600.0) 0)
+       (apply '+ (mapcar (lambda (x) (my/quantified-get-hours x time-summary)) category))))
+
+   (defun _my/extract-tasks-from-agenda (string matchers prefix line-re)
+     (with-temp-buffer
+       (insert string)
+       (goto-char (point-min))
+       (while (re-search-forward line-re nil t)
+         (let ((temp-list matchers))
+           (while temp-list
+             (if (save-match-data
+                   (string-match (car (car temp-list)) (match-string 1)))
+                 (progn
+                   (add-to-list (cdr (car temp-list)) (concat prefix (match-string 3)) t)
+                   (setq temp-list nil)))
+             (setq temp-list (cdr temp-list)))))))
+
+   (ert-deftest _my/extract-tasks-from-agenda ()
+     (let (list-a list-b (line-re "\\([^:]+\\):\\( \\)\\(.*\\)"))
+       (_my/extract-tasks-from-agenda
+        "listA: Task 1\nother: Task 2\nlistA: Task 3"
+        '(("listA" . list-a)
+          ("." . list-b))
+        "- [ ] "
+        line-re)
+       (should (equal list-a '("- [ ] Task 1" "- [ ] Task 3")))
+       (should (equal list-b '("- [ ] Task 2")))))
+
+   (defun _my/get-upcoming-tasks ()
+     (save-window-excursion
+         (org-agenda nil "W")
+         (_my/extract-tasks-from-agenda (buffer-string)
+                                           '(("inbox" . inbox-next)
+                                             ("tickler" . tickler-next)
+                                             ("gtd" . gtd-next)
+                                             ("." . life-next))
+                                           "  - [ ] "
+                                           my/weekly-review-line-regexp)))
+   (defun _my/get-previous-tasks ()
+     (let (string)
+       (save-window-excursion
+         (org-agenda nil "W")
+         (org-agenda-later -1)
+         (org-agenda-log-mode 16)
+         (setq string (buffer-string))
+         ;; Get any completed tasks from the current week as well
+         (org-agenda-later 1)
+         (org-agenda-log-mode 16)
+         (setq string (concat string "\n" (buffer-string)))
+         (_my/extract-tasks-from-agenda string
+                                           '("inbox" . inbox)
+                                             ("tickler" . tickler)
+                                             ("gtd" . gtd)
+                                             ("." . life))
+                                           "  - [X] "
+                                           my/weekly-done-line-regexp))))
+
+   (defun my/org-summarize-focus-areas (date)
+     "Summarize previous and upcoming tasks as a list."
+     (interactive (list (org-read-date-analyze (if current-prefix-arg (org-read-date) "-fri") nil '(0 0 0))))
+     (let (business relationships life business-next relationships-next life-next string emacs emacs-next
+                    start end time-summary biz-time ignore base-date)
+       (setq base-date (apply 'encode-time date))
+       (setq start (format-time-string "%Y-%m-%d" (days-to-time (- (time-to-number-of-days base-date) 6))))
+       (setq end (format-time-string "%Y-%m-%d" (days-to-time (1+ (time-to-number-of-days base-date)))))
+       (setq time-summary (quantified-summarize-time start end))
+       (setq biz-time (my/quantified-get-hours "Inbox" time-summary))
+       (_my/get-upcoming-tasks)
+       (_my/get-previous-tasks)
+       (setq string
+             (concat
+              (format "- *A- (Childcare)* (%.1fh - %d%% of total)\n"
+                      (my/quantified-get-hours '("A-") time-summary)
+                      (/ (my/quantified-get-hours '("A-") time-summary) 1.68))
+              (format "- *Business* (%.1fh - %d%%)\n" biz-time (/ biz-time 1.68))
+              (mapconcat 'identity business "\n") "\n"
+              (mapconcat 'identity business-next "\n")
+              "\n"
+              (format "  - *Earn* (%.1fh - %d%% of Business)\n"
+                      (my/quantified-get-hours "Business - Earn" time-summary)
+                      (/ (my/quantified-get-hours "Business - Earn" time-summary) (* 0.01 biz-time)))
+              (format "  - *Build* (%.1fh - %d%% of Business)\n"
+                      (my/quantified-get-hours "Business - Build" time-summary)
+                      (/ (my/quantified-get-hours "Business - Build" time-summary) (* 0.01 biz-time)))
+              (format "  - *Connect* (%.1fh - %d%% of Business)\n"
+                      (my/quantified-get-hours "Business - Connect" time-summary)
+                      (/ (my/quantified-get-hours "Business - Connect" time-summary) (* 0.01 biz-time)))
+              (format "- *Relationships* (%.1fh - %d%%)\n"
+                      (my/quantified-get-hours '("Discretionary - Social"
+                                                    "Discretionary - Family") time-summary)
+                      (/ (my/quantified-get-hours '("Discretionary - Social"
+                                                       "Discretionary - Family") time-summary) 1.68))
+              (mapconcat 'identity relationships "\n") "\n"
+              (mapconcat 'identity relationships-next "\n") "\n"
+              "\n"
+              (format "- *Discretionary - Productive* (%.1fh - %d%%)\n"
+                      (my/quantified-get-hours "Discretionary - Productive" time-summary)
+                      (/ (my/quantified-get-hours "Discretionary - Productive" time-summary) 1.68))
+              (format "  - *Drawing* (%.1fh)\n"
+                      (my/quantified-get-hours '("Discretionary - Productive - Drawing")  time-summary))
+              (format "  - *Emacs* (%.1fh)\n"
+                      (my/quantified-get-hours "Discretionary - Productive - Emacs" time-summary))
+              (mapconcat 'identity emacs "\n") "\n"
+              (mapconcat 'identity emacs-next "\n") "\n"
+              (format "  - *Coding* (%.1fh)\n"
+                      (my/quantified-get-hours "Discretionary - Productive - Coding" time-summary))
+              (mapconcat 'identity life "\n") "\n"
+              (mapconcat 'identity life-next "\n") "\n"
+              (format "  - *Sewing* (%.1fh)\n"
+                      (my/quantified-get-hours "Discretionary - Productive - Sewing" time-summary))
+              (format "  - *Writing* (%.1fh)\n"
+                      (my/quantified-get-hours "Discretionary - Productive - Writing" time-summary))
+              (format "- *Discretionary - Play* (%.1fh - %d%%)\n"
+                      (my/quantified-get-hours "Discretionary - Play" time-summary)
+                      (/ (my/quantified-get-hours "Discretionary - Play" time-summary) 1.68))
+              (format "- *Personal routines* (%.1fh - %d%%)\n"
+                      (my/quantified-get-hours "Personal" time-summary)
+                      (/ (my/quantified-get-hours "Personal" time-summary) 1.68))
+              (format "- *Unpaid work* (%.1fh - %d%%)\n"
+                      (my/quantified-get-hours "Unpaid work" time-summary)
+                      (/ (my/quantified-get-hours "Unpaid work" time-summary) 1.68))
+              (format "- *Sleep* (%.1fh - %d%% - average of %.1f per day)\n"
+                      (my/quantified-get-hours "Sleep" time-summary)
+                      (/ (my/quantified-get-hours "Sleep" time-summary) 1.68)
+                      (/ (my/quantified-get-hours "Sleep" time-summary) 7)
+                      )))
+       (if (called-interactively-p 'any)
+           (insert string)
+         string)))
+ #+end_src
+
+ #+RESULTS:
+ : my/org-summarize-focus-areas
+
+ I use this to put together a quick summary of how I spent my time.
+
+ The following code makes it easy to add a line:
+
+ #+begin_src emacs-lisp :tangle no
+ (defun my/org-add-line-item-task (task)
+   (interactive "MTask: ")
+   (org-insert-heading)
+   (insert "[ ] " task)
+   (let ((org-capture-entry '("t" "Tasks" entry
+                              (file+headline "~/personal/organizer.org" "Tasks")
+                              "")))
+     (org-capture nil "t")
+     (insert "TODO " task "\nSCHEDULED: <" (org-read-date) ">")))
+ ;(define-key org-mode-map (kbd "C-c t") 'my/org-add-line-item-task)
+ #+end_src
+
+ #+RESULTS:
+ : my/org-add-line-item-task
+
+ Now we put it all together...
+
+ #+begin_src emacs-lisp :tangle no
+   (defun my/org-prepare-weekly-review (&optional date skip-urls)
+     "Prepare weekly review template."
+     (interactive (list (org-read-date-analyze (if current-prefix-arg (org-read-date) "-fri") nil '(0 0 0))))
+     (let ((base-date (apply 'encode-time date))
+           start end links prev)
+       (setq start (format-time-string "%Y-%m-%d 0:00" (days-to-time (- (time-to-number-of-days base-date) 6))))
+       (setq end (format-time-string "%Y-%m-%d 0:00" (days-to-time (1+ (time-to-number-of-days base-date)))))
+       (setq prev (format-time-string "%Y-%m-%d 0:00" (days-to-time (- (time-to-number-of-days base-date) 7 6))))
+       (outline-next-heading)
+         (insert
+          "*** Weekly review: Week ending " (format-time-string "%B %e, %Y" base-date) "  :weekly:\n"
+          (my/org-summarize-journal-csv "~/cloud/a/Journal.csv" start end "week" my/journal-category-map my/journal-categories)
+          "\n\n*Blog posts*\n\n"
+          (my/org-list-from-rss "http://sachachua.com/blog/feed" start end)
+          "\n\n*Sketches*\n\n"
+          (my/sketches-export-and-extract start end) "\n"
+          "\n\n*Time*\n\n"
+          (mapconcat (lambda (row) (concat "| " (mapconcat 'identity row " | ") " |\n"))
+                     (my/quantified-compare prev start start end
+                                            '("A-"
+                                              "Business"
+                                              "Discretionary - Play"
+                                              "Unpaid work"
+                                              "Discretionary - Social"
+                                              "Discretionary - Family"
+                                              "Sleep"
+                                              "Discretionary - Productive"
+                                              "Personal")
+                                            "The other week %" "Last week %") "")
+          ;"\n\n*Focus areas and time review*\n\n"
+          ;(my/org-summarize-focus-areas date)
+          "\n")))
+ #+end_src
+
+ #+RESULTS:
+ : my/org-prepare-weekly-review
+
+**** COMMENT List upcoming tasks so that I can see if I'm overloaded
+DGM: check how to make this work.. but way too complicated for me!
+
+#+begin_src emacs-lisp :tangle no
 (defun my/org-summarize-upcoming-week ()
   "Summarize upcoming tasks as a list."
   (interactive)
@@ -2350,25 +2655,30 @@ Handy for collecting items together.
       (goto-char (point-min))
       (while (re-search-forward my/weekly-review-line-regexp nil t)
         (cond
-         ((string= (match-string 1) "routines") nil) ; skip routine tasks
-         ((string= (match-string 1) "business")
+         ;; ((string= (match-string 1) "inbox") nil) ; skip routine tasks
+         ((string= (match-string 1) "inbox")
           (add-to-list 'business (concat "  - [ ] " (match-string 3))))
-         ((string= (match-string 1) "people")
+         ((string= (match-string 1) "tickler")
+          (add-to-list 'business (concat "  - [ ] " (match-string 3))))
+         ((string= (match-string 1) "gtd")
           (add-to-list 'relationships (concat "  - [ ] " (match-string 3))))
          (t (add-to-list 'life (concat "  - [ ] " (match-string 3)))))))
     (setq string
           (concat
            "*Plans for next week*\n"
-           "- Business\n"
-           (mapconcat 'identity business "\n")
-           "\n- Relationships\n"
-           (mapconcat 'identity relationships "\n")
-           "\n- Life\n"
-           (mapconcat 'identity life "\n")))
+           "- Inbox\n"
+           (mapconcat 'identity inbox "\n")
+           "\n- Tickler\n"
+           (mapconcat 'identity tickler "\n")
+           "\n- GTD\n"
+           (mapconcat 'identity gtd "\n")))
     (if (called-interactively-p 'any)
         (kill-new string)
       string)))
 #+end_src
+
+#+RESULTS:
+: my/org-summarize-upcoming-week
 
 * Org-web-tools
 
@@ -2411,7 +2721,6 @@ Handy for collecting items together.
 
 #+RESULTS:
 
-
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -2426,3 +2735,4 @@ Handy for collecting items together.
 #+begin_src emacs-lisp :tangle yes
   (message "Starter Kit Org loaded.")
 #+end_src
+

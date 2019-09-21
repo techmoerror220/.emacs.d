@@ -20,20 +20,20 @@ depends on you having GNU coreutils installed. To ignore these
 sections, add `:tangle no` to any code block you don't want to use.
 
 To use the customizations here yourself, /you must change the name of
- this file to match your own user name or system name/. Those are the
- values of the Emacs variables =user-login-name= or =system-name=, so
- that it will be picked up by =init.el= when Emacs starts up, and get
- loaded properly. To find the current value of these variables on your
- system, launch emacs and do =C-h-v system-name [RET]= or =C-h-v
- user-login-name [RET]=. For example, on my system =user-login-name=
- is 'kjhealy', so this file is named =kjhealy.org=, and when Emacs
- starts up with the starter kit it creates the file =kjhealy.el=.
+this file to match your own user name or system name/. Those are the
+values of the Emacs variables =user-login-name= or =system-name=, so
+that it will be picked up by =init.el= when Emacs starts up, and get
+loaded properly. To find the current value of these variables on your
+system, launch emacs and do =C-h-v system-name [RET]= or =C-h-v
+user-login-name [RET]=. For example, on my system =user-login-name=
+is 'kjhealy', so this file is named =kjhealy.org=, and when Emacs
+starts up with the starter kit it creates the file =kjhealy.el=.
 
 You will also need to change the values for the location of bibtex
- databases, pandoc and orgmode-mobile specified below, and some other
- settings. *Search for 'kjhealy' in this file* to find the paths that
- need to be updated. Change them as needed or delete them if you don't
- need these features.
+databases, pandoc and orgmode-mobile specified below, and some other
+settings. *Search for 'kjhealy' in this file* to find the paths that
+need to be updated. Change them as needed or delete them if you don't
+need these features.
 
 ** Local Miscellaneous Settings
 *** Use GNU ls
@@ -53,46 +53,46 @@ Use =M-e= for sentence-level navigation, but without having to put two spaces af
 
 #+source: periods
 #+begin_src emacs-lisp :tangle yes
-  (setq sentence-end-double-space nil)
+(setq sentence-end-double-space nil)
 #+end_src
 
 #+RESULTS: periods
 
 *** Run Emacs in Full Screen
-  I find it very useful to run Emacs in full-screen mode. There is no
-    completely satisfactory way to accomplish this on Mac OS X. What
-    works depends on the flavor of emacs you are using,
-    unfortunately. Choose as appropriate from the following options. Enable one of them by changing the value of =:tangle= to =yes=.
+I find it very useful to run Emacs in full-screen mode. There is no
+completely satisfactory way to accomplish this on Mac OS X. What
+works depends on the flavor of emacs you are using,
+unfortunately. Choose as appropriate from the following options. Enable one of them by changing the value of =:tangle= to =yes=.
 
 Bind full screen to `C-c f`.
 
 #+source: fullscreen-4
 #+begin_src emacs-lisp :tangle yes
-    (defun fullscreen (&optional f)
-      (interactive)
-      (set-frame-parameter f 'fullscreen
-                           (if (frame-parameter f 'fullscreen) nil 'fullboth)))
-    (global-set-key (kbd "C-c f") 'fullscreen)        
-    (add-hook 'after-make-frame-functions 'fullscreen)
+(defun fullscreen (&optional f)
+  (interactive)
+  (set-frame-parameter f 'fullscreen
+                       (if (frame-parameter f 'fullscreen) nil 'fullboth)))
+(global-set-key (kbd "C-c f") 'fullscreen)        
+(add-hook 'after-make-frame-functions 'fullscreen)
 #+end_src
 
 #+RESULTS: fullscreen-4
 | fullscreen | x-dnd-init-frame |
 
 *** COMMENT Mac Key mode
-    Used with Mitsuharu Yamamoto's carbon-patched Emacs, which turns
-    off support for default mac bindings. Turned off by default.
+Used with Mitsuharu Yamamoto's carbon-patched Emacs, which turns
+off support for default mac bindings. Turned off by default.
 #+srcname: mac-keys
 #+begin_src emacs-lisp :tangle yes
-   (require 'mac-key-mode)
-   (mac-key-mode 1)
-   (add-hook 'mac-key-mode-hook
-       (lambda()
-         (interactive)
-         (if mac-key-mode
-             (setq mac-option-modifier 'meta)
-             (setq mac-option-modifier nil)
-             )))
+(require 'mac-key-mode)
+(mac-key-mode 1)
+(add-hook 'mac-key-mode-hook
+          (lambda()
+            (interactive)
+            (if mac-key-mode
+                (setq mac-option-modifier 'meta)
+              (setq mac-option-modifier nil)
+              )))
 #+end_src
 
 ** Dired
@@ -122,18 +122,18 @@ Modified following the advice in the *info* node on installation of =dired-x=.
 #+source: Dired-x
 #+begin_src emacs-lisp :tangle yes
 ;;  (load "dired-x")
-     (add-hook 'dired-load-hook
-               (lambda ()
-                 (load "dired-x")
-                 ;; Set dired-x global variables here.  For example:
-                 ;; (setq dired-guess-shell-gnutar "gtar")
-                 ;; (setq dired-x-hands-off-my-keys nil)
-                 ))
-     (add-hook 'dired-mode-hook
-               (lambda ()
-                 ;; Set dired-x buffer-local variables here.  For example:
-                 ;; (dired-omit-mode 1)
-                 ))
+(add-hook 'dired-load-hook
+          (lambda ()
+            (load "dired-x")
+            ;; Set dired-x global variables here.  For example:
+            ;; (setq dired-guess-shell-gnutar "gtar")
+            ;; (setq dired-x-hands-off-my-keys nil)
+            ))
+(add-hook 'dired-mode-hook
+          (lambda ()
+            ;; Set dired-x buffer-local variables here.  For example:
+            ;; (dired-omit-mode 1)
+            ))
 #+end_src
 
 #+RESULTS: Dired-x
@@ -164,7 +164,7 @@ DGM 16 july 2019: Ojo: when Dired buffer sorted alphabetically, my powermode bar
 
 (add-hook 'dired-mode-hook
           (lambda()
-             (setq truncate-lines 1)))
+            (setq truncate-lines 1)))
 #+END_SRC
 
 #+RESULTS:
@@ -218,7 +218,7 @@ In dired mode, visit all marked files using. Bound to the "F" key.
 
 #+source: dired-F
 #+begin_src emacs-lisp :tangle yes
-  (eval-after-load "dired"
+(eval-after-load "dired"
   '(progn
      (define-key dired-mode-map "F" 'my-dired-find-file)
      (defun my-dired-find-file (&optional arg)
@@ -270,10 +270,10 @@ Tested with Git, Mercurial, Bazaar and SVN. May work with other VC backends, too
 
 The package also contains auxiliary modes:
 
-    diff-hl-dired-mode provides similar functionality in Dired.
-    diff-hl-margin-mode changes the highlighting function to use the margin instead of the fringe.
-    diff-hl-amend-mode shifts the reference revision back by one.
-    diff-hl-flydiff-mode implements highlighting changes on the fly. It requires Emacs 24.4 or newer.
+diff-hl-dired-mode provides similar functionality in Dired.
+diff-hl-margin-mode changes the highlighting function to use the margin instead of the fringe.
+diff-hl-amend-mode shifts the reference revision back by one.
+diff-hl-flydiff-mode implements highlighting changes on the fly. It requires Emacs 24.4 or newer.
 
 Check out the Commentary section in each respective file for the usage instructions.
 
@@ -297,10 +297,10 @@ For example, suppose you have:
 
 Here's what you can do now to a word that starts with a "w" and is select-able with "a":
 
-    To jump there: =M-t w a=.
-    To copy the word instead of jumping to it: =M-t w na=
-    To mark the word after jumping to it: =M-t w ma=.
-    To kill the word after jumping to it: =M-t w xa=.
+To jump there: =M-t w a=.
+To copy the word instead of jumping to it: =M-t w na=
+To mark the word after jumping to it: =M-t w ma=.
+To kill the word after jumping to it: =M-t w xa=.
 
 Note I have binded to =C-o= instead of =M-t=:
 
@@ -316,7 +316,7 @@ I like M-s for it, same as C-s is for moving by searching string, now M-s is mov
 (use-package avy
   :ensure t
   :bind
-    ("s-z" . avy-goto-char))  ;; goes literally to any char
+  ("s-z" . avy-goto-char))  ;; goes literally to any char
 
 (define-key global-map (kbd "C-o") 'avy-goto-word-1) ;; goes to word that starts with a given char
 #+end_src
@@ -332,7 +332,7 @@ It enables linum only in programming modes
 
 #+srcname: line-numbering
 #+begin_src emacs-lisp :tangle yes
- (add-hook 'prog-mode-hook 'linum-mode)
+(add-hook 'prog-mode-hook 'linum-mode)
 #+end_src
 
 #+RESULTS: line-numbering
@@ -409,9 +409,9 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 #+srcname: ggtags-customization
 #+begin_src emacs-lisp :tangle yes
 (add-hook 'c-mode-common-hook
-    (lambda ()
-      (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-  (ggtags-mode 1))))
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+              (ggtags-mode 1))))
 #+end_src
 
 #+RESULTS: ggtags-customization
@@ -442,8 +442,8 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq
  kill-ring-max 5000 ; increase kill-ring capacity
-;; kill-whole-line t  ; if NIL, killwhole line and move the next line up / commented out by dgm as it might interfere with kill-whole-line-or-region mode
-)
+ ;; kill-whole-line t  ; if NIL, killwhole line and move the next line up / commented out by dgm as it might interfere with kill-whole-line-or-region mode
+ )
 #+END_SRC
 
 #+RESULTS: killing
@@ -472,24 +472,24 @@ Default to 4 visible spaces to display a tab. Sacha has it at 2: =(setq-default 
 From https://github.com/pashinin/workgroups2 and http://tuhdo.github.io/emacs-tutor3.html
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (require 'workgroups2)
+;; (require 'workgroups2)
 
-  ;; Change workgroups session file
-  ;; (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
-  ;; (wg-find-session-file "~/.emacs.d/.emacs_workgroups") ;; for emacs to load this file on startup... but it doesn't work... don't know why...
+;; Change workgroups session file
+;; (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
+;; (wg-find-session-file "~/.emacs.d/.emacs_workgroups") ;; for emacs to load this file on startup... but it doesn't work... don't know why...
 
-  ;; Set your own keyboard shortcuts to reload/save/switch WGs:
-  ;; "s" == "Super" or "Win"-key, "S" == Shift, "C" == Control
-  ;; (global-set-key (kbd "<pause>")     'wg-reload-session)
-  ;; (global-set-key (kbd "C-S-<pause>") 'wg-save-session)
-  ;; (global-set-key (kbd "s-z")         'wg-switch-to-workgroup)
-  ;; (global-set-key (kbd "s-/")         'wg-switch-to-previous-workgroup)
+;; Set your own keyboard shortcuts to reload/save/switch WGs:
+;; "s" == "Super" or "Win"-key, "S" == Shift, "C" == Control
+;; (global-set-key (kbd "<pause>")     'wg-reload-session)
+;; (global-set-key (kbd "C-S-<pause>") 'wg-save-session)
+;; (global-set-key (kbd "s-z")         'wg-switch-to-workgroup)
+;; (global-set-key (kbd "s-/")         'wg-switch-to-previous-workgroup)
 
-  ;; What to do on Emacs exit / workgroups-mode exit?
-  ;; (setq wg-emacs-exit-save-behavior           'save)      ; Options: 'save 'ask nil
-  ;; (setq wg-workgroups-mode-exit-save-behavior 'save)      ; Options: 'save 'ask nil
+;; What to do on Emacs exit / workgroups-mode exit?
+;; (setq wg-emacs-exit-save-behavior           'save)      ; Options: 'save 'ask nil
+;; (setq wg-workgroups-mode-exit-save-behavior 'save)      ; Options: 'save 'ask nil
 
-  ;; (workgroups-mode 1)   ; put this one at the bottom of .emacs
+;; (workgroups-mode 1)   ; put this one at the bottom of .emacs
 #+END_SRC
 
 #+RESULTS:
@@ -497,19 +497,19 @@ From https://github.com/pashinin/workgroups2 and http://tuhdo.github.io/emacs-tu
 *** diff-mode 
 #+srcname: whitespace
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (add-hook 'diff-mode-hook (lambda ()
-                              (setq-local whitespace-style
-                                          '(face
-                                            tabs
-                                            tab-mark
-                                            spaces
-                                            space-mark
-                                            trailing
-                                            indentation::space
-                                            indentation::tab
-                                            newline
-                                            newline-mark))
-                              (whitespace-mode 1)))
+(add-hook 'diff-mode-hook (lambda ()
+                            (setq-local whitespace-style
+                                        '(face
+                                          tabs
+                                          tab-mark
+                                          spaces
+                                          space-mark
+                                          trailing
+                                          indentation::space
+                                          indentation::tab
+                                          newline
+                                          newline-mark))
+                            (whitespace-mode 1)))
 #+END_SRC
 
 *** Attach multiple files
@@ -527,7 +527,7 @@ Attach multiple files to mu4e email message. (Tip from http://www.djcbsoftware.n
       (dolist (buffer (buffer-list t))
         (set-buffer buffer)
         (when (and (derived-mode-p 'message-mode)
-                (null message-sent-message-via))
+                   (null message-sent-message-via))
           (push (buffer-name buffer) buffers))))
     (nreverse buffers)))
 
@@ -568,12 +568,12 @@ Includes:
 (use-package clean-aindent-mode)
 (add-hook 'prog-mode-hook 'clean-aindent-mode)
 
- (defun my-pkg-init()
-   (electric-indent-mode -1)  ; no electric indent, auto-indent is sufficient
-   (clean-aindent-mode t)
-   (setq clean-aindent-is-simple-indent t)
-   (define-key global-map (kbd "RET") 'newline-and-indent))
- (add-hook 'after-init-hook 'my-pkg-init)
+(defun my-pkg-init()
+  (electric-indent-mode -1)  ; no electric indent, auto-indent is sufficient
+  (clean-aindent-mode t)
+  (setq clean-aindent-is-simple-indent t)
+  (define-key global-map (kbd "RET") 'newline-and-indent))
+(add-hook 'after-init-hook 'my-pkg-init)
 #+END_SRC
 
 #+RESULTS: clean-indent
@@ -745,21 +745,21 @@ Included in =starter-kit-completion.org=
 
 ;; copied  by dgm from: http://emacs-leuven.readthedocs.io/en/latest/?badge=latest
 
-    ;; Don't hide details in Dired.
+;; Don't hide details in Dired.
 ;;    (setq diredp-hide-details-initially-flag nil)
 
-    ;; Don't display the next Dired buffer the same way as the last.
+;; Don't display the next Dired buffer the same way as the last.
 ;;    (setq diredp-hide-details-propagate-flag nil)
 
-    ;; Don't wrap "next" command around to buffer beginning.
-    ;; (setq diredp-wrap-around-flag nil)
+;; Don't wrap "next" command around to buffer beginning.
+;; (setq diredp-wrap-around-flag nil)
 
-    ;; Dired `find-file' commands reuse directories.
-    ;; (diredp-toggle-find-file-reuse-dir 1)
+;; Dired `find-file' commands reuse directories.
+;; (diredp-toggle-find-file-reuse-dir 1)
 
-    ;; Up, reusing Dired buffers.
-    ;; (define-key dired-mode-map (kbd "C-x C-j")
-    ;;  #'diredp-up-directory-reuse-dir-buffer)
+;; Up, reusing Dired buffers.
+;; (define-key dired-mode-map (kbd "C-x C-j")
+;;  #'diredp-up-directory-reuse-dir-buffer)
 
 ;; tips from Ista Zahn. Not sure if they require dired+
 ;; https://github.com/izahn/dotemacs
@@ -777,13 +777,13 @@ Set emacs to open Bookmark+ on start. From Xah Emacs. Disabled now that I use =D
 
 #+srcname: bookmarks
 #+BEGIN_SRC emacs-lisp :tangle no
-  ;; included by dgm
+;; included by dgm
 ;;   (setq inhibit-splash-screen t)
-  ;; (require 'bookmark+) ;; no longer available in MELPA
+;; (require 'bookmark+) ;; no longer available in MELPA
 ;;  (bookmark-bmenu-list)
 ;;  (switch-to-buffer "*Bookmark List*")
-  ;; '(initial-buffer-choice "*Bookmark List*")
-  ;; (setq initial-buffer-choice "*Bookmark List*")
+;; '(initial-buffer-choice "*Bookmark List*")
+;; (setq initial-buffer-choice "*Bookmark List*")
 #+END_SRC
 
 
@@ -819,27 +819,27 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 #+srcname: golden-ratio
 #+BEGIN_SRC emacs-lisp :tangle no
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; PACKAGE: golden-ratio                         ;;
-  ;;                                               ;;
-  ;; GROUP: Environment -> Windows -> Golden Ratio ;;
+;; PACKAGE: golden-ratio                         ;;
+;;                                               ;;
+;; GROUP: Environment -> Windows -> Golden Ratio ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  ;; activate for helm when helm is installed
-  ;; (require 'golden-ratio)
+;; activate for helm when helm is installed
+;; (require 'golden-ratio)
 
-  ;; (add-to-list 'golden-ratio-exclude-modes "ediff-mode")
-  ;; (add-to-list 'golden-ratio-exclude-modes "helm-mode")
-  ;; (add-to-list 'golden-ratio-exclude-modes "dired-mode")
-  ;; (add-to-list 'golden-ratio-exclude-modes "ess-mode")
+;; (add-to-list 'golden-ratio-exclude-modes "ediff-mode")
+;; (add-to-list 'golden-ratio-exclude-modes "helm-mode")
+;; (add-to-list 'golden-ratio-exclude-modes "dired-mode")
+;; (add-to-list 'golden-ratio-exclude-modes "ess-mode")
 
-  ;; I dont want the golden ratio with the Helm window
-  ;;  (defun pl/helm-alive-p ()
-  ;;   (if (boundp 'helm-alive-p)
-  ;;       (symbol-value 'helm-alive-p)))
+;; I dont want the golden ratio with the Helm window
+;;  (defun pl/helm-alive-p ()
+;;   (if (boundp 'helm-alive-p)
+;;       (symbol-value 'helm-alive-p)))
 
-  ;;  (add-to-list 'golden-ratio-inhibit-functions 'pl/helm-alive-p)
+;;  (add-to-list 'golden-ratio-inhibit-functions 'pl/helm-alive-p)
 
-  ;; do not enable golden-ratio in theses modes
+;; do not enable golden-ratio in theses modes
 ;;   (setq golden-ratio-exclude-modes '("ediff-mode"
 ;;                                      "gud-mode"
 ;;                                      "gdb-locals-mode"
@@ -860,7 +860,7 @@ For now, I deactivate the golden-ratio mode because it distract me too much.
 ;;                                      "dired-mode"
 ;;                                      "helm-mode"
 ;;                                      "ess-mode"))
-  ;; delete "dired-mode"  from the above list if you want golden-ratio to apply to helm
+;; delete "dired-mode"  from the above list if you want golden-ratio to apply to helm
 
 ;;   (golden-ratio-mode)
 #+END_SRC
@@ -955,7 +955,7 @@ I disable this as it is dealt with in -misc.org
   (add-hook 'R-mode-hook            #'rainbow-mode)
   (add-hook 'inferior-ess-mode-hook #'rainbow-mode)
   (add-hook 'python-mode-hook       #'rainbow-mode)
- )
+  )
 
 ;;R-mode-hook runs when you open a new source buffer, so anything you put in that will only affect your source buffers.inferior-ess-mode-hook runs when you start an R console, so anything in there should only apply to the console buffer and not the source.
 #+END_SRC
@@ -973,7 +973,7 @@ I disable this as it is dealt with in -misc.org
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package kurecolor
-   :ensure t)
+  :ensure t)
 #+END_SRC
 
 #+RESULTS:
@@ -1043,12 +1043,12 @@ Only turn on if a window system is available. This prevents error under terminal
 ;;         (sml/setup)
 ;;         (add-hook 'after-init-hook 'sml/setup))))
 ;;
-      ;; Alternatives:
-      ;; (sml/apply-theme 'powerline)
-      ;; (sml/apply-theme 'dark)
-      ;; (sml/apply-theme 'light)
-      ;; (sml/apply-theme 'respectful)
-      ;; (sml/apply-theme 'automatic)
+;; Alternatives:
+;; (sml/apply-theme 'powerline)
+;; (sml/apply-theme 'dark)
+;; (sml/apply-theme 'light)
+;; (sml/apply-theme 'respectful)
+;; (sml/apply-theme 'automatic)
 
 ;;      (add-to-list 'sml/replacer-regexp-list '("^~/Dropbox/" ":DB:"))
 ;;      (add-to-list 'sml/replacer-regexp-list '("^~/Code/" ":CODE:"))
@@ -1075,9 +1075,9 @@ tip from: https://github.com/izahn/dotemacs
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package which-key
-:ensure t
-:config
-(which-key-mode))
+  :ensure t
+  :config
+  (which-key-mode))
 #+END_SRC
 
 #+RESULTS:
@@ -1177,20 +1177,20 @@ Alternativa from https://github.com/malb/emacs.d/blob/master/malb.org
             ;;   (add-hook 'sage-shell-mode-hook #'shx-mode))
             (with-eval-after-load 'shell
               (add-hook 'shell-mode-hook #'shx-mode)))
-            ;; from https://github.com/riscy/shx-for-emacs
-           (setq
-             ;; vastly improve display performance by breaking up long output lines
-             shx-max-output 1024
-             ;; prevent input longer than macOS's typeahead buffer from going through
-             shx-max-input 1024
-             ;; prefer inlined images to have a height of 250 pixels
-             shx-img-height 250
-             ;; don't show any incidental hint messages about how to use shx
-             shx-show-hints nil
-             ;; flash the previous comint prompt for a full second when using C-c C-p
-             shx-flash-prompt-time 1.0
-             ;; use `#' to prefix shx commands instead of the default `:'
-             shx-leader "#"))
+  ;; from https://github.com/riscy/shx-for-emacs
+  (setq
+   ;; vastly improve display performance by breaking up long output lines
+   shx-max-output 1024
+   ;; prevent input longer than macOS's typeahead buffer from going through
+   shx-max-input 1024
+   ;; prefer inlined images to have a height of 250 pixels
+   shx-img-height 250
+   ;; don't show any incidental hint messages about how to use shx
+   shx-show-hints nil
+   ;; flash the previous comint prompt for a full second when using C-c C-p
+   shx-flash-prompt-time 1.0
+   ;; use `#' to prefix shx commands instead of the default `:'
+   shx-leader "#"))
 #+END_SRC
 
 #+RESULTS:
@@ -1517,7 +1517,7 @@ Idea from http://pragmaticemacs.com/emacs/easily-manage-emacs-workspaces-with-ey
 I have commented this out because with =exwm= I think I don't need =eyebrowse= anymore.
 
 #+BEGIN_SRC emacs-lisp :tangle no
-  (use-package eyebrowse
+(use-package eyebrowse
   :ensure t
   :defer 1
   :init
@@ -1596,7 +1596,7 @@ Magit depends on this. Copied from https://github.com/jwiegley/dot-emacs/blob/ma
 
 (use-package ghub+         
   :defer t)
-  #+END_SRC
+#+END_SRC
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23934 47113 548749 897000) :init (23934 47113 548708 930000) :init-secs (0 0 173 741000) :use-package-secs (0 0 452 911000)))
@@ -1661,10 +1661,10 @@ Other example edit servers can be found at the project homepage. There is no rea
 (use-package edit-server
   :ensure t
   :config
-   (when (locate-library "edit-server")
-     (require 'edit-server)
-     (setq edit-server-new-frame nil)
-     (edit-server-start)))
+  (when (locate-library "edit-server")
+    (require 'edit-server)
+    (setq edit-server-new-frame nil)
+    (edit-server-start)))
 ;;  (setq edit-server-default-major-mode 'markdown-mode)
 ;;(setq edit-server-new-frame nil))
 #+END_SRC
@@ -1675,16 +1675,16 @@ Other example edit servers can be found at the project homepage. There is no rea
 Not working for me. So I try =atomic-chrome= (see https://github.com/alpha22jp/atomic-chrome and https://www.reddit.com/r/emacs/comments/8jb4p5/editing_html_textareas_with_emacs_bye_bye_its_all/)
 
 #+BEGIN_SRC emacs-lisp :tangle yes
- (use-package atomic-chrome
-   :ensure t
-   :custom
-   (atomic-chrome-url-major-mode-alist
-    '(("reddit\\.com" . markdown-mode)
-      ;;("github\\.com" . gfm-mode)
-      ("uned\\.es" . text-mode))
-    "Major modes for URLs.")
-   :config
-   (atomic-chrome-start-server))
+(use-package atomic-chrome
+  :ensure t
+  :custom
+  (atomic-chrome-url-major-mode-alist
+   '(("reddit\\.com" . markdown-mode)
+     ;;("github\\.com" . gfm-mode)
+     ("uned\\.es" . text-mode))
+   "Major modes for URLs.")
+  :config
+  (atomic-chrome-start-server))
 #+END_SRC
 
 #+RESULTS:
@@ -1703,8 +1703,8 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; System locale to use for formatting time values.
 (setq system-time-locale "C")         ; Make sure that the weekdays in the
-                                      ; time stamps of your Org mode files and
-                                      ; in the agenda appear in English.
+                                        ; time stamps of your Org mode files and
+                                        ; in the agenda appear in English.
 #+END_SRC
 
 #+RESULTS:
@@ -1733,7 +1733,7 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
     (if filename
         (progn
           (when (buffer-modified-p)
-             (save-buffer))
+            (save-buffer))
           (rename-file filename new-name t)
           (kill-buffer (current-buffer))
           (find-file new-name)
@@ -1783,26 +1783,26 @@ Commented out because I am using =exwm= now.
   (interactive)
   (if (= (count-windows) 2)
       (let* ((this-win-buffer (window-buffer))
-         (next-win-buffer (window-buffer (next-window)))
-         (this-win-edges (window-edges (selected-window)))
-         (next-win-edges (window-edges (next-window)))
-         (this-win-2nd (not (and (<= (car this-win-edges)
-                     (car next-win-edges))
-                     (<= (cadr this-win-edges)
-                     (cadr next-win-edges)))))
-         (splitter
-          (if (= (car this-win-edges)
-             (car (window-edges (next-window))))
-          'split-window-horizontally
-        'split-window-vertically)))
-    (delete-other-windows)
-    (let ((first-win (selected-window)))
-      (funcall splitter)
-      (if this-win-2nd (other-window 1))
-      (set-window-buffer (selected-window) this-win-buffer)
-      (set-window-buffer (next-window) next-win-buffer)
-      (select-window first-win)
-      (if this-win-2nd (other-window 1))))))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
 
 (global-set-key (kbd "s-c") 'toggle-window-split)
 #+END_SRC
@@ -1826,8 +1826,8 @@ https://stackoverflow.com/questions/36873727/make-org-agenda-full-screen
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (defun my-window-displaying-agenda-p (window)
-    (equal (with-current-buffer (window-buffer window) major-mode)
-        'org-agenda-mode)) 
+  (equal (with-current-buffer (window-buffer window) major-mode)
+         'org-agenda-mode)) 
 
 (defun my-position-calendar-buffer (buffer alist)
   (let ((agenda-window (car (remove-if-not #'my-window-displaying-agenda-p (window-list)))))
@@ -1895,7 +1895,7 @@ From his =main.el=
 https://emacs.stackexchange.com/questions/5603/how-to-quickly-copy-move-file-in-emacs-dired
 
 #+BEGIN_SRC emacs-lisp :tangle yes
- (setq dired-dwim-target t)
+(setq dired-dwim-target t)
 #+END_SRC
 
 #+RESULTS:
@@ -1906,10 +1906,10 @@ https://emacs.stackexchange.com/questions/5603/how-to-quickly-copy-move-file-in-
 After updating packages, this returns error.
 
 #+BEGIN_SRC emacs-lisp :tangle no
-  (use-package gpastel
-    :ensure t
-    :config 
-   (gpastel-start-listening))
+(use-package gpastel
+  :ensure t
+  :config 
+  (gpastel-start-listening))
 #+END_SRC
 
 #+RESULTS:
@@ -1932,7 +1932,7 @@ DGM on 29 dic 2018: this is set in =starter-kit-misc.org=
 #+BEGIN_SRC emacs-lisp :tangle no
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "chromium")
-;      browse-url-generic-program "qutebrowser")
+                                        ;      browse-url-generic-program "qutebrowser")
 #+END_SRC
 
 #+RESULTS:
@@ -1958,11 +1958,11 @@ Uniquify buffer names is useful for when you have buffers with many similar name
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'uniquify)
 (setq ;;(setq uniquify-buffer-name-style 'reverse)
-      ;; (setq uniquify-buffer-name-style 'forward) ;; technomancy's default
-      ;;(setq uniquify-separator "|")
-      uniquify-after-kill-buffer-p t
-      uniquify-buffer-name-style 'post-forward-angle-brackets)  ;; default in kieran healy's config
-   ;;(setq uniquify-ignore-buffers-re "^*")
+ ;; (setq uniquify-buffer-name-style 'forward) ;; technomancy's default
+ ;;(setq uniquify-separator "|")
+ uniquify-after-kill-buffer-p t
+ uniquify-buffer-name-style 'post-forward-angle-brackets)  ;; default in kieran healy's config
+;;(setq uniquify-ignore-buffers-re "^*")
 #+END_SRC  
 
 #+RESULTS:
@@ -1986,7 +1986,7 @@ Other stuff from Technomancy's better defaults
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (autoload 'zap-up-to-char "misc"
-    "Kill up to, but not including ARGth occurrence of CHAR." t)
+  "Kill up to, but not including ARGth occurrence of CHAR." t)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 
 (setq apropos-do-all t
@@ -2048,19 +2048,19 @@ Don't wait 3 seconds then ask about closing the merge buffer, just close it!
           )
         (sit-for 2))
     (ediff-with-current-buffer buf
-      (if (or (not (file-exists-p file))
-              (y-or-n-p (format "File %s exists, overwrite? " file)))
-          (progn
-            ;;(write-region nil nil file)
-            (ediff-with-current-buffer buf
-              (set-visited-file-name file)
-              (save-buffer))
-            (if show-file
-                (progn
-                  (message "Merge buffer saved in: %s" file)
-                  (set-buffer-modified-p nil)))
-            (if (and (not save-and-continue))
-                (ediff-kill-buffer-carefully buf)))))
+                               (if (or (not (file-exists-p file))
+                                       (y-or-n-p (format "File %s exists, overwrite? " file)))
+                                   (progn
+                                     ;;(write-region nil nil file)
+                                     (ediff-with-current-buffer buf
+                                                                (set-visited-file-name file)
+                                                                (save-buffer))
+                                     (if show-file
+                                         (progn
+                                           (message "Merge buffer saved in: %s" file)
+                                           (set-buffer-modified-p nil)))
+                                     (if (and (not save-and-continue))
+                                         (ediff-kill-buffer-carefully buf)))))
     ))
 
 (defun caolan/ediff-maybe-save-and-delete-merge (&optional save-and-continue)
@@ -2257,29 +2257,29 @@ However, to actually get the colors, I followed  http://amitp.blogspot.com/2007/
   :bind ("<s-escape>" . shell-pop))
 
 ;;  (setq shell-pop-default-directory "/home/dgm")
-  (setq shell-pop-set-internal-mode "shell")
-  (setq shell-pop-set-internal-mode-shell "/bin/bash")
-  (setq shell-pop-set-window-height 30) ;the number for the percentage of the selected window. if 100, shell-pop use the whole of selected window, not spliting.
-  (setq shell-pop-set-window-position "bottom") ;shell-pop-up position. You can choose "top" or "bottom".
+(setq shell-pop-set-internal-mode "shell")
+(setq shell-pop-set-internal-mode-shell "/bin/bash")
+(setq shell-pop-set-window-height 30) ;the number for the percentage of the selected window. if 100, shell-pop use the whole of selected window, not spliting.
+(setq shell-pop-set-window-position "bottom") ;shell-pop-up position. You can choose "top" or "bottom".
 
-  ;; https://emacs.stackexchange.com/questions/14876/how-can-i-make-ansi-color-codes-inside-the-prompt-show-up-in-shell-mode
-  (set-face-attribute 'comint-highlight-prompt nil
-                      :inherit nil)
+;; https://emacs.stackexchange.com/questions/14876/how-can-i-make-ansi-color-codes-inside-the-prompt-show-up-in-shell-mode
+(set-face-attribute 'comint-highlight-prompt nil
+                    :inherit nil)
 
   ;;;;;;;;;;;;;;;;;;;;;; http://amitp.blogspot.com/2007/04/emacs-color-in-shell-buffers.html
-  (setq ansi-color-names-vector ; better contrast colors
-        ["black" "red4" "green4" "yellow4"
-         "blue3" "magenta4" "cyan4" "white"])
-  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+(setq ansi-color-names-vector ; better contrast colors
+      ["black" "red4" "green4" "yellow4"
+       "blue3" "magenta4" "cyan4" "white"])
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
-  ;; (setq shell-pop-window-size 30)
-  ;;(setq shell-pop-full-span t)
-  ;;(setq shell-pop-window-position "bottom")
-  ;;:config
-  ;;(setq shell-pop-shell-type (quote ("shell" "*shell*" (lambda nil (shell shell-pop-term-shell)))))
-  ;;(setq shell-pop-term-shell "/bin/bash")
-  ;; need to do this manually or not picked up by `shell-pop'
-  ;;(shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
+;; (setq shell-pop-window-size 30)
+;;(setq shell-pop-full-span t)
+;;(setq shell-pop-window-position "bottom")
+;;:config
+;;(setq shell-pop-shell-type (quote ("shell" "*shell*" (lambda nil (shell shell-pop-term-shell)))))
+;;(setq shell-pop-term-shell "/bin/bash")
+;; need to do this manually or not picked up by `shell-pop'
+;;(shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
 #+END_SRC
 
 #+RESULTS:
@@ -2409,15 +2409,15 @@ I don’t need scrot to take screenshots, or shutter or whatever tools you might
   "Takes a fullscreen screenshot of the current workspace"
   (interactive)
   (when window-system
-  (loop for i downfrom 3 to 1 do
-        (progn
-          (message (concat (number-to-string i) "..."))
-          (sit-for 1)))
-  (message "Cheese!")
-  (sit-for 1)
-  (start-process "screenshot" nil "import" "-window" "root" 
-             (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
-  (message "Screenshot taken!")))
+    (loop for i downfrom 3 to 1 do
+          (progn
+            (message (concat (number-to-string i) "..."))
+            (sit-for 1)))
+    (message "Cheese!")
+    (sit-for 1)
+    (start-process "screenshot" nil "import" "-window" "root" 
+                   (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
+    (message "Screenshot taken!")))
 (global-set-key (kbd "s-[") 'daedreth/take-screenshot)
 #+END_SRC
 
@@ -2428,10 +2428,10 @@ I don’t need scrot to take screenshots, or shutter or whatever tools you might
   "Takes a screenshot of a region selected by the user."
   (interactive)
   (when window-system
-  (call-process "import" nil nil nil ".newScreen.png")
-  (call-process "convert" nil nil nil ".newScreen.png" "-shave" "1x1"
-                (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
-  (call-process "rm" nil nil nil ".newScreen.png")))
+    (call-process "import" nil nil nil ".newScreen.png")
+    (call-process "convert" nil nil nil ".newScreen.png" "-shave" "1x1"
+                  (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
+    (call-process "rm" nil nil nil ".newScreen.png")))
 (global-set-key (kbd "s-]") 'daedreth/take-screenshot-region)
 #+END_SRC
 
@@ -2546,14 +2546,14 @@ DGM: I suspect that this package is responsible for my disappearing-cursor probl
 (use-package switch-window
   :ensure t
   :config
-    (setq switch-window-input-style 'minibuffer)
-    (setq switch-window-increase 4)
-    (setq switch-window-threshold 2)
-    (setq switch-window-shortcut-style 'qwerty)
-    (setq switch-window-qwerty-shortcuts
+  (setq switch-window-input-style 'minibuffer)
+  (setq switch-window-increase 4)
+  (setq switch-window-threshold 2)
+  (setq switch-window-shortcut-style 'qwerty)
+  (setq switch-window-qwerty-shortcuts
         '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
   :bind
-    ([remap other-window] . switch-window))
+  ([remap other-window] . switch-window))
 #+END_SRC
 
 #+RESULTS:
@@ -2645,8 +2645,8 @@ Note: I disable this as I find it not very useful and dizzling by way of the mov
 (use-package linum-relative
   :ensure t
   :config
-    (setq linum-relative-current-symbol "")
-    (add-hook 'prog-mode-hook 'linum-relative-mode))
+  (setq linum-relative-current-symbol "")
+  (add-hook 'prog-mode-hook 'linum-relative-mode))
 #+END_SRC
 
 #+RESULTS:
@@ -2744,7 +2744,7 @@ While changing buffers or workspaces, the first thing you do is look for your cu
 (use-package beacon
   :ensure t
   :config
-    (beacon-mode 1))
+  (beacon-mode 1))
 #+END_SRC
 
 #+RESULTS:
@@ -2759,7 +2759,7 @@ Note, however, that Sacha Chua doesn't automatically turn this on because she th
 (use-package rainbow-delimiters
   :ensure t
   :init
-    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 #+END_SRC
 
 #+RESULTS:
@@ -2773,7 +2773,7 @@ DGM: I am commenting this out as I found it annoying when, for example, editing 
 (use-package hungry-delete
   :ensure t
   :config
-    (global-hungry-delete-mode))
+  (global-hungry-delete-mode))
 #+END_SRC
 
 #+RESULTS:
@@ -2875,7 +2875,7 @@ http://www.masteringemacs.org/article/smart-scan-jump-symbols-buffer
   :config (global-smartscan-mode 1)
   :bind (("C-M-+" . smartscan-symbol-go-forward)
          ("C-M-*" . smartscan-symbol-go-backward))
-         ("C-M-'" . smartscan-symbol-replace))
+  ("C-M-'" . smartscan-symbol-replace))
 #+END_SRC
 
 #+RESULTS:
@@ -2912,9 +2912,9 @@ I was driven crazy by the jumps. I had set scroll-step and scroll-conservatively
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq scroll-step 1)
-; Autosave every 500 typed characters. Alternative: try turning off auto save interval altogether.
+                                        ; Autosave every 500 typed characters. Alternative: try turning off auto save interval altogether.
 (setq auto-save-interval 500)
-; Scroll just one line when hitting bottom of window // ;; scrolling to always be a line at a time
+                                        ; Scroll just one line when hitting bottom of window // ;; scrolling to always be a line at a time
 (setq scroll-conservatively 10000)
 (setq auto-window-vscroll nil)
 #+END_SRC
@@ -2987,11 +2987,11 @@ Sets prefix to =C-x /=. Then
 From https://github.com/danielmai/.emacs.d/blob/master/config.org and http://tobytripp.github.io/emacs.d/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
- (put 'upcase-region 'disabled nil)
- (put 'downcase-region 'disabled nil)
- (put 'narrow-to-region 'disabled nil)
- (put 'dired-find-alternate-file 'disabled nil)
- (put 'set-goal-column 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
+(put 'set-goal-column 'disabled nil)
 #+END_SRC
 
 ** COMMENT Dashboard
@@ -3002,12 +3002,12 @@ I leave it out as it doesn't work with =exwm=
 (use-package dashboard
   :ensure t
   :config
-    (dashboard-setup-startup-hook)
-;    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
-    (setq dashboard-items '((recents   . 10)
-                            (bookmarks . 10)
-                            (projects  . 10)))
-    (setq dashboard-banner-logo-title ""))
+  (dashboard-setup-startup-hook)
+                                        ;    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
+  (setq dashboard-items '((recents   . 10)
+                          (bookmarks . 10)
+                          (projects  . 10)))
+  (setq dashboard-banner-logo-title ""))
 (message "Testing 2 dashboard chunk is evaluated.")
 #+END_SRC
 
@@ -3020,30 +3020,30 @@ From https://www.emacswiki.org/emacs/MarkCommands#toc7
 Commented out as =s-/= does the same and with a better shortcut, as defined  [[select]]
 
 #+BEGIN_SRC emacs-lisp :tangle no
-  (defun my-mark-current-word (&optional arg allow-extend)
-    "Put point at beginning of current word, set mark at end."
-    (interactive "p\np")
-    (setq arg (if arg arg 1))
-    (if (and allow-extend
-             (or (and (eq last-command this-command) (mark t))
-                 (region-active-p)))
-        (set-mark
-         (save-excursion
-           (when (< (mark) (point))
-             (setq arg (- arg)))
-           (goto-char (mark))
-           (forward-word arg)
-           (point)))
-      (let ((wbounds (bounds-of-thing-at-point 'word)))
-        (unless (consp wbounds)
-          (error "No word at point"))
-        (if (>= arg 0)
-            (goto-char (car wbounds))
-          (goto-char (cdr wbounds)))
-        (push-mark (save-excursion
-                     (forward-word arg)
-                     (point)))
-        (activate-mark))))
+(defun my-mark-current-word (&optional arg allow-extend)
+  "Put point at beginning of current word, set mark at end."
+  (interactive "p\np")
+  (setq arg (if arg arg 1))
+  (if (and allow-extend
+           (or (and (eq last-command this-command) (mark t))
+               (region-active-p)))
+      (set-mark
+       (save-excursion
+         (when (< (mark) (point))
+           (setq arg (- arg)))
+         (goto-char (mark))
+         (forward-word arg)
+         (point)))
+    (let ((wbounds (bounds-of-thing-at-point 'word)))
+      (unless (consp wbounds)
+        (error "No word at point"))
+      (if (>= arg 0)
+          (goto-char (car wbounds))
+        (goto-char (cdr wbounds)))
+      (push-mark (save-excursion
+                   (forward-word arg)
+                   (point)))
+      (activate-mark))))
 
 (define-key global-map (kbd "C-c x") 'my-mark-current-word) 
 #+END_SRC
@@ -3071,11 +3071,11 @@ Sometimes useful for getting help on R or Emacs.
 
 #+srcname: final-custom
 #+begin_src emacs-lisp :tangle yes
-  ;; minimize fringe
-  (setq-default indicate-empty-lines nil)
+;; minimize fringe
+(setq-default indicate-empty-lines nil)
 
-  ;; Add keybindings for commenting regions of text
-  (global-set-key (kbd "C-c ;") 'comment-or-uncomment-region)
+;; Add keybindings for commenting regions of text
+(global-set-key (kbd "C-c ;") 'comment-or-uncomment-region)
 #+end_src
 
 #+RESULTS: final-custom
@@ -3084,8 +3084,8 @@ Sometimes useful for getting help on R or Emacs.
 ** Base dir
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; Base dir
-  (cd "~/")
+;; Base dir
+(cd "~/")
 #+END_SRC
 
 #+RESULTS:
@@ -3168,10 +3168,10 @@ Can I make Imenu index the whole buffer even if using FoldingMode and all folds 
 From https://www.emacswiki.org/emacs/ImenuMode#toc10
 
 #+BEGIN_SRC emacs-lisp :tangle yes
- (defadvice imenu (around unfold-it compile activate)
-      (save-restriction
-        (widen)
-        ad-do-it))
+(defadvice imenu (around unfold-it compile activate)
+  (save-restriction
+    (widen)
+    ad-do-it))
 #+END_SRC
 
 #+RESULTS:
@@ -3180,9 +3180,9 @@ From https://www.emacswiki.org/emacs/ImenuMode#toc10
 Quickly force rescan. You can avoid auto rescanning big buffers just making it easy to manually rescan:
 
 #+BEGIN_SRC emacs-lisp :tangle yes
- (defun my-imenu-rescan ()
-   (interactive)
-   (imenu--menubar-select imenu--rescan-item))
+(defun my-imenu-rescan ()
+  (interactive)
+  (imenu--menubar-select imenu--rescan-item))
 #+END_SRC
 
 #+RESULTS:
@@ -3193,53 +3193,53 @@ Quickly force rescan. You can avoid auto rescanning big buffers just making it e
 =.el= file for function =ido-goto-symbol= downloaded from https://www.emacswiki.org/emacs/ImenuMode#toc10
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-    (defun ido-goto-symbol (&optional symbol-list)
-      "Refresh imenu and jump to a place in the buffer using Ido."
-      (interactive)
-      (unless (featurep 'imenu)
-        (require 'imenu nil t))
+(defun ido-goto-symbol (&optional symbol-list)
+  "Refresh imenu and jump to a place in the buffer using Ido."
+  (interactive)
+  (unless (featurep 'imenu)
+    (require 'imenu nil t))
+  (cond
+   ((not symbol-list)
+    (let ((ido-mode ido-mode)
+          (ido-enable-flex-matching
+           (if (boundp 'ido-enable-flex-matching)
+               ido-enable-flex-matching t))
+          name-and-pos symbol-names position)
+      (unless ido-mode
+        (ido-mode 1)
+        (setq ido-enable-flex-matching t))
+      (while (progn
+               (imenu--cleanup)
+               (setq imenu--index-alist nil)
+               (ido-goto-symbol (imenu--make-index-alist))
+               (setq selected-symbol
+                     (ido-completing-read "Symbol? " symbol-names))
+               (string= (car imenu--rescan-item) selected-symbol)))
+      (unless (and (boundp 'mark-active) mark-active)
+        (push-mark nil t nil))
+      (setq position (cdr (assoc selected-symbol name-and-pos)))
       (cond
-       ((not symbol-list)
-        (let ((ido-mode ido-mode)
-              (ido-enable-flex-matching
-               (if (boundp 'ido-enable-flex-matching)
-                   ido-enable-flex-matching t))
-              name-and-pos symbol-names position)
-          (unless ido-mode
-            (ido-mode 1)
-            (setq ido-enable-flex-matching t))
-          (while (progn
-                   (imenu--cleanup)
-                   (setq imenu--index-alist nil)
-                   (ido-goto-symbol (imenu--make-index-alist))
-                   (setq selected-symbol
-                         (ido-completing-read "Symbol? " symbol-names))
-                   (string= (car imenu--rescan-item) selected-symbol)))
-          (unless (and (boundp 'mark-active) mark-active)
-            (push-mark nil t nil))
-          (setq position (cdr (assoc selected-symbol name-and-pos)))
-          (cond
-           ((overlayp position)
-            (goto-char (overlay-start position)))
-           (t
-            (goto-char position)))))
-       ((listp symbol-list)
-        (dolist (symbol symbol-list)
-          (let (name position)
-            (cond
-             ((and (listp symbol) (imenu--subalist-p symbol))
-              (ido-goto-symbol symbol))
-             ((listp symbol)
-              (setq name (car symbol))
-              (setq position (cdr symbol)))
-             ((stringp symbol)
-              (setq name symbol)
-              (setq position
-                    (get-text-property 1 'org-imenu-marker symbol))))
-            (unless (or (null position) (null name)
-                        (string= (car imenu--rescan-item) name))
-              (add-to-list 'symbol-names name)
-              (add-to-list 'name-and-pos (cons name position))))))))
+       ((overlayp position)
+        (goto-char (overlay-start position)))
+       (t
+        (goto-char position)))))
+   ((listp symbol-list)
+    (dolist (symbol symbol-list)
+      (let (name position)
+        (cond
+         ((and (listp symbol) (imenu--subalist-p symbol))
+          (ido-goto-symbol symbol))
+         ((listp symbol)
+          (setq name (car symbol))
+          (setq position (cdr symbol)))
+         ((stringp symbol)
+          (setq name symbol)
+          (setq position
+                (get-text-property 1 'org-imenu-marker symbol))))
+        (unless (or (null position) (null name)
+                    (string= (car imenu--rescan-item) name))
+          (add-to-list 'symbol-names name)
+          (add-to-list 'name-and-pos (cons name position))))))))
 
 (global-set-key (kbd "s-?") 'ido-goto-symbol)
 #+END_SRC
@@ -3265,9 +3265,9 @@ I don’t remember if I wrote the code below (or if I simply snarfed it from som
   (tags-completion-table)
   (let (tag-names)
     (mapc (lambda (x)
-        (unless (integerp x)
-          (push (prin1-to-string x t) tag-names)))
-      tags-completion-table)
+            (unless (integerp x)
+              (push (prin1-to-string x t) tag-names)))
+          tags-completion-table)
     (find-tag (ido-completing-read "Tag: " tag-names))))
 
 (defun ido-find-file-in-tag-files ()
@@ -3366,11 +3366,11 @@ New set up from https://www.reddit.com/r/emacs/comments/bge7tc/how_to_solve_lisp
 (use-package pdf-tools
   :config (pdf-tools-install)
   ;; open pdfs scaled to fit page
-          (setq-default pdf-view-display-size 'fit-page)
+  (setq-default pdf-view-display-size 'fit-page)
   ;; automatically annotate highlights
-          (setq pdf-annot-activate-created-annotations t)
+  (setq pdf-annot-activate-created-annotations t)
   ;; use normal isearch
-          (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
 #+END_SRC
 
 #+RESULTS:
@@ -3383,45 +3383,45 @@ There is a command very similar to =pdf-view-next-page=, pdf-view-next-page-comm
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (with-eval-after-load "pdf-view"
-(defun pdf-view-scroll-up-or-next-page (&optional arg)
-  "Scroll page up ARG lines if possible, else go to the next page.
+  (defun pdf-view-scroll-up-or-next-page (&optional arg)
+    "Scroll page up ARG lines if possible, else go to the next page.
 When `pdf-view-continuous' is non-nil, scrolling upward at the
 bottom edge of the page moves to the next page.  Otherwise, go to
 next page only on typing SPC (ARG is nil)."
-  (interactive "P")
-  (if (or pdf-view-continuous (null arg))
-      (let ((hscroll (window-hscroll))
-            (cur-page (pdf-view-current-page)))
-        (when (or (= (window-vscroll) (image-scroll-up arg))
-                  ;; Workaround rounding/off-by-one issues.
-                  (memq pdf-view-display-size
-                        '(fit-height fit-page)))
-          (pdf-view-next-page-command)
-          (when (/= cur-page (pdf-view-current-page))
-            (image-bob)
-            (image-bol 1))
-          (set-window-hscroll (selected-window) hscroll)))
-    (image-scroll-up arg)))
+    (interactive "P")
+    (if (or pdf-view-continuous (null arg))
+        (let ((hscroll (window-hscroll))
+              (cur-page (pdf-view-current-page)))
+          (when (or (= (window-vscroll) (image-scroll-up arg))
+                    ;; Workaround rounding/off-by-one issues.
+                    (memq pdf-view-display-size
+                          '(fit-height fit-page)))
+            (pdf-view-next-page-command)
+            (when (/= cur-page (pdf-view-current-page))
+              (image-bob)
+              (image-bol 1))
+            (set-window-hscroll (selected-window) hscroll)))
+      (image-scroll-up arg)))
 
-(defun pdf-view-scroll-down-or-previous-page (&optional arg)
-  "Scroll page down ARG lines if possible, else go to the previous page.
+  (defun pdf-view-scroll-down-or-previous-page (&optional arg)
+    "Scroll page down ARG lines if possible, else go to the previous page.
 When `pdf-view-continuous' is non-nil, scrolling downward at the
 top edge of the page moves to the previous page.  Otherwise, go
 to previous page only on typing DEL (ARG is nil)."
-  (interactive "P")
-  (if (or pdf-view-continuous (null arg))
-      (let ((hscroll (window-hscroll))
-            (cur-page (pdf-view-current-page)))
-        (when (or (= (window-vscroll) (image-scroll-down arg))
-                  ;; Workaround rounding/off-by-one issues.
-                  (memq pdf-view-display-size
-                        '(fit-height fit-page)))
-          (pdf-view-previous-page-command)
-          (when (/= cur-page (pdf-view-current-page))
-            (image-eob)
-            (image-bol 1))
-          (set-window-hscroll (selected-window) hscroll)))
-(image-scroll-down arg))))
+    (interactive "P")
+    (if (or pdf-view-continuous (null arg))
+        (let ((hscroll (window-hscroll))
+              (cur-page (pdf-view-current-page)))
+          (when (or (= (window-vscroll) (image-scroll-down arg))
+                    ;; Workaround rounding/off-by-one issues.
+                    (memq pdf-view-display-size
+                          '(fit-height fit-page)))
+            (pdf-view-previous-page-command)
+            (when (/= cur-page (pdf-view-current-page))
+              (image-eob)
+              (image-bol 1))
+            (set-window-hscroll (selected-window) hscroll)))
+      (image-scroll-down arg))))
 #+END_SRC
 
 #+RESULTS:
@@ -3433,11 +3433,11 @@ Tweaking from Ambrevar's dot file. However, his original combination of colors w
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (when (require 'pdf-tools nil t)
-   ;; (setq pdf-view-midnight-colors '("#ffffff" . "#000000")) 
-   ;; (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; Amber's original combination. Too agressive for me. 
-   (setq pdf-view-midnight-colors '("black" . "#EDD1B9" )) ; peach is the answer.
-   (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
-   (pdf-tools-install t t t))
+  ;; (setq pdf-view-midnight-colors '("#ffffff" . "#000000")) 
+  ;; (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; Amber's original combination. Too agressive for me. 
+  (setq pdf-view-midnight-colors '("black" . "#EDD1B9" )) ; peach is the answer.
+  (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
+  (pdf-tools-install t t t))
 #+END_SRC
 
 #+RESULTS:
@@ -3636,7 +3636,7 @@ indent yanked text (with prefix arg don't indent)."
           (message "Indented buffer.")))
       (whitespace-cleanup))))
 
-(global-set-key (kbd "C-c i") 'indent-region-or-buffer)
+(global-set-key (kbd "s->") 'indent-region-or-buffer)
 #+end_src
 
 #+RESULTS:
@@ -3762,11 +3762,11 @@ I try to change helm selection in minibuffer so that it is highlighted.
 ;;(set-face-attribute 'helm-selection nil 
 ;;                    :background nil
 ;;                    :foreground "#Cd8500") 
-  (set-face-attribute 'helm-selection nil 
-                      :background nil
-                      :foreground "Orange3")
-  (set-face-attribute 'helm-source-header  nil
-                      :foreground "#dcdcdc")
+(set-face-attribute 'helm-selection nil 
+                    :background nil
+                    :foreground "Orange3")
+(set-face-attribute 'helm-source-header  nil
+                    :foreground "#dcdcdc")
 ;; ;; Change Helm's color of Source!!
 ;; (set-face-attribute 'helm-source-header nil 
 ;;                    :background "DeepSkyBlue4"
@@ -3784,15 +3784,15 @@ If I place this in the =starter-kit-helm.org= file, for some reason, probably be
 #+BEGIN_SRC emacs-lisp :tangle no
 ;; comment out by dgm
 ;;;;; (set-face-attribute 'helm-source-header nil :inherit 'header-line :height 'unspecified :background 'unspecified :foreground 'unspecified)
-;(set-face-background 'helm-selection "#4f4f4f")  
-;(set-face-background 'helm-visible-mark "#2f2f2f")
-;(set-face-foreground 'helm-visible-mark nil)
-;(set-face-foreground 'helm-match "DarkOrange3")
-;(set-face-attribute 'helm-buffer-file nil :background 'unspecified :foreground nil :weight 'normal)
-;(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)  ;; #1e90ff
-;(set-face-attribute 'helm-ff-directory nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-directory)
-;(set-face-attribute 'helm-ff-file nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-file)
-;(set-face-foreground 'helm-grep-finish "green4")
+                                        ;(set-face-background 'helm-selection "#4f4f4f")  
+                                        ;(set-face-background 'helm-visible-mark "#2f2f2f")
+                                        ;(set-face-foreground 'helm-visible-mark nil)
+                                        ;(set-face-foreground 'helm-match "DarkOrange3")
+                                        ;(set-face-attribute 'helm-buffer-file nil :background 'unspecified :foreground nil :weight 'normal)
+                                        ;(set-face-attribute 'helm-buffer-directory nil :background 'unspecified :foreground "#1e90ff" :weight 'bold)  ;; #1e90ff
+                                        ;(set-face-attribute 'helm-ff-directory nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-directory)
+                                        ;(set-face-attribute 'helm-ff-file nil :background 'unspecified :foreground 'unspecified :weight 'unspecified :inherit 'helm-buffer-file)
+                                        ;(set-face-foreground 'helm-grep-finish "green4")
 #+END_SRC
 
 #+RESULTS:
@@ -3869,34 +3869,34 @@ Edit this list as you see fit!
 PS: recall that the =diminish= package is installed in =starter-kit.org=.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (diminish 'which-key-mode)
-  (diminish 'linum-relative-mode)
-  (diminish 'hungry-delete-mode)
-  (diminish 'visual-line-mode)
-  (diminish 'subword-mode)
-  (diminish 'beacon-mode)
-  (diminish 'irony-mode)
-  (diminish 'page-break-lines-mode)
+(diminish 'which-key-mode)
+(diminish 'linum-relative-mode)
+(diminish 'hungry-delete-mode)
+(diminish 'visual-line-mode)
+(diminish 'subword-mode)
+(diminish 'beacon-mode)
+(diminish 'irony-mode)
+(diminish 'page-break-lines-mode)
 ;;  (diminish 'auto-revert-mode)
-  (diminish 'rainbow-delimiters-mode)
-  (diminish 'yas-minor-mode)
-  (diminish 'rainbow-mode)
+(diminish 'rainbow-delimiters-mode)
+(diminish 'yas-minor-mode)
+(diminish 'rainbow-mode)
 ;;  (diminish 'undo-tree-mode)
-  (diminish 'editorconfig-mode)
+(diminish 'editorconfig-mode)
 ;;  (diminish 'smartparens-mode) ;; added in -text.org
-  (diminish 'minimal-mode)
-  (diminish 'org-mode)
-  (diminish 'org-indent-mode)
-  (diminish 'volatile-highlights-mode) 
-  (diminish 'highlight-symbol-mode) 
-  (diminish 'pandoc-mode) 
+(diminish 'minimal-mode)
+(diminish 'org-mode)
+(diminish 'org-indent-mode)
+(diminish 'volatile-highlights-mode) 
+(diminish 'highlight-symbol-mode) 
+(diminish 'pandoc-mode) 
 ;;  (diminish 'projectile-mode) 
-  (diminish 'browse-kill-ring-mode) 
-  (diminish 'auto-fill-mode) 
-  (diminish 'refill-mode) 
-  (diminish 'helm-gtags-mode) 
-  (diminish 'vi-tilde-fringe-mode)
-  (diminish 'dired)
+(diminish 'browse-kill-ring-mode) 
+(diminish 'auto-fill-mode) 
+(diminish 'refill-mode) 
+(diminish 'helm-gtags-mode) 
+(diminish 'vi-tilde-fringe-mode)
+(diminish 'dired)
 #+END_SRC
 
 #+RESULTS:
@@ -3908,7 +3908,7 @@ But it doesn't work
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (fset 'euro
-   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([24 56 return 35 120 50 48 65 67 return] 0 "%d")) arg)))
+      (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([24 56 return 35 120 50 48 65 67 return] 0 "%d")) arg)))
 #+END_SRC
 
 #+RESULTS:
@@ -3968,17 +3968,17 @@ Constantly extracts current prompt text and executes and manages applying
                (_ (and prompt-end
                        (> (point) prompt-end)  ; new command is being entered
                        (hy--shell-current-buffer-a-process?))))  ; process alive?
-      (let* ((input (buffer-substring-no-properties prompt-end (point-max)))
-             (deactivate-mark nil)
-             (buffer-undo-list t)
-             (font-lock-buffer-pos nil)
-             (text (hy--shell-with-font-locked-shell-buffer
-                    (delete-region (line-beginning-position) (point-max))
-                    (setq font-lock-buffer-pos (point))
-                    (insert input)
-                    (font-lock-ensure)
-                    (buffer-substring font-lock-buffer-pos (point-max)))))
-        (hy--shell-faces-to-font-lock-faces text prompt-end))))
+    (let* ((input (buffer-substring-no-properties prompt-end (point-max)))
+           (deactivate-mark nil)
+           (buffer-undo-list t)
+           (font-lock-buffer-pos nil)
+           (text (hy--shell-with-font-locked-shell-buffer
+                  (delete-region (line-beginning-position) (point-max))
+                  (setq font-lock-buffer-pos (point))
+                  (insert input)
+                  (font-lock-ensure)
+                  (buffer-substring font-lock-buffer-pos (point-max)))))
+      (hy--shell-faces-to-font-lock-faces text prompt-end))))
 
 (defun hy--shell-font-lock-turn-on ()
   "Turn on fontification of current line for hy shell."
@@ -4048,8 +4048,8 @@ Sacha has this but it doesn't work because it doesn't interpret my latitude and 
         forecast-city "Madrid"
         forecast-country "Spain"
         forecast-api-key "b580b82a056cdb3f6089f08ece4b2eb6"
+        )
   )
-)
 #+END_SRC
 
 #+RESULTS:
@@ -4062,13 +4062,13 @@ and sunset for any date.
 
 mouse-3 Sunrise/sunset
 S
- Display times of sunrise and sunset for the selected date (calendar-sunrise-sunset).
+Display times of sunrise and sunset for the selected date (calendar-sunrise-sunset).
 =M-x sunrise-sunset=
- Display times of sunrise and sunset for today's date. 
+Display times of sunrise and sunset for today's date. 
 =C-u M-x sunrise-sunset=
- Display times of sunrise and sunset for a specified date. 
+Display times of sunrise and sunset for a specified date. 
 =M-x calendar-sunrise-sunset-month=
- Display times of sunrise and sunset for the selected month. 
+Display times of sunrise and sunset for the selected month. 
 
 Within the calendar, to display the local times of sunrise and sunset in the echo area,
 move point to the date you want, and type S. Alternatively, click mouse-3 on the date,
@@ -4174,18 +4174,18 @@ By default wttrin prompts you to chose the city from your list when it starts. T
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; function to open wttrin with first city on list
 (defun bjm/wttrin ()
-    "Open `wttrin' without prompting, using first city in `wttrin-default-cities'"
-    (interactive)
-    ;; save window arrangement to register 
-    (window-configuration-to-register :pre-wttrin)
-    (delete-other-windows)
-    ;; save frame setup
-    (save-frame-config)
-    (set-frame-width (selected-frame) 130)
-    (set-frame-height (selected-frame) 48)
-    ;; call wttrin
-    (wttrin-query (car wttrin-default-cities))
-    )
+  "Open `wttrin' without prompting, using first city in `wttrin-default-cities'"
+  (interactive)
+  ;; save window arrangement to register 
+  (window-configuration-to-register :pre-wttrin)
+  (delete-other-windows)
+  ;; save frame setup
+  (save-frame-config)
+  (set-frame-width (selected-frame) 130)
+  (set-frame-height (selected-frame) 48)
+  ;; call wttrin
+  (wttrin-query (car wttrin-default-cities))
+  )
 #+END_SRC
 
 #+RESULTS:
@@ -4223,9 +4223,9 @@ From https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el
 (defadvice kill-region (before slick-cut activate compile)
   "When called interactively with no active region, kill a single line instead."
   (interactive
-    (if mark-active (list (region-beginning) (region-end))
-      (list (line-beginning-position)
-        (line-beginning-position 2)))))
+   (if mark-active (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
 #+END_SRC
 
 ** Help - guide-key
@@ -4238,8 +4238,8 @@ It's hard to remember keyboard shortcuts. The =guide-key= package pops up help a
   :diminish guide-key-mode
   :config
   (progn
-  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
-  (guide-key-mode 1)))  ; Enable guide-key-mode
+    (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
+    (guide-key-mode 1)))  ; Enable guide-key-mode
 #+END_SRC
 
 ** Reading
@@ -4297,31 +4297,31 @@ Handy way of getting back to previous places. Nice but I already have =C-h SPC= 
 ** Sorting
 
 #+begin_src emacs-lisp :tangle yes
-  (defun my/sort-sexps-in-region (beg end)
-    "Can be handy for sorting out duplicates.
+(defun my/sort-sexps-in-region (beg end)
+  "Can be handy for sorting out duplicates.
 Sorts the sexps from BEG to END. Leaves the point at where it
 couldn't figure things out (ex: syntax errors)."
-    (interactive "r")
-    (let ((input (buffer-substring beg end))
-          list last-point form result)
-      (save-restriction
-        (save-excursion
-          (narrow-to-region beg end)
-          (goto-char (point-min))
-          (setq last-point (point-min))
-          (setq form t)
-          (while (and form (not (eobp)))
-            (setq form (ignore-errors (read (current-buffer))))
-            (when form
-              (add-to-list
-               'list
-               (cons
-                (prin1-to-string form)
-                (buffer-substring last-point (point))))
-              (setq last-point (point))))
-          (setq list (sort list (lambda (a b) (string< (car a) (car b)))))
-          (delete-region (point-min) (point))
-          (insert (mapconcat 'cdr list "\n"))))))
+  (interactive "r")
+  (let ((input (buffer-substring beg end))
+        list last-point form result)
+    (save-restriction
+      (save-excursion
+        (narrow-to-region beg end)
+        (goto-char (point-min))
+        (setq last-point (point-min))
+        (setq form t)
+        (while (and form (not (eobp)))
+          (setq form (ignore-errors (read (current-buffer))))
+          (when form
+            (add-to-list
+             'list
+             (cons
+              (prin1-to-string form)
+              (buffer-substring last-point (point))))
+            (setq last-point (point))))
+        (setq list (sort list (lambda (a b) (string< (car a) (car b)))))
+        (delete-region (point-min) (point))
+        (insert (mapconcat 'cdr list "\n"))))))
 #+end_src
 
 **** Evaluation
@@ -4390,7 +4390,7 @@ This only makes sense for empty buffers."
   "#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"
   "#+LATEX_HEADER: \\input{vc}\n"
   "#+LATEX_HEADER: \\renewcommand*{\\PrelimText}{\\textnormal{\\small\\textcolor{black!40}{author: \\VCAuthor\\ -- date: \\VCDateISO\\ -- time: \\VCTime\\ -- commit: \\texttt{\\VCRevision}}}}\n\n"
-   "" _ "\n\n"
+  "" _ "\n\n"
   "\\printbibliography")
 #+END_SRC
 
@@ -4461,9 +4461,9 @@ I'd rather have Spanish prefix as the default. Tips from: https://emacs.stackexc
 (add-hook 'LaTeX-mode-hook 'activate-default-input-method)
 (add-hook 'latex-mode-hook 'activate-default-input-method)
 (add-hook 'mu4e-compose-mode-hook 'activate-default-input-method)
-;(defun inactivate-default-input-method ()
-;  (setq use-default-input-method nil))
-;(add-hook 'c-mode-hook 'inactivate-default-input-method)
+                                        ;(defun inactivate-default-input-method ()
+                                        ;  (setq use-default-input-method nil))
+                                        ;(add-hook 'c-mode-hook 'inactivate-default-input-method)
 #+END_SRC
 
 The variable =use-default-input-method= and the function =inactivate-default-input-method= provide a way to turn off the input method (it may be annoying e.g. in programming modes). If you want to turn off the default method in some modes, you register the function =inactivate-default-input-method= in that mode's startup hook, as in the example above for C mode and derived modes (C++, Java, etc.).
@@ -4481,9 +4481,9 @@ If you prefer to whitelist modes where the input method is automatically activat
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (set-input-method "spanish-prefix")
-;(set-input-method 'spanish-prefix) 
+                                        ;(set-input-method 'spanish-prefix) 
 (setq default-input-method "spanish-prefix")
-;(setq-default default-input-method 'spanish-prefix)
+                                        ;(setq-default default-input-method 'spanish-prefix)
 
 (defun activate-default-input-method ()
   (interactive)
@@ -4496,7 +4496,7 @@ If you prefer to whitelist modes where the input method is automatically activat
 (add-hook 'mu4e-compose-pre-hook 'activate-default-input-method) 
 (add-hook 'mu4e-compose-parent-message 'activate-default-input-method) 
 
-; (add-hook 'mu4e-mode-hook #'activate-default-input-method)
+                                        ; (add-hook 'mu4e-mode-hook #'activate-default-input-method)
 
 (defun inactivate-default-input-method ()
   (setq use-default-input-method nil))
@@ -4517,15 +4517,15 @@ March 6: well, it's not working exactly. It works after I set up the new input m
 But now that I've changed some lines in the bit on input method in =dgm.org= this =mrb= stuff does not work at all...
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (defun mrb/set-input-method()
-    (interactive)
-    (setq default-input-method "spanish-prefix")
-    ;; Toggle only if it not active yet
-    (if (not current-input-method)
-        (toggle-input-method)))
+(defun mrb/set-input-method()
+  (interactive)
+  (setq default-input-method "spanish-prefix")
+  ;; Toggle only if it not active yet
+  (if (not current-input-method)
+      (toggle-input-method)))
 
- ;;(exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
-  (exwm-input-set-key (kbd "s-s") #'mrb/set-input-method)
+;;(exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
+(exwm-input-set-key (kbd "s-s") #'mrb/set-input-method)
 #+END_SRC
 
 #+RESULTS:
@@ -4590,28 +4590,28 @@ From a program takes two point or marker arguments, BEG and END."
     (goto-char beg)
     (let (paragraphs fix-newline)
       (while (< beg end)
-	;; skip to the beginning of the next paragraph instead of
-	;; remaining on the position separating the two paragraphs
-	(when (= 0 (forward-paragraph 1))
-	  (goto-char (1+ (match-end 0))))
-	(when (> (point) end)
-	  (goto-char end))
-	(setq paragraphs (cons (buffer-substring beg (point))
-			       paragraphs))
-	(delete-region beg (point)))
+	    ;; skip to the beginning of the next paragraph instead of
+	    ;; remaining on the position separating the two paragraphs
+	    (when (= 0 (forward-paragraph 1))
+	      (goto-char (1+ (match-end 0))))
+	    (when (> (point) end)
+	      (goto-char end))
+	    (setq paragraphs (cons (buffer-substring beg (point))
+			                   paragraphs))
+	    (delete-region beg (point)))
       ;; if all but the last paragraph end with two newlines, add a
       ;; newline to the last paragraph
       (when (and (null (delete 2 (mapcar (lambda (s)
-					   (when (string-match "\n+$" s -2)
-					     (length (match-string 0 s))))
-					 (cdr paragraphs))))
-		 (when (string-match "\n+$" (car paragraphs) -2)
-		   (= 1 (length (match-string 0 (car paragraphs))))))
-	(setq fix-newline t)
-	(setcar paragraphs (concat (car paragraphs) "\n")))
+					                       (when (string-match "\n+$" s -2)
+					                         (length (match-string 0 s))))
+					                     (cdr paragraphs))))
+		         (when (string-match "\n+$" (car paragraphs) -2)
+		           (= 1 (length (match-string 0 (car paragraphs))))))
+	    (setq fix-newline t)
+	    (setcar paragraphs (concat (car paragraphs) "\n")))
       ;; insert paragraphs
       (dolist (par paragraphs)
-	(insert par))
+	    (insert par))
       (when fix-newline
 	    (delete-char -1)))))
 #+END_SRC
@@ -4704,8 +4704,8 @@ Joe di Castro says: Display a more appealing line numbers. I don't use them too 
 
 DGM: not sure it is better.
 #+BEGIN_SRC emacs-lisp :tangle no
-; 2014-04-04: Holy moly its effort to get line numbers like vim!
-; http://www.emacswiki.org/emacs/LineNumbers#toc6
+                                        ; 2014-04-04: Holy moly its effort to get line numbers like vim!
+                                        ; http://www.emacswiki.org/emacs/LineNumbers#toc6
 (unless window-system
   (add-hook 'linum-before-numbering-hook
             (lambda ()
@@ -4715,9 +4715,9 @@ DGM: not sure it is better.
                             (concat "%" (number-to-string w) "d"))))))
 
 (defun joe-linum-format-func (line)
-   (concat
-    (propertize (format linum-format-fmt line) 'face 'linum)
-    (propertize " " 'face 'linum)))
+  (concat
+   (propertize (format linum-format-fmt line) 'face 'linum)
+   (propertize " " 'face 'linum)))
 
 (unless window-system
   (setq linum-format 'joe-linum-format-func))
@@ -4735,19 +4735,17 @@ DGM: not sure it is better.
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23876 24572 365881 952000) :init (23876 24572 365873 813000) :config (23876 24572 365671 940000) :config-secs (0 0 5 73000) :init-secs (0 0 20833 634000) :use-package-secs (0 0 20886 646000)))
 
-* TODO Browser switching
-
-!!here  update this
+* Browser switching
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (global-set-key (kbd "s-;") 'ivy-switch-buffer)
 
 (global-set-key (kbd "s-*") 'electric-buffer-list)
- ; This hook run after buffer formatted, so it is necessary to re-fontify it...
- (add-hook 'electric-buffer-menu-mode-hook
-	   '(lambda ()
-	      (font-lock-mode 1)
-	      (font-lock-fontify-buffer)))
+                                        ; This hook run after buffer formatted, so it is necessary to re-fontify it...
+(add-hook 'electric-buffer-menu-mode-hook
+	      '(lambda ()
+	         (font-lock-mode 1)
+	         (font-lock-fontify-buffer)))
 
 (setq ido-default-buffer-method 'selected-window)
 (unless ido-mode
@@ -4859,6 +4857,15 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Debugging
                   :key "M-x gdb"
                   :description "IDE-like interface, with specialized buffers for controlling breakpoints, stack frames, and other aspects of the debugger state.")
+  (cheatsheet-add :group 'Diary
+                  :key "i"
+                  :description "org-agenda-diary-entry. Works from Org-agenda and calendar")
+  (cheatsheet-add :group 'Diary
+                  :key "C-c C-q"
+                  :description "quit-window")
+  (cheatsheet-add :group 'Diary
+                  :key "C-c C-s"
+                  :description "diary-show-all-entries")
   (cheatsheet-add :group 'Dired
                   :key "C-x d"
                   :description "helm-mode-dired. TAB to select; RET to jump to selection")
@@ -4953,6 +4960,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "s-/"
                   :description "indent-region")
   (cheatsheet-add :group 'Editing
+                  :key "s->"
+                  :description "indent-region-or-buffer")
+  (cheatsheet-add :group 'Editing
                   :key "M-/"
                   :description "hippie-expand")
   (cheatsheet-add :group 'Editing
@@ -4962,17 +4972,17 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "s-!"
                   :description "toggle-theme")
   (cheatsheet-add :group 'Editing
-                  :key "s-/"
-                  :description "indent-region")
-  (cheatsheet-add :group 'Editing
                   :key "s-y"
                   :description "ivy-yasnippet")
+  (cheatsheet-add :group 'Editing
+                  :key "C-c k"
+                  :description "yas-expand. Expand a snippet before point.")
   (cheatsheet-add :group 'Editing
                   :key "s-#"
                   :description "sudo-edit")
   (cheatsheet-add :group 'Editing
                   :key "C-x C-i"
-                  :description "indent-rigidly. Indent all lines starting in the region.")
+                  :description "indent-rigidly. Indent all lines starting in the region. Then <right>/<left> or <S-right>/<S-left> to actually indent")
   (cheatsheet-add :group 'Editing-Killing
                   :key "M-w"
                   :description "kill-ring-save: Save the region as if killed, but don’t kill it. When no active region, copy a single line instead")
@@ -5031,6 +5041,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-*"
                   :description "mu4e")
   (cheatsheet-add :group 'Email
+                  :key "C-c C-k"
+                  :description "mu4e-message-kill-buffer")
+  (cheatsheet-add :group 'Email
                   :key "a"
                   :description "Lists possible actions when inside message like Show In Browser or Show Thread")
   (cheatsheet-add :group 'Email
@@ -5048,6 +5061,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Expressions-Copying
                   :key "C-M w"
                   :description "sp-copy-sexp: Copies next bit of the sexp")
+  (cheatsheet-add :group 'Expressions-Copying
+                  :key "M-x my/org-insert-defun"
+                  :description "Inserts an Org source block with the definition for FUNCTION")
   (cheatsheet-add :group 'Expressions-Find
                   :key "C-c f"
                   :description "find-function")
@@ -5201,6 +5217,15 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Find-Files
                   :key "C-x C-g"
                   :description "deft-find-file")
+  (cheatsheet-add :group 'Find-Files
+                  :key "C-c d"
+                  :description "deft. Switch to Deft buffer and load files.")
+  (cheatsheet-add :group 'Find-Files
+                  :key "C-c d"
+                  :description "deft. Switch to Deft buffer and load files.")
+  (cheatsheet-add :group 'Find-Files
+                  :key "C-c C-q"
+                  :description "quit-window. Works with deft")
   (cheatsheet-add :group 'Find-Files
                   :key "s-d"
                   :description "helm-find frontend for *nix FIND command in current dir; C-u chooses dir")
@@ -5421,7 +5446,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "W"
                   :description "Widen in Org subtree") 
   (cheatsheet-add :group 'Org
-                  :key "C-c k"
+                  :key "s-<"
                   :description "org-cut-subtree: cut tree and paste it elsewhere in the hierarchy.")
   (cheatsheet-add :group 'Org
                   :key "C-c @"
@@ -5429,6 +5454,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org
                   :key "M-Shift-<right>"
                   :description "Demote heading and all subheadings")
+  (cheatsheet-add :group 'Org
+                  :key "r"
+                  :description "Positioned on stars of heading, demote heading but not subheadings")
+  (cheatsheet-add :group 'Org
+                  :key "R"
+                  :description "Positioned on stars of heading, demote heading and all subheadings")
   (cheatsheet-add :group 'Org
                   :key "M-<right>"
                   :description "Demote only current heading but NOT its subheadings")
@@ -5441,6 +5472,27 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org
                   :key "C-c C-n"
                   :description "Move to next heading")
+  (cheatsheet-add :group 'Org
+                  :key "n"
+                  :description "Place cursor at start of heading. n will move to next heading")
+  (cheatsheet-add :group 'Org
+                  :key "b"
+                  :description "Place cursor at start of heading. b will move to previous heading")
+  (cheatsheet-add :group 'Org
+                  :key "a"
+                  :description "org-archive-subtree-default. Place cursor at start of heading. a will archive it")
+  (cheatsheet-add :group 'Org
+                  :key "i"
+                  :description "Place cursor at start of heading. i will open clock menu")
+  (cheatsheet-add :group 'Org
+                  :key "t"
+                  :description "Place cursor at start of heading. Toggle todo state. SPC to clear")
+  (cheatsheet-add :group 'Org
+                  :key "T"
+                  :description "Place cursor at start of heading. Column view with effort and clocksum")
+  (cheatsheet-add :group 'Org
+                  :key "SPC"
+                  :description "Place cursor at start of heading. See hierachical path to this heading")
   (cheatsheet-add :group 'Org
                   :key "C-c C-w"
                   :description "org-refile")
@@ -5455,7 +5507,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "Widen") 
   (cheatsheet-add :group 'Org
                   :key "S"
-                  :description "org-sort")
+                  :description "org-sort. Sorts subtrees") 
   (cheatsheet-add :group 'Org
                   :key "S-<up><down>"
                   :description "On heading, add priority tag")
@@ -5468,21 +5520,87 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org
                   :key "S-<left><right>"
                   :description "On heading, add or change TODO status")
+  (cheatsheet-add :group 'Org
+                  :key "M-x org-repair-property-drawers"
+                  :description "Fix properties drawers in current buffer. To use when habits or schedules don't show rightly")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "A"
+                  :description "Interactively select another agenda view and append it to the current view")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "o"
+                  :description "When in agenda view, delete other windows")
   (cheatsheet-add :group 'Org-agenda
                   :key "T or < C-c a t"
                   :description "my/org-agenda-for-subtree")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "t"
+                  :description "org-agenda-todo. When in an agenda's item, choose state")
   (cheatsheet-add :group 'Org-agenda
                   :key "K"
                   :description "Toggle org-habits")
   (cheatsheet-add :group 'Org-agenda
                   :key "C-, and C-'"
-                  :description "org-cycle-agenda-files")
-  (cheatsheet-add :group 'Org-capture
+                  :description "org-cycle-agenda-files. Has to be located in heading of agenda file")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "R"
+                  :description "org-agenda-clockreport-mode. Toggle clocktable mode. Info about clocked time in the displayed period")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "SPC"
+                  :description "org-agenda-show-and-scroll-up. Display the original location of the item in another window. If repeated, scroll that other window")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "TAB"
+                  :description "org-agenda-goto. Go to the original location of the item in another window")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "RET"
+                  :description "org-agenda-switch-to. Go to the original location of the item and delete other windows")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "J"
+                  :description "org-agenda-clock-goto. Go to the currently clocked-in task in the agenda buffer")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "F"
+                  :description "org-agenda-follow-mode. Toggle Follow mode. As you move the cursor through the agenda buffer, the other window shows the corresponding location in the Org file")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "v"
+                  :description "Choose time spam in view and more")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "v R"
+                  :description "org-agenda-clockreport-mode. Toggle clock table. A quick report on time usage. Works directly with R only")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "b"
+                  :description "org-agenda-earlier. Move back one day or week")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "f"
+                  :description "org-agenda-later. Move forward one day or week")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "l"
+                  :description "org-agenda-log-mode. Shows entries marked DONE while logging was on and are entries clocked on that day, recording their timing")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "v L"
+                  :description "org-agenda-log-mode. how all possible logbook entries, including state changes")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "G"
+                  :description "org-agenda-toggle-time-grid. Toggle the time grid on and off")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "J"
+                  :description "org-agenda-clock-goto. Jump to the currently clocked in task within the agenda")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "s"
+                  :description "org-save-all-org-buffers. Save all Org buffers in the current Emacs session, and also the locations of IDs")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "M-x my/org-show-active-projects"
+                  :description "Show my current projects. From Sacha")
+  (cheatsheet-add :group 'Org-capture 
                   :key "C-c C-c"
                   :description "On heading of Org-captured entry, choose tag")
   (cheatsheet-add :group 'Org-capture
                   :key "SPC"
                   :description "Clear tag selection")
+  (cheatsheet-add :group 'Org-capture
+                  :key "C-c C-r"
+                  :description "my/org-refile-and-jump org-capture-mode-map. Refile a capture and then jump to the new location")
+  (cheatsheet-add :group 'Org-clock
+                  :key "C-c j"
+                  :description "org-clock-goto. jump to current task from anywhere")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-e"
                   :description "org-clock-modify-effort-estimate. Manually set the effort for a particular headline")
@@ -5491,7 +5609,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "Prompted for an effort estimation")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-c"
-                  :description "Turn on org-columns reporting your time use-Quit with q")
+                  :description "org-agenda-columns. Turn on org-columns reporting your time use-Quit with q")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x i"
                   :description "Generate a local column view-Quit with q-Not working!")
@@ -5518,7 +5636,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "org-clock-in-last. Clock in to the last clocked task")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-j"
-                  :description "org-clock-goto. Jump to whatever headline you are currently clocked in to ")
+                  :description "org-clock-goto. Jump to whatever headline you are currently clocked in to or to the most recently clocked one")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c C-x C-q"
                   :description "org-clock-cancel. Cancel the current clock-removes all of its current time ")
@@ -5532,11 +5650,8 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-c C-x C-z"
                   :description "org-resolve-clocks. Resolve any half-open clocks")
   (cheatsheet-add :group 'Org-clock
-                  :key "v R"
-                  :description "Clock table in the Agenda. Same key to turn off. It's a quick report on time usage")
-  (cheatsheet-add :group 'Org-clock
                   :key "v c"
-                  :description "view clockcheck in org agenda: show clock gaps and overlaps-Use b to go back one day")
+                  :description "Show overlapping clock entries, clocking gaps, and other clocking problems in the current agenda range. Use b to go back one day, l to exit")
   (cheatsheet-add :group 'Org-clock
                   :key "Fn-Shift-<left><right>"
                   :description "On date entry will shift the days; On brackets will change them to <>")
@@ -5671,7 +5786,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "Practise typing")
   (cheatsheet-add :group 'Typing
                   :key "my/org-entry-wpm"
-                  :description "Curious about how fast I type")
+                  :description "Curious about how fast I type. Works under Org tree")
   (cheatsheet-add :group 'Undo-Propose
                   :key "M-x undo-propose"
                   :description "Cycle through the list of undo's as normal in a new temporary buffer")
@@ -5749,7 +5864,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23938 1927 936055 124000) :init (23938 1927 936017 69000) :init-secs (0 0 1064 956000) :use-package-secs (0 0 1144 421000) :config (23938 1927 936011 264000) :config-secs (0 0 1055 219000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23942 38722 892933 154000) :init (23942 38722 892873 187000) :init-secs (0 0 22 482000) :use-package-secs (0 0 146 899000)))
+
+
 
 * Remapping =M-<= and =M->=
 
@@ -5807,3 +5924,4 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+

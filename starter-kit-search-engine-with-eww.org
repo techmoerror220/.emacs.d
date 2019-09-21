@@ -267,7 +267,7 @@ prefixed with =C-x /=:
 ; The default keymap prefix for engine-mode is C-x /. If you'd like to bind the keymap to an additional prefix (say, C-c s), you totally can:
 
 ;; Todo: activate when something available
-;; (engine/set-keymap-prefix (kbd "s-b"))
+(engine/set-keymap-prefix (kbd "s-}"))
 
 (defengine amazon
   "http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=%s"
