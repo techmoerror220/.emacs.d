@@ -811,6 +811,7 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
 (setq org-agenda-files (list "/home/dgm/Dropbox/gtd/inbox.org"
                              "/home/dgm/Dropbox/gtd/gtd.org"
                              "/home/dgm/Dropbox/gtd/journal.org"
+                             "/home/dgm/Dropbox/gtd/habits.org"
                              "/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" ; i could add it with =C-c [= but that action does not survive across sections
                              "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org"
                              "/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org"
@@ -846,43 +847,47 @@ HOWEVER I am not 100% sure how useful is all this because I have a nice option i
           ;; type "l" in the agenda to review logged items
           ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
           (todo "STARTED") ;; review  actions that have started
+          (todo "WAITING") ;;review waiting items          
           (todo "NEXT") ;; review next actions
           (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
-          (todo "WAITING"))) ;; review waiting items
+          )) ;; 
         ("w" "Weekly Review"
          ((agenda "" ((org-agenda-span 7)))  ;; review upcoming deadlines and appointments
           ;; old code ((org-agenda-fortnight-view)))
           ;; type "l" in the agenda to review logged items
           ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
           (todo "STARTED") ;; review  actions that have started
+          (todo "WAITING") ;; review waiting items         
           (todo "NEXT") ;; review next actions
           (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
-          (todo "WAITING"))) ;; review waiting items
+          )) 
         ("f" "Fortnight Review"
          ((agenda "" ((org-agenda-span 14))) ;; review upcoming deadlines and appointments
           ;; type "l" in the agenda to review logged items
           ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
           (todo "STARTED") ;; review  actions that have started
+          (todo "WAITING")    ;; review waiting items
           (todo "NEXT") ;; review next actions
           (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
-          (todo "WAITING"))) ;; review waiting items
+          )) 
         ("r" "Monthly Review"
          ((agenda "" ((org-agenda-span 31))) ;; review upcoming deadlines and appointments
           ;; type "l" in the agenda to review logged items
           ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
           (todo "STARTED") ;; review  actions that have started
+          (todo "WAITING")      ;; review waiting items
           (todo "NEXT") ;; review next actions
           (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
-          (todo "WAITING"))) ;; review waiting items
+          )) 
         ("y" "Yearly Review"
          ((agenda "" ((org-agenda-span (quote year))))))
         ("p" "Project Review"
          ((tags "+project+LEVEL=1")               
           (tags "+project+LEVEL=2")               ;; it'd be tags-todo if the :project: tag had a TODO keyword. See https://emacs.stackexchange.com/questions/41150/top-level-heading-in-the-org-mode-agenda
           (tags "+project+TODO=\"STARTED\"")
+          (tags "+project+TODO=\"WAITING\"")
           (tags "+project+TODO=\"NEXT\"")
           (tags "+project+TODO=\"TODO\"")
-          (tags "+project+TODO=\"WAITING\"")
           (tags "+project+TODO=\"DONE\"")))
         ;;(todo "NEXT") ;; review next actions
         ;;(todo "TODO")))  ;; review pending actions waiting for "next actions" to be fulfilled
@@ -891,7 +896,7 @@ HOWEVER I am not 100% sure how useful is all this because I have a nice option i
         ("o" "Office and home agenda"
          ((agenda "" ((org-agenda-ndays 1))) ;; esto no me funciona... debe ser que (setq org-agenda-span (quote month)) en starter-kit-org.org tiene prioridad
           ;; limits the agenda display to a single day
-          (tags-todo "@office|@home")
+          (tags-todo "office|home")
           ;;            (tags "project+CATEGORY=\"elephants\"")
           ;;            (tags "review" ((org-agenda-files '("~/org/circuspeanuts.org"))))
           ;; limits the tag search to the file circuspeanuts.org
@@ -984,11 +989,11 @@ Remove DONE tasks from agenda view. Tip from: https://stackoverflow.com/question
 Tip from: https://orgmode.org/manual/Setting-tags.html
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-tag-alist '(("project" . ?a) ("@errands" . ?e) ("@home" . ?h) ("@laptop" . ?l) ("@office" . ?o) ("@PC" . ?p) ("reading" . ?r) ("salud" . ?s) ("@tel" . ?t) ("writing" . ?w)))
+(setq org-tag-alist '(("project" . ?a) ("browsing" . ?b) ("errands" . ?e) ("home" . ?h) ("laptop" . ?l) ("mailing" . ?m) ("office" . ?o) ("PC" . ?p) ("reading" . ?r) ("salud" . ?s) ("tel" . ?t) ("writing" . ?w)))
 #+END_SRC
 
 #+RESULTS:
-: ((project . 97) (@errands . 101) (@home . 104) (@laptop . 108) (@office . 111) (@PC . 112) (reading . 114) (salud . 115) (@tel . 116) (writing . 119))
+: ((project . 97) (browsing . 98) (errands . 101) (home . 104) (laptop . 108) (mailing . 109) (office . 111) (PC . 112) (reading . 114) (salud . 115) (tel . 116) (writing . 119))
 
 ** Public holidays 
 
@@ -999,7 +1004,7 @@ Check another cool customization here: http://www.gnomon.org.uk/diary.html
 (require 'org-agenda)
 (require 'holidays)
 (setq calendar-holidays holiday-other-holidays)
-(setq org-agenda-include-diary t)
+;; (setq org-agenda-include-diary t) ;; already included below
 
 ;; (setq holiday-other-holidays  ;; with this holidays don't show up in agenda.
 ;; with the following holidays show up in org-agenda but still it does not show up in orgzly so watch out! 
@@ -1064,12 +1069,11 @@ Thanks to the following declaration, the above holidays show up in my computer's
 
 (Tip from https://emacs.stackexchange.com/questions/10965/easiest-way-to-customize-holidays-that-appear-in-org-agenda.)
 
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 '(org-agenda-include-diary t) 
 #+END_SRC
 
-#+RESULTS:
-| org-agenda-include-diary | t |
 
 *** Make calendar start on Monday instead of Sunday
 
@@ -1102,11 +1106,12 @@ When I changed this to =("/home/dgm/Dropbox/gtd/tickler.org" :maxlevel . 2)= I g
                            ("/home/dgm/Dropbox/gtd/someday.org" :maxlevel . 2)                    
                            ("/home/dgm/Dropbox/gtd/inbox.org" :level . 2)
                            ("/home/dgm/Dropbox/gtd/notes.org" :maxlevel . 2)
+                           ("/home/dgm/Dropbox/gtd/habits.org" :maxlevel . 2)
                            ("/home/dgm/Dropbox/gtd/tickler.org" :maxlevel . 2)))
 #+END_SRC
 
 #+RESULTS:
-: ((/home/dgm/Dropbox/gtd/gtd.org :maxlevel . 3) (/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org :level . 2) (/media/dgm/blue/documents/personal/documentacion/divorcio/divorcio_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org :level . 2) (/home/dgm/Dropbox/gtd/someday.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/inbox.org :level . 2) (/home/dgm/Dropbox/gtd/notes.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/tickler.org :maxlevel . 2))
+: ((/home/dgm/Dropbox/gtd/gtd.org :maxlevel . 3) (/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org :level . 2) (/media/dgm/blue/documents/personal/documentacion/divorcio/divorcio_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org :level . 2) (/home/dgm/Dropbox/gtd/someday.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/inbox.org :level . 2) (/home/dgm/Dropbox/gtd/notes.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/habits.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/tickler.org :maxlevel . 2))
 
 New from https://www.reddit.com/r/emacs/comments/4366f9/how_do_orgrefiletargets_work/
 
@@ -1275,10 +1280,18 @@ for another presentation of =org-goto=.
 (bind-key "C-c j" 'org-clock-goto) ;; jump to current task from anywhere;; C-c C-x C-j does the job already
 (bind-key "C-c C-w" 'org-refile)
 (setq org-cycle-include-plain-lists 'integrate)
+(define-key org-agenda-mode-map "x" 'org-agenda-refile)
 #+end_src
 
 #+RESULTS:
-: integrate
+: org-agenda-refile
+
+If "x" disabled, then, by default, "x" is bound to exiting the org-agenda!
+#+begin_src emacs-lisp :tangle no
+;;(define-key org-agenda-mode-map "x" nil)
+#+end_src
+
+#+RESULTS:
 
 *** Link Org subtrees and navigate between them
 The following code makes it easier for me to link trees with entries, as in http://sachachua.com/evil-plans
@@ -1884,12 +1897,6 @@ the same tree node, and the headline of the tree node in the Org-mode file."
 #+RESULTS:
 : my/org-agenda-done
 
-However, DGM realized after disabling "x" above that, by default, "x" is bound to exiting the org-agenda!
-#+begin_src emacs-lisp :tangle yes
-(define-key org-agenda-mode-map "x" nil)
-#+end_src
-
-#+RESULTS:
 
 *** COMMENT Make it easy to mark a task as done and create a follow-up task
 
@@ -1950,7 +1957,7 @@ DGM: I don't find this function... ahh, it's not interactive!
 | +PROJECT-MAYBE-DONE | (TODO) | nil | \<IGNORE\> |
 
 *** Projects
-DGM: no need for this, as I have a Project overview in Org-agenda
+DGM: no need for this, as I have a Project overview in Org-agenda. Plus I have the command =my-org-project-list= by the great Carsten.
 
 #+begin_src emacs-lisp :tangle no
 (defun my/org-show-active-projects ()

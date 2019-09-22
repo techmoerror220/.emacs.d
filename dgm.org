@@ -5346,6 +5346,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Help
                   :key "C-h v"
                   :description "helpful-variable")
+(cheatsheet-add :group 'Org-Help
+                  :key "?"
+                  :description "With cursor on heading's stars, ? opens window with shortcuts available")
   (cheatsheet-add :group 'History
                   :key "C-c C-l"
                   :description "History in Eshell, Shell and Minibuffer")
@@ -5586,6 +5589,15 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-agenda
                   :key "s"
                   :description "org-save-all-org-buffers. Save all Org buffers in the current Emacs session, and also the locations of IDs")
+(cheatsheet-add :group 'Org-agenda
+                  :key "S"
+                  :description "Show sunrise/Sunset times")
+(cheatsheet-add :group 'Org-agenda
+                  :key "M"
+                  :description "Show lunar phases")
+(cheatsheet-add :group 'Org-agenda
+                  :key "C"
+                  :description "Convert to other calendars")
   (cheatsheet-add :group 'Org-agenda
                   :key "M-x my/org-show-active-projects"
                   :description "Show my current projects. From Sacha")
@@ -5864,7 +5876,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23942 38722 892933 154000) :init (23942 38722 892873 187000) :init-secs (0 0 22 482000) :use-package-secs (0 0 146 899000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23943 17469 425967 203000) :init (23943 17469 425902 201000) :init-secs (0 0 1954 88000) :use-package-secs (0 0 2108 456000) :config (23943 17469 425890 18000) :config-secs (0 0 1937 374000)))
 
 
 
