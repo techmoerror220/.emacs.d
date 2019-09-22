@@ -454,6 +454,7 @@ DGM 30 dic 2018: tangle no as I've moved this to =-stats.org=.
    (haskell . t)
    (stata . t)
    (shell . t)
+   (ledger . t)
    (latex . t)
    ))
 
