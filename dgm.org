@@ -4872,6 +4872,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Dired
                   :key "/"
                   :description "Dired narrow to match filter")
+(cheatsheet-add :group 'Dired
+                  :key "C-l"
+                  :description "Delete directory in path")
+(cheatsheet-add :group 'Dired
+                  :key "C-k"
+                  :description "Delete path to write a new path")
   (cheatsheet-add :group 'Dired-Projectile
                   :key "C-d"
                   :description "Open dired when in P session")
@@ -5346,7 +5352,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Help
                   :key "C-h v"
                   :description "helpful-variable")
-(cheatsheet-add :group 'Org-Help
+(cheatsheet-add :group 'Help-Org
                   :key "?"
                   :description "With cursor on heading's stars, ? opens window with shortcuts available")
   (cheatsheet-add :group 'History
@@ -5673,6 +5679,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-latex
                   :key "C-c C-x C-l"
                   :description "org-toggle-latex-fragment. C-c C-c to show the equation code")
+(cheatsheet-add :group 'Org-movement
+                :key "C-M-p and C-M-n"
+                :description "Move across headings of any level")
+(cheatsheet-add :group 'Org-movement
+                :key "C-c C-b and C-c C-f"
+                :description "Move back and forward headings of same level")
   (cheatsheet-add :group 'Org-recipes
                   :key "C-c i"
                   :description "Insert raw code under a heading")
@@ -5738,7 +5750,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "helm-register. Then TAB or RET to insert. Equivalent to C-x r i")
   (cheatsheet-add :group 'Redshift
                   :key "C-\("
-                  :description "Redshift on")
+                  :description "Redshift on. If repeated, intensity increases")
   (cheatsheet-add :group 'Redshift
                   :key "C-\)"
                   :description "Redshift off")
@@ -5859,6 +5871,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Windows
                   :key "C-c <left>"
                   :description "winner-undo: Switch back to earlier window config; undo changes in window config")
+(cheatsheet-add :group 'Windows
+                  :key "C-c <right> or <down>"
+                  :description "winner-redo: Restore a more recent window configuration saved by Winner mode")
   (cheatsheet-add :group 'Window-Movement
                   :key "s-<left>"
                   :description "windmove-left")
@@ -5876,7 +5891,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23943 17469 425967 203000) :init (23943 17469 425902 201000) :init-secs (0 0 1954 88000) :use-package-secs (0 0 2108 456000) :config (23943 17469 425890 18000) :config-secs (0 0 1937 374000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23944 57690 737426 961000) :init (23944 57690 737365 562000) :init-secs (0 0 2320 914000) :use-package-secs (0 0 2475 167000) :config (23944 57690 737352 958000) :config-secs (0 0 2303 108000)))
 
 
 

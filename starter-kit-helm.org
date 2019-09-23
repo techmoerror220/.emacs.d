@@ -864,6 +864,8 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
                                          "/media/dgm/blue/documents/cv"
                                          "/media/dgm/blue/documents/backups"
                                          "/media/dgm/blue/documents/UNED/teaching/mis-cursos"
+                                         "/media/dgm/blue/documents/reviews"
+                                         "/media/dgm/blue/documents/elibrary/org"
                                          "/media/dgm/blue/documents/elibrary/women-labor-market"))
 
   (projectile-add-known-project "~/.emacs.d/")
@@ -883,6 +885,8 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
   (projectile-add-known-project "/media/dgm/blue/documents/cv/")
   (projectile-add-known-project "/media/dgm/blue/documents/backups")
   (projectile-add-known-project "/media/dgm/blue/documents/UNED/teaching/mis-cursos/")
+  (projectile-add-known-project "/media/dgm/blue/documents/reviews/")
+  (projectile-add-known-project "/media/dgm/blue/documents/elibrary/org/")
   (projectile-add-known-project "/media/dgm/blue/documents/elibrary/women-labor-market/")
   
   (when (require 'magit nil t)

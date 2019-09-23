@@ -883,8 +883,8 @@ HOWEVER I am not 100% sure how useful is all this because I have a nice option i
         ("y" "Yearly Review"
          ((agenda "" ((org-agenda-span (quote year))))))
         ("p" "Project Review"
-         ((tags "+project+LEVEL=1")               
-          (tags "+project+LEVEL=2")               ;; it'd be tags-todo if the :project: tag had a TODO keyword. See https://emacs.stackexchange.com/questions/41150/top-level-heading-in-the-org-mode-agenda
+         (;;(tags "+project+LEVEL=1")  ;; commented out. Projects can be of any level so this ordering has no sense.             
+          ;;(tags "+project+LEVEL=2")  ;; it'd be tags-todo if the :project: tag had a TODO keyword. See https://emacs.stackexchange.com/questions/41150/top-level-heading-in-the-org-mode-agenda
           (tags "+project+TODO=\"STARTED\"")
           (tags "+project+TODO=\"WAITING\"")
           (tags "+project+TODO=\"NEXT\"")
