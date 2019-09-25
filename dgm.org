@@ -5226,6 +5226,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Find-Files
                   :key "C-c d"
                   :description "deft. Switch to Deft buffer and load files.")
+(cheatsheet-add :group 'Find-Files
+                  :key "C-c C-c"
+                  :description "deft-filter-clear")
+(cheatsheet-add :group 'Find-Files
+                  :key "C-c C-q"
+                  :description "quit-window. Works in Deft")
   (cheatsheet-add :group 'Find-Files
                   :key "C-c d"
                   :description "deft. Switch to Deft buffer and load files.")
@@ -5319,6 +5325,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Help
                   :key "C-h p"
                   :description "Search the standard Emacs Lisp libraries by topic keywords")  
+(cheatsheet-add :group 'Help
+                  :key "C-h i m"
+                  :description "Search the info system and open the menu. Then type something, like 'org' and RET")  
   (cheatsheet-add :group 'Help
                   :key "C-h C-a"
                   :description "about-emacs: For information about GNU Emacs and the GNU system")  
@@ -5415,6 +5424,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Mark
                   :key "C-x C-x"
                   :description "Exchange point and mark without activating region")
+(cheatsheet-add :group 'Mark
+                  :key "M-h"
+                  :description "org-mark-element. Put point at beginning of this element, mark at end")
   (cheatsheet-add :group 'Minibuffer
                   :key "C-M-e"
                   :description "Miniedit: enter minibuffer edit")
@@ -5505,6 +5517,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org
                   :key "C-c C-w"
                   :description "org-refile")
+(cheatsheet-add :group 'Org
+                  :key "g"
+                  :description "org-refile. Works if you place cursor on stars")
   (cheatsheet-add :group 'Org
                   :key "C-c C-x p"
                   :description "org-set-property. Edit a task's properties,e.g.,set STYLE to habit")
@@ -5607,6 +5622,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-agenda
                   :key "M-x my/org-show-active-projects"
                   :description "Show my current projects. From Sacha")
+(cheatsheet-add :group 'Org-agenda
+                  :key "g"
+                  :description "org-agenda-redo-all. Rebuild all agenda views in the current buffer")
   (cheatsheet-add :group 'Org-capture 
                   :key "C-c C-c"
                   :description "On heading of Org-captured entry, choose tag")
@@ -5891,7 +5909,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23944 57690 737426 961000) :init (23944 57690 737365 562000) :init-secs (0 0 2320 914000) :use-package-secs (0 0 2475 167000) :config (23944 57690 737352 958000) :config-secs (0 0 2303 108000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23947 32546 918542 630000) :init (23947 32546 918503 926000) :init-secs (0 0 18 300000) :use-package-secs (0 0 100 715000)))
 
 
 
