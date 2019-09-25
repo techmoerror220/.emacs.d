@@ -727,6 +727,7 @@ I don't know why it doesn't work
 #+RESULTS:
 
 * Agenda 
+
 ** Shortcuts
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -840,6 +841,7 @@ Useful for using custom agenda commands to get an overview of actions by context
 
 HOWEVER I am not 100% sure how useful is all this because I have a nice option in C-c a to choose filtering by tag (/), etc.  Anyways, more info on agenda-custom-commands in http://orgmode.org/worg/org-tutorials/org-custom-agenda-commands.html.
 
+On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgtimeline/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq org-agenda-custom-commands
@@ -905,7 +907,19 @@ HOWEVER I am not 100% sure how useful is all this because I have a nice option i
           )
          ((org-agenda-compact-blocks t))) ;; options set here apply to the entire block
         ;; ...other commands here
-        ))
+
+   ("L" "TimeLine"
+      ((todo
+        "TODO"
+        ((org-agenda-overriding-header "================================= TODO Tasks Without Scheduled Date ================================")
+         (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
+         (org-agenda-prefix-format '((todo . " %1c ")))))
+       (agenda
+        ""
+        ((org-agenda-overriding-header "========================================== Scheduled Tasks ==========================================")
+         (org-agenda-span 22)
+         (org-agenda-prefix-format '((agenda . " %1c %?-12t% s")))))) 
+        )))
 
 (defun my-org-agenda-skip-all-siblings-but-first ()
   "Skip all but the first non-done entry."
@@ -1158,6 +1172,7 @@ notes that
 
 #+RESULTS:
 : ambrevar/org-switch-agenda-file-other-window
+
 
 * Ido =Imenu='s depth of search
 
@@ -2728,6 +2743,7 @@ DGM: check how to make this work.. but way too complicated for me!
 #+end_src
 
 #+RESULTS:
+
 
 * Provide
 
