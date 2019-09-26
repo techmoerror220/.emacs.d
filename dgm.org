@@ -4840,8 +4840,8 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "R"
                   :description "eww-readable. Find text, leaving out navigation menus and the like.")
   (cheatsheet-add :group 'Browsing
-                  :key "here"
-                  :description "Web browsing: Maps and Wolfram included")
+                  :key "s-}"
+                  :description "Web browsing with engine-mode: Google maps and Wolfram included")
   (cheatsheet-add :group 'Browsing
                   :key "M-x sos"
                   :description "StackOverflow only")
@@ -4872,10 +4872,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Dired
                   :key "/"
                   :description "Dired narrow to match filter")
-(cheatsheet-add :group 'Dired
+  (cheatsheet-add :group 'Dired
                   :key "C-l"
                   :description "Delete directory in path")
-(cheatsheet-add :group 'Dired
+  (cheatsheet-add :group 'Dired
                   :key "C-k"
                   :description "Delete path to write a new path")
   (cheatsheet-add :group 'Dired-Projectile
@@ -5226,10 +5226,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Find-Files
                   :key "C-c d"
                   :description "deft. Switch to Deft buffer and load files.")
-(cheatsheet-add :group 'Find-Files
+  (cheatsheet-add :group 'Find-Files
                   :key "C-c C-c"
                   :description "deft-filter-clear")
-(cheatsheet-add :group 'Find-Files
+  (cheatsheet-add :group 'Find-Files
                   :key "C-c C-q"
                   :description "quit-window. Works in Deft")
   (cheatsheet-add :group 'Find-Files
@@ -5325,7 +5325,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Help
                   :key "C-h p"
                   :description "Search the standard Emacs Lisp libraries by topic keywords")  
-(cheatsheet-add :group 'Help
+  (cheatsheet-add :group 'Help
                   :key "C-h i m"
                   :description "Search the info system and open the menu. Then type something, like 'org' and RET")  
   (cheatsheet-add :group 'Help
@@ -5361,7 +5361,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Help
                   :key "C-h v"
                   :description "helpful-variable")
-(cheatsheet-add :group 'Help-Org
+  (cheatsheet-add :group 'Help-Org
                   :key "?"
                   :description "With cursor on heading's stars, ? opens window with shortcuts available")
   (cheatsheet-add :group 'History
@@ -5424,9 +5424,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Mark
                   :key "C-x C-x"
                   :description "Exchange point and mark without activating region")
-(cheatsheet-add :group 'Mark
+  (cheatsheet-add :group 'Mark
                   :key "M-h"
                   :description "org-mark-element. Put point at beginning of this element, mark at end")
+  (cheatsheet-add :group 'Mark
+                  :key "C-c @"
+                  :description "org-mark-subtree. Mark the subtree at point. Repeat to mark subsequent subtrees of the same level")
   (cheatsheet-add :group 'Minibuffer
                   :key "C-M-e"
                   :description "Miniedit: enter minibuffer edit")
@@ -5491,15 +5494,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :key "C-c C-x M-w"
                   :description "org-copy-subtree. Copy subtree to kill ring. With a numeric prefix argument N, copy the N sequential subtrees")
   (cheatsheet-add :group 'Org
-                  :key "C-c C-n"
-                  :description "Move to next heading")
-  (cheatsheet-add :group 'Org
-                  :key "n"
-                  :description "Place cursor at start of heading. n will move to next heading")
-  (cheatsheet-add :group 'Org
-                  :key "b"
-                  :description "Place cursor at start of heading. b will move to previous heading")
-  (cheatsheet-add :group 'Org
                   :key "a"
                   :description "org-archive-subtree-default. Place cursor at start of heading. a will archive it")
   (cheatsheet-add :group 'Org
@@ -5517,7 +5511,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org
                   :key "C-c C-w"
                   :description "org-refile")
-(cheatsheet-add :group 'Org
+  (cheatsheet-add :group 'Org
                   :key "g"
                   :description "org-refile. Works if you place cursor on stars")
   (cheatsheet-add :group 'Org
@@ -5540,7 +5534,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "org-move-subtree-up or -down. On heading, move it up or down in hierarchy")
   (cheatsheet-add :group 'Org
                   :key "M-<left><right>"
-                  :description "Demote all headings in a region")
+                  :description "Promote/demote heading or all headings in a region")
   (cheatsheet-add :group 'Org
                   :key "S-<left><right>"
                   :description "On heading, add or change TODO status")
@@ -5610,19 +5604,19 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-agenda
                   :key "s"
                   :description "org-save-all-org-buffers. Save all Org buffers in the current Emacs session, and also the locations of IDs")
-(cheatsheet-add :group 'Org-agenda
+  (cheatsheet-add :group 'Org-agenda
                   :key "S"
                   :description "Show sunrise/Sunset times")
-(cheatsheet-add :group 'Org-agenda
+  (cheatsheet-add :group 'Org-agenda
                   :key "M"
                   :description "Show lunar phases")
-(cheatsheet-add :group 'Org-agenda
+  (cheatsheet-add :group 'Org-agenda
                   :key "C"
                   :description "Convert to other calendars")
   (cheatsheet-add :group 'Org-agenda
                   :key "M-x my/org-show-active-projects"
                   :description "Show my current projects. From Sacha")
-(cheatsheet-add :group 'Org-agenda
+  (cheatsheet-add :group 'Org-agenda
                   :key "g"
                   :description "org-agenda-redo-all. Rebuild all agenda views in the current buffer")
   (cheatsheet-add :group 'Org-capture 
@@ -5697,12 +5691,18 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-latex
                   :key "C-c C-x C-l"
                   :description "org-toggle-latex-fragment. C-c C-c to show the equation code")
-(cheatsheet-add :group 'Org-movement
-                :key "C-M-p and C-M-n"
-                :description "Move across headings of any level")
-(cheatsheet-add :group 'Org-movement
-                :key "C-c C-b and C-c C-f"
-                :description "Move back and forward headings of same level")
+  (cheatsheet-add :group 'Org-movement
+                  :key "M-{"
+                  :description "org-backward-element. Move to the previous element at the same level, when possible")
+  (cheatsheet-add :group 'Org-movement
+                  :key "M-}"
+                  :description "org-forward-element. Move to the next element at the same level, when possible")
+  (cheatsheet-add :group 'Org-movement
+                  :key "n"
+                  :description "Place cursor at start of heading, n will move to next heading of any level. C-M-n and C-c C-n do the same")
+  (cheatsheet-add :group 'Org-movement
+                  :key "p"
+                  :description "Place cursor at start of heading, b will move to previous heading. C-M-p and C-c C-p do the same")
   (cheatsheet-add :group 'Org-recipes
                   :key "C-c i"
                   :description "Insert raw code under a heading")
@@ -5889,7 +5889,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Windows
                   :key "C-c <left>"
                   :description "winner-undo: Switch back to earlier window config; undo changes in window config")
-(cheatsheet-add :group 'Windows
+  (cheatsheet-add :group 'Windows
                   :key "C-c <right> or <down>"
                   :description "winner-redo: Restore a more recent window configuration saved by Winner mode")
   (cheatsheet-add :group 'Window-Movement
@@ -5909,7 +5909,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23947 32546 918542 630000) :init (23947 32546 918503 926000) :init-secs (0 0 18 300000) :use-package-secs (0 0 100 715000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23948 40087 748273 47000) :init (23948 40087 748221 737000) :init-secs (0 0 1658 117000) :use-package-secs (0 0 1814 589000) :config (23948 40087 748212 720000) :config-secs (0 0 1645 108000)))
 
 
 
