@@ -44,15 +44,17 @@ This is the old configuration.
 (yas-global-mode 1)
 (setq yas-snippet-dirs '("~/.emacs.d/snippets"
                          "~/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets"
-                         "~/.emacs.d/elpa/yasnippet-snippets-20181107.2203/snippets"
-                         "~/.emacs.d/elpa/"))
+                         "/home/dgm/.emacs.d/elpa/yasnippet-snippets-20190725.1049/snippets"
+                         "/home/dgm/.emacs.d/elpa/yasnippet-snippets-20190821.901/snippets"
+                         "/home/dgm/.emacs.d/elpa/yasnippet-snippets-20190926.1252/snippets"))
+                         ;; "~/.emacs.d/elpa/"))
 
 ;;(yas/load-directory "~/.emacs.d/snippets")
 ;;(yas-load-directory (expand-file-name "snippets" dotfiles-dir)) ;; original line from kieran healy
 #+end_src
 
 #+RESULTS:
-| ~/.emacs.d/snippets | ~/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets | ~/.emacs.d/elpa/yasnippet-snippets-20181107.2203/snippets | ~/.emacs.d/elpa/ |
+| ~/.emacs.d/snippets | ~/.emacs.d/elpa/yasnippet-classic-snippets-1.0.2/snippets | /home/dgm/.emacs.d/elpa/yasnippet-snippets-20190725.1049/snippets | /home/dgm/.emacs.d/elpa/yasnippet-snippets-20190821.901/snippets | /home/dgm/.emacs.d/elpa/yasnippet-snippets-20190926.1252/snippets |
 
 The new config from Daniel Mai's config files is this:
 

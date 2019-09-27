@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-mu4e-compose-mode
+# key: dias
+# name: dias
+# --
+`(newline)`
+${1:$$(yas-choose-value '("Buenos días " "Buenas tardes " ("Estimado " `(bjm/mu4e-get-names-for-yasnippet)`)))},
+
+$0
+
+Un saludo,
+
+--
+Daniel Guinea
+Dept. Sociología I
+Facultad de CC.PP. y Sociología
+Universidad Nacional de Educación a Distancia (UNED)
+Calle Obispo Trejo 2, Madrid 28040
+email: daniel.guinea@poli.uned.es
+Tel. +34 91 398 9441

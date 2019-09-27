@@ -1,5 +1,7 @@
-# key: ex
+# -*- mode: snippet -*-
 # name: example
+# expand-env: ((yas-wrap-around-region t))
+# key: ex
 # --
 #+BEGIN_EXAMPLE
 $1

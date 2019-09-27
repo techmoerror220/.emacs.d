@@ -4905,6 +4905,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Editing
                   :key "C-x l"
                   :description "count-lines-page")
+(cheatsheet-add :group 'Editing
+                  :key "C-x 8-"
+                  :description "Prefix to insert symbols")
   (cheatsheet-add :group 'Editing
                   :key "M--c"
                   :description "Upper case last word: Mientras haces M-- dale a la c")
@@ -5061,6 +5064,15 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Email
                   :key "g"
                   :description "mu4e-view-go-to-url. Open URL")
+  (cheatsheet-add :group 'Email
+                  :key "S"
+                  :description "helm-mu. Defined in mu4e-main-mode-map")
+  (cheatsheet-add :group 'Email
+                  :key "C-i"
+                  :description "helm-execute-persistent-action. In helm-mu, execute action, open email at point in another window and move point there, without quitting helm")
+  (cheatsheet-add :group 'Email
+                  :key "M-x helm-mu-contacts"
+                  :description "Greps contacts so regexp allowed. M-SPC to select multiple sources. Available actions with C-z are insert selected contacts at point and copy selected contacts to clipboard.")
   (cheatsheet-add :group 'Expressions-Eval
                   :key "C-x C-e"
                   :description "sanityinc/eval-last-sexp-or-region")
@@ -5295,6 +5307,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Helm
                   :key "C-c TAB"
                   :description "Yank selected candidate in Helm session at point")
+(cheatsheet-add :group 'Helm
+                  :key "M-SPC"
+                  :description "Select multiple sources")
   (cheatsheet-add :group 'Helm
                   :key "s-r"
                   :description "helm-resume previous H session, inputs included. C-u lets choose Helm buffer. C-c n inside Helm session")
@@ -5619,6 +5634,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-agenda
                   :key "g"
                   :description "org-agenda-redo-all. Rebuild all agenda views in the current buffer")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "SPC"
+                  :description "org-agenda-show-and-scroll-up. Display the Org file which contains the item at point. If repeated, scroll that Org file")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "DEL"
+                  :description "org-agenda-show-scroll-down. Scroll down the window showing the agenda")
   (cheatsheet-add :group 'Org-capture 
                   :key "C-c C-c"
                   :description "On heading of Org-captured entry, choose tag")
@@ -5627,7 +5648,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "Clear tag selection")
   (cheatsheet-add :group 'Org-capture
                   :key "C-c C-r"
-                  :description "my/org-refile-and-jump org-capture-mode-map. Refile a capture and then jump to the new location")
+                  :description "my/org-refile-and-jump org-capture-mode-map. Refile a capture and then jump to the new location... Leaves one hanging buffer. I think C-c C-w is better")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c j"
                   :description "org-clock-goto. jump to current task from anywhere")
@@ -5909,7 +5930,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23948 40087 748273 47000) :init (23948 40087 748221 737000) :init-secs (0 0 1658 117000) :use-package-secs (0 0 1814 589000) :config (23948 40087 748212 720000) :config-secs (0 0 1645 108000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23950 12701 583672 765000) :init (23950 12701 583609 57000) :init-secs (0 0 27 870000) :use-package-secs (0 0 181 508000)))
 
 
 
@@ -5948,6 +5969,50 @@ This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try a
 | \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
 | \`\*Calendar\*\' | (display-buffer-below-selected) |                       |
 | \*Calendar\*     | my-position-calendar-buffer     |                       |
+
+
+* Security
+On Sept 27, 2019, when I try to look up for package doing =M-x package-list-packages=, I get an error: 
+
+#+begin_example
+Failed to verify signature archive-contents.sig:
+No public key for 066DAFCB81E42C40 created at 2019-09-27T11:10:02+0200 using RSA
+Command output:
+gpg: Signature made Fri 27 Sep 2019 11:10:02 AM CEST
+gpg:                using RSA key C433554766D3DDC64221BFAA066DAFCB81E42C40
+gpg: Can't check signature: No public key
+#+end_example
+
+Investigating I go to http://elpa.gnu.org/packages/gnu-elpa-keyring-update.html and 
+I do as it says:
+
+1. Fetch the new key manually, e.g. with something like:
+
+#+begin_example
+gpg --homedir ~/.emacs.d/elpa/gnupg --receive-keys 066DAFCB81E42C40
+#+end_example
+
+2. Modify the expiration date of the old key, e.g. with something like:
+
+#+begin_example
+      gpg --homedir ~/.emacs.d/elpa/gnupg \
+          --quick-set-expire 474F05837FBDEF9B 1y
+#+end_example
+
+Esto no funciona. Obtengo: 
+
+#+begin_example
+gpg: "474F05837FBDEF9B" is not a fingerprint
+#+end_example
+
+Temporarily disable signature verification (see variable `package-check-signature').
+
+#+begin_example
+(setq package-check-signature nil)
+#+end_example
+
+After all this, I do =M-x package-refresh-contents= and this updates all my packages, which I think is a mistake.
+
 
 
 * Provide

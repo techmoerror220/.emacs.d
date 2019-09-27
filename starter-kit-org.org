@@ -321,7 +321,6 @@ Make yasnippet work properly with org-mode.
             (add-to-list 'org-tab-first-hook
                          'yas-org-very-safe-expand)
             ))
-
 #+end_src
 
 #+RESULTS:

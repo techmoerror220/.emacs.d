@@ -233,8 +233,6 @@ From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
 
 Many email services/clients expect soft-wrapped emails, so I like to use visual-line-mode and the visual-fill-column package instead of auto-fill-mode. To show whether a paragraph is hard- or soft-wrapped I also turn on visual line indicators in the fringe.
 
-!!here DGM: checking origin of problem
-
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package visual-fill-column
   :ensure t)
@@ -524,12 +522,11 @@ I don't know the use of this but I had it, so...
 #+RESULTS:
 : t
 
-
 * Customizing the main view
 ** Adding bookmark to menu or =Main view=
 - Read https://www.djcbsoftware.nl/code/mu/mu4e/Bookmarks.html
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes 
 (add-to-list 'mu4e-bookmarks
   (make-mu4e-bookmark
     :name  "Messages with attachments"
@@ -540,11 +537,46 @@ I don't know the use of this but I had it, so...
   (make-mu4e-bookmark
     :name  "Archived messages"
     :query "maildir:/archive" 
-    :key ?r) t)
+    :key ?z) t)
 #+END_SRC
 
-#+RESULTS:
-| (flag:unread AND NOT flag:trashed Unread messages 117) | (date:today..now Today's messages 116) | (date:7d..now Last 7 days 119) | (mime:image/* Messages with images 112) | #s(mu4e-bookmark Messages with attachments flag:attach 97) | #s(mu4e-bookmark Archived messages maildir:/archive 114) |
+
+** New bookmarks inspired by the great Royal Holloway Albertch
+- https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
+
+#+begin_src emacs-lisp :tangle yes
+(add-to-list
+ 'mu4e-bookmarks
+ '("(maildir:\"/personal/[personal].Sent Mail\" OR maildir:\"/work/[work].Sent Mail\") AND date:7d..now"
+   "Sent in last 7 days" ?s) t)
+
+(add-to-list
+ 'mu4e-bookmarks
+ '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\"  OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND ((from:\"Maria Angel\" OR from:departamentos.polisoci@adm.uned.es OR from:secretaria.poli.soci@adm.uned.es OR from:decanato.polisoci@adm.uned.es OR from:negociado-pruebas-presenciales@adm.uned.es OR from:vicepruebas@adm.uned.es OR from:vrector-pruebas-presen@adm.uned.es OR from:coord.pruebas@adm.uned.es OR from:pruebaspresenciales@adm.uned.es OR from:gastosextraordinariospruebas@adm.uned.es OR from:\"Secretaría Docente\" OR from:secdoc.cee@adm.uned.es OR from:gabriela.topa1@gmail.com OR from:\"Gabriela Topa\" OR from:gtopa@psi.uned.es OR from:\"Máster Formación Profesorado\" OR from:master-formacionprofesorado@adm.uned.es OR from:\"M. Angeles Serrano Garcia\" OR from:maserrano@pas.uned.es OR from:\"M. del Puerto Hojas Rosales\" OR from:mhojas@pas.uned.es) OR (subject:tfg OR subject:TFG OR body:tfg OR body:TFG OR subject:\"trabajo fin de grado\" OR body:\"trabajo fin de grado\" OR subject:tfm OR subject:TFM OR body:tfm OR body:TFM OR subject:\"trabajo fin de master\" OR body:\"trabajo fin de master\" OR subject:\"/ex.men.*/\"  OR body:\"/ex.men.*/\" OR subject:\"sociologia aplicada\"  OR body:\"sociologia aplicada\" OR subject:/modelo.*/))"
+   "Facultad, dept., vicerrec., TFG, exámenes" ?f) t)
+
+(add-to-list
+ 'mu4e-bookmarks
+ '("(maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:ricardo.mora.villarrubia@gmail.com OR from:ricardo.mora@uc3m.es OR from:ricardo.mora.villarrubia@outlook.com OR from:\"Ricardo Mora\" OR from:ricmora@eco.uc3m.es OR from:\"Adelheid Holl\" OR from:a.holl@csic.es)"
+   "Ricardo" ?r) t)
+
+(add-to-list
+ 'mu4e-bookmarks
+ '("(maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Belén Barreiro\" OR from:bbarreiro@40db.es OR from:40db.es OR from:\"Mónica Méndez\" OR from:monica.mendez@cis.es) OR from:\"Luis Manuel Ayuso Sanchez\" Or from:luis.ayuso@uma.es OR from:\"Juan Ignacio Martinez Pastor\" OR from:jimartinez@poli.uned.es)"
+   "Work-hunt" ?h) t)
+
+(add-to-list
+ 'mu4e-bookmarks
+ '("(maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Paula Zingoni\" OR from:paulazingoni@gmail.com OR from:\"Croydon County\" OR from:\"Family\" OR from:family.croydon.countycourt@justice.gov.uk OR from:\"Jose Antonio Arcila\" OR from:joseantonio@arcila-abogados.es OR from:\"Elena Benítez Imedio\" OR from:ebi@ayuelajimenez.es OR from:\"Juan Antonio Montoro\" OR from:jmontoro@euroconsejo.org OR from:\"Pablo Velasco Espinosa\" OR from:pvelasco@euroconsejo.org)"
+   "Operation D" ?d))
+
+;;(add-to-list
+;; 'mu4e-bookmarks
+;; '("mime:application/* AND NOT mime:application/pgp* AND (maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\")"
+;;   "Messages with attachments for me." ?i) t)
+#+end_src
+
+OR subject:modelo OR subject:modelos OR subject:examen OR subject:examenes OR subject:convocatoria OR body:modelo OR body:modelos OR body:examen OR body:examenes OR body:convocatoria
 
 ** COMMENT New item in Basics (Main View): =helm-mu=
 
@@ -1047,19 +1079,6 @@ From: https://etienne.depar.is/emacs.d/mu4e.html
 #+RESULTS:
 : ed/preview-some-mail-at
 
-** =helm-mu=
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package helm-mu
-  :ensure t)
-
-(when (require 'helm-mu nil t)
-  (dolist (map (list mu4e-headers-mode-map mu4e-main-mode-map mu4e-view-mode-map))
-    (define-key map "m" 'helm-mu)))
-#+END_SRC
-
-#+RESULTS:
-
 
 ** Caolan's costumization <<here>>
 !!here: commented out in search of culprit.
@@ -1069,11 +1088,11 @@ From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-hook 'mu4e-compose-mode-hook
           (lambda ()
-            (set-fill-column 72)
+            ;;(set-fill-column 72)
             (auto-fill-mode 0)
-            (visual-fill-column-mode)
-            (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
-            (visual-line-mode)))
+            ;;(visual-fill-column-mode)
+            (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))))
+            ;;(visual-line-mode)))
 
 
   ;; I want to see full From header, not only name
@@ -1566,6 +1585,641 @@ Indeed, `org-mu4e-store-link` won't do anything if current mode is not either `m
 (add-hook 'org-store-link-functions 'org-mu4e-store-link)
 #+END_SRC
 
+* COMMENT Settings by the great Martin Albrecth
+
+https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
+
+** COMMENT Contacts
+
+Handling contacts semi-automagically is one of mu4e’s big selling points to me. The functions below make it more automagic.
+
+My shitty regexp for detecting e-mail addresses
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defconst malb/email-regexp "<?\\([^ ]+@[^ ]+\.[^ >]+\\)>?")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/extract-email (str)
+  ;; return last sub-string looking like an email address
+  (let ((tokens (reverse (split-string-and-unquote str)))
+        (match))
+    (dolist (token tokens)
+      (string-match malb/email-regexp token)
+      (setq match (or match (match-string 1 token))))
+    match))
+#+END_SRC
+
+*** COMMENT Canonicalisation
+
+A table of canonical names for people who cannot seem to fix their headers …
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defcustom malb/mu4e-name-replacements nil
+  "replacement names from e-mail addresses"
+  :type '(list :type string)
+  :group 'malb)
+#+END_SRC
+
+- My uni likes “Lastname, Firstname (Year)” which is weird, so we fix it.
+- Some people like to YELL their LASTNAME and then write the first name, we also canonicalise that
+- Some people like to send incomplete data, so we maintain a local replacement list
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/canonicalise-contact-name (email  &optional name nick)
+  ""
+  (let* ((name (or name ""))
+         (case-fold-search nil)
+         ;; look up email address and use entry if found
+         (candidate (if nick (caddr (assoc (downcase email) malb/mu4e-name-replacements))
+                      (cadr (assoc (downcase email) malb/mu4e-name-replacements)))))
+    (if candidate
+        candidate
+      (progn
+        ;; deal with YELL’d last names
+        (setq name (replace-regexp-in-string "^\\(\\<[[:upper:]]+\\>\\) \\(.*\\)" "\\2 \\1" name))
+        ;; Foo, Bar becomes Bar Foo
+        (setq name (replace-regexp-in-string "^\\(.*\\), \\([^ ]+\\).*" "\\2 \\1" name))
+        ;; foo bar becomes Foo Bar
+        (setq name (capitalize name))))))
+#+END_SRC
+
+A function to add new replacements.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/add-mu4e-name-replacement ()
+  (interactive)
+  (let* ((email (helm-read-string "E-mail: " (downcase (get-text-property (point) 'email))))
+         (name  (helm-read-string "Name: "
+                                  (malb/canonicalise-contact-name email
+                                                                  (get-text-property (point) 'long))))
+         (nick  (helm-read-string "Nick: " (replace-regexp-in-string "(.*) " "\\1" name))))
+    (add-to-list 'malb/mu4e-name-replacements (list email name nick) t)
+    (customize-save-variable 'malb/mu4e-name-replacements malb/mu4e-name-replacements)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(bind-key "N" #'malb/add-mu4e-name-replacement mu4e-view-mode-map)
+#+END_SRC
+
+Canonicalise contacts as they appear from mu4e.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/mu4e-contact-rewrite-function (contact)
+  (let* ((email (downcase (plist-get contact :mail)))
+         (name (if (equal (plist-get contact :name) email)
+                   nil
+                 (plist-get contact :name)))
+         (case-fold-search t))
+    (plist-put contact :name (malb/canonicalise-contact-name email name))
+    contact))
+
+(setq mu4e-contact-rewrite-function #'malb/mu4e-contact-rewrite-function)
+#+END_SRC
+
+Ignore some e-mail addresses when auto completing:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq mu4e-compose-complete-ignore-address-regexp (rx  (or (seq "no" (zero-or-one "-") "reply")
+                                                           (seq "replyto-" (one-or-more char) "@plus.google.com")
+                                                           (seq "@" (one-or-more char) ".twitter.com")
+                                                           (seq "do-not-reply" (zero-or-more char) "@")
+                                                           (seq "bounce-" (one-or-more char) "@"))))
+#+END_SRC
+
+Extract a pretty-ish list of contacts from an e-mail.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/extract-contacts (fields)
+  "Return a list of 'name <email>' entries."
+  (let (addresses
+        point-end-of-line
+        (case-fold-search t)
+        (search-regexp (mapconcat (lambda (arg) (concat "^" arg ": *"))
+                                  fields "\\|")))
+
+    ;; extract addresses
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward search-regexp nil t)
+        (save-excursion
+          (setq point-end-of-line (re-search-forward "$")))
+        (setq addresses (append addresses
+                                (mail-header-parse-addresses
+                                 (buffer-substring-no-properties (point) point-end-of-line))))))
+    (setq addresses (mapcar (lambda (address)
+                              (format "\"%s\" <%s>"
+                                      (malb/canonicalise-contact-name (car address) (cdr address))
+                                      (car address)))
+                            addresses))))
+#+END_SRC
+
+The following is useful in e-mail templates
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/get-names-from-fields (fields)
+  (let (contacts
+        ret
+        point-end-of-line
+        (search-regexp (mapconcat (lambda (arg)
+                                    (concat "^" arg ": "))
+                                  fields "\\|"))
+        (case-fold-search t))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward search-regexp nil t)
+        (save-excursion
+          (setq point-end-of-line (re-search-forward "$")))
+        (setq contacts (append contacts
+                               (mail-header-parse-addresses
+                                (buffer-substring-no-properties (point)
+                                                                point-end-of-line)))))
+      (dolist (contact contacts)
+        (let ((name (malb/canonicalise-contact-name (car contact) (cdr contact) t)))
+          ;; extract first name
+          (when (string-match "\\([^ ,]+\\)" name)
+            (push (match-string 1 name) ret))))
+      (if ret (string-join (nreverse ret) ", ") ret "¿qué tal?"))))
+#+END_SRC
+
+A shortcut:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/get-names-from-to-field ()
+  (interactive)
+  (malb/get-names-from-fields '("To")))
+#+END_SRC
+
+*** COMMENT Rearrange To and CC
+
+Use Helm to re-arrange recipients of an e-mail. I often get e-mail from Bob with Charley in CC which prompts me to send an e-mail to Charley with Bob in CC.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/helm-reorder-recipients ()
+  "Re-distribute addresses to To: and CC: fields."
+  (interactive)
+  (let* ((search-regexp "^to: *\\|^cc: *")
+         (addresses (malb/extract-contacts '("to" "cc")))
+         (case-fold-search t)
+         to cc)
+
+    ;; ask user to split into To and CC
+    (setq to (helm :sources (helm-build-sync-source "To:"
+                              :candidates addresses
+                              :action  '(("Select" . (lambda (x) (helm-marked-candidates)))
+                                         ("Ignore" . (lambda (x)))))))
+
+    (dolist (address to)
+      (setq addresses (delete address addresses)))
+
+    (if addresses
+        (setq cc (helm :sources (helm-build-sync-source "CC:"
+                                  :candidates addresses
+                                  :action  '(("Select" . (lambda (x) (helm-marked-candidates)))
+                                             ("Ignore" . (lambda (x))))))))
+
+    ;; Replace To: and CC: fields
+    (save-excursion
+      (goto-char (point-min))
+
+      (while (re-search-forward search-regexp nil t)
+        (kill-whole-line))
+
+      (message-goto-from)
+
+      (progn (newline)
+             (insert "To: ")
+             (insert (mapconcat #'identity to ", ")))
+      (if cc (progn (newline)
+                    (insert "Cc: ")
+                    (insert (mapconcat #'identity cc ", ")))))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(bind-key "C-c ]" #'malb/helm-reorder-recipients mu4e-compose-mode-map)
+#+END_SRC
+
+*** COMMENT Contact Look up
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/fullcontact ()
+  (interactive)
+  (let* ((email (replace-regexp-in-string "<\\(.*?\\)>" "\\1" (thing-at-point 'email)))
+         (path (expand-file-name "fullcontact.py" user-emacs-directory)))
+    (if email
+        (let ((msg (shell-command-to-string (format "PYTHONIOENCODING=utf8 python %s -e %s" path email))))
+          (message "%s" msg)))))
+
+(bind-key "@" #'malb/fullcontact mu4e-view-mode-map)
+#+END_SRC
+
+** COMMENT Searching
+A helm menu for contacts, based on ([[http://kitchingroup.cheme.cmu.edu/blog/2015/03/14/A-helm-mu4e-contact-selector/][source]])
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/helm-mu-contacts (arg)
+  "Helm interface to e-mail addresses.
+
+When ARG equals then the persistent action is search, otherwise
+it is to insert the contact.
+"
+  (interactive "p")
+
+  (if (not mu4e~contacts)
+      (progn
+        ;; request contacts
+        (mu4e~request-contacts)
+        (let ((i 0))
+          ;; sleep for at most 2 seconds to wait for contacts to be filed
+          (while (and (not mu4e~contacts) (> 2 i))
+            (sleep-for 1)
+            (+ i 1)))))
+
+  (let ((malb/helm-mu-actions
+         '(("Insert" . (lambda (x)
+                         (insert (mapconcat 'identity
+                                            (helm-marked-candidates) ","))))
+           ("Find messages (combine multiple with OR)" .
+            (lambda (x)
+              (mu4e-headers-search
+               (format "contact:%s"
+                       (mapconcat 'malb/extract-email (helm-marked-candidates) " OR ")))))
+           ("Copy to clipboard" . (lambda (x)
+                                    (kill-new (mapconcat 'identity
+                                                         (helm-marked-candidates) ","))))
+           ("Google search" . (lambda (x) (helm-google (replace-regexp-in-string
+                                                        (format "^\\(.*\\) %s" malb/email-regexp) "\\1" x))))
+
+           ("Find messages (combine multiple with AND)" .
+            (lambda (x)
+              (mu4e-headers-search
+               (format "contact:%s"
+                       (mapconcat 'malb/extract-email (helm-marked-candidates) " AND ")))))
+           )))
+
+    (helm :sources (helm-build-sync-source "E-mail address candidates"
+                     :candidates  (append
+                                   ;; mu contacts
+                                   (loop for contact being the hash-key of mu4e~contacts
+                                         collect (cons contact contact)))
+                     :action  (cond ((equal arg 4) (cons (cadr malb/helm-mu-actions)
+                                                         (cons (car malb/helm-mu-actions)
+                                                               (cddr  malb/helm-mu-actions))))
+                                    (t malb/helm-mu-actions))))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(key-chord-define mu4e-compose-mode-map ",," #'malb/helm-mu-contacts)
+(bind-key "C-c [" #'malb/helm-mu-contacts mu4e-compose-mode-map)
+#+END_SRC
+
+** COMMENT Viewing
+
+Use =<TAB>= to preview messages and =q= to close previews.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'mu4e-view)
+(require 'mu4e-headers)
+
+(defun malb/preview-message ()
+  (interactive)
+  (mu4e-headers-view-message)
+  (sleep-for 0.1) ;; this is a HACK
+  (select-window (previous-window)))
+
+;; based on (mu4e-select-other-view)
+(defun malb/close-message-view ()
+  (interactive)
+  (let* ((other-buf
+	   (cond
+	     ((eq major-mode 'mu4e-headers-mode)
+	       (mu4e-get-view-buffer))
+	     ((eq major-mode 'mu4e-view-mode)
+	       (mu4e-get-headers-buffer))))
+	  (other-win (and other-buf (get-buffer-window other-buf))))
+    (if (window-live-p other-win)
+      (progn
+          (select-window other-win)
+          (sleep-for 0.1)
+          (mu4e~view-quit-buffer))
+      (mu4e~headers-quit-buffer))))
+
+(bind-key "<tab>" #'malb/preview-message mu4e-headers-mode-map)
+(bind-key "q" #'malb/close-message-view mu4e-headers-mode-map)
+(bind-key "z" #'malb/close-message-view mu4e-headers-mode-map)
+#+END_SRC
+
+Visual-line mode all the way.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(bind-key "<home>" #'beginning-of-visual-line mu4e-view-mode-map)
+(bind-key "<end>" #'end-of-visual-line mu4e-view-mode-map)
+#+END_SRC
+
+Headers to show in header view.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq mu4e-headers-fields '((:human-date . 10)
+                            (:flags . 4)
+                            (:mailing-list . 16)
+                            (:from . 22)
+                            (:to . 22)
+                            (:subject)))
+#+END_SRC
+
+Use imagemagick, if available
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(when (fboundp 'imagemagick-register-types)
+  (imagemagick-register-types))
+#+END_SRC
+
+View e-mails with width restriction, but wider for HTML
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/mu4e-view-mode-hook ()
+  "View e-mails with width restriction, but wider for HTML."
+  (if (boundp 'msg)
+      (let* ((txt (mu4e-message-field msg :body-txt))
+             (html (mu4e-message-field msg :body-html)))
+        (cond
+         ((and (> (* mu4e-view-html-plaintext-ratio-heuristic
+                     (length txt)) (length html))
+               (or (not mu4e-view-prefer-html) (not html)))
+          (set-fill-column 80))
+         (t
+          (set-fill-column 120))))
+    (set-fill-column 80))
+  (visual-line-mode 1)
+  (visual-fill-column-mode 1))
+
+(add-hook 'mu4e-view-mode-hook #'malb/mu4e-view-mode-hook)
+#+END_SRC
+
+Set higher contrast.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq shr-color-visible-luminance-min 80)
+;; (setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
+#+END_SRC
+
+** COMMENT Actions
+
+Action to search messages by/to sender.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/search-for-sender (msg)
+  "Search for messages sent by the sender of the message at point."
+  (mu4e-headers-search
+   (concat "from:" (cdar (mu4e-message-field msg :from)))))
+
+(defun malb/search-for-sender-extended (msg)
+  "Search for messages sent by the sender of the message at point."
+  (mu4e-headers-search
+   (concat "from:"  (mu4e-headers-search (cdar (mu4e-message-field msg :from)))
+           "OR to:" (mu4e-headers-search (cdar (mu4e-message-field msg :from)))
+           "OR cc:" (mu4e-headers-search (cdar (mu4e-message-field msg :from))))))
+
+(add-to-list 'mu4e-view-actions
+             '("from 🔍" . malb/search-for-sender) t)
+(add-to-list 'mu4e-headers-actions
+             '("from 🔍" . malb/search-for-sender) t)
+
+;; (add-to-list 'mu4e-view-actions
+;;              '("sender search" . malb/search-for-sender-extended) t)
+#+END_SRC
+
+Action to search messages involving all correspondents.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/find-correspondence (msg)
+  "Find messages involving all correspondents."
+  (let ((addresses (append (mapcar (lambda (x) (cdr x))
+                                   (mu4e-message-field msg :to))
+                           (mapcar (lambda (x) (cdr x))
+                                   (mu4e-message-field msg :cc))
+                           (mapcar (lambda (x) (cdr x))
+                                   (mu4e-message-field msg :from)))))
+    (helm :sources (helm-build-sync-source "Filter candidates:"
+                     :candidates addresses
+                     :after-init-hook (lambda () (with-helm-buffer
+                                                   (run-at-time 0.25 nil #'helm-mark-all)))
+                     :action '(("Filter" . (lambda (x) (setq addresses (helm-marked-candidates))))
+                              ("Use all" . (lambda (x))))))
+    (mu4e-headers-search
+     (format "contact:%s"
+             (mapconcat 'identity addresses " AND ")))))
+
+(add-to-list 'mu4e-view-actions
+             '("Contact 🔍" . malb/find-correspondence) t)
+
+(add-to-list 'mu4e-headers-actions
+             '("Contact 🔍" . malb/find-correspondence) t)
+#+END_SRC
+
+DWIM action. ~malb/mu4e-dwim-actions~ is a list of triples ~("from regexp" "subject regexp" (lambda (msg) …))~ where the lambda is executed whenever both regexps match. Processing does not stop after the first match.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq malb/mu4e-dwim-actions nil)
+
+(defun malb/mu4e-dwim-action (msg)
+  (let  ((from (cdr (car (mu4e-message-field msg :from))))
+         (subject (mu4e-message-field msg :subject)))
+    (dolist (action malb/mu4e-dwim-actions)
+      (let ((from-regexp (car action))
+            (subject-regexp (cadr action))
+            (f (caddr action)))
+        (when (and
+               (string-match from-regexp from)
+               (string-match subject-regexp subject))
+          (funcall f msg))))))
+
+(add-to-list 'mu4e-view-actions
+             '("dwim" . malb/mu4e-dwim-action) t)
+(add-to-list 'mu4e-headers-actions
+             '("dwim" . malb/mu4e-dwim-action) t)
+#+END_SRC
+
+* COMMENT Yasnippet for email composition
+Now that our addresses are canonicalised, I can use those to fill in a few more bits. Given an email starting with “To: John Doe <john@example.com>” there is no point in typing the name “John” again when I do the customary “Hi …,”. Here, YASnippet comes in. YASnippet is a templating system for Emacs inspired by TextMate, which allows to map short sequences of characters to other sequences of characters, potentially by asking for more user input and/or calling some arbitrary Emacs Lisp function. For example, here’s my “hi” template
+
+#+BEGIN_EXAMPLE
+# -*- mode: snippet -*-
+# name: Say "hi"
+# key: Hi
+# --
+Hi ${1:`(malb/yas-get-names-from-to-fields)`},
+
+$0
+
+Cheers,
+Martin
+#+END_EXAMPLE
+
+Using this snippet, typing Hi<Tab> triggers email boilerplate to be inserted, with the cursor eventually placed in the position of $0. The name used in the greeting is computed using the following function:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/canonicalise-contact-name (email  &optional name nick)
+  ""
+  (let* ((name (or name ""))
+         (case-fold-search nil)
+         ;; look up email address and use entry if found
+         (candidate (if nick (caddr (assoc (downcase email) malb/mu4e-name-replacements))
+                      (cadr (assoc (downcase email) malb/mu4e-name-replacements)))))
+    (if candidate
+        candidate
+      (progn
+        ;; deal with YELL’d last names
+        (setq name (replace-regexp-in-string "^\\(\\<[[:upper:]]+\\>\\) \\(.*\\)" "\\2 \\1" name))
+        ;; Foo, Bar becomes Bar Foo
+        (setq name (replace-regexp-in-string "^\\(.*\\), \\([^ ]+\\).*" "\\2 \\1" name))
+        ;; foo bar becomes Foo Bar
+        (setq name (capitalize name))))))
+#+END_SRC
+
+#+begin_src emacs-lisp :tangle yes
+(defun malb/yas-get-names-from-fields (fields)
+  (let (names
+        ret
+        name
+        point-end-of-line
+        (search-regexp (mapconcat (lambda (arg)
+                                    (concat "^" arg ": "))
+                                  fields "\\|"))
+        (case-fold-search nil))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward search-regexp nil t)
+        (save-excursion
+          (setq point-end-of-line (re-search-forward "$")))
+        (setq name (buffer-substring-no-properties (point) point-end-of-line))
+        (setq name (split-string name "[^ ]+@[^ ]+," t " ")) ;; split on email@address,
+        (setq names (append names name)))
+      (dolist (name names)
+        (setq name (malb/canonicalise-contact-name name))
+        (if (string-match "\\([^ ,]+\\)" name)
+            (progn
+              (setq name (match-string 1 name))
+              (setq name (capitalize name))
+              (if ret
+                  (setq ret (concat ret ", " name))
+                (setq ret name)))))
+      (if ret ret "¿qué tal?"))))
+
+(defun malb/yas-get-names-from-to-fields ()
+  (interactive)
+  (malb/yas-get-names-from-fields '("To")))
+#+end_src
+
+#+RESULTS:
+: malb/yas-get-names-from-to-fields
+
+Of course, you can create much more elaborate snippets calling all kinds of functions to respond to all kinds of email. Once you created so many snippets that you’re at risk of loosing track, I recommend helm-yasnippet as a nice interactive interface for selecting the right snippet.
+
+* Get the first name of the person you are replying to 
+
+Finally, I got it working from here: http://pragmaticemacs.com/emacs/customise-the-reply-quote-string-in-mu4e/
+
+#+begin_src emacs-lisp :tangle yes
+;; function to return first name of email recipients
+;; used by yasnippet
+;; inspired by
+;;http://blog.binchen.org/posts/how-to-use-yasnippets-to-produce-email-templates-in-emacs.html
+(defun bjm/mu4e-get-names-for-yasnippet ()
+  "Return comma separated string of names for an email"
+  (interactive)
+  (let ((email-name "") str email-string email-list email-name2 tmpname)
+    (save-excursion
+      (goto-char (point-min))
+      ;; first line in email could be some hidden line containing NO to field
+      (setq str (buffer-substring-no-properties (point-min) (point-max))))
+    ;; take name from TO field - match series of names
+    (when (string-match "^To: \"?\\(.+\\)" str)
+      (setq email-string (match-string 1 str)))
+    ;;split to list by comma
+    (setq email-list (split-string email-string " *, *"))
+    ;;loop over emails
+    (dolist (tmpstr email-list)
+      ;;get first word of email string
+      (setq tmpname (car (split-string tmpstr " ")))
+      ;;remove whitespace or ""
+      (setq tmpname (replace-regexp-in-string "[ \"]" "" tmpname))
+      ;;join to string
+      (setq email-name
+            (concat email-name ", " tmpname)))
+    ;;remove initial comma
+    (setq email-name (replace-regexp-in-string "^, " "" email-name))
+
+    ;;see if we want to use the name in the FROM field
+    ;;get name in FROM field if available, but only if there is only
+    ;;one name in TO field
+    (if (< (length email-list) 2)
+        (when (string-match "^On.+, \\([^ ,\n]+\\).+wrote:$" str)
+          (progn
+            (setq email-name2 (match-string 1 str))
+            ;;prefer name in FROM field if TO field has "@"
+            (when (string-match "@" email-name)
+              (setq email-name email-name2))
+            )))
+    email-name))
+#+end_src
+
+#+RESULTS:
+: bjm/mu4e-get-names-for-yasnippet
+
+And not off to customise the reply quote string in mu4e:
+
+#+begin_src emacs-lisp :tangle yes
+;; customize the reply-quote-string
+(setq message-citation-line-format "On %a %d %b %Y at %R, %f wrote:\n")
+;; choose to use the formatted string
+(setq message-citation-line-function 'message-insert-formatted-citation-line)
+#+end_src
+
+
+* =helm-mu=
+
+Read https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/#more-1336
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-mu
+  :ensure t
+  :config (progn
+            (bind-key "S" #'helm-mu mu4e-main-mode-map)))
+
+;;(when (reéquire 'helm-mu nil t)
+;;  (dolist (map (list mu4e-headers-mode-map mu4e-main-mode-map mu4e-view-mode-map))
+;;    (define-key map "m" 'helm-mu)))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23949 48934 551986 973000) :init (23949 48934 551964 167000) :config (23949 48934 551725 862000) :config-secs (0 0 695 805000) :init-secs (0 0 1158 979000) :use-package-secs (0 0 1231 800000)))
+
+* View e-mails with width restriction, but wider for HTML
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun malb/mu4e-view-mode-hook ()
+  "View e-mails with width restriction, but wider for HTML."
+  (if (boundp 'msg)
+      (let* ((txt (mu4e-message-field msg :body-txt))
+             (html (mu4e-message-field msg :body-html)))
+        (cond
+         ((and (> (* mu4e-view-html-plaintext-ratio-heuristic
+                     (length txt)) (length html))
+               (or (not mu4e-view-prefer-html) (not html)))
+          (set-fill-column 80))
+         (t
+          (set-fill-column 120))))
+    (set-fill-column 80))
+  (visual-line-mode 1)
+  (visual-fill-column-mode 1))
+
+(add-hook 'mu4e-view-mode-hook #'malb/mu4e-view-mode-hook)
+#+END_SRC
+
+#+RESULTS:
+| malb/mu4e-view-mode-hook | (lambda nil (set (make-local-variable 'bookmark-make-record-function) 'mu4e-view-bookmark-make-record)) |
+
 
 * Provide 
 
@@ -1584,20 +2238,6 @@ Indeed, `org-mu4e-store-link` won't do anything if current mode is not either `m
 
 #+RESULTS: message-line
 : Starter Kit User Mu4e File loaded.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
