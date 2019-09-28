@@ -2239,5 +2239,3 @@ Read https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
 #+RESULTS: message-line
 : Starter Kit User Mu4e File loaded.
 
-
-

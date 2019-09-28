@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
+
+#+TITLE: Customizations Oriented to Programming
+#+OPTIONS: toc:nil num:nil ^:nil
+#+PROPERTY: header-args :tangle yes
+
+This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
+
+* Jumping to code
+
+Disabled, as it conflicts with =org-time-stamp=. 
+
+#+begin_src emacs-lisp :tangle no
+(define-key emacs-lisp-mode-map (kbd "C-c .") 'find-function-at-point)
+(bind-key "C-c f" 'find-function)
+#+end_src
+
+
+* Provide
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(provide 'starter-kit-programming)
+#+END_SRC
+
+#+RESULTS:
+: dgm
+
+* Final message
+#+source: message-line
+#+begin_src emacs-lisp :tangle yes
+(message "Starter Kit Programming File loaded.")
+#+end_src
+
+#+RESULTS: message-line
+: Starter Kit User File loaded.
+

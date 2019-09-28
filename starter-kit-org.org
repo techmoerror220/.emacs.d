@@ -1003,11 +1003,25 @@ Remove DONE tasks from agenda view. Tip from: https://stackoverflow.com/question
 Tip from: https://orgmode.org/manual/Setting-tags.html
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-tag-alist '(("project" . ?a) ("browsing" . ?b) ("errands" . ?e) ("home" . ?h) ("laptop" . ?l) ("mailing" . ?m) ("office" . ?o) ("PC" . ?p) ("reading" . ?r) ("salud" . ?s) ("tel" . ?t) ("writing" . ?w)))
+(setq org-tag-alist '((:startgroup)
+                      ("@errands"  . ?e)
+                      ("@home"     . ?h)
+                      ("@uned"     . ?u)
+                      (:endgroup)
+                      ("project"   . ?p)
+                      ("browsing"  . ?b)
+                      ("laptop"    . ?l)
+                      ("mailing"   . ?m)
+                      ("ordenador" . ?o)
+                      ("reading"   . ?r)
+                      ("salud"     . ?s)
+                      ("tel"       . ?t)
+                      ("writing"   . ?w)
+                      ("flagged"   . ??)))
 #+END_SRC
 
 #+RESULTS:
-: ((project . 97) (browsing . 98) (errands . 101) (home . 104) (laptop . 108) (mailing . 109) (office . 111) (PC . 112) (reading . 114) (salud . 115) (tel . 116) (writing . 119))
+: ((:startgroup) (@errands . 101) (@home . 104) (@uned . 117) (:endgroup) (project . 112) (browsing . 98) (laptop . 108) (mailing . 109) (ordenador . 111) (reading . 114) (salud . 115) (tel . 116) (writing . 119) (flagged . 63))
 
 ** Public holidays 
 
@@ -1497,17 +1511,34 @@ I use the clock a lot, says Sacha. Okay, but I think =I= in agenda does this.
     (setq org-log-done 'time)          ;; explained here: https://www.gnu.org/software/emacs/manual/html_node/org/Closing-items.html
     (setq org-clock-continuously nil)
     (setq org-clock-persist t)  ;; Save the running clock and all clock history when exiting Emacs, load it on startup
-    (setq org-clock-in-switch-to-state "STARTED")
-    (setq org-clock-in-resume nil)  ;; t to Resume clocking task on clock-in if the clock is open
+    (setq org-clock-in-switch-to-state 'bh/clock-in-to-next)
+    (setq org-clock-in-resume t)  ;; t to Resume clocking task on clock-in if the clock is open
+    ;; Do not prompt to resume an active clock
+    (setq org-clock-persist-query-resume nil)
     (setq org-show-notification-handler 'message)
     (setq org-time-stamp-rounding-minutes (quote (0 5)))
     (setq org-clock-report-include-clocking-task t))
   :config
   (org-clock-persistence-insinuate)) ;; Resume clocking task when emacs is restarted
+
+(defun bh/clock-in-to-next (kw)
+  "Switch a task from TODO to NEXT when clocking in.
+Skips capture tasks, projects, and subprojects.
+Switch projects and subprojects from NEXT back to TODO"
+  (when (not (and (boundp 'org-capture-mode) org-capture-mode))
+    (cond
+     ((and (member (org-get-todo-state) (list "TODO"))
+           (bh/is-task-p))
+      "NEXT")
+     ((and (member (org-get-todo-state) (list "NEXT"))
+           (bh/is-project-p))
+      "TODO"))))
+
+
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23591 51264 374669 726000) :init (23591 51264 374630 666000) :config (23591 51264 373428 839000) :config-secs (0 0 2560 615000) :init-secs (0 0 4380 447000) :use-package-secs (0 0 4592 236000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23951 38814 686101 588000) :init (23951 38814 686064 64000) :config (23951 38814 685671 345000) :config-secs (0 0 924 872000) :init-secs (0 0 2300 743000) :use-package-secs (0 0 2834 977000)))
 
 Too many clock entries clutter up a heading.
 
@@ -1532,26 +1563,32 @@ NB: I could try with =:block today=? Objective: to show only time spent today.
 #+begin_src emacs-lisp :tangle yes
 ;; Agenda clock report parameters
 (setq org-agenda-clockreport-parameter-plist
-      '(:link t :maxlevel 6 :fileskip0 t :compact t :narrow 60 :score 0))
+      '(:link t :maxlevel 6 :fileskip0 t :compact t :narrow 80 :score 0))
 #+end_src
 
 #+RESULTS:
 | :link | t | :maxlevel | 6 | :block | today | :fileskip0 | t | :compact | t | :narrow | 60 | :score | 0 |
+
+
+TODO: understand what =:score 0= does.
 
 **** Effort estimation
 
 Then, you can hit =C-c C-x e= on a headline and be prompted for the "quick" efforts. So C-c C-x e 3 would select 45 minutes. 
 #+begin_src emacs-lisp :tangle yes
 ;; global Effort estimate values
-(setq org-global-properties
-      '(("Effort_ALL" .
-         "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")))
+;; (setq org-global-properties
+;;      '(("Effort_ALL" .
+;;         "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")))
 ;;        1    2    3    4    5    6    7    8    9    0
 ;; These are the hotkeys ^^
+
+(setq org-global-properties (quote (("Effort_ALL" . "0:05 0:10 0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+                                    ("STYLE_ALL" . "habit"))))
 #+end_src
 
 #+RESULTS:
-: ((Effort_ALL . 0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00))
+: ((Effort_ALL . 0:05 0:10 0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00) (STYLE_ALL . habit))
 
 **** Column-based presentation of results
   
@@ -1578,13 +1615,15 @@ When the column view in the agenda shows the CLOCKSUM, that is always the entire
 
 If you want information about clocked time in the displayed period use clock table mode (press R in the agenda).
 
+DGM: =%2PRIORITY= deleted (originally between context and state), as I don't use priorities.
+
 #+begin_src emacs-lisp :tangle yes
 ;; Set default column view headings: Task Priority Effort Clock_Summary
-(setq org-columns-default-format "%50ITEM(Task) %15TAGS(Context) %2PRIORITY %7TODO(State) %20SCHEDULED %6Effort(Effort){:} %CLOCKSUM_T{:} %CLOCKSUM{:}")  
+(setq org-columns-default-format "%50ITEM(Task) %15TAGS(Context) %7TODO(State) %20SCHEDULED %6Effort(Effort){:} %CLOCKSUM_T{:} %CLOCKSUM{:}")  
 #+end_src
 
 #+RESULTS:
-: %50ITEM(Task) %15TAGS(Context) %2PRIORITY %7TODO(State) %20SCHEDULED %6Effort(Effort){:} %CLOCKSUM_T{:} %CLOCKSUM{:}
+: %50ITEM(Task) %15TAGS(Context) %7TODO(State) %20SCHEDULED %6Effort(Effort){:} %CLOCKSUM_T{:} %CLOCKSUM{:}
 
 You can now turn on org-columns with =C-c C-x C-c=, you should see something like the following screenshots. =q= to quit.
 
@@ -1677,7 +1716,7 @@ Org has a whole bunch of optional modules. These are the ones I'm
 currently experimenting with.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-modules '(;;org-bbdb
+(setq org-modules '(org-bbdb
                     ;;org-gnus
                     org-drill
                     ;;org-info
@@ -2109,7 +2148,7 @@ scheduled items that I've finished. I like seeing a time grid so that
 I can get a sense of how appointments are spread out.
 
 #+begin_src emacs-lisp :tangle yes
-;;  (setq org-agenda-span 2)
+(setq org-agenda-span 'day) ;; today's date is shown by default
 (setq org-agenda-tags-column -100) ; take advantage of the screen width
 (setq org-agenda-sticky nil)
 (setq org-agenda-inhibit-startup t)
@@ -2743,6 +2782,76 @@ DGM: check how to make this work.. but way too complicated for me!
 
 #+RESULTS:
 
+* Settings copied from the great Bernt Hansen
+
+- http://doc.norang.ca/org-mode.html
+- Original document in org-mode: [[file:/media/dgm/blue/documents/programming/emacs/CoolEmacsGuys/berntHansen/org-mode.org][org-mode.org]]
+
+** COMMENT Fast Todo Selection
+
+DGM: Great idea but all this is already working for me out of the box
+
+Fast todo selection allows changing from any task todo state to any
+other state directly by selecting the appropriate key from the fast
+todo selection key menu.  This is a great feature!
+
+
+#+begin_src emacs-lisp :tangle no
+(setq org-use-fast-todo-selection t)
+#+end_src
+
+Changing a task state is done with =C-c C-t KEY=
+
+where =KEY= is the appropriate fast todo state selection key as defined in =org-todo-keywords=.
+
+The setting
+
+#+begin_src emacs-lisp  :tangle no
+(setq org-treat-S-cursor-todo-selection-as-state-change nil)
+#+end_src
+allows changing todo states with S-left and S-right skipping all of
+the normal processing when entering or leaving a todo state.  This
+cycles through the todo states but skips setting timestamps and
+entering notes which is very convenient when all you want to do is fix
+up the status of an entry.
+
+** Providing progress reports to others
+
+When someone wants details of what I've done recently I simple generate a
+log report in the agenda with tasks I've completed and state changes combined
+with a clock report for the appropriate time period.
+
+The following setting shows closed tasks and state changes in the
+agenda.  Combined with the agenda clock report ('R') I can quickly
+generate all of the details required.
+
+#+begin_src emacs-lisp :tangle yes
+;; Agenda log mode items to display (closed and state changes by default)
+(setq org-agenda-log-mode-items (quote (closed state)))
+#+end_src
+
+#+RESULTS:
+| closed | state |
+
+To generate the report I pull up the agenda for the appropriate time frame
+(today, yesterday, this week, or last week) and hit the key sequence
+=l R= to add the log report (without clocking data lines) and the agenda clock
+report at the end.
+
+Then it's simply a matter of exporting the resulting agenda in some useful format
+to provide to other people.  =C-x C-w /tmp/agenda.html RET= exports to HTML
+and =C-x C-w /tmp/agenda.txt RET= exports to plain text.  Other formats are 
+available but I use these two the most.
+
+Combining this export with tag filters and =C-u R= can limit the
+report to exactly the tags that people are interested in.
+
+** Addressbook database
+
+#+begin_src emacs-lisp :tangle yes
+(require 'bbdb)
+(require 'bbdb-com)
+#+end_src
 
 * Provide
 

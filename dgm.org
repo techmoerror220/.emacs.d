@@ -4287,13 +4287,6 @@ Handy way of getting back to previous places. Nice but I already have =C-h SPC= 
 #+RESULTS:
 : t
 
-** Jumping to code
-
-#+begin_src emacs-lisp :tangle yes
-(define-key emacs-lisp-mode-map (kbd "C-c .") 'find-function-at-point)
-(bind-key "C-c f" 'find-function)
-#+end_src
-
 ** Sorting
 
 #+begin_src emacs-lisp :tangle yes
@@ -5484,6 +5477,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Narrowing
                   :key "W"
                   :description "Widen in Org subtree") 
+(cheatsheet-add :group 'Org
+                :key "C-c C-v C-t"
+                :description "org-babel-tangle. Write code blocks to source-specific files")
   (cheatsheet-add :group 'Org
                   :key "s-<"
                   :description "org-cut-subtree: cut tree and paste it elsewhere in the hierarchy.")
@@ -5559,6 +5555,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-agenda
                   :key "A"
                   :description "Interactively select another agenda view and append it to the current view")
+(cheatsheet-add :group 'Org-agenda
+                  :key "B"
+                  :description "org-agenda-bulk-action. Mark with m0")
   (cheatsheet-add :group 'Org-agenda
                   :key "o"
                   :description "When in agenda view, delete other windows")
@@ -5586,6 +5585,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-agenda
                   :key "RET"
                   :description "org-agenda-switch-to. Go to the original location of the item and delete other windows")
+(cheatsheet-add :group 'Org-agenda
+                :key "="
+                :description "org-agenda-filter-by-regexp. Filter agenda entries by regular expressions. With one prefix argument, filter out entries matching the regexp")
   (cheatsheet-add :group 'Org-agenda
                   :key "J"
                   :description "org-agenda-clock-goto. Go to the currently clocked-in task in the agenda buffer")
@@ -5669,7 +5671,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "org-clock-in. Clock in to the section you're currently in or clock-in to a different task")
   (cheatsheet-add :group 'Org-clock
                   :key "C-c I"
-                  :description "eos/org-clock-in. History of tasks to pick from when I clock in to thing")
+                  :description "eos/org-clock-in. History of tasks to pick from when I clock in to things")
   (cheatsheet-add :group 'Org-clock
                   :key "I"
                   :description "In org-agenda, clock in highlighted task or clock-in to a different task")
@@ -5930,7 +5932,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23950 12701 583672 765000) :init (23950 12701 583609 57000) :init-secs (0 0 27 870000) :use-package-secs (0 0 181 508000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23951 52570 669939 696000) :init (23951 52570 669877 791000) :init-secs (0 0 2334 66000) :use-package-secs (0 0 2488 471000) :config (23951 52570 669866 348000) :config-secs (0 0 2318 270000)))
 
 
 
@@ -6014,7 +6016,6 @@ Temporarily disable signature verification (see variable `package-check-signatur
 After all this, I do =M-x package-refresh-contents= and this updates all my packages, which I think is a mistake.
 
 
-
 * Provide
 
 Trying this on 28 dic 2018. I don't really know why it is needed or not.
@@ -6034,4 +6035,7 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+
+
+
 

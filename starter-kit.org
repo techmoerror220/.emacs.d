@@ -580,6 +580,17 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 #+RESULTS:
 : Loaded /home/dgm/.emacs.d/starter-kit-pass.el
 
+
+*** Starter kit =programming=
+
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-load "starter-kit-programming.org")
+#+END_SRC
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-pass.el
+
+
 ** Load User/System Specific Files
 *** Settings from M-x customize
 #+srcname: m-x-customize-customizations
