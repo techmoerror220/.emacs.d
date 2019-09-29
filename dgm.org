@@ -4985,6 +4985,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Editing
                   :key "C-x C-i"
                   :description "indent-rigidly. Indent all lines starting in the region. Then <right>/<left> or <S-right>/<S-left> to actually indent")
+(cheatsheet-add :group 'Editing
+                  :key "M-m"
+                  :description "back-to-indentation. Move point to the first non-whitespace character on this line")
   (cheatsheet-add :group 'Editing-Killing
                   :key "M-w"
                   :description "kill-ring-save: Save the region as if killed, but don’t kill it. When no active region, copy a single line instead")

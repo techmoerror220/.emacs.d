@@ -138,6 +138,8 @@ just have to assume it's online."
 
 (starter-kit-load "starter-kit-pass.org")
 
+(starter-kit-load "starter-kit-programming.org")
+
 (load custom-file 'noerror)
 
 (starter-kit-load "dgm.org")

@@ -95,7 +95,7 @@ A pandoc menu for markdown and tex files.
 ;; (global-set-key (kbd "C-c C-p") 'pandoc-main-hydra/body) ;; not sure it is taken
 #+end_src
 
-#+RESULTS:
+gg#+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23561 617 539596 896000) :init (23561 617 539564 637000) :config (23561 617 539347 779000) :config-secs (0 0 432 56000) :init-secs (0 0 824 478000) :use-package-secs (0 0 1011 280000)))
 
 *** Export options 
@@ -762,8 +762,6 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq
- org-insert-heading-respect-content t
- org-enforce-todo-dependencies t
  org-deadline-warning-days 7
  org-agenda-default-appointment-duration 60
  org-agenda-columns-add-appointments-to-effort-sum t
@@ -773,7 +771,7 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
                                         ; Customizations in:
                                         ; http://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html added
                                         ; by dgm
- org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w)"  "|" "DONE(d)" "CANCELED(c)"))
+ ;; org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w)"  "|" "DONE(d)" "CANCELED(c)"))
                                         ; comments out
  ;; org-todo-keyword-faces '(("REVIEW" :inherit org-done))
  ;; Priorities.
@@ -785,18 +783,6 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
 
 #+RESULTS:
 : 67
-
-*** Config for faces using Solarized chromatism
-
-#+BEGIN_SRC emacs-lisp :tangle yes :results silent
-(setq org-todo-keyword-faces
-   '(("TODO"     . (:foreground "#d33682" :weight bold))
-    ("NEXT"      . (:foreground "#dc322f" :weight bold))
-    ("STARTED"   . (:foreground "#859900" :weight bold))
-    ("WAITING"   . (:foreground "#b58900" :weight bold))
-    ("DONE"      . (:foreground "#268bd2" :weight bold))
-    ("CANCELED"  . (:foreground "#2aa198" :weight bold))))
-#+END_SRC
 
 *** Set to the location of your Org files on your local system.
 
@@ -1186,7 +1172,6 @@ notes that
 #+RESULTS:
 : ambrevar/org-switch-agenda-file-other-window
 
-
 * Ido =Imenu='s depth of search
 
 Depth of search for =Imenu= in Org buffers. From https://www.reddit.com/r/emacs/comments/8v6fny/how_to_change_the_depth_of_imenulist_for_org_files/
@@ -1405,13 +1390,13 @@ able to clock in on them.
 
 =org-refile= lets you organize notes by typing in the headline to file them under.
 
-#+begin_src emacs-lisp :tangle yes
-(setq org-reverse-note-order t)
+#+begin_src emacs-lisp :tangle no
+;; (setq org-reverse-note-order t)
 ;; (setq org-refile-use-outline-path nil) ;; set to t above
 ;; (setq org-refile-allow-creating-parent-nodes 'confirm)
 ;; (setq org-refile-use-cache nil)
 ;; (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3)))) ;; check if this is more efficient than my current code
-(setq org-blank-before-new-entry nil)
+;; (setq org-blank-before-new-entry nil)
 #+end_src
 
 *** Estimating WPM
@@ -1436,12 +1421,6 @@ I'm curious about how fast I type some things.
 
 #+RESULTS:
 : my/org-entry-wpm
-
-*** Time
-
-#+begin_src emacs-lisp :tangle yes
-(setq org-log-done 'time)
-#+end_src
 
 *** Projects
 
@@ -1716,7 +1695,7 @@ Org has a whole bunch of optional modules. These are the ones I'm
 currently experimenting with.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-modules '(org-bbdb
+(setq org-modules '(;;org-bbdb
                     ;;org-gnus
                     org-drill
                     ;;org-info
@@ -2150,7 +2129,6 @@ I can get a sense of how appointments are spread out.
 #+begin_src emacs-lisp :tangle yes
 (setq org-agenda-span 'day) ;; today's date is shown by default
 (setq org-agenda-tags-column -100) ; take advantage of the screen width
-(setq org-agenda-sticky nil)
 (setq org-agenda-inhibit-startup t)
 (setq org-agenda-use-tag-inheritance t)
 (setq org-agenda-show-log t)
@@ -2848,10 +2826,409 @@ report to exactly the tags that people are interested in.
 
 ** Addressbook database
 
-#+begin_src emacs-lisp :tangle yes
+This does not work, why?
+s
+#+begin_src emacs-lisp :tangle no
 (require 'bbdb)
 (require 'bbdb-com)
 #+end_src
+
+** Sticky Agendas
+
+Sticky agendas allow you to have more than one agenda view created simultaneously.
+You can quickly switch to the view without incurring an agenda rebuild by invoking
+the agenda custom command key that normally generates the agenda.  If it already 
+exists it will display the existing view.  =g= forces regeneration of the agenda view.
+
+I normally have two views displayed (=F12 a= for the daily/weekly
+agenda and =F12 SPC= for my project management view)
+
+#+begin_src emacs-lisp :tangle yes
+;; Use sticky agenda's so they persist
+(setq org-agenda-sticky t)
+#+end_src
+
+#+RESULTS:
+: t
+
+** Checklist handling
+:PROPERTIES:
+:CUSTOM_ID: ChecklistHandling
+:END:
+
+Checklists are great for repeated tasks with lots of things that need
+to be done.  For a long time I was manually resetting the check boxes
+to unchecked when marking the repeated task =DONE= but no more!
+There's a contributed =org-checklist= that can uncheck the boxes
+automagically when the task is marked done.
+
+Add the following to your =.emacs=
+
+#+header: :tangle no
+#+begin_src emacs-lisp
+(add-to-list 'load-path (expand-file-name "~/git/org-mode/contrib/lisp"))
+
+(require 'org-checklist)
+#+end_src
+
+#+begin_src emacs-lisp :tangle yes 
+;; The following setting is different from the document so that you
+;; can override the document path by setting your path in the variable
+;; org-mode-user-contrib-lisp-path
+;;
+;;(if (boundp 'org-mode-user-contrib-lisp-path)
+;;    (add-to-list 'load-path org-mode-user-contrib-lisp-path)
+;;  (add-to-list 'load-path (expand-file-name "~/git/org-mode/contrib/lisp")))
+
+(require 'org-checklist)
+#+end_src
+
+#+RESULTS:
+: org-checklist
+
+and then to use it in a task you simply set the property =RESET_CHECK_BOXES= to =t= 
+like this
+
+#+begin_src org :exports src
+,* TODO Invoicing and Archive Tasks [0/7]
+  DEADLINE: <2009-07-01 Wed +1m -0d> 
+  :PROPERTIES:
+  :RESET_CHECK_BOXES: t
+  :END:
+
+  - [ ] Do task 1
+  - [ ] Do task 2
+  ...
+  - [ ] Do task 7
+#+end_src
+
+Idea: Podría usar las checklists para las "repeated tasks" such as exam setting each year.
+
+** Handling blocked tasks
+:PROPERTIES:
+:CUSTOM_ID: HandlingBlockedTasks
+:END:
+
+Blocked tasks are tasks that have subtasks which are not in a done
+todo state.  Blocked tasks show up in a grayed font by default in the
+agenda.
+
+To enable task blocking set the following variable:
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-enforce-todo-dependencies t)
+#+end_src
+
+This setting prevents tasks from changing to =DONE= if any subtasks
+are still open.  This works pretty well except for repeating tasks.  I
+find I'm regularly adding =TODO= tasks under repeating tasks and not
+all of the subtasks need to be complete before the next repeat cycle.
+
+You can override the setting temporarily by changing the task with
+=C-u C-u C-u C-c C-t= but I never remember that.  I set a permanent
+property on the repeated tasks as follows:
+
+#+begin_src org :exports src
+,* TODO New Repeating Task
+  SCHEDULED: <2009-06-16 Tue +1w>
+  :PROPERTIES:
+  :NOBLOCKING: t
+  :END:
+  ...
+,** TODO Subtask  
+#+end_src
+
+This prevents the =New Repeating Task= from being blocked if some of
+the items under it are not complete.
+
+Occassionally I need to complete tasks in a given order.  Org-mode has
+a property =ORDERED= that enforces this for subtasks.
+
+#+begin_src org :exports src
+,* TODO Some Task
+  :PROPERTIES:
+  :ORDERED: t
+  :END:
+,** TODO Step 1
+,** TODO Step 2
+,** TODO Step 3  
+#+end_src
+
+In this case you need to complete =Step 1= before you can complete
+=Step 2=, etc. and org-mode prevents the state change to a done task
+until the preceding tasks are complete.
+
+** Org Task structure and presentation
+:PROPERTIES:
+:CUSTOM_ID: OrgTaskStructureAndPresentation
+:END:
+
+This section describes various org-mode settings I use to control how
+tasks are displayed while I work on my org mode files.
+*** Controlling display of leading stars on headlines
+:PROPERTIES:
+:CUSTOM_ID: DisplayLeadingStars
+:END:
+
+Org-mode has the ability to show or hide the leading stars on task
+headlines.  It's also possible to have headlines at odd levels only so
+that the stars and heading task names line up in sublevels.
+
+To make org show leading stars use
+
+#+header: :tangle yes
+#+begin_src emacs-lisp 
+(setq org-hide-leading-stars nil)
+#+end_src
+
+I now use org-indent mode which hides leading stars.
+*** org-indent mode
+:PROPERTIES:
+:CUSTOM_ID: OrgIndentMode
+:END:
+
+I recently started using org-indent mode.  I like this setting a lot.
+It removes the indentation in the org-file but displays it as if it
+was indented while you are working on the org file buffer.
+
+org-indent mode displays as if org-odd-levels-only is true but it has
+a really clean look that I prefer over my old setup.
+
+I have org-indent mode on by default at startup with the following
+setting:
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-startup-indented t)
+#+end_src
+
+*** Handling blank lines
+:PROPERTIES:
+:CUSTOM_ID: HandlingBlankLines
+:END:
+
+Blank lines are evil :).  They keep getting inserted in between
+headlines and I don't want to see them in collapsed (contents) views.
+When I use =TAB= to fold (cycle) tasks I don't want to see any blank
+lines between headings.
+
+The following setting hides blank lines between headings which keeps
+folded view nice and compact.
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-cycle-separator-lines 0)
+#+end_src
+
+I find extra blank lines in lists and headings a bit of a nuisance.
+To get a body after a list you need to include a blank line between
+the list entry and the body -- and indent the body appropriately.
+Most of my lists have no body detail so I like the look of collapsed
+lists with no blank lines better.
+
+The following setting prevents creating blank lines before headings
+but allows list items to adapt to existing blank lines around the items:
+
+#+header: :tangle yes
+#+begin_src emacs-lisp
+(setq org-blank-before-new-entry (quote ((heading)
+                                         (plain-list-item . auto))))
+#+end_src
+*** Adding new tasks quickly without disturbing the current task content
+:PROPERTIES:
+:CUSTOM_ID: AddingNewTasks
+:END:
+
+To create new headings in a project file it is really convenient to
+use =C-RET=, =C-S-RET=, =M-RET=, and =M-S-RET=.  This inserts a new headline
+possibly with a =TODO= keyword.  With the following setting
+
+#+header: :tangle yes
+#+begin_src emacs-lisp
+(setq org-insert-heading-respect-content nil)
+#+end_src
+
+#+RESULTS:
+
+org inserts the heading at point for the =M-= versions and respects
+content for the =C-= versions.  The respect content setting is
+temporarily turned on for the =C-= versions which adds the new heading
+after the content of the current item.  This lets you hit =C-S-RET= in
+the middle of an entry and the new heading is added after the body of
+the current entry but still allow you to split an entry in the middle
+with =M-S-RET=.
+*** Notes at the top
+:PROPERTIES:
+:CUSTOM_ID: NotesAtTop
+:END:
+
+I enter notes for tasks with =C-c C-z= (or just =z= in the agenda).
+Changing tasks states also sometimes prompt for a note (e.g. moving to
+=WAITING= prompts for a note and I enter a reason for why it is
+waiting).  These notes are saved at the top of the task so unfolding
+the task shows the note first.
+#+header: :tangle yes
+#+begin_src emacs-lisp
+(setq org-reverse-note-order nil)
+#+end_src
+
+#+RESULTS:
+
+*** Searching and showing results
+:PROPERTIES:
+:CUSTOM_ID: SearchingResults
+:END:
+
+Org-mode's searching capabilities are really effective at finding data
+in your org files.  =C-c / /= does a regular expression search on the
+current file and shows matching results in a collapsed view of the
+org-file.
+
+I have org-mode show the hierarchy of tasks above the matched entries
+and also the immediately following sibling task (but not all siblings)
+with the following settings:
+
+#+header: :tangle yes
+#+begin_src emacs-lisp
+(setq org-show-following-heading t)
+(setq org-show-hierarchy-above t)
+(setq org-show-siblings (quote ((default))))
+#+end_src
+
+This keeps the results of the search relatively compact and mitigates
+accidental errors by cutting too much data from your org file with
+=C-k=.  Cutting folded data (including the ...) can be really
+dangerous since it cuts text (including following subtrees) which you
+can't see.  For this reason I always show the following headline when
+displaying search results.
+*** Editing and Special key handling
+:PROPERTIES:
+:CUSTOM_ID: SpecialKeyHandling
+:END:
+
+Org-mode allows special handling of the C-a, C-e, and C-k keys while
+editing headlines.  I also use the setting that pastes (yanks)
+subtrees and adjusts the levels to match the task I am pasting to.
+See the docstring (=C-h v org-yank-adjust-subtrees=) for more details
+on each variable and what it does.
+
+I have =org-special-ctrl-a/e= set to enable easy access to the
+beginning and end of headlines. I use =M-m= or =C-a C-a= to get to the
+beginning of the line so the speed commands work and =C-a= to give
+easy access to the beginning of the heading text when I need that.
+
+#+header: :tangle yes
+#+begin_src emacs-lisp
+(setq org-special-ctrl-a/e t)
+(setq org-special-ctrl-k t)
+(setq org-yank-adjusted-subtrees t)
+#+end_src
+
+** Exporting Tables to CSV
+:PROPERTIES:
+:CUSTOM_ID: TableExportToCSV
+:END:
+
+I generate org-mode tables with details of task specifications and
+record structures for some of my projects.  My clients like to use
+spreadsheets for this type of detail.
+
+It's easy to share the details of the org-mode table by exporting in
+HTML but that isn't easy for anyone else to work with if they need to
+edit data.
+
+To solve this problem I export my table as comma delimited values
+(CSV) and then send that to the client (or read it into a spreadsheet
+and email the resulting spreadsheet file).
+
+Org-mode can export tables as TAB or comma delimited formats.  I set
+the default format to CSV with:
+
+#+header: :tangle yes
+#+begin_src emacs-lisp
+(setq org-table-export-default-format "orgtbl-to-csv")
+#+end_src
+
+#+RESULTS:
+: orgtbl-to-csv
+
+Exporting to CSV format is the only one I use and this provides the
+default so I can just hit RETURN when prompted for the format.
+
+To export the following table I put the cursor inside the table and
+hit =M-x org-table-export= which prompts for a filename and the format
+which defaults to orgtbl-to-csv from the setting above.
+
+|   One |    Two | Three |
+|-------+--------+-------|
+|     1 |      1 |     2 |
+|     3 |      6 |     5 |
+|  fred |    kpe |  mary |
+| 234.5 | 432.12 | 324.3 |
+
+This creates the file with the following data
+
+#+begin_src csv
+One,Two,Three
+1,1,2
+3,6,5
+fred,kpe,mary
+234.5,432.12,324.3
+#+end_src
+
+** Logging stuff
+:PROPERTIES:
+:CUSTOM_ID: LoggingStuff
+:END:
+
+Most of my logging is controlled by the global =org-todo-keywords=
+
+My logging settings are set as follows:
+#+header: :tangle yes
+#+begin_src emacs-lisp
+;; (setq org-log-done (quote time))
+;; (setq org-log-into-drawer t)
+(setq org-log-state-notes-insert-after-drawers nil)
+#+end_src
+
+#+RESULTS:
+
+My =org-todo-keywords= are set as follows:
+
+#+header: :tangle yes
+#+begin_src emacs-lisp
+;; (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w)"  "|" "DONE(d)" "CANCELED(c)"))
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "|" "CANCELED(c@/!)" "PHONE" "MEETING"))))
+#+end_src
+
+#+RESULTS:
+| sequence | TODO(t)       | NEXT(n) |   |                | DONE(d) |         |
+| sequence | WAITING(w@/!) |         |   | CANCELED(c@/!) | PHONE   | MEETING |
+
+This adds a log entry whenever a task moves to any of the following states:
+- to or out of =DONE= status
+- to =WAITING= status (with a note) or out of =WAITING= status
+- to =HOLD= status
+- to =CANCELLED= status (with a note) or out of =CANCELLED= status
+
+I keep clock times and states in the =LOGBOOK= drawer to keep my tasks
+uncluttered.  If a task is WAITING then the reason for why it is
+waiting is near the top of the LOGBOOK and unfolding the LOGBOOK
+drawer provides that information.  From the agenda simply hitting
+=SPC= on the task will reveal the LOGBOOK drawer.
+
+*** Config for faces using Solarized chromatism
+
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
+(setq org-todo-keyword-faces
+   '(("TODO"     . (:foreground "#d33682" :weight bold))
+    ("NEXT"      . (:foreground "#dc322f" :weight bold))
+    ("PHONE"     . (:foreground "#859900" :weight bold))
+    ("WAITING"   . (:foreground "#b58900" :weight bold))
+    ("DONE"      . (:foreground "#268bd2" :weight bold))
+    ("MEETING"   . (:foreground "#6c71c4" :weight bold))
+    ("CANCELED"  . (:foreground "#2aa198" :weight bold))))
+#+END_SRC
 
 * Provide
 
@@ -2867,4 +3244,36 @@ report to exactly the tags that people are interested in.
 #+begin_src emacs-lisp :tangle yes
   (message "Starter Kit Org loaded.")
 #+end_src
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
