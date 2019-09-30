@@ -872,14 +872,16 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
         ("p" "Project Review"
          (agenda
           ""
-          (tags "+project")
+          (tags "project"
           (org-tags-match-list-sublevels nil)))
-          ;;(agenda 
-          ;;""
-          ;;((tags "+project+TODO=\"NEXT\"")
-          ;; (tags "+project+TODO=\"WAITING\"")
-          ;; (tags "+project+TODO=\"TODO\"")
-          ;; (tags "+project+TODO=\"DONE\""))))
+          (agenda
+           ""
+          (org-agenda-overriding-header "========================================== Tasks ==========================================")
+          ((tags "+project+TODO=\"NEXT\"")
+           (tags "+project+TODO=\"WAITING\"")
+           (tags "+project+TODO=\"TODO\"")
+           (tags "+project+TODO=\"DONE\"")))
+         )
         ("o" "Office and home agenda"
          ((agenda "" ((org-agenda-ndays 1))) ;; esto no me funciona... debe ser que (setq org-agenda-span (quote month)) en starter-kit-org.org tiene prioridad
           ;; limits the agenda display to a single day
