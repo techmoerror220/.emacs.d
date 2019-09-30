@@ -6018,7 +6018,6 @@ Temporarily disable signature verification (see variable `package-check-signatur
 
 After all this, I do =M-x package-refresh-contents= and this updates all my packages, which I think is a mistake.
 
-
 * Provide
 
 Trying this on 28 dic 2018. I don't really know why it is needed or not.

@@ -835,20 +835,20 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
           ;; type "l" in the agenda to review logged items
           ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
           (todo "STARTED") ;; review  actions that have started
-          (todo "WAITING") ;;review waiting items          
+          (todo "WAITING") ;;review waiting items
           (todo "NEXT") ;; review next actions
           (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
-          )) ;; 
+          )) ;;
         ("w" "Weekly Review"
          ((agenda "" ((org-agenda-span 7)))  ;; review upcoming deadlines and appointments
           ;; old code ((org-agenda-fortnight-view)))
           ;; type "l" in the agenda to review logged items
           ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
           (todo "STARTED") ;; review  actions that have started
-          (todo "WAITING") ;; review waiting items         
+          (todo "WAITING") ;; review waiting items
           (todo "NEXT") ;; review next actions
           (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
-          )) 
+          ))
         ("f" "Fortnight Review"
          ((agenda "" ((org-agenda-span 14))) ;; review upcoming deadlines and appointments
           ;; type "l" in the agenda to review logged items
@@ -857,7 +857,7 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
           (todo "WAITING")    ;; review waiting items
           (todo "NEXT") ;; review next actions
           (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
-          )) 
+          ))
         ("r" "Monthly Review"
          ((agenda "" ((org-agenda-span 31))) ;; review upcoming deadlines and appointments
           ;; type "l" in the agenda to review logged items
@@ -866,22 +866,16 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
           (todo "WAITING")      ;; review waiting items
           (todo "NEXT") ;; review next actions
           (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
-          )) 
+          ))
         ("y" "Yearly Review"
          ((agenda "" ((org-agenda-span (quote year))))))
-        ("p" "Project Review"
-         (agenda
-          ""
-          (tags "project"
-          (org-tags-match-list-sublevels nil)))
-          (agenda
-           ""
-          (org-agenda-overriding-header "========================================== Tasks ==========================================")
-          ((tags "+project+TODO=\"NEXT\"")
-           (tags "+project+TODO=\"WAITING\"")
-           (tags "+project+TODO=\"TODO\"")
-           (tags "+project+TODO=\"DONE\"")))
-         )
+        ("p" "Project Review" 
+         (tags "project"
+               ((org-tags-match-list-sublevels nil))))
+;         (tags "+project+TODO=\"NEXT\""))
+;                 (tags "+project+TODO=\"WAITING\"")
+;                 (tags "+project+TODO=\"TODO\"")
+;                 (tags "+project+TODO=\"DONE\""))
         ("o" "Office and home agenda"
          ((agenda "" ((org-agenda-ndays 1))) ;; esto no me funciona... debe ser que (setq org-agenda-span (quote month)) en starter-kit-org.org tiene prioridad
           ;; limits the agenda display to a single day
@@ -903,7 +897,7 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
            ""
            ((org-agenda-overriding-header "========================================== Scheduled Tasks ==========================================")
             (org-agenda-span 22)
-            (org-agenda-prefix-format '((agenda . " %1c %?-12t% s")))))) 
+            (org-agenda-prefix-format '((agenda . " %1c %?-12t% s"))))))
          )))
 
 (defun my-org-agenda-skip-all-siblings-but-first ()
