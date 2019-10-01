@@ -5976,7 +5976,8 @@ This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try a
 | \*Calendar\*     | my-position-calendar-buffer     |                       |
 
 
-* Security
+* Security: bad-signature issue
+
 On Sept 27, 2019, when I try to look up for package doing =M-x package-list-packages=, I get an error: 
 
 #+begin_example
