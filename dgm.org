@@ -4349,7 +4349,7 @@ It can be difficult to remember the full names of Emacs commands, so I use =icom
 
 ** Latex
 
-- Recall to =eval-and-replace= =(latex-skeleton)= with =C-c e=. 
+- Recall to =eval-and-replace= =(article-skeleton)= with =C-c e=. 
 - Nota que por alguna razon hace falta las dos declaraciones de Spanish.
 - Nota que ="#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"= is gone because now I compile =vc= in the makefile.
 
@@ -5558,6 +5558,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-agenda
                   :key "A"
                   :description "Interactively select another agenda view and append it to the current view")
+(cheatsheet-add :group 'Org-agenda
+                  :key "G"
+                  :description "org-agenda-toggle-time-grid")
+(cheatsheet-add :group 'Org-agenda
+                  :key "k"
+                  :description "org-agenda-capture. Call org-capture with the date at point")
 (cheatsheet-add :group 'Org-agenda
                   :key "B"
                   :description "org-agenda-bulk-action. Mark with m0")

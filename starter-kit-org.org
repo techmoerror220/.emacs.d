@@ -798,15 +798,16 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
                              "/home/dgm/Dropbox/gtd/gtd.org"
                              "/home/dgm/Dropbox/gtd/journal.org"
                              "/home/dgm/Dropbox/gtd/habits.org"
+                             "/home/dgm/Dropbox/gtd/tickler.org"
                              "/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" ; i could add it with =C-c [= but that action does not survive across sections
                              "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org"
                              "/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org"
                              "/media/dgm/blue/documents/personal/documentacion/divorcio/divorcio_gtd.org"
-                             "/home/dgm/Dropbox/gtd/tickler.org"))
+                             ))
 #+END_SRC
 
 #+RESULTS:
-| /home/dgm/Dropbox/gtd/inbox.org | /home/dgm/Dropbox/gtd/gtd.org | /home/dgm/Dropbox/gtd/journal.org | /media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org | /media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org | /media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org | /media/dgm/blue/documents/personal/documentacion/divorcio/divorcio_gtd.org | /home/dgm/Dropbox/gtd/tickler.org |
+| /home/dgm/Dropbox/gtd/inbox.org | /home/dgm/Dropbox/gtd/gtd.org | /home/dgm/Dropbox/gtd/journal.org | /home/dgm/Dropbox/gtd/habits.org | /home/dgm/Dropbox/gtd/tickler.org | /media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org | /media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org | /media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org | /media/dgm/blue/documents/personal/documentacion/divorcio/divorcio_gtd.org |
 
 
 From https://stackoverflow.com/questions/10635989/emacs-org-agenda-list-destroy-my-windows-splits. 
@@ -3504,13 +3505,13 @@ My =org-todo-keywords= are set as follows:
 #+begin_src emacs-lisp
 ;; (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w)"  "|" "DONE(d)" "CANCELED(c)"))
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-              (sequence "WAITING(w@/!)" "|" "CANCELED(c@/!)" "PHONE" "MEETING"))))
+      (quote ((sequence "TODO(t)" "NEXT(n)" "PROJECT(p)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "|" "CANCELED(c@/!)" "PHONE"))))
 #+end_src
 
 #+RESULTS:
-| sequence | TODO(t)       | NEXT(n) |   |                | DONE(d) |         |
-| sequence | WAITING(w@/!) |         |   | CANCELED(c@/!) | PHONE   | MEETING |
+| sequence | TODO(t)       | NEXT(n) | PROJECT(p) |                |       | DONE(d) |
+| sequence | WAITING(w@/!) |         |            | CANCELED(c@/!) | PHONE |         |
 
 This adds a log entry whenever a task moves to any of the following states:
 - to or out of =DONE= status
@@ -3533,7 +3534,7 @@ drawer provides that information.  From the agenda simply hitting
     ("PHONE"     . (:foreground "#859900" :weight bold))
     ("WAITING"   . (:foreground "#b58900" :weight bold))
     ("DONE"      . (:foreground "#268bd2" :weight bold))
-    ("MEETING"   . (:foreground "#6c71c4" :weight bold))
+    ("PROJECT"   . (:foreground "#6c71c4" :weight bold))
     ("CANCELED"  . (:foreground "#2aa198" :weight bold))))
 #+END_SRC
 
