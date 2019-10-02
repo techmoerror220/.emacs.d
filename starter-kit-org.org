@@ -850,7 +850,7 @@ the default stuck project view with =F12 #= from the agenda menu.  My
 customized stuck projects view is part of my block agenda displayed
 with =F12 SPC=.
 
-Projects can have subprojects - and these subprojects can also be stuck.
+Projectsg can have subprojects - and these subprojects can also be stuck.
 Any project that is stuck shows up on the stuck projects list so I can
 indicate or create a =NEXT= task to move that project forward.
 
@@ -1140,6 +1140,9 @@ HOWEVER I am not 100% sure how useful is all this because I have a nice option i
 On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgtimeline/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
+(setq org-agenda-block-separator "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
 (setq org-agenda-custom-commands
       '(("d" "Daily Review"
          ((agenda "" ((org-agenda-span 1))) ;; review upcoming deadlines and appointments
@@ -1180,7 +1183,7 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
           ))
         ("y" "Yearly Review"
          ((agenda "" ((org-agenda-span (quote year))))))
-        ("p" "Project Review" 
+        ("pa" "Overview of Projects" 
          ((agenda "")
           ;;(tags-todo "project")
           (tags "project" ((org-tags-match-list-sublevels nil)))
@@ -1188,7 +1191,15 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
           (tags "+project+TODO=\"NEXT\"")
           (tags "+project+TODO=\"TODO\"")
           ;;(tags "+project+TODO=\"DONE\"")
-         ))
+          ))
+        ("pb" "View by Project" 
+         ((agenda "")
+          (tags "project" ((org-tags-match-list-sublevels nil)))
+          (tags-todo "+project+CATEGORY=\"leo\"")
+          (tags-todo "+project+CATEGORY=\"tfg\"")
+          (tags-todo "+project+CATEGORY=\"div-conv\"")
+          (tags-todo "+project+CATEGORY=\"abuelo\"")
+          ))
         ("o" "Office and home agenda"
          ((agenda "" ((org-agenda-ndays 1))) ;; esto no me funciona... debe ser que (setq org-agenda-span (quote month)) en starter-kit-org.org tiene prioridad
           ;; limits the agenda display to a single day
@@ -1211,10 +1222,10 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
            (;; (org-agenda-overriding-header "========================================== Scheduled Tasks ==========================================")
             (org-agenda-span 22)
             (org-agenda-prefix-format '((agenda . " %1c %?-12t% s")))
-		      ;;(org-agenda-skip-function '(lambda()
-			  ;;	                ((bh/skip-habits))))
+		    ;;(org-agenda-skip-function '(lambda()
+			;;	                ((bh/skip-habits))))
             )))
-          )))
+         )))
 
 (defun my-org-agenda-skip-all-siblings-but-first ()
   "Skip all but the first non-done entry."
@@ -1236,6 +1247,7 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
 #+RESULTS:
 : org-current-is-todo
 
+
 From: https://stackoverflow.com/questions/31639086/emacs-org-mode-how-can-i-filter-on-tags-and-todo-status-simultaneously
 
 The tag search view is poorly named. It actually searches tags and properties. tag-todo adds an extra condition that only matches todo headlines. Use "+" to indicated that a condition is required (and "-" that it's forbidden). So +PROJECT+TODO=\"TODO\" will match headlines with the tag :PROJECT: and a todo keyword of TODO. Putting into a custom command looks like
@@ -1247,6 +1259,37 @@ The tag search view is poorly named. It actually searches tags and properties. t
 #+END_EXAMPLE
 
 
+**** COMMENT More customizations for agenda
+
+- https://emacs.stackexchange.com/questions/24151/list-todos-which-have-specific-property
+
+
+***** Leo's projects
+#+begin_src emacs-lisp :tangle yes :results silent
+(add-to-list 'org-agenda-custom-commands
+             '("pl" "Leo"
+               tags-todo "+project+CATEGORY=\"leo\""))
+#+end_src
+
+***** TFG project
+
+#+begin_src emacs-lisp :tangle yes :results silent
+(add-to-list 'org-agenda-custom-commands
+             '("pt" "TFG"
+               tags-todo "+project+CATEGORY=\"tfg\""))
+#+end_src
+
+***** Divorce project
+
+#+begin_src emacs-lisp :tangle yes :results silent
+(add-to-list 'org-agenda-custom-commands
+             '("pd" "Divorce"
+               tags-todo "+project+CATEGORY=\"divorce_gtd\""))
+#+end_src
+
+
+
+**** More 
 Set to the name of the file where new notes will be stored
 
 #+BEGIN_SRC emacs-lisp :tangle yes

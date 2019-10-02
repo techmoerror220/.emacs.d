@@ -58,7 +58,7 @@ Use =M-e= for sentence-level navigation, but without having to put two spaces af
 
 #+RESULTS: periods
 
-*** Run Emacs in Full Screen
+*** COMMENT Run Emacs in Full Screen
 I find it very useful to run Emacs in full-screen mode. There is no
 completely satisfactory way to accomplish this on Mac OS X. What
 works depends on the flavor of emacs you are using,
@@ -66,8 +66,10 @@ unfortunately. Choose as appropriate from the following options. Enable one of t
 
 Bind full screen to `C-c f`.
 
+DGM: not needed with EXWM
+
 #+source: fullscreen-4
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 (defun fullscreen (&optional f)
   (interactive)
   (set-frame-parameter f 'fullscreen
@@ -4895,7 +4897,13 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Dired-Projectile
                   :key "C-c d"
                   :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
-  (cheatsheet-add :group 'Editing
+(cheatsheet-add :group 'Editing
+                  :key "C-c f"
+                  :description "focus-mode")
+(cheatsheet-add :group 'Editing
+                  :key "C-c F"
+                  :description "focus-read-only-mode")
+(cheatsheet-add :group 'Editing
                   :key "C-x l"
                   :description "count-lines-page")
 (cheatsheet-add :group 'Editing
@@ -6024,6 +6032,22 @@ Temporarily disable signature verification (see variable `package-check-signatur
 #+end_example
 
 After all this, I do =M-x package-refresh-contents= and this updates all my packages, which I think is a mistake.
+
+
+* Focus
+
+Dim everything except for the thing-at-point. Improves focus when reading code and text.
+ 
+#+begin_src emacs-lisp :tangle yes
+(use-package focus
+  :ensure t
+  :bind
+  ("C-c f" . focus-mode)
+  ("C-c F" . focus-read-only-mode))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23956 20320 309073 950000) :init (23956 20320 308839 176000) :init-secs (0 0 107 389000) :use-package-secs (0 4 939579 800000)))
 
 * Provide
 

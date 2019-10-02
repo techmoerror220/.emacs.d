@@ -69,13 +69,13 @@
 ;;; Set up package. Originally in =starter-kit.org= but when I
 ;;; downloaded everything anew from the github repository =use-package=
 ;;; didn't work until I moved this here.
-
+;;; DGM on 2 Oct 2019: changing all http's to https as per: https://www.reddit.com/r/emacs/comments/aug9in/failed_to_verify_signature_archivecontentssig/
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+             '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)  ;; NB: maybe this doesn't work with https and needs to be set at 'http' instead
 (add-to-list 'package-archives
-             '("gnu" . "http://elpa.gnu.org/packages/") t)
+             '("gnu" . "https://elpa.gnu.org/packages/") t)
 (when (boundp 'package-pinned-packages)
   (setq package-pinned-packages
         '((org-plus-contrib . "org"))))
