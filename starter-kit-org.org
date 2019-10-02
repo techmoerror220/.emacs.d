@@ -761,7 +761,7 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq
- org-deadline-warning-days 7
+ org-deadline-warning-days 14
  org-agenda-default-appointment-duration 60
  org-agenda-columns-add-appointments-to-effort-sum t
  ;; Add keywords.
@@ -962,13 +962,13 @@ Callers of this function already widen the buffer view."
               (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
                 (unless (member "WAITING" (org-get-tags-at))
                   (setq has-next t))))
-            (if has-next
+ p           (if has-next
                 nil
               next-headline)) ; a stuck project, has subtasks but no next task
         nil))))
 
 (defun bh/skip-non-stuck-projects ()
-  "Skip trees that are not stuck projects"
+p  "Skip trees that are not stuck projects"
   ;; (bh/list-sublevels-for-projects-indented)
   (save-restriction
     (widen)
@@ -1144,7 +1144,23 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
 (setq org-agenda-block-separator "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
 (setq org-agenda-custom-commands
-      '(("d" "Daily Review"
+      '(("x" "Export Day Agenda" agenda ""
+         ((ps-number-of-columns 2)
+          (ps-landscape-mode t)
+          (org-agenda-prefix-format " [ ] ")
+          (org-agenda-with-colors nil)
+          (org-agenda-remove-tags t))
+         nil
+         ("~/Dropbox/gtd/theDayAgenda.pdf"))   ;; no se' por qu'e no se graba automaticamente este file. Da igual poner NIl antes que no (ver abajo)
+        ("X" "Export Week Agenda" agenda ""
+         ((ps-number-of-columns 2)
+          (ps-landscape-mode t)
+          (org-agenda-prefix-format " [ ] ")
+          (org-agenda-with-colors nil)
+          (org-agenda-remove-tags t)
+          (org-agenda-span 7))
+         ("~/Dropbox/gtd/theWeekAgenda.pdf")) ;; no se' por qu'e no se graba automaticamente este file
+        ("d" "Daily Review"
          ((agenda "" ((org-agenda-span 1))) ;; review upcoming deadlines and appointments
           ;; type "l" in the agenda to review logged items
           ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
@@ -1183,8 +1199,8 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
           ))
         ("y" "Yearly Review"
          ((agenda "" ((org-agenda-span (quote year))))))
-        ("pa" "Overview of Projects" 
-         ((agenda "")
+        ("ps" "All Tasks in Some Project by TODO State "
+         ((agenda)
           ;;(tags-todo "project")
           (tags "project" ((org-tags-match-list-sublevels nil)))
           (tags "+project+TODO=\"WAITING\"")
@@ -1192,13 +1208,17 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
           (tags "+project+TODO=\"TODO\"")
           ;;(tags "+project+TODO=\"DONE\"")
           ))
-        ("pb" "View by Project" 
+        ("pg" "Tasks Grouped by Project"
          ((agenda "")
           (tags "project" ((org-tags-match-list-sublevels nil)))
-          (tags-todo "+project+CATEGORY=\"leo\"")
-          (tags-todo "+project+CATEGORY=\"tfg\"")
-          (tags-todo "+project+CATEGORY=\"div-conv\"")
-          (tags-todo "+project+CATEGORY=\"abuelo\"")
+          (tags-todo "+project+CATEGORY=\"uned\"")
+          (tags-todo "+project+CATEGORY=\"work\"")
+          (tags-todo "+project+CATEGORY=\"work-hunt\"")
+          (tags-todo "+project+CATEGORY=\"computing\"")
+          (tags-todo "+project+CATEGORY=\"learning\"")
+          (tags-todo "+project+CATEGORY=\"personal\"")
+          ;; (tags-todo "+project+CATEGORY=\"div\"")
+          ;;(tags-todo "+project+CATEGORY=\"familia\"")
           ))
         ("o" "Office and home agenda"
          ((agenda "" ((org-agenda-ndays 1))) ;; esto no me funciona... debe ser que (setq org-agenda-span (quote month)) en starter-kit-org.org tiene prioridad
@@ -1222,8 +1242,8 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
            (;; (org-agenda-overriding-header "========================================== Scheduled Tasks ==========================================")
             (org-agenda-span 22)
             (org-agenda-prefix-format '((agenda . " %1c %?-12t% s")))
-		    ;;(org-agenda-skip-function '(lambda()
-			;;	                ((bh/skip-habits))))
+            ;;(org-agenda-skip-function '(lambda()
+            ;;                  ((bh/skip-habits))))
             )))
          )))
 
@@ -1752,7 +1772,7 @@ able to clock in on them.
 ;; (setq org-blank-before-new-entry nil)
 #+end_src
 
-*** Estimating WPM
+*** Estimating HHHHWPM
 
 I'm curious about how fast I type some things.
 
@@ -2485,7 +2505,7 @@ I can get a sense of how appointments are spread out.
 (setq org-agenda-show-log t)
 ;;  (setq org-agenda-skip-scheduled-if-done t)
 (setq org-agenda-skip-deadline-if-done t)
-(setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+;; (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
 ;;  (setq org-agenda-time-grid
 ;;        '((daily today require-timed)
 ;;         "----------------"
@@ -3704,9 +3724,94 @@ as the default task."
 | org-clock-remove-empty-clock-drawer | bh/clock-out-maybe |
 
 
+** Limiting time spent on tasks
+:PROPERTIES:
+:CUSTOM_ID: LimitingTimeSpentOnTasks
+:END:
+
+Org-mode has this great new feature for signalling alarms when the
+estimated time for a task is reached.  I use this to limit the amount
+of time I spend on a task during the day.
+
+As an example, I've been working on this document for over two months
+now.  I want to get it finished but I can't just work on it solely
+until it's done because then nothing else gets done.  I want to do a
+little bit every day but limit the total amount of time I spend
+documenting org-mode to an hour a day.
+
+To this end I have a task
+
+#+begin_src org :exports src
+,* NEXT Document my use of org-mode
+  :LOGBOOK:...
+  :PROPERTIES:
+  :CLOCK_MODELINE_TOTAL: today
+  :Effort:   1:00
+  :END:  
+#+end_src
+
+The task has an estimated effort of 1 hour and when I clock in the
+task it gives me a total in the mode-line like this
+
+: --:**  org-mode.org   91% (2348,73) Git:master  (Org Fly yas Font)-----[0:35/1:00 (Document my use of org-mode)]-------
+
+I've spent 35 minutes of my 1 hour so far today on this document and
+other help on IRC.
+
+I set up an alarm so the Star Trek door chime goes off when the
+total estimated time is hit.  (Yes I'm a Trekkie :) )
+
+DGM: sounds found here http://scnresearch.com/sounds/
+
+#+header: :tangle yes
+#+begin_src emacs-lisp
+(setq org-clock-sound "~/inconcv.wav")
+#+end_src
+
+#+RESULTS:
+: ~/inconcv.wav
+
+When the one hour time limit is hit the alarm sound goes off and a
+message states that I should be done working on this task.  If I
+switch tasks and try to clock in this task again I get the sound each
+and every time I clock in the task.  This nags me to go work on
+something else :)
+
+You can use similar setups for repeated tasks.  By default the last
+repeat time is recorded as a property when a repeating task is marked
+done.  For repeating tasks the mode-line clock total counts since the
+last repeat time by default.  This lets you accumulate time over
+multiple days and counts towards your estimated effort limit.
+
+
+** Habits only log DONE state changes
+:PROPERTIES:
+:CUSTOM_ID: HabitsLogDone
+:END:
+
+I tend to keep habits under a level 1 task =* Habits= with a special
+logging property that only logs changes to the =DONE= state.  This
+allows me to cancel a habit and not record a timestamp for it since
+that messes up the habit graph.  Cancelling a habit just to get it off
+my agenda because it's undoable (like get up before 6AM) should not
+mark the habit as done today.  I only cancel habits that repeat every
+day.
+
+My habit tasks look as follows - and I tend to have one in every org
+file that can have habits defined
+
+#+begin_src org :exports src
+,* Habits
+  :PROPERTIES:
+  :LOGGING:  DONE(!)
+  :ARCHIVE:  %s_archive::* Habits
+  :END:  
+#+end_src
+
+
 * Settings from the great Alphapapa 
 ** COMMENT via Benjamin Beckwith
-*** Org Super Agenda
+*** COMMENT Org Super Agenda
 - https://github.com/alphapapa/org-super-agenda/issues/51
 - http://bnbeckwith.com/bnb-emacs/#orga483373
 
@@ -3717,7 +3822,7 @@ as the default task."
 #+RESULTS:
 : ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**** Views 
+**** COMMENT Views 
 The key to knowing what work there is the agenda views. These provide a landscape to list, filter or manipulate tasks. org-agenda-custom-commands defines which views are available by default.
 
 First, I define a little helper function (from Sacha Chua) to display a note with agenda.
@@ -4079,6 +4184,13 @@ c Select default clocking task
 #+begin_src emacs-lisp :tangle yes
   (message "Starter Kit Org loaded.")
 #+end_src
+
+
+
+
+
+
+
 
 
 

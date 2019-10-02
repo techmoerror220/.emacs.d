@@ -656,6 +656,12 @@ However, with =helm-ag= I'm getting errors that seem related to undo-tree, plus 
 
 *** COMMENT auto-file-revert
 
+Explanation by Bernt Hansen: With this setting any files that change on
+disk where there are no changes in the buffer automatically revert to
+the on-disk version.
+
+DGM: I can't recall now why it is commented out.
+
 See: http://pragmaticemacs.com/emacs/automatically-revert-buffers/
 
 If you want Emacs to automatically update a buffer if a file changes on disk, then add the following to your config:
@@ -4863,7 +4869,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                   :description "diary-show-all-entries")
   (cheatsheet-add :group 'Dired
                   :key "C-x d"
-                  :description "helm-mode-dired. TAB to select; RET to jump to selection")
+                  :description "helm-mode-dired. TAB to select; RET to jump to selection") 
+  (cheatsheet-add :group 'Dired
+                  :key "J"
+                  :description "bmkp-dired-jump. Jump to a Dired bookmark") 
   (cheatsheet-add :group 'Dired
                   :key "/"
                   :description "Dired narrow to match filter")
@@ -5563,7 +5572,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org
                   :key "M-x org-repair-property-drawers"
                   :description "Fix properties drawers in current buffer. To use when habits or schedules don't show rightly")
-  (cheatsheet-add :group 'Org-agenda
+(cheatsheet-add :group 'Org-agenda
+                  :key "C-x C-w"
+                  :description "Write the agenda view to a file: .html, ps, pdf. Any other extension results in plain ASCII file")  
+(cheatsheet-add :group 'Org-agenda
                   :key "A"
                   :description "Interactively select another agenda view and append it to the current view")
 (cheatsheet-add :group 'Org-agenda
@@ -5949,7 +5961,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23951 52570 669939 696000) :init (23951 52570 669877 791000) :init-secs (0 0 2334 66000) :use-package-secs (0 0 2488 471000) :config (23951 52570 669866 348000) :config-secs (0 0 2318 270000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23956 25536 204697 658000) :init (23956 25536 204643 385000) :init-secs (0 0 19 859000) :use-package-secs (0 0 133 965000)))
 
 
 

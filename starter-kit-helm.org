@@ -1302,7 +1302,7 @@ Run one of the rifle commands, type some words, and results will be displayed, g
  - Delete the result at point in helm-org-rifle-occur buffers by pressing d. This does not alter the source buffers but simply removes uninteresting results from view.
 - You can customize the helm-org-rifle group if you like.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package helm-org-rifle
   :ensure t
   :bind ("s-u" . helm-org-rifle))
@@ -1310,6 +1310,27 @@ Run one of the rifle commands, type some words, and results will be displayed, g
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23904 2416 473789 40000) :init (23904 2416 473492 686000) :init-secs (0 0 130 631000) :use-package-secs (0 0 667 779000)))
+
+
+Customization by the great malb: (https://github.com/malb/emacs.d/blob/master/malb.org)
+
+#+begin_src emacs-lisp :tangle yes
+(use-package helm-org-rifle
+  :ensure t
+  :commands (helm-org-rifle-agenda-files helm-org-rifle-occur-agenda-files malb/helm-org-rifle-agenda-files)
+  :config (progn
+            (defun malb/helm-org-rifle-agenda-files (arg)
+              (interactive "p")
+              (let ((current-prefix-arg nil))
+                (cond
+                 ((equal arg 4) (call-interactively #'helm-org-rifle-agenda-files nil))
+                 ((equal arg 16) (helm-org-rifle-occur-agenda-files))
+                 (t (helm-org-agenda-files-headings))))))
+  :bind ("s-u" . helm-org-rifle))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23957 2239 822862 619000) :init (23957 2239 822570 651000) :init-secs (0 0 1124 727000) :use-package-secs (0 0 1664 722000) :config (23957 2239 822513 825000) :config-secs (0 0 1030 942000)))
 
 * Look at the Emacs or Elisp manual with helm
 
@@ -1394,7 +1415,24 @@ From: https://www.reddit.com/r/emacs/comments/cuc8hl/how_do_you_remember_various
 
 * Org in buffer heading search
 
+=defun= included as the function has disappeared after today's package upgrade! (2 October 2019) I need to intall =helm-org= to get it working! 
+
+[[https://github.com/emacs-helm/helm-org][Helm for org headlines and keywords completion]]
+
+- Used by the great malb: https://github.com/malb/emacs.d/blob/master/malb.org
+
 #+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-org
+  :config (progn
+            (setq helm-org-headings-fontify t)
+
+            (defun malb/helm-in-buffer ()
+              "The right kind™ of buffer menu."
+              (interactive)
+              (if (eq major-mode 'org-mode)
+                  (call-interactively #'helm-org-in-buffer-headings)
+                (call-interactively #'helm-semantic-or-imenu)))))
+
 (global-set-key (kbd "s-p") 'helm-org-in-buffer-headings)
 #+END_SRC
 
