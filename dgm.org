@@ -4783,9 +4783,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Bindings
                   :key "C-h m"
                   :description "Bindings for all modes active in buffer")
-  (cheatsheet-add :group 'Bindings-Free
-                  :key "s-:"
-                  :description "")
   (cheatsheet-add :group 'Bookmarks
                   :key "C-x r m"
                   :description "Create bookmark")
@@ -4798,6 +4795,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Bookmarks
                   :key "a"
                   :description "Read note on bookmark where point is")
+  (cheatsheet-add :group 'Bookmarks
+                  :key "s--"
+                  :description "Bookmark location")
+  (cheatsheet-add :group 'Bookmarks
+                  :key "s-_"
+                  :description "Get back to saved bookmark")
   (cheatsheet-add :group 'Buffer-Cycling
                   :key "s-<tab>"
                   :description "ambrevar/switch-to-last-buffer")
@@ -4906,16 +4909,19 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Dired-Projectile
                   :key "C-c d"
                   :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
-(cheatsheet-add :group 'Editing
+  (cheatsheet-add :group 'Editing
+                  :key "s-:"
+                  :description "Cheatsheet")
+  (cheatsheet-add :group 'Editing
                   :key "C-c f"
                   :description "focus-mode")
-(cheatsheet-add :group 'Editing
+  (cheatsheet-add :group 'Editing
                   :key "C-c F"
                   :description "focus-read-only-mode")
-(cheatsheet-add :group 'Editing
+  (cheatsheet-add :group 'Editing
                   :key "C-x l"
                   :description "count-lines-page")
-(cheatsheet-add :group 'Editing
+  (cheatsheet-add :group 'Editing
                   :key "C-x 8-"
                   :description "Prefix to insert symbols")
   (cheatsheet-add :group 'Editing
@@ -5002,9 +5008,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Editing
                   :key "C-x C-i"
                   :description "indent-rigidly. Indent all lines starting in the region. Then <right>/<left> or <S-right>/<S-left> to actually indent")
-(cheatsheet-add :group 'Editing
+  (cheatsheet-add :group 'Editing
                   :key "M-m"
                   :description "back-to-indentation. Move point to the first non-whitespace character on this line")
+  (cheatsheet-add :group 'Editing
+                  :key "C-c C-r"
+                  :description "org-reveal. Display where point is if it is buried in invisible text to allow editing again")
   (cheatsheet-add :group 'Editing-Killing
                   :key "M-w"
                   :description "kill-ring-save: Save the region as if killed, but don’t kill it. When no active region, copy a single line instead")
@@ -5320,7 +5329,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Helm
                   :key "C-c TAB"
                   :description "Yank selected candidate in Helm session at point")
-(cheatsheet-add :group 'Helm
+  (cheatsheet-add :group 'Helm
                   :key "M-SPC"
                   :description "Select multiple sources")
   (cheatsheet-add :group 'Helm
@@ -5497,9 +5506,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Narrowing
                   :key "W"
                   :description "Widen in Org subtree") 
-(cheatsheet-add :group 'Org
-                :key "C-c C-v C-t"
-                :description "org-babel-tangle. Write code blocks to source-specific files")
+  (cheatsheet-add :group 'Org
+                  :key "C-c C-v C-t"
+                  :description "org-babel-tangle. Write code blocks to source-specific files")
   (cheatsheet-add :group 'Org
                   :key "s-<"
                   :description "org-cut-subtree: cut tree and paste it elsewhere in the hierarchy.")
@@ -5572,19 +5581,19 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org
                   :key "M-x org-repair-property-drawers"
                   :description "Fix properties drawers in current buffer. To use when habits or schedules don't show rightly")
-(cheatsheet-add :group 'Org-agenda
+  (cheatsheet-add :group 'Org-agenda
                   :key "C-x C-w"
                   :description "Write the agenda view to a file: .html, ps, pdf. Any other extension results in plain ASCII file")  
-(cheatsheet-add :group 'Org-agenda
+  (cheatsheet-add :group 'Org-agenda
                   :key "A"
                   :description "Interactively select another agenda view and append it to the current view")
-(cheatsheet-add :group 'Org-agenda
+  (cheatsheet-add :group 'Org-agenda
                   :key "G"
                   :description "org-agenda-toggle-time-grid")
-(cheatsheet-add :group 'Org-agenda
+  (cheatsheet-add :group 'Org-agenda
                   :key "k"
                   :description "org-agenda-capture. Call org-capture with the date at point")
-(cheatsheet-add :group 'Org-agenda
+  (cheatsheet-add :group 'Org-agenda
                   :key "B"
                   :description "org-agenda-bulk-action. Mark with m0")
   (cheatsheet-add :group 'Org-agenda
@@ -5614,9 +5623,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-agenda
                   :key "RET"
                   :description "org-agenda-switch-to. Go to the original location of the item and delete other windows")
-(cheatsheet-add :group 'Org-agenda
-                :key "="
-                :description "org-agenda-filter-by-regexp. Filter agenda entries by regular expressions. With one prefix argument, filter out entries matching the regexp")
+  (cheatsheet-add :group 'Org-agenda
+                  :key "="
+                  :description "org-agenda-filter-by-regexp. Filter agenda entries by regular expressions. With one prefix argument, filter out entries matching the regexp")
   (cheatsheet-add :group 'Org-agenda
                   :key "J"
                   :description "org-agenda-clock-goto. Go to the currently clocked-in task in the agenda buffer")
@@ -5961,7 +5970,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23956 25536 204697 658000) :init (23956 25536 204643 385000) :init-secs (0 0 19 859000) :use-package-secs (0 0 133 965000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23959 49064 494851 590000) :init (23959 49064 494769 228000) :init-secs (0 0 2529 422000) :use-package-secs (0 0 2711 986000) :config (23959 49064 494756 447000) :config-secs (0 0 2512 280000)))
 
 
 

@@ -392,6 +392,8 @@ ARCHIVE is the string name of the package archive.")
  (unless (eq system-type 'windows-nt)
    (set-selection-coding-system 'utf-8))
 
+;; DGM on 4 October 2019 following Bern Hansen
+(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
 
 ;;;;;;; dgm on 13 December 2018 to try and not get the conflict with utf-8-emacs
 ;; from https://stackoverflow.com/questions/24904208/emacs-windows-org-mode-encoding
