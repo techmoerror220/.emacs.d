@@ -1351,7 +1351,7 @@ From: https://www.reddit.com/r/emacs/comments/cuc8hl/how_do_you_remember_various
 #+RESULTS:
 : ap/helm-info-emacs-elisp-cl
 
-* COMMENT Worf and hydra
+* Worf and hydra
 
 =worf= needs =hydra=
 

@@ -4782,6 +4782,32 @@ c Select default clocking task
 #+RESULTS:
 | z | Super zaen view | ((agenda  ((org-agenda-span 'day) (org-super-agenda-groups '((:name Today :time-grid t :date today :todo TODAY :scheduled today :order 1) (:name Quick Picks :effort <= 0:30)))))) | (alltodo  ((org-agenda-overriding-header ) (org-super-agenda-groups '((:name Next to do :todo NEXT :order 1) (:name Waiting :todo WAITING :order 20) (:name Due Today :deadline today :order 2) (:name Due Soon :deadline future :order 8) (:name Overdue :deadline past :order 7) (:name Projects :tag project :order 14))))) |
 
+** org-ql
+
+- https://github.com/alphapapa/org-ql
+
+org-ql is a lispy query language for Org files. It allows you to find Org entries matching certain criteria and return a list of them or perform actions on them. Commands are also provided which display matching results.
+
+#+begin_src emacs-lisp :tangle yes
+(use-package org-ql
+  :quelpa (org-ql :fetcher github :repo "alphapapa/org-ql"))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23960 46491 699160 485000) :init (23960 46491 699136 474000) :config (23960 46491 698868 240000) :config-secs (0 0 8 293000) :init-secs (0 0 540 714000) :use-package-secs (0 0 5868 960000)))
+
+** org-sideline
+
+- https://github.com/alphapapa/org-sidebar
+
+#+begin_src emacs-lisp :tangle yes
+(use-package org-sidebar
+  :quelpa (org-sidebar :fetcher github :repo "alphapapa/org-sidebar"))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23960 46649 402522 37000) :init (23960 46649 402508 846000) :config (23960 46649 402280 546000) :config-secs (0 0 4 972000) :init-secs (0 0 15019 548000) :use-package-secs (0 2 173952 145000)))
+
 * COMMENT Settings from org-query
 - https://github.com/remyhonig/org-query
 
@@ -4792,6 +4818,82 @@ c Select default clocking task
 
 #+RESULTS:
 : org-query-gtd
+
+* Settings from Pragmatic Emacs
+** Reorder TODO items 
+- http://pragmaticemacs.com/emacs/reorder-todo-items-in-your-org-mode-agenda/
+
+#+begin_src emacs-lisp :tangle yes
+(defun bjm/org-headline-to-top ()
+  "Move the current org headline to the top of its section"
+  (interactive)
+  ;; check if we are at the top level
+  (let ((lvl (org-current-level)))
+    (cond
+     ;; above all headlines so nothing to do
+     ((not lvl)
+      (message "No headline to move"))
+     ((= lvl 1)
+      ;; if at top level move current tree to go above first headline
+      (org-cut-subtree)
+      (beginning-of-buffer)
+      ;; test if point is now at the first headline and if not then
+      ;; move to the first headline
+      (unless (looking-at-p "*")
+        (org-next-visible-heading 1))
+      (org-paste-subtree))
+     ((> lvl 1)
+      ;; if not at top level then get position of headline level above
+      ;; current section and refile to that position. Inspired by
+      ;; https://gist.github.com/alphapapa/2cd1f1fc6accff01fec06946844ef5a5
+      (let* ((org-reverse-note-order t)
+             (pos (save-excursion
+                    (outline-up-heading 1)
+                    (point)))
+             (filename (buffer-file-name))
+             (rfloc (list nil filename nil pos)))
+        (org-refile nil nil rfloc))))))
+
+(defun bjm/org-agenda-item-to-top ()
+    "Move the current agenda item to the top of the subtree in its file"
+  (interactive)
+  ;; save buffers to preserve agenda
+  (org-save-all-org-buffers)
+  ;; switch to buffer for current agenda item
+  (org-agenda-switch-to)
+  ;; move item to top
+  (bjm/org-headline-to-top)
+  ;; go back to agenda view
+  (switch-to-buffer (other-buffer (current-buffer) 1))
+  ;; refresh agenda
+  (org-agenda-redo)
+  )
+
+  ;; bind to key 1
+  (define-key org-agenda-mode-map (kbd "1") 'bjm/org-agenda-item-to-top)
+#+end_src
+
+#+RESULTS:
+: bjm/org-agenda-item-to-top
+
+** Use org-mode tables and structures in emails and elsewhere
+
+I love the way that org-mode allows you to add simple clean structures to your text, with lists and tables. You can get some of that functionality in other modes by using
+orgstruct-mode and orgtbl-mode, which are part of org-mode. 
+
+Enable these minor modes in any major mode for one-off use with M-x orgstruct++-mode or M-x orgtbl-mode and you can use the normal org-mode commands to create lists and
+tables. I find this especially useful in emails, so I use this code in my emacs config file to automatically enable these for message-mode 
+
+DGM: already under [[id:48af1742-2872-4dbc-8f3d-ff8940e64c39][Org functionality in compose buffer]]  in the =mu4e.org= file. 
+
+#+begin_src emacs-lisp :tangle no
+;; use org structures and tables in message mode
+;;(add-hook 'message-mode-hook 'turn-on-orgtbl)
+;;(add-hook 'message-mode-hook 'turn-on-orgstruct++)
+#+end_src
+
+#+RESULTS:
+| turn-on-orgstruct++ | turn-on-orgtbl | org-contacts-setup-completion-at-point |
 
 * Provide
 

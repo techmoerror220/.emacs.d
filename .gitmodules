@@ -4,3 +4,6 @@
 [submodule "src/org-recipes"]
 	path = src/org-recipes
 	url = https://github.com/tuhdo/org-recipes.git
+[submodule "quelpa/melpa"]
+	path = quelpa/melpa
+	url = https://github.com/melpa/melpa.git

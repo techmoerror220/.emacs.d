@@ -1031,6 +1031,9 @@ Also, killing a draft doesn't work properly with this option active.
 : t
 
 ** Org functionality in compose buffer
+:PROPERTIES:
+:ID:       48af1742-2872-4dbc-8f3d-ff8940e64c39
+:END:
 
 From https://irreal.org/blog/?p=6122
 
