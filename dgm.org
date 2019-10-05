@@ -6088,16 +6088,17 @@ Dim everything except for the thing-at-point. Improves focus when reading code a
 ;; :quelpa keyword
 (use-package quelpa
   :ensure t
-  :defer t
+  :defer t)
   ;:custom
   ;  (quelpa-update-melpa-p nil "Don't update the MELPA git repo.")
-)
+  ;)
 
-(use-package quelpa-use-package :ensure t)
+(use-package quelpa-use-package 
+  :ensure t)
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23960 46363 925552 668000) :init (23960 46363 925477 873000) :config (23960 46363 924523 48000) :config-secs (0 0 42 102000) :init-secs (0 0 18659 924000) :use-package-secs (0 1 408647 956000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23960 64404 983820 211000) :init (23960 64404 983767 258000) :config (23960 64404 982937 260000) :config-secs (0 0 23 583000) :init-secs (0 0 1502 136000) :use-package-secs (0 0 1716 812000)))
 
 * Provide
 

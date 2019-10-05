@@ -1378,6 +1378,7 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
               ;;(org-agenda-sorting-strategy '(todo-state-down))))
               (tags-todo "+project+CATEGORY=\"learning\""
                          ((org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+                          ;;(org-agenda-files '("/home/dgm/Dropbox/gtd/habits.org"))))
               ;;(org-agenda-sorting-strategy '(todo-state-down))))
               (tags-todo "+project+CATEGORY=\"personal\""
                          ((org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
@@ -2334,6 +2335,10 @@ Enable random "noise" for item itervals.
 - https://orgmode.org/worg/org-contrib/org-drill.html
 
 *** org-habit
+
+Yiufung: Org-habit tracks consistency of TODO item finish states. It produces a nice graph in Org-agenda that I can at one glance know whether I’m on track.
+
+=!= means today and =*= means a task has been done on that day. The color interpretation is intuitive: Green means on track, yellow warning sign of overdue, red overdue, and blue ``still early, don't feel bad taking a break''.
 
 What's really useful about habits is that they are displayed along with a consistency graph, to show how consistent you’ve been at getting that task done in the past.
 
@@ -4346,9 +4351,14 @@ I find invisible edits (and undo's) hard to deal with so now I can't edit invisi
 =C-c C-r= (org-reveal) will display where the point is if it is buried in invisible text
 to allow editing again.
 
+Yiufung: When text is inserted near invisible area (...), I’m never sure what exactly is changed. Usually I would expand to check, only to end up losing my focus during panic TAB ing.
+
+Set org-catch-invisible-edits to error to prevent editing invisible area, and show an error message in echo area instead. I prefer show-and-error, which additionally expand text and move focus to the expected point.
+
 #+header: :tangle yes
 #+begin_src emacs-lisp
-(setq org-catch-invisible-edits 'error)
+;;(setq org-catch-invisible-edits 'error)
+(setq org-catch-invisible-edits 'show-and-error) ; https://yiufung.net/post/org-mode-hidden-gems-pt1/
 #+end_src
 
 #+RESULTS:
@@ -4651,7 +4661,7 @@ WIP from: https://github.com/fniessen/emacs-leuven/blob/master/org-custom-agenda
 
 (use-package org-super-agenda
   :ensure t
-  ;;:quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
+  :quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
   :config
   (org-super-agenda-mode t)
   (add-to-list 'org-agenda-custom-commands
@@ -4708,8 +4718,7 @@ c Select default clocking task
 
 #+begin_src emacs-lisp :tangle yes
 (use-package org-super-agenda
- 
-  ;;:quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
+  :quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
   :config
   (org-super-agenda-mode t))
 
@@ -4736,7 +4745,7 @@ c Select default clocking task
 
 (use-package org-super-agenda
   :ensure t
-  ;;:quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
+  :quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
   :config
   (org-super-agenda-mode t))
 
@@ -4789,24 +4798,26 @@ c Select default clocking task
 org-ql is a lispy query language for Org files. It allows you to find Org entries matching certain criteria and return a list of them or perform actions on them. Commands are also provided which display matching results.
 
 #+begin_src emacs-lisp :tangle yes
-(use-package org-ql
-  :quelpa (org-ql :fetcher github :repo "alphapapa/org-ql"))
+(require 'org-ql)
+
+(use-package org-ql)
+;;  :quelpa (org-ql :fetcher github :repo "alphapapa/org-ql"))
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23960 46491 699160 485000) :init (23960 46491 699136 474000) :config (23960 46491 698868 240000) :config-secs (0 0 8 293000) :init-secs (0 0 540 714000) :use-package-secs (0 0 5868 960000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23960 47870 865728 276000) :init (23960 47870 865703 945000) :config (23960 47870 865411 131000) :config-secs (0 0 13 882000) :init-secs (0 0 738 217000) :use-package-secs (0 0 935 669000)))
 
 ** org-sideline
 
 - https://github.com/alphapapa/org-sidebar
 
 #+begin_src emacs-lisp :tangle yes
-(use-package org-sidebar
-  :quelpa (org-sidebar :fetcher github :repo "alphapapa/org-sidebar"))
+(use-package org-sidebar)
+;;  :quelpa (org-sidebar :fetcher github :repo "alphapapa/org-sidebar"))
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23960 46649 402522 37000) :init (23960 46649 402508 846000) :config (23960 46649 402280 546000) :config-secs (0 0 4 972000) :init-secs (0 0 15019 548000) :use-package-secs (0 2 173952 145000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23960 48128 850470 636000) :init (23960 48128 850459 899000) :config (23960 48128 850303 367000) :config-secs (0 0 3 871000) :init-secs (0 0 38013 165000) :use-package-secs (0 0 38157 554000)))
 
 * COMMENT Settings from org-query
 - https://github.com/remyhonig/org-query
@@ -4894,6 +4905,43 @@ DGM: already under [[id:48af1742-2872-4dbc-8f3d-ff8940e64c39][Org functionality 
 
 #+RESULTS:
 | turn-on-orgstruct++ | turn-on-orgtbl | org-contacts-setup-completion-at-point |
+
+* Settings from Yiu Fung
+- https://yiufung.net/post/org-mode-hidden-gems-pt1/
+
+** Increase sub-item indentation
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-list-indent-offset 1)
+#+end_src
+
+** Hierarchical todo statistics
+
+=org-hierarchical-todo-statistics= controls whether TODO statistics should cover only direct children. This can be set on a per-subtree basis.
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-hierarchical-todo-statistics nil) ; t will make it cover only direct children
+#+end_src
+
+** Change log note templates
+If any of =org-log-(done/refile/repeat/reschedule/redeadline)= is set to =note=, then a status change would trigger insertion of a note in the :LOGBOOK: drawer. It’s possible to define template for notes via =org-log-note-headings=. Here’s my setting, which adds new timestamp (=%s=) to  =reschedule= and =redeadline=:
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-log-note-headings '((done        . "CLOSING NOTE %t")
+                              (state       . "State %-12s from %-12S %t")
+                              (note        . "Note taken on %t")
+                              (reschedule  . "Schedule changed on %t: %S -> %s")
+                              (delschedule . "Not scheduled, was %S on %t")
+                              (redeadline  . "Deadline changed on %t: %S -> %s")
+                              (deldeadline . "Removed deadline, was %S on %t")
+                              (refile      . "Refiled on %t")
+                              (clock-out   . "")))
+#+end_src
+
+These days I set many of =org-log-*= to note to keep verbose log of task progress. Whenever a task is =delayed/rescheduled/redeadlined=, the reasons are kept as notes in logbook drawer. In this way, a full history is retained while not intervening normal edits. Verbose timestamps also helps in keeping a daily working journal, and when using Org Sparse Trees (especially with the c option).
+
+#+RESULTS:
+: ((done . CLOSING NOTE %t) (state . State %-12s from %-12S %t) (note . Note taken on %t) (reschedule . Schedule changed on %t: %S -> %s) (delschedule . Not scheduled, was %S on %t) (redeadline . Deadline changed on %t: %S -> %s) (deldeadline . Removed deadline, was %S on %t) (refile . Refiled on %t) (clock-out . ))
 
 * Provide
 
