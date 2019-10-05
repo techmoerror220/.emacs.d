@@ -3789,13 +3789,13 @@ My =org-todo-keywords= are set as follows:
 #+begin_src emacs-lisp
 ;; (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w)"  "|" "DONE(d)" "CANCELED(c)"))
 (setq org-todo-keywords
-      (quote ((sequence "PROJECT(p)" "TODO(t)" "NEXT(n)" "PROJECT(p)" "|" "DONE(d)")
+      (quote ((sequence "PROJECT(p)" "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "WAITING(w@/!)" "|" "CANCELED(c@/!)" "PHONE"))))
 #+end_src
 
 #+RESULTS:
-| sequence | PROJECT(p)    | TODO(t) | NEXT(n) | PROJECT(p)     |       |   | DONE(d) |
-| sequence | WAITING(w@/!) |         |         | CANCELED(c@/!) | PHONE |   |         |
+| sequence | PROJECT(p)    | TODO(t) | NEXT(n) |                |       | DONE(d) |
+| sequence | WAITING(w@/!) |         |         | CANCELED(c@/!) | PHONE |         |
 
 This adds a log entry whenever a task moves to any of the following states:
 - to or out of =DONE= status
