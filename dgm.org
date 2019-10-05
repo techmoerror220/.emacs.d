@@ -5770,6 +5770,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
   (cheatsheet-add :group 'Org-table
                   :key "M-Shift-<down>"
                   :description "Insert a new row above the current row. With a prefix argument, the line is created below the current one")
+(cheatsheet-add :group 'Org-table
+                  :key "M-Shift-<left>"
+                  :description "Delete column")
   (cheatsheet-add :group 'Org-table
                   :key "Shift-TAB"
                   :description "Re-align, move to previous field-like previous cell")

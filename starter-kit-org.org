@@ -463,6 +463,129 @@ display a list of the code blocks commands and their related keys.
 #+RESULTS:
 : bh/narrow-to-org-project
 
+*** Recall org-agenda commands
+- https://orgmode.org/worg/doc.html
+
+#+BEGIN_EXAMPLE
+Mode for time-sorted view on action items in Org files.
+
+The following commands are available:
+
+key             binding
+---             -------
+
+C-c		Prefix Command
+TAB		org-agenda-goto
+C-k		org-agenda-kill
+RET		org-agenda-switch-to
+C-n		org-agenda-next-line
+C-p		org-agenda-previous-line
+C-x		Prefix Command
+ESC		Prefix Command
+C-_		org-agenda-undo
+SPC		org-agenda-show-and-scroll-up
+!		org-agenda-toggle-deadlines
+#		org-agenda-dim-blocked-tasks
+$		org-agenda-archive
+%		org-agenda-bulk-mark-regexp
+*		org-agenda-bulk-mark-all
++		org-agenda-priority-up
+,		org-agenda-priority
+-		org-agenda-priority-down
+.		org-agenda-goto-today
+/		org-agenda-filter-by-tag
+0 .. 9		digit-argument
+:		org-agenda-set-tags
+;		org-timer-set-timer
+<		org-agenda-filter-by-category
+=		org-agenda-filter-by-regexp
+>		org-agenda-date-prompt
+?		org-agenda-show-the-flagging-note
+A		org-agenda-append-agenda
+B		org-agenda-bulk-action
+C		org-agenda-convert-date
+D		org-agenda-toggle-diary
+E		org-agenda-entry-text-mode
+F		org-agenda-follow-mode
+G		org-agenda-toggle-time-grid
+H		org-agenda-holidays
+I		org-agenda-clock-in
+J		org-agenda-clock-goto
+K		org-habit-toggle-habits
+L		org-agenda-recenter
+M		org-agenda-phases-of-moon
+N		org-agenda-next-item
+O		org-agenda-clock-out
+P		org-agenda-previous-item
+Q		org-agenda-Quit
+R		org-agenda-clockreport-mode
+S		org-agenda-sunrise-sunset
+T		org-agenda-show-tags
+U		org-agenda-bulk-unmark-all
+X		org-agenda-clock-cancel
+[		org-agenda-manipulate-query-add
+]		org-agenda-manipulate-query-subtract
+^		org-agenda-filter-by-top-headline
+_		org-agenda-filter-by-effort
+a		org-agenda-archive-default-with-confirmation
+b		org-agenda-earlier
+c		org-agenda-goto-calendar
+d		org-agenda-day-view
+e		org-agenda-set-effort
+f		org-agenda-later
+g		org-agenda-redo-all
+h		org-agenda-holidays
+i		org-agenda-diary-entry
+j		org-agenda-goto-date
+k		org-agenda-capture
+l		org-agenda-log-mode
+m		org-agenda-bulk-mark
+n		org-agenda-next-line
+o		delete-other-windows
+p		org-agenda-previous-line
+q		org-agenda-quit
+r		org-agenda-redo
+s		org-save-all-org-buffers
+t		org-agenda-todo
+u		org-agenda-bulk-unmark
+v		org-agenda-view-mode-dispatch
+w		org-agenda-week-view
+x		org-agenda-exit
+y		org-agenda-year-view
+z		org-agenda-add-note
+{		org-agenda-manipulate-query-add-re
+|		org-agenda-filter-remove-all
+}		org-agenda-manipulate-query-subtract-re
+~		org-agenda-limit-interactively
+DEL		org-agenda-show-scroll-down
+C-/		org-agenda-undo
+<C-S-left>	org-agenda-todo-previousset
+<C-S-right>	org-agenda-todo-nextset
+<M-down>	org-agenda-drag-line-forward
+<M-up>		org-agenda-drag-line-backward
+<S-down>	org-agenda-priority-down
+<S-left>	org-agenda-do-date-earlier
+<S-right>	org-agenda-do-date-later
+<S-up>		org-agenda-priority-up
+<backspace>	org-agenda-show-scroll-down
+<down>		org-agenda-next-line
+<mouse-2>	org-agenda-goto-mouse
+<mouse-3>	org-agenda-show-mouse
+<remap>		Prefix Command
+<tab>		org-agenda-goto
+<undo>		org-agenda-undo
+<up>		org-agenda-previous-line
+
+<remap> <backward-paragraph>	org-agenda-backward-block
+<remap> <forward-paragraph>	org-agenda-forward-block
+
+M-*		org-agenda-bulk-toggle-all
+M-m		org-agenda-bulk-toggle
+#+END_EXAMPLE
+
+
+
+
 ** Code blocks
 This activates a number of widely used languages, you are encouraged
 to activate more languages using the customize interface for the
@@ -1162,8 +1285,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 #+RESULTS:
 : bh/skip-non-subprojects
 
-
-
 Tip from https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html.
 
 Useful for using custom agenda commands to get an overview of actions by context or tag. Here's an example custom agenda command that will display all actions for the =@office= context. Following the GTD principle, what I usually want is to only show the first action to be done (or next action) for each project with the =@office= tag. That can be achieved using a skipping condition. I've tweak it so that I can have it work for entries tagged for the context "work" and for the context "home".
@@ -1173,132 +1294,184 @@ HOWEVER I am not 100% sure how useful is all this because I have a nice option i
 On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgtimeline/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+    (setq org-agenda-block-separator "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
-(setq org-agenda-block-separator "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    (setq org-agenda-custom-commands
+          '(("x" "Export Day Agenda" agenda ""
+             ((ps-number-of-columns 2)
+              (ps-landscape-mode t)
+              (org-agenda-prefix-format " [ ] ")
+              (org-agenda-with-colors nil)
+              (org-agenda-remove-tags t))
+             nil
+             ("~/Dropbox/gtd/theDayAgenda.pdf"))   ;; no se' por qu'e no se graba automaticamente este file. Da igual poner NIl antes que no (ver abajo)
+            ("X" "Export Week Agenda" agenda ""
+             ((ps-number-of-columns 2)
+              (ps-landscape-mode t)
+              (org-agenda-prefix-format " [ ] ")
+              (org-agenda-with-colors nil)
+              (org-agenda-remove-tags t)
+              (org-agenda-span 7))
+             ("~/Dropbox/gtd/theWeekAgenda.pdf")) ;; no se' por qu'e no se graba automaticamente este file
+            ("d" "Daily Review"
+             ((agenda "" ((org-agenda-span 1))) ;; review upcoming deadlines and appointments
+              ;; type "l" in the agenda to review logged items
+              ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+              ;;(todo "STARTED") ;; review  actions that have started
+              (todo "WAITING" ((org-agenda-sorting-strategy '(category-up)))) ;;This way tasks of the same category are together and sorted alphabetically
+              (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
+              (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
+              )) ;;
+            ("w" "Weekly Review"
+             ((agenda "" ((org-agenda-span 7)))  ;; review upcoming deadlines and appointments
+              ;; old code ((org-agenda-fortnight-view)))
+              ;; type "l" in the agenda to review logged items
+              ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+              ;;(todo "STARTED") ;; review  actions that have started
+              (todo "WAITING" ((org-agenda-sorting-strategy '(category-up)))) ;; review waiting items
+              (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
+              (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
+              ))
+            ("f" "Fortnight Review"
+             ((agenda "" ((org-agenda-span 14))) ;; review upcoming deadlines and appointments
+              ;; type "l" in the agenda to review logged items
+              ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+              ;;(todo "STARTED") ;; review  actions that have started
+              (todo "WAITING" ((org-agenda-sorting-strategy '(category-up))))    ;; review waiting items
+              (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
+              (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
+              ))
+            ("r" "Monthly Review"
+             ((agenda "" ((org-agenda-span 31))) ;; review upcoming deadlines and appointments
+              ;; type "l" in the agenda to review logged items
+              ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+              ;;(todo "STARTED") ;; review  actions that have started
+              (todo "WAITING" ((org-agenda-sorting-strategy '(category-up))))      ;; review waiting items
+              (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
+              (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
+              ))
+            ("y" "Yearly Review"
+             ((agenda "" ((org-agenda-span (quote year))))))
+            ("ps" "All Tasks in Some Project by TODO State "
+             ((agenda)
+              ;;(tags-todo "project")
+              (tags "project" ((org-tags-match-list-sublevels nil)))
+              (tags "+project+TODO=\"WAITING\"")
+              (tags "+project+TODO=\"NEXT\"")
+              (tags "+project+TODO=\"TODO\"")
+              ;;(tags "+project+TODO=\"DONE\"")
+              ))
+            ("pg" "Tasks Grouped by Project"
+             ((agenda "")
+              (tags "project" ((org-tags-match-list-sublevels nil)))
+              (tags-todo "+project+CATEGORY=\"uned\""
+                         ((org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              ;;(org-agenda-sorting-strategy '(todo-state-down))))  ; this way all NEXT tasks are shown before TODO taskse. Problem: it mixes projects
+              (tags-todo "+project+CATEGORY=\"work\""
+                         ((org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              ;;            (org-agenda-sorting-strategy '(todo-state-up)))
+              (tags-todo "+project+CATEGORY=\"work-hunt\""
+                         ((org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              ;;(org-agenda-sorting-strategy '(todo-state-down))))
+              (tags-todo "+project+CATEGORY=\"computing\""
+                         ((org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              ;;(org-agenda-sorting-strategy '(todo-state-down))))
+              (tags-todo "+project+CATEGORY=\"learning\""
+                         ((org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              ;;(org-agenda-sorting-strategy '(todo-state-down))))
+              (tags-todo "+project+CATEGORY=\"personal\""
+                         ((org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              ;;(org-agenda-sorting-strategy '(todo-state-down))))
+              ;; (tags-todo "+project+CATEGORY=\"div\"")
+              ;;(tags-todo "+project+CATEGORY=\"familia\"")
+              ))
+            ("o" "Office and home agenda"
+             ((agenda "" ((org-agenda-ndays 1))) ;; esto no me funciona... debe ser que (setq org-agenda-span (quote month)) en starter-kit-org.org tiene prioridad
+              ;; limits the agenda display to a single day
+              (tags-todo "@home|@uned")
+              ;;            (tags "project+CATEGORY=\"elephants\"")
+              ;;            (tags "review" ((org-agenda-files '("~/org/circuspeanuts.org"))))
+              ;; limits the tag search to the file circuspeanuts.org
+              ;;            (todo "WAITING")
+              )
+             ((org-agenda-compact-blocks t))) ;; options set here apply to the entire block
+            ;; ...other commands here
+            ("L" "TimeLine"
+             ((todo
+               "TODO"
+               ((org-agenda-overriding-header "================================================================ TODO Tasks Without Scheduled Date ===============================================================")
+                (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
+                (org-agenda-prefix-format '((todo . " %1c ")))))
+              (agenda
+               ""
+               (;; (org-agenda-overriding-header "========================================== Scheduled Tasks ==========================================")
+                (org-agenda-span 22)
+                (org-agenda-prefix-format '((agenda . " %1c %?-12t% s")))
+                ;;(org-agenda-skip-function '(lambda()
+                ;;                  ((bh/skip-habits))))
+                )))
+             )))
 
-(setq org-agenda-custom-commands
-      '(("x" "Export Day Agenda" agenda ""
-         ((ps-number-of-columns 2)
-          (ps-landscape-mode t)
-          (org-agenda-prefix-format " [ ] ")
-          (org-agenda-with-colors nil)
-          (org-agenda-remove-tags t))
-         nil
-         ("~/Dropbox/gtd/theDayAgenda.pdf"))   ;; no se' por qu'e no se graba automaticamente este file. Da igual poner NIl antes que no (ver abajo)
-        ("X" "Export Week Agenda" agenda ""
-         ((ps-number-of-columns 2)
-          (ps-landscape-mode t)
-          (org-agenda-prefix-format " [ ] ")
-          (org-agenda-with-colors nil)
-          (org-agenda-remove-tags t)
-          (org-agenda-span 7))
-         ("~/Dropbox/gtd/theWeekAgenda.pdf")) ;; no se' por qu'e no se graba automaticamente este file
-        ("d" "Daily Review"
-         ((agenda "" ((org-agenda-span 1))) ;; review upcoming deadlines and appointments
-          ;; type "l" in the agenda to review logged items
-          ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
-          ;;(todo "STARTED") ;; review  actions that have started
-          (todo "WAITING") ;;review waiting items
-          (todo "NEXT") ;; review next actions
-          (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
-          )) ;;
-        ("w" "Weekly Review"
-         ((agenda "" ((org-agenda-span 7)))  ;; review upcoming deadlines and appointments
-          ;; old code ((org-agenda-fortnight-view)))
-          ;; type "l" in the agenda to review logged items
-          ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
-          ;;(todo "STARTED") ;; review  actions that have started
-          (todo "WAITING") ;; review waiting items
-          (todo "NEXT") ;; review next actions
-          (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
-          ))
-        ("f" "Fortnight Review"
-         ((agenda "" ((org-agenda-span 14))) ;; review upcoming deadlines and appointments
-          ;; type "l" in the agenda to review logged items
-          ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
-          ;;(todo "STARTED") ;; review  actions that have started
-          (todo "WAITING")    ;; review waiting items
-          (todo "NEXT") ;; review next actions
-          (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
-          ))
-        ("r" "Monthly Review"
-         ((agenda "" ((org-agenda-span 31))) ;; review upcoming deadlines and appointments
-          ;; type "l" in the agenda to review logged items
-          ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
-          ;;(todo "STARTED") ;; review  actions that have started
-          (todo "WAITING")      ;; review waiting items
-          (todo "NEXT") ;; review next actions
-          (todo "TODO") ;; review pending actions waiting for "next actiosn" to be fulfilled
-          ))
-        ("y" "Yearly Review"
-         ((agenda "" ((org-agenda-span (quote year))))))
-        ("ps" "All Tasks in Some Project by TODO State "
-         ((agenda)
-          ;;(tags-todo "project")
-          (tags "project" ((org-tags-match-list-sublevels nil)))
-          (tags "+project+TODO=\"WAITING\"")
-          (tags "+project+TODO=\"NEXT\"")
-          (tags "+project+TODO=\"TODO\"")
-          ;;(tags "+project+TODO=\"DONE\"")
-          ))
-        ("pg" "Tasks Grouped by Project"
-         ((agenda "")
-          (tags "project" ((org-tags-match-list-sublevels nil)))
-          (tags-todo "+project+CATEGORY=\"uned\"")
-          (tags-todo "+project+CATEGORY=\"work\"")
-          (tags-todo "+project+CATEGORY=\"work-hunt\"")
-          (tags-todo "+project+CATEGORY=\"computing\"")
-          (tags-todo "+project+CATEGORY=\"learning\"")
-          (tags-todo "+project+CATEGORY=\"personal\"")
-          ;; (tags-todo "+project+CATEGORY=\"div\"")
-          ;;(tags-todo "+project+CATEGORY=\"familia\"")
-          ))
-        ("o" "Office and home agenda"
-         ((agenda "" ((org-agenda-ndays 1))) ;; esto no me funciona... debe ser que (setq org-agenda-span (quote month)) en starter-kit-org.org tiene prioridad
-          ;; limits the agenda display to a single day
-          (tags-todo "@home|@uned")
-          ;;            (tags "project+CATEGORY=\"elephants\"")
-          ;;            (tags "review" ((org-agenda-files '("~/org/circuspeanuts.org"))))
-          ;; limits the tag search to the file circuspeanuts.org
-          ;;            (todo "WAITING")
-          )
-         ((org-agenda-compact-blocks t))) ;; options set here apply to the entire block
-        ;; ...other commands here
-        ("L" "TimeLine"
-         ((todo
-           "TODO"
-           ((org-agenda-overriding-header "================================================================ TODO Tasks Without Scheduled Date ===============================================================")
-            (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
-            (org-agenda-prefix-format '((todo . " %1c ")))))
-          (agenda
-           ""
-           (;; (org-agenda-overriding-header "========================================== Scheduled Tasks ==========================================")
-            (org-agenda-span 22)
-            (org-agenda-prefix-format '((agenda . " %1c %?-12t% s")))
-            ;;(org-agenda-skip-function '(lambda()
-            ;;                  ((bh/skip-habits))))
-            )))
-         )))
+    (defun my-org-agenda-skip-all-siblings-but-first ()
+      "Skip all but the first non-done entry."
+      (let (should-skip-entry)
+        (unless (org-current-is-todo)
+          (setq should-skip-entry t))
+        (save-excursion
+          (while (and (not should-skip-entry) (org-goto-sibling t))
+            (when (org-current-is-todo)
+              (setq should-skip-entry t))))
+        (when should-skip-entry
+          (or (outline-next-heading)
+              (goto-char (point-max))))))
 
-(defun my-org-agenda-skip-all-siblings-but-first ()
-  "Skip all but the first non-done entry."
-  (let (should-skip-entry)
-    (unless (org-current-is-todo)
-      (setq should-skip-entry t))
-    (save-excursion
-      (while (and (not should-skip-entry) (org-goto-sibling t))
-        (when (org-current-is-todo)
-          (setq should-skip-entry t))))
-    (when should-skip-entry
-      (or (outline-next-heading)
-          (goto-char (point-max))))))
+    (defun org-current-is-todo ()
+      (string= "TODO" (org-get-todo-state)))
 
-(defun org-current-is-todo ()
-  (string= "TODO" (org-get-todo-state)))
+
+ ;; from https://emacs.stackexchange.com/questions/9585/org-how-to-sort-headings-by-todo-and-then-by-priority
+ ;;  (setq org-todo-sort-order '("PROJECT" "WAITING" "NEXT" "TODO" "CANCELED" "DONE"))
+ ;; commented as it doesn't work for me
+;; (require 'cl)
+;; (require 'dash)
+
+;; (defun todo-to-int (todo)
+;;    (first (-non-nil
+;;            (mapcar (lambda (keywords)
+;;                      (let ((todo-seq
+;;                             (-map (lambda (x) (first (split-string  x "(")))
+;;                                   (rest keywords)))) 
+;;                        (cl-position-if (lambda (x) (string= x todo)) todo-seq)))
+;;                    org-todo-keywords))))
+
+;;(defun my/org-sort-key ()
+;;  (let* ((todo-max (apply #'max (mapcar #'length org-todo-keywords)))
+;;         (todo (org-entry-get (point) "TODO"))
+;;         (todo-int (if todo (todo-to-int todo) todo-max))
+;;         )
+;;    (format "%03d %03d" todo-int priority-int)
+;;    ))
+
+;;(defun my/org-sort-entries ()
+;;  (interactive)
+;;  (org-sort-entries nil ?f #'my/org-sort-key))
+
+ ;; from https://github.com/arcthur/.emacs.d/blob/master/modes/init-org-mode.el
+
+    (defun org-sort-agenda-items-todo (a b)
+      (or
+       ;;(org-cmp-todo-state a b)
+       ;; (org-cmp-todo-state "PROJECT") ;; first list project heading
+       (org-cmp-todo-state a b)
+       ;;(org-cmp-time a b)
+       ;;(org-date-cmp a b)
+       ;;(org-cmp-priority a b)
+       ;;(org-cmp-effort a b)
+       ))
 #+END_SRC
 
 #+RESULTS:
-: org-current-is-todo
+: org-sort-agenda-items-todo
 
 
 From: https://stackoverflow.com/questions/31639086/emacs-org-mode-how-can-i-filter-on-tags-and-todo-status-simultaneously
@@ -3611,13 +3784,13 @@ My =org-todo-keywords= are set as follows:
 #+begin_src emacs-lisp
 ;; (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w)"  "|" "DONE(d)" "CANCELED(c)"))
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "PROJECT(p)" "|" "DONE(d)")
+      (quote ((sequence "PROJECT(p)" "TODO(t)" "NEXT(n)" "PROJECT(p)" "|" "DONE(d)")
               (sequence "WAITING(w@/!)" "|" "CANCELED(c@/!)" "PHONE"))))
 #+end_src
 
 #+RESULTS:
-| sequence | TODO(t)       | NEXT(n) | PROJECT(p) |                |       | DONE(d) |
-| sequence | WAITING(w@/!) |         |            | CANCELED(c@/!) | PHONE |         |
+| sequence | PROJECT(p)    | TODO(t) | NEXT(n) | PROJECT(p)     |       |   | DONE(d) |
+| sequence | WAITING(w@/!) |         |         | CANCELED(c@/!) | PHONE |   |         |
 
 This adds a log entry whenever a task moves to any of the following states:
 - to or out of =DONE= status
@@ -4154,7 +4327,7 @@ place without requiring use of =C-c '= so that code lines up correctly.
 #+header: :tangle yes
 #+begin_src emacs-lisp
 (setq org-src-preserve-indentation nil)
-(setgq org-edit-src-content-indentation 0)
+(setq org-edit-src-contentqq-indentation 0)
 #+end_src
 
 #+RESULTS:
@@ -4241,6 +4414,22 @@ around arbitrarily in my org files and the link to it still works.
 
 #+RESULTS:
 : create-if-interactive-and-no-custom-id
+
+** Subscripts and Superscripts
+:PROPERTIES:
+:CUSTOM_ID: SubscriptsAndSuperscripts
+:END:
+
+I don't currently write documents that need subscripts and superscript
+support.  I disable handling of =_= and =^= for subscript and
+superscripts with
+
+#+header: :tangle yes
+#+begin_src emacs-lisp
+(setq org-use-sub-superscripts nil)
+#+end_src
+
+#+RESULTS:
 
 
 * Settings from the great Alphapapa 
