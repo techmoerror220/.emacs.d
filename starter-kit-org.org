@@ -2187,11 +2187,11 @@ DGM: =%2PRIORITY= deleted (originally between context and state), as I don't use
 
 #+begin_src emacs-lisp :tangle yes
 ;; Set default column view headings: Task Priority Effort Clock_Summary
-(setq org-columns-default-format "%50ITEM(Task) %15TAGS(Context) %7TODO(State) %20SCHEDULED %6Effort(Effort){:} %CLOCKSUM_T{:} %CLOCKSUM{:}")  
+(setq org-columns-default-format "%50ITEM(Task) %15TAGS(Context) %7TODO(State) %20SCHEDULED(Scheduled) %6Effort(Effort){:} %CLOCKSUM_T(Tday'sHrs){:} %CLOCKSUM(TotalHrs){:}")  
 #+end_src
 
 #+RESULTS:
-: %50ITEM(Task) %15TAGS(Context) %7TODO(State) %20SCHEDULED %6Effort(Effort){:} %CLOCKSUM_T{:} %CLOCKSUM{:}
+: %50ITEM(Task) %15TAGS(Context) %7TODO(State) %20SCHEDULED(Scheduled) %6Effort(Effort){:} %CLOCKSUM_T(Tday'sHrs){:} %CLOCKSUM(TotalHrs){:}
 
 You can now turn on org-columns with =C-c C-x C-c=, you should see something like the following screenshots. =q= to quit.
 

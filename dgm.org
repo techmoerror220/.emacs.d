@@ -5352,7 +5352,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "Yank symbol at point into Helm prompt")
     (cheatsheet-add :group 'Helm-Bibtex
                     :key "C-c \]"
-                    :description "helm-bibtex: search BibTeX files for refs to insert into the current document")
+                    :description "helm-bibtex: In Org mode, search BibTeX files for refs to insert into the current document")
     (cheatsheet-add :group 'Helm-Menu
                     :key "C-c h w"
                     :description "helm-buffer-switch-other-window: Works on a helm menu like the one by C-x b")
@@ -5551,6 +5551,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Org
                     :key "C-c C-w"
                     :description "org-refile")
+(cheatsheet-add :group 'Org
+                    :key "C-u C-u C-c C-o"
+                    :description "org-open-at-point. Open link outside Emacs with external app-such as Libreoffice")
     (cheatsheet-add :group 'Org
                     :key "g"
                     :description "org-refile. Works if you place cursor on stars")
