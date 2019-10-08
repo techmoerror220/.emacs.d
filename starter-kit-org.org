@@ -1576,6 +1576,7 @@ Tip from: https://orgmode.org/manual/Setting-tags.html
                       (:endgroup)
                       ("project"   . ?p)
                       ("browsing"  . ?b)
+                      ("drill"     . ?d)
                       ("laptop"    . ?l)
                       ("mailing"   . ?m)
                       ("ordenador" . ?o)
@@ -1587,7 +1588,7 @@ Tip from: https://orgmode.org/manual/Setting-tags.html
 #+END_SRC
 
 #+RESULTS:
-: ((:startgroup) (@errands . 101) (@home . 104) (@uned . 117) (:endgroup) (project . 112) (browsing . 98) (laptop . 108) (mailing . 109) (ordenador . 111) (reading . 114) (salud . 115) (tel . 116) (writing . 119) (flagged . 63))
+: ((:startgroup) (@errands . 101) (@home . 104) (@uned . 117) (:endgroup) (project . 112) (browsing . 98) (drill . 100) (laptop . 108) (mailing . 109) (ordenador . 111) (reading . 114) (salud . 115) (tel . 116) (writing . 119) (FLAGGED . 63))
 
 ** Public holidays 
 
@@ -2326,10 +2327,11 @@ Enable random "noise" for item itervals.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq org-drill-add-random-noise-to-intervals-p t)
+(setq org-drill-cram-hours 0) ;; by default 12
 #+END_SRC
 
 #+RESULTS:
-: t
+: 0
 
 ***** TODO Read this webpage on org-drill
 - https://orgmode.org/worg/org-contrib/org-drill.html

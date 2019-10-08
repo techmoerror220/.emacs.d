@@ -5665,6 +5665,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Org-agenda
                     :key "M"
                     :description "Show lunar phases")
+(cheatsheet-add :group 'Org-agenda
+                    :key "z OR C-c C-z"
+                    :description "org-agenda-add-note. Add a time-stamped note to the entry at point")
     (cheatsheet-add :group 'Org-agenda
                     :key "C"
                     :description "Convert to other calendars")
@@ -5980,7 +5983,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23960 46222 290714 795000) :init (23960 46222 290609 318000) :init-secs (0 0 83 357000) :use-package-secs (0 0 286 290000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23963 22929 878373 169000) :init (23963 22929 878313 378000) :init-secs (0 0 27 528000) :use-package-secs (0 0 189 649000)))
 
 
 
