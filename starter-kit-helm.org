@@ -866,6 +866,7 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
                                          "/media/dgm/blue/documents/UNED/teaching/mis-cursos"
                                          "/media/dgm/blue/documents/reviews"
                                          "/media/dgm/blue/documents/elibrary/org"
+                                         "/media/dgm/blue/documents/proyectos/D-PlanNacional2019"
                                          "/media/dgm/blue/documents/elibrary/women-labor-market"))
 
   (projectile-add-known-project "~/.emacs.d/")
@@ -887,6 +888,7 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
   (projectile-add-known-project "/media/dgm/blue/documents/UNED/teaching/mis-cursos/")
   (projectile-add-known-project "/media/dgm/blue/documents/reviews/")
   (projectile-add-known-project "/media/dgm/blue/documents/elibrary/org/")
+  (projectile-add-known-project "/media/dgm/blue/documents/proyectos/D-PlanNacional2019/")
   (projectile-add-known-project "/media/dgm/blue/documents/elibrary/women-labor-market/")
   
   (when (require 'magit nil t)
@@ -943,7 +945,7 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
 : helm-projectile
 
 #+RESULTS: projectile
-: helm-projectile-switch-to-buffer
+| :eval | (format  Projectile[%s] (projectile-project-name)) |
 
 Need to use =helm-projectile-find-other-file=. See https://tuhdo.github.io/helm-projectile.html
 
