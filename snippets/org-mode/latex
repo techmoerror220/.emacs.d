@@ -1,6 +1,9 @@
-#name : LATEX
-#contributor : dgm
+# -*- mode: snippet -*-
+# name : LATEX
+# contributor : dgm
+# expand-env: ((yas-wrap-around-region t))
+# key: la
 # --
 #+begin_src latex
-${0}
+$0
 #+end_src

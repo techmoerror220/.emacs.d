@@ -3,5 +3,6 @@
 # key: sh
 # --
 #+begin_src sh
-$0
+$1
 #+end_src
+$0

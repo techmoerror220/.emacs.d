@@ -4354,7 +4354,6 @@ It can be difficult to remember the full names of Emacs commands, so I use =icom
 : t
 
 * Skeleton
-
 ** Latex
 
 - Recall to =eval-and-replace= =(article-skeleton)= with =C-c e=. 
@@ -4380,6 +4379,7 @@ This only makes sense for empty buffers."
   "#+LATEX_HEADER: \\usepackage{longtable}\n"
   "#+LATEX_HEADER: \\usepackage{float}\n"
   "#+LATEX_HEADER: \\usepackage{url}\n"
+  "#+LATEX_HEADER: \\usepackage{amsmath}\n"
   "#+LANGUAGE: "str | "spanish""\n"
   "#+LATEX_HEADER: \\usepackage["str | "spanish""]{babel}\n"
   "#+LATEX_HEADER: \\usepackage{sectsty}\n"
@@ -5095,6 +5095,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Email
                     :key "M-x helm-mu-contacts"
                     :description "Greps contacts so regexp allowed. M-SPC to select multiple sources. Available actions with C-z are insert selected contacts at point and copy selected contacts to clipboard.")
+    (cheatsheet-add :group 'ESS
+                    :key "C-c C-j"
+                    :description "ess-eval-line. Send the current line to the inferior ESS process")
     (cheatsheet-add :group 'Expressions-Eval
                     :key "C-x C-e"
                     :description "sanityinc/eval-last-sexp-or-region")
@@ -5473,7 +5476,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Minibuffer
                     :key "C-c C-c"
                     :description "Miniedit: exit minibuffer edit")
-    (cheatsheet-add :group 'Movement
+(cheatsheet-add :group 'Movement
+                    :key "C-c C-j"
+                    :description "org-goto. Look up a different location in the current file. Go back with org-mark-ring-goto")
+(cheatsheet-add :group 'Movement
                     :key "s-,"
                     :description "beginning-of-buffer")
     (cheatsheet-add :group 'Movement
@@ -5551,7 +5557,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Org
                     :key "C-c C-w"
                     :description "org-refile")
-(cheatsheet-add :group 'Org
+    (cheatsheet-add :group 'Org
                     :key "C-u C-u C-c C-o"
                     :description "org-open-at-point. Open link outside Emacs with external app-such as Libreoffice")
     (cheatsheet-add :group 'Org
@@ -5668,7 +5674,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Org-agenda
                     :key "M"
                     :description "Show lunar phases")
-(cheatsheet-add :group 'Org-agenda
+    (cheatsheet-add :group 'Org-agenda
                     :key "z OR C-c C-z"
                     :description "org-agenda-add-note. Add a time-stamped note to the entry at point")
     (cheatsheet-add :group 'Org-agenda
@@ -5986,7 +5992,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23963 22929 878373 169000) :init (23963 22929 878313 378000) :init-secs (0 0 27 528000) :use-package-secs (0 0 189 649000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23967 34866 690134 637000) :init (23967 34866 690074 728000) :init-secs (0 0 33 296000) :use-package-secs (0 0 182 748000)))
 
 
 

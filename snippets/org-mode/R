@@ -1,8 +1,9 @@
 # -*- mode: snippet -*-
-# name: python
+# name : R
+# contributor : dgm
 # expand-env: ((yas-wrap-around-region t))
-# key: py_
+# key: R
 # --
-#+begin_src python
+#+begin_src R
 $0
 #+end_src

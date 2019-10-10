@@ -1,8 +1,9 @@
 # -*- mode: snippet -*-
-# name: python
+# name : align
+# contributor : dgm
 # expand-env: ((yas-wrap-around-region t))
-# key: py_
+# key: al
 # --
-#+begin_src python
+\begin{align}
 $0
-#+end_src
+\end{align}

@@ -4,7 +4,5 @@
 # key: ex
 # --
 #+BEGIN_EXAMPLE
-$1
-#+END_EXAMPLE
-
 $0
+#+END_EXAMPLE
