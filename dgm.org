@@ -6135,9 +6135,9 @@ Next time you're writing fiction, non-fiction, a journalistic piece or a blog po
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23971 17249 116183 203000) :init (23971 17249 116150 414000) :config (23971 17249 115812 109000) :config-secs (0 0 832 46000) :init-secs (0 0 1514 227000) :use-package-secs (0 0 1593 107000) ...))
 
-* Face of comments
+* COMMENT Face of comments
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
     (set-face-attribute 'font-lock-comment-delimiter-face nil :foreground "#268bd2")
     (set-face-attribute 'font-lock-comment-face nil :foreground "#268bd2")
 #+end_src

@@ -615,14 +615,16 @@ Templates with shortcuts =u= and =w= taken from =org-drill= manual.
 The 'Respond later' template is a customised TODO which includes some extra email information. This relies on the extended email properties made available in the Org-mode -> Custom Links -> mu4e section of this config.
 
 First, template for contacts from: https://www.reddit.com/r/emacs/comments/8toivy/tip_how_to_manage_your_contacts_with_orgcontacts/
+
+Add field =:BIRTHDAY: %^{yyyy-mm-dd= only add when i want to. Otherwise, if date not valid (YYYY-MM-DD), agenda fails
+
 #+begin_src emacs-lisp :tangle yes
   (defvar my/org-contacts-template "* %(org-contacts-template-name)
   :PROPERTIES:
   :ADDRESS: %^{Calle, Ciudad, CP, País}
-  :BIRTHDAY: %^{yyyy-mm-dd}
   :EMAIL: %(org-contacts-template-email)
-  :TEL: %^{91 }
-  :CELL: %^{6}
+  :TEL: %^{Tel}
+  :CELL: %^{Mobile}
   :NOTE: %^{NOTE}
   :END:" "Template for org-contacts.")
 #+end_src
@@ -635,12 +637,12 @@ First, template for contacts from: https://www.reddit.com/r/emacs/comments/8toiv
                                 ("a"  "Article"  entry
                                  (file+headline "/home/dgm/Dropbox/gtd/bibliography.org" "Bibliography")
                                  "* %a %^g
-                                    \n:PROPERTIES:
-                                    \n:Created: %U
-                                    \n:END:
-                                    \n%i
-                                    \nBrief description:
-                                    \n%?"
+                                      \n:PROPERTIES:
+                                      \n:Created: %U
+                                      \n:END:
+                                      \n%i
+                                      \nBrief description:
+                                      \n%?"
                                  :immediate-finish t
                                  :prepend t
                                  :empty-lines 0
@@ -648,6 +650,23 @@ First, template for contacts from: https://www.reddit.com/r/emacs/comments/8toiv
                                 ("c" "Contact" entry (file+headline "/home/dgm/Dropbox/gtd/contacts.org" "Contacts"),
                                  my/org-contacts-template
                                  :empty-lines 1)
+                                ("f" "Financial entries (Ledger)")
+                                ("fc" "Checking" plain
+                                 (file "/media/dgm/blue/documents/personal/finanzas/ledger/journal.dat")
+                                 "%(org-read-date) %^{Payee}
+                                 Expenses:%^{Account}  $%^{Amount}"
+                                 :immediate-finish t)
+                                ("fv" "Visa (Credit card)" plain
+                                 (file "/media/dgm/blue/documents/personal/finanzas/ledger/journal.dat")
+                                 "%(org-read-date) %^{Payee}
+                                  Expenses:%^{Account}  $%^{Amount}
+                                  Liabilities:Visa"
+                                 :immediate-finish t)
+                                ("fm" "Metalico" plain
+                                 (file "/media/dgm/blue/documents/personal/finanzas/ledger/journal.dat")
+                                 "%(org-read-date) * %^{Payee}
+                                  Expenses:Cash
+                                  Expenses:%^{Account}  %^{Amount}")
                                 ("j" "Journal" entry
                                  (file+datetree "/home/dgm/Dropbox/gtd/journal.org")
                                  "* %? \n Added on: %U")
@@ -694,6 +713,7 @@ First, template for contacts from: https://www.reddit.com/r/emacs/comments/8toiv
 
 #+RESULTS:
 | a | Article | entry | (file+headline /home/dgm/Dropbox/gtd/bibliography.org Bibliography) | * %a %^g |
+
 
 
 
