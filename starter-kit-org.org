@@ -398,7 +398,7 @@ Line wrapping from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs.
 
 (when (require 'org-contacts nil t)
   ;;  (let ((contacts "~/personal/contacts/contacts.org.gpg"))
-  (let ((contacts "/media/dgm/blue/documents/dropbox/org/contacts.org.gpg"))
+  (let ((contacts "/home/dgm/Dropbox/gtd/contacts.org"))
     (when (file-exists-p contacts)
       ;; When used to auto-complete e-mail addresses, the file is automatically
       ;; loaded.  The buffer usually need not be restored by a desktop session.
@@ -881,6 +881,32 @@ I don't know why it doesn't work
 
 #+RESULTS:
 
+* Globally defined tags. 
+
+Tip from: https://orgmode.org/manual/Setting-tags.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-tag-alist '((:startgroup)
+                      ("@errands"  . ?e)
+                      ("@home"     . ?h)
+                      ("@uned"     . ?u)
+                      (:endgroup)
+                      ("project"   . ?p)
+                      ("browsing"  . ?b)
+                      ("drill"     . ?d)
+                      ("laptop"    . ?l)
+                      ("mailing"   . ?m)
+                      ("ordenador" . ?o)
+                      ("reading"   . ?r)
+                      ("salud"     . ?s)
+                      ("tel"       . ?t)
+                      ("writing"   . ?w)
+                      ("FLAGGED"   . ??)))
+#+END_SRC
+
+#+RESULTS:
+: ((:startgroup) (@errands . 101) (@home . 104) (@uned . 117) (:endgroup) (project . 112) (browsing . 98) (drill . 100) (laptop . 108) (mailing . 109) (ordenador . 111) (reading . 114) (salud . 115) (tel . 116) (writing . 119) (FLAGGED . 63))
+
 * Agenda 
 ** Shortcuts
 
@@ -955,6 +981,7 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
                              "/home/dgm/Dropbox/gtd/journal.org"
                              "/home/dgm/Dropbox/gtd/habits.org"
                              "/home/dgm/Dropbox/gtd/tickler.org"
+                             "/home/dgm/Dropbox/gtd/calendar.org"
                              "/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" ; i could add it with =C-c [= but that action does not survive across sections
                              "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org"
                              "/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org"
@@ -963,7 +990,7 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
 #+END_SRC
 
 #+RESULTS:
-| /home/dgm/Dropbox/gtd/inbox.org | /home/dgm/Dropbox/gtd/gtd.org | /home/dgm/Dropbox/gtd/journal.org | /home/dgm/Dropbox/gtd/habits.org | /home/dgm/Dropbox/gtd/tickler.org | /media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org | /media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org | /media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org | /media/dgm/blue/documents/personal/documentacion/divorcio/divorcio_gtd.org |
+| /home/dgm/Dropbox/gtd/contacts.org |
 
 
 From https://stackoverflow.com/questions/10635989/emacs-org-agenda-list-destroy-my-windows-splits. 
@@ -1564,46 +1591,22 @@ Remove DONE tasks from agenda view. Tip from: https://stackoverflow.com/question
 #+RESULTS:
 : t
 
-*** Globally defined tags. 
-
-Tip from: https://orgmode.org/manual/Setting-tags.html
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq org-tag-alist '((:startgroup)
-                      ("@errands"  . ?e)
-                      ("@home"     . ?h)
-                      ("@uned"     . ?u)
-                      (:endgroup)
-                      ("project"   . ?p)
-                      ("browsing"  . ?b)
-                      ("drill"     . ?d)
-                      ("laptop"    . ?l)
-                      ("mailing"   . ?m)
-                      ("ordenador" . ?o)
-                      ("reading"   . ?r)
-                      ("salud"     . ?s)
-                      ("tel"       . ?t)
-                      ("writing"   . ?w)
-                      ("FLAGGED"   . ??)))
-#+END_SRC
-
-#+RESULTS:
-: ((:startgroup) (@errands . 101) (@home . 104) (@uned . 117) (:endgroup) (project . 112) (browsing . 98) (drill . 100) (laptop . 108) (mailing . 109) (ordenador . 111) (reading . 114) (salud . 115) (tel . 116) (writing . 119) (FLAGGED . 63))
 
 ** Public holidays 
 
 Public holidays in Spain. Tip from: https://www.emacswiki.org/emacs/CalendarLocalization
 And Calendario de fiestas moviles hasta 2100 en http://www.antonioburgos.com/antologia/semana_santa/curiosidades/zzcurioaalmaque.html
 Check another cool customization here: http://www.gnomon.org.uk/diary.html
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'org-agenda)
 (require 'holidays)
 (setq calendar-holidays holiday-other-holidays)
-;; (setq org-agenda-include-diary t) ;; already included below
+(setq org-agenda-include-diary t)  ;; Thanks to this, the holidays below show up in my computer's Org Agenda view  (though not in orgzly).
 
 ;; (setq holiday-other-holidays  ;; with this holidays don't show up in agenda.
 ;; with the following holidays show up in org-agenda but still it does not show up in orgzly so watch out! 
-(setq calendar-holidays          
+(setq holiday-other-holidays  ;; calendar-holidays          
       '((holiday-fixed 1 1 "Año Nuevo / New Year's Day")
         (holiday-fixed 1 6 "Día de Reyes / Epiphany") 
         (holiday-fixed 2 14 "Valentine's Day")
@@ -1611,7 +1614,7 @@ Check another cool customization here: http://www.gnomon.org.uk/diary.html
         ;;          (holiday-fixed 3 6 "Miércoles de Ceniza")
         (holiday-easter-etc -47 "Martes de Carnaval / Shrove Tuesday") 
         (holiday-easter-etc -46 "Miércoles de Ceniza / Ash Friday")
-        (holiday-sexp '(calendar-nth-named-day 1 1 3 year 19) "Día de San José")
+        ;; (holiday-sexp '(calendar-nth-named-day 1 1 3 year 19) "Día de San José") ;; en 2020 este esta mal
         (holiday-easter-etc -7 "Domingo de Ramos / Palm Sunday")
         (holiday-easter-etc -3 "Jueves Santo / Maundy Thursday")
         (holiday-easter-etc -2 "Viernes Santo / Good Friday")
@@ -1660,15 +1663,18 @@ Check another cool customization here: http://www.gnomon.org.uk/diary.html
 | holiday-fixed      |                                      12 |                                                8 | Inmaculada Concepción         |
 
 
-Thanks to the following declaration, the above holidays show up in my computer's Org Agenda view  (though not in orgzly) Basically you tell agenda to display events from calendar diary:
+
+Basically you tell agenda to display events from calendar diary:
 
 (Tip from https://emacs.stackexchange.com/questions/10965/easiest-way-to-customize-holidays-that-appear-in-org-agenda.)
 
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 '(org-agenda-include-diary t) 
 #+END_SRC
 
+#+RESULTS:
+| org-agenda-include-diary | t |
 
 *** Make calendar start on Monday instead of Sunday
 
@@ -4996,6 +5002,19 @@ These days I set many of =org-log-*= to note to keep verbose log of task progres
 
 #+RESULTS:
 : ((done . CLOSING NOTE %t) (state . State %-12s from %-12S %t) (note . Note taken on %t) (reschedule . Schedule changed on %t: %S -> %s) (delschedule . Not scheduled, was %S on %t) (redeadline . Deadline changed on %t: %S -> %s) (deldeadline . Removed deadline, was %S on %t) (refile . Refiled on %t) (clock-out . ))
+
+* Org-contacts
+
+#+begin_src emacs-lisp :tangle yes
+(use-package org-contacts
+  :ensure nil
+  :after org
+  :custom
+   (org-contacts-files '("/home/dgm/Dropbox/gtd/contacts.org")))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23971 22201 764284 712000) :init (23971 22201 764185 251000) :config (23971 22201 763607 281000) :config-secs (0 0 15 830000) :init-secs (0 0 990 627000) :use-package-secs (0 0 1149 302000) ...))
 
 * Provide
 

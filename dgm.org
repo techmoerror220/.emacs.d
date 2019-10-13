@@ -5,8 +5,6 @@
 #+OPTIONS: toc:nil num:nil ^:nil
 #+PROPERTY: header-args :tangle yes
 
-Adding this line to test magit.
-
 * Starter Kit kjhealy
 This file contains local customizations---ones that in some cases
 you will not be able to just drop in and use because, e.g., they
@@ -6111,6 +6109,40 @@ Dim everything except for the thing-at-point. Improves focus when reading code a
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23960 64404 983820 211000) :init (23960 64404 983767 258000) :config (23960 64404 982937 260000) :config-secs (0 0 23 583000) :init-secs (0 0 1502 136000) :use-package-secs (0 0 1716 812000)))
+
+* Palimpsest
+
+https://github.com/danielsz/Palimpsest
+
+This minor mode for Emacs provides several strategies to remove text without permanently deleting it. Namely, it provides the following capabilities:
+
+Send selected text to the bottom of the file
+Send selected text to the top of the file
+Send selected text to a trash file
+Much like code, the process of writing text is a progression of revisions where content gets transformed and refined. During these iterations, it is often desirable to move text instead of deleting it: you may have written a sentence that doesn't belong in the paragraph you're editing right now, but it might very well fit somewhere else. Since you don't know where exactly, you'd like to put it out of the way, not discard it entirely. Palimpsest saves you from the traveling back and forth between your current position and the bottom of your document (or another draft or trash document).
+
+Next time you're writing fiction, non-fiction, a journalistic piece or a blog post using Emacs, give palimpsest-mode a try. You might even try it while coding in a functional language, moving stuff around sprightly, aided by an abstraction reminiscent of the Read-Eval-Print loop, yet completely orthogonal.
+
+#+begin_src emacs-lisp :tangle yes
+(use-package palimpsest
+  :diminish palimpsest-mode
+  :config
+  (palimpsest-mode 1))
+  ;;(add-hook 'org-mode-hook 'palimpsest-mode)
+  ;;(add-hook 'text-mode-hook 'palimpsest-mode)
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23971 17249 116183 203000) :init (23971 17249 116150 414000) :config (23971 17249 115812 109000) :config-secs (0 0 832 46000) :init-secs (0 0 1514 227000) :use-package-secs (0 0 1593 107000) ...))
+
+* Face of comments
+
+#+begin_src emacs-lisp :tangle yes
+    (set-face-attribute 'font-lock-comment-delimiter-face nil :foreground "#268bd2")
+    (set-face-attribute 'font-lock-comment-face nil :foreground "#268bd2")
+#+end_src
+
+#+RESULTS:
 
 * Provide
 
