@@ -5588,7 +5588,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Org
                     :key "M-x org-repair-property-drawers"
                     :description "Fix properties drawers in current buffer. To use when habits or schedules don't show rightly")
-    (cheatsheet-add :group 'Org-agenda
+(cheatsheet-add :group 'Org-agenda
+                    :key "."
+                    :description "org-agenda-goto-today")      
+(cheatsheet-add :group 'Org-agenda
                     :key "C-x C-w"
                     :description "Write the agenda view to a file: .html, ps, pdf. Any other extension results in plain ASCII file")  
     (cheatsheet-add :group 'Org-agenda
