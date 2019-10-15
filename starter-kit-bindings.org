@@ -11,6 +11,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 Key Bindings.
 
 ** COMMENT Map fn to Hyper
+
 #+source: fn-to-hyper 
 #+begin_src emacs-lisp
 ;;  (setq mac-function-modifier 'hyper)
@@ -534,8 +535,9 @@ The reason is that in many data science programs, the great ista zahn binds the 
 : t
 
 ** Expand Region
+
    Expand selected region by semantic units. Just keep pressing the key until it selects what you want.
-#+source: expand-region
+
 #+begin_src emacs-lisp
 (use-package expand-region
   :ensure t
@@ -544,15 +546,18 @@ The reason is that in many data science programs, the great ista zahn binds the 
 #+end_src
 
 #+RESULTS: expand-region
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23923 46858 528074 957000) :init (23923 46858 527722 124000) :init-secs (0 0 165 330000) :use-package-secs (0 0 746 505000) :config (23923 46858 527627 336000) :config-secs (0 0 18 314000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23973 37848 504409 702000) :init (23973 37848 504337 958000) :init-secs (0 0 24 784000) :use-package-secs (0 0 142 83000)))
 
 *** COMMENT Remapping =er/expand-region=
 
 Old code
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (global-set-key (kbd "<s-SPC>") 'er/expand-region)
 (global-set-key (kbd "<s-backspace>") 'er/contract-region)
 #+end_src
+
+#+RESULTS:
+: er/contract-region
 
 ** Multiple Cursors
    Use multiple cursors for search, replace, and text-cleaning tasks. For a demonstration, see http://emacsrocks.com/e13.html

@@ -4194,6 +4194,12 @@ It works! Note the original had =compose-mail= and it worked too!
 :CUSTOM_ID: MailingSubtrees
 :END:
 
+Read: https://github.com/org-mime/org-mime
+
+org-mime can be used to send HTML email using Org-mode HTML export.
+
+This approximates a WYSiWYG HTML mail editor from within Emacs, and can be useful for sending tables, fontified source code, and inline images in email.
+  
 It's possible to create mail from an org-mode subtree.  I use =C-c
 M-o= to start an email message with the details filled in from the
 current subtree.  I use this for repeating reminder tasks where I need
@@ -4202,11 +4208,17 @@ contained in the org-mode subtree and all I need to do is =C-c M-o=
 and any minor edits before sending it off.
 
 *** Function from Kitchin to make this work
+   :PROPERTIES:
+   :MAIL_FMT: html
+   :END:
 
 - https://kitchingroup.cheme.cmu.edu/blog/2016/10/29/Sending-html-emails-from-org-mode-with-org-mime/
 
 #+begin_src emacs-lisp :tangle yes
 (require 'org-mime)
+
+(advice-add 'org-mime-org-buffer-htmlize :after-while
+            'mu4e-compose-mode)
 
 (defun org-mime-org-buffer-htmlize ()
   "Create an email buffer containing the current org-mode file
@@ -4224,13 +4236,12 @@ and any minor edits before sending it off.
   (org-mime-send-subtree
    (or (org-entry-get nil "MAIL_FMT" org-mime-use-property-inheritance) 'org))
   (message-goto-to))
-
 #+end_src
 
 #+RESULTS:
 : org-mime-subtree
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 (add-hook 'org-mode-hook
           (lambda ()
             (local-set-key (kbd "C-c M-o") 'bh/mail-subtree))
