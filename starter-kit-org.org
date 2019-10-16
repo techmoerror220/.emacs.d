@@ -1392,31 +1392,31 @@ On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgti
            ((agenda "")
             (tags "project"
                   ((org-tags-match-list-sublevels nil)
-                   (org-agenda-overriding-header "                                          LIST OF PROJECTS"))
+                   (org-agenda-overriding-header "                                          LIST OF PROJECTS                                          "))
                   )
             (tags-todo "+project+CATEGORY=\"uned\""
-                       ((org-agenda-overriding-header "                                                UNED")
+                       ((org-agenda-overriding-header "                                                UNED                                                ")
                         (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
             (tags-todo "+project+CATEGORY=\"research\""
-                       ((org-agenda-overriding-header "                                               RESEARCH")
+                       ((org-agenda-overriding-header "                                               RESEARCH                                             ")
                         (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
             (tags-todo "+project+CATEGORY=\"work-hunt\""
-                       ((org-agenda-overriding-header "                                               WORK-HUNT")
+                       ((org-agenda-overriding-header "                                               WORK-HUNT                                            ")
                         (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
             (tags-todo "+project+CATEGORY=\"computing\""
-                       ((org-agenda-overriding-header "                                               COMPUTING")
+                       ((org-agenda-overriding-header "                                               COMPUTING                                            ")
                         (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
             (tags-todo "+project+CATEGORY=\"personal\""
-                       ((org-agenda-overriding-header "                                               PERSONAL")
+                       ((org-agenda-overriding-header "                                               PERSONAL                                             ")
                         (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
             (tags-todo "+project+CATEGORY=\"git\"|+project+CATEGORY=\"linux\"|+project+CATEGORY=\"learning\""
-                       ((org-agenda-overriding-header "                                               LEARNING")
+                       ((org-agenda-overriding-header "                                               LEARNING                                             ")
                         (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
             (tags-todo "-project+TODO=\"TODO\""
-                       ((org-agenda-overriding-header "                                               ORPHAN TODOs")
+                       ((org-agenda-overriding-header "                                               ORPHAN TODOs                                         ")
                         ))
             (tags-todo "+project+CATEGORY=\"emacs\""
-                       ((org-agenda-overriding-header "                                               EMACS")
+                       ((org-agenda-overriding-header "                                               EMACS                                                ")
                         (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
             ))
           ("o" "Office and home agenda"
@@ -3340,20 +3340,24 @@ DGM: check how to make this work.. but way too complicated for me!
 #+begin_src emacs-lisp :tangle yes
   (require 'org-wiki)
   (setq org-wiki-location "/media/dgm/blue/documents/dropbox/notes/org-wiki")
+
+(global-set-key (kbd "s-.") 'org-wiki-helm)
 #+end_src
 
 #+RESULTS:
-: /media/dgm/blue/documents/dropbox/notes/org-wiki
+: org-wiki-helm
 
 * Tuhdo's =org-recipes=
 #+begin_src emacs-lisp :tangle yes
   (add-to-list 'load-path "/home/dgm/.emacs.d/src/org-recipes")
   (require 'org-recipes)
   (setq org-recipes-file-list '("/media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org" "/media/dgm/blue/documents/dropbox/notes/cheatSheets/emacsCheatSheet.org"))
+
+(global-set-key (kbd "s-,") 'org-recipes)
 #+end_src
 
 #+RESULTS:
-| /media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org | /media/dgm/blue/documents/dropbox/notes/cheatSheets/emacsCheatSheet.org |
+: org-recipes
 
 * COMMENT Disabling bindings that are used elsewhere
 
@@ -4263,7 +4267,7 @@ and any minor edits before sending it off.
 
 Uhmm, no me funciona.
 
-** Use Emacs bookmarks for fast navigation
+** COMMENT Use Emacs bookmarks for fast navigation
 :PROPERTIES:
 :CUSTOM_ID: BookmarksFastNavigation
 :END:
@@ -4275,7 +4279,9 @@ item to check, then go away and work on it, and return to the checkbox to mark i
 
 I use Emacs bookmarks for this setup as follows:
 
-#+header: :tangle yes
+DGM: no me convencio' cuando lo use'. Better to save mark.
+
+#+header: :tangle no
 #+begin_src emacs-lisp
   ;; Bookmark handling
   ;;

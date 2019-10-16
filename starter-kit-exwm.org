@@ -107,7 +107,7 @@ These cannot be set globally: if Emacs were to be run in another WM, the =s-= pr
 ;;(exwm-input-set-key (kbd "s-f") #'find-file)       "s-f" mapped to helm-find-files in starter-kit-helm.org 
 
 (when (require 'functions)
-  (exwm-input-set-key (kbd "C-$") 'ambrevar/toggle-window-split))
+  (exwm-input-set-key (kbd "s-z") 'ambrevar/toggle-window-split))
 ;; DGM comments out as never used
   ;;(exwm-input-set-key (kbd "s-H") 'ambrevar/swap-windows-left)
   ;;(exwm-input-set-key (kbd "s-J") 'ambrevar/swap-windows-below)
@@ -348,7 +348,7 @@ I've selected an unlikely combination to avoid locking the screen accidentally. 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (global-set-key (kbd "C-\{") 'daedreth/launch-browser) ;; commented out as <s-w> also launches the browser and <s-W> does so in other window
-(global-set-key (kbd "s-_") 'daedreth/lock-screen)
+;;(global-set-key (kbd "s-_") 'daedreth/lock-screen)
 #+END_SRC
 
 #+RESULTS:

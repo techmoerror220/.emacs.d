@@ -230,7 +230,7 @@ When windows get out of order, you can rotate them.
        (setq i (1+ i)))))))
 
   ;; (global-set-key (kbd "C-c m") 'rotate-windows)
-  (global-set-key (kbd "C-&") 'rotate-windows)
+  (global-set-key (kbd "s-+") 'rotate-windows)
 #+end_src
 
 #+RESULTS: rotate-windows

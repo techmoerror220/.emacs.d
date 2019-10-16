@@ -316,9 +316,9 @@ I like M-s for it, same as C-s is for moving by searching string, now M-s is mov
 (use-package avy
   :ensure t
   :bind
-  ("s-z" . avy-goto-char))  ;; goes literally to any char
+  ("s-^" . avy-goto-char))  ;; goes literally to any char
 
-(define-key global-map (kbd "C-o") 'avy-goto-word-1) ;; goes to word that starts with a given char
+(define-key global-map (kbd "s-l") 'avy-goto-word-1) ;; goes to word that starts with a given char
 #+end_src
 
 #+RESULTS: avy-mode
@@ -2704,10 +2704,10 @@ And again, the same as above but we make sure to not delete the source word.
 
 #+RESULTS:
 : daedreth/copy-whole-word
-**** Copy a line
-Regardless of where your cursor is, this quickly copies a line.
+**** COMMENT Copy a line
+Regardless of where your cursor is, this quickly copies a line... (DGM: I don't understand this, plus =M-w= copies line already.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun daedreth/copy-whole-line ()
   "Copies a line without regard for cursor position."
   (interactive)
@@ -3685,12 +3685,13 @@ Position the cursor at it's beginning, according to the current mode."
   (forward-line -1)
   (indent-according-to-mode))
 
-(global-set-key (kbd "s-@") 'prelude-smart-open-line)
-(global-set-key (kbd "s-@") 'open-line)
+(global-set-key (kbd "C-o") 'prelude-smart-open-line)
+(global-set-key (kbd "C-o") 'open-line)
 #+end_src
 
 #+RESULTS:
 : open-line
+
 
 ** CEDET for C editing
 
@@ -4738,8 +4739,9 @@ DGM: not sure it is better.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (global-set-key (kbd "s-;") 'ivy-switch-buffer)
+(global-set-key (kbd "C-c b") 'ivy-switch-buffer)
 
-(global-set-key (kbd "s-*") 'electric-buffer-list)
+;; (global-set-key (kbd "s-*") 'electric-buffer-list) ;; no lo uso
                                         ; This hook run after buffer formatted, so it is necessary to re-fontify it...
 (add-hook 'electric-buffer-menu-mode-hook
 	      '(lambda ()
@@ -4749,8 +4751,7 @@ DGM: not sure it is better.
 (setq ido-default-buffer-method 'selected-window)
 (unless ido-mode
   (ido-mode 1))
-(global-set-key (kbd "s-l") 'ido-switch-buffer)
-(global-set-key (kbd "C-c b") 'ido-switch-buffer)
+; (global-set-key (kbd "s-l") 'ido-switch-buffer)
 #+END_SRC
 
 #+RESULTS:
@@ -4789,16 +4790,16 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "List bookmark")
     (cheatsheet-add :group 'Bookmarks
                     :key "C-u a"
-                    :description "Annotate bookmark where point is")
+                    :description "In list of bookmarks, annotate bookmark where point is")
     (cheatsheet-add :group 'Bookmarks
                     :key "a"
-                    :description "Read note on bookmark where point is")
+                    :description "In list of bookmarks, read note on bookmark where point is")
     (cheatsheet-add :group 'Bookmarks
                     :key "s--"
-                    :description "Bookmark location")
+                    :description "bookmark-save")
     (cheatsheet-add :group 'Bookmarks
                     :key "s-_"
-                    :description "Get back to saved bookmark")
+                    :description "bookmark-bmenu-list")
     (cheatsheet-add :group 'Buffer-Cycling
                     :key "s-<tab>"
                     :description "ambrevar/switch-to-last-buffer")
@@ -4923,11 +4924,17 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-x 8-"
                     :description "Prefix to insert symbols")
     (cheatsheet-add :group 'Editing
+                    :key "C-M-SPC M-w"
+                    :description "Select word or sexp after point and put it in the kill-ring")
+    (cheatsheet-add :group 'Editing
                     :key "M--c"
                     :description "Upper case last word: Mientras haces M-- dale a la c")
     (cheatsheet-add :group 'Editing
                     :key "s-@"
                     :description "open-line and prelude-smart-open-line. Insert an empty line after the current line.")
+    (cheatsheet-add :group 'Editing
+                    :key "s-@"
+                    :description "open-line, prelude-smart-open-line and org-open-line. Insert an empty line after the current line OR insert new row in table. C-o does the same in Org-mode.")
     (cheatsheet-add :group 'Editing
                     :key "C-x C-q"
                     :description "read-only-mode")
@@ -4955,9 +4962,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Editing
                     :key "gs-w"
                     :description "Copy whole word")
-    (cheatsheet-add :group 'Editing
-                    :key "s-@"
-                    :description "Copies a line where your cursor is in")
     (cheatsheet-add :group 'Editing
                     :key "s-%"
                     :description "Kills whole line where your cursor is in")
@@ -5238,10 +5242,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c-t-f"
                     :description "Resize frame from external app-Usually when saving something")
     (cheatsheet-add :group 'Find-char
-                    :key "C-o"
+                    :key "s-l"
                     :description "avy-goto-word-1: Jump to char at word start")
     (cheatsheet-add :group 'Find-char
-                    :key "s-z"
+                    :key "s-^"
                     :description "avy-goto-char: Jump to any char in window")
     (cheatsheet-add :group 'Find-Files
                     :key "C-x f"
@@ -5253,23 +5257,23 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-x C-f"
                     :description "helm-find-files")
     (cheatsheet-add :group 'Find-Files
-                    :key "M-x helm-for-filess"
+                    :key "M-x helm-for-files"
                     :description "Find in opened, recent, bookmarked files; files in current dir; files anywhere with locate")
-    (cheatsheet-add :group 'Find-Files
-                    :key "C-x C-g"
-                    :description "deft-find-file")
-    (cheatsheet-add :group 'Find-Files
-                    :key "C-c d"
-                    :description "deft. Switch to Deft buffer and load files.")
-    (cheatsheet-add :group 'Find-Files
-                    :key "C-c C-c"
-                    :description "deft-filter-clear")
+    ;;    (cheatsheet-add :group 'Find-Files
+    ;;                    :key "C-x C-g"
+    ;;                    :description "deft-find-file")
+    ;;    (cheatsheet-add :group 'Find-Files
+    ;;                    :key "C-c d"
+    ;;                    :description "deft. Switch to Deft buffer and load files.")
+    ;;    (cheatsheet-add :group 'Find-Files
+    ;;                    :key "C-c C-c"
+    ;;                    :description "deft-filter-clear")
     (cheatsheet-add :group 'Find-Files
                     :key "C-c C-q"
                     :description "quit-window. Works in Deft")
     (cheatsheet-add :group 'Find-Files
-                    :key "C-c d"
-                    :description "deft. Switch to Deft buffer and load files.")
+                    :key "s-'"
+                    :description "deft-find-file")
     (cheatsheet-add :group 'Find-Files
                     :key "C-c C-q"
                     :description "quit-window. Works with deft")
@@ -5301,7 +5305,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "s-i"
                     :description "swiper")
     (cheatsheet-add :group 'Find-Occurences
-                    :key "s-\'"
+                    :key "s-\""
                     :description "helm-regexp to test regexp interactively and save it. Actions on C-z")
     (cheatsheet-add :group 'Find-Ocurrences
                     :key "M-x helm-swoop"
@@ -5327,6 +5331,15 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Grep-Projectile
                     :key "C-s"
                     :description "Grep in project when using P. C-u for recursive grep")
+    (cheatsheet-add :group 'Free
+                    :key "s-@"
+                    :description "C-}")
+    (cheatsheet-add :group 'Free
+                    :key "C-&"
+                    :description "")
+    (cheatsheet-add :group 'Free
+                    :key "C-$"
+                    :description "")
     (cheatsheet-add :group 'Helm
                     :key "C-c TAB"
                     :description "Yank selected candidate in Helm session at point")
@@ -5474,14 +5487,14 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Minibuffer
                     :key "C-c C-c"
                     :description "Miniedit: exit minibuffer edit")
-(cheatsheet-add :group 'Movement
+    (cheatsheet-add :group 'Movement
                     :key "C-c C-j"
                     :description "org-goto. Look up a different location in the current file. Go back with org-mark-ring-goto")
-(cheatsheet-add :group 'Movement
-                    :key "s-,"
+    (cheatsheet-add :group 'Movement
+                    :key "M-<"
                     :description "beginning-of-buffer")
     (cheatsheet-add :group 'Movement
-                    :key "s-.>"
+                    :key "M->"
                     :description "end-of-buffer")
     (cheatsheet-add :group 'Narrowing
                     :key "C-x n b"
@@ -5588,10 +5601,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Org
                     :key "M-x org-repair-property-drawers"
                     :description "Fix properties drawers in current buffer. To use when habits or schedules don't show rightly")
-(cheatsheet-add :group 'Org-agenda
+    (cheatsheet-add :group 'Org-agenda
                     :key "."
                     :description "org-agenda-goto-today")      
-(cheatsheet-add :group 'Org-agenda
+    (cheatsheet-add :group 'Org-agenda
                     :key "C-x C-w"
                     :description "Write the agenda view to a file: .html, ps, pdf. Any other extension results in plain ASCII file")  
     (cheatsheet-add :group 'Org-agenda
@@ -5829,12 +5842,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Prefixes
                     :key "C-x r"
                     :description "Registers and bookmarks")
+    (cheatsheet-add :group 'Register
+                    :key "s-x"
+                    :description "helm-register. Then TAB or RET to insert. Equivalent to C-x r i")
     (cheatsheet-add :group 'Prefixes
                     :key "C-c"
                     :description "Org commands")
-    (cheatsheet-add :group 'Prefixes
-                    :key "C-x r"
-                    :description "Registers and bookmarks")
     (cheatsheet-add :group 'Projectile
                     :key "s-h"
                     :description "helm-projectile: select project and buffers/files")
@@ -5847,9 +5860,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Reading
                     :key "xah-toggle-margin-right"
                     :description "For reading novel or documentation: Toggle right margin")
-    (cheatsheet-add :group 'Register
-                    :key "s-x"
-                    :description "helm-register. Then TAB or RET to insert. Equivalent to C-x r i")
     (cheatsheet-add :group 'Redshift
                     :key "C-\("
                     :description "Redshift on. If repeated, intensity increases")
@@ -5944,6 +5954,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-x 1"
                     :description "zygospore-toggle-delete-other-windows RET: lets you revert C-x 1-delete-other-window-by pressing C-x 1 again")
     (cheatsheet-add :group 'Windows
+                    :key "C-x 4 c"
+                    :description "clone-indirect-buffer-other-window. Splits buffer in two and makes them independent")
+    (cheatsheet-add :group 'Windows
                     :key "M-P"
                     :description "ace-window")
     (cheatsheet-add :group 'Windows
@@ -5953,10 +5966,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-x 3"
                     :description "Horizontal split windows and move to new window")
     (cheatsheet-add :group 'Windows
-                    :key "C-$"
+                    :key "s-z"
                     :description "ambrevar/toggle-window-split: Transpose windows")
     (cheatsheet-add :group 'Windows
-                    :key "C-&"
+                    :key "s-+"
                     :description "rotate-windows")
     (cheatsheet-add :group 'Windows
                     :key "s-M-<left>"
@@ -5976,6 +5989,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Windows
                     :key "C-c <right> or <down>"
                     :description "winner-redo: Restore a more recent window configuration saved by Winner mode")
+    (cheatsheet-add :group 'Windows
+                    :key "s-,"
+                    :description "org-recipe")
+    (cheatsheet-add :group 'Windows
+                    :key "s-."
+                    :description "org-wiki-helm")
     (cheatsheet-add :group 'Window-Movement
                     :key "s-<left>"
                     :description "windmove-left")
@@ -5993,13 +6012,13 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23967 34866 690134 637000) :init (23967 34866 690074 728000) :init-secs (0 0 33 296000) :use-package-secs (0 0 182 748000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23975 36373 83312 504000) :init (23975 36373 83240 26000) :init-secs (0 0 3545 226000) :use-package-secs (0 0 4052 62000) :config (23975 36373 83224 993000) :config-secs (0 0 3509 316000)))
 
 
 
-* Remapping =M-<= and =M->=
+* COMMENT Remapping =M-<= and =M->=
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 (global-set-key (kbd "s-,") 'beginning-of-buffer)
 (global-set-key (kbd "s-.") 'end-of-buffer)
 #+end_src
@@ -6146,6 +6165,52 @@ Next time you're writing fiction, non-fiction, a journalistic piece or a blog po
 #+end_src
 
 #+RESULTS:
+
+* COMMENT Management of window configurations
+From https://emacs.stackexchange.com/questions/2710/switching-between-window-layouts
+
+DGM: I've tried it but not convinced...
+#+begin_src emacs-lisp :tangle yes
+(defvar winstack-stack '()
+  "A Stack holding window configurations.
+Use `winstack-push' and
+`winstack-pop' to modify it.")
+
+(defun winstack-push()
+  "Push the current window configuration onto `winstack-stack'."
+  (interactive)
+  (if (and (window-configuration-p (first winstack-stack))
+         (compare-window-configurations (first winstack-stack) (current-window-configuration)))
+      (message "Current config already pushed")
+    (progn (push (current-window-configuration) winstack-stack)
+           (message (concat "pushed " (number-to-string
+                                       (length (window-list (selected-frame)))) " frame config")))))
+
+(defun winstack-pop()
+  "Pop the last window configuration off `winstack-stack' and apply it."
+  (interactive)
+  (if (first winstack-stack)
+      (progn (set-window-configuration (pop winstack-stack))
+             (message "popped"))
+    (message "End of window stack")))
+
+;;(global-set-key (kbd "s-,") 'winstack-push)
+;;(global-set-key (kbd "s-.") 'winstack-pop)
+#+end_src
+
+#+RESULTS:
+: winstack-pop
+
+* Quick bookmark bindings
+
+#+begin_src emacs-lisp :tangle yes
+(global-set-key (kbd "s--") 'bookmark-save)
+(global-set-key (kbd "s-_")  'bookmark-bmenu-list)
+#+end_src
+
+#+RESULTS:
+: bookmark-bmenu-list
+
 
 * Provide
 

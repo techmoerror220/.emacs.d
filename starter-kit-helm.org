@@ -339,13 +339,14 @@ Commenting out by DGM on sept 2019
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;;(global-set-key [remap query-replace-regexp] 'helm-regexp)
-(global-set-key (kbd "s-\'") 'helm-regexp)
+(global-set-key (kbd "s-\"") 'helm-regexp)
 ;;(unless (boundp 'completion-in-region-function)
 ;;  (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
 ;;  (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
 #+END_SRC
 
 #+RESULTS:
+: helm-regexp
 
 And still more on grep, but they are already defined in the =exwm= shortcuts, so I take them out
 
@@ -1040,7 +1041,7 @@ From https://github.com/bbatsov/projectile/issues/184
 ;; (define-key projectile-mode-map [?\s-d] 'projectile-switch-project)
 (define-key projectile-mode-map [?\s-\|] 'helm-projectile-find-file-dwim)
 (define-key projectile-mode-map [?\s-\`] 'helm-projectile-find-other-file)
-(define-key projectile-mode-map [?\s-\+] 'helm-projectile-find-dir)
+(define-key projectile-mode-map [?\s-\*] 'helm-projectile-find-dir)
 (define-key projectile-mode-map [?\s-j] 'helm-projectile-find-file)
 (define-key projectile-mode-map [?\s-n] 'helm-projectile-switch-to-buffer)
 ;;(define-key projectile-mode-map [?\s-y] 'projectile-ag) ;; this is not working. 
