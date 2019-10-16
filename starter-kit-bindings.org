@@ -162,8 +162,12 @@ Manage a lot of buffers easily with C-x C-b. Already set up elsewhere in the sta
   (global-set-key (kbd "C-c r") 'revert-buffer)
 ;;  (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete) ;; Key used somewhere else
   (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (global-set-key (kbd "C-\}") 'ibuffer)
 ;;  (global-set-key (kbd "C-x f") 'recentf-ido-find-file) ;; commented out until helm and ido are made to work together
 #+end_src
+
+#+RESULTS:
+: ibuffer
 
 ** Browse the Kill Ring
 Conveniently navigate the kill-ring (ie, the cut/copy clipboard history) in a pop-up buffer.

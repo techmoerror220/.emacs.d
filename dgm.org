@@ -4819,8 +4819,8 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "s-;"
                     :description "ivy-switch-buffer. Like iBuffer: list of buffers for editing")
     (cheatsheet-add :group 'Buffer-List
-                    :key "s-*"
-                    :description "electric-buffer-list")
+                    :key "C-}"
+                    :description "iBuffer. List of buffers for editing")
     (cheatsheet-add :group 'Buffer-List
                     :key "C-x C-b"
                     :description "iBuffer. List of buffers for editing")
@@ -5333,7 +5333,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "Grep in project when using P. C-u for recursive grep")
     (cheatsheet-add :group 'Free
                     :key "s-@"
-                    :description "C-}")
+                    :description "")
     (cheatsheet-add :group 'Free
                     :key "C-&"
                     :description "")
