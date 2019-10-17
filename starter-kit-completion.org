@@ -245,7 +245,7 @@ We use the `:with` keyword to include dabbrev in every backend, which gives us c
 (browse-kill-ring-default-keybindings)
 
 ;; From https://stackoverflow.com/questions/34652692/how-to-turn-off-company-mode-in-org-mode
-(setq company-global-modes '(not python-mode org-mode text-mode latex-mode tex-mode LaTeX-mode TeX-mode))
+(setq company-global-modes '(not python-mode org-mode text-mode latex-mode tex-mode LaTeX-mode TeX-mode mu4e-compose-mode))
 #+end_src
 
 #+RESULTS: company-mode

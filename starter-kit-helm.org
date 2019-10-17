@@ -1442,9 +1442,10 @@ From: https://www.reddit.com/r/emacs/comments/cuc8hl/how_do_you_remember_various
 #+RESULTS:
 : helm-org-in-buffer-headings
 
-* Helm-color
-#+begin_src emacs-lisp :tangle yes
-(global-set-key (kbd "s-c") 'helm-colors) 
+* COMMENT Helm-color
+I don't use it that much...
+#+begin_src emacs-lisp :tangle no
+;;(global-set-key (kbd "s-c") 'helm-colors) 
 #+end_src
 
 #+RESULTS:
