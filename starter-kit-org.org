@@ -5043,6 +5043,26 @@ These days I set many of =org-log-*= to note to keep verbose log of task progres
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23971 22201 764284 712000) :init (23971 22201 764185 251000) :config (23971 22201 763607 281000) :config-secs (0 0 15 830000) :init-secs (0 0 990 627000) :use-package-secs (0 0 1149 302000) ...))
 
+* Remapping of keys for headings' movement
+
+#+begin_src emacs-lisp :tangle yes
+;;(define-key org-mode-map (kbd "M-<right>") 'org-shiftmetaright)
+;;(define-key org-mode-map [M-<right>] 'org-shiftmetaright)
+(with-eval-after-load 'org
+    (define-key org-mode-map (kbd "M-<right>") nil)
+    (define-key org-mode-map (kbd "M-<right>") 'org-shiftmetaright)
+    (define-key org-mode-map (kbd "M-<left>") nil)
+    (define-key org-mode-map (kbd "M-<left>") 'org-shiftmetaleft)
+    (define-key org-mode-map (kbd "M-S-<right>") nil)
+    (define-key org-mode-map (kbd "M-S-<right>") 'org-metaright)
+    (define-key org-mode-map (kbd "M-S-<left>") nil)
+    (define-key org-mode-map (kbd "M-S-<left>") 'org-metaleft))
+#+end_src
+
+#+RESULTS:
+: org-metaleft
+
+
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes

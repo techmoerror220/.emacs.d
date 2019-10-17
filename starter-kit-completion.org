@@ -245,11 +245,11 @@ We use the `:with` keyword to include dabbrev in every backend, which gives us c
 (browse-kill-ring-default-keybindings)
 
 ;; From https://stackoverflow.com/questions/34652692/how-to-turn-off-company-mode-in-org-mode
-(setq company-global-modes '(not python-mode))
+(setq company-global-modes '(not python-mode org-mode text-mode latex-mode tex-mode LaTeX-mode TeX-mode))
 #+end_src
 
 #+RESULTS: company-mode
-| not | python-mode |
+| not | python-mode | org-mode | text-mode | latex-mode | tex-mode | LaTeX-mode | TeX-mode |
 
 Now that I have =company-capf= above, I turn on =semantic-mode=. See https://github.com/syl20bnr/spacemacs/issues/1907
 Tuhdo says that =company-capf= is the expected backend to be used: ``I had no slowness [due to semantic-mode] with it [turned off] (...) And even without semantic-mode enabled, in Emacs Lisp company should use company-capf. Do you set =company-idle-delay= to very small value?''

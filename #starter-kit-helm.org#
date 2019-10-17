@@ -1,0 +1,1471 @@
+# -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
+
+#+TITLE: Helm Customizations
+#+OPTIONS: toc:nil num:nil ^:nil
+#+PROPERTY: header-args :tangle yes
+
+This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
+
+It controls helm and projectile.
+
+* First, make sure that =ido-everywhere= is disabled
+
+See https://github.com/emacs-helm/helm/issues/2085
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;;(cl-assert (null ido-everywhere)
+;;             nil "ido-everywhere is incompatible with helm, please disable it")
+#+END_SRC
+
+* Starting out the helm magic
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm
+  :ensure t
+  :diminish helm-mode
+  :init 
+  (helm-mode 1)
+  (require 'helm-config)
+  (require 'helm-grep))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23923 19145 404749 655000) :init (23923 19145 404708 41000) :config (23923 19145 404210 276000) :config-secs (0 0 61 269000) :init-secs (0 0 1289 6000) :use-package-secs (0 0 1390 358000)))
+
+** COMMENT Tuhdo function for hiding minibuffer
+
+DGM comments it out in case it is responsible of minimizing the minibuffer so I don't see the systemtray!
+
+#+begin_src emacs-lisp :tangle no
+    (defun helm-hide-minibuffer-maybe ()
+      (when (with-helm-buffer helm-echo-input-in-header-line)
+        (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+          (overlay-put ov 'window (selected-window))
+          (overlay-put ov 'face (let ((bg-color (face-background 'default nil)))
+                                  `(:background ,bg-color :foreground ,bg-color)))
+          (setq-local cursor-type nil))))
+
+    (add-hook 'helm-minibuffer-set-up-hook 'helm-hide-minibuffer-maybe)
+#+end_src
+
+** Tuhdo's bindings
+
+#+begin_src emacs-lisp :tangle yes
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action but this gives rise to problems. See https://github.com/jkitchin/org-ref/issues/527
+(define-key helm-map (kbd "C-i")   'helm-execute-persistent-action) ; make TAB work in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+(define-key helm-grep-mode-map (kbd "<return>")  'helm-grep-mode-jump-other-window)
+(define-key helm-grep-mode-map (kbd "n")  'helm-grep-mode-jump-other-window-forward)
+(define-key helm-grep-mode-map (kbd "p")  'helm-grep-mode-jump-other-window-backward)
+#+end_src
+
+** Tuhdo's costumization
+
+#+begin_src emacs-lisp :tangle yes
+(when (executable-find "curl")
+  (setq helm-google-suggest-use-curl-p t))
+
+(setq helm-google-suggest-use-curl-p t
+      helm-scroll-amount 4 ; scroll 4 lines other window using M-<next>/M-<prior>
+      ;; helm-quick-update t ; do not display invisible candidates
+      helm-ff-search-library-in-sexp t ; search for library in `require' and `declare-function' sexp.
+
+      ;; you can customize helm-do-grep to execute ack-grep
+      ;; helm-grep-default-command "ack-grep -Hn --smart-case --no-group --no-color %e %p %f"
+      ;; helm-grep-default-recurse-command "ack-grep -H --smart-case --no-group --no-color %e %p %f"
+      helm-split-window-in-side-p t ;; open helm buffer inside current window, not occupy whole other window
+
+      helm-echo-input-in-header-line t
+
+      ;; helm-candidate-number-limit 500 ; limit the number of displayed canidates
+      helm-ff-file-name-history-use-recentf t
+      helm-move-to-line-cycle-in-source t ; move to end or beginning of source when reaching top or bottom of source.
+      helm-buffer-skip-remote-checking t
+
+      helm-mode-fuzzy-match t
+
+      helm-buffers-fuzzy-matching t ; fuzzy matching buffer names when non-nil
+                                        ; useful in helm-mini that lists buffers
+      helm-org-headings-fontify t
+      ;; helm-find-files-sort-directories t
+      ;; ido-use-virtual-buffers t
+      helm-semantic-fuzzy-match t
+      ;; helm-M-x-fuzzy-match t
+      ;; helm-imenu-fuzzy-match t
+      ;; helm-lisp-fuzzy-completion t
+      ;; helm-apropos-fuzzy-match t
+      ;; helm-locate-fuzzy-match t
+      helm-display-header-line nil)
+#+end_src
+
+** Tuhdo's bindings
+
+#+begin_src emacs-lisp :tangle yes
+;;    (global-set-key (kbd "C-x b") 'helm-buffers-list)
+;;    (global-set-key (kbd "C-c r") 'helm-recentf)
+;;    (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+;;    (define-key 'help-command (kbd "C-l") 'helm-locate-library)
+#+end_src
+
+** Mark ring
+
+Save current position to mark ring:
+
+#+begin_src emacs-lisp :tangle yes
+(add-hook 'helm-goto-line-before-hook 'helm-save-current-pos-to-mark-ring)
+#+end_src
+
+** Minibuffer
+
+If you get into the minibuffer (=C-x b= for =helm-mini=), then you get its history with =C-c C-l=.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Command: helm-mini-buffer-history
+(define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
+#+END_SRC
+
+#+RESULTS:
+: helm-minibuffer-history
+
+Show minibuffer history with Helm
+
+#+begin_src emacs-lisp :tangle yes
+(define-key minibuffer-local-map (kbd "M-p") 'helm-minibuffer-history)
+(define-key minibuffer-local-map (kbd "M-n") 'helm-minibuffer-history)
+#+end_src
+
+* Limit candidates for speed
+
+- Limit max number of matches displayed for speed. In Pragmatic Emacs's =helm-for-files= and in Sacha Chua's dotfiles.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq helm-candidate-number-limit 100)
+#+END_SRC
+
+#+RESULTS:
+: 100
+
+* Sacha Chua
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+    ;; From https://gist.github.com/antifuchs/9238468
+    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+          helm-input-idle-delay 0.01  ; this actually updates things
+                                        ; reeeelatively quickly.
+          helm-yas-display-key-on-candidate t
+          helm-quick-update t
+          helm-M-x-requires-pattern nil
+          helm-ff-skip-boring-files t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* Daniel Mai's stuff 
+
+From: https://github.com/danielmai/.emacs.d/blob/master/config.org
+
+** =helm-swoop=
+From https://wikemacs.org/wiki/Helm-swoop
+
+helm-swoop, based on Helm, allows to show interactively lines that match a pattern in another (helm) buffer. It updates while we type, and usually starts with the word at point. When we navigate around this helm list, the cursor in the original buffer jumps to the corresponding line, without loosing the helm session.
+
+Conclusion: it's like a helm-occur bound to =s-;=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-swoop
+  :ensure t
+  :after helm-mode
+  :bind (("C-c h o" . helm-swoop)
+         ("C-c s" . helm-multi-swoop-all))
+  :config
+  ;; When doing isearch, hand the word over to helm-swoop
+  (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+
+  ;; From helm-swoop to helm-multi-swoop-all
+  (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+
+  ;; Save buffer when helm-multi-swoop-edit complete
+  (setq helm-multi-swoop-edit-save t)
+
+  ;; If this value is t, split window inside the current window
+  (setq helm-swoop-split-with-multiple-windows t)
+
+  ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
+  (setq helm-swoop-split-direction 'split-window-vertically)
+
+  ;; If nil, you can slightly boost invoke speed in exchange for text color
+  (setq helm-swoop-speed-or-color t))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23547 50524 462788 646000) :init (23547 50524 462634 659000) :config (23547 50524 462593 680000) :config-secs (0 0 10 173000) :init-secs (0 0 75 23000) :use-package-secs (0 0 317 531000)))
+
+* Key bindings 
+
+The default "C-x c" is quite close to "C-x C-c", which quits Emacs. Changed to "C-c h". Note: We must set "C-c h" globally, because we cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-set-key (kbd "C-c h") 'helm-command-prefix)
+(global-unset-key (kbd "C-x c"))
+
+    ;; Make M-x be equal to M-x helm-M-x
+(global-set-key (kbd "M-x") 'helm-M-x)
+
+(setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
+
+    ;; Command: helm-show-kill-ring
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+
+    ;; Command: helm-mini
+(global-set-key (kbd "C-x b") 'helm-mini)
+#+END_SRC
+
+#+RESULTS:
+: helm-mini
+
+* Fuzzy matching for searches
+To enable fuzzy matching, add the following settings:
+
+On semantic, read https://tuhdo.github.io/helm-intro.html: Semantic is a package that provides language-aware editing commands based on 'source-code parsers'. When enabled, each file you visit is automatically parsed. Semantic provides execellent support for C/C++. To enable Semantic mode, execute =(semantic-mode 1)= (done in =starter-kit-completion.org=).
+
+Helm offers an interface to both Semantic and Imenu at the same time: If `semantic-mode' is active in the current buffer, then use semantic for generating tags, otherwise fall back to imenu. If point is on a symbol, helm feeds the symbol into input prompt by default.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq helm-recentf-fuzzy-match    t)
+
+;; Command: helm-find-files
+;; helm-find-files is file navigation on steroids:
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+;;(global-set-key (kbd "<s-escape>") 'helm-recentf)
+
+;; Command: helm-semantic-or-imenu
+;; recall I have ==(semantic-mode 1)= in =starter-kit-completion.org=
+(setq helm-imenu-fuzzy-match    t)
+
+(global-set-key (kbd "M-i") 'helm-semantic-or-imenu)
+
+;; Command: helm-locate
+(setq helm-locate-fuzzy-match t)
+
+;; From ambrevar: Fallback on 'find' if 'locate' is not available.
+(unless (executable-find "locate")
+  (setq helm-locate-recursive-dirs-command "find %s -type d -regex .*%s.*$"))
+
+;; See https://github.com/emacs-helm/helm/issues/1962.
+;; DGM comments it out on 4 sept 2019 as I don't use it
+;; (defun ambrevar/helm-locate-meta (&optional update)
+;;   "Like `helm-locate' but also use the databases found in /media and /run/media.
+;; With prefix argument, UPDATE the databases with custom uptions thanks to the
+;; 'updatedb-local' script."
+;;   (interactive "P")
+;;   (let ((user-db (expand-file-name "~/.cache/locate.db"))
+;;         (media-dbs (apply 'append
+;;                           (mapcar
+;;                            (lambda (root) (ignore-errors (file-expand-wildcards (concat root "/*/locate.db"))))
+;;                            (list (concat "/run/media/" (user-login-name))
+;;                                  (concat "/media/" (user-login-name))
+;;                                  "/media")))))
+;;     (when update
+;;       (with-temp-buffer
+;;         (if (= (shell-command "updatedb-local" (current-buffer)) 0)
+;;             (message "%s" (buffer-string))
+;;           (error "%s" (current-buffer)))))
+;;     (helm-locate-with-db
+;;      (mapconcat 'identity
+;;                 (cons user-db media-dbs)
+;;                 ":")
+;;      nil (thing-at-point 'filename))))
+
+;; Command: helm-occur
+;; search for patterns in current buffer
+;; (global-set-key (kbd "C-c h o") 'helm-occur)
+(global-set-key (kbd "s-o") 'helm-occur)
+
+;; helm-resume: taken to dgm.org or else it didn't replace <exwm-reset>
+;; (global-set-key (kbd "s-r") 'helm-resume)
+
+;; Command: helm-lisp-completion-at-point
+;; To enable fuzzy matching, add this setting:
+(setq helm-lisp-fuzzy-completion t)
+
+;; Command: helm-all-mark-rings
+;; (global-set-key (kbd "<s-return>") 'helm-all-mark-rings)
+;; <> compulsory for return but not for s
+(global-set-key (kbd "s-<return>") 'helm-all-mark-rings)
+
+;; Command: helm-register
+(global-set-key (kbd "C-c h x") 'helm-register)
+(global-set-key (kbd "s-x") 'helm-register)
+#+END_SRC
+
+#+RESULTS:
+: helm-register
+
+** COMMENT From Ambrevar: 
+DGM: I'm commenting out Ambrevar's stuff on 4 sept 2019.
+
+Do not exclude any files from 'git grep'.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq helm-grep-git-grep-command "git --no-pager grep -n%cH --color=always --full-name -e %p -- %f")
+
+(defun ambrevar/helm-grep-git-or-ag (arg)
+  "Run `helm-grep-do-git-grep' if possible; fallback to `helm-do-grep-ag' otherwise.
+Requires `call-process-to-string' from `functions'."
+  (interactive "P")
+  (require 'vc)
+  (require 'functions)
+  (if (and (vc-find-root default-directory ".git")
+           (or arg (split-string (ambrevar/call-process-to-string "git" "ls-files" "-z") "\0" t)))
+      (helm-grep-do-git-grep arg)
+    (helm-do-grep-ag nil)))
+
+(defun ambrevar/helm-grep-git-all-or-ag ()
+  "Run `helm-grep-do-git-grep' over all git files."
+  (interactive)
+  (helm-grep-do-git-grep t))
+#+END_SRC
+
+#+RESULTS:
+: ambrevar/helm-grep-git-all-or-ag
+
+** More stuff from Ambrevar
+*** =helm-regexp=
+
+Commenting out by DGM on sept 2019
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;(global-set-key [remap query-replace-regexp] 'helm-regexp)
+(global-set-key (kbd "s-\"") 'helm-regexp)
+;;(unless (boundp 'completion-in-region-function)
+;;  (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+;;  (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
+#+END_SRC
+
+#+RESULTS:
+: helm-regexp
+
+And still more on grep, but they are already defined in the =exwm= shortcuts, so I take them out
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(ambrevar/global-set-keys
+ "C-x M-g" 'ambrevar/helm-grep-git-or-ag
+ "C-x M-G" 'helm-do-grep-ag)
+#+END_SRC
+
+** And more Ambrevar's stuff
+
+TODO: =helm-ff= should allow opening several marks externally, e.g.  sxiv for pics. See https://github.com/emacs-helm/helm/wiki/Find-Files#open-files-externally.
+What about the default program?  It currently defaults to ~/.mailcap, which is not so customizable.  Would ranger's rifle be useful here?  See https://github.com/emacs-helm/helm/issues/1796.  There is the `openwith' package.
+
+TODO: Batch-open torrent files automatically.  Add to mailcap?  Same as above, C-c C-x does not allow for opening several files at once.
+
+TODO: helm-find in big folders sometimes leads bad results, like exact match not appearing first. Better sorting?
+
+TODO: Implement alternating-color multiline lists. See https://github.com/emacs-helm/helm/issues/1790.
+
+Note: =wgrep-helm= allows you to edit a helm-grep-mode buffer and apply those changes to the file buffer.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (when (< emacs-major-version 26)
+;;   (when (require 'linum-relative nil t)
+;;     (helm-linum-relative-mode 1)))
+
+;; (when (require 'helm-descbinds nil t)
+;;    (helm-descbinds-mode))
+
+(when (require 'wgrep-helm nil t)
+  (setq wgrep-auto-save-buffer t
+        wgrep-enable-key (kbd "C-c h w")))
+
+;; From Ambrevar: wgrep-face is not so pretty. Commented out as not working
+;; (set-face-attribute 'wgrep-face nil :inherit 'ediff-current-diff-C :foreground 'unspecified :background 'unspecified :box nil)
+
+;; (when (require 'helm-ls-git nil t)
+;;   ;; `helm-source-ls-git' must be defined manually.
+;;   ;; See https://github.com/emacs-helm/helm-ls-git/issues/34.
+;;   (setq helm-source-ls-git
+;;         (and (memq 'helm-source-ls-git helm-ls-git-default-sources)
+;;              (helm-make-source "Git files" 'helm-ls-git-source
+;;                :fuzzy-match helm-ls-git-fuzzy-match))))
+#+END_SRC
+
+#+RESULTS:
+
+** Generic configuration
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq
+ helm-follow-mode-persistent t
+ helm-reuse-last-window-split-state t
+ helm-findutils-search-full-path t
+ helm-show-completion-display-function nil
+ helm-completion-mode-string ""
+ helm-dwim-target 'completion
+ ;; helm-echo-input-in-header-line t
+ helm-use-frame-when-more-than-two-windows nil
+ ;; helm-apropos-fuzzy-match t
+ ;; helm-buffers-fuzzy-matching t
+ ;; helm-eshell-fuzzy-match t
+ ;; helm-imenu-fuzzy-match t
+ ;; helm-M-x-fuzzy-match t
+ ;; helm-recentf-fuzzy-match t
+ ;; Use woman instead of man.
+ helm-man-or-woman-function nil
+ ;; https://github.com/emacs-helm/helm/issues/1910
+ helm-buffers-end-truncated-string "…"
+ helm-buffer-max-length 22
+ helm-window-show-buffers-function 'helm-window-mosaic-fn
+ helm-window-prefer-horizontal-split t)
+#+END_SRC
+
+** Apropos 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Command: helm-apropos
+;; To enable fuzzy matching, add this setting:
+(setq helm-apropos-fuzzy-match t)
+;; (global-set-key [remap apropos-command] 'helm-apropos) ;; dgm comments out on sept 2019
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;; Add bindings to `helm-apropos`. TODO: Does not work most of the times.
+;;; https://github.com/emacs-helm/helm/issues/1140
+;;; Commented out by DGM on 4 sept 2019
+(defun ambrevar/helm-def-source--emacs-commands (&optional default)
+  (helm-build-in-buffer-source "Commands"
+    :init `(lambda ()
+             (helm-apropos-init 'commandp ,default))
+    :fuzzy-match helm-apropos-fuzzy-match
+    :filtered-candidate-transformer (and (null helm-apropos-fuzzy-match)
+                                         'helm-apropos-default-sort-fn)
+    :candidate-transformer 'helm-M-x-transformer-1
+    :nomark t
+    :action '(("Describe Function" . helm-describe-function)
+              ("Find Function" . helm-find-function)
+              ("Info lookup" . helm-info-lookup-symbol))))
+
+(global-set-key (kbd "s-a") 'helm-apropos)
+#+END_SRC
+
+#+RESULTS:
+: helm-apropos
+
+** COMMENT The =M-s= prefix
+Use the =M-s= prefix just like `occur'. 
+Note that the =s= in the prefix is the letter =s= and not the =super= key.
+Note that I think =M-i= does the same.
+
+DGM, 16 july: I disable this as the prefix =M-s= is not working. Don't know why. 
+
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(define-key prog-mode-map (kbd "M-s f") 'helm-semantic-or-imenu)
+;;; The text-mode-map binding targets structured text modes like Markdown.
+(define-key text-mode-map (kbd "M-s f") 'helm-semantic-or-imenu)
+(with-eval-after-load 'org
+  (require 'helm-org-contacts nil t)
+  (define-key org-mode-map (kbd "M-s f") 'helm-org-in-buffer-headings))
+(with-eval-after-load 'woman
+  (define-key woman-mode-map (kbd "M-s f") 'helm-imenu))
+(with-eval-after-load 'man
+  (define-key Man-mode-map (kbd "M-s f") 'helm-imenu))
+#+END_SRC
+
+#+RESULTS:
+
+** COMMENT More stuff!!!
+
+Commented out by DGM on 4 sept 2019
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq helm-source-names-using-follow '("Occur" "Git-Grep" "AG" "mark-ring" "Org Headings" "Imenu"))
+
+;;; From https://www.reddit.com/r/emacs/comments/5q922h/removing_dot_files_in_helmfindfiles_menu/.
+(defun ambrevar/helm-skip-dots (old-func &rest args)
+  "Skip . and .. initially in helm-find-files.  First call OLD-FUNC with ARGS."
+  (apply old-func args)
+  (let ((sel (helm-get-selection)))
+    (if (and (stringp sel) (string-match "/\\.$" sel))
+        (helm-next-line 2)))
+  (let ((sel (helm-get-selection))) ; if we reached .. move back
+    (if (and (stringp sel) (string-match "/\\.\\.$" sel))
+        (helm-previous-line 1))))
+
+(advice-add #'helm-preselect :around #'ambrevar/helm-skip-dots)
+(advice-add #'helm-ff-move-to-first-real-candidate :around #'ambrevar/helm-skip-dots)
+
+(with-eval-after-load 'desktop
+  (add-to-list 'desktop-globals-to-save 'kmacro-ring)
+  (add-to-list 'desktop-globals-to-save 'last-kbd-macro)
+  (add-to-list 'desktop-globals-to-save 'kmacro-counter)
+  (add-to-list 'desktop-globals-to-save 'kmacro-counter-format)
+  (add-to-list 'desktop-globals-to-save 'helm-ff-history)
+  (add-to-list 'desktop-globals-to-save 'comint-input-ring))
+;;; Column indices might need some customizing. See `helm-top-command' and
+;;; https://github.com/emacs-helm/helm/issues/1586 and
+;;; https://github.com/emacs-helm/helm/issues/1909.
+#+END_SRC
+
+** =top=
+
+#+begin_src emacs-lisp :tangle yes
+(helm-top-poll-mode)
+(global-set-key (kbd "s-t") 'helm-top)
+#+end_src
+
+#+RESULTS:
+: helm-top
+
+** COMMENT Convenience
+
+Commented out by DGM on 4 sept 2019
+#+BEGIN_SRC emacs-lisp :tangle no
+;;; Convenience.
+(defun ambrevar/helm-toggle-visible-mark-backwards (arg)
+  (interactive "p")
+  (helm-toggle-visible-mark (- arg)))
+;; (define-key helm-map (kbd "S-SPC") 'ambrevar/helm-toggle-visible-mark-backwards)
+
+;; (global-set-key  (kbd "C-<f4>") 'helm-execute-kmacro)
+#+END_SRC
+
+* Google and Wikipedia
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; helm-google-suggest
+(global-set-key (kbd "C-c h g") 'helm-google-suggest)
+(global-set-key (kbd "C-c h w") 'helm-wikipedia-suggest)
+#+END_SRC
+
+* Eldoc 
+
+ELDOC is interactive eLisp evaluation.
+
+In Sacha's dotfiles, she says: "Eldoc provides minibuffer hints when working with Emacs Lisp."
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; helm-eval-expression-with-eldoc
+;; (global-set-key (kbd "C-c h M-:") 'helm-eval-expression-with-eldoc)
+(global-set-key (kbd "s-\(") 'helm-eval-expression-with-eldoc)
+#+END_SRC
+
+#+RESULTS:
+: helm-eval-expression-with-eldoc
+
+* Eshell
+
+Por alguna razon el keybind no se registra, asi que lo quito.
+
+DMG on 9 sept changes M-l binding to M-p but it doesn't work... don't know why
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Command: helm-eshell-history
+(require 'helm-eshell)
+
+;; (add-hook 'eshell-mode-hook
+;;          '(lambda ()
+;;             (define-key eshell-mode-map (kbd "C-c h C-c h")  'helm-eshell-history))) 
+    (add-hook 'eshell-mode-hook
+              #'(lambda ()
+                  (define-key eshell-mode-map (kbd "M-p")  'helm-eshell-history)))
+#+END_SRC
+
+#+RESULTS:
+| (lambda nil (define-key eshell-mode-map (kbd M-l) 'helm-eshell-history)) | (lambda nil (define-key eshell-mode-map  'eshell-bol)) | helm-gtags-mode | ambrevar/helm/eshell-set-keys | (lambda nil (define-key eshell-mode-map (kbd M-p) 'helm-eshell-history)) | tramp-eshell-directory-change | ess-r-package-activate-directory-tracker |
+
+** Ambrevar's eshell
+
+This doesn't work either...
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;; Eshell
+(defun ambrevar/helm/eshell-set-keys ()
+  (define-key eshell-mode-map [remap eshell-pcomplete] 'helm-esh-pcomplete)
+  (define-key eshell-mode-map (kbd "M-p") 'helm-eshell-history))
+  ;; dgm comments out on 4 sept 2019
+  ;;(define-key eshell-mode-map (kbd "M-s") nil) ; Useless when we have 'helm-eshell-history.
+  ;;(define-key eshell-mode-map (kbd "M-s f") 'helm-eshell-prompts-all)) ;; this one doesn't work... I don't know what it'd do.
+(add-hook 'eshell-mode-hook 'ambrevar/helm/eshell-set-keys)
+#+END_SRC
+
+#+RESULTS:
+| (lambda nil (define-key eshell-mode-map (kbd M-l) 'helm-eshell-history)) | (lambda nil (define-key eshell-mode-map  'eshell-bol)) | helm-gtags-mode | ambrevar/helm/eshell-set-keys | (lambda nil (define-key eshell-mode-map (kbd M-p) 'helm-eshell-history)) | tramp-eshell-directory-change | ess-r-package-activate-directory-tracker |
+
+* Comint 
+
+Disabled as it gives rise to lisp error
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;; Command: helm-comint-input-ring
+;; (define-key shell-mode-map (kbd "C-c h C-c h") 'helm-comint-input-ring)
+#+END_SRC
+
+#+RESULTS:
+
+* helm-descbinds
+
+List active key bindings:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-descbinds
+	:ensure t)
+(helm-descbinds-mode)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* Helm, etags and gtags
+** etags
+
+#+begin_src emacs-lisp :tangle yes
+(define-key global-map [remap find-tag] 'helm-etags-select)
+#+end_src
+
+** gtags
+Further customization of =gtags= with =helm=, from http://tuhdo.github.io/c-ide.html.
+
+Check out: http://tuhdo.github.io/c-ide.html and https://github.com/syohex/emacs-helm-gtags
+
+Also of interest this setup: https://github.com/tuhdo/emacs-c-ide-demo/blob/master/custom/setup-helm-gtags.el
+and https://github.com/yusekiya/dotfiles/blob/master/.emacs.d/config/packages/my-helm-config.el
+
+** TODO Understand how =gtags= differ from =etags=
+
+Old setup
+
+#+begin_src emacs-lisp :tangle no
+(use-package helm-gtags
+	:ensure t
+    :init
+    ;; Enable helm-gtags-mode
+    (add-hook 'dired-mode-hook 'helm-gtags-mode)
+    (add-hook 'eshell-mode-hook 'helm-gtags-mode)
+    (add-hook 'c-mode-hook 'helm-gtags-mode)
+    (add-hook 'c++-mode-hook 'helm-gtags-mode)
+    (add-hook 'asm-mode-hook 'helm-gtags-mode)
+    ;; (add-hook 'python-mode-hook 'helm-gtags-mode)
+    :config
+    (setq
+     helm-gtags-ignore-case t
+     helm-gtags-auto-update t
+     helm-gtags-use-input-at-cursor t
+     helm-gtags-pulse-at-cursor t
+     helm-gtags-prefix-key "C-c g"
+     helm-gtags-suggested-key-mapping t))
+
+    (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+    (define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+    (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+    (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+    (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+    (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+#+end_src
+
+New setup from Tuhdo's =setup-helm-gtags.el=
+
+#+begin_src emacs-lisp :tangle yes
+(use-package ggtags
+  :ensure t)
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+              (ggtags-mode 1))))
+
+(define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+(define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+(define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+(define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+(define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+(define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
+
+(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
+#+end_src
+
+#+RESULTS:
+: pop-tag-mark
+
+And now on to helm. 
+
+#+begin_src emacs-lisp :tangle yes
+;; this variable must be set before load helm-gtags
+;; you can change to any prefix key of your choice
+(setq helm-gtags-prefix-key "\C-cg")
+
+(use-package helm-gtags
+  :init
+  (progn
+    (setq helm-gtags-ignore-case t
+          helm-gtags-auto-update t
+          helm-gtags-use-input-at-cursor t
+          helm-gtags-pulse-at-cursor t
+          helm-gtags-prefix-key "\C-cg"
+          helm-gtags-suggested-key-mapping t)
+
+    ;; Enable helm-gtags-mode in Dired so you can jump to any tag
+    ;; when navigate project tree with Dired
+    (add-hook 'dired-mode-hook 'helm-gtags-mode)
+
+    ;; Enable helm-gtags-mode in Eshell for the same reason as above
+    (add-hook 'eshell-mode-hook 'helm-gtags-mode)
+
+    ;; Enable helm-gtags-mode in languages that GNU Global supports
+    (add-hook 'c-mode-hook 'helm-gtags-mode)
+    (add-hook 'c++-mode-hook 'helm-gtags-mode)
+    (add-hook 'java-mode-hook 'helm-gtags-mode)
+    (add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+    ;; key bindings
+    (with-eval-after-load 'helm-gtags
+      (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+      (define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+      (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+      (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+      (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+      (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history))))
+#+end_src
+
+* Helm-bibtex
+And now the bit by Ista Zahn in tip from: https://github.com/izahn/dotemacs but modified to use helm instead of ivy.
+This allows you to search your BibTeX files for references to insert into the current document. For it to work you will need to set `bibtex-completion-bibliography` to the location of your BibTeX files.
+Initiate a citation search with ivy-bibtex, bound to =C-c r= (not working, of course. This is the keybinding for revert buffer.)
+
+Commented out by DGM: not sure it is working and I can use ivy with helm
+
+From https://github.com/tmalsburg/helm-bibtex: Helm-bibtex and ivy-bibtex allow you to search and manage your BibTeX bibliography. They both share the same generic backend, bibtex-completion, but one uses the Helm completion framework and the other Ivy as a front-end.
+
+#+begin_src emacs-lisp :tangle yes
+;; (setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
+(use-package helm-bibtex
+  :ensure t)
+;; (global-set-key (kbd "<s-backspace>") 'helm-bibtex) ;; not needed. Already in =C-c ]=. <s-backspace> relocated to helm-swoop. Aunque ojo que en Olivetti mode =C-c ]= esta' bound to another thing.
+#+end_src
+
+#+RESULTS:
+: helm-bibtex
+
+Tip from =titus= for =helm-bibtex=: I use the menu key as the prefix key for all helm commands and bind helm-bibtex to b. Helm-bibtex can then be started using <menu> b. It is also useful to bind helm-resume to <menu> in helm-command-map. With this binding, <menu> <menu> can be used to reopen the last helm search.
+
+** Bibtex-completion
+
+Bibtex-completion depends on helm-bibtex. That's why I paste it here. A minimal configuration involves telling =bibtex-completion= where your bibliographies can be found. I am leaving it as not a list.
+
+#+BEGIN_EXAMPLE
+(setq bibtex-completion-bibliography 
+      '("/media/dgm/blue/documents/bibs/socbib.bib"))  
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
+#+END_SRC
+
+#+RESULTS:
+: /media/dgm/blue/documents/bibs/socbib.bib
+
+Specify where PDFs can be found: =Bibtex-completion= assumes that the name of a PDF consists of the BibTeX key followed plus a user-defined suffix (.pdf by default). For example, if a BibTeX entry has the key Darwin1859, bibtex-completion searches for Darwin1859.pdf.
+
+I am commenting out as I have the variable =helm-bibtex-library-path= in =starter-kit-helm.org=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq bibtex-completion-library-path '("/media/dgm/blue/documents/elibrary/org/references/pdfs"))
+#+END_SRC
+
+#+RESULTS:
+| /media/dgm/blue/documents/elibrary/org/references/pdfs/ |
+
+
+Bibtex-completion supports two methods for storing notes. It can either store all notes in one file or store notes in multiple files, one file per publication. In the first case, the customization variable bibtex-completion-notes-path has to be set to the full path of the notes file:
+I am commenting it out as I have the variable =helm-bibtex-notes-path= in =starter-kit-helm.org=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq bibtex-completion-notes-path "/media/dgm/blue/documents/elibrary/org/references")
+#+END_SRC
+
+#+RESULTS:
+: /media/dgm/blue/documents/elibrary/org/references/readings.org
+
+(See also Kitchin on setting these paths here https://github.com/jkitchin/org-ref.)
+
+Symbols used for indicating the availability of notes and PDF files
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq bibtex-completion-pdf-symbol "⌘")
+(setq bibtex-completion-notes-symbol "✎")
+#+END_SRC
+
+#+RESULTS:
+: ✎
+
+Open pdf with system pdf viewer
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq bibtex-completion-pdf-open-function 'org-open-file)
+#+END_SRC
+
+#+RESULTS:
+: org-open-file
+
+** The Reddit workflow
+
+From: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/
+
+With this setup helm-bibtex points to the same notes file as =org-ref=. Just run =M-x helm-bibtex= (=C-]=) and select the article you want. Instead of pressing =<return>=, press =<tab>=. This opens up helm's alternate action list where you can choose to =Edit notes=. This opens up the exact notes file created by org-ref.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+ (setq helm-bibtex-bibliography "/media/dgm/blue/documents/bibs/socbib.bib" 
+       helm-bibtex-library-path "/media/dgm/blue/documents/elibrary/org/references/pdfs/"
+       helm-bibtex-notes-path "/media/dgm/blue/documents/elibrary/org/references/readings.org")
+#+END_SRC
+
+#+RESULTS:
+: /media/dgm/blue/documents/elibrary/org/references/readings.org
+
+* Uncle Dave
+
+Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs and Tuhdo  https://tuhdo.github.io/helm-intro.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
+;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
+#+END_SRC
+
+#+RESULTS:
+: helm-select-action
+
+* Projectile 
+
+I kept loosing my projects in external drives upon re-start. My attempt to keep them thru magit is copied from https://emacs.stackexchange.com/questions/32634/how-can-the-list-of-projects-used-by-projectile-be-manually-updated/32635
+
+#+srcname: projectile
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Projectile
+(use-package projectile
+  :ensure t
+  :config 
+  (projectile-global-mode t)
+  (setq projectile-project-search-path '("~/.emacs.d/"
+                                         "~/texmf/"
+                                         "~/Dropbox/gtd/"
+                                         "/media/dgm/blue/documents/proyectos/mtj/"
+                                         "/media/dgm/blue/documents/dropbox/"
+                                         "/media/dgm/blue/documents/UNED/"
+                                         "/media/dgm/blue/documents/data/eurostat" 
+                                         "/media/dgm/blue/documents/programming"
+                                         "/media/dgm/blue/documents/My-Academic-Stuff"
+                                         "/media/dgm/blue/documents/personal"
+                                         "/home/dgm/Dropbox/gtd"
+                                         "/media/dgm/blue/documents/bibs"
+                                         "/media/dgm/blue/documents/templates"
+                                         "/media/dgm/blue/documents/proyectos/alianza"
+                                         "/media/dgm/blue/documents/cv"
+                                         "/media/dgm/blue/documents/backups"
+                                         "/media/dgm/blue/documents/UNED/teaching/mis-cursos"
+                                         "/media/dgm/blue/documents/reviews"
+                                         "/media/dgm/blue/documents/elibrary/org"
+                                         "/media/dgm/blue/documents/proyectos/D-PlanNacional2019"
+                                         "/media/dgm/blue/documents/elibrary/women-labor-market"))
+
+  (projectile-add-known-project "~/.emacs.d/")
+  (projectile-add-known-project  "~/texmf/")
+  (projectile-add-known-project "~/Dropbox/gtd/")
+  (projectile-add-known-project "/media/dgm/blue/documents/proyectos/mtj/")
+  (projectile-add-known-project "/media/dgm/blue/documents/dropbox/")
+  (projectile-add-known-project "/media/dgm/blue/documents/UNED/")
+  (projectile-add-known-project "/media/dgm/blue/documents/data/eurostat")
+  (projectile-add-known-project "/media/dgm/blue/documents/programming")
+  (projectile-add-known-project "/media/dgm/blue/documents/My-Academic-Stuff")
+  (projectile-add-known-project "/media/dgm/blue/documents/personal")  
+  (projectile-add-known-project "/home/dgm/Dropbox/gtd")  
+  (projectile-add-known-project "/media/dgm/blue/documents/bibs")  
+  (projectile-add-known-project "/media/dgm/blue/documents/templates")
+  (projectile-add-known-project "/media/dgm/blue/documents/proyectos/alianza/")
+  (projectile-add-known-project "/media/dgm/blue/documents/cv/")
+  (projectile-add-known-project "/media/dgm/blue/documents/backups")
+  (projectile-add-known-project "/media/dgm/blue/documents/UNED/teaching/mis-cursos/")
+  (projectile-add-known-project "/media/dgm/blue/documents/reviews/")
+  (projectile-add-known-project "/media/dgm/blue/documents/elibrary/org/")
+  (projectile-add-known-project "/media/dgm/blue/documents/proyectos/D-PlanNacional2019/")
+  (projectile-add-known-project "/media/dgm/blue/documents/elibrary/women-labor-market/")
+  
+  (when (require 'magit nil t)
+    (mapc #'projectile-add-known-project
+          (mapcar #'file-name-as-directory (magit-list-repos)))
+    ;; Optionally write to persistent `projectile-known-projects-file'
+    (projectile-save-known-projects)))
+
+;; from: https://github.com/bbatsov/projectile#usage
+(projectile-mode +1) ;; You now need to explicitly enable projectile and set a prefix. See      https://stackoverflow.com/questions/31421106/why-emacs-project-c-c-p-is-undefined, I guess it's already done with (projectile-global-mode t) in the use-package settings... but just in case.
+;;(define-key projectile-mode-map (kbd "s--") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+(setq projectile-enable-caching nil) ;; update 22 nov 2018. In C-h v projectile-indexing-method they recommend to have it set to alien to have this other variable set to true. If it does not work, revert to instructions in emacs's cheatsheet.
+;; (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
+;; https://github.com/bbatsov/projectile/issues/1183
+;; trying to fix slow behaviour of emacs
+(setq projectile-mode-line
+      '(:eval (format " Projectile[%s]"
+                      (projectile-project-name))))
+#+END_SRC
+
+*** Tuhdo's set up
+
+#+begin_src emacs-lisp :tangle no
+(use-package projectile
+  :init
+  (projectile-global-mode)
+  (setq projectile-enable-caching t))
+#+end_src
+
+** Helm-Projectile
+
+#+srcname: helm-projectile
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-projectile
+  :ensure t
+  :after helm-mode 
+  :init     
+  (helm-projectile-on)
+  (setq projectile-completion-system 'helm)
+  :commands helm-projectile
+  ;;   :bind ("C-c p h" . helm-projectile)
+  )
+
+;; (define-key projectile-mode-map [?\s-u] 'helm-projectile-find-file-in-known-projects) 
+(setq projectile-switch-project-action 'helm-projectile)
+(global-set-key (kbd "s-h") 'helm-projectile)
+;; from https://projectile.readthedocs.io/en/latest/usage/
+;; You can go one step further and set a list of folders which Projectile is automatically going to check for projects. But in reality, if I re-start the computer, Projectile does not recall this list. 
+#+END_SRC
+
+#+RESULTS: helm-projectile
+: helm-projectile
+
+#+RESULTS: projectile
+| :eval | (format  Projectile[%s] (projectile-project-name)) |
+
+Need to use =helm-projectile-find-other-file=. See https://tuhdo.github.io/helm-projectile.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq projectile-other-file-alist '(("cpp" "h" "hpp" "ipp")
+                                    ("ipp" "h" "hpp" "cpp")
+                                    ("hpp" "h" "ipp" "cpp")
+                                    ("cxx" "hxx" "ixx")
+                                    ("ixx" "cxx" "hxx")
+                                    ("hxx" "ixx" "cxx")
+                                    ("c" "h")
+                                    ("m" "h")
+                                    ("mm" "h")
+                                    ("h" "c" "cpp" "ipp" "hpp" "m" "mm")
+                                    ("cc" "hh")
+                                    ("hh" "cc")
+                                    ("vert" "frag")
+                                    ("frag" "vert")
+                                    (nil "lock" "gpg")
+                                    ("lock" "")
+                                    ("gpg" "")))
+
+(add-to-list 'projectile-other-file-alist '("org" "el")) ;; switch from org -> el 
+(add-to-list 'projectile-other-file-alist '("el" "org")) ;; switch from el -> org 
+(add-to-list 'projectile-other-file-alist '("Rnw" "R"))
+(add-to-list 'projectile-other-file-alist '("R" "Rnw"))
+(add-to-list 'projectile-other-file-alist '("Rnw" "tex"))
+(add-to-list 'projectile-other-file-alist '("tex" "Rnw"))
+(add-to-list 'projectile-other-file-alist '("org" "tex"))
+(add-to-list 'projectile-other-file-alist '("tex" "org"))
+(add-to-list 'projectile-other-file-alist '("tex" "log"))
+(add-to-list 'projectile-other-file-alist '("log" "tex"))
+(add-to-list 'projectile-other-file-alist '("org" "html"))
+(add-to-list 'projectile-other-file-alist '("html" "org"))
+#+END_SRC
+
+#+RESULTS:
+| html | org  |     |     |     |   |    |
+| org  | html |     |     |     |   |    |
+| log  | tex  |     |     |     |   |    |
+| tex  | log  |     |     |     |   |    |
+| tex  | org  |     |     |     |   |    |
+| org  | tex  |     |     |     |   |    |
+| tex  | Rnw  |     |     |     |   |    |
+| Rnw  | tex  |     |     |     |   |    |
+| R    | Rnw  |     |     |     |   |    |
+| Rnw  | R    |     |     |     |   |    |
+| el   | org  |     |     |     |   |    |
+| org  | el   |     |     |     |   |    |
+| cpp  | h    | hpp | ipp |     |   |    |
+| ipp  | h    | hpp | cpp |     |   |    |
+| hpp  | h    | ipp | cpp |     |   |    |
+| cxx  | hxx  | ixx |     |     |   |    |
+| ixx  | cxx  | hxx |     |     |   |    |
+| hxx  | ixx  | cxx |     |     |   |    |
+| c    | h    |     |     |     |   |    |
+| m    | h    |     |     |     |   |    |
+| mm   | h    |     |     |     |   |    |
+| h    | c    | cpp | ipp | hpp | m | mm |
+| cc   | hh   |     |     |     |   |    |
+| hh   | cc   |     |     |     |   |    |
+| vert | frag |     |     |     |   |    |
+| frag | vert |     |     |     |   |    |
+| nil  | lock | gpg |     |     |   |    |
+| lock |      |     |     |     |   |    |
+| gpg  |      |     |     |     |   |    |
+
+** Advice from Tuhdo for ignoring files
+
+From https://github.com/bbatsov/projectile/issues/184
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list 'projectile-globally-ignored-files "*.png")
+(setq projectile-globally-ignored-file-suffixes '(".cache"))
+#+END_SRC
+
+#+RESULTS:
+| .cache |
+
+** Tuhdo on indexing method
+
+#+BEGIN_EXAMPLE
+(use-package helm-projectile
+  :init
+  (helm-projectile-on)
+  (setq projectile-completion-system 'helm)
+  (setq projectile-indexing-method 'alien))))
+#+END_EXAMPLE
+** Various =helm-projectile= shortcuts
+
+#+begin_src emacs-lisp :tangle yes
+;; (define-key projectile-mode-map [?\s-d] 'projectile-switch-project)
+(define-key projectile-mode-map [?\s-\|] 'helm-projectile-find-file-dwim)
+(define-key projectile-mode-map [?\s-\`] 'helm-projectile-find-other-file)
+(define-key projectile-mode-map [?\s-\*] 'helm-projectile-find-dir)
+(define-key projectile-mode-map [?\s-j] 'helm-projectile-find-file)
+(define-key projectile-mode-map [?\s-n] 'helm-projectile-switch-to-buffer)
+;;(define-key projectile-mode-map [?\s-y] 'projectile-ag) ;; this is not working. 
+#+end_src
+
+#+RESULTS:
+: helm-projectile-switch-to-buffer
+* helm-man-woman
+
+With helm-man-woman, you can quickly jump to any man entry using the Helm interface, either by typing in Helm prompt or if the point is on a symbol, opening the man page at point. To enable man page at point, add the following code: 
+
+#+begin_src emacs-lisp :tangle yes
+(add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
+(global-set-key (kbd "s-m") 'helm-man-woman)
+#+end_src
+
+#+RESULTS:
+| helm-source-imenu | helm-source-imenu-all | helm-source-info-elisp | helm-source-etags-select | helm-source-man-pages | helm-source-occur | helm-source-moccur | helm-source-grep-ag | helm-source-grep-git | helm-source-grep |
+
+* Grep, Ack, AG
+** COMMENT =helm-ack=
+
+=C-x C-f= you start a =helm-find-files= session. There you can do =C-s= to recursively grep a selected directory.  Every time you type a character, helm updates grep result immediately. You can use ack-grep to replace grep with this configuration:
+
+DGM, 4 sept 2019: not sure ack is better than grep.
+
+#+begin_src emacs-lisp :tangle no
+(use-package helm-ack)
+
+(when (executable-find "ack-grep")
+  (setq helm-grep-default-command "ack-grep -Hn --no-group --no-color %e %p %f"
+        helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f"))
+#+end_src
+
+#+RESULTS:
+
+** Grep in Projectile project
+
+#+begin_src emacs-lisp :tangle yes
+ (global-set-key (kbd "s-g") 'helm-projectile-grep)
+ ;; (global-set-key (kbd "s-f") 'helm-projectile-ag)
+
+#+end_src
+
+#+RESULTS:
+: helm-projectile-grep
+
+*** Customization
+https://github.com/emacs-helm/helm/wiki/Grep
+
+#+begin_src emacs-lisp :tangle yes
+(setq helm-grep-default-command
+      "grep --color=always -d skip %e -n%cH -e %p %f"
+      helm-grep-default-recurse-command
+      "grep --color=always -d recurse %e -n%cH -e %p %f")
+#+end_src
+
+#+RESULTS:
+: grep --color=always -d recurse %e -n%cH -e %p %f
+
+* =helm-ag=:  Interface with Ag ("The Silver Searcher")
+
+The Silver Searcher is grep-like program implemented by =C=. An attempt to make something better than =ack-grep=.
+
+It searches pattern about 3–5x faster than ack-grep. It ignores file patterns from your .gitignore and .hgignore. 
+
+[[https://github.com/ggreer/the_silver_searcher][The Silver Searcher]] is a very fast, smart code search tool, similar to ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://github.com/Wilfred/ag.el/#agel][described here]].
+
+
+NB: =helm-projectile-ag= resulta en un formato ilegible. =helm-ag= resulta en un formato legible, luego uso esta.
+
+** Critical options: 
+
+1. =-n --norecurse= Don't recurse into directories 
+2. =-r --recurse= Recurse into directories when searching. Default it true.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Originally in starter-kit-bindings.org like this
+;;  (require 'ag)
+;;  (define-key global-map "\C-x\C-a" 'ag) 
+;;  (define-key global-map "\C-x\C-r" 'ag-regexp)
+
+;; new bindings by DGM to try and use 'helm-ag
+;;  (define-key global-map "\C-x\C-a" 'helm-ag) 
+;;  (define-key global-map "\C-x\C-r" 'helm-ag-regexp)
+
+(use-package ag 
+  :ensure t)
+
+(use-package helm-ag
+  :ensure t
+  :after (helm-mode ag)
+  :bind ("s-f" . helm-ag)
+  :init (setq helm-ag-base-command "/usr/bin/ag"
+              helm-ag-insert-at-point t
+              helm-ag-fuzzy-match     t
+              helm-ag-command-option " --hidden" 
+              helm-ag-use-agignore t))
+#+END_SRC
+
+#+RESULTS:
+: helm-projectile-ag
+
+
+** Customization
+
+https://github.com/emacs-helm/helm/wiki/Grep
+
+#+begin_src emacs-lisp :tangle yes
+(setq helm-grep-ag-command "ag --line-numbers -S --hidden --color --color-match '31;43' --nogroup %s %s %s")
+(setq helm-grep-ag-pipe-cmd-switches '("--color-match '31;43'"))
+#+end_src
+
+#+RESULTS:
+| --color-match '31;43' |
+
+* EXWM
+
+Basic commands with for interfacing with =exwm= with =helm=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(with-eval-after-load 'helm
+  ;; Need `with-eval-after-load' here since 'helm-map is not defined in 'helm-config.
+  ;;  (ambrevar/define-keys helm-map "s-\\" 'helm-toggle-resplit-and-swap-windows) ;; already used in starter-kit-exwm.org for ambrevar/toggle-window-split
+  ;; (exwm-input-set-key (kbd "s-c") #'helm-resume)  ;; get the latest helm thing you did!, i.e., reopen the last helm search. Hey: if I enable this line, instead of helm-resume I get helm-occur. Why?
+  ;; (exwm-input-set-key (kbd "s-b") #'helm-mini) ;; not needed as already in =C-x b=
+  ;; (exwm-input-set-key (kbd "s-f") #'helm-find-files) ;; already in C-x C-f
+  ;; (exwm-input-set-key (kbd "s-:") #'helm-for-files) ;; tuhdo doesn't use it, so it goes
+  (exwm-input-set-key (kbd "s-D") #'helm-locate)
+  (exwm-input-set-key (kbd "s-d") #'helm-find))
+  ;;(when (fboundp 'ambrevar/helm-locate-meta)
+  ;;  (exwm-input-set-key (kbd "!!here") #'ambrevar/helm-locate-meta))
+  ;; (exwm-input-set-key (kbd "s-F") #'helm-ag)
+  ;; (exwm-input-set-key (kbd "s-f") #'helm-do-grep-ag))
+  ;;(exwm-input-set-key (kbd "s-g") 'ambrevar/helm-grep-git-or-ag)
+  ;;(exwm-input-set-key (kbd "s-G") 'ambrevar/helm-grep-git-all-or-ag))
+#+END_SRC
+
+#+RESULTS:
+
+** EXWM buffers with helm. Also: make =helm-mini= almighty
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (require 'helm-bookmark)
+
+  (use-package helm-exwm)
+  ;; (when (require 'helm-exwm nil t)
+  (add-to-list 'helm-source-names-using-follow "EXWM buffers")
+  (setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
+  (setq helm-exwm-source (helm-exwm-build-source))
+  (setq helm-mini-default-sources `(helm-exwm-emacs-buffers-source
+                                    helm-exwm-source
+                                    helm-source-buffers-list
+                                    helm-source-recentf
+                                    ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
+                                    helm-source-bookmarks
+                                    helm-source-bookmark-set
+                                    helm-source-buffer-not-found))
+
+  ;; Not sure how this works
+  ;;(ambrevar/define-keys helm-exwm-map
+  ;;   "s-!" 'helm-buffer-run-kill-persistent
+  ;;   "s-#" 'helm-buffer-switch-other-window)
+  ;; The above does not work and I don't know what is meant to do
+
+  ;; next two lines work in the context of a helm menu like the one triggered with =C-x b=
+  (global-set-key (kbd "C-c h w") 'helm-buffer-switch-other-window)
+  (global-set-key (kbd "C-c h k") 'helm-buffer-run-kill-persistent)
+
+  ;; Launcher
+  (exwm-input-set-key (kbd "s-e") 'helm-run-external-command)
+
+  ;; Web browser. Turned off by DGM on 22 august 2019
+  ;; (exwm-input-set-key (kbd "M-s-j") #'helm-exwm-switch-browser)               ;; I don't use these two and I don't see the user case.
+  ;; (exwm-input-set-key (kbd "s-j")   #'helm-exwm-switch-browser-other-window)  ;; not using it
+#+END_SRC
+
+#+RESULTS:
+
+* Allowing =ido= mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun ido-recentf-open ()
+  "Use `ido-completing-read' to find a recent file."
+  (interactive)
+  (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+      (message "Opening file...")
+    (message "Aborting")))
+
+(global-set-key (kbd "C-x f") 'ido-recentf-open)
+
+(add-to-list 'helm-completing-read-handlers-alist '(ido-recentf-open  . ido))
+#+END_SRC
+
+
+* Quit Helm with one key stroke
+
+Often when invoking helm and wanting to cancel, I have to press =C-g= multiple times. Trying here to reduce it to one time.
+
+From: https://www.reddit.com/r/emacs/comments/7eboyr/closing_helmmx_with_single_key_press/
+
+Originally i had also =(define-key helm-M-x-map (kbd "ESC") 'helm-keyboard-quit)= but then I got the message "(void-variable helm-M-x-map)" and could not use Helm.
+
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'helm-after-initialize-hook
+          (lambda()
+            (define-key helm-buffer-map (kbd "C-g") 'helm-keyboard-quit)
+            (define-key helm-map (kbd "C-g") 'helm-keyboard-quit)))
+#+END_SRC
+
+#+RESULTS:
+| (lambda nil (define-key helm-buffer-map (kbd C-g) 'helm-keyboard-quit) (define-key helm-map (kbd C-g) 'helm-keyboard-quit)) | (lambda nil (define-key helm-buffer-map (kbd ESC) 'helm-keyboard-quit) (define-key helm-map (kbd ESC) 'helm-keyboard-quit)) | helm-reset-yank-point |
+
+* =org-rifle=
+
+See https://github.com/alphapapa/org-rifle
+
+=org-rifle= searches in your notes as you type and it finds the search words in any order which makes it very easy and quick to find a given note.
+
+What does my rifle do? It searches rapidly through my Org files. It searches both headings and contents of entries in Org buffers, and it displays entries that match all search terms, whether the terms appear in the heading, the contents, or both. Matching portions of entries’ contents are displayed with surrounding context and grouped by buffer to make it easy to acquire your target.'
+
+In contrast with org-occur and similar commands, helm-org-rifle is entry-based (i.e. a heading and all of its contents, not including subheadings), while org-occur is line-based. So org-occur will show you entire lines that contain matching words, without any reference to the heading the line is under, while helm-org-rifle will show the heading of the entry that matches, followed by context around each matching word in the entry. In other words, helm-org-rifle is sort of like Google, while org-occur is sort of like grep.
+
+Entries are fontified by default to match the appearance of an Org buffer, and optionally the entire path can be displayed for each entry, rather than just its own heading.
+
+** Usage
+
+Run one of the rifle commands, type some words, and results will be displayed, grouped by buffer. Hit RET to show the selected entry, or <C-return> to show it in an indirect buffer.
+
+*** Helm commands: show results in a Helm buffer
+
+- helm-org-rifle: Show results from all open Org buffers
+- helm-org-rifle-agenda-files: Show results from Org agenda files
+- helm-org-rifle-current-buffer: Show results from current buffer
+- helm-org-rifle-directories: Show results from selected directories; with prefix, recursively
+- helm-org-rifle-files: Show results from selected files
+- helm-org-rifle-org-directory: Show results from Org files in org-directory
+
+*** Occur commands: show results in an occur-like, persistent buffer
+
+- helm-org-rifle-occur: Show results from all open Org buffers
+- helm-org-rifle-occur-agenda-files: Show results from Org agenda files
+- helm-org-rifle-occur-current-buffer: Show results from current buffer
+- helm-org-rifle-occur-directories: Show results from selected directories; with prefix, recursively
+- helm-org-rifle-occur-files: Show results from selected files
+- helm-org-rifle-occur-org-directory: Show results from Org files in org-directory
+
+*** Tips
+- Select multiple entries in the Helm buffer to display selected entries in a read-only, occur-style buffer.
+- Save all results in a Helm buffer to a helm-org-rifle-occur buffer by pressing C-s (like helm-grep-save-results).
+- Show results from certain buffers by typing the name of the buffer (usually the filename).
+- Show headings with certain to-do keywords by typing the keyword, e.g. TODO or DONE.
+- Multiple to-do keywords are matched with boolean OR.
+- Show headings with certain priorities by typing, e.g. #A or [#A].
+- Show headings with certain tags by searching for, e.g. :tag1:tag2:.
+- Negate matches with a !, e.g. pepperoni !anchovies.
+- Sort results by timestamp or buffer-order (the default) by calling commands with a universal prefix (C-u).
+- Show entries in an indirect buffer by selecting that action from the Helm actions list, or by pressing <C-return>.
+- The keymap for helm-org-rifle-occur results buffers imitates the org-speed keys, making it quicker to navigate. You can also collapse and expand headings and drawers with TAB and S-TAB, just like in regular Org buffers. Results buffers are marked read-only so you cannot modify them by accidental keypresses.
+ - Delete the result at point in helm-org-rifle-occur buffers by pressing d. This does not alter the source buffers but simply removes uninteresting results from view.
+- You can customize the helm-org-rifle group if you like.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package helm-org-rifle
+  :ensure t
+  :bind ("s-u" . helm-org-rifle))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23904 2416 473789 40000) :init (23904 2416 473492 686000) :init-secs (0 0 130 631000) :use-package-secs (0 0 667 779000)))
+
+
+Customization by the great malb: (https://github.com/malb/emacs.d/blob/master/malb.org)
+
+#+begin_src emacs-lisp :tangle yes
+(use-package helm-org-rifle
+  :ensure t
+  :commands (helm-org-rifle-agenda-files helm-org-rifle-occur-agenda-files malb/helm-org-rifle-agenda-files)
+  :config (progn
+            (defun malb/helm-org-rifle-agenda-files (arg)
+              (interactive "p")
+              (let ((current-prefix-arg nil))
+                (cond
+                 ((equal arg 4) (call-interactively #'helm-org-rifle-agenda-files nil))
+                 ((equal arg 16) (helm-org-rifle-occur-agenda-files))
+                 (t (helm-org-agenda-files-headings))))))
+  :bind ("s-u" . helm-org-rifle))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23957 2239 822862 619000) :init (23957 2239 822570 651000) :init-secs (0 0 1124 727000) :use-package-secs (0 0 1664 722000) :config (23957 2239 822513 825000) :config-secs (0 0 1030 942000)))
+
+* Look at the Emacs or Elisp manual with helm
+
+From: https://www.reddit.com/r/emacs/comments/cuc8hl/how_do_you_remember_various_features_of_emacs/
+
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun ap/helm-info-emacs-elisp-cl ()
+  "Helm for Emacs, Elisp, and CL-library info pages."
+  (interactive)
+  (helm :sources '(helm-source-info-emacs
+                   helm-source-info-elisp
+                   helm-source-info-cl)))
+
+(global-set-key (kbd "s-\)") 'ap/helm-info-emacs-elisp-cl)
+#+END_SRC
+
+#+RESULTS:
+: ap/helm-info-emacs-elisp-cl
+
+* Worf and hydra
+
+=worf= needs =hydra=
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package hydra)
+(use-package worf)
+#+END_SRC
+
+** COMMENT Worf costumization to work as a search engine across org headers
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;; ——— WORF Utilities ———————————————————————————————————————————————————————————————
+;; https://github.com/abo-abo/worf/blob/master/worf.el
+(defun worf--pretty-heading (str lvl)
+  "Prettify heading STR or level LVL."
+  (setq str (or str ""))
+  (setq str (propertize str 'face (nth (1- lvl) org-level-faces)))
+  (let (desc)
+    (while (and (string-match org-bracket-link-regexp str)
+                (stringp (setq desc (match-string 3 str))))
+      (setq str (replace-match
+                 (propertize desc 'face 'org-link)
+                 nil nil str)))
+    str))
+(defun worf--pattern-transformer (x)
+  "Transform X to make 1-9 select the heading level in `worf-goto'."
+  (if (string-match "^[1-9]" x)
+      (setq x (format "^%s" x))
+    x))
+
+(defun worf-goto ()
+  "Jump to a heading with `helm'."
+  (interactive)
+  (require 'helm-match-plugin) ;; commented out by DGM as I think it is not needed. See https://stackoverflow.com/questions/19098272/initialization-error-caused-by-helm-match-plugin
+  (let ((candidates
+         (org-map-entries
+          (lambda ()
+            (let ((comp (org-heading-components))
+                  (h (org-get-heading)))
+              (cons (format "%d%s%s" (car comp)
+                            (make-string (1+ (* 2 (1- (car comp)))) ?\ )
+                            (if (get-text-property 0 'fontified h)
+                                h
+                              (worf--pretty-heading (nth 4 comp) (car comp))))
+                    (point))))))
+        helm-update-blacklist-regexps
+        helm-candidate-number-limit)
+    (helm :sources
+          `((name . "Headings")
+            (candidates . ,candidates)
+            (action . (lambda (x) (goto-char x)
+                        (call-interactively 'show-branches)
+                        (worf-more)))
+            (pattern-transformer . worf--pattern-transformer)))))
+
+(global-set-key (kbd "C-=") 'worf-goto)
+#+END_SRC
+
+#+RESULTS:
+: worf-goto
+
+* Org in buffer heading search
+
+=defun= included as the function has disappeared after today's package upgrade! (2 October 2019) I need to intall =helm-org= to get it working! 
+
+[[https://github.com/emacs-helm/helm-org][Helm for org headlines and keywords completion]]
+
+- Used by the great malb: https://github.com/malb/emacs.d/blob/master/malb.org
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package helm-org
+  :config (progn
+            (setq helm-org-headings-fontify t)
+
+            (defun malb/helm-in-buffer ()
+              "The right kind™ of buffer menu."
+              (interactive)
+              (if (eq major-mode 'org-mode)
+                  (call-interactively #'helm-org-in-buffer-headings)
+                (call-interactively #'helm-semantic-or-imenu)))))
+
+(global-set-key (kbd "s-p") 'helm-org-in-buffer-headings)
+#+END_SRC
+
+#+RESULTS:
+: helm-org-in-buffer-headings
+
+* Helm-color
+#+begin_src emacs-lisp :tangle yes
+(global-set-key (kbd "s-c") 'helm-colors) 
+#+end_src
+
+#+RESULTS:
+: helm-colors
+
+
+* Provide
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(provide 'starter-kit-helm)
+#+END_SRC
+
+#+RESULTS:
+: starter-kit-helm
+
+* Final message
+#+source: message-line
+#+begin_src emacs-lisp :tangle yes
+(message "Starter Kit Helm File loaded.")
+#+end_src
+
+#+RESULTS: message-line
+: Starter Kit User File loaded.
+
