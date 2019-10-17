@@ -6220,6 +6220,22 @@ Use `winstack-push' and
 #+RESULTS:
 : bookmark-bmenu-list
 
+* Pomidor
+#+begin_src emacs-lisp :tangle yes
+(use-package pomidor
+  :bind (("s-@" . pomidor))
+  :config (setq pomidor-sound-tick nil
+                pomidor-sound-tack nil)
+  :hook (pomidor-mode . (lambda ()
+                          (display-line-numbers-mode -1) ; Emacs 26.1+
+                          (setq left-fringe-width 0 right-fringe-width 0)
+                          (setq left-margin-width 2 right-margin-width 0)
+                          ;; force fringe update
+                          (set-window-buffer nil (current-buffer)))))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23976 34920 197166 850000) :init (23976 34920 197084 642000) :init-secs (0 0 105 469000) :use-package-secs (0 9 772091 107000)))
 
 * Provide
 
@@ -6244,3 +6260,4 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 
 
+.
