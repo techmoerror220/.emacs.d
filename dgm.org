@@ -5533,8 +5533,20 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c @"
                     :description "Insert as Org link current highlighted file in P session")
     (cheatsheet-add :group 'Org
-                    :key "M-Shift-<right>"
-                    :description "Demote heading and all subheadings")
+                    :key "M-Shift-<up/down>"
+                    :description "org-shiftmetaup. Moves subtree heading BUT not its contents. Drag the line at point up.In a table, kill the current row.On a clock timestamp, update the value of the timestamp like S-<up>")
+    (cheatsheet-add :group 'Org
+                    :key "M-<up/down>"
+                    :description "org-move-subtree-up. On same level, swaps subtree with other subtrees tree--heading and contents. Same as typing =U/D=")
+    (cheatsheet-add :group 'Org
+                    :key "M-Shift-<right/left>"
+                    :description "Demote/Promote heading and all subheadings. Same as typing =R/L= on the heading")
+    (cheatsheet-add :group 'Org
+                    :key "M--<right/left>"
+                    :description "Demote/Promote heading BUT NOT subheadings. Same as typing =r/l= on the heading")
+    (cheatsheet-add :group 'Org
+                    :key "Shift-<left/right>"
+                    :description "org-shiftright. On subtree heading, cycles TODO word")
     (cheatsheet-add :group 'Org
                     :key "r"
                     :description "Positioned on stars of heading, demote heading but not subheadings")
@@ -5799,7 +5811,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "Insert raw code under a heading")
     (cheatsheet-add :group 'Org-table
                     :key "M-Shift-<down>"
-                    :description "Insert a new row above the current row. With a prefix argument, the line is created below the current one")
+                    :description "Insert a new row above the current row. With a prefix argument, the line is created below the current one. Can do the same with C-o")
     (cheatsheet-add :group 'Org-table
                     :key "C-c ^-"
                     :description "org-sort. With cursor on a column, a will short the table alphabetically; n numerically. Capitals reverse sorting")
