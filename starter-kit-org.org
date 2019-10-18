@@ -1003,6 +1003,584 @@ From https://stackoverflow.com/questions/10635989/emacs-org-agenda-list-destroy-
 : current-window
 
 ** Custom agenda commands in overview  
+*** Project definition and finding stuck projects (Bernt Hansen)
+:PROPERTIES:
+:CUSTOM_ID: Projects
+:END:
+
+I'm using a new lazy project definition to mark tasks as projects.
+This requires zero effort from me.  Any task with a subtask using a
+todo keyword is a project.  Period.
+
+Projects are 'stuck' if they have no subtask with a =NEXT= todo
+keyword task defined.
+
+The org-mode stuck projects agenda view lists projects that have no
+=NEXT= task defined.  Stuck projects show up on my block agenda and I
+tend to assign a =NEXT= task so the list remains empty.  This helps to
+keep projects moving forward.
+
+I disable the default org-mode stuck projects agenda view with the
+following setting.
+
+#+header: :tangle no
+#+begin_src emacs-lisp
+  (setq org-stuck-projects (quote ("" nil nil "")))
+#+end_src
+
+This prevents org-mode from trying to show incorrect data if I select
+the default stuck project view with =F12 #= from the agenda menu.  My
+customized stuck projects view is part of my block agenda displayed
+with =F12 SPC=.
+
+Projectsg can have subprojects - and these subprojects can also be stuck.
+Any project that is stuck shows up on the stuck projects list so I can
+indicate or create a =NEXT= task to move that project forward.
+
+In the following example =Stuck Project A= is stuck because it has no
+subtask which is =NEXT=.  =Project C= is not stuck because it has
+=NEXT= tasks =SubTask G= and =Task I=.  =Stuck Sub Project D= is stuck
+because =SubTask E= is not =NEXT= and there are no other tasks
+available in this project.
+
+#+header: :tangle yes
+#+begin_src emacs-lisp
+  (defun bh/skip-habits ()
+    "Skip habits"
+    (save-restriction
+      (widen)
+      (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+        (if (org-is-habit-p)
+            next-headline
+          nil))))
+
+  (defun bh/is-project-p ()
+    "Any task with a todo keyword subtask"
+    (save-restriction
+      (widen)
+      (let ((has-subtask)
+            (subtree-end (save-excursion (org-end-of-subtree t)))
+            (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+        (save-excursion
+          (forward-line 1)
+          (while (and (not has-subtask)
+                      (< (point) subtree-end)
+                      (re-search-forward "^\*+ " subtree-end t))
+            (when (member (org-get-todo-state) org-todo-keywords-1)
+              (setq has-subtask t))))
+        (and is-a-task has-subtask))))
+
+  (defun bh/is-project-subtree-p ()
+    "Any task with a todo keyword that is in a project subtree.
+  Callers of this function already widen the buffer view."
+    (let ((task (save-excursion (org-back-to-heading 'invisible-ok)
+                                (point))))
+      (save-excursion
+        (bh/find-project-task)
+        (if (equal (point) task)
+            nil
+          t))))
+
+  (defun bh/is-task-p ()
+    "Any task with a todo keyword and no subtask"
+    (save-restriction
+      (widen)
+      (let ((has-subtask)
+            (subtree-end (save-excursion (org-end-of-subtree t)))
+            (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+        (save-excursion
+          (forward-line 1)
+          (while (and (not has-subtask)
+                      (< (point) subtree-end)
+                      (re-search-forward "^\*+ " subtree-end t))
+            (when (member (org-get-todo-state) org-todo-keywords-1)
+              (setq has-subtask t))))
+        (and is-a-task (not has-subtask)))))
+
+  (defun bh/is-subproject-p ()
+    "Any task which is a subtask of another project"
+    (let ((is-subproject)
+          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+      (save-excursion
+        (while (and (not is-subproject) (org-up-heading-safe))
+          (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+            (setq is-subproject t))))
+      (and is-a-task is-subproject)))
+
+  (defun bh/list-sublevels-for-projects-indented ()
+    "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
+    This is normally used by skipping functions where this variable is already local to the agenda."
+    (if (marker-buffer org-agenda-restrict-begin)
+        (setq org-tags-match-list-sublevels 'indented)
+      (setq org-tags-match-list-sublevels nil))
+    nil)
+
+  (defun bh/list-sublevels-for-projects ()
+    "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
+    This is normally used by skipping functions where this variable is already local to the agenda."
+    (if (marker-buffer org-agenda-restrict-begin)
+        (setq org-tags-match-list-sublevels t)
+      (setq org-tags-match-list-sublevels nil))
+    nil)
+
+  (defvar bh/hide-scheduled-and-waiting-next-tasks t)
+
+  (defun bh/toggle-next-task-display ()
+    (interactive)
+    (setq bh/hide-scheduled-and-waiting-next-tasks (not bh/hide-scheduled-and-waiting-next-tasks))
+    (when  (equal major-mode 'org-agenda-mode)
+      (org-agenda-redo))
+    (message "%s WAITING and SCHEDULED NEXT Tasks" (if bh/hide-scheduled-and-waiting-next-tasks "Hide" "Show")))
+
+  (defun bh/skip-stuck-projects ()
+    "Skip trees that are not stuck projects"
+    (save-restriction
+      (widen)
+      (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+        (if (bh/is-project-p)
+            (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                   (has-next ))
+              (save-excursion
+                (forward-line 1)
+                (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
+                  (unless (member "WAITING" (org-get-tags-at))
+                    (setq has-next t))))
+                          (if has-next
+                              nil
+                            next-headline)) ; a stuck project, has subtasks but no next task
+          nil))))
+
+  (defun bh/skip-non-stuck-projects ()
+    p  "Skip trees that are not stuck projects"
+    ;; (bh/list-sublevels-for-projects-indented)
+    (save-restriction
+      (widen)
+      (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+        (if (bh/is-project-p)
+            (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                   (has-next ))
+              (save-excursion
+                (forward-line 1)
+                (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
+                  (unless (member "WAITING" (org-get-tags-at))
+                    (setq has-next t))))
+              (if has-next
+                  next-headline
+                nil)) ; a stuck project, has subtasks but no next task
+          next-headline))))
+
+  (defun bh/skip-non-projects ()
+    "Skip trees that are not projects"
+    ;; (bh/list-sublevels-for-projects-indented)
+    (if (save-excursion (bh/skip-non-stuck-projects))
+        (save-restriction
+          (widen)
+          (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+            (cond
+             ((bh/is-project-p)
+              nil)
+             ((and (bh/is-project-subtree-p) (not (bh/is-task-p)))
+              nil)
+             (t
+              subtree-end))))
+      (save-excursion (org-end-of-subtree t))))
+
+  (defun bh/skip-non-tasks ()
+    "Show non-project tasks.
+  Skip project and sub-project tasks, habits, and project related tasks."
+    (save-restriction
+      (widen)
+      (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+        (cond
+         ((bh/is-task-p)
+          nil)
+         (t
+          next-headline)))))
+
+  (defun bh/skip-project-trees-and-habits ()
+    "Skip trees that are projects"
+    (save-restriction
+      (widen)
+      (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+        (cond
+         ((bh/is-project-p)
+          subtree-end)
+         ((org-is-habit-p)
+          subtree-end)
+         (t
+          nil)))))
+
+  (defun bh/skip-projects-and-habits-and-single-tasks ()
+    "Skip trees that are projects, tasks that are habits, single non-project tasks"
+    (save-restriction
+      (widen)
+      (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+        (cond
+         ((org-is-habit-p)
+          next-headline)
+         ((and bh/hide-scheduled-and-waiting-next-tasks
+               (member "WAITING" (org-get-tags-at)))
+          next-headline)
+         ((bh/is-project-p)
+          next-headline)
+         ((and (bh/is-task-p) (not (bh/is-project-subtree-p)))
+          next-headline)
+         (t
+          nil)))))
+
+  (defun bh/skip-project-tasks-maybe ()
+    "Show tasks related to the current restriction.
+  When restricted to a project, skip project and sub project tasks, habits, NEXT tasks, and loose tasks.
+  When not restricted, skip project and sub-project tasks, habits, and project related tasks."
+    (save-restriction
+      (widen)
+      (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+             (next-headline (save-excursion (or (outline-next-heading) (point-max))))
+             (limit-to-project (marker-buffer org-agenda-restrict-begin)))
+        (cond
+         ((bh/is-project-p)
+          next-headline)
+         ((org-is-habit-p)
+          subtree-end)
+         ((and (not limit-to-project)
+               (bh/is-project-subtree-p))
+          subtree-end)
+         ((and limit-to-project
+               (bh/is-project-subtree-p)
+               (member (org-get-todo-state) (list "NEXT")))
+          subtree-end)
+         (t
+          nil)))))
+
+  (defun bh/skip-project-tasks ()
+    "Show non-project tasks.
+  Skip project and sub-project tasks, habits, and project related tasks."
+    (save-restriction
+      (widen)
+      (let* ((subtree-end (save-excursion (org-end-of-subtree t))))
+        (cond
+         ((bh/is-project-p)
+          subtree-end)
+         ((org-is-habit-p)
+          subtree-end)
+         ((bh/is-project-subtree-p)
+          subtree-end)
+         (t
+          nil)))))
+
+  (defun bh/skip-non-project-tasks ()
+    "Show project tasks.
+  Skip project and sub-project tasks, habits, and loose non-project tasks."
+    (save-restriction
+      (widen)
+      (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+             (next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+        (cond
+         ((bh/is-project-p)
+          next-headline)
+         ((org-is-habit-p)
+          subtree-end)
+         ((and (bh/is-project-subtree-p)
+               (member (org-get-todo-state) (list "NEXT")))
+          subtree-end)
+         ((not (bh/is-project-subtree-p))
+          subtree-end)
+         (t
+          nil)))))
+
+  (defun bh/skip-projects-and-habits ()
+    "Skip trees that are projects and tasks that are habits"
+    (save-restriction
+      (widen)
+      (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+        (cond
+         ((bh/is-project-p)
+          subtree-end)
+         ((org-is-habit-p)
+          subtree-end)
+         (t
+          nil)))))
+
+  (defun bh/skip-non-subprojects ()
+    "Skip trees that are not projects"
+    (let ((next-headline (save-excursion (outline-next-heading))))
+      (if (bh/is-subproject-p)
+          nil
+        next-headline)))
+#+end_src
+
+#+RESULTS:
+: bh/skip-non-subprojects
+
+Tip from https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html.
+
+Useful for using custom agenda commands to get an overview of actions by context or tag. Here's an example custom agenda command that will display all actions for the =@office= context. Following the GTD principle, what I usually want is to only show the first action to be done (or next action) for each project with the =@office= tag. That can be achieved using a skipping condition. I've tweak it so that I can have it work for entries tagged for the context "work" and for th context "home".
+
+HOWEVER I am not 100% sure how useful is all this because I have a nice option in C-c a to choose filtering by tag (/), etc.  Anyways, more info onagenda-custom-commands in http://orgmode.org/worg/org-tutorials/org-custom-agenda-commands.html.
+
+On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgtimeline/
+
+
+*** My (DGM) org-agenda-custom-commands customization
+
+This I don't really use but could be useful in future:
+
+#+BEGIN_EXAMPLE
+          ("ps" "All Tasks in Some Project by TODO State "
+           ((agenda)
+            ;;(tags-todo "project")
+            (tags "project" ((org-tags-match-list-sublevels nil)))
+            (tags "+project+TODO=\"WAITING\"")
+            (tags "+project+TODO=\"NEXT\"")
+            (tags "+project+TODO=\"TODO\"")
+            ;;(tags "+project+TODO=\"DONE\"")
+            ))
+#+END_EXAMPLE
+
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq org-agenda-block-separator "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+  (setq org-agenda-custom-commands
+        '(("x" "Export Day Agenda" agenda ""
+           ((ps-number-of-columns 2)
+            (ps-landscape-mode t)
+            (org-agenda-prefix-format " [ ] ")
+            (org-agenda-with-colors nil)
+            (org-agenda-remove-tags t))
+           nil
+           ("~/Dropbox/gtd/theDayAgenda.pdf"))   ;; no se' por qu'e no se graba automaticamente este file. Da igual poner NIl antes que no (ver abajo)
+          ("X" "Export Week Agenda" agenda ""
+           ((ps-number-of-columns 2)
+            (ps-landscape-mode t)
+            (org-agenda-prefix-format " [ ] ")
+            (org-agenda-with-colors nil)
+            (org-agenda-remove-tags t)
+            (org-agenda-span 7))
+           ("~/Dropbox/gtd/theWeekAgenda.pdf")) ;; no se' por qu'e no se graba automaticamente este file
+          ("d" "Daily Review"
+           ((agenda "" ((org-agenda-span 1))) ;; review upcoming deadlines and appointments
+            ;; type "l" in the agenda to review logged items
+            ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+            ;;(todo "STARTED") ;; review  actions that have started
+            (todo "WAITING" ((org-agenda-sorting-strategy '(category-up)))) ;;This way tasks of the same category are together and sorted alphabetically
+            (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
+            (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
+            )) ;;
+          ("w" "Weekly Review"
+           ((agenda "" ((org-agenda-span 7)))  ;; review upcoming deadlines and appointments
+            ;; old code ((org-agenda-fortnight-view)))
+            ;; type "l" in the agenda to review logged items
+            ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+            ;;(todo "STARTED") ;; review  actions that have started
+            (todo "WAITING" ((org-agenda-sorting-strategy '(category-up)))) ;; review waiting items
+            (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
+            (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
+            ))
+          ("f" "Fortnight Review"
+           ((agenda "" ((org-agenda-span 14))) ;; review upcoming deadlines and appointments
+            ;; type "l" in the agenda to review logged items
+            ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+            ;;(todo "STARTED") ;; review  actions that have started
+            (todo "WAITING" ((org-agenda-sorting-strategy '(category-up))))    ;; review waiting items
+            (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
+            (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
+            ))
+          ("r" "Monthly Review"
+           ((agenda "" ((org-agenda-span 31))) ;; review upcoming deadlines and appointments
+            ;; type "l" in the agenda to review logged items
+            ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+            ;;(todo "STARTED") ;; review  actions that have started
+            (todo "WAITING" ((org-agenda-sorting-strategy '(category-up))))      ;; review waiting items
+            (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
+            (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
+            ))
+          ("y" "Yearly Review"
+           ((agenda "" ((org-agenda-span (quote year))))))
+          ("p" "Tasks Grouped by Project"
+           ((agenda "")
+            (tags "project"
+                  ((org-tags-match-list-sublevels nil)
+                   (org-agenda-overriding-header "                                          LIST OF PROJECTS                                          "))
+                  )
+            (tags-todo "+project+CATEGORY=\"uned\""
+                       ((org-agenda-overriding-header "                                                UNED                                                ")
+                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+            (tags-todo "+project+CATEGORY=\"research\""
+                       ((org-agenda-overriding-header "                                               RESEARCH                                             ")
+                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+            (tags-todo "+project+CATEGORY=\"work-hunt\""
+                       ((org-agenda-overriding-header "                                               WORK-HUNT                                            ")
+                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+            (tags-todo "+project+CATEGORY=\"computing\""
+                       ((org-agenda-overriding-header "                                               COMPUTING                                            ")
+                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+            (tags-todo "+project+CATEGORY=\"personal\""
+                       ((org-agenda-overriding-header "                                               PERSONAL                                             ")
+                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+            (tags-todo "+project+CATEGORY=\"git\"|+project+CATEGORY=\"linux\"|+project+CATEGORY=\"learning\""
+                       ((org-agenda-overriding-header "                                               LEARNING                                             ")
+                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+            (tags-todo "-project+TODO=\"TODO\""
+                       ((org-agenda-overriding-header "                                               ORPHAN TODOs                                         ")
+                        ))
+            (tags-todo "+project+CATEGORY=\"emacs\""
+                       ((org-agenda-overriding-header "                                               EMACS                                                ")
+                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+            ))
+          ("o" "Office and home agenda"
+           ((agenda "" ((org-agenda-ndays 1))) ;; esto no me funciona... debe ser que (setq org-agenda-span (quote month)) en starter-kit-org.org tiene prioridad
+            ;; limits the agenda display to a single day
+            (tags-todo "@home|@uned")
+            ;;            (tags "project+CATEGORY=\"elephants\"")
+            ;;            (tags "review" ((org-agenda-files '("~/org/circuspeanuts.org"))))
+            ;; limits the tag search to the file circuspeanuts.org
+            ;;            (todo "WAITING")
+            )
+           ((org-agenda-compact-blocks t))) ;; options set here apply to the entire block
+          ;; ...other commands here
+          ("L" "TimeLine"
+           ((todo
+             "TODO"
+             ((org-agenda-overriding-header "================================================================ TODO Tasks Without Scheduled Date ==============================================================")
+              (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
+              (org-agenda-prefix-format '((todo . " %1c ")))))
+              (agenda
+               ""
+               (;; (org-agenda-overriding-header "========================================== Scheduled Tasks ==========================================")
+                (org-agenda-span 22)
+                (org-agenda-prefix-format '((agenda . " %1c %?-12t% s")))
+                ;;(org-agenda-skip-function '(lambda()
+                ;;                  ((bh/skip-habits))))
+                )))
+              )))
+
+  (defun my-org-agenda-skip-all-siblings-but-first ()
+    "Skip all but the first non-done entry."
+    (let (should-skip-entry)
+      (unless (org-current-is-todo)
+        (setq should-skip-entry t))
+      (save-excursion
+        (while (and (not should-skip-entry) (org-goto-sibling t))
+          (when (org-current-is-todo)
+            (setq should-skip-entry t))))
+      (when should-skip-entry
+        (or (outline-next-heading)
+            (goto-char (point-max))))))
+
+  (defun org-current-is-todo ()
+    (string= "TODO" (org-get-todo-state)))
+
+  ;; from https://emacs.stackexchange.com/questions/9585/org-how-to-sort-headings-by-todo-and-then-by-priority
+  ;;  (setq org-todo-sort-order '("PROJECT" "WAITING" "NEXT" "TODO" "CANCELED" "DONE"))
+  ;; commented as it doesn't work for me
+  ;; (require 'cl)
+  ;; (require 'dash)
+
+  ;; (defun todo-to-int (todo)
+  ;;    (first (-non-nil
+  ;;            (mapcar (lambda (keywords)
+  ;;                      (let ((todo-seq
+  ;;                             (-map (lambda (x) (first (split-string  x "(")))
+  ;;                                   (rest keywords)))) 
+  ;;                        (cl-position-if (lambda (x) (string= x todo)) todo-seq)))
+  ;;                    org-todo-keywords))))
+
+  ;;(defun my/org-sort-key ()
+  ;;  (let* ((todo-max (apply #'max (mapcar #'length org-todo-keywords)))
+  ;;         (todo (org-entry-get (point) "TODO"))
+  ;;         (todo-int (if todo (todo-to-int todo) todo-max))
+  ;;         )
+  ;;    (format "%03d %03d" todo-int priority-int)
+  ;;    ))
+
+  ;;(defun my/org-sort-entries ()
+  ;;  (interactive)
+  ;;  (org-sort-entries nil ?f #'my/org-sort-key))
+
+  ;; from https://github.com/arcthur/.emacs.d/blob/master/modes/init-org-mode.el
+
+  (defun org-sort-agenda-items-todo (a b)
+    (or
+     ;;(org-cmp-todo-state a b)
+     ;; (org-cmp-todo-state "PROJECT") ;; first list project heading
+     (org-cmp-todo-state a b)
+     ;;(org-cmp-time a b)
+     ;;(org-date-cmp a b)
+     ;;(org-cmp-priority a b)
+     ;;(org-cmp-effort a b)
+     ))
+#+END_SRC
+
+#+RESULTS:
+: org-sort-agenda-items-todo
+
+
+From: https://stackoverflow.com/questions/31639086/emacs-org-mode-how-can-i-filter-on-tags-and-todo-status-simultaneously
+
+The tag search view is poorly named. It actually searches tags and properties. tag-todo adds an extra condition that only matches todo headlines. Use "+" to ndicated that a condition is required (and "-" that it's forbidden). So +PROJECT+TODO=\"TODO\" will match headlines with the tag :PROJECT: and a todo keyword of TODO. Putting into a custom command looks like-
+
+#+BEGIN_EXAMPLE
+(setq org-agenda-custom-commands
+      '((p" "List Non-done projects"
+         tags "+PROJECT+TODO=\"TODO\"")))
+#+END_EXAMPLE
+
+
+**** COMMENT More customizations for agenda
+
+- https://emacs.stackexchange.com/questions/24151/list-todos-which-have-specific-property
+
+
+***** Leo's projects
+#+begin_src emacs-lisp :tangle yes :results silent
+  (add-to-list 'org-agenda-custom-commands
+               '("pl" "Leo"
+                 tags-todo "+project+CATEGORY=\"leo\""))
+#+end_src
+
+***** TFG project
+
+#+begin_src emacs-lisp :tangle yes :results silent
+  (add-to-list 'org-agenda-custom-commands
+               '("pt" "TFG"
+                 tags-todo "+project+CATEGORY=\"tfg\""))
+#+end_src
+
+***** Divorce project
+
+#+begin_src emacs-lisp :tangle yes :results silent
+  (add-to-list 'org-agenda-custom-commands
+               '("pd" "Divorce"
+                 tags-todo "+project+CATEGORY=\"divorce_gtd\""))
+#+end_src
+
+
+**** More 
+Set to the name of the file where new notes will be stored
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq org-mobile-inbox-for-pull "/media/dgm/blue/documents/dropbox/org/fromMobile.org")
+#+END_SRC
+
+#+RESULTS:
+: /media/dgm/blue/documents/dropbox/org/fromMobile.org
+
+Finally, as Carsten Dominik says here: http://thread.gmane.org/gmane.emacs.orgmode/523, with the project list You may run into problems with this approach if ou have set =org-tags-match-list-sublevels= to a non-nil value, because then, due to tag inheritance, every headline *inside* each project will also showup in the resulting list.  To work around this, you may define your own special command like this:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun my-org-project-list ()
+    "Get me a list of projecs."
+    (interactive)-    (let ((org-tags-match-list-sublevels nil))
+      (org-ags-view nil "project")))
+#+END_SRC
+
+#+RESULTS:
+: my-org-project-list
+
+And guess what?? It works!!!
+
+
 ** Agenda costumization from Ambrevar
 
 Set PDF association in Org-mode (original is ='default=).
