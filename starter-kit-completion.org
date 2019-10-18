@@ -203,7 +203,7 @@ We use the `:with` keyword to include dabbrev in every backend, which gives us c
 ;;;;;;; (require 'company) ;; commented out by dgm in favor of uncle dave's use-package from https://github.com/daedreth/UncleDavesEmacs
 
 (use-package company
-  :ensure t
+  ;; :ensure t
   :config
   (setq company-tooltip-limit 20)
 ;;  (setq company-idle-delay 0.01)

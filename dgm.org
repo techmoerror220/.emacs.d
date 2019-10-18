@@ -2409,6 +2409,8 @@ Already in =init.el=
 *** Screenshots
 I don’t need scrot to take screenshots, or shutter or whatever tools you might have. This is enough. These won’t work in the terminal version or the virtual console, obvious reasons.
 
+DGM: Shortcuts commented out as I don't use them that often.
+
 ***** Screenshotting the entire screen
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -2425,7 +2427,7 @@ I don’t need scrot to take screenshots, or shutter or whatever tools you might
     (start-process "screenshot" nil "import" "-window" "root" 
                    (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
     (message "Screenshot taken!")))
-(global-set-key (kbd "s-[") 'daedreth/take-screenshot)
+;;(global-set-key (kbd "s-[") 'daedreth/take-screenshot)
 #+END_SRC
 
 ***** Screenshotting a region
@@ -2439,7 +2441,7 @@ I don’t need scrot to take screenshots, or shutter or whatever tools you might
     (call-process "convert" nil nil nil ".newScreen.png" "-shave" "1x1"
                   (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
     (call-process "rm" nil nil nil ".newScreen.png")))
-(global-set-key (kbd "s-]") 'daedreth/take-screenshot-region)
+;;(global-set-key (kbd "s-]") 'daedreth/take-screenshot-region)
 #+END_SRC
 
 #+RESULTS:
@@ -5795,9 +5797,18 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Org-movement
                     :key "p"
                     :description "Place cursor at start of heading, b will move to previous heading. C-M-p and C-c C-p do the same")
+  (cheatsheet-add :group 'Org-movement
+                  :key "s-:"
+                  :description "avy-org-refile-as-child. Refiling under different heading.")
     (cheatsheet-add :group 'Org-recipes
                     :key "C-c i"
                     :description "Insert raw code under a heading")
+    (cheatsheet-add :group 'Org-Skeleton
+                    :key "M-x article-skeleton"
+                    :description "Inserts a skeleton for Org-export to LaTeX")
+    (cheatsheet-add :group 'Org-Skeleton
+                    :key "M-x beamer-skeleton"
+                    :description "Inserts a  for Org-export to Beamer")
     (cheatsheet-add :group 'Org-table
                     :key "M-Shift-<down>"
                     :description "Insert a new row above the current row. With a prefix argument, the line is created below the current one. Can do the same with C-o")
@@ -5885,12 +5896,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Scratch
                     :key "M-x scratch"
                     :description "With C-u you choose mode, otherwise current mode is used")
-    (cheatsheet-add :group 'Screenshot
-                    :key "s-["
-                    :description "Takes a fullscreen screenshot of the current workspace")
-    (cheatsheet-add :group 'Screenshot
-                    :key "s-]"
-                    :description "Takes a screenshot of a region selected by the user")
     (cheatsheet-add :group 'Security
                     :key "s-_"
                     :description "daedreth/lock-screen")
@@ -5903,12 +5908,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Shell
                     :key "M-e"
                     :description "Open Eshell when in P session")
-    (cheatsheet-add :group 'Org-Skeleton
-                    :key "M-x article-skeleton"
-                    :description "Inserts a skeleton for Org-export to LaTeX")
-    (cheatsheet-add :group 'Org-Skeleton
-                    :key "M-x beamer-skeleton"
-                    :description "Inserts a  for Org-export to Beamer")
     (cheatsheet-add :group 'Spelling
                     :key "C-M-$"
                     :description "Change dictionary")
@@ -6014,12 +6013,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Window-Movement
                     :key "s-<down>"
                     :description "windmove-down")
-    :bind ("s-:" . cheatsheet-show)
+    :bind ("s-[" . cheatsheet-show)
     )
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23975 36373 83312 504000) :init (23975 36373 83240 26000) :init-secs (0 0 3545 226000) :use-package-secs (0 0 4052 62000) :config (23975 36373 83224 993000) :config-secs (0 0 3509 316000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23977 34091 120131 816000) :init (23977 34091 120053 81000) :init-secs (0 0 29 355000) :use-package-secs (0 0 196 33000)))
 
 
 
@@ -6244,6 +6243,25 @@ Remember: =q= to exit
 
 #+RESULTS:
 : calendar
+
+* avy-org-refile-as-child
+#+begin_src emacs-lisp :tangle yes
+(global-set-key (kbd "s-:") 'avy-org-refile-as-child)
+#+end_src
+
+#+RESULTS:
+: avy-org-refile-as-child
+
+* Abbrev-mode
+#+begin_src emacs-lisp :tangle yes
+(setq-default abbrev-mode t)    ;; turn on abbrev mode globally
+(read-abbrev-file "~/.emacs.d/abbrev_defs")
+;; (setq save-abbrevs t)
+(setq save-abbrevs 'silently) ;; do not ask whether to save the abbrevs
+#+end_src
+
+#+RESULTS:
+: silently
 
 * Provide
 

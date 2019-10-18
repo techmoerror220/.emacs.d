@@ -60,7 +60,6 @@ Key Bindings.
 
 ** Completion that uses many different methods to find options.
 
-
 #+begin_src emacs-lisp 
 (global-set-key (kbd "M-/") 'hippie-expand) ;; replace dabbrev-expand
 (setq
@@ -240,10 +239,13 @@ When windows get out of order, you can rotate them.
 #+RESULTS: rotate-windows
 : rotate-windows
 
-** Indentation help
+** COMMENT Indentation help
+Disabled, as it interferes with abbrev-mode. 
 #+begin_src emacs-lisp 
-(global-set-key (kbd "C-x a") 'join-line)
+;; (global-set-key (kbd "C-x a") 'join-line)
 #+end_src
+
+#+RESULTS:
 
 ** Start eshell or switch to it if it's active.
 #+begin_src emacs-lisp 

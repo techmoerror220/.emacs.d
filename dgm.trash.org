@@ -1,3 +1,9 @@
+    (cheatsheet-add :group 'Screenshot
+                    :key "s-["
+                    :description "Takes a fullscreen screenshot of the current workspace")
+    (cheatsheet-add :group 'Screenshot
+                    :key "s-]"
+                    :description "Takes a screenshot of a region selected by the user")
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23976 37641 374020 479000) :init (23976 37641 373942 205000) :config (23976 37641 373935 600000) :config-secs (0 0 259 705000) :init-secs (0 0 281 796000) :use-package-secs (0 0 398 31000)))
 
