@@ -651,10 +651,10 @@ much more like reading and editing of code using its major mode.
 Added from Daniel Mai at https://github.com/danielmai/.emacs.d/blob/master/config.org as well
 
 #+begin_src emacs-lisp :tangle yes
-  (setq org-src-fontify-natively t
+  (setq org-src-fontify-natively t   ;; if I set to nil, trying to speed up editing of src code, in large chunks of code i don't get any advantage.
         org-src-window-setup 'current-window
         org-src-strip-leading-and-trailing-blank-lines t
-        ;; org-src-preserve-indentation t  ;; bern hansen changes it to =nil=
+        org-src-preserve-indentation t  ;; bern hansen changes it to =nil= but Miskatonic says: preserve indentation when tangling source blocks (important for makefiles)
         org-src-tab-acts-natively t)
 #+end_src
 
@@ -704,8 +704,15 @@ Org-mode manual is available to the =info= command (bound to =C-h i=).
 
 ** Nice Bulleted Lists
 
+- From Miskatonic's setup: [[file:/media/dgm/blue/documents/programming/emacs/CoolEmacsGuys/miskatonic/.emacs.d/setup/setup-orgmode.el::;;;;%20org-bullets%20(https://github.com/sabof/org-bullets)][Miskatonic!]]
+Possibilities include:  ◉ ○ ✸ ✿ ♥ ● ◇ ✚ ✜ ☯ ◆ ♠ ♣ ♦ ☢ ❀ ◆ ◖ ▶ ► • ★ ▸ or any other Unicode character
+
+Default is '("◉" "○" "✸" "✿")
+
+I've used ("◉" "○ ""►" "•" "•"))
+
 #+name: org-bullets
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (use-package org-bullets
     :ensure t
     :config
@@ -714,6 +721,18 @@ Org-mode manual is available to the =info= command (bound to =C-h i=).
 
 #+RESULTS: org-bullets
 : t
+
+#+begin_src emacs-lisp :tangle yes
+(use-package org-bullets
+  :config
+  (setq org-bullets-bullet-list '("⊢" "⋮" "⋱" "⋱" "⋱"))
+  :init
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  )
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23978 12595 960157 264000) :init (23978 12595 960102 53000) :config (23978 12595 959712 522000) :config-secs (0 0 1000 376000) :init-secs (0 0 2335 74000) :use-package-secs (0 0 2702 479000)))
 
 ** More customization
 
@@ -728,15 +747,25 @@ Disable line splitting on M-RET.
 
 Replace ellipsis with ellipsis in brackets
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
   (setq org-ellipsis " […]")
 #+END_SRC
 
 #+RESULTS:
 :  […]
 
-Indentation.
+DGM: now I like Miskatonic's setup better: 
+ - Change the ellipsis that indicates hidden content
+ - http://endlessparentheses.com/changing-the-org-mode-ellipsis.html
 
+#+begin_src emacs-lisp :tangle yes
+(setq org-ellipsis " ⬎") ;; ⤵ ↴ ⬎ ⤷
+(set-face-attribute 'org-ellipsis nil :underline nil)
+#+end_src
+
+#+RESULTS:
+
+Indentation.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq org-adapt-indentation nil)
 #+END_SRC
@@ -1787,8 +1816,10 @@ Depth of search for =Imenu= in Org buffers. From https://www.reddit.com/r/emacs/
 * Initial visibility 
 I want to see properties by default but this is of no help. I'm using =s-h= for visible mode.
 
+DGM: I think =(setq org-startup-folded 'showeverything)= is what allows me seeing stuff when I am searching
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;;(setq org-startup-folded 'showeverything)
+  (setq org-startup-folded 'showeverything)
   ;;(setq org-inhibit-startup-visibility-stuff t)
   ;;(setq org-save-outline-visibility t)
 #+END_SRC
@@ -1809,10 +1840,16 @@ I want to see properties by default but this is of no help. I'm using =s-h= for 
 
 * Font-lock
 
+DGM sets this to nil trying to get the minimum decoration available to speed things up.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (setq font-lock-maximum-decoration        
+;; (setq font-lock-maximum-decoration nil)
+        
+(setq font-lock-maximum-decoration        
         '((org-mode . 1)))
-#+END_SRC
+
+;; (setq org-src-font-lock-fontify-block nil)
+#+End_SRC
 
 #+RESULTS:
 : ((org-mode . 1))
@@ -1891,7 +1928,7 @@ for another presentation of =org-goto=.
   (setq org-goto-interface 'outline-path-completion
         org-goto-max-level 10)
   (require 'imenu)
-  (setq org-startup-folded t)  ;; originally set to =nil=
+  (setq org-startup-folded nil)  ;; originally set to =nil=. When changed to =t= I think I don't see anything
   (bind-key "C-c j" 'org-clock-goto) ;; jump to current task from anywhere;; C-c C-x C-j does the job already but this is eaasier
   (bind-key "C-c C-w" 'org-refile)
   (setq org-cycle-include-plain-lists t) ;; originally set to ='integrate=. bern hansen has this set to =t=.
@@ -3838,7 +3875,7 @@ drawer provides that information.  From the agenda simply hitting
 
 #+BEGIN_SRC emacs-lisp :tangle yes :results silent
   (setq org-todo-keyword-faces
-        '(("TODO"      . (:foreground "#859900" :weight bold))
+        '(("TODO"      . (:foreground "SeaGreen" :weight bold))  ;; "#859900"
           ("NEXT"      . (:foreground "#d33682" :weight bold))
           ("PHONE"     . (:foreground "#dc322f" :weight bold))
           ("WAITING"   . (:foreground "#b58900" :weight bold))
@@ -4901,18 +4938,18 @@ org-ql is a lispy query language for Org files. It allows you to find Org entrie
             ))
 
         (bind-keys ("C-c 1" . my-projects-agenda)
-                   ("C-c 0" . my-org-super-agenda))
-        :config
+                   ("C-c 0" . my-org-super-agenda)))
+        
+        ;; :config ;; I don't use it
         ;; Enable folding
-        (use-package origami
-          :bind (:map org-super-agenda-header-map
-                      ("TAB" . origami-toggle-node))
-          :hook ((org-agenda-mode . origami-mode))))
-
+        ;; (use-package origami
+        ;;  :bind (:map org-super-agenda-header-map
+        ;;              ("TAB" . origami-toggle-node))
+        ;;  :hook ((org-agenda-mode . origami-mode))))
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23973 65032 801242 388000) :init (23973 65032 801219 957000) :config (23973 65032 800903 9000) :config-secs (0 0 893 260000) :init-secs (0 0 2449 219000) :use-package-secs (0 0 2725 825000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23977 51559 253628 701000) :init (23977 51559 253602 436000) :config (23977 51559 253300 629000) :config-secs (0 0 15 942000) :init-secs (0 0 1434 508000) :use-package-secs (0 0 1677 929000)))
 
 * Settings from org-query
 - https://github.com/remyhonig/org-query

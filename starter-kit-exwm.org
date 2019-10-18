@@ -205,9 +205,11 @@ Note that with the package =whole-line-or-region-kill-save= these simulation key
 
 * Ambrevar's functions
 
+Commenting out =switch-to-last-buffer= function as I am going to try =buffer-flip=
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; (require 'functions) ;; this is the first thing loaded in the whole process so no need to use it here again
-(exwm-input-set-key (kbd "s-<tab>") #'ambrevar/switch-to-last-buffer)
+;; (exwm-input-set-key (kbd "s-<tab>") #'ambrevar/switch-to-last-buffer)
 #+END_SRC
 
 ** COMMENT Lock screen 
