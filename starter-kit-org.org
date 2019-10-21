@@ -759,7 +759,7 @@ DGM: now I like Miskatonic's setup better:
  - http://endlessparentheses.com/changing-the-org-mode-ellipsis.html
 
 #+begin_src emacs-lisp :tangle yes
-(setq org-ellipsis " ⬎") ;; ⤵ ↴ ⬎ ⤷
+(setq org-ellipsis " ⤵") ;; ⤵ ↴ ⬎ ⤷ ⬎
 (set-face-attribute 'org-ellipsis nil :underline nil)
 #+end_src
 

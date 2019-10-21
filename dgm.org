@@ -2702,7 +2702,7 @@ And again, the same as above but we make sure to not delete the source word.
     (backward-word)
     (kill-word 1)
     (yank)))
-(global-set-key (kbd "s-w") 'daedreth/copy-whole-word) 
+(global-set-key (kbd "s-@") 'daedreth/copy-whole-word) 
 #+END_SRC
 
 #+RESULTS:
@@ -4953,10 +4953,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                       :description "Upper case last word: Mientras haces M-- dale a la c")
       (cheatsheet-add :group 'Editing
                       :key "s-@"
-                      :description "open-line and prelude-smart-open-line. Insert an empty line after the current line.")
-      (cheatsheet-add :group 'Editing
-                      :key "s-@"
-                      :description "open-line, prelude-smart-open-line and org-open-line. Insert an empty line after the current line OR insert new row in table. C-o does the same in Org-mode.")
+                      :description "daedreth/copy-whole-word")
       (cheatsheet-add :group 'Editing
                       :key "C-x C-q"
                       :description "read-only-mode")
@@ -4976,8 +4973,11 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                       :key "C-c ;"
                       :description "Comment and uncomment region")
       (cheatsheet-add :group 'Editing
+                      :key "C-;"
+                      :description "Toggle Iedit mode. Highlight occurrences and edit simultaneously")
+      (cheatsheet-add :group 'Editing
                       :key "s-k"
-                      :description "Kills the entire word your cursor is in")
+                      :description "daedreth/kill-inner-word. Kills the entire word your cursor is in")
       (cheatsheet-add :group 'Editing
                       :key "M-z"
                       :description "zap-up-to-char")
@@ -5953,9 +5953,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
       (cheatsheet-add :group 'Utilities
                       :key "s-c"
                       :description "calendar")
-      (cheatsheet-add :group 'Utilities
-                      :key "s-@"
-                      :description "pomidor")
+      ;;(cheatsheet-add :group 'Utilities
+      ;;                :key "s-@"
+      ;;                :description "pomidor")
       (cheatsheet-add :group 'Weather
                       :key "M-x forecast"
                       :description "forecast package")
@@ -6027,7 +6027,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23978 1270 376197 634000) :init (23978 1270 376127 885000) :init-secs (0 0 23 898000) :use-package-secs (0 0 158 206000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23981 30630 635245 11000) :init (23981 30630 635185 891000) :init-secs (0 0 23 263000) :use-package-secs (0 0 150 874000)))
 
 
 
@@ -6230,7 +6230,7 @@ Use `winstack-push' and
 * Pomidor
 #+begin_src emacs-lisp :tangle yes
 (use-package pomidor
-  :bind (("s-@" . pomidor))
+  ;; :bind (("s-@" . pomidor))
   :config (setq pomidor-sound-tick nil
                 pomidor-sound-tack nil)
   :hook (pomidor-mode . (lambda ()
@@ -6242,7 +6242,7 @@ Use `winstack-push' and
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23976 34920 197166 850000) :init (23976 34920 197084 642000) :init-secs (0 0 105 469000) :use-package-secs (0 9 772091 107000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23981 29936 785167 905000) :init (23981 29936 785126 11000) :init-secs (0 0 102457 208000) :use-package-secs (0 0 102787 632000) :config (23981 29936 784913 633000) :config-secs (0 0 217 811000)))
 
 * Calendar
 Remember: =q= to exit
