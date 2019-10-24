@@ -43,7 +43,6 @@ eshell/history
 /index.org
 /vc-git.awk
 var/
-abbrev_defs
 bookmarks
 ido.last
 ido.last~
