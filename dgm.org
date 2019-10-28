@@ -4982,9 +4982,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                       :key "M-z"
                       :description "zap-up-to-char")
       (cheatsheet-add :group 'Editing
-                      :key "gs-w"
-                      :description "Copy whole word")
-      (cheatsheet-add :group 'Editing
                       :key "s-%"
                       :description "Kills whole line where your cursor is in")
       (cheatsheet-add :group 'Editing
@@ -5564,6 +5561,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                       :key "C-c C-x M-w"
                       :description "org-copy-subtree. Copy subtree to kill ring. With a numeric prefix argument N, copy the N sequential subtrees")
       (cheatsheet-add :group 'Org
+                      :key "C-c C-x C-w"
+                      :description "org-cut-subtree. i.e., remove it from buffer but save in kill ring. With a numeric prefix argument N, kill N sequential subtrees")
+      (cheatsheet-add :group 'Org
                       :key "a"
                       :description "org-archive-subtree-default. Place cursor at start of heading. a will archive it")
       (cheatsheet-add :group 'Org
@@ -5953,9 +5953,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
       (cheatsheet-add :group 'Utilities
                       :key "s-c"
                       :description "calendar")
-      ;;(cheatsheet-add :group 'Utilities
-      ;;                :key "s-@"
-      ;;                :description "pomidor")
       (cheatsheet-add :group 'Weather
                       :key "M-x forecast"
                       :description "forecast package")
@@ -6308,12 +6305,12 @@ By the way, =M-SPC= is bound to =just-one-space=: Delete all spaces and tabs aro
     :config
     (setq buffer-flip-skip-patterns
           '("^\\*helm\\b"
-            "^\\*\\b"
+            "^\\*help\\b"
             "^\\*swiper\\*$")))
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23977 53920 154010 387000) :init (23977 53920 153181 297000) :init-secs (0 0 3822 261000) :use-package-secs (0 0 4721 2000) :config (23977 53920 153024 299000) :config-secs (0 0 3479 621000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23985 33607 413816 782000) :init (23985 33607 412832 358000) :init-secs (0 0 1697 515000) :use-package-secs (0 0 2984 279000) :config (23985 33607 412746 8000) :config-secs (0 0 1594 687000)))
 
 * Font locking
 
