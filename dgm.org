@@ -5089,6 +5089,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
       (cheatsheet-add :group 'Email
                       :key "C-*"
                       :description "mu4e")
+(cheatsheet-add :group 'Email
+                      :key "SPC"
+                      :description "cua-scroll-up. Equivalent to C-v: scroll down")
+(cheatsheet-add :group 'Email
+                      :key "S-SPC"
+                      :description "cua-scroll-down. Equivalent to M-v: scroll up")
       (cheatsheet-add :group 'Email
                       :key "C-c C-k"
                       :description "mu4e-message-kill-buffer")
@@ -6024,7 +6030,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23981 30630 635245 11000) :init (23981 30630 635185 891000) :init-secs (0 0 23 263000) :use-package-secs (0 0 150 874000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23992 24775 96428 87000) :init (23992 24775 96368 783000) :init-secs (0 0 29 865000) :use-package-secs (0 0 204 594000)))
 
 
 
