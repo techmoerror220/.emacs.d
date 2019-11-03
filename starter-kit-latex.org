@@ -283,10 +283,6 @@ Allow AucTeX to use biber as well as/instead of bibtex.
 
 From https://tex.stackexchange.com/questions/454966/biblatex-custom-entries-with-emacs-bibtex-mode
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-
-#+END_SRC
-
 *** Use Biblatex key template by default in bib files
 
 #+source: bibtex-dialect
@@ -340,8 +336,6 @@ Higham prefers closing brace on its own line after cleaning BibTeX entry. I don'
   (progn (bibtex-end-of-entry) (left-char) (newline-and-indent)
          (insert "      ")))
 #+END_SRC
-
-
 
 ** Configure RefTeX
 *** Default Bibliography

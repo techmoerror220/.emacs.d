@@ -4510,29 +4510,6 @@ If you prefer to whitelist modes where the input method is automatically activat
 #+RESULTS:
 | inactivate-default-input-method |
 
-** Input method shortcut
-
-=defun= defined in Marcel van der Boom's configuration files.
-After I change to Spanish with =s-z=, I toggle the input method with =C-\=
-
-DGM on march, 3rd: I've made spanish-prefix the default so this is not needed
-March 6: well, it's not working exactly. It works after I set up the new input method. But before it does not. So I need my shortcut back
-But now that I've changed some lines in the bit on input method in =dgm.org= this =mrb= stuff does not work at all...
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun mrb/set-input-method()
-  (interactive)
-  (setq default-input-method "spanish-prefix")
-  ;; Toggle only if it not active yet
-  (if (not current-input-method)
-      (toggle-input-method)))
-
-;;(exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
-(exwm-input-set-key (kbd "s-s") #'mrb/set-input-method)
-#+END_SRC
-
-#+RESULTS:
-
 * undo-propose
 
 To use undo-propose, call "M-x undo-propose" in the buffer you are editing.
@@ -4816,9 +4793,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
       (cheatsheet-add :group 'Buffer-Cycling
                       :key "C-g"
                       :description "buffer-flip-abort")
-      (cheatsheet-add :group 'Buffer-Cycling
-                      :key "s-<tab>"
-                      :description "ambrevar/switch-to-last-buffer")
       (cheatsheet-add :group 'Buffer-Cycling
                       :key "C-x b"
                       :description "helm-mini. Cycles EXWM buffers")
@@ -5425,6 +5399,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
       (cheatsheet-add :group 'Help
                       :key "C-h v"
                       :description "helpful-variable")
+      (cheatsheet-add :group 'Help
+                      :key "s-,"
+                      :description "org-recipe")
+      (cheatsheet-add :group 'Help
+                      :key "s-."
+                      :description "org-wiki-helm")
       (cheatsheet-add :group 'Help-Org
                       :key "?"
                       :description "With cursor on heading's stars, ? opens window with shortcuts available")
@@ -6007,12 +5987,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
       (cheatsheet-add :group 'Windows
                       :key "C-c <right> or <down>"
                       :description "winner-redo: Restore a more recent window configuration saved by Winner mode")
-      (cheatsheet-add :group 'Windows
-                      :key "s-,"
-                      :description "org-recipe")
-      (cheatsheet-add :group 'Windows
-                      :key "s-."
-                      :description "org-wiki-helm")
       (cheatsheet-add :group 'Window-Movement
                       :key "s-<left>"
                       :description "windmove-left")
@@ -6030,7 +6004,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23992 24775 96428 87000) :init (23992 24775 96368 783000) :init-secs (0 0 29 865000) :use-package-secs (0 0 204 594000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23994 44710 996775 660000) :init (23994 44710 996470 431000) :init-secs (0 0 2781 961000) :use-package-secs (0 0 3190 115000) :config (23994 44710 996455 772000) :config-secs (0 0 2762 717000)))
 
 
 
@@ -6055,20 +6029,33 @@ This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try a
 (push (cons "\\*Python\\*" display-buffer--same-window-action) display-buffer-alist)
 (push (cons "\\*stata\\*" display-buffer--same-window-action) display-buffer-alist)
 (push (cons "\\*cheatsheet\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*password-store\\*" display-buffer--same-window-action) display-buffer-alist)
 #+END_SRC
 
 #+RESULTS:
-| \*cheatsheet\*   | display-buffer-same-window      | (inhibit-same-window) |
-| \*stata\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython\*      | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython3\*     | display-buffer-same-window      | (inhibit-same-window) |
-| \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \*stata\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython\*      | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython3\*     | display-buffer-same-window      | (inhibit-same-window) |
-| \*shell\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \`\*Calendar\*\' | (display-buffer-below-selected) |                       |
-| \*Calendar\*     | my-position-calendar-buffer     |                       |
+| \*password-store\* | display-buffer-same-window      | (inhibit-same-window) |
+| \*cheatsheet\*     | display-buffer-same-window      | (inhibit-same-window) |
+| \*stata\*          | display-buffer-same-window      | (inhibit-same-window) |
+| \*Python\*         | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython3\*       | display-buffer-same-window      | (inhibit-same-window) |
+| \*shell\*          | display-buffer-same-window      | (inhibit-same-window) |
+| \*password-store\* | display-buffer-same-window      | (inhibit-same-window) |
+| \*cheatsheet\*     | display-buffer-same-window      | (inhibit-same-window) |
+| \*stata\*          | display-buffer-same-window      | (inhibit-same-window) |
+| \*Python\*         | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython3\*       | display-buffer-same-window      | (inhibit-same-window) |
+| \*shell\*          | display-buffer-same-window      | (inhibit-same-window) |
+| \*pass\*           | display-buffer-same-window      | (inhibit-same-window) |
+| \*cheatsheet\*     | display-buffer-same-window      | (inhibit-same-window) |
+| \*stata\*          | display-buffer-same-window      | (inhibit-same-window) |
+| \*Python\*         | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython3\*       | display-buffer-same-window      | (inhibit-same-window) |
+| \*shell\*          | display-buffer-same-window      | (inhibit-same-window) |
+| \`\*Calendar\*\'   | (display-buffer-below-selected) |                       |
+| \*Calendar\*       | my-position-calendar-buffer     |                       |
 
 
 * Security: bad-signature issue
@@ -6289,34 +6276,12 @@ This piece of code disables abbrev when you enter the minibuffer, then enables i
 #+end_src
 
 #+RESULTS:
-| exwm-input--on-minibuffer-exit | (lambda nil (abbrev-mode 1)) |
+| lambda | nil | (abbrev-mode 1) |
 
 NB: If you want to use an abbrev and NOT expand it, do =M-SPC= and you'll get an space and no expansion.
 
 By the way, =M-SPC= is bound to =just-one-space=: Delete all spaces and tabs around point, leaving one space (or N spaces).
 
-* Buffer-flip
-
-- https://github.com/killdash9/buffer-flip.el
-- Alternative: Buffer-stack and others: https://www.emacswiki.org/emacs/ControlTABbufferCycling
-
-#+begin_src emacs-lisp :tangle yes
-  (use-package buffer-flip
-    :ensure t
-    :bind  (("C-c b"      . buffer-flip)
-            :map buffer-flip-map
-            ( "s-<tab>"   . buffer-flip-forward)
-            ( "C-M-<tab>" . buffer-flip-backward)
-            ( "C-g"       . buffer-flip-abort))
-    :config
-    (setq buffer-flip-skip-patterns
-          '("^\\*helm\\b"
-            "^\\*help\\b"
-            "^\\*swiper\\*$")))
-#+end_src
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23985 33607 413816 782000) :init (23985 33607 412832 358000) :init-secs (0 0 1697 515000) :use-package-secs (0 0 2984 279000) :config (23985 33607 412746 8000) :config-secs (0 0 1594 687000)))
 
 * Font locking
 
@@ -6328,6 +6293,63 @@ Read:
 #+begin_src emacs-lisp :tangle yes
 (setq font-lock-maximum-decoration 1)
 #+end_src
+
+
+* Buffer-flip
+
+- https://github.com/killdash9/buffer-flip.el
+- Alternative: Buffer-stack and others: https://www.emacswiki.org/emacs/ControlTABbufferCycling
+- ;; ("C-c b"      . buffer-flip) deleted
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package buffer-flip
+    :ensure t
+    :bind  (("C-c b"      . buffer-flip)
+            :map buffer-flip-map
+            ( "s-<tab>"   . buffer-flip-forward)
+            ( "C-M-<tab>" . buffer-flip-backward) ;; note: <backtab> is <Shift-tab>, nice, but didn't work with Chromium. It'd go to the links in a page.
+            ( "C-g"       . buffer-flip-abort))
+
+    :config
+    (setq buffer-flip-skip-patterns
+          '("^\\*helm\\b"
+            "^\\*help\\b"
+            "^\\*swiper\\*$")))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23998 36743 215870 19000) :init (23998 36743 215259 86000) :init-secs (0 0 1241 542000) :use-package-secs (0 0 2208 661000) :config (23998 36743 215223 779000) :config-secs (0 0 1184 806000)))
+
+** Trying EXWM keybind
+
+#+begin_src emacs-lisp :tangle no
+;;;(setq exwm-input-global-keys
+;;;        `(,(kbd "s-<tab>") . buffer-flip))
+#+end_src
+
+
+* Input method shortcut
+=defun= defined in Marcel van der Boom's configuration files.
+After I change to Spanish with =s-z=, I toggle the input method with =C-\=
+
+DGM on march, 3rd: I've made spanish-prefix the default so this is not needed
+March 6: well, it's not working exactly. It works after I set up the new input method. But before it does not. So I need my shortcut back
+But now that I've changed some lines in the bit on input method in =dgm.org= this =mrb= stuff does not work at all...
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun mrb/set-input-method()
+  (interactive)
+  (setq default-input-method "spanish-prefix")
+  ;; Toggle only if it not active yet
+  (if (not current-input-method)
+      (toggle-input-method)))
+
+;;(exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
+(exwm-input-set-key (kbd "s-s") #'mrb/set-input-method)
+#+END_SRC
+
+#+RESULTS:
+
 
 
 * Provide
@@ -6349,8 +6371,3 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
-
-
-
-
-.

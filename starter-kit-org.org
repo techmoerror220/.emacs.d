@@ -1349,8 +1349,12 @@ HOWEVER I am not 100% sure how useful is all this because I have a nice option i
 
 On timeline bit, read https://www.reddit.com/r/orgmode/comments/7hps9j/rip_orgtimeline/
 
+Note, very importat: =+project+= refers to the =tag=, not the =TODO= state.
 
 *** My (DGM) org-agenda-custom-commands customization
+:PROPERTIES:
+:ID:       9b247ff5-7e32-4c1c-9a9b-d0f46761f52f
+:END:
 
 This I don't really use but could be useful in future:
 
@@ -1431,7 +1435,7 @@ This I don't really use but could be useful in future:
             (tags "project"
                   ((org-tags-match-list-sublevels nil)
                    (org-agenda-overriding-header "                                          LIST OF PROJECTS                                          "))
-                  )
+                  ) ;; TODO include condition: when TODO state changed from PROJECT to DONE, do not list here
             (tags-todo "+project+CATEGORY=\"uned\""
                        ((org-agenda-overriding-header "                                                UNED                                                ")
                         (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))

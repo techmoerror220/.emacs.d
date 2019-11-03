@@ -1158,68 +1158,6 @@ https://github.com/emacs-helm/helm/wiki/Grep
 #+RESULTS:
 | --color-match '31;43' |
 
-* EXWM
-
-Basic commands with for interfacing with =exwm= with =helm=
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(with-eval-after-load 'helm
-  ;; Need `with-eval-after-load' here since 'helm-map is not defined in 'helm-config.
-  ;;  (ambrevar/define-keys helm-map "s-\\" 'helm-toggle-resplit-and-swap-windows) ;; already used in starter-kit-exwm.org for ambrevar/toggle-window-split
-  ;; (exwm-input-set-key (kbd "s-c") #'helm-resume)  ;; get the latest helm thing you did!, i.e., reopen the last helm search. Hey: if I enable this line, instead of helm-resume I get helm-occur. Why?
-  ;; (exwm-input-set-key (kbd "s-b") #'helm-mini) ;; not needed as already in =C-x b=
-  ;; (exwm-input-set-key (kbd "s-f") #'helm-find-files) ;; already in C-x C-f
-  ;; (exwm-input-set-key (kbd "s-:") #'helm-for-files) ;; tuhdo doesn't use it, so it goes
-  (exwm-input-set-key (kbd "s-D") #'helm-locate)
-  (exwm-input-set-key (kbd "s-d") #'helm-find))
-  ;;(when (fboundp 'ambrevar/helm-locate-meta)
-  ;;  (exwm-input-set-key (kbd "!!here") #'ambrevar/helm-locate-meta))
-  ;; (exwm-input-set-key (kbd "s-F") #'helm-ag)
-  ;; (exwm-input-set-key (kbd "s-f") #'helm-do-grep-ag))
-  ;;(exwm-input-set-key (kbd "s-g") 'ambrevar/helm-grep-git-or-ag)
-  ;;(exwm-input-set-key (kbd "s-G") 'ambrevar/helm-grep-git-all-or-ag))
-#+END_SRC
-
-#+RESULTS:
-
-** EXWM buffers with helm. Also: make =helm-mini= almighty
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(require 'helm-bookmark)
-
-(use-package helm-exwm)
-;; (when (require 'helm-exwm nil t)
-(add-to-list 'helm-source-names-using-follow "EXWM buffers")
-(setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
-(setq helm-exwm-source (helm-exwm-build-source))
-(setq helm-mini-default-sources `(helm-exwm-emacs-buffers-source
-                                  helm-exwm-source
-                                  helm-source-buffers-list
-                                  helm-source-recentf
-                                  ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
-                                  helm-source-bookmarks
-                                  helm-source-bookmark-set
-                                  helm-source-buffer-not-found))
-
-;; Not sure how this works
-;;(ambrevar/define-keys helm-exwm-map
-;;   "s-!" 'helm-buffer-run-kill-persistent
-;;   "s-#" 'helm-buffer-switch-other-window)
-;; The above does not work and I don't know what is meant to do
-
-;; next two lines work in the context of a helm menu like the one triggered with =C-x b=
-(global-set-key (kbd "C-c h w") 'helm-buffer-switch-other-window)
-(global-set-key (kbd "C-c h k") 'helm-buffer-run-kill-persistent)
-
-;; Launcher
-(exwm-input-set-key (kbd "s-e") 'helm-run-external-command)
-
-;; Web browser. Turned off by DGM on 22 august 2019
-;; (exwm-input-set-key (kbd "M-s-j") #'helm-exwm-switch-browser)               ;; I don't use these two and I don't see the user case.
-;; (exwm-input-set-key (kbd "s-j")   #'helm-exwm-switch-browser-other-window)  ;; not using it
-#+END_SRC
-
-#+RESULTS:
 
 * Allowing =ido= mode
 
@@ -1450,6 +1388,65 @@ I don't use it that much...
 
 #+RESULTS:
 : helm-colors
+
+
+* EXWM buffers with helm. Also: make =helm-mini= almighty
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'helm-bookmark)
+
+(use-package helm-exwm)
+;; (when (require 'helm-exwm nil t)
+(add-to-list 'helm-source-names-using-follow "EXWM buffers")
+(setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
+(setq helm-exwm-source (helm-exwm-build-source))
+(setq helm-mini-default-sources `(helm-exwm-emacs-buffers-source
+                                  helm-exwm-source
+                                  helm-source-buffers-list
+                                  helm-source-recentf
+                                  ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
+                                  helm-source-bookmarks
+                                  helm-source-bookmark-set
+                                  helm-source-buffer-not-found))
+
+;; Not sure how this works
+;;(ambrevar/define-keys helm-exwm-map
+;;   "s-!" 'helm-buffer-run-kill-persistent
+;;   "s-#" 'helm-buffer-switch-other-window)
+;; The above does not work and I don't know what is meant to do
+
+;; next two lines work in the context of a helm menu like the one triggered with =C-x b=
+(global-set-key (kbd "C-c h w") 'helm-buffer-switch-other-window)
+(global-set-key (kbd "C-c h k") 'helm-buffer-run-kill-persistent)
+
+;; Launcher
+(exwm-input-set-key (kbd "s-e") 'helm-run-external-command)
+
+;; Web browser. Turned off by DGM on 22 august 2019
+;; (exwm-input-set-key (kbd "M-s-j") #'helm-exwm-switch-browser)               ;; I don't use these two and I don't see the user case.
+;; (exwm-input-set-key (kbd "s-j")   #'helm-exwm-switch-browser-other-window)  ;; not using it
+#+END_SRC
+
+
+Basic commands with for interfacing with =exwm= with =helm=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(with-eval-after-load 'helm
+  ;; Need `with-eval-after-load' here since 'helm-map is not defined in 'helm-config.
+  ;;  (ambrevar/define-keys helm-map "s-\\" 'helm-toggle-resplit-and-swap-windows) ;; already used in starter-kit-exwm.org for ambrevar/toggle-window-split
+  ;; (exwm-input-set-key (kbd "s-c") #'helm-resume)  ;; get the latest helm thing you did!, i.e., reopen the last helm search. Hey: if I enable this line, instead of helm-resume I get helm-occur. Why?
+  ;; (exwm-input-set-key (kbd "s-b") #'helm-mini) ;; not needed as already in =C-x b=
+  ;; (exwm-input-set-key (kbd "s-f") #'helm-find-files) ;; already in C-x C-f
+  ;; (exwm-input-set-key (kbd "s-:") #'helm-for-files) ;; tuhdo doesn't use it, so it goes
+  (exwm-input-set-key (kbd "s-D") #'helm-locate)
+  (exwm-input-set-key (kbd "s-d") #'helm-find))
+  ;;(when (fboundp 'ambrevar/helm-locate-meta)
+  ;;  (exwm-input-set-key (kbd "!!here") #'ambrevar/helm-locate-meta))
+  ;; (exwm-input-set-key (kbd "s-F") #'helm-ag)
+  ;; (exwm-input-set-key (kbd "s-f") #'helm-do-grep-ag))
+  ;;(exwm-input-set-key (kbd "s-g") 'ambrevar/helm-grep-git-or-ag)
+  ;;(exwm-input-set-key (kbd "s-G") 'ambrevar/helm-grep-git-all-or-ag))
+#+END_SRC
 
 
 * Provide

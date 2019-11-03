@@ -383,8 +383,34 @@ sudo apt install redshift redshift-gtk
                     (lambda () (interactive) (start-process "" nil "redshift" "-O" "3500")))
 #+END_SRC
 
-#+RESULTS:
 
+* COMMENT Setting bindings to be available in EXWM buffers
+
+From https://www.reddit.com/r/emacs/comments/bfhepc/does_exwmsetinputkey_work_in_exwm_windows/
+
+Someone says: 
+
+     #+BEGIN_QUOTE
+There are some weird interactions between EXWM, Emacs, and managed X clients. In this case, you're best off customizing exwm-input-global-keys instead of calling exwm-input-set-key after things have started up.
+     #+END_QUOTE
+
+     #+BEGIN_QUOTE
+     You have to set bindings you want available in EXWM buffers in exwm-input-global-keys.
+     #+END_QUOTE
+
+Then read https://github.com/ch11ng/exwm/wiki/Configuration-Example
+and 
+https://git.sr.ht/~jakob/.emacs.d/tree/703f2c9a60773989a8e434d00b2e32a8cd9afcbd/jakob.org
+
+#+begin_src emacs-lisp :tangle no
+  (setq exwm-input-global-keys
+        `(,(kbd "s-<tab>") . buffer-flip))
+#+end_src
+
+#+RESULTS:
+: ([s-TAB] . buffer-flip)
+
+DGM: commented out as it screwed up my dotfiles. Don't know why.
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -396,7 +422,4 @@ sudo apt install redshift redshift-gtk
 #+begin_src emacs-lisp :tangle yes
 (message "Starter Kit User EXWM File loaded.")
 #+end_src
-
-
-
 
