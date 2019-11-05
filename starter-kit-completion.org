@@ -325,7 +325,8 @@ Each category also has additional settings.
 #+END_SRC
 **** company
 Requires libclang to be installed.
-#+BEGIN_SRC emacs-lisp :tangle no
+
+#+BEGIN_SRC emacs-lisp :tangle yes
 (with-eval-after-load 'company
   (add-hook 'c++-mode-hook 'company-mode)
   (add-hook 'c-mode-hook 'company-mode))
@@ -346,6 +347,7 @@ Requires libclang to be installed.
   (add-hook 'c-mode-hook 'irony-mode)
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 #+END_SRC
+
 **** Tuhdo setup
 
 #+begin_src emacs-lisp :tangle yes
