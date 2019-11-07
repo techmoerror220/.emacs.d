@@ -1,9 +1,10 @@
 # -*- mode: snippet -*-
 # name: quote
 # key: quote
+# expand-env: ((yas-wrap-around-region t))
 # --
      #+BEGIN_QUOTE
-       $1
+       $0
      #+END_QUOTE
 
-$0
+$1

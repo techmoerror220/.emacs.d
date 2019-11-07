@@ -70,6 +70,11 @@
 ;;; downloaded everything anew from the github repository =use-package=
 ;;; didn't work until I moved this here.
 ;;; DGM on 2 Oct 2019: changing all http's to https as per: https://www.reddit.com/r/emacs/comments/aug9in/failed_to_verify_signature_archivecontentssig/
+
+;;; DGM on 6 nov 2019: added this line to be able to load emacs or else
+;;; I had a signature fail message. I have to solve this
+(setq package-check-signature nil)
+
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)

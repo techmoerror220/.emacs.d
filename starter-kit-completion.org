@@ -325,8 +325,8 @@ Each category also has additional settings.
 #+END_SRC
 **** company
 Requires libclang to be installed.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
+DGM 7 Nov 2019: when activated, I lost company mode in email and ledger, even though it was supposed to be active
+#+BEGIN_SRC emacs-lisp :tangle no
 (with-eval-after-load 'company
   (add-hook 'c++-mode-hook 'company-mode)
   (add-hook 'c-mode-hook 'company-mode))

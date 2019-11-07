@@ -5064,6 +5064,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                       :key "C-*"
                       :description "mu4e")
 (cheatsheet-add :group 'Email
+                      :key "S-a"
+                      :description "mu4e-view-attachment-action")
+(cheatsheet-add :group 'Email
                       :key "SPC"
                       :description "cua-scroll-up. Equivalent to C-v: scroll down")
 (cheatsheet-add :group 'Email
@@ -5074,7 +5077,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                       :description "mu4e-message-kill-buffer")
       (cheatsheet-add :group 'Email
                       :key "a"
-                      :description "Lists possible actions when inside message like Show In Browser or Show Thread")
+                      :description "mu4e-view-action. Lists possible actions when inside message like Show In Browser or Show Thread")
       (cheatsheet-add :group 'Email
                       :key "e"
                       :description "mu4e-view-save-attachmen. Offer to save multiple email attachments from the current message.")
@@ -6095,9 +6098,11 @@ gpg: "474F05837FBDEF9B" is not a fingerprint
 
 Temporarily disable signature verification (see variable `package-check-signature').
 
-#+begin_example
+#+begin_src emacs-lisp :tangle yes
 (setq package-check-signature nil)
-#+end_example
+#+end_src
+
+#+RESULTS:
 
 After all this, I do =M-x package-refresh-contents= and this updates all my packages, which I think is a mistake.
 
