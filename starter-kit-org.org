@@ -5111,6 +5111,15 @@ These days I set many of =org-log-*= to note to keep verbose log of task progres
 #+RESULTS:
 : org-metaleft
 
+* Save all org buffers...
+... at 1 minute before the hour:
+
+#+begin_src emacs-lisp :tangle yes
+(run-at-time "00:59" 3600 'org-save-all-org-buffers)
+#+end_src
+
+#+RESULTS:
+: [nil 24003 24132 0 3600 org-save-all-org-buffers nil nil 0]
 
 * Provide
 
