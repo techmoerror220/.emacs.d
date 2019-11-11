@@ -6356,7 +6356,6 @@ But now that I've changed some lines in the bit on input method in =dgm.org= thi
 #+RESULTS:
 
 
-
 * Provide
 
 Trying this on 28 dic 2018. I don't really know why it is needed or not.

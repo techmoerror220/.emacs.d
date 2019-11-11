@@ -4520,6 +4520,142 @@ superscripts with
 
 #+RESULTS:
 
+** Using Git for Automatic History, Backups, and Synchronization
+:PROPERTIES:
+:CUSTOM_ID: GitSync
+:END:
+
+Editing folded regions of your org-mode file can be hazardous to your
+data.  My method for dealing with this is to put my org files in a
+=Git= source repository.
+
+My setup saves all of my org-files every hour and creates a commit
+with my changes automatically.  This lets me go back in time and view
+the state of my org files for any given hour over the lifetime of the
+document.  I've used this once or twice to recover data I accidentally
+removed while editing folded regions.
+*** Automatic Hourly Commits
+:PROPERTIES:
+:CUSTOM_ID: HourlyCommits
+:END:
+
+My Emacs setup saves all org buffers at 1 minute before the hour using
+the following code in my =.emacs=
+
+#+header: :tangle yes
+#+begin_src emacs-lisp
+(run-at-time "00:59" 3600 'org-save-all-org-buffers)
+#+end_src
+
+#+RESULTS:
+: [nil 24006 324 0 3600 org-save-all-org-buffers nil nil 0]
+
+A =cron= job runs at the top of the hour to commit any changes just
+saved by the call to =org-save-all-org-buffers= above.  I use a script
+to create the commits so that I can run it on demand to easily commit
+all modified work when moving from one machine to another.
+
+=crontab= details:
+#+begin_example 
+0 * * * * ~/bin/org-git-sync.sh >/dev/null
+#+end_example
+
+DGM change: I have made it to run every minute with =crontab -e=:
+#+begin_example 
+,* * * * * ~/bin/org-git-sync.sh >/dev/null
+#+end_example
+
+**** DGM adds saving Org buffers every minute
+
+You may wish to call `recentf-save-list` periodically, e.g. every 5 minutes:
+(originally disabled because I found it too invasive).
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(run-at-time nil 60 'org-save-all-org-buffers)
+#+END_SRC
+
+#+RESULTS:
+: [nil 24006 30951 345509 60 org-save-all-org-buffers nil nil 104000]
+
+*** ~/bin/org-git-sync.sh
+:PROPERTIES:
+:CUSTOM_ID: OrgGitSyncSh
+:END:
+
+Here is the shell script I use to create a =git= commit for each of my
+org-repositories.  This loops through multiple repositories and
+commits any modified files.  I have the following org-mode
+repositories:
+
+- org 
+
+  for all of my organization project files and todo lists
+
+- doc-norang.ca
+
+  for any changes to documents under http://doc.norang.ca/
+
+- www.norang.ca
+
+  for any changes to my other website http://www.norang.ca/
+
+This script does not create empty commits - =git= only creates a commit
+if something was modified.
+
+#+begin_src sh
+#!/bin/sh
+# Add org file changes to the repository
+REPOS="org doc.norang.ca www.norang.ca"
+
+for REPO in $REPOS
+do
+    echo "Repository: $REPO"
+    cd ~/git/$REPO
+    # Remove deleted files
+    git ls-files --deleted -z | xargs -0 git rm >/dev/null 2>&1
+    # Add new files
+    git add . >/dev/null 2>&1
+    git commit -m "$(date)"
+done
+#+end_src
+
+I use the following =.gitignore= file in my org-mode =git=
+repositories to keep export generated files out of my =git=
+repositories.  If I include a graphic from some other source than
+ditaa or graphviz then I'll add it to the repository manually.  By
+default all PNG graphic files are ignored (since I assume they are
+produced by ditaa during export)
+
+#+begin_example 
+core
+core.*
+,*.html
+,*~
+.#*
+\#*\#
+,*.txt
+,*.tex
+,*.aux
+,*.dvi
+,*.log
+,*.out
+,*.ics
+,*.pdf
+,*.xml
+,*.org-source
+*.png
+*.toc
+#+end_example
+
+**** DGM tweaks
+- Recall that =REPOS= are the directory where you run =git=, not the remote repo that I sometimes create "locally" in my =/media/blue= disk, for example.
+- So Hansen's trick makes commits in the local repo. I should have to add the line that pushes changes to the remote.
+- Note that the bash file has to have execution rights for it to run:
+
+#+BEGIN_EXAMPLE
+dgm@toshiba:~/bin
+[] $ sudo chmod 755 org-git-sync.sh
+#+END_EXAMPLE
 
 * Settings from the great Alphapapa 
 ** COMMENT via Benjamin Beckwith
