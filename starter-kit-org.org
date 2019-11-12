@@ -4542,13 +4542,17 @@ removed while editing folded regions.
 My Emacs setup saves all org buffers at 1 minute before the hour using
 the following code in my =.emacs=
 
+DGM changes this to saving all org buffers every five minutes so that changes in GTD are recorded constantly.
+
 #+header: :tangle yes
 #+begin_src emacs-lisp
-(run-at-time "00:59" 3600 'org-save-all-org-buffers)
+;; (run-at-time "00:59" 3600 'org-save-all-org-buffers)
+(run-at-time nil (* 5 60) 'org-save-all-org-buffers)
 #+end_src
 
 #+RESULTS:
-: [nil 24006 324 0 3600 org-save-all-org-buffers nil nil 0]
+: [nil 24010 26657 354650 300 org-save-all-org-buffers nil nil 10000]
+
 
 A =cron= job runs at the top of the hour to commit any changes just
 saved by the call to =org-save-all-org-buffers= above.  I use a script
@@ -4565,7 +4569,7 @@ DGM change: I have made it to run every minute with =crontab -e=:
 ,* * * * * ~/bin/org-git-sync.sh >/dev/null
 #+end_example
 
-**** DGM adds saving Org buffers every minute
+**** COMMENT DGM adds saving Org buffers every minute
 
 You may wish to call `recentf-save-list` periodically, e.g. every 5 minutes:
 (originally disabled because I found it too invasive).
@@ -4602,22 +4606,34 @@ repositories:
 This script does not create empty commits - =git= only creates a commit
 if something was modified.
 
-#+begin_src sh
+#+BEGIN_EXAMPLE
 #!/bin/sh
 # Add org file changes to the repository
-REPOS="org doc.norang.ca www.norang.ca"
+REPOS="gtd-repo config-repo"
 
 for REPO in $REPOS
 do
-    echo "Repository: $REPO"
-    cd ~/git/$REPO
-    # Remove deleted files
-    git ls-files --deleted -z | xargs -0 git rm >/dev/null 2>&1
-    # Add new files
-    git add . >/dev/null 2>&1
-    git commit -m "$(date)"
+echo "Repository: $REPO"
+# cd ~/git/$REPO
+
+if [ $REPO = "gtd-repo" ]
+then
+  cd ~/Dropbox/gtd
+fi
+
+if [ $REPO = "config-repo" ]
+then
+    cd ~
+fi
+
+# Remove deleted files
+git ls-files --deleted -z | xargs -0 git rm >/dev/null 2>&1
+# Add new files
+git add . >/dev/null 2>&1
+git commit -m "$(date)"
+git push $REPO master
 done
-#+end_src
+#+END_EXAMPLE
 
 I use the following =.gitignore= file in my org-mode =git=
 repositories to keep export generated files out of my =git=
