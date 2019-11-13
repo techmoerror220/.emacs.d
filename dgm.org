@@ -5519,6 +5519,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
       (cheatsheet-add :group 'Narrowing
                       :key "W"
                       :description "Widen in Org subtree") 
+(cheatsheet-add :group 'Org
+                      :key "C-i"
+                      :description "org-cycle. Toggle fold-unfold heading")
       (cheatsheet-add :group 'Org
                       :key "C-c C-v C-t"
                       :description "org-babel-tangle. Write code blocks to source-specific files")

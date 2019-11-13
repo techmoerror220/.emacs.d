@@ -185,11 +185,15 @@ ARCHIVE is the string name of the package archive.")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Sacha says: (server-start) permits the use of emacsclient,
-;; emacsclientw, and org-protocol.
+;; emacsclient, and org-protocol.
 ;; emacs --daemon, which starts a server automatically but with --daemon, Emacs doesn't start off
 ;; in a graphical environment.
 
-(server-start)
+;; dgm comments out on Nov 13th 2019 to try and stop emacs from
+;; creating new frames
+;; (server-start)
+(require 'server)
+(or (server-running-p) (server-start))
 
   (use-package exwm
     :ensure t
