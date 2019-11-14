@@ -4542,16 +4542,16 @@ removed while editing folded regions.
 My Emacs setup saves all org buffers at 1 minute before the hour using
 the following code in my =.emacs=
 
-DGM changes this to saving all org buffers every five minutes so that changes in GTD are recorded constantly.
+DGM changes this to saving all org buffers every fifteen minutes so that changes in GTD are recorded constantly.
 
 #+header: :tangle yes
 #+begin_src emacs-lisp
 ;; (run-at-time "00:59" 3600 'org-save-all-org-buffers)
-(run-at-time nil (* 5 60) 'org-save-all-org-buffers)
+(run-at-time nil (* 15 60) 'org-save-all-org-buffers)
 #+end_src
 
 #+RESULTS:
-: [nil 24010 26657 354650 300 org-save-all-org-buffers nil nil 10000]
+: [nil 24012 63008 61123 900 org-save-all-org-buffers nil nil 772000]
 
 
 A =cron= job runs at the top of the hour to commit any changes just
@@ -5266,7 +5266,7 @@ These days I set many of =org-log-*= to note to keep verbose log of task progres
 * Save all org buffers...
 ... at 1 minute before the hour:
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 (run-at-time "00:59" 3600 'org-save-all-org-buffers)
 #+end_src
 

@@ -6101,13 +6101,21 @@ gpg: "474F05837FBDEF9B" is not a fingerprint
 
 Temporarily disable signature verification (see variable `package-check-signature').
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 (setq package-check-signature nil)
 #+end_src
 
-#+RESULTS:
-
 After all this, I do =M-x package-refresh-contents= and this updates all my packages, which I think is a mistake.
+
+** gnu-elpa-keyring-update
+
+This package updates the GPG keys used by the ELPA package manager
+(a.k.a `package.el') to verify authenticity of packages downloaded
+from the GNU ELPA archive.
+
+#+begin_src emacs-lisp :tangle yes
+(use-package gnu-elpa-keyring-update)
+#+end_src
 
 
 * Focus

@@ -73,7 +73,7 @@
 
 ;;; DGM on 6 nov 2019: added this line to be able to load emacs or else
 ;;; I had a signature fail message. I have to solve this
-(setq package-check-signature nil)
+;;; (setq package-check-signature nil)
 
 (require 'package)
 (add-to-list 'package-archives
