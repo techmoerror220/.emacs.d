@@ -1011,15 +1011,16 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
                                "/home/dgm/Dropbox/gtd/habits.org"
                                "/home/dgm/Dropbox/gtd/tickler.org"
                                "/home/dgm/Dropbox/gtd/calendar.org"
+                               "/home/dgm/Dropbox/gtd/stata-gtd.org"
+                               "/home/dgm/Dropbox/gtd/divorcio_gtd.org"
                                "/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" ; i could add it with =C-c [= but that action does not survive across sections
                                "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org"
                                "/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org"
-                               "/media/dgm/blue/documents/personal/documentacion/divorcio/divorcio_gtd.org"
                                ))
 #+END_SRC
 
 #+RESULTS:
-| /home/dgm/Dropbox/gtd/contacts.org |
+| /home/dgm/Dropbox/gtd/inbox.org | /home/dgm/Dropbox/gtd/gtd.org | /home/dgm/Dropbox/gtd/journal.org | /home/dgm/Dropbox/gtd/habits.org | /home/dgm/Dropbox/gtd/tickler.org | /home/dgm/Dropbox/gtd/calendar.org | /home/dgm/Dropbox/gtd/stata-gtd.org | /home/dgm/Dropbox/gtd/divorcio_gtd.org | /media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org | /media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org | /media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org |
 
 
 From https://stackoverflow.com/questions/10635989/emacs-org-agenda-list-destroy-my-windows-splits. 
@@ -5120,6 +5121,9 @@ org-ql is a lispy query language for Org files. It allows you to find Org entrie
 
 * Settings from Pragmatic Emacs
 ** Reorder TODO items 
+:PROPERTIES:
+:ID:       81742c80-0d32-4949-8462-cb6e3da0c5fe
+:END:
 - http://pragmaticemacs.com/emacs/reorder-todo-items-in-your-org-mode-agenda/
 
 #+begin_src emacs-lisp :tangle yes

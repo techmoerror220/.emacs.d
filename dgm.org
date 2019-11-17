@@ -6036,9 +6036,11 @@ This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try a
 (push (cons "\\*stata\\*" display-buffer--same-window-action) display-buffer-alist)
 (push (cons "\\*cheatsheet\\*" display-buffer--same-window-action) display-buffer-alist)
 (push (cons "\\*password-store\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*Bookmark List\\*" display-buffer--same-window-action) display-buffer-alist)
 #+END_SRC
 
 #+RESULTS:
+| \*Bookmark List\*  | display-buffer-same-window      | (inhibit-same-window) |
 | \*password-store\* | display-buffer-same-window      | (inhibit-same-window) |
 | \*cheatsheet\*     | display-buffer-same-window      | (inhibit-same-window) |
 | \*stata\*          | display-buffer-same-window      | (inhibit-same-window) |
@@ -6047,13 +6049,6 @@ This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try a
 | \*IPython3\*       | display-buffer-same-window      | (inhibit-same-window) |
 | \*shell\*          | display-buffer-same-window      | (inhibit-same-window) |
 | \*password-store\* | display-buffer-same-window      | (inhibit-same-window) |
-| \*cheatsheet\*     | display-buffer-same-window      | (inhibit-same-window) |
-| \*stata\*          | display-buffer-same-window      | (inhibit-same-window) |
-| \*Python\*         | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython3\*       | display-buffer-same-window      | (inhibit-same-window) |
-| \*shell\*          | display-buffer-same-window      | (inhibit-same-window) |
-| \*pass\*           | display-buffer-same-window      | (inhibit-same-window) |
 | \*cheatsheet\*     | display-buffer-same-window      | (inhibit-same-window) |
 | \*stata\*          | display-buffer-same-window      | (inhibit-same-window) |
 | \*Python\*         | display-buffer-same-window      | (inhibit-same-window) |
@@ -6366,6 +6361,46 @@ But now that I've changed some lines in the bit on input method in =dgm.org= thi
 
 #+RESULTS:
 
+* Chess
+** jwiegley's Chess
+
+Welcome to chess.el, a client and library for playing Chess from
+Emacs.
+
+chess.el is an Emacs Lisp library and several clients on top of the
+underlying library functionality for performing various activities
+related to the game of chess.
+
+You can play against an external chess program such as gnuchess,
+crafty, phalanx or sjeng.  All of them are publically available, and
+chess.el will automatically detect which one you have installed,
+provided they have standard executable program names, and are in a
+located in a directory which is part of the PATH.  See the
+customisable variable `chess-default-engine'.
+
+You can also play against another human or computer over the internet
+(through a direct Emacs-to-Emacs connection, or on one of the Internet
+Chess Servers like freechess.org or chessclub.com), or even against a
+very simple chess thinking module implemented in pure Emacs Lisp.
+
+chess.el also provides a mode for editing Portable Game Notation (PGN)
+files.
+
+To improve your chessaility, you might also like to have a look at
+chess-puzzle, which allows you to solve chess puzzle collections (in
+PGN or EPD format) against one of the engines you have installed.
+
+
+These days, chess.el is maintained as part of GNU ELPA, the Emacs Lisp
+Package Repository.  Use `M-x list-packages RET' to show information about,
+and install, the current version.
+
+#+begin_src emacs-lisp :tangle yes
+(use-package chess)
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24016 25179 503137 586000) :init (24016 25179 503127 326000) :config (24016 25179 502930 231000) :config-secs (0 0 5 517000) :init-secs (0 0 37369 8000) :use-package-secs (0 17 444212 319000)))
 
 * Provide
 
