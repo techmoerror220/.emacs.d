@@ -43,7 +43,6 @@ eshell/history
 /index.org
 /vc-git.awk
 var/
-bookmarks
 ido.last
 ido.last~
 projectile-bookmarks.eld
@@ -65,3 +64,4 @@ _minted-starter-kit-python/
 network-security.data
 speed-type/German.txt
 custom.el
+.#starter-kit-org.org
