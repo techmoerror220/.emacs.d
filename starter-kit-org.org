@@ -1756,11 +1756,12 @@ When I changed this to =("/home/dgm/Dropbox/gtd/tickler.org" :maxlevel . 2)= I g
                              ("/home/dgm/Dropbox/gtd/inbox.org" :level . 2)
                              ("/home/dgm/Dropbox/gtd/notes.org" :maxlevel . 2)
                              ("/home/dgm/Dropbox/gtd/habits.org" :maxlevel . 2)
+                             ("/home/dgm/Dropbox/gtd/stata-gtd.org" :maxlevel . 2)
                              ("/home/dgm/Dropbox/gtd/tickler.org" :maxlevel . 2)))
 #+END_SRC
 
 #+RESULTS:
-: ((/home/dgm/Dropbox/gtd/gtd.org :maxlevel . 3) (/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org :level . 2) (/media/dgm/blue/documents/personal/documentacion/divorcio/divorcio_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org :level . 2) (/home/dgm/Dropbox/gtd/someday.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/inbox.org :level . 2) (/home/dgm/Dropbox/gtd/notes.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/habits.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/tickler.org :maxlevel . 2))
+: ((/home/dgm/Dropbox/gtd/gtd.org :maxlevel . 3) (/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org :level . 2) (/media/dgm/blue/documents/personal/documentacion/divorcio/divorcio_gtd.org :level . 2) (/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org :level . 2) (/home/dgm/Dropbox/gtd/someday.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/inbox.org :level . 2) (/home/dgm/Dropbox/gtd/notes.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/habits.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/stata-gtd.org :maxlevel . 2) (/home/dgm/Dropbox/gtd/tickler.org :maxlevel . 2))
 
 New from https://www.reddit.com/r/emacs/comments/4366f9/how_do_orgrefiletargets_work/
 

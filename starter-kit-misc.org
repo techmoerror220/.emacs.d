@@ -243,14 +243,14 @@ If you want your Emacs automatically switch between the color schemes when the t
 #+BEGIN_SRC emacs-lisp 
 (defun theme-switcher ()
   (let ((current-hour (string-to-number (format-time-string "%H"))))
-    (if (or (< current-hour 9) (> current-hour 19)) (set-dark-theme) (set-light-theme))))
+    (if (or (< current-hour 11) (> current-hour 17)) (set-dark-theme) (set-light-theme))))
 
 ;; Run at every 3600 seconds, after 0s delay; DGM commented this out on 24 august 2019 so it did not switch back by itself 
 (run-with-timer 0 3600 'theme-switcher)
 #+END_SRC
 
 #+RESULTS:
-: [nil 23933 17573 196111 3600 theme-switcher nil nil 721000]
+: [nil 24021 32824 946091 3600 theme-switcher nil nil 677000]
 
 ** Mode-line customization
 
