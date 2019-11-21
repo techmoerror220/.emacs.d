@@ -538,22 +538,20 @@ Attach multiple files to mu4e email message. (Tip from http://www.djcbsoftware.n
 #+RESULTS:
 | diff-hl-dired-mode | stripe-listify-buffer | (lambda nil (setq truncate-lines 1)) | ensure-buffer-name-ends-in-slash | (lambda nil) | turn-on-gnus-dired-mode | helm-gtags-mode |
 
-*** Volatile 
+*** COMMENT Volatile 
 
 =volatile= makes so that when you yank (paste) something, the yanked (pasted) region will be highlighted.
 See http://tuhdo.github.io/emacs-tutor3.html
 
+Read this: 
+- https://www.reddit.com/r/emacs/comments/8qyq53/can_i_make_emacs_highlight_the_area_that_i_just/
+- https://emacs.stackexchange.com/questions/50493/highlight-yanked-region-during-sequence-of-yank-pops-until-mark-is-moved-away
+
 #+srcname: volatile
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package volatile-highlights)
 (volatile-highlights-mode t)
 #+END_SRC
-
-#+RESULTS: volatile
-: t
-
-#+RESULTS:
-: t
 
 *** Clean-indent
 Emacs extension for clean auto-indent and backspace unindent.
@@ -4901,6 +4899,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
       (cheatsheet-add :group 'Editing
                       :key "C-$"
                       :description "palimpsest-move-region-to-trash")
+      (cheatsheet-add :group 'Editing
+                      :key "C-x C-o"
+                      :description "delete-blank-lines")
   (cheatsheet-add :group 'Editing
                       :key "M-;"
                       :description "comment-dwim and org-comment-dwim.")
