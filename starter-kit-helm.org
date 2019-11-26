@@ -851,6 +851,7 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
   (setq projectile-project-search-path '("~/.emacs.d/"
                                          "~/texmf/"
                                          "~/Dropbox/gtd/"
+                                         "~/Downloads/"
                                          "/media/dgm/blue/documents/proyectos/mtj/"
                                          "/media/dgm/blue/documents/dropbox/"
                                          "/media/dgm/blue/documents/UNED/"
@@ -871,6 +872,7 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
                                          "/media/dgm/blue/documents/elibrary/women-labor-market"))
 
   (projectile-add-known-project "~/.emacs.d/")
+  (projectile-add-known-project "~/Downloads/")
   (projectile-add-known-project  "~/texmf/")
   (projectile-add-known-project "~/Dropbox/gtd/")
   (projectile-add-known-project "/media/dgm/blue/documents/proyectos/mtj/")
