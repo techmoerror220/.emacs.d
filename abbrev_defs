@@ -74,6 +74,7 @@
     ("levls" "levels" nil :count 1)
     ("lk" "like" nil :count 2)
     ("lw" "likewise" nil :count 1)
+    ("misam" "misma" nil :count 1)
     ("mo" "moreover" nil :count 5)
     ("nonnomral" "nonnormal" nil :count 1)
     ("poryectos" "proyectos" nil :count 1)

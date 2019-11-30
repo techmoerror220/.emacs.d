@@ -848,10 +848,7 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
   :ensure t
   :config 
   (projectile-global-mode t)
-  (setq projectile-project-search-path '("~/.emacs.d/"
-                                         "~/texmf/"
-                                         "~/Dropbox/gtd/"
-                                         "~/Downloads/"
+  (setq projectile-project-search-path '("~/"
                                          "/media/dgm/blue/documents/proyectos/mtj/"
                                          "/media/dgm/blue/documents/dropbox/"
                                          "/media/dgm/blue/documents/UNED/"
@@ -871,10 +868,8 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
                                          "/media/dgm/blue/documents/proyectos/D-PlanNacional2019"
                                          "/media/dgm/blue/documents/elibrary/women-labor-market"))
 
+  (projectile-add-known-project "~/")
   (projectile-add-known-project "~/.emacs.d/")
-  (projectile-add-known-project "~/Downloads/")
-  (projectile-add-known-project  "~/texmf/")
-  (projectile-add-known-project "~/Dropbox/gtd/")
   (projectile-add-known-project "/media/dgm/blue/documents/proyectos/mtj/")
   (projectile-add-known-project "/media/dgm/blue/documents/dropbox/")
   (projectile-add-known-project "/media/dgm/blue/documents/UNED/")
@@ -914,6 +909,20 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
                       (projectile-project-name))))
 #+END_SRC
 
+Note:
+
+#+BEGIN_EXAMPLE
+"~/.emacs.d/"
+                                         "~/texmf/"
+                                         "~/Dropbox/gtd/"
+                                         "~/Downloads/"
+  (projectile-add-known-project "~/Downloads/")
+  (projectile-add-known-project  "~/texmf/")
+  (projectile-add-known-project "~/Dropbox/gtd/")
+#+END_EXAMPLE
+
+Not needed, I think as the they are included in =.git= of =~/=.
+
 *** Tuhdo's set up
 
 #+begin_src emacs-lisp :tangle no
@@ -922,6 +931,9 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
   (projectile-global-mode)
   (setq projectile-enable-caching t))
 #+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24034 9694 517929 992000) :init (24034 9694 517918 228000) :config (24034 9694 517634 638000) :config-secs (0 0 9 408000) :init-secs (0 5 707366 238000) :use-package-secs (0 5 707478 796000)))
 
 ** Helm-Projectile
 
@@ -933,6 +945,7 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
   :init     
   (helm-projectile-on)
   (setq projectile-completion-system 'helm)
+  (setq projectile-indexing-method 'alien) ;; added by DGM on 30 nov 2019
   :commands helm-projectile
   ;;   :bind ("C-c p h" . helm-projectile)
   )
@@ -1037,6 +1050,7 @@ From https://github.com/bbatsov/projectile/issues/184
   (setq projectile-completion-system 'helm)
   (setq projectile-indexing-method 'alien))))
 #+END_EXAMPLE
+
 ** Various =helm-projectile= shortcuts
 
 #+begin_src emacs-lisp :tangle yes
