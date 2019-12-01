@@ -1603,7 +1603,7 @@ Set to the name of the file where new notes will be stored
 #+RESULTS:
 : /media/dgm/blue/documents/dropbox/org/fromMobile.org
 
-Finally, as Carsten Dominik says here: http://thread.gmane.org/gmane.emacs.orgmode/523, with the project list You may run into problems with this approach if ou have set =org-tags-match-list-sublevels= to a non-nil value, because then, due to tag inheritance, every headline *inside* each project will also showup in the resulting list.  To work around this, you may define your own special command like this:
+Finally, as Carsten Dominik says here: http://thread.gmane.org/gmane.emacs.orgmode/523, with the project list You may run into problems with this approach if you have set =org-tags-match-list-sublevels= to a non-nil value, because then, due to tag inheritance, every headline *inside* each project will also showup in the resulting list.  To work around this, you may define your own special command like this:
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (defun my-org-project-list ()
