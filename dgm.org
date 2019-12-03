@@ -4872,6 +4872,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
       (cheatsheet-add :group 'Dired
                       :key "C-k"
                       :description "Delete path to write a new path")
+      (cheatsheet-add :group 'Dired
+                      :key "("
+                      :description "dired-hide-details-mode")
+      (cheatsheet-add :group 'Dired
+                      :key "$"
+                      :description "dired-hide-subdir. Hide or unhide the current subdirectory and move to next directory.")
       (cheatsheet-add :group 'Dired-Projectile
                       :key "C-d"
                       :description "Open dired when in P session")
