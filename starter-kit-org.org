@@ -1443,6 +1443,9 @@ This I don't really use but could be useful in future:
             (tags-todo "+project+CATEGORY=\"research\""
                        ((org-agenda-overriding-header "                                               RESEARCH                                             ")
                         (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+            (tags-todo "+project+CATEGORY=\"academico\""
+                       ((org-agenda-overriding-header "                                               ACADEMICO                                            ")
+                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
             (tags-todo "+project+CATEGORY=\"work-hunt\""
                        ((org-agenda-overriding-header "                                               WORK-HUNT                                            ")
                         (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
