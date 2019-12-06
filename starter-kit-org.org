@@ -157,6 +157,35 @@ Create =html= files form the =org= sources, to help with documentation. To set u
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23561 790 48242 633000) :init (23561 790 48205 768000) :config (23561 790 47836 935000) :config-secs (0 0 26 942000) :init-secs (0 0 707 567000) :use-package-secs (0 0 940 130000)))
 
+*** =ox-tufte=: exporter to HTML
+This is an export backend for Org-mode that exports buffers to HTML that
+is compatible with Tufte CSS - https://edwardtufte.github.io/tufte-css/ out of
+the box (meaning no CSS modifications needed).
+
+URL: 
+https://github.com/janruehling/ox-tufte
+
+It’s important that you download =tufte css= and place it on your server (with the fonts) and then reference it from your org-mode document by adding a header such as:
+
+#+BEGIN_EXAMPLE
+#+HTML_HEAD: <link rel="stylesheet" href="/css/tufte.css" type="text/css" />
+#+END_EXAMPLE
+
+
+#+begin_src emacs-lisp :tangle yes
+(if (file-exists-p "/home/dgm/.emacs.d/src/ox-tufte")
+    (progn
+      (add-to-list 'load-path "/home/dgm/.emacs.d/src/ox-tufte")
+      (require 'ox-tufte))
+  (use-package ox-tufte
+    :ensure t
+    :init (require 'ox-tufte)))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24042 39677 384338 476000) :init (24042 39677 384311 77000) :config (24042 39677 383906 724000) :config-secs (0 0 13 47000) :init-secs (0 0 808 512000) :use-package-secs (0 0 996 587000)))
+
+
 ***  Configure Org-babel
 - Add LaTeX to the list of languages Org-babel will recognize.
 #+srcname: add-latex

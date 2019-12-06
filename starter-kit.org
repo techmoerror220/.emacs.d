@@ -528,6 +528,7 @@ Located in [[file:starter-kit-latex.org][starter-kit-latex]]
 #+begin_src emacs-lisp
 (starter-kit-load "starter-kit-latex.org")
 #+end_src
+
 *** Starter Kit Latex-Org
 Located in [[file:starter-kit-latex-org.org][starter-kit-latex-org]]
 
@@ -538,6 +539,13 @@ Located in [[file:starter-kit-latex-org.org][starter-kit-latex-org]]
 #+RESULTS:
 : Loaded /home/dgm/.emacs.d/starter-kit-latex-org.el
 
+*** Starter Kit Tufte Latex
+
+#+begin_src emacs-lisp
+(starter-kit-load "starter-kit-tufte-latex.org")
+#+end_src
+
+
 *** Starter Kit Stats
 Located in [[file:starter-kit-stats.org][starter-kit-stats]]
 
@@ -545,12 +553,18 @@ Located in [[file:starter-kit-stats.org][starter-kit-stats]]
   (starter-kit-load "starter-kit-stats.org")
 #+end_src
 
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-stats.el
+
 *** Starter Kit Text
 Located in [[file:starter-kit-text.org][starter-kit-text]]
 
 #+begin_src emacs-lisp
   (starter-kit-load "starter-kit-text.org")
 #+end_src
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-text.el
 
 *** Starter Kit Parens
 Located in [[file:starter-kit-text.org][starter-kit-text]]

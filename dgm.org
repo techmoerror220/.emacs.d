@@ -891,7 +891,6 @@ I disable this as it is dealt with in -misc.org
 
 #+srcname: highlight-numbers-and-symbols
 #+BEGIN_SRC emacs-lisp :tangle yes
-
 (use-package highlight-numbers)
 (use-package highlight-symbol)
 
@@ -2589,7 +2588,7 @@ Note: I've commented this out because below I implement the same functionality. 
 #+RESULTS:
 : split-and-follow-vertically
 
-*** =swipe=
+*** =swiper=
 I like me some searching, the default search is very meh. In emacs, you mostly use search to get around your buffer, much like with avy, but sometimes it doesn’t hurt to search for entire words or mode, swiper makes sure this is more efficient.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -4424,6 +4423,56 @@ This only makes sense for empty buffers."
 
 #+RESULTS:
 : beamer-skeleton
+
+** COMMENT Tufte book
+Not working because I have another class already set.
+#+BEGIN_SRC emacs-lisp :tangle no
+(define-skeleton tufte-skeleton
+  "Inserts a Latex Tufte book skeleton into current buffer.
+This only makes sense for empty buffers."
+  "\n"
+  "# -*- coding: utf-8 -*-\n"
+  "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
+  "#+TITLE:\n"
+  "#+SUBTITLE:\n" 
+  "#+AUTHOR:\n" 
+  "#+DATE:\n" 
+  "#+OPTIONS: toc:4\n" 
+  "#+OPTIONS: H:2 num:nil toc:nil \\n:nil @:t ::t |:t ^:{} _:{} *:t TeX:t LaTeX:t\n"
+  "#+PROPERTY: header-args :tangle yes\n"
+  "#+LATEX_HEADER: \\documentclass{tufte-book}\n"
+  "#+LATEX_HEADER: \\usepackage{org-preamble-pdflatex}\n"
+  "#+LATEX_HEADER: \\setkeys{Gin}{width=\\linewidth,totalheight=\\textheight,keepaspectratio}\n"
+  "#+LATEX_HEADER: \\fvset{fontsize=\\normalsize}\n"
+  "#+LATEX_HEADER: \\newcommand{\\hangp}[1]{\\makebox[0pt][r]{(}#1\\makebox[0pt][l]{)}}\n"
+  "#+LATEX_HEADER: \\newcommand{\\hangstar}{\\makebox[0pt][l]{*}}\n"
+  "#+LATEX_HEADER: \\newcommand{\monthyear}{%\n"
+  "#+LATEX_HEADER: \\ifcase\month\\or January\\or February\\or March\\or April\\or May\\or June\\or\n"
+  "#+LATEX_HEADER: July\\or August\\or September\\or October\\or November\\or\n"
+  "#+LATEX_HEADER: December\\fi\\space\\number\\year\n"
+  "#+LATEX_HEADER: }\n"
+  "#+LATEX_HEADER: \\newcommand{\\openepigraph}[2]{%\n"
+  "#+LATEX_HEADER: \\begin{fullwidth}\n"
+  "#+LATEX_HEADER: \\sffamily\large\n"
+  "#+LATEX_HEADER: \\begin{doublespace}\n"
+  "#+LATEX_HEADER: \\noindent\\allcaps{#1}\\\% epigraph\n"
+  "#+LATEX_HEADER: \\noindent\\allcaps{#2}% author\n"
+  "#+LATEX_HEADER: \\end{doublespace}\n"
+  "#+LATEX_HEADER: \\end{fullwidth}\n"
+  "#+LATEX_HEADER: \\newcommand{\\blankpage}{\\newpage\\hbox{}\\thispagestyle{empty}\\newpage}\n"
+  "#+LATEX_HEADER: \\newcommand{\\measure}[3]{#1/#2$\times$\\unit[#3]{pc}}\n"
+  "#+LANGUAGE: "str | "spanish""\n"
+  "#+LATEX_HEADER: \\usepackage["str | "spanish""]{babel}\n"
+
+
+  "" _ "\n\n"
+  "\\printbibliography")
+#+END_SRC
+
+#+RESULTS:
+: tufte-skeleton
+
+
 
 * Pragmatic Emacs
 ** dired-narrow

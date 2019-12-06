@@ -10,7 +10,6 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
   Support for editing LaTeX.
 
 * Set the engine running latex
-
 ** With =tex= comes =auctex=
 
 Following advice from https://emacs.stackexchange.com/questions/41321/when-to-specify-a-package-name-in-use-packages-ensure-tag
@@ -361,6 +360,48 @@ Tell RefTeX where the bibliography files are. Commented out for now cos the path
      '("/home/dgm/texmf/bibtex/bib"))
 #+end_src
 
+** eBib package 
+Package required by tufte-org-mode (https://github.com/tsdye/tufte-org-mode).
+
+Ebib is a BibTeX database manager that runs in GNU Emacs.  With Ebib, you
+can create and manage .bib-files, all within Emacs.  It supports @String
+and @Preamble definitions, multi-line field values, searching, and
+integration with Emacs' (La)TeX mode, Org mode and others.
+
+See the Ebib manual for usage and installation instructions.
+
+The latest release version of Ebib, contact information and mailing list
+can be found at <http://joostkremers.github.io/ebib>.  Development
+sources can be found at <https://github.com/joostkremers/ebib>.
+
+#+begin_src emacs-lisp :tangle yes
+(use-package ebib
+  :ensure t)
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24042 10284 3769 362000) :init (24042 10284 3747 398000) :config (24042 10284 3336 76000) :config-secs (0 0 10 247000) :init-secs (0 0 723 546000) :use-package-secs (0 0 813 878000)))
+
+** =ox-extra=
+
+Required by tufted org mode (https://github.com/tsdye/tufte-org-mode)
+
+#+begin_src emacs-lisp :tangle yes
+ (require 'ox-extra)
+ (ox-extras-activate '(latex-header-blocks ignore-headlines))
+#+end_src
+
+#+RESULTS:
+
+** ox-tufte-latex
+
+#+begin_src emacs-lisp :tangle yes
+(require 'ox-tufte-latex)
+#+end_src
+
+#+RESULTS:
+: ox-tufte-latex
+
 ** Local vc commands
 
     Run the =vc= shellscript before running xelatex with =C-c c= (instead
@@ -399,7 +440,7 @@ See https://www.linuxtopia.org/online_books/linux_tool_guides/gnu_emacs_manual/F
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq font-lock-maximum-decoration        
-   '((latex-mode . 2)))
+   '((latex-mode . 3)))
 #+END_SRC
 
 #+RESULTS:

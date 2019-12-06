@@ -128,6 +128,8 @@ just have to assume it's online."
 
 (starter-kit-load "starter-kit-latex-org.org")
 
+(starter-kit-load "starter-kit-tufte-latex.org")
+
 (starter-kit-load "starter-kit-stats.org")
 
 (starter-kit-load "starter-kit-text.org")

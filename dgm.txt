@@ -1,0 +1,10 @@
+                              ━━━━━━━━━━━
+                               INFO PLUS
+
+                                  dgm
+                              ━━━━━━━━━━━
+
+
+┌────
+│ ;; (use-package info+) ;;no longer available in MELPA?
+└────

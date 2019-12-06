@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: python
-# expand-env: ((yas-wrap-around-region t))
-# key: py_
-# --
-#+begin_src python
-$0
-#+end_src
