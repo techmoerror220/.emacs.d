@@ -213,106 +213,7 @@ globally for later insertion into an Org-mode buffer.  See
 
 #+RESULTS:
 : org-store-link
-*** ebib and citation settings
-ebib is a bibtex database manager that works inside emacs. It can
-talk to org-mode. See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-17_2][this Worg tutorial]] for details.
-#+source: ebib-setup
-#+begin_src emacs-lisp :tangle yes
-  (org-add-link-type "ebib" 'ebib)
 
-  (org-add-link-type
-   "cite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "cite:" desc)))
-           (format "\\cite{%s}" path)
-         (format "\\cite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "parencite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "parencite:" desc)))
-           (format "\\parencite{%s}" path)
-         (format "\\parencite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "textcite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "textcite:" desc)))
-           (format "\\textcite{%s}" path)
-         (format "\\textcite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "autocite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "autocite:" desc)))
-           (format "\\autocite{%s}" path)
-         (format "\\autocite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "footcite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "footcite:" desc)))
-           (format "\\footcite{%s}" path)
-         (format "\\footcite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "fullcite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "fullcite:" desc)))
-           (format "\\fullcite{%s}" path)
-         (format "\\fullcite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "citetitle" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "citetitle:" desc)))
-           (format "\\citetitle{%s}" path)
-         (format "\\citetitle[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "citetitles" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "citetitles:" desc)))
-           (format "\\citetitles{%s}" path)
-         (format "\\citetitles[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "headlessfullcite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "headlessfullcite:" desc)))
-           (format "\\headlessfullcite{%s}" path)
-         (format "\\headlessfullcite[%s]{%s}" desc path)
-         )))))
-#+end_src
-
-#+RESULTS: ebib-setup
-: Created headlessfullcite link.
 
 *** Org-protocol
 
@@ -729,7 +630,8 @@ Org-mode manual is available to the =info= command (bound to =C-h i=).
 #+end_src
 
 #+RESULTS:
-| /home/dgm/.emacs.d/src/org/doc | /home/dgm/.emacs.d/src/org/doc | /home/dgm/.emacs.d/elpa/auctex-12.1.1 | /home/dgm/.emacs.d/elpa/ebib-20180817.1024 | /home/dgm/.emacs.d/elpa/editorconfig-20181025.421 | /home/dgm/.emacs.d/elpa/magit-20180915.1359 | /home/dgm/.emacs.d/elpa/ghub-20180914.802 | /home/dgm/.emacs.d/elpa/magit-popup-20180726.2037 | /home/dgm/.emacs.d/elpa/org-plus-contrib-20180910 | /home/dgm/.emacs.d/elpa/pandoc-mode-20180727.2201 | /home/dgm/.emacs.d/elpa/r-autoyas-20140101.1510 | /home/dgm/.emacs.d/elpa/ess-20180911.2135 | /home/dgm/.emacs.d/elpa/slime-20181031.31 | /home/dgm/.emacs.d/elpa/ivy-20180911.1701 | /home/dgm/.emacs.d/elpa/use-package-20180715.1801 | /home/dgm/.emacs.d/elpa/with-editor-20180726.2044 | /usr/local/share/info/ | /usr/share/info/ | /usr/local/share/info/ |
+| /home/dgm/.emacs.d/src/org/doc | /home/dgm/.emacs.d/src/org/doc | /home/dgm/.emacs.d/src/org/doc | /home/dgm/.emacs.d/elpa/chess-2.0.4 | /home/dgm/.emacs.d/elpa/auctex-12.2.0 | /home/dgm/.emacs.d/elpa/ebib-20191205.1336 | /home/dgm/.emacs.d/elpa/editorconfig-20191127.529 | /home/dgm/.emacs.d/elpa/ess-smart-underscore-20190309.101 | /home/dgm/.emacs.d/elpa/ess-20191130.2000 | /home/dgm/.emacs.d/elpa/ghub-20191205.1648 | /home/dgm/.emacs.d/elpa/ledger-mode-20191126.2029 | /home/dgm/.emacs.d/elpa/magit-20191128.1802 | /home/dgm/.emacs.d/elpa/org-plus-contrib-20191203 | /home/dgm/.emacs.d/elpa/org-ql-20191203.221 | /home/dgm/.emacs.d/elpa/org-super-agenda-20191130.2245 | /home/dgm/.emacs.d/elpa/pandoc-mode-20191003.1221 | /home/dgm/.emacs.d/elpa/racket-mode-20191204.205 | /home/dgm/.emacs.d/elpa/transient-20191206.1306 | /home/dgm/.emacs.d/elpa/use-package-20191126.2034 | /home/dgm/.emacs.d/elpa/with-editor-20191105.2250 | /home/dgm/.emacs.d/elpa/ivy-20191128.1153 | /usr/local/share/info/ | /usr/share/info/ | /usr/local/share/info/ |
+
 
 ** Nice Bulleted Lists
 

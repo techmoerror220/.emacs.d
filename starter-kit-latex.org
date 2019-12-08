@@ -125,7 +125,7 @@ Trying the next bit from https://yoo2080.wordpress.com/2016/11/15/how-to-make-pr
 #+END_SRC
 
 #+RESULTS: latex-pretty-symbols
-| preview-mode-setup | TeX-PDF-mode | (lambda nil (local-set-key  v 'ebib-insert-bibtex-key)) | turn-on-reftex | latex-unicode-simplified |
+| er/add-latex-mode-expansions | TeX-PDF-mode | turn-on-reftex | latex-unicode-simplified |
 
 #+end_src
 
@@ -193,23 +193,6 @@ Trying the next bit from https://yoo2080.wordpress.com/2016/11/15/how-to-make-pr
 #+RESULTS: reftex-support
 : t
 
-*** Load ebib
-    =ebib= is a bibtex database manager that works inside emacs. It can
-    talk to org-mode. See [[http://ebib.sourceforge.net/][the ebib project page]] for more. When Ebib is
-    loaded, you can run it with =M-x ebib=.
-  
-#+source: ebib-load
-#+begin_src emacs-lisp :tangle yes
-  (autoload 'ebib "ebib" "Ebib, a BibTeX database manager." t)
-  (setq ebib-preload-bib-files 
-        '("/media/dgm/blue/documents/bibs/socbib.bib"))
-  (add-hook 'LaTeX-mode-hook #'(lambda ()
-          (local-set-key "\C-c v" 'ebib-insert-bibtex-key)))
-#+end_src
-
-#+RESULTS: ebib-load
-| er/add-latex-mode-expansions | TeX-PDF-mode | (lambda nil (local-set-key  v 'ebib-insert-bibtex-key)) | turn-on-reftex |
-
 ** Configure AucTeX 
 
 Following advice from https://github.com/alexeyr/company-auctex/issues/27
@@ -237,7 +220,7 @@ Following advice from https://github.com/alexeyr/company-auctex/issues/27
 #+end_src
 
 #+RESULTS: pdf-mode
-| er/add-latex-mode-expansions | TeX-PDF-mode | (lambda nil (local-set-key  v 'ebib-insert-bibtex-key)) | turn-on-reftex |
+| er/add-latex-mode-expansions | TeX-PDF-mode | turn-on-reftex | latex-unicode-simplified |
 
 *** Configure Biber
 Allow AucTeX to use biber as well as/instead of bibtex.
@@ -282,15 +265,21 @@ Allow AucTeX to use biber as well as/instead of bibtex.
 
 From https://tex.stackexchange.com/questions/454966/biblatex-custom-entries-with-emacs-bibtex-mode
 
+Read https://tex.stackexchange.com/questions/454966/biblatex-custom-entries-with-emacs-bibtex-mode to customize bibtex
+
 *** Use Biblatex key template by default in bib files
 
 #+source: bibtex-dialect
 #+begin_src emacs-lisp :tangle yes
-(setq bibtex-dialect "BibTeX")
+(use-package bibtex
+  :custom
+  (bibtex-dialect (quote biblatex)))
+; (setq bibtex-dialect "BibTeX")
 #+end_src
 
 #+RESULTS: bibtex-dialect
-: BibTeX
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24044 9385 679053 832000) :init (24044 9385 679043 369000) :config (24044 9385 678881 394000) :config-secs (0 0 4 424000) :init-secs (0 0 350 650000) :use-package-secs (0 0 773 233000)))
+
 *** Keep all entries in sorted order
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -361,6 +350,14 @@ Tell RefTeX where the bibliography files are. Commented out for now cos the path
 #+end_src
 
 ** eBib package 
+:PROPERTIES:
+:ID:       e7ec94da-a5b8-4850-ab00-164517da8dc5
+:END:
+
+=ebib= is a bibtex database manager that works inside emacs. It can
+talk to org-mode. See [[http://ebib.sourceforge.net/][the ebib project page]] for more. When Ebib is
+loaded, you can run it with =M-x ebib=.
+  
 Package required by tufte-org-mode (https://github.com/tsdye/tufte-org-mode).
 
 Ebib is a BibTeX database manager that runs in GNU Emacs.  With Ebib, you
@@ -374,13 +371,262 @@ The latest release version of Ebib, contact information and mailing list
 can be found at <http://joostkremers.github.io/ebib>.  Development
 sources can be found at <https://github.com/joostkremers/ebib>.
 
+
+Original code on =bib=
+
+#+BEGIN_EXAMPLE
+,#+source: ebib-load
+,#+begin_src emacs-lisp :tangle yes
+(autoload 'ebib "ebib" "Ebib, a BibTeX database manager." t)
+(setq ebib-preload-bib-files 
+'("/media/dgm/blue/documents/bibs/socbib.bib"))
+(add-hook 'LaTeX-mode-hook #'(lambda ()
+(local-set-key "\C-c v" 'ebib-insert-bibtex-key)))
+,#+end_src
+
+,#+RESULTS: ebib-load
+| er/add-latex-mode-expansions | TeX-PDF-mode | (lambda nil (local-set-key  v 'ebib-insert-bibtex-key)) | turn-on-reftex |
+#+END_EXAMPLE
+
 #+begin_src emacs-lisp :tangle yes
-(use-package ebib
-  :ensure t)
+  (use-package ebib
+    :defer t
+    :ensure t
+    :preface
+    (use-package parsebib)
+    :custom
+     (ebib-preload-bib-files '("/media/dgm/blue/documents/bibs/socbib.bib"))
+     (ebib-bib-search-dirs '("/media/dgm/blue/documents/bibs")))
+
+ (setq ebib-timestamp-format "%d.%m.%Y.")
+ (setq ebib-use-timestamp t)
+ (setq ebib-bibtex-dialect 'biblatex)
+
+  ;;(add-hook 'LaTeX-mode-hook #'(lambda ()
+  ;;        (local-set-key "\C-c v" 'ebib-insert-bibtex-key)))
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24042 10284 3769 362000) :init (24042 10284 3747 398000) :config (24042 10284 3336 76000) :config-secs (0 0 10 247000) :init-secs (0 0 723 546000) :use-package-secs (0 0 813 878000)))
+: biblatex
+
+
+*** ebib and citation settings in =org-mode=
+
+=ebib= is a bibtex database manager that works inside emacs. It can
+talk to org-mode. See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-17_2][this Worg tutorial]] for details.
+
+#+source: ebib-setup
+#+begin_src emacs-lisp :tangle yes
+  (org-add-link-type "ebib" 'ebib)
+
+  (org-add-link-type
+   "cite" 'ebib
+   (lambda (path desc format)
+     (cond
+      ((eq format 'latex)
+       (if (or (not desc) (equal 0 (search "cite:" desc)))
+           (format "\\cite{%s}" path)
+         (format "\\cite[%s]{%s}" desc path)
+         )))))
+
+  (org-add-link-type
+   "parencite" 'ebib
+   (lambda (path desc format)
+     (cond
+      ((eq format 'latex)
+       (if (or (not desc) (equal 0 (search "parencite:" desc)))
+           (format "\\parencite{%s}" path)
+         (format "\\parencite[%s]{%s}" desc path)
+         )))))
+
+  (org-add-link-type
+   "textcite" 'ebib
+   (lambda (path desc format)
+     (cond
+      ((eq format 'latex)
+       (if (or (not desc) (equal 0 (search "textcite:" desc)))
+           (format "\\textcite{%s}" path)
+         (format "\\textcite[%s]{%s}" desc path)
+         )))))
+
+  (org-add-link-type
+   "autocite" 'ebib
+   (lambda (path desc format)
+     (cond
+      ((eq format 'latex)
+       (if (or (not desc) (equal 0 (search "autocite:" desc)))
+           (format "\\autocite{%s}" path)
+         (format "\\autocite[%s]{%s}" desc path)
+         )))))
+
+  (org-add-link-type
+   "footcite" 'ebib
+   (lambda (path desc format)
+     (cond
+      ((eq format 'latex)
+       (if (or (not desc) (equal 0 (search "footcite:" desc)))
+           (format "\\footcite{%s}" path)
+         (format "\\footcite[%s]{%s}" desc path)
+         )))))
+
+  (org-add-link-type
+   "fullcite" 'ebib
+   (lambda (path desc format)
+     (cond
+      ((eq format 'latex)
+       (if (or (not desc) (equal 0 (search "fullcite:" desc)))
+           (format "\\fullcite{%s}" path)
+         (format "\\fullcite[%s]{%s}" desc path)
+         )))))
+
+  (org-add-link-type
+   "citetitle" 'ebib
+   (lambda (path desc format)
+     (cond
+      ((eq format 'latex)
+       (if (or (not desc) (equal 0 (search "citetitle:" desc)))
+           (format "\\citetitle{%s}" path)
+         (format "\\citetitle[%s]{%s}" desc path)
+         )))))
+
+  (org-add-link-type
+   "citetitles" 'ebib
+   (lambda (path desc format)
+     (cond
+      ((eq format 'latex)
+       (if (or (not desc) (equal 0 (search "citetitles:" desc)))
+           (format "\\citetitles{%s}" path)
+         (format "\\citetitles[%s]{%s}" desc path)
+         )))))
+
+  (org-add-link-type
+   "headlessfullcite" 'ebib
+   (lambda (path desc format)
+     (cond
+      ((eq format 'latex)
+       (if (or (not desc) (equal 0 (search "headlessfullcite:" desc)))
+           (format "\\headlessfullcite{%s}" path)
+         (format "\\headlessfullcite[%s]{%s}" desc path)
+         )))))
+#+end_src
+
+#+RESULTS: ebib-setup
+: Created headlessfullcite link.
+
+** Biblio
+
+From: http://juanjose.garciaripoll.com/blog/managing-bibliographies-from-emacs/
+
+A nice complement to ebib is =biblio=, a library to query various databases, such as Crossref, the arXiv, etc. This library allows you to grab bibtex records for the articles you search for. The following code links this library with ebib, so that you can press Ctrl-i and the current record is added to your ebib database.
+
+#+begin_src emacs-lisp :tangle yes
+(use-package biblio
+  :defer t
+  :ensure t
+  :custom
+  (biblio-arxiv-bibtex-header "misc")
+  :init
+  ;; This links biblio to ebib
+  (defun biblio-to-ebib-and-quit ()
+    (interactive)
+    (biblio--selection-forward-bibtex
+     (lambda (entry metadata)
+       (print entry)
+       (ebib-capture-raw-bibtex entry)
+       (ebib--update-buffers))
+     t))
+  )
+
+(define-key biblio-selection-mode-map (kbd "C-i") 'biblio-to-ebib-and-quit)
+;;  :bind
+;;  (map biblio-selection-mode-map
+;;        ("C-i" . biblio-to-ebib-and-quit))
+#+end_src
+
+#+RESULTS:
+: biblio-to-ebib-and-quit
+
+In order for this to work, you need the following code, which extends ebib with a function to edit raw Bibtex entries from arbitrary sources.
+
+#+begin_src emacs-lisp :tangle yes
+(defvar ebib-capture-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "\C-c\C-c" #'ebib-capture-finalize)
+    (define-key map "\C-c\C-k" #'ebib-capture-kill)
+    map)
+  "Keymap for `ebib-capture-mode', a minor mode.
+  Use this map to set additional keybindings for when Org mode is used
+  for a capture buffer.")
+
+(defvar ebib-capture-mode-hook nil
+  "Hook for the `ebib-capture-mode' minor mode.")
+
+(define-minor-mode ebib-capture-mode
+  "Minor mode for special key bindings in a capture buffer.
+
+  Turning on this mode runs the normal hook `ebib-capture-mode-hook'."
+  nil " Cap" ebib-capture-mode-map
+  (setq-local
+   header-line-format
+   (substitute-command-keys
+    "\\<ebib-capture-mode-map>Capture buffer.  Finish \
+  `\\[ebib-capture-finalize]', abort `\\[ebib-capture-kill]'.")))
+
+(defun ebib-capture-kill ()
+  "Abort the current capture process."
+  (interactive)
+  ;; FIXME: This does not do the right thing, we need to remove the
+  ;; new stuff by hand it is easy: undo, then kill the buffer
+  (kill-buffer (current-buffer))
+  (quit-window))
+
+(defun ebib-capture-finalize ()
+  "Save entries and finalize."
+  (interactive)
+  (ebib--execute-when
+    ((or slave-db filtered-db)
+     (error "[Ebib] Cannot merge into a filtered or a slave database"))
+    (real-db
+     (unless (ebib-capture-check-duplicates)
+       (let ((result (ebib--bib-find-bibtex-entries ebib--cur-db nil)))
+         (ebib--log 'message "%d entries, %d @Strings and %s @Preamble found in file."
+                    (car result)
+                    (cadr result)
+                    (if (nth 2 result) "a" "no")))
+       (ebib--update-buffers)
+       (ebib--set-modified t ebib--cur-db)
+       (ebib-capture-kill)))
+    (default (beep))))
+
+(defun ebib-capture-check-duplicates ()
+  (interactive)
+  (let ((db (ebib-db-new-database))
+        (duplicates '()))
+    (let ((result (ebib--bib-find-bibtex-entries db nil)))
+      (if (zerop (car result))
+          (message "No entries found")
+        (maphash
+         (lambda (key value)
+           (if (ebib-db-get-entry key ebib--cur-db t)
+               (push key duplicates)))
+         (ebib-db-val 'entries db))))
+    (when duplicates
+      (message "Found duplicate keys: %S" duplicates)
+      (goto-char 0)
+      (search-forward (car duplicates)))))
+
+(defun ebib-capture-raw-bibtex (entry)
+  (with-current-buffer (get-buffer-create "*Biblio entry*")
+    (erase-buffer)
+    (insert entry)
+    (bibtex-mode)
+    (ebib-capture-mode)
+    (pop-to-buffer (current-buffer))
+    (current-buffer)))
+#+end_src
+
+#+RESULTS:
+: ebib-capture-raw-bibtex
 
 ** =ox-extra=
 

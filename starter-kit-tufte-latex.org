@@ -93,7 +93,7 @@ Copyright \\copyright\\ %s %s
 #+end_export
 
 
-* A Tufte Org Mode Handout                                         :noexport:
+* A Tufte Org Mode Handout
 :PROPERTIES:
 :EXPORT_FILE_NAME: tufte-org-mode-handout
 :MARGIN-NOTE-FONT: \itshape\footnotesize
@@ -1101,7 +1101,7 @@ from lines like: #+PROPERTY: value"
 #+end_src
 
 ** Configuration
-NB: DGM adds =#+LATEX_HEADER: \usepackage{amssymb}= on 6 Dic 2019
+NB: DGM adds =#+LATEX_HEADER: \usepackage{amssymb}= on 6 Dic 2019 and ==\RequirePackage{etex}== instead of ==\usepackage{etex}==
 
 #+OPTIONS: ':nil *:t -:t ::t <:t H:5 \n:nil ^:{} arch:headline
 #+OPTIONS: author:t c:nil creator:nil d:(not "LOGBOOK") date:t e:t
@@ -1116,17 +1116,19 @@ NB: DGM adds =#+LATEX_HEADER: \usepackage{amssymb}= on 6 Dic 2019
 #+MACRO: sidenote \sidenote[$2][$3]{$1}
 #+MACRO: marginnote \marginnote[$2]{$1}
 #+MACRO: tl Tufte-LaTeX
-#+LATEX_HEADER: \usepackage{amssymb}
-#+LATEX_HEADER: \usepackage{etex}
+#+LATEX_HEADER: \RequirePackage{etex}
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage[T1]{fontenc}
 #+LATEX_HEADER: \reserveinserts{36}
 #+LATEX_HEADER: \usepackage[maxfloats=48]{morefloats}
 #+LATEX_HEADER: \usepackage[style=verbose-trad1, backend=bibtex]{biblatex}
 #+LATEX_HEADER: \addbibresource{/media/dgm/blue/documents/bibs/socbib.bib}
-#+LATEX_HEADER: \usepackage{booktabs,graphicx,microtype,hyphenat,marginfix,amsmath}
+#+LATEX_HEADER: \usepackage{booktabs,graphicx,microtype,hyphenat,marginfix,amsmath,amssymb}
 #+LATEX_HEADER: \geometry{paperheight=10.5in,paperwidth=8.5in,textwidth=4.375in}
 #+LATEX_HEADER: \titleformat{\part}[display]{\relax\itshape\huge}{}{0pt}{\huge\rmfamily\itshape}[]
 #+LATEX_HEADER: \usepackage{xparse}
 #+LATEX_HEADER: \usepackage{xpatch}
+#+LATEX_HEADER: \RequirePackage[babel,autostyle=true]{csquotes}
 #+LATEX_HEADER: \makeatletter
 #+LATEX_HEADER: \xpatchcmd{\@footnotetext}%
 #+LATEX_HEADER:       {\color@begingroup}
