@@ -76,6 +76,9 @@ Watch out! If I want to change to latex (instead of xelatex), and I have a =cust
 : xetex
 
 ** XeLaTeX and pdfLaTeX Org Export Settings 
+:PROPERTIES:
+:ID:       e9f6cdbc-2253-4c86-a7b2-d77ded4807e9
+:END:
 
     Configure org-mode to export directly to PDF using xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
 
@@ -404,10 +407,15 @@ Of course we need to load  =beamer= for it to show up in the menu after =C-c C-e
   | breaklines | true |
 
 
-* My =sty= file
+* My default =sty= file
+:PROPERTIES:
+:ID:       006444f6-8639-42da-82d0-0f930e4a6d73
+:END:
 DGM 3 nov 2019:  hey, I've noticed that now I don't have =org-preamble-pdflatex.sty= loaded by default when I export to latex!! Trying to fix it with this:
 
 elisp: Note that when I did ='(("org-preamble-pdflatex" t)))= the =sty= "loaded" was =t.sty=. And if I did ='(("org-preamble-pdflatex")= I got the =nil.sty=... so I don't really know how =setq= works.
+
+DGM, 8 dic 2019: here's why I get =org-preamble-pdflatex.sty= loaded every time I export... but now that I am using =org-tufte= I don't really want this to happen...
 
 #+begin_src emacs-lisp :tangle yes
 (setq org-latex-packages-alist
@@ -497,4 +505,3 @@ backslash):
 
 #+RESULTS: message-line
 : Starter Kit LaTeX-Org loaded.
-

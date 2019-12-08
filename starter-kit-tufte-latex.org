@@ -380,6 +380,9 @@ Tufte Org Mode tries to load the following packages:
 These packages are all loaded in =#+LATEX_HEADER= lines.
 
 **** Patches to =biblatex=
+:PROPERTIES:
+:ID:       9fd330d6-2f78-4e76-88db-29a2f32573ca
+:END:
 The {{{tl}}} package was written while =biblatex= was under development and it
 was not yet clear that it would be able to replace the venerable
 =bibtex= package.  Accordingly, the developers of {{{tl}}} chose to base the
@@ -1058,26 +1061,35 @@ Hawaiian language words with what is known in Hawaiian as a
 
 *** PDF process
 
-NB: DGM adds =-shell-escape= on 6 Dic 2019
+NB: DGM adds =-shell-escape= on 6 Dic 2019 and on the 8th I disabled it in favor of what I have in the =starter-kit-latex-org.org= file ([[id:e9f6cdbc-2253-4c86-a7b2-d77ded4807e9][XeLaTeX and pdfLaTeX Org Export Settings]])
+
+#+BEGIN_EXAMPLE
+,#+name: pdf-process-bibtex
+,#+header: :results silent
+,#+begin_src emacs-lisp
+(setq org-latex-pdf-process
+'("pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
+"bibtex %b"
+"pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
+"pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
+,#+end_src
+
+,#+name: pdf-process-biber
+,#+header: :results silent
+,#+begin_src emacs-lisp
+(setq org-latex-pdf-process
+'("pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
+"biber %b"
+"pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
+"pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
+,#+end_src
+#+END_EXAMPLE
 
 #+name: pdf-process-bibtex
 #+header: :results silent
 #+begin_src emacs-lisp
-  (setq org-latex-pdf-process
-        '("pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
-          "bibtex %b"
-          "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
-          "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
-#+end_src
-
-#+name: pdf-process-biber
-#+header: :results silent
-#+begin_src emacs-lisp
-  (setq org-latex-pdf-process
-        '("pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
-          "biber %b"
-          "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"
-          "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
+(setq org-latex-pdf-process
+'("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -bibtex -pdf %f"))
 #+end_src
 
 *** Access keyword values
@@ -1100,89 +1112,116 @@ from lines like: #+PROPERTY: value"
   (or (cdr (assoc KEYWORD (jk-org-kwds))) ""))
 #+end_src
 
-** Configuration
+** COMMENT Configuration
 NB: DGM adds =#+LATEX_HEADER: \usepackage{amssymb}= on 6 Dic 2019 and ==\RequirePackage{etex}== instead of ==\usepackage{etex}==
 
-#+OPTIONS: ':nil *:t -:t ::t <:t H:5 \n:nil ^:{} arch:headline
-#+OPTIONS: author:t c:nil creator:nil d:(not "LOGBOOK") date:t e:t
-#+OPTIONS: email:nil f:t inline:t num:t p:nil pri:nil prop:nil stat:nil
-#+OPTIONS: tags:t tasks:nil tex:t timestamp:nil title:t toc:nil todo:t |:t
-#+LANGUAGE: en
-#+SELECT_TAGS: export
-#+EXCLUDE_TAGS: noexport
-#+STARTUP: noinlineimages
-#+STARTUP: entitiespretty
-#+MACRO: newthought \newthought{$1}
-#+MACRO: sidenote \sidenote[$2][$3]{$1}
-#+MACRO: marginnote \marginnote[$2]{$1}
-#+MACRO: tl Tufte-LaTeX
-#+LATEX_HEADER: \RequirePackage{etex}
-#+LATEX_HEADER: \usepackage[utf8]{inputenc}
-#+LATEX_HEADER: \usepackage[T1]{fontenc}
-#+LATEX_HEADER: \reserveinserts{36}
-#+LATEX_HEADER: \usepackage[maxfloats=48]{morefloats}
-#+LATEX_HEADER: \usepackage[style=verbose-trad1, backend=bibtex]{biblatex}
-#+LATEX_HEADER: \addbibresource{/media/dgm/blue/documents/bibs/socbib.bib}
-#+LATEX_HEADER: \usepackage{booktabs,graphicx,microtype,hyphenat,marginfix,amsmath,amssymb}
-#+LATEX_HEADER: \geometry{paperheight=10.5in,paperwidth=8.5in,textwidth=4.375in}
-#+LATEX_HEADER: \titleformat{\part}[display]{\relax\itshape\huge}{}{0pt}{\huge\rmfamily\itshape}[]
-#+LATEX_HEADER: \usepackage{xparse}
-#+LATEX_HEADER: \usepackage{xpatch}
-#+LATEX_HEADER: \RequirePackage[babel,autostyle=true]{csquotes}
-#+LATEX_HEADER: \makeatletter
-#+LATEX_HEADER: \xpatchcmd{\@footnotetext}%
-#+LATEX_HEADER:       {\color@begingroup}
-#+LATEX_HEADER:       {\color@begingroup\toggletrue{blx@footnote}}
-#+LATEX_HEADER:       {}
-#+LATEX_HEADER:       {}
-#+LATEX_HEADER: \makeatother
-#+LATEX_HEADER: 
-#+LATEX_HEADER: \DeclareCiteCommand{\sidecitehelper}
-#+LATEX_HEADER:   {\usebibmacro{prenote}}
-#+LATEX_HEADER:   {\usebibmacro{citeindex}%
-#+LATEX_HEADER:    \usebibmacro{cite}}
-#+LATEX_HEADER:   {\multicitedelim}
-#+LATEX_HEADER:   {\usebibmacro{cite:postnote}}
-#+LATEX_HEADER: 
-#+LATEX_HEADER: \ExplSyntaxOn
-#+LATEX_HEADER: \NewDocumentCommand\sidecite{D<>{}O{}om}{%
-#+LATEX_HEADER:   \iftoggle{blx@footnote}
-#+LATEX_HEADER:     {\cs_set_protected_nopar:Npn \__sct_wrapper:nn ##1 ##2 {\mkbibparens{##2}}}
-#+LATEX_HEADER:     {\cs_set_protected_nopar:Npn \__sct_wrapper:nn ##1 ##2 {\sidenote[][##1]{##2}}}
-#+LATEX_HEADER:     {\IfNoValueTF{#3}
-#+LATEX_HEADER:       {\__sct_wrapper:nn{#1}{\sidecitehelper[#2]{#4}}}
-#+LATEX_HEADER:       {\__sct_wrapper:nn{#1}{\sidecitehelper[#2][#3]{#4}}}}
-#+LATEX_HEADER: }
-#+LATEX_HEADER: \ExplSyntaxOff
+
+#+BEGIN_EXAMPLE
+,#+OPTIONS: ':nil *:t -:t ::t <:t H:5 \n:nil ^:{} arch:headline
+,#+OPTIONS: author:t c:nil creator:nil d:(not "LOGBOOK") date:t e:t
+,#+OPTIONS: email:nil f:t inline:t num:t p:nil pri:nil prop:nil stat:nil
+,#+OPTIONS: tags:t tasks:nil tex:t timestamp:nil title:t toc:nil todo:t |:t
+,#+LANGUAGE: en
+,#+SELECT_TAGS: export
+,#+EXCLUDE_TAGS: noexport
+,#+STARTUP: noinlineimages
+,#+STARTUP: entitiespretty
+,#+MACRO: newthought \newthought{$1}
+,#+MACRO: sidenote \sidenote[$2][$3]{$1}
+,#+MACRO: marginnote \marginnote[$2]{$1}
+,#+MACRO: tl Tufte-LaTeX
+,#+MACRO: lt LaTeX
+,#+MACRO: xt XeTeX
+,#+LATEX_HEADER: \RequirePackage{etex}
+,#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+,#+LATEX_HEADER: \usepackage[T1]{fontenc}
+,#+LATEX_HEADER: \reserveinserts{36}
+,#+LATEX_HEADER: \usepackage[maxfloats=48]{morefloats}
+,#+LATEX_HEADER: \usepackage[authordate, backend=biber, babel=hyphen, bibencoding=inputenc, strict, isbn=false, uniquename=false]{biblatex-chicago} 
+,#+LATEX_HEADER: \addbibresource{/media/dgm/blue/documents/bibs/socbib.bib}
+,#+LATEX_HEADER: \usepackage{booktabs,graphicx,microtype,hyphenat,marginfix,amsmath,amssymb}
+,#+LATEX_HEADER: \geometry{paperheight=10.5in,paperwidth=8.5in,textwidth=4.375in}
+,#+LATEX_HEADER: \titleformat{\part}[display]{\relax\itshape\huge}{}{0pt}{\huge\rmfamily\itshape}[]
+,#+LATEX_HEADER: \usepackage{xparse}
+,#+LATEX_HEADER: \usepackage{xpatch}
+,#+LATEX_HEADER: \makeatletter
+,#+LATEX_HEADER: \xpatchcmd{\@footnotetext}%
+,#+LATEX_HEADER:       {\color@begingroup}
+,#+LATEX_HEADER:       {\color@begingroup\toggletrue{blx@footnote}}
+,#+LATEX_HEADER:       {}
+,#+LATEX_HEADER:       {}
+,#+LATEX_HEADER: \makeatother
+,#+LATEX_HEADER: 
+,#+LATEX_HEADER: \DeclareCiteCommand{\sidecitehelper}
+,#+LATEX_HEADER:   {\usebibmacro{prenote}}
+,#+LATEX_HEADER:   {\usebibmacro{citeindex}%
+,#+LATEX_HEADER:    \usebibmacro{cite}}
+,#+LATEX_HEADER:   {\multicitedelim}
+,#+LATEX_HEADER:   {\usebibmacro{cite:postnote}}
+,#+LATEX_HEADER: 
+,#+LATEX_HEADER: \ExplSyntaxOn
+,#+LATEX_HEADER: \NewDocumentCommand\sidecite{D<>{}O{}om}{%
+,#+LATEX_HEADER:   \iftoggle{blx@footnote}
+,#+LATEX_HEADER:     {\cs_set_protected_nopar:Npn \__sct_wrapper:nn ##1 ##2 {\mkbibparens{##2}}}
+,#+LATEX_HEADER:     {\cs_set_protected_nopar:Npn \__sct_wrapper:nn ##1 ##2 {\sidenote[][##1]{##2}}}
+,#+LATEX_HEADER:     {\IfNoValueTF{#3}
+,#+LATEX_HEADER:       {\__sct_wrapper:nn{#1}{\sidecitehelper[#2]{#4}}}
+,#+LATEX_HEADER:       {\__sct_wrapper:nn{#1}{\sidecitehelper[#2][#3]{#4}}}}
+,#+LATEX_HEADER: }
+,#+LATEX_HEADER: \ExplSyntaxOff
+,#+LATEX_HEADER: \usepackage[babel,autostyle=true]{csquotes}
+#+END_EXAMPLE
+
+** COMMENT Local variables
+
+#+BEGIN_EXAMPLE
+,# Local Variables: 
+,# eval: (require 'ox-tufte-latex)
+,# eval: (require 'ox-extra)
+,# eval: (require 'ox-gfm)
+,# eval: (ox-extras-activate '(ignore-headlines))
+,# eval: (org-sbe "user-entities")
+,# eval: (org-sbe "tufte-book")
+,# eval: (org-sbe "tufte-handout")
+,# eval: (org-sbe "tufte-ebib-setup")
+,# eval: (org-sbe "biblatex-footcite-link") 
+,# eval: (org-sbe "biblatex-multicite-link") 
+,# eval: (org-sbe "biblatex-sidecite-link")
+,# eval: (org-sbe "biblatex-parencite-link")
+,# eval: (org-sbe "biblatex-textcite-link")
+,# eval: (org-sbe "biblatex-cite-link")
+,# eval: (org-sbe "latex-filter-footcites")
+,# eval: (org-sbe "ngz-nbsp")
+,# eval: (org-sbe "pdf-process-bibtex")
+,# eval: (org-sbe "jk-keywords")
+,# eval: (org-sbe "latex-opt-link")
+,# eval: (org-sbe "latex-link")
+,# org-fontify-quote-and-verse-blocks: t
+,# org-hide-macro-markers: t
+,# org-hide-emphasis-markers: t 
+,# org-latex-title-command: ""
+,# org-latex-caption-above: nil
+,# org-inline-image-overlays: nil
+,# End:
+#+END_EXAMPLE
 
 
-** Local variables
+* Provide 
 
-# Local Variables: 
-# eval: (require 'ox-tufte-latex)
-# eval: (require 'ox-extra)
-# eval: (require 'ox-gfm)
-# eval: (ox-extras-activate '(ignore-headlines))
-# eval: (org-sbe "user-entities")
-# eval: (org-sbe "tufte-book")
-# eval: (org-sbe "tufte-handout")
-# eval: (org-sbe "tufte-ebib-setup")
-# eval: (org-sbe "biblatex-footcite-link") 
-# eval: (org-sbe "biblatex-multicite-link") 
-# eval: (org-sbe "biblatex-sidecite-link")
-# eval: (org-sbe "biblatex-parencite-link")
-# eval: (org-sbe "biblatex-textcite-link")
-# eval: (org-sbe "biblatex-cite-link")
-# eval: (org-sbe "latex-filter-footcites")
-# eval: (org-sbe "ngz-nbsp")
-# eval: (org-sbe "pdf-process-bibtex")
-# eval: (org-sbe "jk-keywords")
-# eval: (org-sbe "latex-opt-link")
-# eval: (org-sbe "latex-link")
-# org-fontify-quote-and-verse-blocks: t
-# org-hide-macro-markers: t
-# org-hide-emphasis-markers: t 
-# org-latex-title-command: ""
-# org-latex-caption-above: nil
-# org-inline-image-overlays: nil
-# End:
+#+BEGIN_SRC emacs-lisp 
+(provide 'starter-kit-tufte-latex.org)
+#+END_SRC
+
+#+RESULTS:
+: starter-kit-tufte-latex\.org
+
+
+
+* Final message
+#+source: message-line
+#+begin_src emacs-lisp
+(message "Starter Kit Tufte Latex File loaded.")
+#+end_src
+
+#+RESULTS: message-line
+: Starter Kit Tufte Latex File loaded.

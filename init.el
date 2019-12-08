@@ -448,10 +448,19 @@ ARCHIVE is the string name of the package archive.")
 (call-process-shell-command "(sleep 10s && ~/.dropbox-dist/dropboxd) &" nil 0)
 
 
+;;;;;;;;;;;;;;;;;;;;;
+;; Local variables ;;
+;;;;;;;;;;;;;;;;;;;;;
+
+;; From https://alhassy.github.io/init/
+;; Let's always load local variables that we've marked as safe. ( I tend to use loads of such locals! )
+(setq enable-local-variables :safe)
+
+
+
+
 ;; This buffer is for text that is not saved, and for Lisp evaluation.
 ;; To create a file, visit it with <open> and enter text in its buffer.
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; ambrevar stuff
