@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
+
 #+TITLE: Tufte Org Mode
 #+AUTHOR: Thomas S. Dye
 #+FULLNAME: Thomas Stuart Dye

@@ -398,9 +398,10 @@ Original code on =bib=
      (ebib-preload-bib-files '("/media/dgm/blue/documents/bibs/socbib.bib"))
      (ebib-bib-search-dirs '("/media/dgm/blue/documents/bibs")))
 
- (setq ebib-timestamp-format "%d.%m.%Y.")
- (setq ebib-use-timestamp t)
  (setq ebib-bibtex-dialect 'biblatex)
+
+ (setq ebib-use-timestamp t)
+ (setq ebib-timestamp-format "%d.%m.%Y.")
 
   ;;(add-hook 'LaTeX-mode-hook #'(lambda ()
   ;;        (local-set-key "\C-c v" 'ebib-insert-bibtex-key)))
