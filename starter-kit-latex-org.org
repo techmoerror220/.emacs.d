@@ -166,12 +166,12 @@ Turn off the default toc behavior; deal with it properly in headers to files.
 #+RESULTS:
 : org-latex-no-toc
 
-Now I define the style of memoir-class articles and others. Note the insertion of the =\input= statement for the vc information 
+Now I define the style of memoir-class articles and others. Note the insertion of the =\input= statement for the vc information (now deleted as I include it in the skeleton for XeLaTeX outputs)
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'org-latex-classes
                '("memarticle"
-                 "\\documentclass[11pt,oneside,article]{memoir}\n\%\input{vc} % vc package"
+                 "\\documentclass[11pt,oneside,article]{memoir}\n"
                   ("\\section{%s}" . "\\section*{%s}")
                   ("\\subsection{%s}" . "\\subsection*{%s}")
                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -180,7 +180,7 @@ Now I define the style of memoir-class articles and others. Note the insertion o
 
 (add-to-list 'org-latex-classes
                '("membook"
-                 "\\documentclass[11pt,oneside]{memoir}\n\%\input{vc} % vc package"
+                 "\\documentclass[11pt,oneside]{memoir}\n"
                  ("\\chapter{%s}" . "\\chapter*{%s}")
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
@@ -310,9 +310,9 @@ Now I've tangled it to "no" because I have created the =sanchez-dgm.sty= where I
 
 My new option comes from here: https://emacs.stackexchange.com/questions/33010/how-to-word-wrap-within-code-blocks
 
-A commonly used environment for source code is lstlisting, provided by the LaTeX package listings. To get Org-mode to use it, add it to org-latex-packages-alist and set the variable org-latex-listings to t:
+A commonly used environment for source code is =lstlisting=, provided by the LaTeX package =listings=. To get Org-mode to use it, add it to =org-latex-packages-alist= and set the variable =org-latex-listings= to =t=:
 
-And to then get listings to wrap, the breaklines=true option needs to be supplied to listings. Org-mode can do this:
+And to then get listings to wrap, the ~breaklines=true~ option needs to be supplied to listings. Org-mode can do this:
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (add-to-list 'org-latex-packages-alist '("" "listings" nil))
@@ -441,7 +441,9 @@ From: https://orgmode.org/worg/org-tutorials/org-latex-export.html
 #+RESULTS:
 : org-export-latex-no-toc
 
-* Math notation in Latex in Org
+* Latex Math Notation in Org
+
+DGM on 10 Dic 2019: I've kind of forgotten what this was all about, but I think it is about the rendering of math notation in org-mode buffers with =C-c C-x C-l=
 
 From https://tex.stackexchange.com/questions/78501/change-size-of-the-inline-image-for-latex-fragment-in-emacs-org-mode and  https://www.youtube.com/watch?v=88Mid7B31YQ&list=PLKNjNbxhXaeA57E5uJldm-vW_qfxeF6Gy&index=3
 
@@ -483,8 +485,8 @@ By default, Org mode adds a rather unhelpful hypersetup section. You can prevent
 
 #+RESULTS:
 
-In addition, if you want to pass any options to hyperref or url (which is loaded
-automically by hyperref), then you can use a command of the form (notice the escaped
+In addition, if you want to pass any options to =hyperref= or =url= (which is loaded
+automically by =hyperref=), then you can use a command of the form (notice the escaped
 backslash):
 
 #+BEGIN_SRC emacs-lisp :tangle yes

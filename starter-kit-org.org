@@ -180,10 +180,12 @@ It’s important that you download =tufte css= and place it on your server (with
   (use-package ox-tufte
     :ensure t
     :init (require 'ox-tufte)))
+
+ (require 'ox-tufte)
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24042 39677 384338 476000) :init (24042 39677 384311 77000) :config (24042 39677 383906 724000) :config-secs (0 0 13 47000) :init-secs (0 0 808 512000) :use-package-secs (0 0 996 587000)))
+: ox-tufte
 
 
 ***  Configure Org-babel

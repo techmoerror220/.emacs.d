@@ -4424,8 +4424,37 @@ This only makes sense for empty buffers."
 #+RESULTS:
 : beamer-skeleton
 
+
+** XeLaTeX and =memoir= class
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(define-skeleton xelatex-skeleton
+  "Inserts a XeLaTeX  skeleton into current buffer.
+This only makes sense for empty buffers."
+  "\n"
+  "# -*- coding: utf-8 -*-\n"
+  "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
+  "#+TITLE:\n"
+  "#+SUBTITLE:\n" 
+  "#+AUTHOR:\n" 
+  "#+DATE:\n" 
+  "#+LaTeX_CLASS: memoir\n"
+  "#+LaTeX_CLASS_OPTIONS: [11pt,oneside, article]\n"
+  "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
+  "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
+  "#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"
+  "#+LATEX_HEADER: \\input{vc}\n"
+  "#+LATEX_HEADER: \\renewcommand*{\\PrelimText}{\\textnormal{\\small\\textcolor{black!40}{author: \\VCAuthor\\ -- date: \\VCDateISO\\ -- time: \\VCTime\\ -- commit: \\texttt{\\VCRevision}}}}\n\n"
+  "" _ "\n\n"
+  "\\printbibliography")
+#+END_SRC
+
+#+RESULTS:
+: xelatex-skeleton
+
+
+
 ** Tufte book
-Not working because I have another class already set.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (define-skeleton tufte-skeleton
