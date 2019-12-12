@@ -4427,6 +4427,7 @@ This only makes sense for empty buffers."
 
 ** XeLaTeX and =memoir= class
 
+="#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"= not needed now that I have included it in [[id:562fc8d9-c2cb-4476-92c7-b530cf9ed6ab][Style of memoir class articles, etc]]
 #+BEGIN_SRC emacs-lisp :tangle yes
 (define-skeleton xelatex-skeleton
   "Inserts a XeLaTeX  skeleton into current buffer.
@@ -4440,7 +4441,6 @@ This only makes sense for empty buffers."
   "#+DATE:\n" 
   "#+LaTeX_CLASS: memoir\n"
   "#+LaTeX_CLASS_OPTIONS: [11pt,oneside, article]\n"
-  "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
   "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
   "#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"
   "#+LATEX_HEADER: \\input{vc}\n"
@@ -4453,6 +4453,22 @@ This only makes sense for empty buffers."
 : xelatex-skeleton
 
 
+
+** XeLaTeX and =memoir= class (minimalistic skeleton)
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(define-skeleton minimalist
+  "Inserts class-declaration for XeLaTeX 
+   export into current buffer."
+  "\n"
+  "# -*- coding: utf-8 -*-\n"
+  "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
+  "#+LaTeX_CLASS: memarticle\n"
+  "\n\n")
+#+END_SRC
+
+#+RESULTS:
+: minimalist
 
 ** Tufte book
 

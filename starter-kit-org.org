@@ -1979,28 +1979,41 @@ able to clock in on them.
   ;; (setq org-blank-before-new-entry nil)
 #+end_src
 
-*** Estimating HHHHWPM
+*** Estimating WPM
 
 I'm curious about how fast I type some things.
 
+How to use it: clock in in an Org heading. Type as much as you like. When you clock out, call the function and you'll see your stats. 
+
 #+begin_src emacs-lisp :tangle yes
-  (require 'org-clock)
-  (defun my/org-entry-wpm ()
-    (interactive)
-    (save-restriction
-      (save-excursion
-        (org-narrow-to-subtree)
-        (goto-char (point-min))
-        (let* ((words (count-words-region (point-min) (point-max)))
-               (minutes (org-clock-sum-current-item))
-               (wpm (/ words minutes)))
-          (message "WPM: %d (words: %d, minutes: %d)" wpm words minutes)
-          (kill-new (number-to-string wpm))))))
+(require 'org-clock)
+(defun sacha/org-entry-wpm ()
+  (interactive)
+  (save-restriction
+    (save-excursion
+      (org-narrow-to-subtree)
+      (goto-char (point-min))
+      (let* ((words (count-words-region (point-min) (point-max)))
+	     (minutes (org-clock-sum-current-item))
+	     (wpm (/ words minutes)))
+	(message "WPM: %d (words: %d, minutes: %d)" wpm words minutes)
+	(kill-new (number-to-string wpm))))))
+  
+(defun sacha/timer-go ()
+  "Quick keyboard timer."
+  (interactive)
+  (insert "GO\n")
+  (run-with-timer 3 nil (lambda () (insert "\n")))  ; for warmup
+  (run-with-timer 15 nil (lambda () ; 12 seconds + the 3-second warmup
+                           (let ((col (- (point) (line-beginning-position))))
+                             (insert (format " | %d | \n" col)))
+                           )))
+;;(local-set-key (kbd "<f7>") 'sacha/timer-go)
 #+end_src
 
 
 #+RESULTS:
-: my/org-entry-wpm
+: sacha/timer-go
 
 *** Projects
 

@@ -2274,6 +2274,14 @@ Read https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
 #+RESULTS:
 | malb/mu4e-view-mode-hook | (lambda nil (set (make-local-variable 'bookmark-make-record-function) 'mu4e-view-bookmark-make-record)) |
 
+* Fields when composing email
+
+#+begin_src emacs-lisp :tangle yes
+(setq mu4e-view-fields '(:from :to :cc :bcc :subject :flags :date :maildir :mailing-list :tags :attachments :signature :decryption))
+#+end_src
+
+#+RESULTS:
+| :from | :to | :cc | :bcc | :subject | :flags | :date | :maildir | :mailing-list | :tags | :attachments | :signature | :decryption |
 
 * Provide 
 

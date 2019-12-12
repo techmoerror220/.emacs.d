@@ -46,7 +46,7 @@ The default set here does not matter much as I'm asked what command to run every
 #+RESULTS: latemkdefault
 | (lambda nil (setq TeX-command-default latexmk)) | pandoc-mode |
 
-* COMMENT The /XeLaTeX/ route 
+* The /XeLaTeX/ route 
 ** Set default engine <<engine>>
 
 Custom variables kludge. Why can't I get these to work via =setq=?
@@ -108,7 +108,6 @@ Also, if I change to latex instead of xelatex, then change tangle option to no o
 | latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -bibtex -pdf %f |
 
 *** XeLaTeX options (Comment out if default latex is used instead)  <<options>>
-
 **** Listings and Minted
 
 Choose either listings or minted for exporting source code blocks. Using minted (as here) requires pygments be installed. 
@@ -166,7 +165,14 @@ Turn off the default toc behavior; deal with it properly in headers to files.
 #+RESULTS:
 : org-latex-no-toc
 
+**** Style of memoir class articles, etc 
+:PROPERTIES:
+:ID:       562fc8d9-c2cb-4476-92c7-b530cf9ed6ab
+:END:
+
 Now I define the style of memoir-class articles and others. Note the insertion of the =\input= statement for the vc information (now deleted as I include it in the skeleton for XeLaTeX outputs)
+
+DGM 12 dic 2019: note that ="\\usepackage[minted]{org-preamble-xelatex}\n"= cannot go here below ="memarticle"= because the processs would output it after =\begin{document}=.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'org-latex-classes
@@ -190,7 +196,6 @@ Now I define the style of memoir-class articles and others. Note the insertion o
  #+RESULTS:
  | membook | \documentclass[11pt,oneside]{memoir} |
 
-
 Default packages included in the tex file. As before, =org-preamble-xelatex= is part of =latex-custom-kjh=. There's =org-preamble-pdflatex= as well, if you wish to use that instead.
 DGM note: This code calls on the stuff in the =~/texmf= directory that allows using fonts a la MinionPro etc. Specifically, it uses the =org-preamble-xelatex= style file. 
 DGM note on 13 may: I'ved tangled to no as this conflicted with my export to beamer. Now I have included these lines in the =org-skeleton= code.
@@ -212,7 +217,17 @@ Then, if I uncomment the rest I'll have the call to =org-preamble-xelatex= in ev
    #+RESULTS: orgmode-latex-export
    : ox-latex
 
-* The /LaTeX/ route 
+** My default =sty= file with XeLaTeX
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-latex-packages-alist
+        '(( "minted" "org-preamble-xelatex" nil)))
+#+end_src
+
+#+RESULTS:
+|   | org-preamble-pdflatex | nil |
+
+* COMMENT The /LaTeX/ route 
 ** Set default engine 
 
 Custom variables kludge. Why can't I get these to work via =setq=?
@@ -394,9 +409,9 @@ Of course we need to load  =beamer= for it to show up in the menu after =C-c C-e
 #+RESULTS:
 : ox-beamer
 
-** =listings= with Beamer
+** COMMENT =listings= with Beamer
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (with-eval-after-load 'ox-beamer 
   (add-to-list 'org-latex-packages-alist '("" "listings" nil))
   (setq org-latex-listings t)
@@ -407,7 +422,7 @@ Of course we need to load  =beamer= for it to show up in the menu after =C-c C-e
   | breaklines | true |
 
 
-* My default =sty= file
+* COMMENT My default =sty= file
 :PROPERTIES:
 :ID:       006444f6-8639-42da-82d0-0f930e4a6d73
 :END:
@@ -485,11 +500,12 @@ By default, Org mode adds a rather unhelpful hypersetup section. You can prevent
 
 #+RESULTS:
 
+* COMMENT Passing options to preamble packages in the =texmf= dir
 In addition, if you want to pass any options to =hyperref= or =url= (which is loaded
 automically by =hyperref=), then you can use a command of the form (notice the escaped
 backslash):
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (add-to-list 'org-latex-default-packages-alist "\\PassOptionsToPackage{hyphens}{url}")
 #+END_SRC
 
