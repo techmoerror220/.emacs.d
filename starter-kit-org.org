@@ -1980,6 +1980,9 @@ able to clock in on them.
 #+end_src
 
 *** Estimating WPM
+:PROPERTIES:
+:ID:       f5bae513-1704-4417-93b9-a770d6b93253
+:END:
 
 I'm curious about how fast I type some things.
 
