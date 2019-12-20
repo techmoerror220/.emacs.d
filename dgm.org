@@ -4441,6 +4441,8 @@ This only makes sense for empty buffers."
   "#+DATE:\n" 
   "#+LaTeX_CLASS: memoir\n"
   "#+LaTeX_CLASS_OPTIONS: [11pt,oneside, article]\n"
+  "#+LANGUAGE: "str | "spanish""\n"
+  "#+LATEX_HEADER: \\usepackage["str | "spanish""]{babel}\n"  
   "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
   "#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"
   "#+LATEX_HEADER: \\input{vc}\n"
@@ -4464,6 +4466,9 @@ This only makes sense for empty buffers."
   "# -*- coding: utf-8 -*-\n"
   "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
   "#+LaTeX_CLASS: memarticle\n"
+  "#+LANGUAGE: "str | "spanish""\n"
+  "#+LATEX_HEADER: \\usepackage["str | "spanish""]{babel}\n"  
+
   "\n\n")
 #+END_SRC
 
@@ -4584,8 +4589,6 @@ This only makes sense for empty buffers."
 
 #+RESULTS:
 : tufte-skeleton
-
-
 
 * Pragmatic Emacs
 ** dired-narrow
