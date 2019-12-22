@@ -4197,7 +4197,8 @@ By default wttrin prompts you to chose the city from your list when it starts. T
 
 #+RESULTS:
 : bjm/wttrin
-g
+
+
 ** Typing of Emacs
 
 #+BEGIN_SRC emacs-lisp :tangle yes
