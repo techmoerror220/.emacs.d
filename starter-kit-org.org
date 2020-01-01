@@ -5230,6 +5230,16 @@ These days I set many of =org-log-*= to note to keep verbose log of task progres
 #+RESULTS:
 : [nil 24003 24132 0 3600 org-save-all-org-buffers nil nil 0]
 
+* Org-pdfview
+
+#+begin_src emacs-lisp :tangle yes
+(use-package org-pdfview
+  :ensure t)
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24074 15478 667014 530000) :init (24074 15478 667006 645000) :config (24074 15478 666813 689000) :config-secs (0 0 5 30000) :init-secs (0 0 5960 581000) :use-package-secs (0 6 418812 42000)))
+
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes

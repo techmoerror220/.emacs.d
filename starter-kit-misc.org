@@ -19,20 +19,20 @@ loading the =zenburn= and =anti-zenburn= themes.
 *** Solarized Theme
 #+source: colors
 #+begin_src emacs-lisp
-;;  add (setq custom-safe-themes t) to your init file before you load your theme. This will treat all themes as safe, which could be a risk in theory, but if ;; you are only installing themes from trusted sources, I don't see any issue 
-;; https://emacs.stackexchange.com/questions/18932/stop-emacs-asking-if-a-theme-is-safe
-(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
-(setq custom-safe-themes t)
+  ;;  add (setq custom-safe-themes t) to your init file before you load your theme. This will treat all themes as safe, which could be a risk in theory, but if ;; you are only installing themes from trusted sources, I don't see any issue 
+  ;; https://emacs.stackexchange.com/questions/18932/stop-emacs-asking-if-a-theme-is-safe
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
+  (setq custom-safe-themes t)
 
-;;(use-package solarized-theme
-;;  :defer 10
-;;  :init
-;;  (setq solarized-use-variable-pitch nil)
-;;  (setq solarized-height-plus-1 1.0)
-;;  :ensure t)
+  ;;(use-package solarized-theme
+  ;;  :defer 10
+  ;;  :init
+  ;;  (setq solarized-use-variable-pitch nil)
+  ;;  (setq solarized-height-plus-1 1.0)
+  ;;  :ensure t)
 
 
-;; From https://github.com/andschwa/.emacs.d/blob/master/init.el and https://github.com/bbatsov/solarized-emacs
+  ;; From https://github.com/andschwa/.emacs.d/blob/master/init.el and https://github.com/bbatsov/solarized-emacs
 
 (use-package solarized-theme
   :init 
@@ -349,6 +349,44 @@ editor thing not to use the mouse?", just notice that the previous setup used
 effort of writing =:delight= in most package declarations and provides a nice
 menu if I need to check the minor modes at some points.
 
+Original: 
+
+#+BEGIN_EXAMPLE
+(use-package minions
+  :ensure t
+  :config
+  (setq minions-mode-line-lighter "[+]")
+  (minions-mode))
+
+(use-package moody
+  :ensure t
+  :config
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+
+  (defun set-moody-face (frame)
+    (let ((line (face-attribute 'mode-line :underline frame)))
+      (set-face-attribute 'mode-line          frame :overline   line)
+      (set-face-attribute 'mode-line-inactive frame :overline   line)
+      (set-face-attribute 'mode-line-inactive frame :underline  line)
+      (set-face-attribute 'mode-line          frame :box        nil)
+      (set-face-attribute 'mode-line-inactive frame :box        nil))
+
+  ;; (defun set-current-moody-face (&optional args)
+  ;;   (interactive)
+  ;;   (set-moody-face (selected-frame)))
+
+  (setq-default x-underline-at-descent-line t
+                column-number-mode t)
+
+  (add-to-list 'after-make-frame-functions 'set-moody-face t))
+  ;; (add-to-list 'after-make-frame-functions 'set-current-moody-face t))
+
+(setq display-time-24hr-format t)
+(setq display-time-default-load-average t)
+(setq display-time-mail-string "") ;; no mail alert
+(display-time-mode 1)
+#+END_EXAMPLE
 
 #+begin_src emacs-lisp
 (use-package minions
@@ -356,6 +394,7 @@ menu if I need to check the minor modes at some points.
   :config
   (setq minions-mode-line-lighter "[+]")
   (minions-mode))
+
 
 (use-package moody
   :ensure t
@@ -389,6 +428,7 @@ menu if I need to check the minor modes at some points.
 
 #+RESULTS:
 : t
+
 
 ** Window system 
 
