@@ -48,6 +48,7 @@ This file provides settings for ESS and R.
    (stata . t)
    (shell . t)
    (latex . t)
+   (ledger . t)
    ))
 
 ;; (sh . t)

@@ -1,4 +1,4 @@
-,# -*- coding: utf-8 -*-
+!# -*- coding: utf-8 -*-
 # -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Starter Kit Misc
@@ -8,250 +8,6 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 * Starter Kit Misc
 Things that don't fit anywhere else.
-** Color Themes
-Emacs 24 introduces a streamlined theming system that replaces an
-older, messier one. The Starter Kit comes with Ethan Schoonover's
-/Solarized/ color theme and the /Zenburn/ theme, in versions
-maintained by Bozhidar Batsov. Load it with =M-x load-theme
-solarized-dark= or =M-x load-theme solarized-light=. You can also try
-loading the =zenburn= and =anti-zenburn= themes. 
-
-*** Solarized Theme
-#+source: colors
-#+begin_src emacs-lisp
-  ;;  add (setq custom-safe-themes t) to your init file before you load your theme. This will treat all themes as safe, which could be a risk in theory, but if ;; you are only installing themes from trusted sources, I don't see any issue 
-  ;; https://emacs.stackexchange.com/questions/18932/stop-emacs-asking-if-a-theme-is-safe
-  (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
-  (setq custom-safe-themes t)
-
-  ;;(use-package solarized-theme
-  ;;  :defer 10
-  ;;  :init
-  ;;  (setq solarized-use-variable-pitch nil)
-  ;;  (setq solarized-height-plus-1 1.0)
-  ;;  :ensure t)
-
-
-  ;; From https://github.com/andschwa/.emacs.d/blob/master/init.el and https://github.com/bbatsov/solarized-emacs
-
-(use-package solarized-theme
-  :init 
-  (setq solarized-distinct-fringe-background t) ;; make the fringe stand out from the background 
-  (setq solarized-use-variable-pitch nil)       ;; Don't change the font for some headings and titles
-  (setq solarized-high-contrast-mode-line nil)    ;; make the modeline high contrast (change to t if you want it)
-  ;;  (setq solarized-use-less-bold t)              ;; Use less bolding
-  ;;  (setq solarized-use-more-italic t)            ;; Use more italics
-  (setq solarized-emphasize-indicators nil)     ;; Use less colors for indicators such as git: gutter, flycheck and similar
-  (setq solarized-scale-org-headlines nil)      ;; Don't change size of org-mode headlines (but keep other size-changes)
-  ;; Avoid all font-size changes
-  (setq solarized-height-minus-1 1.0)
-  (setq solarized-height-plus-1 1.0)
-  (setq solarized-height-plus-2 1.0)
-  (setq solarized-height-plus-3 1.0)
-  (setq solarized-height-plus-4 1.0)
-  (setq x-underline-at-descent-line t)
-  (set-face-attribute 'helm-selection nil 
-                      :background nil
-                      :foreground "Orange3")
-  (set-face-attribute 'helm-source-header
-                      nil
-                      :foreground "#dcdcdc")
-  :config
-  (set-face-attribute 'helm-selection nil 
-                      :background nil
-                      :foreground "Orange3")
-  (set-face-attribute 'helm-source-header
-                      nil
-                      :foreground "#dcdcdc")
-  (defun toggle-theme ()
-    "Switch between Solarized variants."
-    (interactive)
-    (cond
-     ((member 'solarized-dark custom-enabled-themes)
-      (disable-theme 'solarized-dark)
-      (load-theme 'solarized-light t)
-      (set-face-attribute 'helm-selection nil 
-                          :background nil
-                          :foreground "Orange3"))
-     ((member 'solarized-light custom-enabled-themes)
-      (disable-theme 'solarized-light)
-      (load-theme 'solarized-dark t)
-      (set-face-attribute 'helm-selection nil 
-                          :background nil
-                          :foreground "Orange3")
-      (set-face-attribute 'helm-source-header
-                          nil
-                          :foreground "#dcdcdc"))))
-  (load-theme 'solarized-light t))
-
-(bind-key "s-!" 'toggle-theme)
-
-;;  (load-theme 'solarized-dark t))
-
-;;  (load-theme 'zenburn t)
-;;  (load-theme 'solarized-dark t)
-;;  (load-theme 'solarized-light t)
-;;  (load-theme 'darktooth t)
-;;  (load-theme 'soothe t)
-;;  (load-theme 'clues t)
-
-;; from https://github.com/kuanyui/moe-theme.el
-;;    (require 'moe-theme)
-;;    (powerline-moe-theme)
-
-;; Show highlighted buffer-id as decoration. (Default: nil)
-;;    (setq moe-theme-highlight-buffer-id t)
-
-;; Resize titles (optional).
-;;    (setq moe-theme-resize-markdown-title '(1.5 1.4 1.3 1.2 1.0 1.0))
-;;    (setq moe-theme-resize-org-title '(1.5 1.4 1.3 1.2 1.1 1.0 1.0 1.0 1.0))
-;;    (setq moe-theme-resize-rst-title '(1.5 1.4 1.3 1.2 1.1 1.0))
-
-;;    Choose a color for mode-line.(Default: blue)
-;;    (moe-theme-set-color 'orange)
-
-;; Finally, apply moe-theme now.
-;; Choose what you like, (moe-light) or (moe-dark)
-;;    (moe-dark)    
-
-;; If you use Emacs build-in show-paren-mode, I recommend set the value of show-paren-style to expression for optimized visual experience:
-
-;;    (show-paren-mode t)
-;;    (setq show-paren-style 'expression)
-
-;; trying to improve the looks of dired+ with solarized dark: http://unix.stackexchange.com/questions/20519/dired-on-dark-color-themes
-;; (add-to-list 'default-frame-alist '(background-mode . dark))
-;;  (load-theme 'spacemacs-dark t)
-;;  (load-theme 'misterioso t)
-#+end_src
-
-#+RESULTS: colors
-: toggle-theme
-
-#+RESULTS:
-: t
-*** COMMENT Joe Di Castro bit
-
-- Objective: to make toggling themes smoother.
-- Joe says: This another code is to provide a hook to do some things after loading a theme, like overwriting a face in a particular theme or
-always reload the smart-mode-line theme.
-
-#+BEGIN_EXAMPLE
-(defvar after-load-theme-hook nil
-   "Hook run after a color theme is loaded using `load-theme'.")
-
-(defadvice load-theme (after run-after-load-theme-hook activate)
-   "Run `after-load-theme-hook'."
-   (run-hooks 'after-load-theme-hook))
-#+END_EXAMPLE
-
-*** COMMENT Sacha Chua's tweaks 
-
-Some more tweaks to solarized:
-
-#+BEGIN_EXAMPLE
-;; (when window-system
-;;  (custom-set-faces
-;;   '(erc-input-face ((t (:foreground "antique white"))))
-;;   '(helm-selection ((t (:background "#4682b4" :foreground "black"))))
-;;   '(org-agenda-clocking ((t (:inherit secondary-selection :foreground "black"))) t)
-;;   '(org-agenda-done ((t (:foreground "dim gray" :strike-through nil))))
-;;;;;;;   '(org-done ((t (:foreground "PaleGreen" :weight normal :strike-through t))))
-;;   '(org-clock-overlay ((t (:background "SkyBlue4" :foreground "black"))))
-;;;;;;;   '(org-headline-done ((((class color) (min-colors 16) (background dark)) (:foreground "LightSalmon" :strike-through t))))
-;;   '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "cornflower blue"))))))
-#+END_EXAMPLE
-
-*** COMMENT Theme function for changing theme and disabling themes
-
-From https://github.com/danielmai/.emacs.d/blob/master/config.org
-His explanation: I tend to switch themes more often than normal. For example, switching to a lighter theme (such as the default) or to a different theme depending on the time of day or my mood. Normally, switching themes is a multi-step process with disable-theme and load-theme. The switch-theme function will do that in one swoop. I just choose which theme I want to go to.
-
-#+BEGIN_EXAMPLE
-(defun switch-theme (theme)
-  "Disables any currently active themes and loads THEME."
-  ;; This interactive call is taken from `load-theme'
-  (interactive
-   (list
-    (intern (completing-read "Load custom theme: "
-                             (mapc 'symbol-name
-                                   (custom-available-themes))))))
-  (let ((enabled-themes custom-enabled-themes))
-    (mapc #'disable-theme custom-enabled-themes)
-    (load-theme theme t)))
-
-(defun disable-active-themes ()
-  "Disables any currently active themes listed in `custom-enabled-themes'."
-  (interactive)
-  (mapc #'disable-theme custom-enabled-themes))
-
-(bind-key "s-<f12>" 'switch-theme)
-(bind-key "s-<f11>" 'disable-active-themes)
-#+END_EXAMPLE
-
-*** COMMENT Another try for switching themes neatly
-
-- From https://emacs.stackexchange.com/questions/3112/how-to-reset-color-theme
-... but I see no difference
-
-#+BEGIN_EXAMPLE
-(defadvice load-theme (before theme-dont-propagate activate)
- (mapc #'disable-theme custom-enabled-themes))
-;; (mapcar #'disable-theme custom-enabled-themes)) ;; asked by emacs on initialization to change mapcar to either mapc or dolist
-
-(defun enab-theme (theme) 
- (if current-t43m3 (disable-theme current-t43m3))
- (setq current-t43m3 theme) 
- (load-theme theme t)) 
-#+END_EXAMPLE
-
-*** Change theme depending on hour of day
-- From 9 am to 8 pm, light theme. Otherwise, dark theme.
-- https://blog.jft.rocks/emacs/time-based-theme.html
-
-#+BEGIN_SRC emacs-lisp 
-(defun set-light-theme ()
-  "Set the light theme with some customization if needed."
-  (interactive)
-  (load-theme 'solarized-light t)
-  (set-face-attribute 'helm-selection nil 
-                      :background nil
-                      :foreground "Orange3")
-  (set-face-attribute 'helm-source-header
-                      nil
-                      :foreground "#dcdcdc"))
-
-(defun set-dark-theme ()
-  "Set the dark theme with some customization if needed."
-  (interactive)
-  (load-theme 'solarized-dark t)
-  (set-face-attribute 'helm-selection nil 
-                      :background nil
-                      :foreground "Orange3")
-  (set-face-attribute 'helm-source-header
-                      nil
-                      :foreground "#dcdcdc"))
-
-(let ((current-hour (string-to-number (format-time-string "%H"))))
-  (if (or (< current-hour 10) (> current-hour 17)) (set-dark-theme) (set-light-theme)))
-#+END_SRC
-
-#+RESULTS:
-
-If you want your Emacs automatically switch between the color schemes when the time come, you can use run-with-timer function to do the check every hour. But hey, if if I switch theme manually, theme is switched back to what it was after one hour.
-
-#+BEGIN_SRC emacs-lisp 
-(defun theme-switcher ()
-  (let ((current-hour (string-to-number (format-time-string "%H"))))
-    (if (or (< current-hour 11) (> current-hour 17)) (set-dark-theme) (set-light-theme))))
-
-;; Run at every 3600 seconds, after 0s delay; DGM commented this out on 24 august 2019 so it did not switch back by itself 
-(run-with-timer 0 3600 'theme-switcher)
-#+END_SRC
-
-#+RESULTS:
-: [nil 24021 32824 946091 3600 theme-switcher nil nil 677000]
-
 ** Mode-line customization
 
 - Powerline (original setup that I had on until I changed to Diego Vicente's)
@@ -388,6 +144,15 @@ Original:
 (display-time-mode 1)
 #+END_EXAMPLE
 
+
+(defun set-moody-face (frame)
+    (let ((line (face-attribute 'mode-line :underline frame)))
+      (set-face-attribute 'mode-line          frame :overline   line)
+      (set-face-attribute 'mode-line-inactive frame :overline   line)
+      (set-face-attribute 'mode-line-inactive frame :underline  line)
+      (set-face-attribute 'mode-line          frame :box        nil)  ; nil
+      (set-face-attribute 'mode-line-inactive frame :box        nil)))
+
 #+begin_src emacs-lisp
 (use-package minions
   :ensure t
@@ -402,13 +167,329 @@ Original:
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode)
 
-  (defun set-moody-face (frame)
-    (let ((line (face-attribute 'mode-line :underline frame)))
-      (set-face-attribute 'mode-line          frame :overline   line)
-      (set-face-attribute 'mode-line-inactive frame :overline   line)
-      (set-face-attribute 'mode-line-inactive frame :underline  line)
-      (set-face-attribute 'mode-line          frame :box        nil)
-      (set-face-attribute 'mode-line-inactive frame :box        nil)))
+ (defun set-moody-face (frame)
+       (let ((line (face-attribute 'mode-line :underline)))
+         (set-face-attribute 'mode-line-inactive nil :overline   line)
+         (set-face-attribute 'mode-line          nil :overline   "#d33682") ; line
+         (set-face-attribute 'mode-line-inactive nil :underline  line)
+         ;(set-face-attribute 'mode-line         nil :box        nil)
+         (set-face-attribute 'mode-line-inactive nil :box        nil)
+         (set-face-attribute 'mode-line          nil :box "#d33682")))
+
+  (defun set-current-moody-face (&optional args)
+     (interactive)
+     (set-moody-face (selected-frame)))
+
+  (setq-default x-underline-at-descent-line t
+                column-number-mode t)
+
+  (add-to-list 'after-make-frame-functions 'set-moody-face t)
+  (add-to-list 'after-make-frame-functions 'set-current-moody-face t))
+
+(setq display-time-24hr-format t)
+(setq display-time-default-load-average t)
+(setq display-time-mail-string "") ;; no mail alert
+(display-time-mode 1)
+
+#+end_src
+
+#+RESULTS:
+: t
+
+
+Alternative by https://github.com/gonsie/dotfiles/blob/master/emacs/theme.el#L75
+Also: https://dev.to/gonsie/beautifying-the-mode-line-3k10
+
+#+BEGIN_EXAMPLE
+;; Mode line settings
+;; use setq-default to set it for /all/ modes
+
+(setq-default mode-line-format
+              (list
+               ;; day and time
+               '(:eval (propertize (format-time-string " %b %d %H:%M ")
+                                   'face 'font-lock-builtin-face))
+
+
+               '(:eval (propertize (substring vc-mode 5)
+                                   'face 'font-lock-comment-face))
+
+               ;; the buffer name; the file name as a tool tip
+               '(:eval (propertize " %b "
+                                   'face
+                                   (let ((face (buffer-modified-p)))
+                                     (if face 'font-lock-warning-face
+                                       'font-lock-type-face))
+                                   'help-echo (buffer-file-name)))
+
+               ;; line and column
+               " (" ;; '%02' to set to 2 chars at least; prevents flickering
+               (propertize "%02l" 'face 'font-lock-keyword-face) ","
+               (propertize "%02c" 'face 'font-lock-keyword-face)
+               ") "
+
+               ;; relative position, size of file
+               " ["
+               (propertize "%p" 'face 'font-lock-constant-face) ;; % above top
+               "/"
+               (propertize "%I" 'face 'font-lock-constant-face) ;; size
+               "] "
+
+               ;; spaces to align right
+               '(:eval (propertize
+                " " 'display
+                `((space :align-to (- (+ right right-fringe right-margin)
+                                      ,(+ 3 (string-width mode-name)))))))
+
+               ;; the current major mode
+               (propertize " %m " 'face 'font-lock-string-face)
+               ;;minor-mode-alist
+               ))
+
+(set-face-attribute 'mode-line nil
+                    :background "#353644"
+                    :foreground "white"
+                    :box '(:line-width 8 :color "#353644")
+                    :overline nil
+                    :underline nil)
+
+(set-face-attribute 'mode-line-inactive nil
+                    :background "#565063"
+                    :foreground "white"
+                    :box '(:line-width 8 :color "#565063")
+                    :overline nil
+                    :underline nil)
+#+END_EXAMPLE
+
+
+** Color Themes
+Emacs 24 introduces a streamlined theming system that replaces an
+older, messier one. The Starter Kit comes with Ethan Schoonover's
+/Solarized/ color theme and the /Zenburn/ theme, in versions
+maintained by Bozhidar Batsov. Load it with =M-x load-theme
+solarized-dark= or =M-x load-theme solarized-light=. You can also try
+loading the =zenburn= and =anti-zenburn= themes. 
+
+*** Solarized Theme
+#+source: colors
+#+begin_src emacs-lisp
+  ;;  add (setq custom-safe-themes t) to your init file before you load your theme. This will treat all themes as safe, which could be a risk in theory, but if ;; you are only installing themes from trusted sources, I don't see any issue 
+  ;; https://emacs.stackexchange.com/questions/18932/stop-emacs-asking-if-a-theme-is-safe
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
+  (setq custom-safe-themes t)
+
+  ;;(use-package solarized-theme
+  ;;  :defer 10
+  ;;  :init
+  ;;  (setq solarized-use-variable-pitch nil)
+  ;;  (setq solarized-height-plus-1 1.0)
+  ;;  :ensure t)
+
+
+  ;; From https://github.com/andschwa/.emacs.d/blob/master/init.el and https://github.com/bbatsov/solarized-emacs
+
+(use-package solarized-theme
+  :init 
+  (setq solarized-distinct-fringe-background t) ;; make the fringe stand out from the background 
+  (setq solarized-use-variable-pitch nil)       ;; Don't change the font for some headings and titles
+  (setq solarized-high-contrast-mode-line nil)    ;; make the modeline high contrast (change to t if you want it)
+  ;;  (setq solarized-use-less-bold t)              ;; Use less bolding
+  ;;  (setq solarized-use-more-italic t)            ;; Use more italics
+  (setq solarized-emphasize-indicators nil)     ;; Use less colors for indicators such as git: gutter, flycheck and similar
+  (setq solarized-scale-org-headlines nil)      ;; Don't change size of org-mode headlines (but keep other size-changes)
+  ;; Avoid all font-size changes
+  (setq solarized-height-minus-1 1.0)
+  (setq solarized-height-plus-1 1.0)
+  (setq solarized-height-plus-2 1.0)
+  (setq solarized-height-plus-3 1.0)
+  (setq solarized-height-plus-4 1.0)
+  (setq x-underline-at-descent-line t)
+  (set-face-attribute 'helm-selection nil 
+                      :background nil
+                      :foreground "Orange3")
+  (set-face-attribute 'helm-source-header
+                      nil
+                      :foreground "#dcdcdc")
+  (set-moody-face t)
+  :config
+  (set-face-attribute 'helm-selection nil 
+                      :background nil
+                      :foreground "Orange3")
+  (set-face-attribute 'helm-source-header
+                      nil
+                      :foreground "#dcdcdc")
+  (set-moody-face t)
+  (defun toggle-theme ()
+    "Switch between Solarized variants."
+    (interactive)
+    (cond
+     ((member 'solarized-dark custom-enabled-themes)
+      (disable-theme 'solarized-dark)
+      (load-theme 'solarized-light t)
+      (set-moody-face t)
+
+      (set-face-attribute 'helm-selection nil 
+                          :background nil
+                          :foreground "Orange3"))
+     ((member 'solarized-light custom-enabled-themes)
+      (disable-theme 'solarized-light)
+      (load-theme 'solarized-dark t)
+      (set-face-attribute 'helm-selection nil 
+                          :background nil
+                          :foreground "Orange3")
+      (set-face-attribute 'helm-source-header
+                          nil
+                          :foreground "#dcdcdc")))
+      (set-moody-face t))
+ 
+(load-theme 'solarized-light t)
+(set-moody-face t))
+
+
+(bind-key "s-!" 'toggle-theme)
+
+;;  (load-theme 'solarized-dark t))
+
+;;  (load-theme 'zenburn t)
+;;  (load-theme 'solarized-dark t)
+;;  (load-theme 'solarized-light t)
+;;  (load-theme 'darktooth t)
+;;  (load-theme 'soothe t)
+;;  (load-theme 'clues t)
+
+;; from https://github.com/kuanyui/moe-theme.el
+;;    (require 'moe-theme)
+;;    (powerline-moe-theme)
+
+;; Show highlighted buffer-id as decoration. (Default: nil)
+;;    (setq moe-theme-highlight-buffer-id t)
+
+;; Resize titles (optional).
+;;    (setq moe-theme-resize-markdown-title '(1.5 1.4 1.3 1.2 1.0 1.0))
+;;    (setq moe-theme-resize-org-title '(1.5 1.4 1.3 1.2 1.1 1.0 1.0 1.0 1.0))
+;;    (setq moe-theme-resize-rst-title '(1.5 1.4 1.3 1.2 1.1 1.0))
+
+;;    Choose a color for mode-line.(Default: blue)
+;;    (moe-theme-set-color 'orange)
+
+;; Finally, apply moe-theme now.
+;; Choose what you like, (moe-light) or (moe-dark)
+;;    (moe-dark)    
+
+;; If you use Emacs build-in show-paren-mode, I recommend set the value of show-paren-style to expression for optimized visual experience:
+
+;;    (show-paren-mode t)
+;;    (setq show-paren-style 'expression)
+
+;; trying to improve the looks of dired+ with solarized dark: http://unix.stackexchange.com/questions/20519/dired-on-dark-color-themes
+;; (add-to-list 'default-frame-alist '(background-mode . dark))
+;;  (load-theme 'spacemacs-dark t)
+;;  (load-theme 'misterioso t)
+#+end_src
+
+#+RESULTS: colors
+: toggle-theme
+
+#+RESULTS:
+: t
+*** COMMENT Joe Di Castro bit
+
+- Objective: to make toggling themes smoother.
+- Joe says: This another code is to provide a hook to do some things after loading a theme, like overwriting a face in a particular theme or
+always reload the smart-mode-line theme.
+
+#+BEGIN_EXAMPLE
+(defvar after-load-theme-hook nil
+   "Hook run after a color theme is loaded using `load-theme'.")
+
+(defadvice load-theme (after run-after-load-theme-hook activate)
+   "Run `after-load-theme-hook'."
+   (run-hooks 'after-load-theme-hook))
+#+END_EXAMPLE
+
+*** COMMENT Sacha Chua's tweaks 
+
+Some more tweaks to solarized:
+
+#+BEGIN_EXAMPLE
+;; (when window-system
+;;  (custom-set-faces
+;;   '(erc-input-face ((t (:foreground "antique white"))))
+;;   '(helm-selection ((t (:background "#4682b4" :foreground "black"))))
+;;   '(org-agenda-clocking ((t (:inherit secondary-selection :foreground "black"))) t)
+;;   '(org-agenda-done ((t (:foreground "dim gray" :strike-through nil))))
+;;;;;;;   '(org-done ((t (:foreground "PaleGreen" :weight normal :strike-through t))))
+;;   '(org-clock-overlay ((t (:background "SkyBlue4" :foreground "black"))))
+;;;;;;;   '(org-headline-done ((((class color) (min-colors 16) (background dark)) (:foreground "LightSalmon" :strike-through t))))
+;;   '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "cornflower blue"))))))
+#+END_EXAMPLE
+
+*** COMMENT Theme function for changing theme and disabling themes
+
+From https://github.com/danielmai/.emacs.d/blob/master/config.org
+His explanation: I tend to switch themes more often than normal. For example, switching to a lighter theme (such as the default) or to a different theme depending on the time of day or my mood. Normally, switching themes is a multi-step process with disable-theme and load-theme. The switch-theme function will do that in one swoop. I just choose which theme I want to go to.
+
+#+BEGIN_EXAMPLE
+(defun switch-theme (theme)
+  "Disables any currently active themes and loads THEME."
+  ;; This interactive call is taken from `load-theme'
+  (interactive
+   (list
+    (intern (completing-read "Load custom theme: "
+                             (mapc 'symbol-name
+                                   (custom-available-themes))))))
+  (let ((enabled-themes custom-enabled-themes))
+    (mapc #'disable-theme custom-enabled-themes)
+    (load-theme theme t)))
+
+(defun disable-active-themes ()
+  "Disables any currently active themes listed in `custom-enabled-themes'."
+  (interactive)
+  (mapc #'disable-theme custom-enabled-themes))
+
+(bind-key "s-<f12>" 'switch-theme)
+(bind-key "s-<f11>" 'disable-active-themes)
+#+END_EXAMPLE
+
+*** COMMENT Another try for switching themes neatly
+
+- From https://emacs.stackexchange.com/questions/3112/how-to-reset-color-theme
+... but I see no difference
+
+#+BEGIN_EXAMPLE
+(defadvice load-theme (before theme-dont-propagate activate)
+ (mapc #'disable-theme custom-enabled-themes))
+;; (mapcar #'disable-theme custom-enabled-themes)) ;; asked by emacs on initialization to change mapcar to either mapc or dolist
+
+(defun enab-theme (theme) 
+ (if current-t43m3 (disable-theme current-t43m3))
+ (setq current-t43m3 theme) 
+ (load-theme theme t)) 
+#+END_EXAMPLE
+
+*** Change theme depending on hour of day
+- From 9 am to 8 pm, light theme. Otherwise, dark theme.
+- https://blog.jft.rocks/emacs/time-based-theme.html
+
+#+BEGIN_SRC emacs-lisp 
+(defun set-light-theme ()
+  "Set the light theme with some customization if needed."
+  (interactive)
+  (load-theme 'solarized-light t)
+  (set-face-attribute 'helm-selection nil 
+                      :background nil
+                      :foreground "Orange3")
+  (set-face-attribute 'helm-source-header
+                      nil
+                      :foreground "#dcdcdc")
+ (defun set-moody-face (frame)
+       (let ((line (face-attribute 'mode-line :underline)))
+         (set-face-attribute 'mode-line-inactive nil :overline   line)
+         (set-face-attribute 'mode-line          nil :overline   "#d33682") ; line
+         (set-face-attribute 'mode-line-inactive nil :underline  line)
+         ;(set-face-attribute 'mode-line         nil :box        nil)
+         (set-face-attribute 'mode-line-inactive nil :box        nil)
+         (set-face-attribute 'mode-line          nil :box "#d33682")))
 
   ;; (defun set-current-moody-face (&optional args)
   ;;   (interactive)
@@ -418,17 +499,55 @@ Original:
                 column-number-mode t)
 
   (add-to-list 'after-make-frame-functions 'set-moody-face t))
-  ;; (add-to-list 'after-make-frame-functions 'set-current-moody-face t))
 
-(setq display-time-24hr-format t)
-(setq display-time-default-load-average t)
-(setq display-time-mail-string "") ;; no mail alert
-(display-time-mode 1)
-#+end_src
+(defun set-dark-theme ()
+  "Set the dark theme with some customization if needed."
+  (interactive)
+  (load-theme 'solarized-dark t)
+  (set-face-attribute 'helm-selection nil 
+                      :background nil
+                      :foreground "Orange3")
+  (set-face-attribute 'helm-source-header
+                      nil
+                      :foreground "#dcdcdc")
+ (defun set-moody-face (frame)
+       (let ((line (face-attribute 'mode-line :underline)))
+         (set-face-attribute 'mode-line-inactive nil :overline   line)
+         (set-face-attribute 'mode-line          nil :overline   "#d33682") ; line
+         (set-face-attribute 'mode-line-inactive nil :underline  line)
+         ;(set-face-attribute 'mode-line         nil :box        nil)
+         (set-face-attribute 'mode-line-inactive nil :box        nil)
+         (set-face-attribute 'mode-line          nil :box "#d33682")))
+
+  ;; (defun set-current-moody-face (&optional args)
+  ;;   (interactive)
+  ;;   (set-moody-face (selected-frame)))
+
+  (setq-default x-underline-at-descent-line t
+                column-number-mode t)
+
+  (add-to-list 'after-make-frame-functions 'set-moody-face t))
+
+(let ((current-hour (string-to-number (format-time-string "%H"))))
+  (if (or (< current-hour 10) (> current-hour 17)) (set-dark-theme) (set-light-theme)))
+#+END_SRC
 
 #+RESULTS:
-: t
+| exwm-workspace--on-after-make-frame | exwm-manage--add-frame | x-dnd-init-frame | set-moody-face | aw--after-make-frame |
 
+If you want your Emacs automatically switch between the color schemes when the time come, you can use run-with-timer function to do the check every hour. But hey, if if I switch theme manually, theme is switched back to what it was after one hour.
+
+#+BEGIN_SRC emacs-lisp 
+(defun theme-switcher ()
+  (let ((current-hour (string-to-number (format-time-string "%H"))))
+    (if (or (< current-hour 11) (> current-hour 17)) (set-dark-theme) (set-light-theme))))
+
+;; Run at every 3600 seconds, after 0s delay; DGM commented this out on 24 august 2019 so it did not switch back by itself 
+(run-with-timer 0 3600 'theme-switcher)
+#+END_SRC
+
+#+RESULTS:
+: [nil 24021 32824 946091 3600 theme-switcher nil nil 677000]
 
 ** Window system 
 

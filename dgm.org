@@ -3823,8 +3823,6 @@ https://www.emacswiki.org/emacs/BookmarkPlus
 
 * Ledger
 
-From
-
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ledger-mode
   :ensure t
@@ -6710,6 +6708,29 @@ consecutive new lines and tabs.
 #+RESULTS:
 : my-clean-buffer
 
+* Window highlight
+Too funky
+
+#+begin_src emacs-lisp :tangle no
+ (require 'window-highlight)
+
+ (apply
+  #'custom-set-faces
+  (let ((inactive-color "#ffffe2")
+        (where '((type x w32 ns))))
+    `((default
+        ((,where
+          :background ,inactive-color)))
+      (fringe
+        ((,where
+          :background ,inactive-color)))
+  )))
+
+ (window-highlight-mode 1)
+#+end_src
+
+#+RESULTS:
+: t
 
 * Provide
 
