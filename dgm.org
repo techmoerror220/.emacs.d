@@ -3823,18 +3823,44 @@ https://www.emacswiki.org/emacs/BookmarkPlus
 
 * Ledger
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Originally:
+
+#+BEGIN_EXAMPLE
 (use-package ledger-mode
   :ensure t
   :init
   (setq ledger-clear-whole-transactions 1)
   ;;:config
   ;;(add-to-list 'ledger-report-mode) ;; Gives error Compiler-macro error for add-to-list: (wrong-number-of-arguments (3 . 5) 2)
-  :mode "\\.dat\\'")
+  :mode "\\.dat\\'"
+        "\\.ledger\\'")
+#+END_EXAMPLE
+
+Next, copied from: https://www.reddit.com/r/emacs/comments/8x4xtt/tip_how_i_use_ledger_to_track_my_money/
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ledger-mode
+  :ensure t
+  :init
+  (setq ledger-clear-whole-transactions 1)
+  :mode ("\\.dat\\'"
+         "\\.ledger\\'")
+  :bind (:map ledger-mode-map
+	("C-x C-s" . my/ledger-save))
+  :preface
+  (defun my/ledger-save ()
+    "Automatically clean the ledger buffer at each save."
+    (interactive)
+    (save-excursion
+      (when (buffer-modified-p)
+        (with-demoted-errors (ledger-mode-clean-buffer))
+        (save-buffer)))))
+
+(add-hook 'ledger-mode-hook #'ledger-flymake-enable)
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23548 17303 871458 855000) :init (23548 17303 871411 289000) :init-secs (0 0 97 698000) :use-package-secs (0 0 314 844000)))
+| ledger-flymake-enable |
 
 * Nice symbol for end of file lines
 
@@ -6708,7 +6734,8 @@ consecutive new lines and tabs.
 #+RESULTS:
 : my-clean-buffer
 
-* Window highlight
+* COMMENT Window highlight
+
 Too funky
 
 #+begin_src emacs-lisp :tangle no
@@ -6729,8 +6756,6 @@ Too funky
  (window-highlight-mode 1)
 #+end_src
 
-#+RESULTS:
-: t
 
 * Provide
 

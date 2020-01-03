@@ -46,7 +46,7 @@ The default set here does not matter much as I'm asked what command to run every
 #+RESULTS: latemkdefault
 | (lambda nil (setq TeX-command-default latexmk)) | pandoc-mode |
 
-* The /XeLaTeX/ route 
+* COMMENT The /XeLaTeX/ route 
 ** Set default engine <<engine>>
 
 Custom variables kludge. Why can't I get these to work via =setq=?
@@ -55,7 +55,7 @@ What if I don't set one by default?
 
 Watch out! If I want to change to latex (instead of xelatex), and I have a =custom.el= file, then I have to get rid of this =custom.el= file
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; (LaTeX-XeTeX-command "xelatex -synctex=1 -shell-escape")
 (setq-default TeX-engine (quote xetex))
 ;; (custom-set-variables
@@ -72,8 +72,6 @@ Watch out! If I want to change to latex (instead of xelatex), and I have a =cust
 ;; )
 #+END_SRC
 
-#+RESULTS:
-: xetex
 
 ** XeLaTeX and pdfLaTeX Org Export Settings 
 :PROPERTIES:
@@ -109,7 +107,6 @@ Also, if I change to latex instead of xelatex, then change tangle option to no o
 
 *** XeLaTeX options (Comment out if default latex is used instead)  <<options>>
 **** Listings and Minted
-
 Choose either listings or minted for exporting source code blocks. Using minted (as here) requires pygments be installed. 
 I don't tangle it now because I set the default to =minted= in =/home/dgm/texmf/tex/generic/latex-custom-kjh/needs-org-mode/org-preamble-xelatex.sty=
 
@@ -199,7 +196,7 @@ DGM 12 dic 2019: note that ="\\usepackage[minted]{org-preamble-xelatex}\n"= cann
 Default packages included in the tex file. As before, =org-preamble-xelatex= is part of =latex-custom-kjh=. There's =org-preamble-pdflatex= as well, if you wish to use that instead.
 DGM note: This code calls on the stuff in the =~/texmf= directory that allows using fonts a la MinionPro etc. Specifically, it uses the =org-preamble-xelatex= style file. 
 DGM note on 13 may: I'ved tangled to no as this conflicted with my export to beamer. Now I have included these lines in the =org-skeleton= code.
-Things I've learnt today that are key: =org export=  inputs a whole bunch of packages that maybe it's not what you wanted and some of them may conflict with packages you do want to have. To get rid of them you need =(setq org-latex-default-packages-alist nil)=
+Things I've learnt today that are key: =org export=  inputs a whole bunch of packages that maybe it's not what you wanted and some of them may conflict with packages you do want to have. To get rid of them you need =(gsetq org-latex-default-packages-alist nil)=
 
 Then, if I uncomment the rest I'll have the call to =org-preamble-xelatex= in every latex file but it happens that this call is great for articles but not for beamer presentations. So I have disabled it here and I have added to the skeleton template. By the way, I also need a beamer skeleton!
 
@@ -227,9 +224,8 @@ Then, if I uncomment the rest I'll have the call to =org-preamble-xelatex= in ev
 #+RESULTS:
 |   | org-preamble-pdflatex | nil |
 
-* COMMENT The /LaTeX/ route 
+* The /LaTeX/ route 
 ** Set default engine 
-
 Custom variables kludge. Why can't I get these to work via =setq=?
 DGM: Originally this was at the end of =kjhealy.org=.
 What if I don't set one by default?
@@ -363,7 +359,6 @@ LaTeX compilation command. For orgmode docs we just always use xelatex for conve
 Also, if I change to latex instead of xelatex, then change tangle option to no or else latex will use xelatex options the compilation will fail. Update: it's enough if I comment out the following heading.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-
 ;; (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex -synctex=1 --shell-escape -bibtex -f' -pdf %f")) ;; with this it doesn't work
 ;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))  ;; this is Kitchin's way
 (setq org-latex-pdf-process (list "latexmk -synctex=1 -shell-escape -bibtex -f -pdf %f"))  ;; this is Kitchin's way customized
@@ -381,6 +376,7 @@ Taken from Sacha Chua's config files.
 Reading https://orgmode.org/worg/exporters/beamer/ox-beamer.html I think as of Orgmode 8.0.3 this setup is not necessary anymore.
 
 Deleted:               "\\documentclass\[presentation\]\{beamer\}"
+
 #+BEGIN_SRC emacs-lisp :tangle no
 (with-eval-after-load 'org
   (require 'ox-latex)
@@ -402,6 +398,7 @@ Deleted:               "\\documentclass\[presentation\]\{beamer\}"
 | membook | \documentclass[11pt,oneside]{memoir}               |                         |                       |                          |     |                                |                                      |                                            |
 
 Of course we need to load  =beamer= for it to show up in the menu after =C-c C-e=.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'ox-beamer)
 #+END_SRC

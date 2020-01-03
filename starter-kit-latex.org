@@ -324,6 +324,18 @@ Higham prefers closing brace on its own line after cleaning BibTeX entry. I don'
   (progn (bibtex-end-of-entry) (left-char) (newline-and-indent)
          (insert "      ")))
 #+END_SRC
+ 
+*** Bibtex
+
+#+begin_src emacs-lisp :tangle yes
+;; emacs-lisp from https://github.com/nkicg6/emacs-config
+;; org-bibtex
+(require 'ox-bibtex)
+#+end_src
+
+#+RESULTS:
+: ox-bibtex
+
 
 ** Configure RefTeX
 *** Default Bibliography
@@ -700,6 +712,7 @@ With the solarized-dark theme, math notation is too dark to see.
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; (setq font-latex-math-face :foreground grey)
 #+END_SRC
+
 
 * Provide
 

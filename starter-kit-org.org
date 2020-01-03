@@ -794,11 +794,21 @@ The default value is -77, which is weird for smaller width windows. I’d rather
 According to https://emacs.stackexchange.com/questions/36430/cant-choose-citation-types-using-org-ref, if I do =C-u C-c ]= I should be able to choose citation type (cite, citep, etc). But I can't. 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (setq org-ref-default-citation-link "textcite")
+  (setq org-ref-default-citation-link "autocite")
 #+END_SRC
 
 #+RESULTS:
 : textcite
+*** Org-ref  shortcut
+Also, in http://kitchingroup.cheme.cmu.edu/blog/2014/05/13/Using-org-ref-for-citations-and-references/#sec-2, JKitchin says: 
+
+The default key binding to insert a citation is C-c ]. I chose that because I do not like pressing shift to get ). However, this key binding usurps an org-mode agenda file command. To change this, set this variable
+
+#+begin_src emacs-lisp :tangle no
+(setq org-ref-insert-cite-key "C-c )")
+#+end_src
+
+DGM: Finally I don't use this as I've seen that =C-c ]= is bound to =org-ref-helm-insert-cite-link= and defined in =org-ref-helm-bibtex.el=.
 
 *** Pre/post text support from Kitchin
 - From: https://github.com/jkitchin/org-ref/blob/master/org-ref.org

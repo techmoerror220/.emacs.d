@@ -550,7 +550,7 @@ In Sacha's dotfiles, she says: "Eldoc provides minibuffer hints when working wit
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; helm-eval-expression-with-eldoc
 ;; (global-set-key (kbd "C-c h M-:") 'helm-eval-expression-with-eldoc)
-(global-set-key (kbd "s-\(") 'helm-eval-expression-with-eldoc)
+(global-set-key (kbd "s-(") 'helm-eval-expression-with-eldoc)
 #+END_SRC
 
 #+RESULTS:

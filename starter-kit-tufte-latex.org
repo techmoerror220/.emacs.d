@@ -1063,6 +1063,9 @@ Hawaiian language words with what is known in Hawaiian as a
 #+end_src
 
 *** PDF process
+:PROPERTIES:
+:ID:       4877cfc1-64fe-4d55-9cfd-9c913570c7f3
+:END:
 
 NB: DGM adds =-shell-escape= on 6 Dic 2019 and on the 8th I disabled it in favor of what I have in the =starter-kit-latex-org.org= file ([[id:e9f6cdbc-2253-4c86-a7b2-d77ded4807e9][XeLaTeX and pdfLaTeX Org Export Settings]])
 
@@ -1088,11 +1091,12 @@ NB: DGM adds =-shell-escape= on 6 Dic 2019 and on the 8th I disabled it in favor
 ,#+end_src
 #+END_EXAMPLE
 
+DGM comments this out on 3rd january 2020 cos I think this is screwing my change to latex from xelatex.
 #+name: pdf-process-bibtex
 #+header: :results silent
 #+begin_src emacs-lisp
-(setq org-latex-pdf-process
-'("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -bibtex -pdf %f"))
+ (setq org-latex-pdf-process
+ '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -bibtex -pdf %f"))
 #+end_src
 
 *** Access keyword values

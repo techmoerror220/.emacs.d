@@ -539,9 +539,9 @@ Located in [[file:starter-kit-latex-org.org][starter-kit-latex-org]]
 #+RESULTS:
 : Loaded /home/dgm/.emacs.d/starter-kit-latex-org.el
 
-*** Starter Kit Tufte Latex
+*** COMMENT Starter Kit Tufte Latex
 
-Originally I commented this out because I have noticed this does not so anything. All is donde thanks to Latex's Tufte class. But this is not true. In this file some functions and macros are defined and I might find them useful in future.
+Originally I commented this out because I have noticed this does not so anything. All is done thanks to Latex's Tufte class. But this is not true. In this file some functions and macros are defined and I might find them useful in future. Also, here XeLaTeX is invoked. That is why I have to deactivate it, so that I can work with Latex when I need to (for example, when using =beamer=)
 
 #+begin_src emacs-lisp
 (starter-kit-load "starter-kit-tufte-latex.org")
