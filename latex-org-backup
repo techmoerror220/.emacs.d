@@ -7,7 +7,28 @@
 This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 * Starter Kit Latex-Org combination
+
+I've always been troubled by the fact that I sometimes want to work in pure Latex and sometimes in XeLaTeX.
+My default is XeLatex. If I want to change it to LaTeX (maybe it is really pdflatex), then change the default [[engine]]. 
+And if I am working with org-mode, I also have to change the [[export]] option and comment out the XeLaTeX [[options]].
+
+To simplify things I have created two routes in this document. By commenting out the one I don't want, and compiling this document, I will have =xelatex= or =pdflatex= in action. 
+
+** How to use 
+1. Comment the engine you don't want to use. 
+2. Delete =starter-kit-latex-org.el=
+3. Evaluate the following:
+
+#+BEGIN_EXAMPLE
+(starter-kit-load "starter-kit-latex-org.org")
+#+END_EXAMPLE
+
+4. Use the export facility of org and it should be fine.
+   - REMEMBER: include =#+LaTeX_CLASS: memarticle= if using /XeLaTeX/ and the standard org export. This way I'll have the Minion, Myriad and Pragmata fonts.
+     + No need to include it if using the Pandoc export with the /XeLaTeX/ export.
+ 
 ** Use latexmk for compilation by default
+The default set here does not matter much as I'm asked what command to run every time I run tex on a file. 
 
 #+srcname: latemkdefault
 #+begin_src emacs-lisp :tangle yes
@@ -24,39 +45,6 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 #+RESULTS: latemkdefault
 | (lambda nil (setq TeX-command-default latexmk)) | pandoc-mode |
 
-** Choosing =pdflatex= or =xelatex=
-I found the solution here, hurray!!!: https://stackoverflow.com/questions/47623041/getting-emacs-spacemacs-to-accept-function-that-changes-latex-compiler-based-u/47626494#47626494
-
-#+begin_src emacs-lisp :tangle yes
-;; Default packages included in every tex file, pdflatex or xelatex. Currently included in the .sty files, so that's why I don't need this.
-;(setq org-latex-packages-alist
-;      '(("" "graphicx" t)
-;        ("" "longtable" nil)
-;        ("" "float" nil)))
-
-;; source: https://lists.gnu.org/archive/html/emacs-orgmode/2013-06/msg00240.html
-(defun my-auto-tex-cmd (backend)
-  "When exporting from .org with latex,
-  automatically run latex, pdflatex, or xelatex as appropriate,
-  using latexmk."
-  (let ((texcmd))
-    (setq texcmd "latexmk -pdf %f")
-    (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
-        (progn
-          (setq texcmd "latexmk -pdf -pdflatex='pdflatex -file-line-error --shell-escape -synctex=1' %f")))
-    (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-        (progn
-          (setq texcmd "latexmk -pdflatex='xelatex -file-line-error --shell-escape -synctex=1' -pdf %f")))
-
-    (setq org-latex-pdf-process (list texcmd))))
-(add-hook 'org-export-before-parsing-hook 'my-auto-tex-cmd)
-#+end_src
-
-
-#+RESULTS:
-| my-auto-tex-cmd | org-latex-header-blocks-filter |
-
-
 *** Set a Path to Executables (optional)
     - The location of the LaTeX excecutables is system
       dependent. AUCTeX calls everything through a shell, so you may
@@ -68,7 +56,32 @@ I found the solution here, hurray!!!: https://stackoverflow.com/questions/476230
       (setenv "PATH" (concat "/usr/texbin:" (getenv "PATH")))
 #+end_src
 
-* The /XeLaTeX/ way
+* The /XeLaTeX/ route 
+** Set default engine <<engine>>
+
+Custom variables kludge. Why can't I get these to work via =setq=?
+DGM: Originally this was at the end of =kjhealy.org=.
+What if I don't set one by default?
+
+Watch out! If I want to change to latex (instead of xelatex), and I have a =custom.el= file, then I have to get rid of this =custom.el= file
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;; (LaTeX-XeTeX-command "xelatex -synctex=1 -shell-escape")
+(setq-default TeX-engine (quote xetex))
+;; (custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ ;;'(LaTeX-XeTeX-command "xelatex -synctex=1 -shell-escape")
+ ;;'(TeX-engine (quote xetex))
+ ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
+ ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
+;; '(blink-cursor-mode nil)
+;; '(text-mode-hook (quote (text-mode-hook-identify)))
+;; )
+#+END_SRC
+
 
 ** XeLaTeX and pdfLaTeX Org Export Settings 
 :PROPERTIES:
@@ -88,6 +101,19 @@ LaTeX compilation command. For orgmode docs we just always use xelatex for conve
 <<export>>
 
 Also, if I change to latex instead of xelatex, then change tangle option to no or else latex will use xelatex options the compilation will fail. Update: it's enough if I comment out the following heading.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -bibtex -pdf %f"))
+
+;;  (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))  ;; this is Kitchin's way
+
+;; the alternative, if you want a regular pdflatex would be, I think
+;; (setq org-latex-pdf-process '("latexmk -pdf %f"))
+;; (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex --shell-escape -bibtex -f'  -pdf %f"))
+#+END_SRC
+
+#+RESULTS:
+| latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -bibtex -pdf %f |
 
 *** XeLaTeX options (Comment out if default latex is used instead)  <<options>>
 **** Listings and Minted
@@ -317,7 +343,7 @@ LaTeX compilation command. For orgmode docs we just always use xelatex for conve
 
 Also, if I change to latex instead of xelatex, then change tangle option to no or else latex will use xelatex options the compilation will fail. Update: it's enough if I comment out the following heading.
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;; (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex -synctex=1 --shell-escape -bibtex -f' -pdf %f")) ;; with this it doesn't work
 ;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))  ;; this is Kitchin's way
 (setq org-latex-pdf-process (list "latexmk -synctex=1 -shell-escape -bibtex -f -pdf %f"))  ;; this is Kitchin's way customized
@@ -509,6 +535,25 @@ DGM changed from yes to no to try new setting
 
 #+RESULTS:
 : default
+
+#+begin_src emacs-lisp :tangle yes
+    ;; Originally taken from Bruno Tavernier: \ http://thread.g
+  ;; but adapted to use latexmk 4.20 or higher.
+  (defun my-auto-tex-cmd ()
+    "When exporting from .org with latex, automatically run l
+  pdflatex, or xelatex as appropriate, using latexmk."
+    (let ((texcmd)))
+    ;; default command: oldstyle latex via dvi
+    (setq texcmd "latexmk -dvi -pdfps %f")
+    ;; pdflatex -> .pdf
+    (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
+        (setq texcmd "latexmk -pdf %f"))
+    ;; xelatex -> .pdf
+    (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+        (setq texcmd "latexmk -pdflatex=xelatex -pdf %f"))
+    ;; LaTeX compilation command
+    (setq org-latex-to-pdf-process (list texcmd)))
+#+end_src
 
 #+RESULTS:
 : my-auto-tex-cmd

@@ -286,7 +286,7 @@ Make yasnippet work properly with org-mode.
 
 Original hook from =dgm.org=
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
   (add-hook 'org-mode-hook
             (lambda ()
               (set-face-attribute 'org-level-1 nil :height 1.5)
@@ -296,31 +296,23 @@ Original hook from =dgm.org=
               (set-face-attribute 'org-level-5 nil :height 1.1)))
 #+END_SRC
 
-#+RESULTS:
-| (lambda nil (highlight-symbol-mode)) | org-table-stripes-enable | org-mode-reftex-setup | org-ref-org-menu | (lambda nil (org-bullets-mode)) | turn-off-auto-fill | ambrevar/turn-off-indent-tabs | ambrevar/turn-off-linum | (lambda nil (visual-line-mode 1)) | org-indent-mode | (lambda nil (set-face-attribute 'org-level-1 nil :height 1.5) (set-face-attribute 'org-level-2 nil :height 1.2) (set-face-attribute 'org-level-3 nil :height 1.1) (set-face-attribute 'org-level-4 nil :height 1.1) (set-face-attribute 'org-level-5 nil :height 1.1)) | (lambda nil (local-set-key \216 'outline-next-visible-heading) (local-set-key \220 'outline-previous-visible-heading) (local-set-key \225 'outline-up-heading) (local-set-key \227 'org-table-copy-region) (local-set-key \231 'org-table-paste-rectangle) (local-set-key \214 'org-table-sort-lines) (local-set-key \311 'org-toggle-iimage-in-org)) | (lambda nil (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)) | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | org-eldoc-load |
 
-*** Hooks by Uncle David
+*** COMMENT Hooks by Uncle David
 
-Hook from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs
+Hook from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs. Turned off, as I prefer to see all the stars. See https://orgmode.org/manual/Clean-view.html
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (add-hook 'org-mode-hook 'org-indent-mode)
+#+BEGIN_SRC emacs-lisp :tangle no :results silent
+;  (add-hook 'org-mode-hook 'org-indent-mode)
 #+END_SRC
-
-#+RESULTS:
-| er/add-org-mode-expansions | (lambda nil (org-bullets-mode)) | turn-off-auto-fill | ambrevar/turn-off-indent-tabs | ambrevar/turn-off-linum | (lambda nil (visual-line-mode 1)) | org-indent-mode | (lambda nil (highlight-symbol-mode)) | org-table-stripes-enable | (lambda nil (set-face-attribute 'org-level-1 nil :height 1.5) (set-face-attribute 'org-level-2 nil :height 1.2) (set-face-attribute 'org-level-3 nil :height 1.1) (set-face-attribute 'org-level-4 nil :height 1.1) (set-face-attribute 'org-level-5 nil :height 1.1)) | org-mode-reftex-setup | org-ref-org-menu | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | org-eldoc-load |
-
 
 Line wrapping from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no :results silent
   (add-hook 'org-mode-hook
             '(lambda ()
                (visual-line-mode 1)))
 #+END_SRC
 
-#+RESULTS:
-| (lambda nil (highlight-symbol-mode)) | org-table-stripes-enable | org-mode-reftex-setup | org-ref-org-menu | (lambda nil (org-bullets-mode)) | turn-off-auto-fill | ambrevar/turn-off-indent-tabs | ambrevar/turn-off-linum | (lambda nil (visual-line-mode 1)) | org-indent-mode | (lambda nil (set-face-attribute 'org-level-1 nil :height 1.5) (set-face-attribute 'org-level-2 nil :height 1.2) (set-face-attribute 'org-level-3 nil :height 1.1) (set-face-attribute 'org-level-4 nil :height 1.1) (set-face-attribute 'org-level-5 nil :height 1.1)) | (lambda nil (local-set-key \216 'outline-next-visible-heading) (local-set-key \220 'outline-previous-visible-heading) (local-set-key \225 'outline-up-heading) (local-set-key \227 'org-table-copy-region) (local-set-key \231 'org-table-paste-rectangle) (local-set-key \214 'org-table-sort-lines) (local-set-key \311 'org-toggle-iimage-in-org)) | (lambda nil (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)) | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | org-eldoc-load |
 
 *** Hooks by Ambrevar
 
@@ -655,7 +647,8 @@ I've used ("◉" "○ ""►" "•" "•"))
 #+RESULTS: org-bullets
 : t
 
-#+begin_src emacs-lisp :tangle yes
+Going back to list of stars.
+#+begin_src emacs-lisp :tangle no
 (use-package org-bullets
   :config
   (setq org-bullets-bullet-list '("⊢" "⋮" "⋱" "⋱" "⋱"))
@@ -3596,12 +3589,14 @@ Org-mode has the ability to show or hide the leading stars on task
 headlines.  It's also possible to have headlines at odd levels only so
 that the stars and heading task names line up in sublevels.
 
-To make org show leading stars use
+To make org show leading stars use (and to hide them, change to =t=)
 
 #+header: :tangle yes
 #+begin_src emacs-lisp 
-  (setq org-hide-leading-stars nil)
+  (setq org-hide-leading-stars nil) ; t
 #+end_src
+
+#+RESULTS:
 
 I now use org-indent mode which hides leading stars.
 *** org-indent mode
@@ -3613,14 +3608,14 @@ I recently started using org-indent mode.  I like this setting a lot.
 It removes the indentation in the org-file but displays it as if it
 was indented while you are working on the org file buffer.
 
-org-indent mode displays as if org-odd-levels-only is true but it has
+org-indent mode displays as if =org-odd-levels-only= is true but it has
 a really clean look that I prefer over my old setup.
 
-I have org-indent mode on by default at startup with the following
+I have =org-indent= mode on by default at startup with the following
 setting:
 
-#+begin_src emacs-lisp :tangle yes
-  (setq org-startup-indented t)
+#+begin_src emacs-lisp :tangle no
+  (setq org-startup-indented nil) ; t
 #+end_src
 
 *** Handling blank lines

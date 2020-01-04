@@ -279,25 +279,30 @@ Some programs such as 'emacs' are better off being started in char-mode.
 
 * Technomancy's customization
 
-** COMMENT Workspaces
+** Workspaces
 We start out with 1 workspace, as exwm creates workspaces dynamically. (I think Technomancy starts with 9 workspaces really and this setup of 1 is really from Uncle Dave.)
 ??? Don't know really. I see three workspaces to start with if I do =s-w= so I disable to see what effect it has
 
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq exwm-workspace-number 1
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq exwm-workspace-number 9
       exwm-workspace-show-all-buffers t
       exwm-layout-show-all-buffers t)
 #+END_SRC
 
+#+RESULTS:
+: t
+
 The next loop will bind =s-<number>= to switch to the corresponding workspace from https://github.com/daedreth/UncleDavesEmacs.
 
-#+BEGIN_SRC emacs-lisp :tangle no
-;;    (dotimes (i 10)
-;;      (exwm-input-set-key (kbd (format "s-%d" i))
-;;                          `(lambda ()
-;;                             (interactive)
-;;                             (exwm-workspace-switch-create ,i))))
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (dotimes (i 10)
+      (exwm-input-set-key (kbd (format "s-%d" i))
+                          `(lambda ()
+                             (interactive)
+                             (exwm-workspace-switch-create ,i))))
 #+END_SRC
+
+#+RESULTS:
 
 
 ** Making the audio keys work

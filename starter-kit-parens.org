@@ -479,7 +479,6 @@ Daniel Guinea Martín disables this on Fri Oct 18 13:25:06 2019, as I have previ
 #+END_SRC
 
 * Electric pair mode
-
 From http://ergoemacs.org/emacs/emacs_insert_brackets_by_pair.html
 
 Emacs 24 has a new minor mode electric-pair-mode. When on, typing any left bracket automatically insert the right matching bracket. You can have it on always. Put this in your emacs init:
@@ -496,11 +495,14 @@ Brackets includes ASCII and Unicode brackets or quotation marks. Deleting one br
 (setq electric-pair-pairs
       '(
         (?\" . ?\")
-        (?\{ . ?\})))
+        (?\{ . ?\})
+        (?\` . ?\')))
 #+END_SRC
 
-** Electric Pair for Org-Mode
+#+RESULTS:
+: ((34 . 34) (123 . 125) (96 . 39))
 
+** Electric Pair for Org-Mode
 And now on to Org mode: 
 
 From: https://ipfs-sec.stackexchange.cloudflare-ipfs.com/emacs/A/question/2538.html 

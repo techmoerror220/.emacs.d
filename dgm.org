@@ -3923,7 +3923,7 @@ PS: recall that the =diminish= package is installed in =starter-kit.org=.
 ;;  (diminish 'smartparens-mode) ;; added in -text.org
 (diminish 'minimal-mode)
 (diminish 'org-mode)
-(diminish 'org-indent-mode)
+;; (diminish 'org-indent-mode)
 (diminish 'volatile-highlights-mode)
 (diminish 'highlight-symbol-mode)
 (diminish 'pandoc-mode)
@@ -4458,7 +4458,15 @@ This only makes sense for empty buffers."
 
 ** XeLaTeX and =memoir= class
 
-="#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"= not needed now that I have included it in [[id:562fc8d9-c2cb-4476-92c7-b530cf9ed6ab][Style of memoir class articles, etc]]
+="#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"=  needed now that I have excluded it from [[id:562fc8d9-c2cb-4476-92c7-b530cf9ed6ab][Style of memoir class articles, etc]]
+
+I've removed this as it creates a clash... I think it is already included in the =preamble=.
+#+BEGIN_EXAMPLE
+"#+LANGUAGE: "str | "spanish""\n"
+"#+LATEX_HEADER: \\usepackage["str | "spanish""]{babel}\n"
+#+END_EXAMPLE
+
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (define-skeleton xelatex-skeleton
   "Inserts a XeLaTeX  skeleton into current buffer.
@@ -4472,9 +4480,8 @@ This only makes sense for empty buffers."
   "#+DATE:\n"
   "#+LaTeX_CLASS: memoir\n"
   "#+LaTeX_CLASS_OPTIONS: [11pt,oneside, article]\n"
-  "#+LANGUAGE: "str | "spanish""\n"
-  "#+LATEX_HEADER: \\usepackage["str | "spanish""]{babel}\n"
-  "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
+  "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
+   "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
   "#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"
   "#+LATEX_HEADER: \\input{vc}\n"
   "#+LATEX_HEADER: \\renewcommand*{\\PrelimText}{\\textnormal{\\small\\textcolor{black!40}{author: \\VCAuthor\\ -- date: \\VCDateISO\\ -- time: \\VCTime\\ -- commit: \\texttt{\\VCRevision}}}}\n\n"
@@ -4496,9 +4503,8 @@ This only makes sense for empty buffers."
   "# -*- coding: utf-8 -*-\n"
   "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
   "#+LaTeX_CLASS: memarticle\n"
-  "#+LANGUAGE: "str | "spanish""\n"
-  "#+LATEX_HEADER: \\usepackage["str | "spanish""]{babel}\n"
-
+  "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
+  
   "\n\n")
 #+END_SRC
 
@@ -4506,6 +4512,7 @@ This only makes sense for empty buffers."
 : minimalist
 
 ** Tufte book
+
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (define-skeleton tufte-skeleton
@@ -4586,6 +4593,29 @@ This only makes sense for empty buffers."
 "#+LATEX_HEADER: \\titleformat{\\part}[display]{\\relax\\itshape\\huge}{}{0pt}{\\huge\\rmfamily\\itshape}[]\n"
 "#+LATEX_HEADER: \\usepackage{xparse}\n"
 "#+LATEX_HEADER: \\usepackage{xpatch}\n"
+"#+LATEX_HEADER: \\usepackage{chngpage}\n"
+"#+LATEX_HEADER: \\usepackage{fancyhdr} \n"
+"#+LATEX_HEADER: \\usepackage{bibentry}\n"
+"#+LATEX_HEADER: \\usepackage{optparams}\n"
+"#+LATEX_HEADER: \\usepackage{placeins}\n"
+"#+LATEX_HEADER: \\usepackage{ragged2e}\n"
+"#+LATEX_HEADER: \\usepackage{setspace}\n"
+"#+LATEX_HEADER: \\usepackage{textcase}\n"
+"#+LATEX_HEADER: \\usepackage{textcomp}\n"
+"#+LATEX_HEADER: \\usepackage{titlesec}\n"
+"#+LATEX_HEADER: \\usepackage{titletoc}\n"
+"#+LATEX_HEADER: \\usepackage{xifthen}\n"
+"#+LATEX_HEADER: \\usepackage{beramono}\n"
+"#+LATEX_HEADER: \\usepackage{helvet}\n"
+"#+LATEX_HEADER: \\usepackage{ifpdf}\n"
+"#+LATEX_HEADER: \\usepackage{ifxetex}\n"
+"#+LATEX_HEADER: \\usepackage{letterspace}\n"
+"#+LATEX_HEADER: \\usepackage{mathpazo}\n"
+"#+LATEX_HEADER: \\usepackage{booktabs}\n"
+"#+LATEX_HEADER: \\usepackage{xspace}\n"
+"#+LATEX_HEADER: \\usepackage{units}\n"
+"#+LATEX_HEADER: \\usepackage{makeidx}\n"
+"#+LATEX_HEADER: \\newtheorem{theorem}{Theorem}\n"
 "#+LATEX_HEADER: \\makeatletter\n"
 "#+LATEX_HEADER: \\xpatchcmd{\\@footnotetext}%\n"
 "#+LATEX_HEADER:       {\\color@begingroup}\n"

@@ -550,7 +550,7 @@ A nice complement to ebib is =biblio=, a library to query various databases, suc
      t))
   )
 
-(define-key biblio-selection-mode-map (kbd "C-i") 'biblio-to-ebib-and-quit)
+;; (define-key biblio-selection-mode-map (kbd "C-i") 'biblio-to-ebib-and-quit)
 ;;  :bind
 ;;  (map biblio-selection-mode-map
 ;;        ("C-i" . biblio-to-ebib-and-quit))

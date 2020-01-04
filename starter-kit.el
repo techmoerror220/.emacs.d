@@ -102,6 +102,10 @@ just have to assume it's online."
 
 (starter-kit-load "starter-kit-defuns.org")
 
+(starter-kit-load "starter-kit-latex.org")
+
+(starter-kit-load "starter-kit-latex-org.org")
+
 (starter-kit-load "starter-kit-org.org")
 
 (starter-kit-load "starter-kit-helm.org")
@@ -123,10 +127,6 @@ just have to assume it's online."
 (starter-kit-load "starter-kit-perl.org")
 
 (starter-kit-load "starter-kit-python.org")
-
-(starter-kit-load "starter-kit-latex.org")
-
-(starter-kit-load "starter-kit-latex-org.org")
 
 (starter-kit-load "starter-kit-stats.org")
 
