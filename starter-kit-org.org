@@ -942,6 +942,9 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
 : 67
 
 *** Set to the location of your Org files on your local system.
+:PROPERTIES:
+:ID:       7276b343-0fdd-45bd-aa20-7a75e3f87fc6
+:END:
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq org-directory "/home/dgm/Dropbox/gtd")

@@ -4385,13 +4385,24 @@ It can be difficult to remember the full names of Emacs commands, so I use =icom
 
 * Skeleton
 ** Latex
-
 - Recall to =eval-and-replace= =(article-skeleton)= with =C-c e=.
 - Nota que por alguna razon hace falta las dos declaraciones de Spanish.
 - Nota que ="#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"= is gone because now I compile =vc= in the makefile.
 
+- I've cut the following as it is now in the =.sty= file.
+#+BEGIN_EXAMPLE
+  "#+LANGUAGE: "str | "spanish""\n"
+  "#+LATEX_HEADER: \\usepackage["str | "spanish""]{babel}\n"
+
+  "#+LATEX_HEADER: \\usepackage{sectsty}\n"
+  "#+LATEX_HEADER: \\sectionfont{\\normalfont\\scshape}\n"
+  "#+LATEX_HEADER: \\subsectionfont{\\normalfont\\bfseries}\n"
+  "#+LATEX_HEADER: \\subsubsectionfont{\\normalfont\\itshape}\n"
+  "#+LATEX_HEADER: \\pdfoptionpdfminorversion=6\n"
+#+END_EXAMPLE
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-(define-skeleton article-skeleton
+(define-skeleton lt-art
   "Inserts a Latex article skeleton into current buffer.
 This only makes sense for empty buffers."
   "\n"
@@ -4405,33 +4416,23 @@ This only makes sense for empty buffers."
   "#+OPTIONS: H:2 num:nil toc:nil \\n:nil @:t ::t |:t ^:{} _:{} *:t TeX:t LaTeX:t\n"
   "#+PROPERTY: header-args :tangle yes\n"
   "#+LATEX_HEADER: \\usepackage{org-preamble-pdflatex}\n"
-  "#+LATEX_HEADER: \\usepackage{graphicx}\n"
-  "#+LATEX_HEADER: \\usepackage{longtable}\n"
-  "#+LATEX_HEADER: \\usepackage{float}\n"
-  "#+LATEX_HEADER: \\usepackage{url}\n"
-  "#+LATEX_HEADER: \\usepackage{amsmath}\n"
-  "#+LANGUAGE: "str | "spanish""\n"
-  "#+LATEX_HEADER: \\usepackage["str | "spanish""]{babel}\n"
-  "#+LATEX_HEADER: \\usepackage{sectsty}\n"
-  "#+LATEX_HEADER: \\sectionfont{\\normalfont\\scshape}\n"
-  "#+LATEX_HEADER: \\subsectionfont{\\normalfont\\bfseries}\n"
-  "#+LATEX_HEADER: \\subsubsectionfont{\\normalfont\\itshape}\n"
-  "#+LATEX_HEADER: \\pdfoptionpdfminorversion=6\n"
+  
   "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
   "#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"
   "#+LATEX_HEADER: \\input{vc}\n"
   "#+LATEX_HEADER: \\renewcommand*{\\PrelimText}{\\textnormal{\\small\\textcolor{black!40}{author: \\VCAuthor\\ -- date: \\VCDateISO\\ -- time: \\VCTime\\ -- commit: \\texttt{\\VCRevision}}}}\n\n"
+  "#+LATEX_CMD: pdflatex\n"
   "" _ "\n\n"
   "\\printbibliography")
 #+END_SRC
 
 #+RESULTS:
-: article-skeleton
+: lt-art
 
 ** Beamer
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(define-skeleton beamer-skeleton
+(define-skeleton beam-sanchez
   "Inserts a Latex beamer skeleton into current buffer.
 This only makes sense for empty buffers."
   "\n"
@@ -4448,12 +4449,13 @@ This only makes sense for empty buffers."
   "#+BEAMER_THEME:\n"
   "#+BEAMER_FONT_THEME: professionalfonts\n"
   "#+OPTIONS: H:2 num:t\n"
+  "#+LATEX_CMD: pdflatex\n"
   "\n\n"
   "" _ "")
 #+END_SRC
 
 #+RESULTS:
-: beamer-skeleton
+: beam-sanchez
 
 
 ** XeLaTeX and =memoir= class
@@ -4466,9 +4468,17 @@ I've removed this as it creates a clash... I think it is already included in the
 "#+LATEX_HEADER: \\usepackage["str | "spanish""]{babel}\n"
 #+END_EXAMPLE
 
+Also, I cut this:
+
+#+BEGIN_EXAMPLE
+  "#+LaTeX_CLASS: memoir\n"
+  "#+LaTeX_CLASS_OPTIONS: [11pt,oneside, article]\n"
+#+END_EXAMPLE
+
+as I think the =memarticle= class contains it.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(define-skeleton xelatex-skeleton
+(define-skeleton xlt-memart
   "Inserts a XeLaTeX  skeleton into current buffer.
 This only makes sense for empty buffers."
   "\n"
@@ -4478,13 +4488,14 @@ This only makes sense for empty buffers."
   "#+SUBTITLE:\n"
   "#+AUTHOR:\n"
   "#+DATE:\n"
-  "#+LaTeX_CLASS: memoir\n"
+  "#+LaTeX_CLASS: memarticle\n"
   "#+LaTeX_CLASS_OPTIONS: [11pt,oneside, article]\n"
   "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
    "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
   "#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"
   "#+LATEX_HEADER: \\input{vc}\n"
   "#+LATEX_HEADER: \\renewcommand*{\\PrelimText}{\\textnormal{\\small\\textcolor{black!40}{author: \\VCAuthor\\ -- date: \\VCDateISO\\ -- time: \\VCTime\\ -- commit: \\texttt{\\VCRevision}}}}\n\n"
+  "#+LATEX_CMD: xelatex\n"
   "" _ "\n\n"
   "\\printbibliography")
 #+END_SRC
@@ -4493,29 +4504,11 @@ This only makes sense for empty buffers."
 : xelatex-skeleton
 
 
-** XeLaTeX and =memoir= class (minimalistic skeleton)
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(define-skeleton minimalist
-  "Inserts class-declaration for XeLaTeX
-   export into current buffer."
-  "\n"
-  "# -*- coding: utf-8 -*-\n"
-  "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
-  "#+LaTeX_CLASS: memarticle\n"
-  "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
-  
-  "\n\n")
-#+END_SRC
-
-#+RESULTS:
-: minimalist
-
 ** Tufte book
 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(define-skeleton tufte-skeleton
+(define-skeleton tufte-book
   "Inserts a Latex Tufte book skeleton into current buffer.
 This only makes sense for empty buffers."
   "\n"
@@ -4648,7 +4641,7 @@ This only makes sense for empty buffers."
 #+END_SRC
 
 #+RESULTS:
-: tufte-skeleton
+: tufte-book
 
 * Pragmatic Emacs
 ** dired-narrow
