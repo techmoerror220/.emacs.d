@@ -297,7 +297,7 @@ Original hook from =dgm.org=
 #+END_SRC
 
 
-*** COMMENT Hooks by Uncle David
+*** COMMENT Org-indenation: Hooks by Uncle David
 
 Hook from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs. Turned off, as I prefer to see all the stars. See https://orgmode.org/manual/Clean-view.html
 
@@ -313,6 +313,17 @@ Line wrapping from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs.
                (visual-line-mode 1)))
 #+END_SRC
 
+**** Another approach
+Suggested here: https://www.reddit.com/r/emacs/comments/ek37ri/i_cant_get_indentation_to_work_orgmode/
+
+#+begin_src emacs-lisp :tangle yes
+(use-package org-indent
+  :ensure nil
+  :defer t
+  :init
+  (add-hook 'org-mode-hook 'org-indent-mode))
+
+#+end_src
 
 *** Hooks by Ambrevar
 

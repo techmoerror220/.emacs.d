@@ -27,7 +27,8 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 ** Choosing =pdflatex= or =xelatex=
 I found the solution here, hurray!!!: https://stackoverflow.com/questions/47623041/getting-emacs-spacemacs-to-accept-function-that-changes-latex-compiler-based-u/47626494#47626494
 
-#+begin_src emacs-lisp :tangle yes
+This is the original solution: 
+#+begin_src emacs-lisp :tangle no
 ;; Default packages included in every tex file, pdflatex or xelatex. Currently included in the .sty files, so that's why I don't need this.
 ;(setq org-latex-packages-alist
 ;      '(("" "graphicx" t)
@@ -56,6 +57,27 @@ I found the solution here, hurray!!!: https://stackoverflow.com/questions/476230
 #+RESULTS:
 | my-auto-tex-cmd | org-latex-header-blocks-filter |
 
+Here is the same but I have added =-bibtex -f=, which I had in my original =(setq org-latex-pdf-process (list "latexmk -synctex=1 -shell-escape -bibtex -f -pdf %f"))=. 
+
+Summary: with this setup I can now easily export to LaTeX, XeLaTeX and also Beamer.
+
+#+begin_src emacs-lisp :tangle yes
+(defun my-auto-tex-cmd (backend)
+  "When exporting from .org with latex,
+  automatically run latex, pdflatex, or xelatex as appropriate,
+  using latexmk."
+  (let ((texcmd))
+    (setq texcmd "latexmk -bibtex -f -pdf %f")
+    (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
+        (progn
+          (setq texcmd "latexmk -pdf -pdflatex='pdflatex -file-line-error --shell-escape -synctex=1 -bibtex -f' %f")))
+    (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+        (progn
+          (setq texcmd "latexmk -pdflatex='xelatex -file-line-error --shell-escape -synctex=1 -bibtex -f' -pdf %f")))
+
+    (setq org-latex-pdf-process (list texcmd))))
+(add-hook 'org-export-before-parsing-hook 'my-auto-tex-cmd)
+#+end_src
 
 *** Set a Path to Executables (optional)
     - The location of the LaTeX excecutables is system
@@ -67,6 +89,7 @@ I found the solution here, hurray!!!: https://stackoverflow.com/questions/476230
 #+begin_src emacs-lisp :tangle no
       (setenv "PATH" (concat "/usr/texbin:" (getenv "PATH")))
 #+end_src
+
 
 * The /XeLaTeX/ way
 
