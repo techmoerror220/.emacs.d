@@ -147,11 +147,151 @@ Manage a lot of buffers easily with C-x C-b. Already set up elsewhere in the sta
           '(lambda ()
              (ibuffer-auto-mode 1)
              (ibuffer-switch-to-saved-filter-groups "home")))
+
 #+end_src
 
 #+RESULTS: iBuffer-custom
 | lambda | nil | (ibuffer-auto-mode 1)                        | (ibuffer-switch-to-saved-filter-groups home) |
 | lambda | nil | (ibuffer-switch-to-saved-filter-groups home) |                                              |
+
+*** iBuffer binding
+#+begin_src emacs-lisp 
+(global-set-key (kbd "C-'") 'ibuffer)
+#+end_src
+
+*** iBuffer in same, whole window.
+
+Si lo pongo en =nil= I get iBuffer in on whole window, replacing whatever I have at present, which is what I want.
+#+srcname: ibuffer
+#+BEGIN_SRC emacs-lisp 
+;; always display ibuffer in another window
+(setq ibuffer-use-other-window nil)
+#+END_SRC
+
+*** Use Human readable Size column
+From: https://www.emacswiki.org/emacs/IbufferMode
+
+I don’t like default “Size” column, so I write a human readable column instead of original one. – coldnew
+
+#+begin_src emacs-lisp 
+;; Use human readable Size column instead of original one
+(define-ibuffer-column size-h
+  (:name "Size" :inline t)
+  (cond
+   ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+   ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+   ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+   (t (format "%8d" (buffer-size)))))
+
+;; Modify the default ibuffer-formats
+  (setq ibuffer-formats
+	'((mark modified read-only " "
+		(name 18 18 :left :elide)
+		" "
+		(size-h 9 -1 :right)
+		" "
+		(mode 16 16 :left :elide)
+		" "
+		filename-and-process)))
+#+end_src
+
+#+RESULTS:
+| mark | modified | read-only |   | (name 18 18 :left :elide) |   | (size-h 9 -1 :right) |   | (mode 16 16 :left :elide) |   | filename-and-process |
+
+I added a little more code to the above code so that the bottom summary line also showed total size in human readable form.
+
+#+begin_src emacs-lisp 
+(defun ajv/human-readable-file-sizes-to-bytes (string)
+  "Convert a human-readable file size into bytes."
+  (interactive)
+  (cond
+   ((string-suffix-p "G" string t)
+    (* 1000000000 (string-to-number (substring string 0 (- (length string) 1)))))
+   ((string-suffix-p "M" string t)
+    (* 1000000 (string-to-number (substring string 0 (- (length string) 1)))))
+   ((string-suffix-p "K" string t)
+    (* 1000 (string-to-number (substring string 0 (- (length string) 1)))))
+   (t
+    (string-to-number (substring string 0 (- (length string) 1))))
+   )
+  )
+
+(defun ajv/bytes-to-human-readable-file-sizes (bytes)
+  "Convert number of bytes to human-readable file size."
+  (interactive)
+  (cond
+   ((> bytes 1000000000) (format "%10.1fG" (/ bytes 1000000000.0)))
+   ((> bytes 100000000) (format "%10.0fM" (/ bytes 1000000.0)))
+   ((> bytes 1000000) (format "%10.1fM" (/ bytes 1000000.0)))
+   ((> bytes 100000) (format "%10.0fk" (/ bytes 1000.0)))
+   ((> bytes 1000) (format "%10.1fk" (/ bytes 1000.0)))
+   (t (format "%10d" bytes)))
+  )
+
+;; Use human readable Size column instead of original one
+(define-ibuffer-column size-h
+  (:name "Size"
+	 :inline t
+	 :summarizer
+	 (lambda (column-strings)
+	   (let ((total 0))
+	     (dolist (string column-strings)
+	       (setq total
+		     ;; like, ewww ...
+		     (+ (float (ajv/human-readable-file-sizes-to-bytes string))
+			total)))
+	     (ajv/bytes-to-human-readable-file-sizes total)))	 ;; :summarizer nil
+	 )
+  (ajv/bytes-to-human-readable-file-sizes (buffer-size)))
+
+;; Modify the default ibuffer-formats
+(setq ibuffer-formats
+      '((mark modified read-only locked " "
+	      (name 20 20 :left :elide)
+	      " "
+	      (size-h 11 -1 :right)
+	      " "
+	      (mode 16 16 :left :elide)
+	      " "
+	      filename-and-process)
+	(mark " "
+	      (name 16 -1)
+	      " " filename)))
+
+#+end_src
+
+#+RESULTS:
+| mark | modified | read-only    | locked |          | (name 20 20 :left :elide) |   | (size-h 11 -1 :right) |   | (mode 16 16 :left :elide) |   | filename-and-process |
+| mark |          | (name 16 -1) |        | filename |                           |   |                       |   |                           |   |                      |
+
+*** Have some buffer groups collapsed by default
+
+I have some buffer groups that i prefer do be collapsed by default. Since i found no way to have this working i adviced ibuffer like this:
+
+#+begin_src emacs-lisp 
+(setq mp/ibuffer-collapsed-groups (list "Helm" "*Internal*"))
+
+(defadvice ibuffer (after collapse-helm)
+  (dolist (group mp/ibuffer-collapsed-groups)
+	  (progn
+	    (goto-char 1)
+	    (when (search-forward (concat "[ " group " ]") (point-max) t)
+	      (progn
+		(move-beginning-of-line nil)
+		(ibuffer-toggle-filter-group)
+		)
+	      )
+	    )
+	  )
+    (goto-char 1)
+    (search-forward "[ " (point-max) t)
+  )
+
+(ad-activate 'ibuffer)
+#+end_src
+
+#+RESULTS:
+: ibuffer
 
 ** File finding
 #+begin_src emacs-lisp 
@@ -161,7 +301,6 @@ Manage a lot of buffers easily with C-x C-b. Already set up elsewhere in the sta
   (global-set-key (kbd "C-c r") 'revert-buffer)
 ;;  (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete) ;; Key used somewhere else
   (global-set-key (kbd "C-x C-b") 'ibuffer)
-  (global-set-key (kbd "C-\}") 'ibuffer)
 ;;  (global-set-key (kbd "C-x f") 'recentf-ido-find-file) ;; commented out until helm and ido are made to work together
 #+end_src
 

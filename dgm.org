@@ -379,7 +379,7 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 
 #+begin_src emacs-lisp :tangle yes
 (use-package iedit
-  :bind (("C-;" . iedit-mode))
+  :bind (("C-}" . iedit-mode))
   :init
   (setq iedit-toggle-key-default nil))
 
@@ -693,13 +693,6 @@ This mode only applies to buffers associated with files on the disk, but I like 
 (setq-default fill-column 72)
 #+END_SRC
 
-*** ibuffer-use-other-window
-
-#+srcname: ibuffer
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; always display ibuffer in another window
-(setq ibuffer-use-other-window t)
-#+END_SRC
 
 *** COMMENT Company mode
 
@@ -5025,7 +5018,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "s-;"
                     :description "ivy-switch-buffer. Like iBuffer: list of buffers for editing")
     (cheatsheet-add :group 'Buffer-List
-                    :key "C-}"
+                    :key "C-'"
                     :description "iBuffer. List of buffers for editing")
     (cheatsheet-add :group 'Buffer-List
                     :key "C-x C-b"
@@ -5178,7 +5171,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c ;"
                     :description "Comment and uncomment region")
     (cheatsheet-add :group 'Editing
-                    :key "C-;"
+                    :key "C-}"
                     :description "Toggle Iedit mode. Highlight occurrences and edit simultaneously")
     (cheatsheet-add :group 'Editing
                     :key "s-k"
@@ -5241,7 +5234,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "M-k"
                     :description "kill-sentence. Kill from point to end of sentence.")
     (cheatsheet-add :group 'Editing
-                    :key "C-u M-k"
+                    :key "C-;"
                     :description "dont-kill-line. Copy from point to end of sentence.")
     (cheatsheet-add :group 'Editing-Killing
                     :key "M-w"
@@ -6155,6 +6148,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Spelling
                     :key "M-$"
                     :description "Spellcheck word or region")
+    (cheatsheet-add :group 'Spelling
+                    :key "C-\""
+                    :description "endless/ispell-word-then-abbrev. Call ispell-word, then create an abbrev for it.")
     (cheatsheet-add :group 'System
                     :key "s-t"
                     :description "helm-top for TOP program to display Linux processes")
@@ -6576,6 +6572,7 @@ Remember: =q= to exit
 : avy-org-refile-as-child
 
 * Abbrev-mode
+Huge list of abbrevations here: https://www.emacswiki.org/emacs/autocorrection_abbrev_defs
 
 #+begin_src emacs-lisp :tangle yes
 (setq-default abbrev-mode t)    ;; turn on abbrev mode globally
@@ -6731,7 +6728,7 @@ sentences; your mileage may vary.
   (kill-line)
   (yank))
 
-;; (global-set-key (kbd "M-k") 'dont-kill-line)
+(global-set-key (kbd "C-;") 'dont-kill-line)
 #+END_SRC
 
 #+RESULTS:
@@ -6779,6 +6776,78 @@ Too funky
  (window-highlight-mode 1)
 #+end_src
 
+* Week number in calendar
+- From https://www.emacswiki.org/emacs/CalendarWeekNumbers
+
+#+begin_src emacs-lisp :tangle yes
+(copy-face font-lock-constant-face 'calendar-iso-week-face)
+(set-face-attribute 'calendar-iso-week-face nil
+                    :height 0.7)
+(setq calendar-intermonth-text
+      '(propertize
+        (format "%2d"
+                (car
+                 (calendar-iso-from-absolute
+                  (calendar-absolute-from-gregorian (list month day year)))))
+        'font-lock-face 'calendar-iso-week-face))
+
+(set-face-attribute 'calendar-iso-week-face nil
+                      :height 1.0 :foreground "#586e75")
+#+end_src
+
+#+RESULTS:
+
+* iSpell and Abbrev
+From: https://endlessparentheses.com/ispell-and-abbrev-the-perfect-auto-correct.html
+
+#+begin_src emacs-lisp :tangle yes
+;;(define-key ctl-x-map "\C-i"
+;;  #'endless/ispell-word-then-abbrev)
+
+(defun endless/simple-get-word ()
+  (car-safe (save-excursion (ispell-get-word nil))))
+
+(defun endless/ispell-word-then-abbrev (p)
+  "Call `ispell-word', then create an abbrev for it.
+With prefix P, create local abbrev. Otherwise it will
+be global.
+If there's nothing wrong with the word at point, keep
+looking for a typo until the beginning of buffer. You can
+skip typos you don't want to fix with `SPC', and you can
+abort completely with `C-g'."
+  (interactive "P")
+  (let (bef aft)
+    (save-excursion
+      (while (if (setq bef (endless/simple-get-word))
+                 ;; Word was corrected or used quit.
+                 (if (ispell-word nil 'quiet)
+                     nil ; End the loop.
+                   ;; Also end if we reach `bob'.
+                   (not (bobp)))
+               ;; If there's no word at point, keep looking
+               ;; until `bob'.
+               (not (bobp)))
+        (backward-word)
+        (backward-char))
+      (setq aft (endless/simple-get-word)))
+    (if (and aft bef (not (equal aft bef)))
+        (let ((aft (downcase aft))
+              (bef (downcase bef)))
+          (define-abbrev
+            (if p local-abbrev-table global-abbrev-table)
+            bef aft)
+          (message "\"%s\" now expands to \"%s\" %sally"
+                   bef aft (if p "loc" "glob")))
+      (user-error "No typo at or before point"))))
+
+(setq save-abbrevs 'silently)
+(setq-default abbrev-mode t)
+
+(global-set-key (kbd "C-\"") #'endless/ispell-word-then-abbrev)
+#+end_src
+
+#+RESULTS:
+: endless/ispell-word-then-abbrev
 
 * Provide
 

@@ -849,7 +849,6 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
   :config 
   (projectile-global-mode t)
   (setq projectile-project-search-path '("~/"
-                                         "/media/dgm/blue/documents/proyectos/mtj/"
                                          "/media/dgm/blue/documents/dropbox/"
                                          "/media/dgm/blue/documents/UNED/"
                                          "/media/dgm/blue/documents/data/eurostat" 
@@ -859,18 +858,15 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
                                          "/home/dgm/Dropbox/gtd"
                                          "/media/dgm/blue/documents/bibs"
                                          "/media/dgm/blue/documents/templates"
-                                         "/media/dgm/blue/documents/proyectos/alianza"
                                          "/media/dgm/blue/documents/cv"
                                          "/media/dgm/blue/documents/backups"
-                                         "/media/dgm/blue/documents/UNED/teaching/mis-cursos"
                                          "/media/dgm/blue/documents/reviews"
-                                         "/media/dgm/blue/documents/elibrary/org"
-                                         "/media/dgm/blue/documents/proyectos/D-PlanNacional2019"
-                                         "/media/dgm/blue/documents/elibrary/women-labor-market"))
+                                         "/media/dgm/blue/documents/elibrary"
+                                         "/media/dgm/blue/documents/proyectos"
+                                         ))
 
   (projectile-add-known-project "~/")
   (projectile-add-known-project "~/.emacs.d/")
-  (projectile-add-known-project "/media/dgm/blue/documents/proyectos/mtj/")
   (projectile-add-known-project "/media/dgm/blue/documents/dropbox/")
   (projectile-add-known-project "/media/dgm/blue/documents/UNED/")
   (projectile-add-known-project "/media/dgm/blue/documents/data/eurostat")
@@ -880,15 +876,12 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
   (projectile-add-known-project "/home/dgm/Dropbox/gtd")  
   (projectile-add-known-project "/media/dgm/blue/documents/bibs")  
   (projectile-add-known-project "/media/dgm/blue/documents/templates")
-  (projectile-add-known-project "/media/dgm/blue/documents/proyectos/alianza/")
   (projectile-add-known-project "/media/dgm/blue/documents/cv/")
   (projectile-add-known-project "/media/dgm/blue/documents/backups")
-  (projectile-add-known-project "/media/dgm/blue/documents/UNED/teaching/mis-cursos/")
   (projectile-add-known-project "/media/dgm/blue/documents/reviews/")
-  (projectile-add-known-project "/media/dgm/blue/documents/elibrary/org/")
-  (projectile-add-known-project "/media/dgm/blue/documents/proyectos/D-PlanNacional2019/")
-  (projectile-add-known-project "/media/dgm/blue/documents/elibrary/women-labor-market/")
-  
+  (projectile-add-known-project "/media/dgm/blue/documents/elibrary/")
+  (projectile-add-known-project "/media/dgm/blue/documents/proyectos/")
+    
   (when (require 'magit nil t)
     (mapc #'projectile-add-known-project
           (mapcar #'file-name-as-directory (magit-list-repos)))
