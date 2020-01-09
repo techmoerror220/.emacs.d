@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: ledger
+# key: lg
+# expand-env: ((yas-wrap-around-region t))
+# --
+#+begin_src ledger
+$0
+#+end_src

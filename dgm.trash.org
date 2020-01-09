@@ -1,3 +1,6 @@
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24087 22692 542633 663000) :init (24087 22692 542407 533000) :init-secs (0 0 1025 235000) :use-package-secs (0 0 1542 697000) :config (24087 22692 542358 823000) :config-secs (0 0 941 319000)))
+
     (cheatsheet-add :group 'Screenshot
                     :key "s-["
                     :description "Takes a fullscreen screenshot of the current workspace")

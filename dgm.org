@@ -6480,7 +6480,7 @@ Next time you're writing fiction, non-fiction, a journalistic piece or a blog po
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23976 37641 374020 479000) :init (23976 37641 373942 205000) :config (23976 37641 373935 600000) :config-secs (0 0 259 705000) :init-secs (0 0 281 796000) :use-package-secs (0 0 398 31000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24087 22692 542633 663000) :init (24087 22692 542407 533000) :init-secs (0 0 1025 235000) :use-package-secs (0 0 1542 697000) :config (24087 22692 542358 823000) :config-secs (0 0 941 319000)))
 
 * COMMENT Face of comments
 
