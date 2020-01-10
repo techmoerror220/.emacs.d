@@ -2401,7 +2401,7 @@ Already in =init.el=
 | all |
 
 *** Screenshots
-I don’t need scrot to take screenshots, or shutter or whatever tools you might have. This is enough. These won’t work in the terminal version or the virtual console, obvious reasons.
+I don't need =scrot= to take screenshots, or =shutter= or whatever tools you might have. This is enough. These won’t work in the terminal version or the virtual console, obvious reasons.
 
 DGM: Shortcuts commented out as I don't use them that often.
 
@@ -2419,10 +2419,13 @@ DGM: Shortcuts commented out as I don't use them that often.
     (message "Cheese!")
     (sit-for 1)
     (start-process "screenshot" nil "import" "-window" "root"
-                   (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
+                   (concat (getenv "HOME") "/Pictures/screenshots/" (subseq (number-to-string (float-time)) 0 10) ".png"))
     (message "Screenshot taken!")))
 ;;(global-set-key (kbd "s-[") 'daedreth/take-screenshot)
 #+END_SRC
+
+#+RESULTS:
+: daedreth/take-screenshot
 
 ***** Screenshotting a region
 
@@ -3832,28 +3835,36 @@ Originally:
 Next, copied from: https://www.reddit.com/r/emacs/comments/8x4xtt/tip_how_i_use_ledger_to_track_my_money/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package ledger-mode
-  :ensure t
-  :init
-  (setq ledger-clear-whole-transactions 1)
-  :mode ("\\.dat\\'"
-         "\\.ledger\\'")
-  :bind (:map ledger-mode-map
-	("C-x C-s" . my/ledger-save))
-  :preface
-  (defun my/ledger-save ()
-    "Automatically clean the ledger buffer at each save."
-    (interactive)
-    (save-excursion
-      (when (buffer-modified-p)
-        (with-demoted-errors (ledger-mode-clean-buffer))
-        (save-buffer)))))
+  (use-package ledger-mode
+    :ensure t
+    :init
+    (setq ledger-clear-whole-transactions 1)
+    :mode ("\\.dat\\'"
+           "\\.ledger\\'"))
 
-(add-hook 'ledger-mode-hook #'ledger-flymake-enable)
+    (add-hook 'ledger-mode-hook #'ledger-flymake-enable)
 #+END_SRC
 
 #+RESULTS:
 | ledger-flymake-enable |
+
+DGM takes this bit out:
+
+#+BEGIN_EXAMPLE
+    :bind (:map ledger-mode-map
+                ("C-x C-s" . my/ledger-save))
+    :preface
+    (defun my/ledger-save ()
+      "Automatically clean the ledger buffer at each save."
+      (interactive)
+      (when (buffer-modified-p)
+        (with-demoted-errors
+            (ledger-mode-clean-buffer)
+            (save-buffer)
+          )))
+#+END_EXAMPLE
+
+until I understand why point is not saved with =(save-excursion)=
 
 * Nice symbol for end of file lines
 
@@ -6722,13 +6733,14 @@ because I usually don't move in sentences and I definitely don't kill
 sentences; your mileage may vary.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(defun dont-kill-line ()
-  "Copy from the point to the end of the line without deleting it."
-  (interactive)
-  (kill-line)
-  (yank))
+  (defun dont-kill-line ()
+    "Copy from the point to the end of the line without deleting it."
+    (interactive)
+    (save-excursion 
+      (kill-line)
+      (yank)))
 
-(global-set-key (kbd "C-;") 'dont-kill-line)
+  (global-set-key (kbd "C-;") 'dont-kill-line) 
 #+END_SRC
 
 #+RESULTS:
