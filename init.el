@@ -218,7 +218,10 @@ ARCHIVE is the string name of the package archive.")
 (when (string=(system-name) "toshiba")
 (require 'exwm-randr)
 ;;(setq exwm-randr-workspace-output-plist '(0 "VGA1"))
-(setq exwm-randr-workspace-output-plist '(0 "HDMI-2"))
+;; (setq exwm-randr-workspace-output-plist '(0 "HDMI-2"))
+(setq exwm-randr-workspace-monitor-plist
+      '(0 "HDMI-2" 1 "HDMI-2" 2 "HDMI-2" 3 "HDMI-2"  4 "HDMI-2"
+          5 "HDMI-2" 6 "HDMI-2" 7 "HDMI-2" 8 "HDMI-2" 9 "HDMI-2"))
 (add-hook 'exwm-randr-screen-change-hook
           (lambda ()
             (start-process-shell-command
