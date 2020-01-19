@@ -49,20 +49,6 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
     (let ((fill-column (point-max)))
     (fill-paragraph nil)))
     (global-set-key (kbd "<f6>") 'unfill-paragraph)
-
-    ;; smooth-scrolling 
-    ;; (require 'smooth-scrolling) ;; moved to dgm.org
-
-    ;; more smooth efforts.
-    ;; (setq-default 
-    ;;  scroll-conservatively 0
-    ;;  scroll-up-aggressively 0.01
-    ;;  scroll-down-aggressively 0.01)
-
-    ;; centered-cursor package in src/
-    ;; (and
-    ;;  (require 'centered-cursor-mode)
-    ;;  (global-centered-cursor-mode +1)) 
 #+end_src
 
 ** COMMENT Spelling

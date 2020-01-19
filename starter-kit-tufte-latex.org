@@ -1095,12 +1095,11 @@ DGM comments this out on 3rd january 2020 cos I think this is screwing my change
 #+name: pdf-process-bibtex
 #+header: :results silent
 #+begin_src emacs-lisp
- (setq org-latex-pdf-process
- '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -bibtex -pdf %f"))
+;; (setq org-latex-pdf-process
+;;  '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -bibtex -pdf %f"))
 #+end_src
 
 *** Access keyword values
-
 This is taken from [[http://jkitchin.github.io/blog/2013/05/05/Getting-keyword-options-in-org-files/][John Kitchin's blog]].  It has been modified so
 =org-element-map= returns node properties in addition to keywords. 
 
