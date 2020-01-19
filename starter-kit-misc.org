@@ -170,11 +170,9 @@ Original:
  (defun set-moody-face (frame)
        (let ((line (face-attribute 'mode-line :underline)))
          (set-face-attribute 'mode-line-inactive nil :overline   line)
-         (set-face-attribute 'mode-line          nil :overline   "#d33682") ; line
+         (set-face-attribute 'mode-line          nil :overline   line) ; line
          (set-face-attribute 'mode-line-inactive nil :underline  line)
-         ;(set-face-attribute 'mode-line         nil :box        nil)
-         (set-face-attribute 'mode-line-inactive nil :box        nil)
-         (set-face-attribute 'mode-line          nil :box "#d33682")))
+         (set-face-attribute 'mode-line-inactive nil :box        nil)))
 
   (defun set-current-moody-face (&optional args)
      (interactive)
@@ -190,7 +188,6 @@ Original:
 (setq display-time-default-load-average t)
 (setq display-time-mail-string "") ;; no mail alert
 (display-time-mode 1)
-
 #+end_src
 
 #+RESULTS:
@@ -310,7 +307,6 @@ loading the =zenburn= and =anti-zenburn= themes.
   (set-face-attribute 'helm-source-header
                       nil
                       :foreground "#dcdcdc")
-  (set-moody-face t)
   :config
   (set-face-attribute 'helm-selection nil 
                       :background nil
@@ -318,7 +314,6 @@ loading the =zenburn= and =anti-zenburn= themes.
   (set-face-attribute 'helm-source-header
                       nil
                       :foreground "#dcdcdc")
-  (set-moody-face t)
   (defun toggle-theme ()
     "Switch between Solarized variants."
     (interactive)
@@ -326,8 +321,7 @@ loading the =zenburn= and =anti-zenburn= themes.
      ((member 'solarized-dark custom-enabled-themes)
       (disable-theme 'solarized-dark)
       (load-theme 'solarized-light t)
-      (set-moody-face t)
-
+      
       (set-face-attribute 'helm-selection nil 
                           :background nil
                           :foreground "Orange3"))
@@ -340,10 +334,10 @@ loading the =zenburn= and =anti-zenburn= themes.
       (set-face-attribute 'helm-source-header
                           nil
                           :foreground "#dcdcdc")))
-      (set-moody-face t))
+      )
  
 (load-theme 'solarized-light t)
-(set-moody-face t))
+)
 
 
 (bind-key "s-!" 'toggle-theme)
@@ -482,23 +476,9 @@ His explanation: I tend to switch themes more often than normal. For example, sw
   (set-face-attribute 'helm-source-header
                       nil
                       :foreground "#dcdcdc")
- (defun set-moody-face (frame)
-       (let ((line (face-attribute 'mode-line :underline)))
-         (set-face-attribute 'mode-line-inactive nil :overline   line)
-         (set-face-attribute 'mode-line          nil :overline   "#d33682") ; line
-         (set-face-attribute 'mode-line-inactive nil :underline  line)
-         ;(set-face-attribute 'mode-line         nil :box        nil)
-         (set-face-attribute 'mode-line-inactive nil :box        nil)
-         (set-face-attribute 'mode-line          nil :box "#d33682")))
-
-  ;; (defun set-current-moody-face (&optional args)
-  ;;   (interactive)
-  ;;   (set-moody-face (selected-frame)))
 
   (setq-default x-underline-at-descent-line t
-                column-number-mode t)
-
-  (add-to-list 'after-make-frame-functions 'set-moody-face t))
+                column-number-mode t))
 
 (defun set-dark-theme ()
   "Set the dark theme with some customization if needed."
@@ -510,30 +490,14 @@ His explanation: I tend to switch themes more often than normal. For example, sw
   (set-face-attribute 'helm-source-header
                       nil
                       :foreground "#dcdcdc")
- (defun set-moody-face (frame)
-       (let ((line (face-attribute 'mode-line :underline)))
-         (set-face-attribute 'mode-line-inactive nil :overline   line)
-         (set-face-attribute 'mode-line          nil :overline   "#d33682") ; line
-         (set-face-attribute 'mode-line-inactive nil :underline  line)
-         ;(set-face-attribute 'mode-line         nil :box        nil)
-         (set-face-attribute 'mode-line-inactive nil :box        nil)
-         (set-face-attribute 'mode-line          nil :box "#d33682")))
-
-  ;; (defun set-current-moody-face (&optional args)
-  ;;   (interactive)
-  ;;   (set-moody-face (selected-frame)))
 
   (setq-default x-underline-at-descent-line t
-                column-number-mode t)
-
-  (add-to-list 'after-make-frame-functions 'set-moody-face t))
+                column-number-mode t))
 
 (let ((current-hour (string-to-number (format-time-string "%H"))))
   (if (or (< current-hour 10) (> current-hour 17)) (set-dark-theme) (set-light-theme)))
 #+END_SRC
 
-#+RESULTS:
-| exwm-workspace--on-after-make-frame | exwm-manage--add-frame | x-dnd-init-frame | set-moody-face | aw--after-make-frame |
 
 If you want your Emacs automatically switch between the color schemes when the time come, you can use run-with-timer function to do the check every hour. But hey, if if I switch theme manually, theme is switched back to what it was after one hour.
 
@@ -548,6 +512,14 @@ If you want your Emacs automatically switch between the color schemes when the t
 
 #+RESULTS:
 : [nil 24021 32824 946091 3600 theme-switcher nil nil 677000]
+
+*** Zenburn
+#+begin_src emacs-lisp
+(use-package zenburn-theme)
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24098 56335 804217 830000) :init (24098 56335 804205 239000) :config (24098 56335 803968 459000) :config-secs (0 0 6 515000) :init-secs (0 0 37581 224000) :use-package-secs (0 1 608834 634000)))
 
 ** Window system 
 

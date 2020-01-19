@@ -693,26 +693,6 @@ Required by tufted org mode (https://github.com/tsdye/tufte-org-mode)
 ;;                        (shell-command "vc")))
 #+end_src
 
-* Font-lock customization
-In =starter-kit-misc.org= the global font-locking is set to its minimum but in latex this is not nice. So I increase it here to its medium level of 2 (max is 3)
-See https://www.linuxtopia.org/online_books/linux_tool_guides/gnu_emacs_manual/Font-Lock.html
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq font-lock-maximum-decoration        
-   '((latex-mode . 3)))
-#+END_SRC
-
-#+RESULTS:
-: ((latex-mode . 1))
-
-** Math notation
-
-With the solarized-dark theme, math notation is too dark to see.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; (setq font-latex-math-face :foreground grey)
-#+END_SRC
-
 
 * Provide
 

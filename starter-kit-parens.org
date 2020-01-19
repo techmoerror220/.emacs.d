@@ -535,6 +535,20 @@ These pairs
 
 not included as they were obstrusive.
 
+** Electric Pair for LaTeX
+
+https://tex.stackexchange.com/questions/75697/auctex-how-to-cause-math-mode-dollars-to-be-closed-automatically-with-electric
+
+#+begin_src emacs-lisp :tangle yes
+(electric-pair-mode)
+(add-hook 'LaTeX-mode-hook
+          '(lambda ()
+            (define-key LaTeX-mode-map (kbd "$") 'self-insert-command)))
+#+end_src
+
+#+RESULTS:
+| (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command)) | preview-mode-setup | TeX-PDF-mode | turn-on-reftex | latex-unicode-simplified |
+
 * Alternative: autopair
 - https://github.com/joaotavora/autopair
 

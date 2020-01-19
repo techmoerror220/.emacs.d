@@ -6616,6 +6616,9 @@ By the way, =M-SPC= is bound to =just-one-space=: Delete all spaces and tabs aro
 
 
 * Font locking
+:PROPERTIES:
+:ID:       494c8267-adf5-466c-8fad-d39d7466d034
+:END:
 
 Read:
 - https://www.reddit.com/r/emacs/comments/3b2ubz/thoughts_on_fontlocking/
@@ -6625,6 +6628,31 @@ Read:
 #+begin_src emacs-lisp :tangle yes
 (setq font-lock-maximum-decoration 1)
 #+end_src
+
+** Font-lock customization for Latex
+DGM' nota: si pusiera esto en =starter-kit-latex-org.org=, given that it loads before =dgm.org=, the previous code setting font-lock to 1 would override the setting of 3 for latex that I set here.
+
+In =starter-kit-misc.org= the global font-locking is set to its minimum but in latex this is not nice. So I increase it here to its medium level of 2 (max is 3)
+See https://www.linuxtopia.org/online_books/linux_tool_guides/gnu_emacs_manual/Font-Lock.html
+
+Note: I think this is overriden by the setting in [[id:494c8267-adf5-466c-8fad-d39d7466d034][Font locking]] (in =dgm.org=). If I run the code below and re-open a latex document, then I have the maximum-level decoration
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq font-lock-maximum-decoration        
+   '((latex-mode . 3)))
+#+END_SRC
+
+#+RESULTS:
+: ((latex-mode . 3))
+
+*** Math notation
+
+With the solarized-dark theme, math notation is too dark to see.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (setq font-latex-math-face :foreground grey)
+#+END_SRC
+
 
 
 * Buffer-flip

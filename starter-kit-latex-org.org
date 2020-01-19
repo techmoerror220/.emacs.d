@@ -73,11 +73,14 @@ Summary: with this setup I can now easily export to LaTeX, XeLaTeX and also Beam
           (setq texcmd "latexmk -pdf -pdflatex='pdflatex -file-line-error --shell-escape -synctex=1 -bibtex -f' %f")))
     (if (string-match "LATEX_CMD: xelatex" (buffer-string))
         (progn
-          (setq texcmd "latexmk -pdflatex='xelatex -file-line-error --shell-escape -synctex=1 -bibtex -f' -pdf %f")))
+          (setq texcmd "latexmk -pdflatex='xelatex -file-line-error --shell-escape -synctex=1' -pdf %f")))  ;;  -bibtex -f between -synctex=1 and ' taken out as they were not recognised according to the log file
 
     (setq org-latex-pdf-process (list texcmd))))
 (add-hook 'org-export-before-parsing-hook 'my-auto-tex-cmd)
 #+end_src
+
+#+RESULTS:
+| my-auto-tex-cmd | org-latex-header-blocks-filter |
 
 *** Set a Path to Executables (optional)
     - The location of the LaTeX excecutables is system
