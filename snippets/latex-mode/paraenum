@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: paraenum
+# key: parae
+# --
+\begin{inparaenum}[a\upshape)]
+\item $0
+\end{inparaenum}
