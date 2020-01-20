@@ -498,6 +498,9 @@ His explanation: I tend to switch themes more often than normal. For example, sw
   (if (or (< current-hour 10) (> current-hour 17)) (set-dark-theme) (set-light-theme)))
 #+END_SRC
 
+#+RESULTS:
+: t
+
 
 If you want your Emacs automatically switch between the color schemes when the time come, you can use run-with-timer function to do the check every hour. But hey, if if I switch theme manually, theme is switched back to what it was after one hour.
 
@@ -511,15 +514,16 @@ If you want your Emacs automatically switch between the color schemes when the t
 #+END_SRC
 
 #+RESULTS:
-: [nil 24021 32824 946091 3600 theme-switcher nil nil 677000]
+: [nil 24101 34486 680014 3600 theme-switcher nil nil 84000]
 
 *** Zenburn
 #+begin_src emacs-lisp
+
 (use-package zenburn-theme)
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24098 56335 804217 830000) :init (24098 56335 804205 239000) :config (24098 56335 803968 459000) :config-secs (0 0 6 515000) :init-secs (0 0 37581 224000) :use-package-secs (0 1 608834 634000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24101 34498 201301 682000) :init (24101 34498 201288 54000) :config (24101 34498 201128 203000) :config-secs (0 0 3 586000) :init-secs (0 0 314 333000) :use-package-secs (0 0 350 514000)))
 
 ** Window system 
 

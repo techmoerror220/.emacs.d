@@ -941,7 +941,7 @@ Alternative from https://etienne.depar.is/emacs.d/mu4e.html that works worse:
 #+END_SRC
 
 ** Call EWW to display HTML messages by pressing =aV= to view in browser
-
+- NB: the point is to open the message, and then press =a= and then =V=
 I still can't see HTML messages okay. Trying this tip from https://irreal.org/blog/?p=6122
 
 #+BEGIN_SRC emacs-lisp :tangle yes

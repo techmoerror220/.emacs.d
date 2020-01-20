@@ -5359,6 +5359,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Email
                     :key "C-*"
                     :description "mu4e")
+(cheatsheet-add :group 'Email
+                    :key "aV"
+                    :description "View message in browser. Use it once inside the message.")
     (cheatsheet-add :group 'Email
                     :key "S-a"
                     :description "mu4e-view-attachment-action")
