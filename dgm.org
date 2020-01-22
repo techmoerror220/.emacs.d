@@ -249,8 +249,26 @@ With the help of library hl-line-mode yet another color can be used for the curr
 
 Use different background colors for even and odd lines. With =(add-hook 'dired-mode-hook 'stripe-listify-buffer)= I could get a horizontal line instead of a cursor. It uses the stripe-hl-line face, which you might wish to customize.
 
+DGM 20 jan 2020: nice idea but doing =M-x profiler-start= and then =M-x profiler-report= I get: 
+
+#+BEGIN_EXAMPLE
+- redisplay_internal (C function)                               13825  77%
+ - sb/redraw-all-tables                                         10768  60%
+  - sb/visible-table-ranges                                     10768  60%
+   - sb/buffer-visible-regions-compressed                       10768  60%
+    - sb/buffer-visible-regions                                 10768  60%
+     - mapcar                                                   10768  60%
+      - sb/window-limits                                        10768  60%
+       - window-end                                             10637  59%
+        - jit-lock-function                                     10637  59%
+         - jit-lock-fontify-now                                 10637  59%
+          + jit-lock--run-functions                             10633  59%
+#+END_EXAMPLE
+
+So this could be the reason why the cursor is so slow! (see https://github.com/syl20bnr/spacemacs/issues/8905)
+
 #+name: stripe-dired
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 (use-package stripe-buffer
   :config (progn
             (add-hook 'dired-mode-hook #'turn-on-stripe-buffer-mode)))
