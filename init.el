@@ -899,3 +899,4 @@ ARCHIVE is the string name of the package archive.")
 ;; images) from /media/dgm/blue/documents/elibrary/computing/Linux/linuxFormat/tips/emacs2-email-video-246February2019.pdf
 
 ;; (setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
+(put 'magit-diff-edit-hunk-commit 'disabled nil)

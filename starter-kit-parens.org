@@ -496,11 +496,12 @@ Brackets includes ASCII and Unicode brackets or quotation marks. Deleting one br
       '(
         (?\" . ?\")
         (?\{ . ?\})
+        (?\[ . ?\])
         (?\` . ?\')))
 #+END_SRC
 
 #+RESULTS:
-: ((34 . 34) (123 . 125) (96 . 39))
+: ((34 . 34) (123 . 125) (91 . 93) (96 . 39))
 
 ** Electric Pair for Org-Mode
 And now on to Org mode: 
@@ -516,6 +517,7 @@ I dunno why some pairs work (//, ==)and some don't (~, *, _)...
                              (?= . ?=) 
                              (?~ . ?~)
                              (?$ . ?$)
+                             (?[ . ?])
                              ) 
   "Electric pairs for Org-mode.")
 
@@ -539,15 +541,17 @@ not included as they were obstrusive.
 
 https://tex.stackexchange.com/questions/75697/auctex-how-to-cause-math-mode-dollars-to-be-closed-automatically-with-electric
 
+DGM, 22 jan 20. Trying to get the =[]= pair in latex
 #+begin_src emacs-lisp :tangle yes
 (electric-pair-mode)
 (add-hook 'LaTeX-mode-hook
           '(lambda ()
-            (define-key LaTeX-mode-map (kbd "$") 'self-insert-command)))
+            (define-key LaTeX-mode-map (kbd "$") 'self-insert-command)
+            (define-key LaTeX-mode-map (kbd "[") 'self-insert-command)))
 #+end_src
 
 #+RESULTS:
-| (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command)) | preview-mode-setup | TeX-PDF-mode | turn-on-reftex | latex-unicode-simplified |
+| (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command) (define-key LaTeX-mode-map (kbd [) 'self-insert-command)) | preview-mode-setup | (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command)) | TeX-PDF-mode | turn-on-reftex | latex-unicode-simplified |
 
 * Alternative: autopair
 - https://github.com/joaotavora/autopair
