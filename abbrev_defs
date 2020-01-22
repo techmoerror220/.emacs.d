@@ -69,6 +69,7 @@
     ("condicioens" "condiciones" nil :count 1)
     ("contorla" "controla" nil :count 1)
     ("cuadno" "cuando" nil :count 1)
+    ("definitiosn" "definitions" nil :count 1)
     ("descommposiciones" "descomposiciones" nil :count 1)
     ("dg" "Daniel Guinea" nil :count 7)
     ("dif-" "dif\\mbox{}ferences" nil :count 0)
