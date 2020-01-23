@@ -144,7 +144,7 @@ I comment out =s-r= because it is already defined for =helm-run-external-command
 ;; (exwm-input-set-key (kbd "s-r") #'ambrevar/exwm-start) 
 
 
-** Magit 
+** COMMENT Magit shortcut 
 
 I don't need this shortcut as I already have =C-x g= for =magit-status=.
 

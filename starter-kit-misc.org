@@ -350,41 +350,47 @@ effort of writing =:delight= in most package declarations and provides a nice
 menu if I need to check the minor modes at some points.
 
 
-#+begin_src emacs-lisp
-(use-package minions
-  :ensure t
-  :config
-  (setq minions-mode-line-lighter "[+]")
-  (minions-mode))
+DGM: disables this on 23 jan 2020 because I think moody can slow down emacs.
 
+
+#+BEGIN_EXAMPLE
 (use-package moody
-  :ensure t
-  :config
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode)
+:ensure t
+:config
+(moody-replace-mode-line-buffer-identification)
+(moody-replace-vc-mode)
 
-  (defun set-moody-face (frame)
-    (let ((line (face-attribute 'mode-line :underline frame)))
-      (set-face-attribute 'mode-line          frame :overline   line)
-      (set-face-attribute 'mode-line-inactive frame :overline   line)
-      (set-face-attribute 'mode-line-inactive frame :underline  line)
-      (set-face-attribute 'mode-line          frame :box        nil)
-      (set-face-attribute 'mode-line-inactive frame :box        nil)))
+(defun set-moody-face (frame)
+(let ((line (face-attribute 'mode-line :underline frame)))
+(set-face-attribute 'mode-line          frame :overline   line)
+(set-face-attribute 'mode-line-inactive frame :overline   line)
+(set-face-attribute 'mode-line-inactive frame :underline  line)
+(set-face-attribute 'mode-line          frame :box        nil)
+(set-face-attribute 'mode-line-inactive frame :box        nil)))
 
-  ;; (defun set-current-moody-face (&optional args)
-  ;;   (interactive)
-  ;;   (set-moody-face (selected-frame)))
+;; (defun set-current-moody-face (&optional args)
+;;   (interactive)
+;;   (set-moody-face (selected-frame)))
 
-  (setq-default x-underline-at-descent-line t
-                column-number-mode t)
+(setq-default x-underline-at-descent-line t
+column-number-mode t)
 
-  (add-to-list 'after-make-frame-functions 'set-moody-face t))
-  ;; (add-to-list 'after-make-frame-functions 'set-current-moody-face t))
+(add-to-list 'after-make-frame-functions 'set-moody-face t))
+;; (add-to-list 'after-make-frame-functions 'set-current-moody-face t))
+#+END_EXAMPLE
 
-(setq display-time-24hr-format t)
-(setq display-time-default-load-average t)
-(setq display-time-mail-string "") ;; no mail alert
-(display-time-mode 1)
+#+begin_src emacs-lisp
+  (use-package minions
+    :ensure t
+    :config
+    (setq minions-mode-line-lighter "[+]")
+    (minions-mode))
+
+
+  (setq display-time-24hr-format t)
+  (setq display-time-default-load-average t)
+  (setq display-time-mail-string "") ;; no mail alert
+  (display-time-mode 1)
 #+end_src
 
 #+RESULTS:

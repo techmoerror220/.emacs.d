@@ -1624,7 +1624,14 @@ Magit depends on this. Copied from https://github.com/jwiegley/dot-emacs/blob/ma
 
 https://magit.vc/manual/magit.html#Installation
 
-Key binding to get the Magit menu
+Key binding to get the Magit menu. Also, from: https://magit.vc/manual/2.90.0/magit/Diff-Options.html
+
+User Option: =magit-diff-refine-hunk=
+Whether to show word-granularity differences within diff hunks.
+
+- =nil= never show fine differences.
+- =t= show fine differences for the current diff hunk only.
+- =all= show fine differences for all displayed diff hunks.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package magit
@@ -1636,6 +1643,8 @@ Key binding to get the Magit menu
          ("C-x M-b" . magit-blame)))
 
 (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+
+(setq magit-diff-refine-hunk 'all)
 #+END_SRC
 
 #+RESULTS:
@@ -2856,7 +2865,7 @@ Emacs treats camelCase strings as a single word by default, this changes said be
 ****** Beacon
 While changing buffers or workspaces, the first thing you do is look for your cursor. Unless you know its position, you cannot move it efficiently. Every time you change buffers, the current position of your cursor will be briefly highlighted now.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package beacon
   :ensure t
   :config
@@ -2864,7 +2873,7 @@ While changing buffers or workspaces, the first thing you do is look for your cu
 #+END_SRC
 
 #+RESULTS:
-: t
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24105 21682 853299 108000) :init (24105 21682 853292 273000) :config (24105 21682 853189 302000) :config-secs (0 0 226 288000) :init-secs (0 0 428 606000) :use-package-secs (0 0 479 138000)))
 
 ****** Rainbow delimiters
 Colors parentheses and other delimiters depending on their depth, useful for any language using them, especially lisp.
