@@ -1340,6 +1340,7 @@ This I don't really use but could be useful in future:
             (org-agenda-prefix-format " [ ] ")
             (org-agenda-with-colors nil)
             (org-agenda-remove-tags t)
+            (org-agenda-start-on-weekday nil)
             (org-agenda-span 7))
            ("~/Dropbox/gtd/theWeekAgenda.pdf")) ;; no se' por qu'e no se graba automaticamente este file
           ("d" "Daily Review"
@@ -1382,7 +1383,10 @@ This I don't really use but could be useful in future:
           ("y" "Yearly Review"
            ((agenda "" ((org-agenda-span (quote year))))))
           ("p" "Tasks Grouped by Project"
-           ((agenda "")
+           ((agenda "" (
+                        (org-agenda-span 7)
+                        (org-agenda-start-on-weekday nil)
+                        ))
             (tags "project"
                   ((org-tags-match-list-sublevels nil)
                    (org-agenda-overriding-header "                                          LIST OF PROJECTS                                          "))
@@ -1416,8 +1420,7 @@ This I don't really use but could be useful in future:
                         (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
             ))
           ("o" "Office and home agenda"
-           ((agenda "" ((org-agenda-ndays 1))) ;; esto no me funciona... debe ser que (setq org-agenda-span (quote month)) en starter-kit-org.org tiene prioridad
-            ;; limits the agenda display to a single day
+           ((agenda "" ((org-agenda-span 1))) 
             (tags-todo "@home|@uned")
             ;;            (tags "project+CATEGORY=\"elephants\"")
             ;;            (tags "review" ((org-agenda-files '("~/org/circuspeanuts.org"))))
@@ -1441,8 +1444,8 @@ This I don't really use but could be useful in future:
               (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
               (org-agenda-prefix-format '((todo . " %1c ")))
               (org-agenda-sorting-strategy '(category-up))
-             )
-            ))
+              )
+             ))
            )))
 
   (defun my-org-agenda-skip-all-siblings-but-first ()
@@ -1801,7 +1804,9 @@ DGM: I think =(setq org-startup-folded 'showeverything)= is what allows me seein
 
 DGM sets this to nil trying to get the minimum decoration available to speed things up.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Note: moved to =dgm.org=
+
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; (setq font-lock-maximum-decoration nil)
         
 (setq font-lock-maximum-decoration        
@@ -1987,8 +1992,10 @@ able to clock in on them.
 
 =org-refile= lets you organize notes by typing in the headline to file them under.
 
+JW [[file:/media/dgm/blue/documents/programming/emacs/CoolEmacsGuys/johnWigley/org-mode-daily-planner.txt::Setting org-reverse-note-order to true means that notes are stored in descending date order – in other words, the most recent note is always at the top. This makes it easier to see your notes for the past week: by simply opening up your notes file.][says]]: Setting =org-reverse-note-order= to true means that notes are stored in descending date order – in other words, the most recent note is always at the top. This makes it easier to see your notes for the past week: by simply opening up your notes file.
+
 #+begin_src emacs-lisp :tangle no
-  ;; (setq org-reverse-note-order t)
+  (setq org-reverse-note-order t)
   ;; (setq org-refile-use-outline-path nil) ;; set to t above
   ;; (setq org-refile-allow-creating-parent-nodes 'confirm)
   ;; (setq org-refile-use-cache nil)
@@ -2753,7 +2760,8 @@ scheduled items that I've finished. I like seeing a time grid so that
 I can get a sense of how appointments are spread out.
 
 #+begin_src emacs-lisp :tangle yes
-  (setq org-agenda-span 'day) ;; today's date is shown by default
+  ;; (setq org-agenda-span 'day) ;; today's date is shown by default
+  (setq org-agenda-span 'week) ;; today's date is shown by default
   (setq org-agenda-tags-column -100) ; take advantage of the screen width
   (setq org-agenda-inhibit-startup t)
   (setq org-agenda-use-tag-inheritance t)
@@ -2913,7 +2921,6 @@ Press `C-u r' to search again with new search string
 : my/org-agenda-projects-and-tasks
 
 *** Org agenda custom commands
-
 There are quite a few custom commands here, and I often forget to use
 them. =) But it's good to define them, and over time, I'll get the
 hang of using these more!
@@ -3686,7 +3693,7 @@ after the content of the current item.  This lets you hit =C-S-RET= in
 the middle of an entry and the new heading is added after the body of
 the current entry but still allow you to split an entry in the middle
 with =M-S-RET=.
-*** Notes at the top
+*** COMMENT Notes at the top
 :PROPERTIES:
 :CUSTOM_ID: NotesAtTop
 :END:
@@ -3696,7 +3703,9 @@ Changing tasks states also sometimes prompt for a note (e.g. moving to
 =WAITING= prompts for a note and I enter a reason for why it is
 waiting).  These notes are saved at the top of the task so unfolding
 the task shows the note first.
-#+header: :tangle yes
+
+DGM note: I've changed this to =t= following JW's [[file:/media/dgm/blue/documents/programming/emacs/CoolEmacsGuys/johnWigley/org-mode-daily-planner.txt::Setting org-reverse-note-order to true means that notes are stored in descending date order – in other words, the most recent note is always at the top. This makes it easier to see your notes for the past week: by simply opening up your notes file.][advice]]
+#+header: :tangle no
 #+begin_src emacs-lisp
   (setq org-reverse-note-order nil)
 #+end_src
@@ -3824,17 +3833,20 @@ My logging settings are set as follows:
 
 My =org-todo-keywords= are set as follows:
 
+DGM: =(@/!)= makes org-mode to ask you for a note. 
+=started=, =deferred= and =delegated= comes from JW's setting [[id:565d9caa-095d-41ba-ace8-b9642afc3300][settings]].
+
 #+header: :tangle yes
 #+begin_src emacs-lisp
   ;; (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w)"  "|" "DONE(d)" "CANCELED(c)"))
   (setq org-todo-keywords
-        (quote ((sequence "PROJECT(p)" "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-                (sequence "WAITING(w@/!)" "|" "CANCELED(c@/!)" "PHONE"))))
+        (quote ((sequence "NEXT(n)" "TODO(t)" "STARTED(s@/!)" "PROJECT(p)" "PHONE" "|" "DONE(d)")
+                (sequence "WAITING(w@/!)" "|" "DEFERRED(@/!)" "DELEGATED(@/!)" "CANCELED(c@/!)"))))
 #+end_src
 
 #+RESULTS:
-| sequence | PROJECT(p)    | TODO(t) | NEXT(n) |                |       | DONE(d) |
-| sequence | WAITING(w@/!) |         |         | CANCELED(c@/!) | PHONE |         |
+| sequence | PROJECT(p)    | TODO(t) | NEXT(n) |               |                | DONE(d)        |       |
+| sequence | WAITING(w@/!) |         |         | DEFERRED(@/!) | CANCELED(c@/!) | DELEGATED(@/!) | PHONE |
 
 This adds a log entry whenever a task moves to any of the following states:
 - to or out of =DONE= status
@@ -3854,11 +3866,14 @@ drawer provides that information.  From the agenda simply hitting
   (setq org-todo-keyword-faces
         '(("TODO"      . (:foreground "SeaGreen" :weight bold))  ;; "#859900"
           ("NEXT"      . (:foreground "#d33682" :weight bold))
-          ("PHONE"     . (:foreground "#dc322f" :weight bold))
+          ("PHONE"     . (:foreground "#859900" :weight bold))
+          ("STARTED"   . (:foreground "#cb4b16" :weight bold))
           ("WAITING"   . (:foreground "#b58900" :weight bold))
+          ("DEFERRED"   . (:foreground "#b58900" :weight bold))
+          ("DELEGATED"   . (:foreground "#b58900" :weight bold))
           ("DONE"      . (:foreground "#268bd2" :weight bold))
           ("PROJECT"   . (:foreground "#6c71c4" :weight bold))
-          ("CANCELED"  . (:foreground "#2aa198" :weight bold))))
+          ("CANCELED"  . (:foreground "#00629D" :weight bold))))
 #+END_SRC
 
 ** Clock setup 
@@ -4669,7 +4684,7 @@ First, I define a little helper function (from Sacha Chua) to display a note wit
     (org-agenda-list arg)
     (let ((inhibit-read-only t)
           (pos (point)))
-      (goto-char (point-max))
+      (goto-char (pnnoint-max))
       (goto-char pos)))
 #+end_src
 

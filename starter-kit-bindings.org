@@ -704,36 +704,37 @@ Old code
 #+RESULTS:
 : er/contract-region
 
-** Multiple Cursors
-   Use multiple cursors for search, replace, and text-cleaning tasks. For a demonstration, see http://emacsrocks.com/e13.html
+** COMMENT Multiple Cursors
+   -Use multiple cursors for search, replace, and text-cleaning tasks. For a demonstration, see http://emacsrocks.com/e13.html
    Alternative customization at https://caolan.org/dotfiles/emacs.html#orgd96aeb0
 
 See also http://pragmaticemacs.com/emacs/multiple-cursors/ and http://pragmaticemacs.com/emacs/add-multiple-cursors-with-mouse-clicks/
 
-
 M-x mc/insert-numbers: By default, it inserts 0 for the first cursor, 1 for the second cursor etc, but you can change this by using a numeric prefix argument. So to get 1, 2, 3 as in your example, use C-u 1 M-x mc/insert-numbers.
+
+HOWEVER, this is the possible cause of choppy cursor movement!! See https://www.reddit.com/r/emacs/comments/d46era/troubleshooting_choppy_cursor_movement/
 
 #+source: multiple-cursors
 #+begin_src emacs-lisp
-(use-package multiple-cursors
-  :ensure t
-  :bind
-  ("C-c C-m l"   . mc/edit-lines) ; When you have an active region that spans multiple lines, add a cursor to each line
-  ("C-c C-m d"   . mc/mark-all-dwim)
-  ("C-c C-m A"   . mc/mark-all-like-this)
-  ("C-c C-m a"   . mc/edit-beginnings-of-lines)
-  ("C-c C-m e"   . mc/edit-ends-of-lines)
-  ("C-c C-m E"   . mc/mark-more-like-this-extended)
-  ("C-c C-m p"   . mc/mark-previous-lines)
-  ("C-c C-m n"   . mc/mark-next-lines)
-  ("C-c C-m P"   . mc/mark-previous-like-this)
-  ("C-c C-m N"   . mc/mark-next-like-this) ;; works on same line! Cool! Warning: have to mark region first.
-  ("C-c C-m h"   . mc-hide-unmatched-lines-mode)
-  ("C-c C-m z"   . mc/insert-numbers)
-  ("C-c C-m u"   . mc/unmark-next-like-this)
-  ("C-c C-m U"   . mc/unmark-previous-like-this)
-  ("C-c C-m r"   . mc/mark-all-in-region)
-  )
+;;(use-package multiple-cursors
+;;  :ensure t
+;;  :bind
+;;  ("C-c C-m l"   . mc/edit-lines) ; When you have an active region that spans multiple lines, add a cursor to each line
+;;  ("C-c C-m d"   . mc/mark-all-dwim)
+;;  ("C-c C-m A"   . mc/mark-all-like-this)
+;;  ("C-c C-m a"   . mc/edit-beginnings-of-lines)
+;;  ("C-c C-m e"   . mc/edit-ends-of-lines)
+;;  ("C-c C-m E"   . mc/mark-more-like-this-extended)
+;;  ("C-c C-m p"   . mc/mark-previous-lines)
+;;  ("C-c C-m n"   . mc/mark-next-lines)
+;;  ("C-c C-m P"   . mc/mark-previous-like-this)
+;;  ("C-c C-m N"   . mc/mark-next-like-this) ;; works on same line! Cool! Warning: have to mark region first.
+;;  ("C-c C-m h"   . mc-hide-unmatched-lines-mode)
+;;  ("C-c C-m z"   . mc/insert-numbers)
+;;  ("C-c C-m u"   . mc/unmark-next-like-this)
+;;  ("C-c C-m U"   . mc/unmark-previous-like-this)
+;;  ("C-c C-m r"   . mc/mark-all-in-region)
+;;  )
 #+end_src  
 
 #+RESULTS: multiple-cursors

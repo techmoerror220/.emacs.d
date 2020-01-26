@@ -19,7 +19,7 @@ sections, add `:tangle no` to any code block you don't want to use.
 
 To use the customizations here yourself, /you must change the name of
 this file to match your own user name or system name/. Those are the
-values of the Emacs variables =user-login-name= or =system-name=, so
+values of the acs variables =user-login-name= or =system-name=, so
 that it will be picked up by =init.el= when Emacs starts up, and get
 loaded properly. To find the current value of these variables on your
 system, launch emacs and do =C-h-v system-name [RET]= or =C-h-v
@@ -148,7 +148,7 @@ Then I added to option to list directories first that I found in https://www.ema
 
 Also, from https://emacs.stackexchange.com/questions/2722/dired-listing-switches-time-style-format-with-a-space I have added =--time-style \"+%m-%d-%Y %H:%M:%S\""=. Esta ha sido la clave para que Dired me dé la fecha completa. <<dired-date>>
 
-DGM 16 july 2019: Ojo: when Dired buffer sorted alphabetically, my powermode bar includes =-alDh --group-directories-first --time-style "+-Dired -alDh --group-directories-first= for some reason. This is meaningless there and leaves no room for time information, etc. It does not occur if I sort by date. Why?
+DGM 16 july 2019: Ojo: when Dired buffer sorted alphabetically, my powermode bar includes =-alDh --group-directories-first --time-style "+-Dired -alDh --group-directories-first= for some reason. This is meaningless there and leaves no roomf for time information, etc. It does not occur if I sort by date. Why?
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (if (eq system-type 'gnu/linux)
@@ -405,7 +405,7 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 
 ;; activate this function by Mickey Petersen if you wish to use iedit only in current function and not all across the buffer.
 ;; (defun iedit-dwim (arg)
-;;   "Starts iedit but uses \\[narrow-to-defun] to limit its scope."
+;;   "Starts iedit but uses \\[narrow-to-defun\\] to limit its scope."
 ;;   (interactive "P")
 ;;   (if arg
 ;;       (iedit-mode)
@@ -596,8 +596,6 @@ Includes:
 (add-hook 'after-init-hook 'my-pkg-init)
 #+END_SRC
 
-#+RESULTS: clean-indent
-| my-pkg-init | #[0 \303\211\235\203 \304"\301\305!\210\210  \205 \306 \210\307\211\207 [command-line-args desktop-save-mode inhibit-startup-screen --no-desktop delete 0 desktop-read t] 4] | global-company-mode | ambrevar/reset-file-name-handler-alist | ambrevar/reset-gc-cons-threshold | x-wm-set-size-hint | tramp-register-archive-file-name-handler | table--make-cell-map | magit-auto-revert-mode--init-kludge | magit-startup-asserts | magit-version |
 
 *** dtrt-indent
 A minor mode that guesses the indentation offset originally used for creating source code files and transparently adjusts the corresponding settings in Emacs, making it more convenient to edit foreign files.
@@ -720,9 +718,6 @@ Included in =starter-kit-completion.org=
 #+BEGIN_SRC emacs-lisp :tangle no
 ;; (add-hook 'after-init-hook 'global-company-mode)
 #+END_SRC
-
-#+RESULTS: company
-| my-pkg-init | #[0 \303\211\235\203 \304"\301\305!\210\210  \205 \306 \210\307\211\207 [command-line-args desktop-save-mode inhibit-startup-screen --no-desktop delete 0 desktop-read t] 4] | global-company-mode | ambrevar/reset-file-name-handler-alist | ambrevar/reset-gc-cons-threshold | x-wm-set-size-hint | tramp-register-archive-file-name-handler | table--make-cell-map | magit-auto-revert-mode--init-kludge | magit-startup-asserts | magit-version |
 
 *** Duplicate-thing
 
@@ -2560,7 +2555,9 @@ Originally I had all this set to 0 in =starter-kit-text.org= as follows:
     ;;  (global-centered-cursor-mode +1)) 
 #+END_EXAMPLE
 
-**** Smooth-scrolling package
+**** Smooth-scrolling package and scrolling setup 
+
+
 Another option is this package.
 
 This makes it so =C-n-=ing and =C-p-= ing won't make the buffer jump around so much.
@@ -2576,6 +2573,16 @@ This makes it so =C-n-=ing and =C-p-= ing won't make the buffer jump around so m
 : 0.01
 
 More tips from https://www.emacswiki.org/emacs/SmoothScrolling
+- https://emacs.stackexchange.com/questions/31402/how-to-avoid-scrolling-with-large-files-hanging-for-short-periods-of-time-hold
+- https://www.reddit.com/r/emacs/comments/9rwb4h/why_does_fast_scrolling_freeze_the_screen/
+
+#+begin_src emacs-lisp :tangle yes
+(setq jit-lock-defer-time 0)
+;;(setq fast-but-imprecise-scrolling t)
+#+end_src
+
+#+RESULTS:
+: 0
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; scroll one line at a time (less "jumpy" than defaults)
@@ -2685,7 +2692,7 @@ DGM: I suspect that this package is responsible for my disappearing-cursor probl
 : switch-window
 
 ******* COMMENT Following window splits
-After you split a window, your focus remains in the previous one. This annoyed me so much I wrote these two, they take care of it.
+After you split a window, your focus remains in the prebbbbvious one. This annoyed me so much I wrote these two, they take care of it.
 Note: I've commented this out because below I implement the same functionality. See [[split]]
 
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -3594,7 +3601,7 @@ Provides a minor mode which displays current match and total matches information
 #+begin_src emacs-lisp :tangle yes
 (use-package anzu
   :init
-  (global-anzu-mode)
+  ;; (global-anzu-mode)
   (global-set-key (kbd "M-%") 'anzu-query-replace)
   (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp))
 #+end_src
@@ -4669,7 +4676,6 @@ This only makes sense for empty buffers."
 "#+LATEX_HEADER: \\titleformat{\\part}[display]{\\relax\\itshape\\huge}{}{0pt}{\\huge\\rmfamily\\itshape}[]\n"
 "#+LATEX_HEADER: \\usepackage{xparse}\n"
 "#+LATEX_HEADER: \\usepackage{xpatch}\n"
-"#+LATEX_HEADER: \\usepackage{chngpage}\n"
 "#+LATEX_HEADER: \\usepackage{fancyhdr} \n"
 "#+LATEX_HEADER: \\usepackage{bibentry}\n"
 "#+LATEX_HEADER: \\usepackage{optparams}\n"
@@ -5059,6 +5065,15 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Agenda
                     :key "j"
                     :description "org-agenda-goto-date. Jump to DATE in agenda")
+    (cheatsheet-add :group 'Agenda
+                    :key "."
+                    :description "org-agenda-goto-today.")
+    (cheatsheet-add :group 'Agenda
+                    :key ","
+                    :description "org-agenda-priority. Set the priority of line at point, also in Org file")
+    (cheatsheet-add :group 'Agenda
+                    :key "d"
+                    :description "org-agenda-day-view.")
     (cheatsheet-add :group 'Bindings
                     :key "describe-personal-keybinding"
                     :description "Personal bindings")
@@ -5386,7 +5401,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Email
                     :key "C-*"
                     :description "mu4e")
-(cheatsheet-add :group 'Email
+    (cheatsheet-add :group 'Email
                     :key "aV"
                     :description "View message in browser. Use it once inside the message.")
     (cheatsheet-add :group 'Email
@@ -6202,9 +6217,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Redshift
                     :key "C-\)"
                     :description "Redshift off")
-  (cheatsheet-add :group 'Rectangle-editing
-                  :key "C-x r k"
-                  :description "kill-rectangle")
+    (cheatsheet-add :group 'Rectangle-editing
+                    :key "C-x r k"
+                    :description "kill-rectangle")
     (cheatsheet-add :group 'Register
                     :key "s-x"
                     :description "helm-register. Then TAB or RET to insert. Equivalent to C-x r i")
@@ -6226,6 +6241,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Scratch
                     :key "M-x scratch"
                     :description "With C-u you choose mode, otherwise current mode is used")
+    (cheatsheet-add :group 'Search
+                    :key "C-u C-r AND C-M r"
+                    :description "isearch-backward. Do incremental search backward.")
     (cheatsheet-add :group 'Security
                     :key "s-_"
                     :description "daedreth/lock-screen")
@@ -6705,17 +6723,48 @@ By the way, =M-SPC= is bound to =just-one-space=: Delete all spaces and tabs aro
 :ID:       494c8267-adf5-466c-8fad-d39d7466d034
 :END:
 
-Read:
-- https://www.reddit.com/r/emacs/comments/3b2ubz/thoughts_on_fontlocking/
-- https://www.gnu.org/software/emacs/manual/html_node/elisp/Levels-of-Font-Lock.html
-- http://www.wilfred.me.uk/blog/2014/09/27/the-definitive-guide-to-syntax-highlighting/
-
-#+begin_src emacs-lisp :tangle yes
-(setq font-lock-maximum-decoration 0)
+** Disable syntax highlighting 
+#+begin_src emacs-lisp :tangle no
+(global-font-lock-mode -1)
 #+end_src
 
 #+RESULTS:
-: 0
+ 
+Read:
+- https://www.gnu.org/software/emacs/manual/html_node/emacs/Font-Lock.html
+- https://www.gnu.org/software/emacs/manual/html_node/elisp/Levels-of-Font-Lock.html
+- https://www.reddit.com/r/emacs/comments/3b2ubz/thoughts_on_fontlocking/
+- http://www.wilfred.me.uk/blog/2014/09/27/the-definitive-guide-to-syntax-highlighting/
+
+Note: =font-lock-maximum-decoration= was originally set to =t=. But this made emacs way too slow.  In https://www.gnu.org/software/emacs/manual/html_node/efaq/Turning-on-syntax-highlighting.html they say that turning it to =nil= we get the default (usually minimum) decoration (but i take this to mean that there is decoration nonetheless). Originally it was set to true but dgm turned it off as emacs is way too slow with it.
+In the description of the variable =font-lock-maximum-decoration= they say that if =nil=, use the default decoration (typically the minimum available).
+- If =t=, use the maximum decoration available.
+- If a number, use that level of decoration (or if not available the maximum). The higher the number, the more decoration is done.
+- If a list, each element should be a cons pair of the form (MAJOR-MODE . LEVEL),
+where MAJOR-MODE is a symbol or t (meaning the default).  For example:
+ ((c-mode . t) (c++-mode . 2) (t . 1))
+means use the maximum decoration available for buffers in C mode, level 2
+decoration for buffers in C++ mode, and level 1 decoration otherwise.
+
+From http://el.lisp.se/Levels-of-Font-Lock.html
+
+22.6.5 Levels of Font Lock
+
+Some major modes offer three different levels of fontification. You can define multiple levels by using a list of symbols for keywords in font-lock-defaults. Each symbol specifies one level of fontification; it is up to the user to choose one of these levels, normally by setting font-lock-maximum-decoration (see Font Lock in the GNU Emacs Manual). The chosen level’s symbol value is used to initialize font-lock-keywords. 
+
+Here are the conventions for how to define the levels of fontification: 
+
+- Level 1: highlight function fdeclarations, file directives (such as include or import directives), strings and comments. The idea is speed, so only the most important and top-level
+ components are fontified. 
+- Level 2: in addition to level 1, highlight all language keywords, including type names that act like keywords, as well as named constant values. The idea is that all keywords
+ (either syntactic or semantic) should be fontified appropriately. 
+- Level 3: in addition to level 2, highlight the symbols being defined in function and variable declarations, and all builtin function names, wherever they appear. 
+
+Tip from http://www.emacs.uniyar.ac.ru/doc/em24h/emacs102.htm: A more advanced method for getting cheap font-lock can be obtained using the minor modes called fast-lock-mode and lazy-lock-mode. Use =C-h f= (=describe-function=) for a discussion of what they do. 
+
+#+begin_src emacs-lisp :tangle no
+(setq font-lock-maximum-decoration 1)
+#+end_src
 
 ** Font-lock customization for Latex
 DGM' nota: si pusiera esto en =starter-kit-latex-org.org=, given that it loads before =dgm.org=, the previous code setting font-lock to 1 would override the setting of 3 for latex that I set here.
@@ -6725,22 +6774,21 @@ See https://www.linuxtopia.org/online_books/linux_tool_guides/gnu_emacs_manual/F
 
 Note: I think this is overriden by the setting in [[id:494c8267-adf5-466c-8fad-d39d7466d034][Font locking]] (in =dgm.org=). If I run the code below and re-open a latex document, then I have the maximum-level decoration
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq font-lock-maximum-decoration        
-   '((latex-mode . 3)))
+#+BEGIN_SRC emacs-lisp :tangle no
+  (setq font-lock-maximum-decoration
+        '(
+          (latex-mode . 3)
+          (org-mode . 1)
+          ))
 #+END_SRC
-
-#+RESULTS:
-: ((latex-mode . 3))
 
 *** Math notation
 
 With the solarized-dark theme, math notation is too dark to see.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; (setq font-latex-math-face :foreground grey)
 #+END_SRC
-
 
 
 * Buffer-flip
