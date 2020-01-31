@@ -605,6 +605,17 @@ Don't ask for confirmation on every =C-c C-c= code-block compile.
 
 #+RESULTS: turn-off-code-block-confirm
 
+*** Latex fontification
+- https://www.mail-archive.com/emacs-orgmode@gnu.org/msg121645.html
+
+;; originally was nil
+
+#+begin_src emacs-lisp :tangle no
+;; (setq org-highlight-latex-and-related nil)
+#+end_src
+
+#+RESULTS:
+
 *** More on syntax highlighting 
 
 We'll need the =htmlize= package for syntax highlighting of code blocks (in Caolan's and Uncle Dave's dot files).
@@ -742,13 +753,18 @@ Where archived projects and tasks go.
 #+RESULTS: orgmode-archive
 : /home/dgm/Dropbox/gtd/archive.org::From %s
 
-** Daniel Mai's costumization
+** COMMENT Daniel Mai's costumization
+
+DGM comments this out: I don't trust D. Mai much now! 
 
 From https://github.com/danielmai/.emacs.d/blob/master/config.org
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq org-image-actual-width 550)
-  (setq org-highlight-latex-and-related '(latex script entities))
+DGM comments out second line in case it is related to the function  =org-do-latex-and-related= that is slowing so much my emacs
+DGM is about scaling inline images in Emacs and I still have to understand what it is about.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; (setq org-image-actual-width 550)
+  ;; (setq org-highlight-latex-and-related '(latex script entities))
 #+END_SRC
 
 #+RESULTS:
@@ -757,12 +773,13 @@ From https://github.com/danielmai/.emacs.d/blob/master/config.org
 *** SRC block exectuation, watch out!
 
 On Org mode version 9 I wasn’t able to execute source blocks out of the box. Others have ran into the same issue too. The solution is to remove the .elc files from the package directory: =rm ${ORG_DIR}/*.elc=.
+
 *** Org tags
 
 The default value is -77, which is weird for smaller width windows. I’d rather have the tags align horizontally with the header. 45 is a good column number to do that.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq org-tags-column 45)
+#+BEGIN_SRC emacs-lisp :tangle no
+;;  (setq org-tags-column 45)
 #+END_SRC
 
 #+RESULTS:
@@ -803,7 +820,7 @@ According to https://emacs.stackexchange.com/questions/36430/cant-choose-citatio
 
 #+RESULTS:
 : textcite
-*** Org-ref  shortcut
+*** Org-ref shortcut
 Also, in http://kitchingroup.cheme.cmu.edu/blog/2014/05/13/Using-org-ref-for-citations-and-references/#sec-2, JKitchin says: 
 
 The default key binding to insert a citation is C-c ]. I chose that because I do not like pressing shift to get ). However, this key binding usurps an org-mode agenda file command. To change this, set this variable
@@ -837,6 +854,15 @@ Tangled to no until I understand what is this Pre/Post thingy.
 
 #+RESULTS:
 : t
+
+*** org-ref-get-labels taking very long time
+- https://gitmemory.com/issue/jkitchin/org-ref/647/498048568
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-ref-show-broken-links nil)
+#+end_src
+
+#+RESULTS:
 
 ** Goodies
 
@@ -5273,6 +5299,28 @@ These days I set many of =org-log-*= to note to keep verbose log of task progres
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24074 15478 667014 530000) :init (24074 15478 667006 645000) :config (24074 15478 666813 689000) :config-secs (0 0 5 30000) :init-secs (0 0 5960 581000) :use-package-secs (0 6 418812 42000)))
+
+* Org-graph view
+
+#+begin_src emacs-lisp :tangle yes
+(require 'graph)
+(require 'org-graph-view)
+#+end_src
+
+#+RESULTS:
+: org-graph-view
+
+* Bindings for =org-time-stamp=
+
+#+begin_src emacs-lisp :tangle yes
+  (with-eval-after-load 'org
+    (define-key org-mode-map (kbd "C->") 'org-time-stamp)
+    )
+#+end_src
+
+#+RESULTS:
+: org-time-stamp
+
 
 * Provide
 

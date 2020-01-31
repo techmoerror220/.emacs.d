@@ -553,6 +553,27 @@ DGM, 22 jan 20. Trying to get the =[]= pair in latex
 #+RESULTS:
 | (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command) (define-key LaTeX-mode-map (kbd [) 'self-insert-command)) | preview-mode-setup | (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command)) | TeX-PDF-mode | turn-on-reftex | latex-unicode-simplified |
 
+** Electric Pair for Markdown
+
+- https://stackoverflow.com/questions/27871876/custom-pairs-in-emacs-electric-pair-mode/27871987#27871987
+
+#+begin_src emacs-lisp :tangle yes
+  (defvar markdown-electric-pairs '(
+                                    (?* . ?*)
+                                    (?` . ?`)
+                                    ) "Electric pairs for markdown-mode.")
+
+  (defun markdown-add-electric-pairs ()
+    (setq-local electric-pair-pairs (append electric-pair-pairs markdown-electric-pairs))
+    (setq-local electric-pair-text-pairs electric-pair-pairs))
+
+  (add-hook 'markdown-mode-hook 'markdown-add-electric-pairs)
+#+end_src
+
+#+RESULTS:
+| markdown-add-electric-pairs | latex-unicode-simplified | turn-off-auto-fill | pandoc-mode |
+
+
 * Alternative: autopair
 - https://github.com/joaotavora/autopair
 

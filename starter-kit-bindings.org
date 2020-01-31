@@ -89,33 +89,63 @@ Key Bindings.
 #+end_src
 
 ** Use Regex searches by default, and use Visual Regexp to construct them.
-Building regular expressions in Emacs is kind of a pain.  The visual-regexp package is a very convenient way to dynamically build regular expressions for searching and replacing. You enter a minibuffer that lets you type the regexp and the prospective matches to the expression you type are highlighted in the main buffer. =M-x vr/replace= gives you global replacement and =M-x vr/query-replace= lets you decide to replace per match. Visual regexp replace is bound to =C-c s= and visual =query-replace-regexp= to =C-c q=. 
+Building regular expressions in Emacs is kind of a pain.  The =visual-regexp= package is a very convenient way to dynamically build regular expressions for searching and replacing. You enter a minibuffer that lets you type the regexp and the prospective matches to the expression you type are highlighted in the main buffer. =M-x vr/replace= gives you global replacement and =M-x vr/query-replace= lets you decide to replace per match. Visual regexp replace is bound to =C-c s= and visual =query-replace-regexp= to =C-c q=. 
+
+- On =visual-regexp= see https://github.com/benma/visual-regexp.el
 
 #+begin_src emacs-lisp 
-(global-set-key (kbd "C-s") 'isearch-forward-regexp)
-(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s") 'isearch-forward)
-(global-set-key (kbd "C-M-r") 'isearch-backward)
+  (global-set-key (kbd "C-s") 'isearch-forward-regexp)
+  (global-set-key (kbd "\C-r") 'isearch-backward-regexp)
+  (global-set-key (kbd "C-M-s") 'isearch-forward)
+  (global-set-key (kbd "C-M-r") 'isearch-backward)
 
-(use-package visual-regexp
-  :ensure t)
-(define-key global-map (kbd "C-c s") 'vr/replace) 
-(define-key global-map (kbd "C-c q") 'vr/query-replace)
-#+end_src
+  (use-package visual-regexp
+    :ensure t)
+  (define-key global-map (kbd "C-c s") 'vr/replace) 
+  (define-key global-map (kbd "C-c q") 'vr/query-replace)
+  #+end_src
+
+
 
 Make searches case-insensitive. Should be on by default but I've realized it is not when working with an org file. I tried the following. At first it did not work. Then I toogled mode from latex back to org and the case-insensitive search worked.
 
-#+begin_src emacs-lisp
-;;  (setq case-fold-search nil) ; make searches case sensitive
-(setq case-fold-search t)   ; Make searches case insensitive
 
-(add-hook 'org-mode-hook
-          (lambda ()
-          (setq case-fold-search t)))
+
+#+begin_src emacs-lisp :tangle yes
+ ;;  (setq case-fold-search nil) ; make searches case sensitive
+  (setq case-fold-search t)   ; Make searches case insensitive
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (setq case-fold-search t)))
 #+end_src
 
+*** COMMENT =visual-regexp= on steroids: an extension
+- DGM: turned off on 31/01/2020 to continue using the regular =visual-regexp= until I understand the version on steroids
+
+- https://github.com/benma/visual-regexp-steroids.el
+- https://www.reddit.com/r/emacs/comments/evdcie/back_to_cursors_stutteringchoppy_movement/
+
+- Interesting: it'll make searches case sentitive.
+
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package visual-regexp
+  ;;   :defer)
+
+  ;; (use-package visual-regexp-steroids
+  ;;   :ensure
+  ;;   :demand
+  ;;   :bind (("C-M-r" . vr/isearch-backward)
+  ;;          ("C-M-s" . vr/isearch-forward)
+  ;;          ("C-c q" . vr/query-replace)
+  ;;          ("C-c r" . vr/replace)
+  ;;          ("C-r"   . vr/isearch-backward) ;; C-M-r
+  ;;          ("C-s"   . vr/isearch-forward) ;; C-M-s
+  ;;          ))
+#+END_SRC
+
 #+RESULTS:
-| (lambda nil (setq case-fold-search t)) | rainbow-mode | (lambda nil (highlight-symbol-mode)) | org-table-stripes-enable | org-mode-reftex-setup | org-clock-load | org-display-inline-images | org-ref-org-menu | (lambda nil (org-bullets-mode)) | turn-off-auto-fill | ambrevar/turn-off-indent-tabs | ambrevar/turn-off-linum | (lambda nil (visual-line-mode 1)) | org-indent-mode | (lambda nil (set-face-attribute 'org-level-1 nil :height 1.5) (set-face-attribute 'org-level-2 nil :height 1.2) (set-face-attribute 'org-level-3 nil :height 1.1) (set-face-attribute 'org-level-4 nil :height 1.1) (set-face-attribute 'org-level-5 nil :height 1.1)) | (lambda nil (local-set-key \216 'outline-next-visible-heading) (local-set-key \220 'outline-previous-visible-heading) (local-set-key \225 'outline-up-heading) (local-set-key \227 'org-table-copy-region) (local-set-key \231 'org-table-paste-rectangle) (local-set-key \214 'org-table-sort-lines) (local-set-key \311 'org-toggle-iimage-in-org)) | (lambda nil (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)) | pandoc-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24115 4119 835327 964000) :init (24115 4119 834970 275000) :init-secs (0 0 747 842000) :use-package-secs (0 0 1160 571000) :config (24115 4119 834609 132000) :config-secs (0 0 9 101000)))
 
 ** Local iBuffer Settings
 

@@ -7,6 +7,32 @@
 ;; This is the first thing to get loaded.
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; John Wiegley's setup tweaked
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst emacs-start-time (current-time))
+
+(defvar file-name-handler-alist-old file-name-handler-alist)
+
+(setq package-enable-at-startup nil
+      file-name-handler-alist nil
+      message-log-max 16384
+      gc-cons-threshold 402653184
+      gc-cons-percentage 0.6
+      auto-window-vscroll nil)
+
+;;; original bit by JW (though with =gc-cons-percentage= on)
+;;; Alphapapa suggests 10 or 100MB (100000000) at most.
+;;; Another use says 300\MBOX{}
+;;; Originally, I found that 3000000 (3 MB) was okay
+(add-hook 'after-init-hook
+          `(lambda ()
+             (setq file-name-handler-alist file-name-handler-alist-old
+                   gc-cons-threshold 10000000)  ;; 10MB
+                   ;;gc-cons-percentage 0.1)
+             (garbage-collect)) t)
+
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -28,24 +54,33 @@
 
 
 ;;; Tip 1 from Ambrevar's init.el
+;; I guess responsiveness is improved by a low gc-cons-threshold, but
+;; speed is improved by a high gc-cons-threshold.
+;; from: https://www.reddit.com/r/emacs/comments/55ork0/is_emacs_251_noticeably_slower_than_245_on_windows/
 
 ;;; Speed up init.
-;;; Temporarily reduce garbage collection during startup. Inspect `gcs-done'.
-(defun ambrevar/reset-gc-cons-threshold ()
-  (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value))))
-(setq gc-cons-threshold (* 64 1024 1024))
-(add-hook 'after-init-hook 'ambrevar/reset-gc-cons-threshold)
-;;; Temporarily disable the file name handler.
-(setq default-file-name-handler-alist file-name-handler-alist)
-(setq file-name-handler-alist nil)
-(defun ambrevar/reset-file-name-handler-alist ()
-  (setq file-name-handler-alist
-        (append default-file-name-handler-alist
-                file-name-handler-alist))
-  (cl-delete-duplicates file-name-handler-alist :test 'equal))
-(add-hook 'after-init-hook 'ambrevar/reset-file-name-handler-alist)
+;;Temporarily reduce garbage collection during startup. Inspect `gcs-done'.
+;; (defun ambrevar/reset-gc-cons-threshold ()
+;;   (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value))))
+;; ;; 511 (setq gc-cons-threshold (* 64 1024 1024))
+;; ;;(setq gc-cons-threshold (* 64 1024 1024))
+;; (setq gc-cons-threshold 800000)
+;; (add-hook 'after-init-hook 'ambrevar/reset-gc-cons-threshold)
+;; ;;Temporarily disable the file name handler.
+;; (setq default-file-name-handler-alist file-name-handler-alist)
+;; (setq file-name-handler-alist nil)
+;; (defun ambrevar/reset-file-name-handler-alist ()
+;;   (setq file-name-handler-alist
+;;         (append default-file-name-handler-alist
+;;                 file-name-handler-alist))
+;;   (cl-delete-duplicates file-name-handler-alist :test 'equal))
+;; (add-hook 'after-init-hook 'ambrevar/reset-file-name-handler-alist)
 
-;;; Tip 1 from Ambrevar's init.el
+;; (setq gc-cons-percentage 0.1)
+;; ;(run-with-idle-timer 5 t #'garbage-collect)
+;; (setq garbage-collection-messages t)
+
+;;; Tip 2 from Ambrevar's init.el
 
 ;;; Avoid the "loaded old bytecode instead of newer source" pitfall.
 (setq load-prefer-newer t)
@@ -149,6 +184,14 @@ ARCHIVE is the string name of the package archive.")
 
 ;;(use-package diminish
 ;;  :ensure t)
+
+
+;;; Garbage collection the automated way
+;;; my system collapsed when I used it!!
+;; (use-package gcmh
+;;   :ensure t
+;;   :init
+;;   (gcmh-mode 1))
 
 (use-package bind-key
   :ensure t)
@@ -367,7 +410,7 @@ ARCHIVE is the string name of the package archive.")
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
  ;;; Higher garbage collection threshold
- (setq gc-cons-threshold 20000000)
+ ;; (setq gc-cons-threshold 20000000)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;; The Power of UTF8 ;;;;;;;;;;;;;;;;;;

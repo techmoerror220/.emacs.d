@@ -50,6 +50,7 @@ This file provides settings for ESS and R.
      (shell . t)
      (latex . t)
      (ledger . t)
+     (ditaa . t)
      ))
 
   ;; (sh . t)

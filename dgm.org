@@ -2576,8 +2576,8 @@ More tips from https://www.emacswiki.org/emacs/SmoothScrolling
 - https://emacs.stackexchange.com/questions/31402/how-to-avoid-scrolling-with-large-files-hanging-for-short-periods-of-time-hold
 - https://www.reddit.com/r/emacs/comments/9rwb4h/why_does_fast_scrolling_freeze_the_screen/
 
-#+begin_src emacs-lisp :tangle yes
-(setq jit-lock-defer-time 0)
+#+begin_src emacs-lisp :tangle no
+;;(setq jit-lock-defer-time 0)
 ;;(setq fast-but-imprecise-scrolling t)
 #+end_src
 
@@ -2600,7 +2600,7 @@ I was driven crazy by the jumps. I had set scroll-step and scroll-conservatively
 
 #+BEGIN_SRC emacs-lisp :tangle yes
                                         ; Autosave every 500 typed characters. Alternative: try turning off auto save interval altogether.
-(setq auto-save-interval 500)
+;; (setq auto-save-interval 500)
                                         ; Scroll just one line when hitting bottom of window // ;; scrolling to always be a line at a time
 (setq auto-window-vscroll nil)
 #+END_SRC
@@ -2613,7 +2613,7 @@ Scrolling behaviour in emacs improved A LOT when I stop using =company-mode= by 
 
 Trying this: https://stackoverflow.com/questions/3631220/fix-to-get-smooth-scrolling-in-emacs
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 (setq redisplay-dont-pause t)
 #+end_src
 
@@ -2623,7 +2623,7 @@ Trying this: https://stackoverflow.com/questions/3631220/fix-to-get-smooth-scrol
 More heavy editing in this regard would be: 
 
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
   (setq redisplay-dont-pause t
         scroll-preserve-screen-position 1)
 #+end_src
@@ -4547,7 +4547,6 @@ This only makes sense for empty buffers."
 #+RESULTS:
 : beam-sanchez
 
-
 ** XeLaTeX and =memoir= class
 
 ="#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"=  needed now that I have excluded it from [[id:562fc8d9-c2cb-4476-92c7-b530cf9ed6ab][Style of memoir class articles, etc]]
@@ -4581,7 +4580,7 @@ This only makes sense for empty buffers."
   "#+LaTeX_CLASS: memarticle\n"
   "#+LaTeX_CLASS_OPTIONS: [11pt,oneside, article]\n"
   "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
-   "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
+  "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
   "#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"
   "#+LATEX_HEADER: \\input{vc}\n"
   "#+LATEX_HEADER: \\renewcommand*{\\PrelimText}{\\textnormal{\\small\\textcolor{black!40}{author: \\VCAuthor\\ -- date: \\VCDateISO\\ -- time: \\VCTime\\ -- commit: \\texttt{\\VCRevision}}}}\n\n"
@@ -4594,8 +4593,108 @@ This only makes sense for empty buffers."
 : xelatex-skeleton
 
 
-** Tufte book
+** XeLaTex for syllabus template
 
+Note the minimalistic =vc= information included with ="\thispagestyle{kjhgit}=. Where does it come from? [[file:~/texmf/tex/generic/latex-custom-kjh/needs-memoir/memoir-article-styles.sty::\makepagestyle{kjhgit}][Here]], i.e., the =memoir-article-styles.sty= file.
+
+#+begin_src emacs-lisp :tangle yes
+  (define-skeleton xlt-syllabus
+    "Inserts a XeLaTeX  skeleton for syllabus writing.
+Recall deleting inputVC and kjhgit if VC not used."
+  "\n"
+  "# -*- coding: utf-8 -*-\n"
+  "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
+  "#+LaTeX_CLASS: memarticle\n"
+  "#+LaTeX_CLASS_OPTIONS: [11pt,oneside, article]\n"
+  "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
+  "#+LATEX_HEADER: \\def\\myauthor{Author}\n"
+  "#+LATEX_HEADER: \\def\\mytitle{Title}\n"
+  "#+LATEX_HEADER: \\def\\mycopyright{\\myauthor}\n"
+  "#+LATEX_HEADER: \\def\\mykeywords{}\n"
+  "#+LATEX_HEADER: \\def\\mybibliostyle{plain}\n"
+  "#+LATEX_HEADER: \\def\\mybibliocommand{}\n"
+  "#+LATEX_HEADER: \\def\\mysubtitle{}\n"
+  "#+LATEX_HEADER: \\def\\myaffiliation{Universidad Nacional de Educación a Distancia (UNED), Madrid}\n"
+  "#+LATEX_HEADER: \\def\\myaddress{Calle Obispo Trejo 2, Madrid 28040}\n"
+  "#+LATEX_HEADER: \\def\\myemail{daniel.guinea@poli.uned.es}\n"
+  "#+LATEX_HEADER: \\def\\myweb{http://www.uned.es}\n"
+  "#+LATEX_HEADER: \\def\\myphone{91 398 9441}\n"
+  "#+LATEX_HEADER: \\def\\myversion{}\n"
+  "#+LATEX_HEADER: \\def\\myrevision{}\n"
+  "#+LATEX_HEADER: \\def\\myaffiliation{\ \\\\Universidad Nacional de Educación a Distancia (UNED), Madrid}\n"
+  "#+LATEX_HEADER: \\def\\myauthor{Daniel Guinea (Coordinador)}\n"
+  "#+LATEX_HEADER: \\def\\mykeywords{Sociología, Guía, Grado, Sociología, TFG}\n"
+  "#+LATEX_HEADER: \\def\\mysubtitle{Grado en Sociología}\n"
+  "#+LATEX_HEADER: \\def\\mytitle{{\\LARGE \\textsc{Guía del} \\newline} \\HUGE Trabajo Fin de Grado}\n"
+  "#+LATEX_HEADER: \\input{vc}\n"
+  "#+LATEX_CMD: xelatex\n"
+  "#+begin_src latex\n"
+    "%% blank label items; hanging bibs for text\n"
+    "%% Custom hanging indent for vita items\n"
+    "\\def\\ind{\\hangindent=1 true cm\\hangafter=1 \\noindent}\n"
+    "\\def\\labelitemi{$\\cdot$} \n"
+    "% \\renewcommand{\\labelitemii}{~}\n"
+    "%% RCS info string for version tracking \n"
+    "\\chapterstyle{article-4}  % alternative styles are defined in latex-custom-kjh/needs-memoir/ \n"
+    "% \\pagestyle{kjh} \n"
+    "\\title{\\LARGE \\mytitle}     \n"
+    "\\author{\\Large\\myauthor \\newline \\footnotesize\\texttt{\\noindent\\myemail}}\n"
+    "\\date{Curso 2019/2020. \\newline Universidad Nacional de Eduación a Distancia (\\textsc{uned})}\n"
+    "\\published{\\,} \n"
+    "\\maketitle \n"
+    "% Include version information in footer if using vc package (see above). \n"
+    "\\thispagestyle{kjhgit} \n"
+    "% Copyright Page \n"
+    "% \\textcopyright{} \\mycopyright \n"
+    "#+end_src\n"
+    "\n" _ "\n\n"
+    "\\printbibliography")
+  #+end_src
+
+  #+RESULTS:
+  : xlt-syllabus
+
+#+end_src
+
+** Evaluación de la PEC
+
+#+BEGIN_EXAMPLE
+  "#+LANGUAGE: "str | "american""\n"
+  "#+LATEX_HEADER: \\usepackage["str | "american""]{babel}\n"
+#+END_EXAMPLE
+ 
+is a good idea, together with commenting out =babel= in [[file:~/texmf/tex/generic/latex-custom-kjh/needs-org-mode/org-preamble-xelatex.sty::%% Recall to change this to american if I want to have dates and so on in English][the preamble file]], but then smart quotes does not work! So I have to set up the language in the preamble file until I find a better solution.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(define-skeleton xlt-pec
+  "Inserts a XeLaTeX skeleton into current buffer.
+For evaluating PECs."
+  "\n"
+  "# -*- coding: utf-8 -*-\n"
+  "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
+  "#+TITLE: Evaluación de la \\textsc{pec}NÚMERO dentro de la línea /Cambio en las Sociedades Contemporáneas/\n"
+  "#+SUBTITLE: Alumno/a:\n"
+  "#+AUTHOR: Daniel Guinea, Dept. Sociología I, \\textsc{uned}\n"
+  "#+DATE:\\today\n"
+  "#+LaTeX_CLASS: memarticle\n"
+  "#+LaTeX_CLASS_OPTIONS: [11pt,oneside, article]\n"
+  "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
+  "#+LATEX_CMD: xelatex\n"
+  "\n\n"
+  "* ¿La PEC1 plantea una pregunta de investigación?\n\n"
+  "" _ "\n\n"
+  "* Potenciales problemas\n"
+  "\n\n"
+  "** Cuestiones de estilo\n"
+  "\n\n"
+  "* Veredicto\n\n\n"
+  "\\printbibliography")
+#+END_SRC
+
+#+RESULTS:
+: xlt-pec
+
+** Tufte book
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (define-skeleton tufte-book
@@ -5177,6 +5276,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c C-s"
                     :description "diary-show-all-entries")
     (cheatsheet-add :group 'Dired
+                    :key "shift-t (T)"
+                    :description "Change timestamp on file under cursor")
+    (cheatsheet-add :group 'Dired
                     :key "C-x d"
                     :description "helm-mode-dired. TAB to select; RET to jump to selection")
     (cheatsheet-add :group 'Dired
@@ -5221,6 +5323,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Dired-Projectile
                     :key "C-c d"
                     :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
+    (cheatsheet-add :group 'Editing
+                    :key "C-x C-w M-n"
+                    :description "Current filename will be inserted for you. Edit what you want and hit RET to save the file to this new name.")
     (cheatsheet-add :group 'Editing
                     :key "C-c x"
                     :description "my-clean-buffer.Cleans buffer by re-indenting,removing tabs and trailing whitespace.")
@@ -5861,6 +5966,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "W"
                     :description "Widen in Org subtree")
     (cheatsheet-add :group 'Org
+                    :key "C->"
+                    :description "org-time-stamp. Prompt for a date/time and insert a time stamp.")
+    (cheatsheet-add :group 'Org
                     :key "C-i"
                     :description "org-cycle. Toggle fold-unfold heading")
     (cheatsheet-add :group 'Org
@@ -6225,10 +6333,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "helm-register. Then TAB or RET to insert. Equivalent to C-x r i")
     (cheatsheet-add :group 'Replace
                     :key "C-c s"
-                    :description "Global replacement by dynamically building regular expressions")
+                    :description "vr/replace. Global replacement by dynamically building regular expressions")
     (cheatsheet-add :group 'Replace
                     :key "C-c q"
-                    :description "Decide to replace per match by dynamically building regular expressions")
+                    :description "vr/query-replace. Decide to replace per match by dynamically building regular expressions")
     (cheatsheet-add :group 'Replace
                     :key "M-%"
                     :description "anzu-query-replace")
@@ -6360,7 +6468,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24074 16338 890686 894000) :init (24074 16338 890616 877000) :init-secs (0 0 2998 730000) :use-package-secs (0 0 3172 763000) :config (24074 16338 890603 955000) :config-secs (0 0 2978 551000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24116 20759 614339 592000) :init (24116 20759 613308 524000) :init-secs (0 0 6398 737000) :use-package-secs (0 0 7657 716000) :config (24116 20759 613190 858000) :config-secs (0 0 6273 480000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
@@ -7024,6 +7132,75 @@ abort completely with `C-g'."
 
 #+RESULTS:
 : endless/ispell-word-then-abbrev
+
+* COMMENT Resize minibuffer 
+
+#+begin_src emacs-lisp :tangle no
+  ;; (setq resize-mini-windows t)
+  ;; (setq max-mini-window-height 0.50)
+#+end_src
+
+#+RESULTS:
+: 0.5
+
+* Performace  
+
+** at loadup
+
+#+begin_src emacs-lisp :tangle yes
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (message "Emacs ready in %s with %d garbage collections."
+                       (format "%.2f seconds"
+                               (float-time
+                                (time-subtract after-init-time before-init-time)))
+                       gcs-done)))
+#+end_src
+
+
+** At garbage collection
+- Alphapapa's bit of code
+- https://www.reddit.com/r/emacs/comments/ck4zb3/trying_to_understand_emacs_memory_usage_and/
+
+#+begin_src emacs-lisp :tangle yes
+(defun ap/garbage-collect ()
+  "Run `garbage-collect' and print stats about memory usage."
+  (interactive)
+  (message (cl-loop for (type size used free) in (garbage-collect)
+                    for used = (* used size)
+                    for free = (* (or free 0) size)
+                    for total = (file-size-human-readable (+ used free))
+                    for used = (file-size-human-readable used)
+                    for free = (file-size-human-readable free)
+                    concat (format "%s: %s + %s = %s\n" type used free total))))
+#+end_src
+
+#+RESULTS:
+: ap/garbage-collect
+
+* Ditaa
+
+#+begin_src elisp :tangle no
+(expand-file-name
+             "ditaa.jar"
+      (file-name-as-directory
+            (expand-file-name
+                "scripts"
+               (file-name-as-directory
+                  (expand-file-name
+                      "../contrib"
+                     (file-name-directory (org-find-library-dir "org")))))))
+#+end_src
+
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar")
+#+end_src
+
+#+RESULTS:
+: /usr/share/ditaa/ditaa.jar
+
+
 
 * Provide
 
