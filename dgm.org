@@ -336,13 +336,15 @@ Now my main use =goto-char-timer= where I am prompted to write the text that I w
 (use-package avy
   :ensure t
   :bind
-  ("s-^" . avy-goto-word-1))  ;; goes to word that starts with a given char
+  ("s-i" . avy-goto-word-1)  ;; goes to word that starts with a given char
+  ("s-^" . avy-goto-char)
+  ("s-l" . avy-goto-char-timer)) 
 
-(define-key global-map (kbd "s-l") 'avy-goto-char-timer) ;;
+;; (define-key global-map (kbd "s-l") 'avy-goto-char-timer) ;;
 #+end_src
 
 #+RESULTS: avy-mode
-: avy-goto-word-1
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24117 58068 70446 790000) :init (24117 58068 70250 881000) :init-secs (0 0 40 129000) :use-package-secs (0 0 351 172000) :config (24117 58068 70225 446000) :config-secs (0 0 3 685000)))
 
 =avy-goto-char= goes literally to any char. But I find it too obstrusive as there are many matches.
 
@@ -2719,9 +2721,10 @@ I like me some searching, the default search is very meh. In emacs, you mostly u
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package swiper
-  :ensure t
-  :bind ("s-i" . 'swiper))
+  :ensure t)
 #+END_SRC
+
+DGM: I have removed =:bind ("s-i" . 'swiper)= becuase I don't use it much really.
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23919 51355 179006 615000) :init (23919 51355 178791 891000) :config (23919 51355 178416 764000) :config-secs (0 0 17 871000) :init-secs (0 0 713 525000) :use-package-secs (0 0 1105 560000)))
@@ -4661,9 +4664,12 @@ Recall deleting inputVC and kjhgit if VC not used."
 #+BEGIN_EXAMPLE
   "#+LANGUAGE: "str | "american""\n"
   "#+LATEX_HEADER: \\usepackage["str | "american""]{babel}\n"
+  "#+LATEX_HEADER: \\usepackage[babel,autostyle=true]{csquotes}\n"
 #+END_EXAMPLE
  
-is a good idea, together with commenting out =babel= in [[file:~/texmf/tex/generic/latex-custom-kjh/needs-org-mode/org-preamble-xelatex.sty::%% Recall to change this to american if I want to have dates and so on in English][the preamble file]], but then smart quotes does not work! So I have to set up the language in the preamble file until I find a better solution.
+is a good idea, together with commenting out =babel= in [[file:~/texmf/tex/generic/latex-custom-kjh/needs-org-mode/org-preamble-xelatex.sty::%% Recall to change this to american if I want to have dates and so on in English][the preamble file]], but then smart quotes does not work! So I have to set up the language in the preamble (typicall to =spanish=, as =american= is my default) file until I find a better solution.
+
+NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (define-skeleton xlt-pec
@@ -5324,6 +5330,18 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c d"
                     :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
     (cheatsheet-add :group 'Editing
+                    :key "C-x C-u"
+                    :description "upcase-region")
+    (cheatsheet-add :group 'Editing
+                    :key "s-i"
+                    :description "avy-goto-word-1. Type first char of word you want to go to.")
+    (cheatsheet-add :group 'Editing
+                    :key "s-l"
+                    :description "avy-goto-char-timer. Start typing word you want to go to.")
+    (cheatsheet-add :group 'Editing
+                    :key "s-^"
+                    :description "avy-goto-char. Jump to any char you view.")
+    (cheatsheet-add :group 'Editing
                     :key "C-x C-w M-n"
                     :description "Current filename will be inserted for you. Edit what you want and hit RET to save the file to this new name.")
     (cheatsheet-add :group 'Editing
@@ -5686,12 +5704,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'EXWM
                     :key "C-c-t-f"
                     :description "Resize frame from external app-Usually when saving something")
-    (cheatsheet-add :group 'Find-char
-                    :key "s-l"
-                    :description "avy-goto-char-timer: Jump to word in buffers")
-    (cheatsheet-add :group 'Find-char
-                    :key "s-^"
-                    :description "avy-goto-char: Jump to at word start")
     (cheatsheet-add :group 'Find-Files
                     :key "C-x f"
                     :description "ido-recentf-open: Find recent file")
@@ -5746,9 +5758,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Find-Occurrences
                     :key "s-o"
                     :description "helm-occur: TAB to temporarily move to highlighted match")
-    (cheatsheet-add :group 'Find-Occurrences
-                    :key "s-i"
-                    :description "swiper")
     (cheatsheet-add :group 'Find-Occurences
                     :key "s-\""
                     :description "helm-regexp to test regexp interactively and save it. Actions on C-z")
@@ -6468,7 +6477,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24116 20759 614339 592000) :init (24116 20759 613308 524000) :init-secs (0 0 6398 737000) :use-package-secs (0 0 7657 716000) :config (24116 20759 613190 858000) :config-secs (0 0 6273 480000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24119 15531 696425 825000) :init (24119 15531 696301 493000) :init-secs (0 0 92 254000) :use-package-secs (0 0 370 465000)))
 
 
 * COMMENT Remapping =M-<= and =M->=

@@ -111,7 +111,7 @@ Make searches case-insensitive. Should be on by default but I've realized it is 
 
 
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
  ;;  (setq case-fold-search nil) ; make searches case sensitive
   (setq case-fold-search t)   ; Make searches case insensitive
 

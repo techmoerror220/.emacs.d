@@ -280,13 +280,12 @@ Some programs such as 'emacs' are better off being started in char-mode.
 * Technomancy's customization
 
 ** Workspaces
-We start out with 1 workspace, as exwm creates workspaces dynamically. (I think Technomancy starts with 9 workspaces really and this setup of 1 is really from Uncle Dave.)
-??? Don't know really. I see three workspaces to start with if I do =s-w= so I disable to see what effect it has
+Read https://u.teknik.io/AZvQe.jpg and [[id:a42887e9-5ba3-4072-8834-aed5c0c2731d][this]].
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq exwm-workspace-number 9
-      exwm-workspace-show-all-buffers t
-      exwm-layout-show-all-buffers t)
+      exwm-workspace-show-all-buffers nil ;; if t, allows showing buffers on other workspaces.dgm: i'm going to try and isolate buffers so that EXWM only shows X windows belonging to current workspace
+      exwm-layout-show-all-buffers t) ;;  allow switching to buffers on other workspaces.
 #+END_SRC
 
 #+RESULTS:
