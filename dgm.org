@@ -4700,7 +4700,8 @@ For evaluating PECs."
 #+RESULTS:
 : xlt-pec
 
-** Tufte book
+** Tufte book and handout
+- For a handout, you simply change ="#+LATEX_CLASS: tufte-book\n"= from =book= to =handout=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (define-skeleton tufte-book
@@ -5479,9 +5480,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Editing-MultipleRegions
                     :key "s-q"
                     :description "mark-next-like-this. Mark next occurence of a region and edit all at once")
-    (cheatsheet-add :group 'Editing-MultipleRegions
-                    :key "C-;"
-                    :description "iedit: Edit multiple regions in the same way simultaneously")
     (cheatsheet-add :group 'Editing-MultipleCursors
                     :key "C-c C-m l"
                     :description "mc/edit-lines: When active region spans multiple lines, add cursor to each line")
@@ -6477,7 +6475,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24119 15531 696425 825000) :init (24119 15531 696301 493000) :init-secs (0 0 92 254000) :use-package-secs (0 0 370 465000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24124 24418 892998 479000) :init (24124 24418 892917 732000) :init-secs (0 0 2417 503000) :use-package-secs (0 0 2599 979000) :config (24124 24418 892902 903000) :config-secs (0 0 2397 130000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
