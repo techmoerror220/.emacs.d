@@ -4770,7 +4770,7 @@ This only makes sense for empty buffers."
 "#+MACRO: tl Tufte-LaTeX\n"
 "#+MACRO: lt LaTeX\n"
 "#+MACRO: xt XeTeX\n"
-"#+LATEX_HEADER: \\RequirePackage{etex}\n"
+"#+LATEX_HEADER: \\usepackage{etex}\n"
 "#+LATEX_HEADER: \\usepackage[utf8]{inputenc}\n"
 "#+LATEX_HEADER: \\usepackage[T1]{fontenc}\n"
 "#+LATEX_HEADER: \\reserveinserts{36}\n"
@@ -5165,7 +5165,7 @@ See https://github.com/darksmile/cheatsheet/blob/master/cheatsheet.el
 Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package cheatsheet
+   (use-package cheatsheet
     :ensure t
     :config
     (cheatsheet-add :group 'Agenda
@@ -5330,6 +5330,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Dired-Projectile
                     :key "C-c d"
                     :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
+    (cheatsheet-add :group 'Editing
+                    :key "C-o"
+                    :description "open-line. Insert a newline and leave point before it.")
     (cheatsheet-add :group 'Editing
                     :key "C-x C-u"
                     :description "upcase-region")
@@ -6105,6 +6108,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "="
                     :description "org-agenda-filter-by-regexp. Filter agenda entries by regular expressions. With one prefix argument, filter out entries matching the regexp")
     (cheatsheet-add :group 'Org-agenda
+                    :key "\\"
+                    :description "org-agenda-filter-by-tag. Filter agenda entries by tab. To clear the filter, press \\ twice")
+    (cheatsheet-add :group 'Org-agenda
                     :key "J"
                     :description "org-agenda-clock-goto. Go to the currently clocked-in task in the agenda buffer")
     (cheatsheet-add :group 'Org-agenda
@@ -6475,7 +6481,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24124 24418 892998 479000) :init (24124 24418 892917 732000) :init-secs (0 0 2417 503000) :use-package-secs (0 0 2599 979000) :config (24124 24418 892902 903000) :config-secs (0 0 2397 130000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24129 55970 434892 447000) :init (24129 55970 434834 208000) :init-secs (0 0 24 685000) :use-package-secs (0 0 153 578000)))
 
 
 * COMMENT Remapping =M-<= and =M->=

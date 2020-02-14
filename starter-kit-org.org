@@ -896,6 +896,7 @@ Tip from: https://orgmode.org/manual/Setting-tags.html
                         ("project"   . ?p)
                         ("browsing"  . ?b)
                         ("drill"     . ?d)
+                        ("habit"     . ?a)
                         ("laptop"    . ?l)
                         ("mailing"   . ?m)
                         ("ordenador" . ?o)
@@ -907,7 +908,7 @@ Tip from: https://orgmode.org/manual/Setting-tags.html
 #+END_SRC
 
 #+RESULTS:
-: ((:startgroup) (@errands . 101) (@home . 104) (@uned . 117) (:endgroup) (project . 112) (browsing . 98) (drill . 100) (laptop . 108) (mailing . 109) (ordenador . 111) (reading . 114) (salud . 115) (tel . 116) (writing . 119) (FLAGGED . 63))
+: ((:startgroup) (@errands . 101) (@home . 104) (@uned . 117) (:endgroup) (project . 112) (browsing . 98) (drill . 100) (habit . 97) (laptop . 108) (mailing . 109) (ordenador . 111) (reading . 114) (salud . 115) (tel . 116) (writing . 119) (FLAGGED . 63))
 
 * Agenda 
 ** Shortcuts
