@@ -65,6 +65,18 @@ This file provides settings for ESS and R.
 
 #+RESULTS:
 
+** Customize smart underscore
+Insert =_= if the preceding character is not a tab/space. 
+
+Toggle with =ess-S-underscore-when-last-character-is-a-space=  Not enabled by default, so when I defined a varible with an underscore as in =my_packages=, I got a =<-= as soon as I typed the =_=.
+
+#+begin_src emacs-lisp 
+(setq ess-S-underscore-when-last-character-is-a-space t)
+#+end_src
+
+#+RESULTS:
+: t
+
 * COMMENT Test 
 ** Coding Hooks
 #+source: ide-ess

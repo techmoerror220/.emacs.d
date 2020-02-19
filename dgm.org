@@ -5168,18 +5168,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
    (use-package cheatsheet
     :ensure t
     :config
-    (cheatsheet-add :group 'Agenda
-                    :key "j"
-                    :description "org-agenda-goto-date. Jump to DATE in agenda")
-    (cheatsheet-add :group 'Agenda
-                    :key "."
-                    :description "org-agenda-goto-today.")
-    (cheatsheet-add :group 'Agenda
-                    :key ","
-                    :description "org-agenda-priority. Set the priority of line at point, also in Org file")
-    (cheatsheet-add :group 'Agenda
-                    :key "d"
-                    :description "org-agenda-day-view.")
     (cheatsheet-add :group 'Bindings
                     :key "describe-personal-keybinding"
                     :description "Personal bindings")
@@ -5564,6 +5552,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'ESS
                     :key "C-c C-j"
                     :description "ess-eval-line. Send the current line to the inferior ESS process")
+    (cheatsheet-add :group 'ESS
+                    :key "C-c C-r"
+                    :description "ess-eval-region. Send the region from START to END to the inferior ESS process")
     (cheatsheet-add :group 'Expressions-Eval
                     :key "C-x C-e"
                     :description "sanityinc/eval-last-sexp-or-region")
@@ -6060,6 +6051,18 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "M-x org-repair-property-drawers"
                     :description "Fix properties drawers in current buffer. To use when habits or schedules don't show rightly")
     (cheatsheet-add :group 'Org-agenda
+                    :key "j"
+                    :description "org-agenda-goto-date. Jump to DATE in agenda")
+    (cheatsheet-add :group 'Org-agenda
+                    :key "."
+                    :description "org-agenda-goto-today.")
+    (cheatsheet-add :group 'Org-Agenda
+                    :key ","
+                    :description "org-agenda-priority. Set the priority of line at point, also in Org file")
+    (cheatsheet-add :group 'Org-Agenda
+                    :key "d"
+                    :description "org-agenda-day-view.")
+   (cheatsheet-add :group 'Org-agenda
                     :key "."
                     :description "org-agenda-goto-today")
     (cheatsheet-add :group 'Org-agenda
@@ -6481,7 +6484,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24129 55970 434892 447000) :init (24129 55970 434834 208000) :init-secs (0 0 24 685000) :use-package-secs (0 0 153 578000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24139 39885 151124 891000) :init (24139 39885 151049 25000) :init-secs (0 0 51 877000) :use-package-secs (0 0 232 894000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
