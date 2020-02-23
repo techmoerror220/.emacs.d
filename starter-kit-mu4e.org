@@ -573,12 +573,17 @@ I don't know the use of this but I had it, so...
   (add-to-list
    'mu4e-bookmarks
    '("(maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Kenedy Alva\" OR from:kenedy@gmail.com OR from:\"Paz Torrente\" OR from:paztorrente@gmail.com OR from:\"Javier Martín\" OR from:javiermartinr@gmail.com OR from:\"Canal de Isabel II\" OR from:comunicaciones.comerciales@canaldeisabelsegunda.es OR from:\"Jazztel\" OR from:att.cliente.jazztel@jazztel.com)"
-     "Ave María" ?a))
+     "Ave María" ?m))
 
   (add-to-list
    'mu4e-bookmarks
    '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:convalid.empresariales@adm.uned.es OR from:\"Negociado de atención al estudiante\" OR from:estudiantes.polisoci@adm.uned.es OR from:\"CARMEN DIAZ BRAGADO\" OR from:cadiaz@pas.uned.es OR subject:convalidación OR subject:convalidacion OR subject:convalidaciones OR body:convalidación OR body:convalidacion  OR body:convalidaciones OR subject:reconocimiento OR subject:Reconocimiento OR subject:reconocimientos OR subject:Reconocimientos OR body:reconocimiento OR body:Reconocimiento OR body:reconocimientos OR body:Reconocimientos)"
      "Convalidaciones" ?c))
+
+  (add-to-list
+   'mu4e-bookmarks
+   '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:\"Ana María González\" OR from:amgonzalez@edu.uned.es)"
+     "Master FOL" ?e))
 
   ;;(add-to-list
   ;; 'mu4e-bookmarks
@@ -2284,6 +2289,12 @@ Read https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
 
 #+RESULTS:
 | :from | :to | :cc | :bcc | :subject | :flags | :date | :maildir | :mailing-list | :tags | :attachments | :signature | :decryption |
+
+* Sort by date
+
+#+begin_src emacs-lisp :tangle yes
+;; (setq mu4e-headers-sort-field :date)
+#+end_src
 
 * Provide 
 

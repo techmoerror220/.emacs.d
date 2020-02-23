@@ -3955,6 +3955,22 @@ DGM takes this bit out:
 
 until I understand why point is not saved with =(save-excursion)=
 
+
+From "2.2 Adding Transactions": https://www.ledger-cli.org/3.0/doc/ledger-mode.html#index-ledger_002dpost_002damount_002dalignment_002dcolumn
+
+Also read: "1.3.1 Quick Add" (aahhh, that is for adding a transation, not adding up!!)
+
+#+begin_src emacs-lisp :tangle yes
+(add-hook 'ledger-mode-hook
+          (lambda ()
+            (setq-local tab-always-indent 'complete)
+            (setq-local completion-cycle-threshold t)
+            (setq-local ledger-complete-in-steps t)))
+#+end_src
+
+#+RESULTS:
+| (lambda nil (setq-local tab-always-indent 'complete) (setq-local completion-cycle-threshold t) (setq-local ledger-complete-in-steps t)) | ledger-flymake-enable |
+
 * Nice symbol for end of file lines
 
 From https://www.reddit.com/r/emacs/comments/2kdztw/emacs_in_evil_mode_show_tildes_for_blank_lines/
@@ -5510,6 +5526,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Emacs
                     :key "C-<digit>"
                     :description "digit-argument. No need to do C-u <digit>. Could do M-<digit> too.")
+    (cheatsheet-add :group 'Email
+                    :key "O"
+                    :description "mu4e-headers-change-sorting. Change the sorting/threading parameters. Useful to see latest emails. Not to use with threading option, only if you search for a set of messages")
     (cheatsheet-add :group 'Email
                     :key "C-*"
                     :description "mu4e")
