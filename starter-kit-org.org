@@ -988,7 +988,6 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
                                "/home/dgm/Dropbox/gtd/habits.org"
                                "/home/dgm/Dropbox/gtd/tickler.org"
                                "/home/dgm/Dropbox/gtd/calendar.org"
-                               "/home/dgm/Dropbox/gtd/stata-gtd.org"
                                "/home/dgm/Dropbox/gtd/divorcio_gtd.org" ; i could add it with =C-c [= but that action does not survive across sections
                                "/media/dgm/blue/documents/proyectos/mutual-stata/gtd/stata-gtd.org" 
                                "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org"
@@ -997,7 +996,7 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
 #+END_SRC
 
 #+RESULTS:
-| /home/dgm/Dropbox/gtd/inbox.org | /home/dgm/Dropbox/gtd/gtd.org | /home/dgm/Dropbox/gtd/journal.org | /home/dgm/Dropbox/gtd/habits.org | /home/dgm/Dropbox/gtd/tickler.org | /home/dgm/Dropbox/gtd/calendar.org | /home/dgm/Dropbox/gtd/stata-gtd.org | /home/dgm/Dropbox/gtd/divorcio_gtd.org | /media/dgm/blue/documents/proyectos/mutual-stata/gtd/stata-gtd.org | /media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org | /media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org |
+| /home/dgm/Dropbox/gtd/inbox.org | /home/dgm/Dropbox/gtd/gtd.org | /home/dgm/Dropbox/gtd/journal.org | /home/dgm/Dropbox/gtd/habits.org | /home/dgm/Dropbox/gtd/tickler.org | /home/dgm/Dropbox/gtd/calendar.org | /home/dgm/Dropbox/gtd/divorcio_gtd.org | /media/dgm/blue/documents/proyectos/mutual-stata/gtd/stata-gtd.org | /media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org | /media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org |
 
 
 From https://stackoverflow.com/questions/10635989/emacs-org-agenda-list-destroy-my-windows-splits. 
