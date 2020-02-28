@@ -448,6 +448,7 @@
     ("vienres" "viernes" nil :count 1)
     ("vierno" "vieron" nil :count 1)
     ("vlaue" "value" nil :count 1)
+    ("vuestrsa" "vuestras" nil :count 1)
     ("watn" "want" nil :count 1)
     ("wd" "would" nil :count 1)
     ("wdn" "wouldn't" nil :count 1)
