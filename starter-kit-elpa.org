@@ -16,14 +16,14 @@ The following packages will be downloaded and installed.
                                     'org-plus-contrib ;; loaded in init.el
                                     'org-ac
                                     'adaptive-wrap  
-                                    'ag
-                                    'avy
+                                    ;; 'ag
+                                    ;; 'avy
                                     'auto-complete
                                     ;;'ac-emmet
                                     ;;'ac-etags
                                     ;;'ac-ispell
                                     'browse-kill-ring
-                                    'company
+                                    ;; 'company
                                     ;;'company-auctex
                                     ;;'company-math
                                     ;;'company-web
@@ -31,44 +31,44 @@ The following packages will be downloaded and installed.
                                     'company-quickhelp
                                     'css-mode
                                     'csv-mode
-                                    'deft
+                                    ;; 'deft
                                     ;;'emmet-mode
                                     ;;'exec-path-from-shell
                                     'expand-region
-                                    'flycheck
+                                    ;; 'flycheck
                                     'flycheck-tip
                                     ;; 'flx-ido
                                     ;; 'gist
                                     ;; 'hl-line+     ;; disable in emacs 27
                                     'idle-highlight-mode
                                     'inf-ruby
-                                    'latex-pretty-symbols
+                                    ;; 'latex-pretty-symbols
                                     ;; 'mac-key-mode
-                                    'magit
-                                    'markdown-mode
+                                    ;; 'magit
+                                    ;; 'markdown-mode
                                     'maxframe
-                                    'multiple-cursors
-                                    'pandoc-mode
-                                    'polymode
-                                    'poly-R
-                                    'poly-noweb
-                                    'poly-markdown
+                                    ;; 'multiple-cursors ;; use-package used
+                                    ;; 'pandoc-mode ;; installed with use-package
+                                    ;; 'polymode ;; all these poly- stuff is installed now with "use-package"
+                                    ;; 'poly-R
+                                    ;; 'poly-noweb
+                                    ;; 'poly-markdown
                                     'pos-tip
                                     ;; 'powerline
                                     'python
                                     'python-mode
                                     'python-x
-                                    'elpy
+                                    ;; 'elpy
                                     'ob-ipython
                                     'ein  ;; Emacs ipython notebook
-                                    'py-autopep8
+                                    ;; 'py-autopep8
                                     ;; 'ipython
                                     ;;'jedi
                                     ;;'jedi-core
-                                    'live-py-mode
+                                    ;; 'live-py-mode
                                     ;; 'redo+
                                     ;; 'ruby-mode
-                                    'smartparens ;; includes all features of =paredit= so the latter is not needed.
+                                    ;; 'smartparens ;; includes all features of =paredit= so the latter is not needed.
                                     ;; 'smex
                                     'anti-zenburn-theme
                                     ;; 'solarized-theme
@@ -76,80 +76,80 @@ The following packages will be downloaded and installed.
                                     ;; 'color-theme-sanityinc-solarized
                                     ;; 'lenlen-theme
                                     ;; 'color-theme-modern
-                                    'hc-zenburn-theme
-                                    'labburn-theme
-                                    'zenburn-theme
-                                    'material-theme
-                                    'tango-2-theme
-                                    'monokai-theme
-                                    'darkokai-theme
+                                    ;; 'hc-zenburn-theme
+                                    ;; 'labburn-theme
+                                    ;; 'zenburn-theme
+                                    ;; 'material-theme
+                                    ;; 'tango-2-theme
+                                    ;; 'monokai-theme
+                                    ;; n'darkokai-theme
                                     'textmate
                                     ;; 'typopunct
-                                    'visual-regexp
+                                    ;; 'visual-regexp
                                     ;; 'yaml-mode
-                                    'yasnippet
-                                    'zenburn-theme
-                                    'spacemacs-theme
+                                    ;; 'yasnippet
+                                    ;; 'zenburn-theme
+                                    ;; 'spacemacs-theme
                                     'auctex
-                                    'ess
+                                    ;; 'ess
                                     'r-autoyas 
                                     'unicode-fonts                               
-                                    'volatile-highlights
-                                    'undo-tree
-                                    'rebox2
+                                    ;; 'volatile-highlights
+                                    ;; 'undo-tree
+                                    ;; 'rebox2
                                     ;; 'workgroups2
-                                    'duplicate-thing
+                                    ;; 'duplicate-thing
                                     'ibuffer-vc
                                     ;; 'dired+
                                     ;; 'recentf-ext
-                                    'diff-hl
-                                    'clean-aindent-mode
+                                    ;; 'diff-hl
+                                    ;; 'clean-aindent-mode
                                     ;; 'golden-ratio
-                                    'highlight-numbers
-                                    'highlight-symbol
+                                    ;; 'highlight-numbers
+                                    ;; 'highlight-symbol
                                     ;; 'info+
                                     'discover-my-major
-                                    'rainbow-mode
-                                    'nyan-mode
-                                    'helm
+                                    ;; 'rainbow-mode
+                                    ;; 'nyan-mode
+                                    ;; 'helm
                                     'free-keys
                                     'helm-descbinds
                                     ;; 'bookmark+
                                     'spaceline
                                     ;; 'smart-mode-line-powerline-theme                                 
                                     ;; 'telephone-line
-                                    'ace-window
-                                    'ox-twbs
-                                    'ox-pandoc
-                                    'moe-theme
-                                    'which-key
-                                    'eval-in-repl
-                                    'ebib
+                                    ;; 'ace-window
+                                    ;; 'ox-twbs
+                                    ;; 'ox-pandoc
+                                    ;; 'moe-theme
+                                    ;; 'which-key
+                                    ;; 'eval-in-repl
+                                    ;; 'ebib
                                     ;; 'helm-bibtex
                                     'helm-R
-                                    'iedit
+                                    ;; 'iedit
                                     ;; 'geiser
-                                    'helm-gtags
-                                    'darktooth-theme
-                                    'soothe-theme
+                                    ;; 'helm-gtags
+                                    ;;'darktooth-theme
+                                    ;; 'soothe-theme
                                     ;; 'uscolors-theme 
-                                    'kurecolor 
-                                    'gruvbox-theme
-                                    'clues-theme
-                                    'speed-type
+                                    ;; 'kurecolor 
+                                    ;; 'gruvbox-theme
+                                    ;; 'clues-theme
+                                    ;; 'speed-type
                                     'typit
-                                    'htmlize
-                                    'ox-tufte
+                                    ;; 'htmlize
+                                    ;; 'ox-tufte
                                     'ox-gfm
-                                    'ztree
-                                    'helpful
+                                    ;; 'ztree
+                                    ;; 'helpful
                                     ;; 'eyebrowse
-                                    'yasnippet-classic-snippets
+                                    ;; 'yasnippet-classic-snippets
                                     'use-package
-                                    'mu4e-conversation
-                                    'org-ref
-                                    'pulseaudio-control
-                                    'gpastel
+                                    ;; 'mu4e-conversation
+                                    ;; 'org-ref
+                                    ;; 'pulseaudio-control
+                                    ;; 'gpastel
                                     )
         "Libraries that should be installed by default.")
 #+end_src

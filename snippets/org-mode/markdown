@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: markdown
+# key: md
+# --
+#+begin_src markdown
+$0
+#+end_src

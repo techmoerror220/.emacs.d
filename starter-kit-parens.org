@@ -518,6 +518,8 @@ I dunno why some pairs work (//, ==)and some don't (~, *, _)...
                              (?~ . ?~)
                              (?$ . ?$)
                              (?[ . ?])
+                             (?\" . ?\")
+                             (?\` . ?\')
                              ) 
   "Electric pairs for Org-mode.")
 
@@ -543,7 +545,6 @@ https://tex.stackexchange.com/questions/75697/auctex-how-to-cause-math-mode-doll
 
 DGM, 22 jan 20. Trying to get the =[]= pair in latex
 #+begin_src emacs-lisp :tangle yes
-(electric-pair-mode)
 (add-hook 'LaTeX-mode-hook
           '(lambda ()
             (define-key LaTeX-mode-map (kbd "$") 'self-insert-command)
@@ -556,6 +557,7 @@ DGM, 22 jan 20. Trying to get the =[]= pair in latex
 ** Electric Pair for Markdown
 
 - https://stackoverflow.com/questions/27871876/custom-pairs-in-emacs-electric-pair-mode/27871987#27871987
+- No funciona
 
 #+begin_src emacs-lisp :tangle yes
   (defvar markdown-electric-pairs '(

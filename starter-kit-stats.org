@@ -126,13 +126,48 @@ Toggle with =ess-S-underscore-when-last-character-is-a-space=  Not enabled by de
   (setq ess-swv-processor "'knitr")
 #+end_src
 
+** Markdown-mode
+Read https://github.com/jrblevin/markdown-mode (with a book)
+
+Recall =markdown= is an external package to install via =apt=, =rmarkdown= is an R library to install via =install.packages("")= (with a book). 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package markdown-mode
+  :ensure t)
+#+END_SRC
+
 ** Local Polymode Support
+- Read: https://polymode.github.io/ and https://masteringemacs.org/article/polymode-multiple-major-modes-how-to-use-sql-python-in-one-buffer
+
 Polymode is a package that supports multiple modes inside a single buffer. It is aimed particularly at literate programming approaches and supports, e.g., R and markdown in a single =.Rmd= file. So it is very useful with knitr in R.
 
+The settings for python and sql from Mickey Peterson at https://masteringemacs.org/article/polymode-multiple-major-modes-how-to-use-sql-python-in-one-buffer
 #+source: Polymode
 #+begin_src emacs-lisp
-  (use-package poly-R)
-  (use-package poly-markdown)
+  (use-package polymode
+    :ensure t)
+  ;;:mode ("\.py$" . poly-python-sql-mode)
+  ;;:config
+  ;;(setq polymode-prefix-key (kbd "C-c n"))
+  ;;(define-hostmode poly-python-hostmode :mode 'python-mode))
+#+end_src
+
+#+RESULTS: Polymode
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24155 60187 842493 445000) :init (24155 60187 842480 711000) :init-secs (0 0 57312 784000) :use-package-secs (0 0 57373 384000) :config (24155 60187 842346 460000) :config-secs (0 0 3 254000)))
+
+
+#+source: Poly-R and Markdown
+#+begin_src emacs-lisp
+  (use-package poly-R
+    :ensure t
+    :pin melpa-stable)
+  (use-package poly-noweb
+    :ensure t
+    :pin melpa-stable)
+  (use-package poly-markdown 
+    :ensure t
+    :pin melpa-stable)
+
   ;;; polymode + markdown
   (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
 
@@ -140,6 +175,10 @@ Polymode is a package that supports multiple modes inside a single buffer. It is
   (add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
   (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
   (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
+  (add-to-list 'auto-mode-alist '("\\.rmd\\'" . markdown-mode))
+  (add-to-list 'auto-mode-alist '("\\.Rcpp$" . poly-r+c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.cppR$" . poly-c++r-mode))
+  (add-hook 'markdown-mode-hook 'turn-on-outline-minor-mode)
 #+end_src
 
 ** Make shift-enter to a lot in ESS.

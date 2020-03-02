@@ -3539,15 +3539,6 @@ Tweaking from Ambrevar's dot file. However, his original combination of colors w
 
 #+RESULTS:
 
-**** Markdown-mode
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package markdown-mode
-  :ensure t)
-#+END_SRC
-
-#+RESULTS:
-
 * Tuhdo's customization
 ** Compilation
 #+begin_src emacs-lisp :tangle yes
@@ -4719,6 +4710,15 @@ For evaluating PECs."
 ** Tufte book and handout
 - For a handout, you simply change ="#+LATEX_CLASS: tufte-book\n"= from =book= to =handout=
 
+DGM on 3 march 2020: 
+
+#+BEGIN_EXAMPLE
+"#+LATEX_HEADER: \\usepackage{etex}\n"
+"#+LATEX_HEADER: \\reserveinserts{36}\n"
+#+END_EXAMPLE
+
+deleted, as they produce an error when exporting to pdf (they are obsolote packages and stuff anyhow: https://tex.stackexchange.com/questions/247428/what-is-the-equivalent-of-reserveinserts-in-latex-2015)
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (define-skeleton tufte-book
   "Inserts a Latex Tufte book skeleton into current buffer.
@@ -4786,10 +4786,8 @@ This only makes sense for empty buffers."
 "#+MACRO: tl Tufte-LaTeX\n"
 "#+MACRO: lt LaTeX\n"
 "#+MACRO: xt XeTeX\n"
-"#+LATEX_HEADER: \\usepackage{etex}\n"
 "#+LATEX_HEADER: \\usepackage[utf8]{inputenc}\n"
 "#+LATEX_HEADER: \\usepackage[T1]{fontenc}\n"
-"#+LATEX_HEADER: \\reserveinserts{36}\n"
 "#+LATEX_HEADER: \\usepackage[maxfloats=48]{morefloats}\n"
 "#+LATEX_HEADER: \\usepackage[authordate, backend=biber, babel=hyphen, bibencoding=inputenc, strict, isbn=false, uniquename=false]{biblatex-chicago}\n"
 "#+LATEX_HEADER: \\addbibresource{/media/dgm/blue/documents/bibs/socbib.bib}\n"
@@ -5181,7 +5179,7 @@ See https://github.com/darksmile/cheatsheet/blob/master/cheatsheet.el
 Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package cheatsheet
+  (use-package cheatsheet
     :ensure t
     :config
     (cheatsheet-add :group 'Bindings
@@ -5359,11 +5357,11 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-$"
                     :description "palimpsest-move-region-to-trash")
     (cheatsheet-add :group 'Editing
-                    :key "C-x C-o"
-                    :description "delete-blank-lines")
-    (cheatsheet-add :group 'Editing
                     :key "C-o"
                     :description "org-open-line. Insert a new row in tables, call open-line elsewhere.")
+    (cheatsheet-add :group 'Editing
+                    :key "C-x C-o"
+                    :description "delete-blank-lines. The opposite of org-open-line.")
     (cheatsheet-add :group 'Editing
                     :key "M-;"
                     :description "comment-dwim and org-comment-dwim.")
@@ -5943,6 +5941,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Mark
                     :key "C-c @"
                     :description "org-mark-subtree. Mark the subtree at point. Repeat to mark subsequent subtrees of the same level")
+    (cheatsheet-add :group 'Markdown
+                    :key "C-c C-s C"
+                    :description "markdown-insert-gfm-code-block. Insert GFM code block for language LANG. Can also use the rb snippet")
+    (cheatsheet-add :group 'Markdown
+                    :key "C-c C-s c"
+                    :description "markdown-insert-code. Insert markup to make a region or word an inline code fragment. Can also use the ` snippet")
     (cheatsheet-add :group 'Minibuffer
                     :key "C-M-e"
                     :description "Miniedit: enter minibuffer edit")
@@ -6081,7 +6085,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Org-Agenda
                     :key "d"
                     :description "org-agenda-day-view.")
-   (cheatsheet-add :group 'Org-agenda
+    (cheatsheet-add :group 'Org-agenda
                     :key "."
                     :description "org-agenda-goto-today")
     (cheatsheet-add :group 'Org-agenda
@@ -6132,6 +6136,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Org-agenda
                     :key "\\"
                     :description "org-agenda-filter-by-tag. Filter agenda entries by tab. To clear the filter, press \\ twice")
+    (cheatsheet-add :group 'Org-agenda
+                    :key "<"
+                    :description "org-agenda-filter-by-category. Filter lines in the agenda buffer that have a specific category.If cursor with a given category, show only entries of that category.With a C-u prefix argument, exclude the lines of that category.")
+    (cheatsheet-add :group 'Org-agenda
+                    :key ">"
+                    :description "org-agenda-date-prompt. Change the date of this item.  Date is prompted for, with default today.")
     (cheatsheet-add :group 'Org-agenda
                     :key "J"
                     :description "org-agenda-clock-goto. Go to the currently clocked-in task in the agenda buffer")
@@ -6336,6 +6346,15 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Password-Ivy
                     :key "RET"
                     :description "Copy password in kill ring")
+    (cheatsheet-add :group 'Polymode
+                    :key "M-n"
+                    :description "Polymode prefix")
+    (cheatsheet-add :group 'Polymode
+                    :key "M-n E"
+                    :description "polymode-set-exporter. Normally I choose =markdown-ess=")
+    (cheatsheet-add :group 'Polymode
+                    :key "M-n e"
+                    :description "polymode-export. Export current file. When FROM or TO are missing they are determined automatically from the current exporters specifications and files extension.")
     (cheatsheet-add :group 'Prefixes
                     :key "C-x r"
                     :description "Registers and bookmarks")
@@ -6503,7 +6522,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24139 39885 151124 891000) :init (24139 39885 151049 25000) :init-secs (0 0 51 877000) :use-package-secs (0 0 232 894000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24156 60561 145589 446000) :init (24156 60561 145530 757000) :init-secs (0 0 24 468000) :use-package-secs (0 0 153 185000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
