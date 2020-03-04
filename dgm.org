@@ -6186,7 +6186,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "org-agenda-add-note. Add a time-stamped note to the entry at point")
     (cheatsheet-add :group 'Org-agenda
                     :key "C"
-                    :description "Convert to other calendars")
+                    :description "org-agenda-convert-date. Show date in/Convert date to other calendars. Place cursor on a given date.")
     (cheatsheet-add :group 'Org-agenda
                     :key "M-x my/org-show-active-projects"
                     :description "Show my current projects. From Sacha")
@@ -6328,6 +6328,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Magit
                     :key "f a X h"
                     :description "Force pull from remote: f a, then move point to remote head, X h")
+    (cheatsheet-add :group 'Magit
+                    :key "v"
+                    :description "magit-reverse. Reverse the change at point, in a hunk of a commit, for example, in the working tree. Prefix causes the change to be applied to the index as well")
     (cheatsheet-add :group 'Packages
                     :key "M-x try"
                     :description "Try a package before installing for good")
