@@ -212,6 +212,7 @@
     ("ot" "to" nil :count 2)
     ("particularmnete" "particularmente" nil :count 1)
     ("patestad" "potestad" nil :count 1)
+    ("pendign" "pending" nil :count 1)
     ("perfectametne" "perfectamente" nil :count 1)
     ("periot" "perito" nil :count 1)
     ("pilsa" "pilas" nil :count 1)
