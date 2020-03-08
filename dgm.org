@@ -5572,6 +5572,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'ESS
                     :key "C-c C-r"
                     :description "ess-eval-region. Send the region from START to END to the inferior ESS process")
+   (cheatsheet-add :group 'ESS
+                    :key "C-RET"
+                    :description "ess-eval-region-or-line-visibly-and-step. Evaluate region if active, otherwise the current line and step.")
     (cheatsheet-add :group 'Expressions-Eval
                     :key "C-x C-e"
                     :description "sanityinc/eval-last-sexp-or-region")

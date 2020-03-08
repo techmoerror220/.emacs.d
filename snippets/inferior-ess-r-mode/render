@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: render
+# key: rd
+# --
+rmarkdown::render('$1.Rmd')$0

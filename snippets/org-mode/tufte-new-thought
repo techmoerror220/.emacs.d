@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: tufte-new-thought
+# key: nt
+# --
+[[latex:newthought][$1]] $0
