@@ -51,6 +51,12 @@
 
 (define-abbrev-table 'SAS-mode-abbrev-table '())
 
+(define-abbrev-table 'TeX-error-overview-mode-abbrev-table '())
+
+(define-abbrev-table 'TeX-output-mode-abbrev-table '())
+
+(define-abbrev-table 'TeX-special-mode-abbrev-table '())
+
 (define-abbrev-table 'ag-mode-abbrev-table '())
 
 (define-abbrev-table 'awk-mode-abbrev-table
@@ -96,6 +102,8 @@
 (define-abbrev-table 'comint-mode-abbrev-table '())
 
 (define-abbrev-table 'completion-list-mode-abbrev-table '())
+
+(define-abbrev-table 'debugger-mode-abbrev-table '())
 
 (define-abbrev-table 'diary-fancy-display-mode-abbrev-table '())
 
@@ -285,7 +293,7 @@
     ("enteindo" "entiendo" nil :count 1)
     ("entergan" "entregan" nil :count 1)
     ("erad" "read" nil :count 1)
-    ("escirbir" "escribir" nil :count 1)
+    ("escirbir" "escribir" nil :count 2)
     ("esle" "else" nil :count 1)
     ("estudiso" "estudios" nil :count 1)
     ("etnic" "ethnic" nil :count 4)
@@ -405,7 +413,7 @@
     ("preugntas" "preguntas" nil :count 2)
     ("preugntna" "preguntan" nil :count 1)
     ("prhase" "phrase" nil :count 1)
-    ("pro" "por" nil :count 13)
+    ("pro" "por" nil :count 14)
     ("prob" "probability" nil :count 7)
     ("probablmente" "probablemente" nil :count 1)
     ("proque" "porque" nil :count 3)
@@ -476,10 +484,12 @@
     ("theri" "their" nil :count 1)
     ("thier" "their" nil :count 1)
     ("thsi" "this" nil :count 2)
+    ("tieen" "tiene" nil :count 1)
     ("tiem" "time" nil :count 1)
     ("tihs" "this" nil :count 1)
     ("tm" "tomorrow" nil :count 4)
     ("tood" "TODO" nil :count 2)
+    ("trabajso" "trabajos" nil :count 1)
     ("transactiosn" "transactions" nil :count 1)
     ("trasnparente" "transparente" nil :count 1)
     ("trugh" "truth" nil :count 1)
@@ -493,7 +503,7 @@
     ("uqien" "quien" nil :count 1)
     ("uqieres" "quieres" nil :count 1)
     ("urgano" "urbano" nil :count 1)
-    ("usal" "Un saludo, Daniel " nil :count 7)
+    ("usal" "Un saludo, Daniel " nil :count 8)
     ("useing" "using" nil :count 1)
     ("variabels" "variables" nil :count 1)
     ("vecotr" "vector" nil :count 1)
@@ -532,6 +542,8 @@
 (define-abbrev-table 'gnus-sticky-article-mode-abbrev-table '())
 
 (define-abbrev-table 'grep-mode-abbrev-table '())
+
+(define-abbrev-table 'helm-ag-mode-abbrev-table '())
 
 (define-abbrev-table 'helm-grep-mode-abbrev-table '())
 
@@ -639,11 +651,21 @@
 
 (define-abbrev-table 'pandoc-@-mode-abbrev-table '())
 
+(define-abbrev-table 'pass-mode-abbrev-table '())
+
+(define-abbrev-table 'pass-view-mode-abbrev-table '())
+
+(define-abbrev-table 'pdf-annot-list-mode-abbrev-table '())
+
 (define-abbrev-table 'pdf-occur-buffer-mode-abbrev-table '())
+
+(define-abbrev-table 'pdf-outline-buffer-mode-abbrev-table '())
 
 (define-abbrev-table 'pike-mode-abbrev-table
   '(
    ))
+
+(define-abbrev-table 'plain-tex-mode-abbrev-table '())
 
 (define-abbrev-table 'pomidor-mode-abbrev-table '())
 
@@ -663,6 +685,8 @@
 
 (define-abbrev-table 'shell-mode-abbrev-table '())
 
+(define-abbrev-table 'slitex-mode-abbrev-table '())
+
 (define-abbrev-table 'smime-mode-abbrev-table '())
 
 (define-abbrev-table 'snippet-mode-abbrev-table '())
@@ -680,6 +704,10 @@
 (define-abbrev-table 'tags-table-mode-abbrev-table '())
 
 (define-abbrev-table 'term-mode-abbrev-table '())
+
+(define-abbrev-table 'tex-mode-abbrev-table '())
+
+(define-abbrev-table 'tex-shell-abbrev-table '())
 
 (define-abbrev-table 'text-mode-abbrev-table '())
 
