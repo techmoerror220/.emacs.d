@@ -78,9 +78,9 @@
       (bmkp-full-record #1#))
     (annotation)
     (tags)
+<<<<<<< Updated upstream
     (filename . "~/Dropbox/gtd/someday.org")
     (buffer-name . "someday.org")
-<<<<<<< HEAD
     (front-context-string . "*** TODO Impleme")
     (rear-context-string . "at 11:49] from \n")
     (front-context-region-string)
@@ -90,22 +90,24 @@
     (created . #2#)
     (position . 21555))
 =======
-    (front-context-string . "*** TODO Larga v")
-    (rear-context-string . " Febrero 2020]]\n")
+    (filename . "~/Dropbox/gtd/divorcio_gtd.org")
+    (buffer-name . "divorcio_gtd.org")
+    (front-context-string . "*** TODO Waiting")
+    (rear-context-string . "roydon Court]]\n\n")
     (front-context-region-string)
     (rear-context-region-string)
     (visits . 0)
-    (time . #2=(24159 45789 247830 719000))
+    (time . #2=(24144 4652 438724 305000))
     (created . #2#)
-    (position . 41449))
->>>>>>> a0d18202f24ca8153b7a9ca4129fb52991ce2768
+    (position . 297336))
+>>>>>>> Stashed changes
 #1=(#("org-refile-last-stored" 0 22
       (bmkp-full-record #1#))
     (annotation)
     (tags)
     (filename . "~/Dropbox/gtd/someday.org")
     (buffer-name . "someday.org")
-<<<<<<< HEAD
+<<<<<<< Updated upstream
     (front-context-string . "*** TODO Impleme")
     (rear-context-string . "at 11:49] from \n")
     (front-context-region-string)
@@ -115,15 +117,15 @@
     (created . #2#)
     (position . 21555))
 =======
-    (front-context-string . "*** TODO Larga v")
-    (rear-context-string . " Febrero 2020]]\n")
+    (front-context-string . "*** TODO El ofic")
+    (rear-context-string . "n 08:56]\n:END:\n\n")
     (front-context-region-string)
     (rear-context-region-string)
     (visits . 0)
-    (time . #2=(24159 45789 247385 341000))
+    (time . #2=(24144 5056 790576 150000))
     (created . #2#)
-    (position . 41449))
->>>>>>> a0d18202f24ca8153b7a9ca4129fb52991ce2768
+    (position . 12019))
+>>>>>>> Stashed changes
 #1=(#("ledger" 0 6
       (bmkp-full-record #1#))
     (buffer-name . "ledger/")
@@ -196,6 +198,7 @@
 =======
     (filename . "~/Dropbox/gtd/inbox.org")
     (buffer-name . "inbox.org")
+<<<<<<< Updated upstream
     (front-context-string . "** TODO imprimir")
     (rear-context-string . "se][Tidyverse]]\n")
     (front-context-region-string)
@@ -205,6 +208,16 @@
     (created . #2#)
     (position . 313855))
 >>>>>>> a0d18202f24ca8153b7a9ca4129fb52991ce2768
+=======
+    (front-context-string . "** TODO Waiting ")
+    (rear-context-string . "m][No subject]]\n")
+    (front-context-region-string)
+    (rear-context-region-string)
+    (visits . 0)
+    (time . #2=(24144 4636 937674 337000))
+    (created . #2#)
+    (position . 324860))
+>>>>>>> Stashed changes
 #1=(#("readings.org" 0 12
       (bmkp-full-record #1#))
     (filename . "/media/dgm/blue/documents/elibrary/org/references/readings.org")
