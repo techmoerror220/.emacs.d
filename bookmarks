@@ -80,6 +80,7 @@
     (tags)
     (filename . "~/Dropbox/gtd/someday.org")
     (buffer-name . "someday.org")
+<<<<<<< HEAD
     (front-context-string . "*** TODO Impleme")
     (rear-context-string . "at 11:49] from \n")
     (front-context-region-string)
@@ -88,12 +89,23 @@
     (time . #2=(24163 54278 643970 88000))
     (created . #2#)
     (position . 21555))
+=======
+    (front-context-string . "*** TODO Larga v")
+    (rear-context-string . " Febrero 2020]]\n")
+    (front-context-region-string)
+    (rear-context-region-string)
+    (visits . 0)
+    (time . #2=(24159 45789 247830 719000))
+    (created . #2#)
+    (position . 41449))
+>>>>>>> a0d18202f24ca8153b7a9ca4129fb52991ce2768
 #1=(#("org-refile-last-stored" 0 22
       (bmkp-full-record #1#))
     (annotation)
     (tags)
     (filename . "~/Dropbox/gtd/someday.org")
     (buffer-name . "someday.org")
+<<<<<<< HEAD
     (front-context-string . "*** TODO Impleme")
     (rear-context-string . "at 11:49] from \n")
     (front-context-region-string)
@@ -102,6 +114,16 @@
     (time . #2=(24163 54278 642571 232000))
     (created . #2#)
     (position . 21555))
+=======
+    (front-context-string . "*** TODO Larga v")
+    (rear-context-string . " Febrero 2020]]\n")
+    (front-context-region-string)
+    (rear-context-region-string)
+    (visits . 0)
+    (time . #2=(24159 45789 247385 341000))
+    (created . #2#)
+    (position . 41449))
+>>>>>>> a0d18202f24ca8153b7a9ca4129fb52991ce2768
 #1=(#("ledger" 0 6
       (bmkp-full-record #1#))
     (buffer-name . "ledger/")
@@ -160,6 +182,7 @@
       (bmkp-full-record #1#))
     (annotation)
     (tags)
+<<<<<<< HEAD
     (filename . "~/Dropbox/gtd/tickler.org")
     (buffer-name . "tickler.org")
     (front-context-string . "** Cancelar subs")
@@ -170,6 +193,18 @@
     (time . #2=(24164 4617 352634 292000))
     (created . #2#)
     (position . 264322))
+=======
+    (filename . "~/Dropbox/gtd/inbox.org")
+    (buffer-name . "inbox.org")
+    (front-context-string . "** TODO imprimir")
+    (rear-context-string . "se][Tidyverse]]\n")
+    (front-context-region-string)
+    (rear-context-region-string)
+    (visits . 0)
+    (time . #2=(24159 58906 80462 864000))
+    (created . #2#)
+    (position . 313855))
+>>>>>>> a0d18202f24ca8153b7a9ca4129fb52991ce2768
 #1=(#("readings.org" 0 12
       (bmkp-full-record #1#))
     (filename . "/media/dgm/blue/documents/elibrary/org/references/readings.org")

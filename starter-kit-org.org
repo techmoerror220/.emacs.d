@@ -1000,11 +1000,10 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
                                "/home/dgm/Dropbox/gtd/habits.org"
                                "/home/dgm/Dropbox/gtd/tickler.org"
                                "/home/dgm/Dropbox/gtd/calendar.org"
-                               "/home/dgm/Dropbox/gtd/divorcio_gtd.org" ; i could add it with =C-c [= but that action does not survive across sections
+                               "/home/dgm/Dropbox/gtd/divorcio_gtd.org" 
                                "/media/dgm/blue/documents/proyectos/mutual-stata/gtd/stata-gtd.org" 
                                "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org"
-                               "/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org" 
-                               ))
+                               "/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org"))
 #+END_SRC
 
 #+RESULTS:

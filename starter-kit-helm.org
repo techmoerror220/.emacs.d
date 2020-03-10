@@ -863,6 +863,7 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
                                          "/media/dgm/blue/documents/reviews"
                                          "/media/dgm/blue/documents/elibrary"
                                          "/media/dgm/blue/documents/proyectos"
+                                         "/media/dgm/blue/documents/UNED/teaching/mis-cursos"
                                          ))
 
   (projectile-add-known-project "~/")
@@ -881,6 +882,7 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
   (projectile-add-known-project "/media/dgm/blue/documents/reviews/")
   (projectile-add-known-project "/media/dgm/blue/documents/elibrary/")
   (projectile-add-known-project "/media/dgm/blue/documents/proyectos/")
+  (projectile-add-known-project "/media/dgm/blue/documents/UNED/teaching/mis-cursos/")
     
   (when (require 'magit nil t)
     (mapc #'projectile-add-known-project
