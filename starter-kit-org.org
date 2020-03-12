@@ -1001,13 +1001,11 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
                                "/home/dgm/Dropbox/gtd/tickler.org"
                                "/home/dgm/Dropbox/gtd/calendar.org"
                                "/home/dgm/Dropbox/gtd/divorcio_gtd.org" 
-                               "/media/dgm/blue/documents/proyectos/mutual-stata/gtd/stata-gtd.org" 
+                               "/media/dgm/blue/documents/proyectos/mutual-stata/gtd/mutual-gtd.org" 
                                "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org"
                                "/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org"))
 #+END_SRC
 
-#+RESULTS:
-| /home/dgm/Dropbox/gtd/inbox.org | /home/dgm/Dropbox/gtd/gtd.org | /home/dgm/Dropbox/gtd/journal.org | /home/dgm/Dropbox/gtd/habits.org | /home/dgm/Dropbox/gtd/tickler.org | /home/dgm/Dropbox/gtd/calendar.org | /home/dgm/Dropbox/gtd/divorcio_gtd.org | /media/dgm/blue/documents/proyectos/mutual-stata/gtd/stata-gtd.org | /media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org | /media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org |
 
 
 From https://stackoverflow.com/questions/10635989/emacs-org-agenda-list-destroy-my-windows-splits. 
@@ -1424,10 +1422,10 @@ This I don't really use but could be useful in future:
                         (org-agenda-span 7)
                         (org-agenda-start-on-weekday nil)
                         ))
-            (tags "project"
-                  ((org-tags-match-list-sublevels nil)
-                   (org-agenda-overriding-header "                                          LIST OF PROJECTS                                          "))
-                  ) ;; TODO include condition: when TODO state changed from PROJECT to DONE, do not list here
+;;            (tags "project"
+;;                  ((org-tags-match-list-sublevels nil)
+;;                   (org-agenda-overriding-header "                                          LIST OF PROJECTS                                          "))
+;;                  ) ;; TODO include condition: when TODO state changed from PROJECT to DONE, do not list here
             (tags-todo "+project+CATEGORY=\"uned\""
                        ((org-agenda-overriding-header "                                                UNED                                                ")
                         (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
@@ -1744,12 +1742,12 @@ When I changed this to =("/home/dgm/Dropbox/gtd/tickler.org" :maxlevel . 2)= I g
                              ("/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" :level . 2)
                              ("/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org" :level . 2)
                              ("/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" :level . 2)
+                             ("/media/dgm/blue/documents/proyectos/mutual-stata/gtd/mutual-gtd.org" :maxlevel . 2)
                              ("/home/dgm/Dropbox/gtd/divorcio_gtd.org" :level . 2)
                              ("/home/dgm/Dropbox/gtd/someday.org" :maxlevel . 2)                    
                              ("/home/dgm/Dropbox/gtd/inbox.org" :level . 2)
                              ("/home/dgm/Dropbox/gtd/notes.org" :maxlevel . 2)
                              ("/home/dgm/Dropbox/gtd/habits.org" :maxlevel . 2)
-                             ("/home/dgm/Dropbox/gtd/stata-gtd.org" :maxlevel . 2)
                              ("/home/dgm/Dropbox/gtd/tickler.org" :maxlevel . 2)))
 #+END_SRC
 
@@ -2422,20 +2420,23 @@ What's really useful about habits is that they are displayed along with a consis
 
 I like using =org-habits= to track consistency. My task names tend to be a bit long, though, so I've configured the graph column to show a little bit more to the right.
 
+dgm 11 march 20: changed the =show= lines from `t' to nil (and now I don't have it by default)
+
 #+begin_src emacs-lisp :tangle yes
   ;;(setq org-habit-show-habits-only-for-today nil)
   ;; (require 'org-habit) ;; yiufung includes this line
 
   (setq org-habit-preceding-days 30
         org-habit-following-days 7
-        org-habit-graph-column 70
-        org-habit-show-habits-only-for-today t
-        org-habit-show-all-today t)
-  ;; (setq org-habit-show-done-always-green t)
+        org-habit-graph-column 70)
+  (setq org-habit-show-habits nil) 
+  (setq org-habit-show-habits-only-for-today t) ;; so that when I call it, I get it only for today
+  (setq org-habit-show-all-today nil)            
 #+end_src
 
 #+RESULTS:
-: t
+  
+  ;; (setq org-habit-show-done-always-green t)
 
 If you want to use habits, be sure to schedule your tasks and add a STYLE property with the value of =habit= to the tasks you want displayed.
 
@@ -2555,8 +2556,10 @@ decide what I feel like doing the most.
 #+begin_src emacs-lisp :tangle yes
   ;; (setq org-enforce-todo-dependencies t)
   (setq org-track-ordered-property-with-tag t)
-  (setq org-agenda-dim-blocked-tasks t)
+  (setq org-agenda-dim-blocked-tasks nil) ; t originally
 #+end_src
+
+#+RESULTS:
 
 *** COMMENT Structure templates
 
@@ -5332,6 +5335,55 @@ These days I set many of =org-log-*= to note to keep verbose log of task progres
 #+RESULTS:
 : org-time-stamp
 
+
+* Settings by Luka Lazarek
+
+https://llazarek.com/2018/07/improving-the-agenda.html
+
+#+begin_src emacs-lisp :tangle yes
+(defun ll/org/agenda/color-headers-with (tag col)
+  "Color agenda lines matching TAG with color COL."
+  (interactive)
+  (goto-char (point-min))
+  (while (re-search-forward tag nil t)
+    (unless (find-in-line "\\[#[A-Z]\\]")
+      (let ((todo-end (or (ll/org/agenda/find-todo-word-end)
+                          (point-at-bol)))
+            (tags-beginning (or (find-in-line " :" t)
+                                (point-at-eol))))
+        (add-text-properties todo-end
+                             tags-beginning
+                             `(face (:foreground ,col)))))))
+
+;; Helper definitions
+(setq ll/org/agenda-todo-words
+      '("PROJECT"))
+(defun find-in-line (PROJECT &optional beginning count)
+  "Find the position of the start of PROJECT in the current line.
+  If BEGINNING is non-nil, find the beginning of PROJECT in the current
+  line. If COUNT is non-nil, find the COUNT'th occurrence from the left."
+  (save-excursion
+    (beginning-of-line)
+    (let ((found (re-search-forward PROJECT (point-at-eol) t count)))
+      (if beginning
+          (match-beginning 0)
+        found))))
+(defun ll/org/agenda/find-todo-word-end ()
+  (reduce (lambda (a b) (or a b))
+          (mapcar #'find-in-line ll/org/agenda-todo-words)))
+
+
+(defun ll/org/colorize-headings ()
+  ;; Color all headings with :pers: #F5f5f5 #Dcdcdc #D3d3d3 #A9a9a9 #696969 #586e75  #657b83 #839496 #93a1a1 #268bd2 (tan originalmente;  #A9a9a9 alternativa)
+  (ll/org/agenda/color-headers-with "PROJECT" "#268bd2"))
+  ;; and :work: blue
+  ;; (ll/org/agenda/color-headers-with ":work:" "blue"))
+(add-hook 'org-agenda-finalize-hook #'ll/org/colorize-headings)
+
+#+end_src
+
+#+RESULTS:
+| ll/org/colorize-headings |
 
 * Provide
 

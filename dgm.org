@@ -5333,6 +5333,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c d"
                     :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
     (cheatsheet-add :group 'Editing
+                    :key "C-x C-+ OR C-x C-- OR C-x C-0"
+                    :description "text-scale-adjust. Adjust the height of the default face. + increases, - descreases, 0 resets")
+    (cheatsheet-add :group 'Editing
                     :key "C-o"
                     :description "open-line. Insert a newline and leave point before it.")
     (cheatsheet-add :group 'Editing
@@ -5572,7 +5575,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'ESS
                     :key "C-c C-r"
                     :description "ess-eval-region. Send the region from START to END to the inferior ESS process")
-   (cheatsheet-add :group 'ESS
+    (cheatsheet-add :group 'ESS
                     :key "C-RET"
                     :description "ess-eval-region-or-line-visibly-and-step. Evaluate region if active, otherwise the current line and step.")
     (cheatsheet-add :group 'Expressions-Eval
@@ -6077,6 +6080,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "M-x org-repair-property-drawers"
                     :description "Fix properties drawers in current buffer. To use when habits or schedules don't show rightly")
     (cheatsheet-add :group 'Org-agenda
+                    :key "E"
+                    :description "org-agenda-entry-text-mode. Toggle entry text mode in an agenda buffer. It shows context in original entry")
+    (cheatsheet-add :group 'Org-agenda
                     :key "j"
                     :description "org-agenda-goto-date. Jump to DATE in agenda")
     (cheatsheet-add :group 'Org-agenda
@@ -6528,7 +6534,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24156 60561 145589 446000) :init (24156 60561 145530 757000) :init-secs (0 0 24 468000) :use-package-secs (0 0 153 185000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24169 24624 708811 310000) :init (24169 24624 708755 787000) :init-secs (0 0 23 852000) :use-package-secs (0 0 152 673000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
