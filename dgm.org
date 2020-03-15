@@ -2875,7 +2875,7 @@ Emacs treats camelCase strings as a single word by default, this changes said be
 ****** Beacon
 While changing buffers or workspaces, the first thing you do is look for your cursor. Unless you know its position, you cannot move it efficiently. Every time you change buffers, the current position of your cursor will be briefly highlighted now.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package beacon
   :ensure t
   :config
@@ -2883,7 +2883,7 @@ While changing buffers or workspaces, the first thing you do is look for your cu
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24172 39197 413514 497000) :init (24172 39197 413503 317000) :config (24172 39197 413331 146000) :config-secs (0 0 405 306000) :init-secs (0 0 7462 198000) :use-package-secs (0 0 7625 960000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24174 25303 116491 741000) :init (24174 25303 116448 801000) :config (24174 25303 115167 252000) :config-secs (0 0 2126 491000) :init-secs (0 0 4012 662000) :use-package-secs (0 0 4173 185000)))
 
 ****** Rainbow delimiters
 Colors parentheses and other delimiters depending on their depth, useful for any language using them, especially lisp.
