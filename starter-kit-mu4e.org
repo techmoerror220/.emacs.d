@@ -685,34 +685,42 @@ Add field =:BIRTHDAY: %^{yyyy-mm-dd= only add when i want to. Otherwise, if date
                                  "* %? \n Added on: %U")
                                 ("l" "Life-related Idea" entry
                                  (file+headline "~/Dropbox/gtd/notes.org" "Life-related Ideas")
-                                 "* %?\nCaptured on %U from %a\n")
+                                 "* %?\nCaptured on %U from %a\n"
+                                  :prepend t)
                                 ("n" "Note" entry
                                  (file+headline "~/Dropbox/gtd/notes.org" "Notes")
-                                 "* %?\nCaptured on %U from %a\n")
+                                 "* %?\nCaptured on %U from %a\n"
+                                  :prepend t)
                                 ("p" "Project-related Idea" entry
                                  (file+headline "~/Dropbox/gtd/notes.org" "Project-related Ideas")
-                                 "* %?\nCaptured on %U from %a\n")
+                                 "* %?\nCaptured on %U from %a\n"
+                                  :prepend t)
                                 ("r" "Respond later" entry
                                  (file+headline "~/Dropbox/gtd/inbox.org" "Email")
                                  "* TODO Respond to %a, email by %:from \nEntry added on: %U \n"
                                  :empty-lines 0
-                                 :immediate-finish t)
+                                 :immediate-finish t
+                                 :prepend t)
                                 ("t" "Todo [inbox]" entry
                                  (file+headline "/home/dgm/Dropbox/gtd/inbox.org" "Tasks")
-                                 "* TODO %i%? \nEntry added on: %U from %a\n")
+                                 "* TODO %i%? \nEntry added on: %U from %a\n"
+                                  :prepend t)
                                 ("T" "Tickler" entry
                                  (file+headline "/home/dgm/Dropbox/gtd/tickler.org" "Tickler")
-                                 "* %i%? \nEntry added on: %U from %a\n")
+                                 "* %i%? \nEntry added on: %U from %a\n"
+                                  :prepend t)
                                 ("u" "URLs to remember" entry
                                  (file+headline  "/home/dgm/Dropbox/gtd/URLs.org" "URLs")
                                  ,(concat "* TODO Read this URL: '%:description'\nURL: %l\nDate:%U\n\n")
                                  :empty-lines 0
-                                 :immediate-finish t)
+                                 :immediate-finish t
+                                 :prepend t)
                                 ("w" "Capture web snippet" entry
                                  (file+headline "~/Dropbox/gtd/notes.org" "Webs")
                                  ,(concat "* Web: '%:description'\n\nURL: %l\nTime:%U\n\nContents:\n\n %i\n")
                                  :empty-lines 1
-                                 :immediate-finish t)
+                                 :immediate-finish t
+                                 :prepend t)
                                 ;;("w"
                                 ;;"Capture web snippet"
                                 ;;entry
@@ -726,6 +734,8 @@ Add field =:BIRTHDAY: %^{yyyy-mm-dd= only add when i want to. Otherwise, if date
 
 #+RESULTS:
 | a | Article | entry | (file+headline /home/dgm/Dropbox/gtd/bibliography.org Bibliography) | * %a %^g |
+
+
 
 
 

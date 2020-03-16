@@ -2029,7 +2029,7 @@ able to clock in on them.
 
 JW [[file:/media/dgm/blue/documents/programming/emacs/CoolEmacsGuys/johnWigley/org-mode-daily-planner.txt::Setting org-reverse-note-order to true means that notes are stored in descending date order – in other words, the most recent note is always at the top. This makes it easier to see your notes for the past week: by simply opening up your notes file.][says]]: Setting =org-reverse-note-order= to true means that notes are stored in descending date order – in other words, the most recent note is always at the top. This makes it easier to see your notes for the past week: by simply opening up your notes file.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
   (setq org-reverse-note-order t)
   ;; (setq org-refile-use-outline-path nil) ;; set to t above
   ;; (setq org-refile-allow-creating-parent-nodes 'confirm)
@@ -2037,6 +2037,9 @@ JW [[file:/media/dgm/blue/documents/programming/emacs/CoolEmacsGuys/johnWigley/o
   ;; (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3)))) ;; check if this is more efficient than my current code
   ;; (setq org-blank-before-new-entry nil)
 #+end_src
+
+#+RESULTS:
+: t
 
 *** Estimating WPM
 :PROPERTIES:
@@ -3733,7 +3736,7 @@ after the content of the current item.  This lets you hit =C-S-RET= in
 the middle of an entry and the new heading is added after the body of
 the current entry but still allow you to split an entry in the middle
 with =M-S-RET=.
-*** COMMENT Notes at the top
+*** Notes at the top
 :PROPERTIES:
 :CUSTOM_ID: NotesAtTop
 :END:
@@ -3745,9 +3748,10 @@ waiting).  These notes are saved at the top of the task so unfolding
 the task shows the note first.
 
 DGM note: I've changed this to =t= following JW's [[file:/media/dgm/blue/documents/programming/emacs/CoolEmacsGuys/johnWigley/org-mode-daily-planner.txt::Setting org-reverse-note-order to true means that notes are stored in descending date order – in other words, the most recent note is always at the top. This makes it easier to see your notes for the past week: by simply opening up your notes file.][advice]]
+(note: this is set somewhere else in this file)
 #+header: :tangle no
 #+begin_src emacs-lisp
-  (setq org-reverse-note-order nil)
+  (setq org-reverse-note-order t)
 #+end_src
 
 #+RESULTS:
