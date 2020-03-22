@@ -22,6 +22,8 @@ This file provides settings for ESS and R.
   (use-package ess
     :ensure t)
 
+  (require 'ess-site)
+
   (use-package ess-smart-underscore
     :ensure t
     :after ess)
@@ -77,109 +79,28 @@ Toggle with =ess-S-underscore-when-last-character-is-a-space=  Not enabled by de
 #+RESULTS:
 : t
 
-* COMMENT Test 
 ** Coding Hooks
 #+source: ide-ess
 #+begin_src emacs-lisp
 (add-hook 'ess-mode-hook 'run-starter-kit-coding-hook)
-(add-hook 'ess-R-post-run-hook 'smartparens-mode)
-(add-hook 'ess-stata-post-run-hook 'smartparens-mode)
-(add-hook 'ess-stata-mode-hook 'smartparens-mode)
+;;  (add-hook 'ess-R-post-run-hook 'smartparens-mode)
 #+end_src
-
-#+RESULTS: ide-ess
-| smartparens-mode | show-smartparens-mode |
-
-** Define Rnw-mode and make LaTeX aware of it. 
-
-#+srcname: misc-r
-#+begin_src emacs-lisp
-(add-to-list 'auto-mode-alist '("\\.Rnw\\'" . Rnw-mode))
-(add-to-list 'auto-mode-alist '("\\.Snw\\'" . Rnw-mode))
-(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . Rnw-mode))
-
-;; Make TeX and RefTex aware of Snw and Rnw files
-(setq reftex-file-extensions
-      '(("Snw" "Rnw" "nw" "tex" ".tex" ".ltx") ("bib" ".bib")))
-(setq TeX-file-extensions
-      '("Snw" "Rnw" "nw" "tex" "sty" "cls" "ltx" "texi" "texinfo"))
-
-;; Lets you do 'C-c C-c Sweave' from your Rnw file
-(add-hook 'Rnw-mode-hook
-	  (lambda ()
-	    (add-to-list 'TeX-command-list
-			 '("Sweave" "R CMD Sweave %s"
-			   TeX-run-command nil (latex-mode) :help "Run Sweave") t)
-	    (add-to-list 'TeX-command-list
-			 '("LatexSweave" "%l %(mode) %s"
-			   TeX-run-TeX nil (latex-mode) :help "Run Latex after Sweave") t)
-	    (setq TeX-command-default "Sweave")))
-#+end_src
-
-#+RESULTS: misc-r
-| lambda | nil | (add-to-list 'TeX-command-list '(Sweave R CMD Sweave %s TeX-run-command nil (latex-mode) :help Run Sweave) t) | (add-to-list 'TeX-command-list '(LatexSweave %l %(mode) %s TeX-run-TeX nil (latex-mode) :help Run Latex after Sweave) t) | (setq TeX-command-default Sweave) |
-| lambda | nil | (local-set-key [(shift return)] 'my-ess-eval)                                                                 |                                                                                                                          |                                   |
 
 ** Use Knitr to process Sweave documents
 #+source: knitr-swv
 #+begin_src emacs-lisp
   (setq ess-swv-processor "'knitr")
 #+end_src
-
-** Markdown-mode
-Read https://github.com/jrblevin/markdown-mode (with a book)
-
-Recall =markdown= is an external package to install via =apt=, =rmarkdown= is an R library to install via =install.packages("")= (with a book). 
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package markdown-mode
-  :ensure t)
-#+END_SRC
-
-** Local Polymode Support
-- Read: https://polymode.github.io/ and https://masteringemacs.org/article/polymode-multiple-major-modes-how-to-use-sql-python-in-one-buffer
-
+ 
+** Use Polymode 
 Polymode is a package that supports multiple modes inside a single buffer. It is aimed particularly at literate programming approaches and supports, e.g., R and markdown in a single =.Rmd= file. So it is very useful with knitr in R.
 
-The settings for python and sql from Mickey Peterson at https://masteringemacs.org/article/polymode-multiple-major-modes-how-to-use-sql-python-in-one-buffer
 #+source: Polymode
-#+begin_src emacs-lisp
-  (use-package polymode
-    :ensure t)
-  ;;:mode ("\.py$" . poly-python-sql-mode)
-  ;;:config
-  ;;(setq polymode-prefix-key (kbd "C-c n"))
-  ;;(define-hostmode poly-python-hostmode :mode 'python-mode))
+#+begin_src emacs-lisp 
+  (require 'poly-R)
+  (require 'poly-markdown)
 #+end_src
 
-#+RESULTS: Polymode
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24155 60187 842493 445000) :init (24155 60187 842480 711000) :init-secs (0 0 57312 784000) :use-package-secs (0 0 57373 384000) :config (24155 60187 842346 460000) :config-secs (0 0 3 254000)))
-
-
-#+source: Poly-R and Markdown
-#+begin_src emacs-lisp
-  (use-package poly-R
-    :ensure t
-    :pin melpa-stable)
-  (use-package poly-noweb
-    :ensure t
-    :pin melpa-stable)
-  (use-package poly-markdown 
-    :ensure t
-    :pin melpa-stable)
-
-  ;;; polymode + markdown
-  (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
-
-  ;;; polymode + R
-  (add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.rmd\\'" . markdown-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rcpp$" . poly-r+c++-mode))
-  (add-to-list 'auto-mode-alist '("\\.cppR$" . poly-c++r-mode))
-  (add-hook 'markdown-mode-hook 'turn-on-outline-minor-mode)
-#+end_src
 
 ** Make shift-enter to a lot in ESS.
 
@@ -227,7 +148,44 @@ The settings for python and sql from Mickey Peterson at https://masteringemacs.o
   (require 'ess-site)
 #+end_src
 
-** lintr and flycheck
+#+RESULTS:
+: ess-site
+
+** Add a Keyboard Shortcut for the Pipe Operator
+
+Assignment in ESS is shift-minus; by extension we'll use M-shift-minus for inserting the `%>%` operator.
+
+#+src-name: ess-pipe-shortcut
+#+begin_src emacs-lisp
+
+(defun my_pipe_operator ()
+  "R/ESS %>% operator"
+  (interactive)
+  (just-one-space 1)
+  (insert "%>%")
+  (reindent-then-newline-and-indent))
+(define-key ess-mode-map (kbd "M-_") 'my_pipe_operator)
+(define-key inferior-ess-mode-map (kbd "M-_") 'my_pipe_operator)
+
+#+end_src
+
+** Add a Keyboard Shortcut for Rmd chunks
+
+#+src-name: rmd-chunk-insert
+#+BEGIN_SRC emacs-lisp
+
+;;;Insert new chunk for Rmarkdown
+(defun kjh-insert-r-chunk (header) 
+  "Insert an r-chunk in markdown mode." 
+  (interactive "sLabel: ") 
+  (insert (concat "```{r " header "}\n\n```")) 
+  (forward-line -1))
+
+(global-set-key (kbd "C-c i") 'kjh-insert-r-chunk)
+#+END_SRC
+
+
+** COMMENT lintr and flycheck
 [[https://github.com/jimhester/lintr][lintr]] checks your R code for style and syntax errors. It's an R library that integrates with [[http://www.flycheck.org][flycheck]]. You must install lintr from R. Flycheck can also check code in many other languages. You will need to install linters for them separately as well. See the flycheck documentation for details.
 
 dgm disables flycheck as it slows emacs down
@@ -240,24 +198,9 @@ dgm disables flycheck as it slows emacs down
 
 #+end_src
 
-** DGM customization
+#+RESULTS: lintr
 
-From: http://stackoverflow.com/questions/2531372/how-to-stop-emacs-from-replacing-underbar-with-in-ess-mode
-
-To assign ":" to "<-" and to stop the assignment of underscore (underbar) "_" to "<-" put the following in .emacs (yes, the repeated line is correct)
-
-DGM: commented out as it is solved now by a package downloaded at the start of this script.
-
-#+BEGIN_SRC emacs-lisp
-;;(setq ess-smart-S-assign-key ";")
-;;(ess-toggle-S-assign nil)
-;;(ess-toggle-S-assign nil)
-;;(ess-toggle-underscore nil) ; leave underscore key alone!
-#+END_SRC
-
-#+RESULTS:
-
-** R very slow
+* R very slow
 
 - See here:  https://stat.ethz.ch/pipermail/ess-help/2011-March/006734.html
 and here: https://stackoverflow.com/questions/13779399/emacs-ess-evaluating-slower-than-normal-r
@@ -274,15 +217,19 @@ and here: https://stackoverflow.com/questions/13779399/emacs-ess-evaluating-slow
 
 Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (provide 'starter-kit-stats)
-#+END_SRC
+#+end_src
 
 #+RESULTS:
-: starter-kit-lisp
+: starter-kit-stats
 
 * Final message
 #+source: message-line
 #+begin_src emacs-lisp
   (message "Starter Kit STATS file loaded.")
 #+end_src
+
+#+RESULTS: message-line
+: Starter Kit STATS file loaded.
+

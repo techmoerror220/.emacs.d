@@ -95,8 +95,9 @@ A pandoc menu for markdown and tex files.
   ;; (global-set-key (kbd "C-c C-p") 'pandoc-main-hydra/body) ;; not sure it is taken
 #+end_src
 
-gg#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23561 617 539596 896000) :init (23561 617 539564 637000) :config (23561 617 539347 779000) :config-secs (0 0 432 56000) :init-secs (0 0 824 478000) :use-package-secs (0 0 1011 280000)))
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24183 46334 164638 301000) :init (24183 46334 164624 693000) :config (24183 46334 164356 613000) :config-secs (0 0 468 902000) :init-secs (0 0 1027 418000) :use-package-secs (0 0 1110 6000)))
+
 
 *** Export options 
 

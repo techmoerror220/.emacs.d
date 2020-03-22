@@ -1974,11 +1974,15 @@ From
 
 ** Better defaults
 
+This is useful for when you have buffers with many similar names, as when there are various open files from different folders named =analysis.R= or similar. 
+
 By the great Technomancy.
 
 Situation with =uniquify= solved here: https://github.com/jwiegley/use-package/issues/320
 
 Uniquify buffer names is useful for when you have buffers with many similar names, as when there are various open files from different folders named =analysis.R= or similar.
+
+
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'uniquify)
@@ -6394,6 +6398,18 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Rectangle-editing
                     :key "C-x r k"
                     :description "kill-rectangle")
+    (cheatsheet-add :group 'RefTeX
+                    :key "C-c ="
+                    :description "reftex-toc. Shows a table of contents. Press ? to get help.") 
+    (cheatsheet-add :group 'RefTeX
+                    :key "C-c ("
+                    :description "reftex-label. Inserts a label at point.") 
+    (cheatsheet-add :group 'RefTeX
+                    :key "C-c )"
+                    :description "reftex-reference. Makes a reference.Shows an outline with all labels of a certain type and some context.") 
+    (cheatsheet-add :group 'RefTeX
+                    :key "C-c ["
+                    :description "reftex-label. Asks for a regexp to search BibTeX file.")
     (cheatsheet-add :group 'Register
                     :key "s-x"
                     :description "helm-register. Then TAB or RET to insert. Equivalent to C-x r i")
@@ -6534,7 +6550,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24169 24624 708811 310000) :init (24169 24624 708755 787000) :init-secs (0 0 23 852000) :use-package-secs (0 0 152 673000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24182 24149 969792 544000) :init (24182 24149 969731 641000) :init-secs (0 0 31 736000) :use-package-secs (0 0 186 929000)))
 
 
 * COMMENT Remapping =M-<= and =M->=

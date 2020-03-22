@@ -45,14 +45,14 @@ The following packages will be downloaded and installed.
                                     ;; 'latex-pretty-symbols
                                     ;; 'mac-key-mode
                                     ;; 'magit
-                                    ;; 'markdown-mode
+                                    'markdown-mode
                                     'maxframe
                                     ;; 'multiple-cursors ;; use-package used
-                                    ;; 'pandoc-mode ;; installed with use-package
-                                    ;; 'polymode ;; all these poly- stuff is installed now with "use-package"
-                                    ;; 'poly-R
-                                    ;; 'poly-noweb
-                                    ;; 'poly-markdown
+                                    'pandoc-mode 
+                                    'polymode 
+                                    'poly-R
+                                    'poly-noweb
+                                    'poly-markdown
                                     'pos-tip
                                     ;; 'powerline
                                     'python

@@ -1,4 +1,4 @@
-,*#
+*#
 *.el~
 starter-kit-*.el
 dgm.el
