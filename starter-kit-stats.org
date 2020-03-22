@@ -92,16 +92,6 @@ Toggle with =ess-S-underscore-when-last-character-is-a-space=  Not enabled by de
   (setq ess-swv-processor "'knitr")
 #+end_src
  
-** Use Polymode 
-Polymode is a package that supports multiple modes inside a single buffer. It is aimed particularly at literate programming approaches and supports, e.g., R and markdown in a single =.Rmd= file. So it is very useful with knitr in R.
-
-#+source: Polymode
-#+begin_src emacs-lisp 
-  (require 'poly-R)
-  (require 'poly-markdown)
-#+end_src
-
-
 ** Make shift-enter to a lot in ESS.
 
  Use shift-enter to split window & launch R (if not running), execute
@@ -150,39 +140,6 @@ Polymode is a package that supports multiple modes inside a single buffer. It is
 
 #+RESULTS:
 : ess-site
-
-** Add a Keyboard Shortcut for the Pipe Operator
-
-Assignment in ESS is shift-minus; by extension we'll use M-shift-minus for inserting the `%>%` operator.
-
-#+src-name: ess-pipe-shortcut
-#+begin_src emacs-lisp
-
-(defun my_pipe_operator ()
-  "R/ESS %>% operator"
-  (interactive)
-  (just-one-space 1)
-  (insert "%>%")
-  (reindent-then-newline-and-indent))
-(define-key ess-mode-map (kbd "M-_") 'my_pipe_operator)
-(define-key inferior-ess-mode-map (kbd "M-_") 'my_pipe_operator)
-
-#+end_src
-
-** Add a Keyboard Shortcut for Rmd chunks
-
-#+src-name: rmd-chunk-insert
-#+BEGIN_SRC emacs-lisp
-
-;;;Insert new chunk for Rmarkdown
-(defun kjh-insert-r-chunk (header) 
-  "Insert an r-chunk in markdown mode." 
-  (interactive "sLabel: ") 
-  (insert (concat "```{r " header "}\n\n```")) 
-  (forward-line -1))
-
-(global-set-key (kbd "C-c i") 'kjh-insert-r-chunk)
-#+END_SRC
 
 
 ** COMMENT lintr and flycheck

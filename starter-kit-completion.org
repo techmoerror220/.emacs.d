@@ -247,8 +247,8 @@ Daniel Guinea Martín: I disable it for text modes and now that I don't have it 
 (browse-kill-ring-default-keybindings)
 
 ;; From https://stackoverflow.com/questions/34652692/how-to-turn-off-company-mode-in-org-mode
-;; mu4e-compose-mode taken out of the list or else I don't get to complete email addresses.b
-(setq company-global-modes '(not python-mode org-mode text-mode latex-mode tex-mode LaTeX-mode TeX-mode))
+;; mu4e-compose-mode taken out of the list or else I don't get to complete email addresses.
+(setq company-global-modes '(not python-mode org-mode text-mode latex-mode tex-mode LaTeX-mode TeX-mode markdown-mode))
 #+end_src
 
 #+RESULTS: company-mode

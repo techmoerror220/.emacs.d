@@ -95,46 +95,6 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
 
 #+RESULTS: spelling-mode
 
-** Markdown 
-Markdown mode support. 
-
-#+srcname: markdown-mode
-#+begin_src emacs-lisp
-      (autoload 'markdown-mode "markdown-mode"
-      "Major mode for editing Markdown files" t)
-      (setq auto-mode-alist
-      (cons '("\\.Markdown" . markdown-mode) auto-mode-alist)
-      )
-      (setq auto-mode-alist
-      (cons '("\\.MarkDown" . markdown-mode) auto-mode-alist)
-      )
-      (setq auto-mode-alist
-      (cons '("\\.markdown" . markdown-mode) auto-mode-alist)
-      )
-      (setq auto-mode-alist
-      (cons '("\\.md" . markdown-mode) auto-mode-alist)
-      )
-      (setq auto-mode-alist
-      (cons '("README\\.md" . gfm-mode) auto-mode-alist)
-      )
-
-   ;; This function will open Marked.app and monitor the current markdown document
-   ;; for anything changes.  In other words, it will live reload and convert the
-   ;; markdown documment
-   ;; DGM comments this out as this Marked.app is for Mac Os
-;;   (defun markdown-preview-file ()
-;;     "run Marked on the current file and revert the buffer"
-;;     (interactive)
-;;     (shell-command
-;;      (format "open -a /Applications/Marked\\ 2.app %s"
-;;              (shell-quote-argument (buffer-file-name))))
-;;     )  
-;;   (global-set-key "\C-co" 'markdown-preview-file) 
-
- (add-hook 'markdown-mode-hook 'latex-unicode-simplified)
-
-#+end_src
-
 ** Deft
    Deft mode helps organize folders of text notes.
 

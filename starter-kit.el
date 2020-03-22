@@ -142,9 +142,11 @@ just have to assume it's online."
 
 (starter-kit-load "starter-kit-programming.org")
 
-(load custom-file 'noerror)
+(starter-kit-load "stater-kit-polymode.org")
 
 (starter-kit-load "dgm.org")
+
+(load custom-file 'noerror)
 
 (provide 'starter-kit)
 

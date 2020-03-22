@@ -607,6 +607,26 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 #+RESULTS:
 : Loaded /home/dgm/.emacs.d/starter-kit-pass.el
 
+*** Starter kit =markdown= and =polymode=
+
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-load "stater-kit-polymode.org")
+#+END_SRC
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/stater-kit-polymode.el
+
+
+*** Starter Kit DGM
+Located in [[file:starter-kit-dgm.org][starter-kit-dgm]]. I loaded like any other package to avoid loading twice as it happened before when the part of this file entitled =E-lisp customization= was uncommented and run.
+
+#+begin_src emacs-lisp
+  (starter-kit-load "dgm.org")
+#+end_src
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/dgm.el
+
 
 ** Load User/System Specific Files
 *** Settings from M-x customize
@@ -635,17 +655,6 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff. How
     (mapc #'load (directory-files user-specific-dir nil ".*el$"))
     (mapc #'org-babel-load-file (directory-files user-specific-dir nil ".*org$"))))
 #+end_src
-
-
-*** Starter Kit DGM
-Located in [[file:starter-kit-dgm.org][starter-kit-dgm]]. I loaded like any other package to avoid loading twice as it happened before when the part of this file entitled =E-lisp customization= was uncommented and run.
-
-#+begin_src emacs-lisp
-  (starter-kit-load "dgm.org")
-#+end_src
-
-#+RESULTS:
-: Loaded /home/dgm/.emacs.d/dgm.el
 
 
 * FAQ

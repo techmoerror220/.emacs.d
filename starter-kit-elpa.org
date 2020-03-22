@@ -27,8 +27,8 @@ The following packages will be downloaded and installed.
                                     ;;'company-auctex
                                     ;;'company-math
                                     ;;'company-web
-                                    'company-statistics
-                                    'company-quickhelp
+                                    ;; 'company-statistics
+                                    ;; 'company-quickhelp
                                     'css-mode
                                     'csv-mode
                                     ;; 'deft
