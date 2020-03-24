@@ -337,7 +337,7 @@ Requires `call-process-to-string' from `functions'."
 
 Commenting out by DGM on sept 2019
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 ;;(global-set-key [remap query-replace-regexp] 'helm-regexp)
 (global-set-key (kbd "s-\"") 'helm-regexp)
 ;;(unless (boundp 'completion-in-region-function)

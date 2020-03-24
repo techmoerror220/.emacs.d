@@ -93,8 +93,6 @@ Allow non-floating resizing with mouse.
 
 These cannot be set globally: if Emacs were to be run in another WM, the =s-= prefix would conflict with the WM bindings.
 
-
-
 #+BEGIN_SRC emacs-lisp :tangle yes
 (exwm-input-set-key (kbd "s-<left>") #'windmove-left)
 (exwm-input-set-key (kbd "s-<down>") #'windmove-down)
@@ -107,7 +105,7 @@ These cannot be set globally: if Emacs were to be run in another WM, the =s-= pr
 ;;(exwm-input-set-key (kbd "s-f") #'find-file)       "s-f" mapped to helm-find-files in starter-kit-helm.org 
 
 (when (require 'functions)
-  (exwm-input-set-key (kbd "s-z") 'ambrevar/toggle-window-split))
+  (exwm-input-set-key (kbd "s-:") 'ambrevar/toggle-window-split))
 ;; DGM comments out as never used
   ;;(exwm-input-set-key (kbd "s-H") 'ambrevar/swap-windows-left)
   ;;(exwm-input-set-key (kbd "s-J") 'ambrevar/swap-windows-below)

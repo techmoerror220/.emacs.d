@@ -912,6 +912,11 @@ I disable this as it is dealt with in -misc.org
 
 (add-hook 'prog-mode-hook (lambda () (highlight-symbol-mode)))
 (add-hook 'org-mode-hook (lambda () (highlight-symbol-mode)))
+(add-hook 'LaTeX-mode-hook (lambda () (highlight-symbol-mode)))
+(add-hook 'latex-mode-hook (lambda () (highlight-symbol-mode)))
+(add-hook 'text-mode-hook (lambda () (highlight-symbol-mode)))
+(add-hook 'markdown-mode-hook (lambda () (highlight-symbol-mode 1)))  
+
 
 (setq highlight-symbol-idle-delay 0.2
       highlight-symbol-on-navigation-p t)
@@ -5147,7 +5152,7 @@ DGM: not sure it is better.
 * Browser switching
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key (kbd "s-;") 'ivy-switch-buffer)
+(global-set-key (kbd "C-'") 'ivy-switch-buffer)
 ;; (global-set-key (kbd "C-c b") 'ivy-switch-buffer) ;; buffer-flip gets this
 
 ;; (global-set-key (kbd "s-*") 'electric-buffer-list) ;; no lo uso
@@ -5235,10 +5240,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c y"
                     :description "bury-buffer")
     (cheatsheet-add :group 'Buffer-Cycling
-                    :key "s-;"
-                    :description "ivy-switch-buffer. Like iBuffer: list of buffers for editing")
-    (cheatsheet-add :group 'Buffer-List
                     :key "C-'"
+                    :description "Ivy-switch-buffer")
+    (cheatsheet-add :group 'Buffer-List
+                    :key "s-z"
                     :description "iBuffer. List of buffers for editing")
     (cheatsheet-add :group 'Buffer-List
                     :key "C-x C-b"
@@ -5906,6 +5911,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Kill-Projectile
                     :key "M-D"
                     :description "Kill marked item in P session")
+    (cheatsheet-add :group 'Latex
+                    :key "C-c ]"
+                    :description "LaTeX-close-environment")
     (cheatsheet-add :group 'Lisp
                     :key "C-c h TAB"
                     :description "helm-lisp-completion-at-point for elisp")
@@ -5957,6 +5965,15 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Markdown
                     :key "C-c C-s c"
                     :description "markdown-insert-code. Insert markup to make a region or word an inline code fragment. Can also use the ` snippet")
+    (cheatsheet-add :group 'Markdown
+                    :key "M-_"
+                    :description "my_pipe_operator by KHealy. Insert R/ESS %>% operator")
+    (cheatsheet-add :group 'Markdown
+                    :key "C-c i"
+                    :description "kjh-insert-r-chunk. Insert an r-chunk in markdown mode. By KHealy")
+    (cheatsheet-add :group 'Markdown
+                    :key "markdown-reftex-citation"
+                    :description "Insert markdown citation formats. By Kleinschmidt.")
     (cheatsheet-add :group 'Minibuffer
                     :key "C-M-e"
                     :description "Miniedit: enter minibuffer edit")
@@ -6306,8 +6323,8 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "p"
                     :description "Place cursor at start of heading, b will move to previous heading. C-M-p and C-c C-p do the same")
     (cheatsheet-add :group 'Org-movement
-                    :key "s-:"
-                    :description "avy-org-refile-as-child. Refiling under different heading.")
+                    :key "avy-org-refile-as-child"
+                    :description "Refiling of Org heading under different heading in same document.")
     (cheatsheet-add :group 'Org-recipes
                     :key "C-c i"
                     :description "Insert raw code under a heading")
@@ -6367,7 +6384,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "Polymode prefix")
     (cheatsheet-add :group 'Polymode
                     :key "M-n E"
-                    :description "polymode-set-exporter. Normally I choose =markdown-ess=")
+                    :description "polymode-set-exporter. Normally I choose markdown-ess")
     (cheatsheet-add :group 'Polymode
                     :key "M-n e"
                     :description "polymode-export. Export current file. When FROM or TO are missing they are determined automatically from the current exporters specifications and files extension.")
@@ -6513,8 +6530,8 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "s-z"
                     :description "ambrevar/toggle-window-split: Transpose windows")
     (cheatsheet-add :group 'Windows
-                    :key "s-+"
-                    :description "rotate-windows")
+                    :key "s-;"
+                    :description "Rotate windows")
     (cheatsheet-add :group 'Windows
                     :key "s-M-<left>"
                     :description "shrink-window-horizontally")
@@ -6550,7 +6567,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24182 24149 969792 544000) :init (24182 24149 969731 641000) :init-secs (0 0 31 736000) :use-package-secs (0 0 186 929000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24186 29361 385810 301000) :init (24186 29361 385743 619000) :init-secs (0 0 31 545000) :use-package-secs (0 0 198 218000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
