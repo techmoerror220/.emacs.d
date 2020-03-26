@@ -503,6 +503,7 @@
     ("woudl" "would" nil :count 1)
     ("wrods" "words" nil :count 1)
     ("wrok" "work" nil :count 1)
+    ("wroth" "worth" nil :count 1)
     ("wsa" "was" nil :count 1)
     ("wth" "with" nil :count 1)
     ("wtih" "with" nil :count 7)

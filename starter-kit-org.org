@@ -1450,7 +1450,7 @@ This I don't really use but could be useful in future:
                        ((org-agenda-overriding-header "                                               EMACS                                                ")
                         (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
             ))
-          ("o" "Office and home agenda"
+           ("o" "Office and home agenda"
            ((agenda "" ((org-agenda-span 1))) 
             (tags-todo "@home|@uned")
             ;;            (tags "project+CATEGORY=\"elephants\"")
@@ -1477,7 +1477,10 @@ This I don't really use but could be useful in future:
               (org-agenda-sorting-strategy '(category-up))
               )
              ))
-           )))
+           )
+           ("z" "Done or Canceled Tasks to Be Archived"
+           ((todo "DONE|CANCELED"))
+           ((org-agenda-compact-blocks t)))))
 
   (defun my-org-agenda-skip-all-siblings-but-first ()
     "Skip all but the first non-done entry."
@@ -2806,7 +2809,7 @@ I can get a sense of how appointments are spread out.
   (setq org-agenda-use-tag-inheritance t)
   (setq org-agenda-show-log t)
   ;;  (setq org-agenda-skip-scheduled-if-done t)
-  (setq org-agenda-skip-deadline-if-done t)
+  ;; (setq org-agenda-skip-deadline-if-done t) ;; (repetido. Lo he puesto a t antes)
   ;; (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
   ;;  (setq org-agenda-time-grid
   ;;        '((daily today require-timed)
@@ -3874,19 +3877,19 @@ My logging settings are set as follows:
 My =org-todo-keywords= are set as follows:
 
 DGM: =(@/!)= makes org-mode to ask you for a note. 
-=started=, =deferred= and =delegated= comes from JW's setting [[id:565d9caa-095d-41ba-ace8-b9642afc3300][settings]].
+=started=, =deferred= and =delegated= comes from JW's setting [[id:565d9caa-095d-41ba-ace8-b9642afc3300][settings]]. In his words, "When the article is finally finished, I'll change the task's state to "DONE".  If I'd chosen to put it off indefinitely, I would mark it "DEFERRED".  If I'd chosen never to do, I would mark it "CANCELLED".  All three of these are "completion states", which mean the task never again shows up in any agenda view."
 
 #+header: :tangle yes
 #+begin_src emacs-lisp
   ;; (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w)"  "|" "DONE(d)" "CANCELED(c)"))
   (setq org-todo-keywords
-        (quote ((sequence "NEXT(n)" "TODO(t)" "STARTED(s@/!)" "PROJECT(p)" "PHONE" "|" "DONE(d)")
+        (quote ((sequence "NEXT(n)" "TODO(t)" "STARTED(s@/!)" "PROJECT(p)" "PHONE(@/!)" "|" "DONE(d@/!)")
                 (sequence "WAITING(w@/!)" "|" "DEFERRED(@/!)" "DELEGATED(@/!)" "CANCELED(c@/!)"))))
 #+end_src
 
 #+RESULTS:
-| sequence | PROJECT(p)    | TODO(t) | NEXT(n) |               |                | DONE(d)        |       |
-| sequence | WAITING(w@/!) |         |         | DEFERRED(@/!) | CANCELED(c@/!) | DELEGATED(@/!) | PHONE |
+| sequence | NEXT(n)       | TODO(t) | STARTED(s@/!) | PROJECT(p)    | PHONE(@/!)     |                |   | DONE(d@/!) |
+| sequence | WAITING(w@/!) |         |               | DEFERRED(@/!) | DELEGATED(@/!) | CANCELED(c@/!) |   |            |
 
 This adds a log entry whenever a task moves to any of the following states:
 - to or out of =DONE= status
@@ -5243,7 +5246,7 @@ DGM: already under [[id:48af1742-2872-4dbc-8f3d-ff8940e64c39][Org functionality 
 #+end_src
 
 ** Change log note templates
-If any of =org-log-(done/refile/repeat/reschedule/redeadline)= is set to =note=, then a status change would trigger insertion of a note in the :LOGBOOK: drawer. It’s possible to define template for notes via =org-log-note-headings=. Here’s my setting, which adds new timestamp (=%s=) to  =reschedule= and =redeadline=:
+If any of =org-log-(done/refile/repeat/reschedule/redeadline)= is set to =note=, then a status change would trigger insertion of a note in the :LOGBOOK: drawer. It's possible to define template for notes via =org-log-note-headings=. Here’s my setting, which adds new timestamp (=%s=) to  =reschedule= and =redeadline=:
 
 #+begin_src emacs-lisp :tangle yes
   (setq org-log-note-headings '((done        . "CLOSING NOTE %t")
@@ -5385,6 +5388,32 @@ https://llazarek.com/2018/07/improving-the-agenda.html
 #+RESULTS:
 | ll/org/colorize-headings |
 
+* Tips from John Wiegley
+
+JW says: Setting `org-fast-tag-selection-single-key` to `expert` makes it very quick and easy to assign common tags to entries.  I'll show how to use this feature later on, in the section titled "Tagging and metadata".
+
+Manual says: 
+If you find that most of the time you need only a single key press to modify your list of tags, set the variable org-fast-tag-selection-single-key. Then you no longer have to press RET to exit fast tag selection—it exits after the first change. If you then occasionally need more keys, press C-c to turn off auto-exit for the current tag selection process (in effect: start selection with C-c C-c C-c instead of C-c C-c). If you set the variable to the value expert, the special window is not even shown for single-key tag selection, it comes up only when you press an extra C-c.
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-fast-tag-selection-single-key 'expert)
+#+end_src
+
+#+RESULTS:
+: expert
+
+His States and Tags are:
+
+#+BEGIN_EXAMPLE
+,(quote (("d" todo "DELEGATED" nil)
+,("c" todo "DONE|DEFERRED|CANCELLED" nil)
+,("w" todo "WAITING" nil)
+
+	#+SEQ_TODO: TODO STARTED WAITING DELEGATED APPT | DONE DEFERRED CANCELLED
+	#+TAGS: { SCHOOL(s) WORK(w) } CALL(c) ERRAND(e)
+#+END_EXAMPLE
+
+
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -5399,4 +5428,15 @@ https://llazarek.com/2018/07/improving-the-agenda.html
 #+begin_src emacs-lisp :tangle yes
   (message "Starter Kit Org loaded.")
 #+end_src
+
+
+
+
+
+
+
+
+
+
+
 
