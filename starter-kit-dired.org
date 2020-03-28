@@ -1,0 +1,415 @@
+# -*- coding: utf-8 -*-
+# -*- find-file-hook: org-babel-execute-buffer -*-
+
+#+TITLE: Emacs Starter Kit Dired
+#+OPTIONS: toc:nil num:nil ^:nil
+#+PROPERTY: header-args :tangle yes
+
+This is part of the [[file:starter-kit.org][Emacs Starter Kit]]. 
+
+This file provides settings for password management.
+
+* Dired
+** Dired-x
+
+Dired extensions. Dired-x (Dired Extra) is not like Dired-plus. The former is part of the standard distribution of emacs.
+
+Modified following the advice in the *info* node on installation of =dired-x=.
+
+#+source: Dired-x
+#+begin_src emacs-lisp :tangle yes
+  ;;  (load "dired-x")
+  (add-hook 'dired-load-hook
+            (lambda ()
+              (load "dired-x")
+              ;; Set dired-x global variables here.  For example:
+              ;; (setq dired-guess-shell-gnutar "gtar")
+              ;; (setq dired-x-hands-off-my-keys nil)
+              ))
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              ;; Set dired-x buffer-local variables here.  For example:
+              ;; (dired-omit-mode 1)
+              ))
+#+end_src
+
+#+RESULTS: Dired-x
+| (lambda nil) | (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
+
+
+** Open files in external programs
+Open files in external programs (from http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
+Consider replacing with https://github.com/thamer/runner.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun xah-open-in-external-app (&optional file)
+    "Open the current file or dired marked files in external app.
+  The app is chosen from your OS's preference."
+    (interactive)
+    (let (doIt
+          (myFileList
+           (cond
+            ((string-equal major-mode "dired-mode")
+             (dired-get-marked-files))
+            ((not file) (list (buffer-file-name)))
+            (file (list file)))))
+      (setq doIt (if (<= (length myFileList) 5)
+                     t
+                   (y-or-n-p "Open more than 5 files? ")))
+      (when doIt
+        (cond
+         ((string-equal system-type "windows-nt")
+          (mapc
+           (lambda (fPath)
+             (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" fPath t t)))
+           myFileList))
+         ((string-equal system-type "darwin")
+          (mapc
+           (lambda (fPath)
+             (shell-command (format "open \"%s\"" fPath)))
+           myFileList))
+         ((string-equal system-type "gnu/linux")
+          (mapc
+           (lambda (fPath)
+             (let ((process-connection-type nil))
+               (start-process "" nil "xdg-open" fPath))) myFileList))))))
+  ;; use zip/unzip to compress/uncompress zip archives
+  (with-eval-after-load "dired-aux"
+    (add-to-list 'dired-compress-file-suffixes
+                 '("\\.zip\\'" "" "unzip"))
+    ;; open files from dired with "E"
+    (define-key dired-mode-map (kbd "E") 'xah-open-in-external-app))
+#+END_SRC
+
+** Dired open multiple files
+In dired mode, visit all marked files using. Bound to the "F" key.
+
+#+source: dired-F
+#+begin_src emacs-lisp :tangle yes
+  (eval-after-load "dired"
+    '(progn
+       (define-key dired-mode-map "F" 'my-dired-find-file)
+       (defun my-dired-find-file (&optional arg)
+         "Open each of the marked files, or the file under the point, or when prefix arg, the next N files "
+         (interactive "P")
+         (let* ((fn-list (dired-get-marked-files nil arg)))
+           (mapc 'find-file fn-list)))))
+#+end_src
+
+#+RESULTS: dired-F
+: my-dired-find-file
+
+** Stripe Dired buffers
+
+Use different background colors for even and odd lines. Info here https://github.com/sabof/stripe-buffer
+
+With the help of library =hl-line-mode= yet another color can be used for the current line.
+
+#+name: stripe-dired
+#+begin_src emacs-lisp :tangle no
+  (use-package stripe-buffer
+    :config (progn
+              (add-hook 'dired-mode-hook #'turn-on-stripe-buffer-mode)))
+
+  (add-hook 'org-mode-hook 'org-table-stripes-enable)
+  ;; (add-hook 'dired-mode-hook 'stripe-listify-buffer)
+#+END_SRC
+
+** Dired Sort By Size And Extension
+From: https://www.emacswiki.org/emacs/DiredSortBySizeAndExtension
+
+Commented out even though it works great, but I loose my customization for dates and size.
+
+#+begin_src emacs-lisp :tangle no
+(require 'dired-fixups)
+#+end_src
+
+#+RESULTS:
+: dired-fixups
+
+** Date format
+
+From: https://stackoverflow.com/questions/11269897/emacs-dired-how-to-set-date-time-format
+
+Pero parece que esto no ha afectado al formato de Dired. En cambio, el secreto lo ha dado la definición aquí: [[dired-date.]] Así que lo comento. El problema es que  [[dired-date]] fastidia a =dired-fixups.el=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+; use ISO dates (the first is for recent dates, second for old dates)
+  
+(setq ls-lisp-format-time-list  '("%d.%m.%Y %H:%M:%S" "%d.%m.%Y %H:%M:%S")
+      ls-lisp-use-localized-time-format t)
+
+(defun ls-lisp-format-time (file-attr time-index now)
+    "%d.%m.%Y %H:%M:%S" "%d.%m.%Y %H:%M:%S")
+#+END_SRC
+
+#+RESULTS:
+: t
+
+** Directories first
+
+Further customization that I originally had within the block on dired plus that I actually do not use!
+
+First I set dired listing options. Originally, among the options there was a =p= in =-alDhp= but in https://www.reddit.com/r/emacs/comments/9flask/dired_mode_move_directory/ they explain that this causes failure when moving directories. The =p= flag to =ls= appends a slash (=/=) indicator to directories.
+
+Then I added to option to list directories first that I found in https://www.emacswiki.org/emacs/DiredSorting
+
+Also, from https://emacs.stackexchange.com/questions/2722/dired-listing-switches-time-style-format-with-a-space I have added =--time-style \"+%m-%d-%Y %H:%M:%S\""=. Esta ha sido la clave para que Dired me dé la fecha completa. <<dired-date>>
+
+DGM 16 july 2019: Ojo: when Dired buffer sorted alphabetically, my powermode bar includes =-alDh --group-directories-first --time-style "+-Dired -alDh --group-directories-first= for some reason. This is meaningless there and leaves no room for time information, etc. It does not occur if I sort by date. Why?
+
+DGM: 28 march 2020. Commented out or else =dired-fixups.el= does not work.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (if (eq system-type 'gnu/linux)
+      (setq dired-listing-switches "-alDh --group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\""))
+
+  (defun ensure-buffer-name-ends-in-slash ()
+    "change buffer name to end with slash"
+    (let ((name (buffer-name)))
+      (if (not (string-match "/$" name))
+          (rename-buffer (concat name "/") t))))
+
+  (add-hook 'dired-mode-hook 'ensure-buffer-name-ends-in-slash)
+
+  (add-hook 'dired-mode-hook
+            (lambda()
+              (setq truncate-lines 1)))
+#+END_SRC
+
+#+RESULTS:
+| (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
+
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; (setq dired-listing-switches "-l --group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\"")
+
+  (defun ensure-buffer-name-ends-in-slash ()
+    "change buffer name to end with slash"
+    (let ((name (buffer-name)))
+      (if (not (string-match "/$" name))
+          (rename-buffer (concat name "/") t))))
+
+  (add-hook 'dired-mode-hook 'ensure-buffer-name-ends-in-slash)
+
+  (add-hook 'dired-mode-hook
+            (lambda()
+              (setq truncate-lines 1)))
+#+END_SRC
+
+** Sort settings
+
+From https://www.reddit.com/r/emacs/comments/4agkye/how_do_you_customize_dired/
+
+Commented out as I don't control what's going on.
+
+#+begin_src emacs-lisp :tangle no
+;;Sort settings
+(require 'dired-sort-menu+)
+(add-hook 'dired-load-hook
+          (lambda () (require 'dired-sort-menu)))
+#+end_src
+
+
+** =dired= do what I mean
+- Tip from
+https://emacs.stackexchange.com/questions/5603/how-to-quickly-copy-move-file-in-emacs-dired
+
+Work like two-panelled file manager if two dired buffers opened. Very cool!
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq dired-dwim-target t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+** Dired plus
+
+#+srcname: dired+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (require 'dired+)
+
+  ;; copied  by dgm from: http://emacs-leuven.readthedocs.io/en/latest/?badge=latest
+
+  ;; Don't hide details in Dired.
+  ;;    (setq diredp-hide-details-initially-flag nil)
+
+  ;; Don't display the next Dired buffer the same way as the last.
+  ;;    (setq diredp-hide-details-propagate-flag nil)
+
+  ;; Don't wrap "next" command around to buffer beginning.
+  ;; (setq diredp-wrap-around-flag nil)
+
+  ;; Dired `find-file' commands reuse directories.
+  ;; (diredp-toggle-find-file-reuse-dir 1)
+
+  ;; Up, reusing Dired buffers.
+  ;; (define-key dired-mode-map (kbd "C-x C-j")
+  ;;  #'diredp-up-directory-reuse-dir-buffer)
+
+  ;; tips from Ista Zahn. Not sure if they require dired+
+  ;; https://github.com/izahn/dotemacs
+
+  ;;; Dired and Dired+ configuration
+  ;; this is commented as it is reapplied somewhere else in this file
+  ;; (add-hook 'dired-mode-hook
+  ;;          (lambda()
+  ;;            (diff-hl-dired-mode)
+  ;;            (diff-hl-margin-mode)))
+
+#+END_SRC
+
+Set emacs to open Bookmark+ on start. From Xah Emacs. Disabled now that I use =Dashboard=
+
+#+srcname: bookmarks
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; included by dgm
+  ;;   (setq inhibit-splash-screen t)
+  ;; (require 'bookmark+) ;; no longer available in MELPA
+  ;;  (bookmark-bmenu-list)
+  ;;  (switch-to-buffer "*Bookmark List*")
+  ;; '(initial-buffer-choice "*Bookmark List*")
+  ;; (setq initial-buffer-choice "*Bookmark List*")
+#+END_SRC
+
+
+#+RESULTS: bookmarks
+
+
+#+srcname: custom-setup
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;;    Load the files in CustomDir using mapc:
+  ;; (mapc 'load (directory-files "~/.emacs.d/customDir" t ".*\.el"))
+  ;; (add-to-list 'load-path "~/.emacs.d/customDir/")
+  ;; (require 'setup-programming)
+#+END_SRC
+
+
+I disable this as flycheck makes emacs too slow.
+#+srcname: flycheck-tip
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;;  (require 'flycheck-tip)
+  ;;  (define-key global-map (kbd "\C-c \C-n") 'flycheck-tip-cycle)
+  ;;  (setq flycheck-display-errors-function 'ignore)
+#+END_SRC
+
+#+RESULTS: flycheck-tip
+: ignore
+
+#+RESULTS:
+: ignore
+
+
+For now, I deactivate the golden-ratio mode because it distract me too much.
+
+#+srcname: golden-ratio
+#+BEGIN_SRC emacs-lisp :tangle no
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; PACKAGE: golden-ratio                         ;;
+  ;;                                               ;;
+  ;; GROUP: Environment -> Windows -> Golden Ratio ;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;; activate for helm when helm is installed
+  ;; (require 'golden-ratio)
+
+  ;; (add-to-list 'golden-ratio-exclude-modes "ediff-mode")
+  ;; (add-to-list 'golden-ratio-exclude-modes "helm-mode")
+  ;; (add-to-list 'golden-ratio-exclude-modes "dired-mode")
+  ;; (add-to-list 'golden-ratio-exclude-modes "ess-mode")
+
+  ;; I dont want the golden ratio with the Helm window
+  ;;  (defun pl/helm-alive-p ()
+  ;;   (if (boundp 'helm-alive-p)
+  ;;       (symbol-value 'helm-alive-p)))
+
+  ;;  (add-to-list 'golden-ratio-inhibit-functions 'pl/helm-alive-p)
+
+  ;; do not enable golden-ratio in theses modes
+  ;;   (setq golden-ratio-exclude-modes '("ediff-mode"
+  ;;                                      "gud-mode"
+  ;;                                      "gdb-locals-mode"
+  ;;                                      "gdb-registers-mode"
+  ;;                                      "gdb-breakpoints-mode"
+  ;;                                      "gdb-threads-mode"
+  ;;                                      "gdb-frames-mode"
+  ;;                                      "gdb-inferior-io-mode"
+  ;;                                      "gud-mode"
+  ;;                                      "gdb-inferior-io-mode"
+  ;;                                      "gdb-disassembly-mode"
+  ;;                                      "gdb-memory-mode"
+  ;;   ;;                                   "magit-log-mode"
+  ;;   ;;                                   "magit-reflog-mode"
+  ;;   ;;                                   "magit-status-mode"
+  ;;                                      "IELM"
+  ;;                                      "eshell-mode"
+  ;;                                      "dired-mode"
+  ;;                                      "helm-mode"
+  ;;                                      "ess-mode"))
+  ;; delete "dired-mode"  from the above list if you want golden-ratio to apply to helm
+
+  ;;   (golden-ratio-mode)
+#+END_SRC
+
+#+RESULTS: golden-ratio :tangle no
+
+
+I disable this as it is dealt with in -misc.org
+#+srcname: frame-title
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; more useful frame title, that show either a file or a
+  ;; buffer name (if the buffer isn't visiting a file)
+  ;; taken from prelude-ui.el
+  ;; (setq frame-title-format
+  ;;      '("" invocation-name " - " (:eval (if (buffer-file-name)
+  ;;                                                    (abbreviate-file-name (buffer-file-name))
+  ;;                                                  "%b"))))
+#+END_SRC
+
+#+RESULTS: frame-title
+|   | invocation-name | - | (:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) %b)) |
+
+
+** Visit last dired buffer
+
+#+begin_src emacs-lisp :tangle yes
+  (defun hrs/visit-last-dired-file ()
+    "Open the last file in an open dired buffer."
+    (interactive)
+    (end-of-buffer)
+    (previous-line)
+    (dired-find-file))
+#+end_src
+
+#+RESULTS:
+: hrs/visit-last-dired-file
+
+** dired-narrow
+
+Narrow dired to match filter.  From: http://pragmaticemacs.com/emacs/dynamically-filter-directory-listing-with-dired-narrow/
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package dired-narrow
+    :ensure t
+    :bind (:map dired-mode-map
+                ("/" . dired-narrow)))
+#+END_SRC
+
+
+* Provide
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(provide 'starter-kit-dired)
+#+END_SRC
+
+
+* Final message
+
+#+begin_src emacs-lisp :tangle yes
+  (message "Starter Kit Dired loaded.")
+#+end_src
+
+
+
+

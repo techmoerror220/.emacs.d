@@ -617,6 +617,16 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 : Loaded /home/dgm/.emacs.d/stater-kit-polymode.el
 
 
+*** Starter kit dired
+
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-load "starter-kit-dired.org")
+#+END_SRC
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-dired.el
+
+
 *** Starter Kit DGM
 Located in [[file:starter-kit-dgm.org][starter-kit-dgm]]. I loaded like any other package to avoid loading twice as it happened before when the part of this file entitled =E-lisp customization= was uncommented and run.
 

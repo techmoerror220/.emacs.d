@@ -95,149 +95,37 @@ off support for default mac bindings. Turned off by default.
                 )))
 #+end_src
 
-** Dired
-*** Date format
+** diff-hl
+Emacs package for highlighting uncommitted changes. See https://github.com/dgutov/diff-hl
 
-From: https://stackoverflow.com/questions/11269897/emacs-dired-how-to-set-date-time-format
+diff-hl-mode highlights uncommitted changes on the left side of the window, allows you to jump between and revert them selectively.
 
-Pero parece que esto no ha afectado al formato de Dired. En cambio, el secreto lo ha dado la definición aquí: [[dired-date]]
+For the usage instructions and the list of commands, see the Commentary section inside the file.
 
-#+BEGIN_SRC emacs-lisp :tangle no
-  (setq ls-lisp-format-time-list  '("%d.%m.%Y %H:%M" "%d.%m.%Y %H:%M")
-        ls-lisp-use-localized-time-format t)
+Tested with Git, Mercurial, Bazaar and SVN. May work with other VC backends, too.
 
-  (defun ls-lisp-format-time (file-attr time-index now)
-    "%d.%m.%Y %H:%M" "%d.%m.%Y %H:%M")
+The package also contains auxiliary modes:
+
+diff-hl-dired-mode provides similar functionality in Dired.
+diff-hl-margin-mode changes the highlighting function to use the margin instead of the fringe.
+diff-hl-amend-mode shifts the reference revision back by one.
+diff-hl-flydiff-mode implements highlighting changes on the fly. It requires Emacs 24.4 or newer.
+
+Check out the Commentary section in each respective file for the usage instructions.
+
+#+begin_src emacs-lisp :tangle no
+  (use-package diff-hl)
+  (global-diff-hl-mode)
+  ;; (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+  (remove-hook 'dired-mode-hook 'diff-hl-dired-mode)
+  (remove-hook 'dired-mode-hook 'hl-line-mode)
 #+END_SRC
 
 #+RESULTS:
-: ls-lisp-format-time
-
-*** Dired-x
-
-Dired extensions. Dired-x (Dired Extra) is not like Dired-plus. The former is part of the standard distribution of emacs.
-
-Modified following the advice in the *info* node on installation of =dired-x=.
-
-#+source: Dired-x
-#+begin_src emacs-lisp :tangle yes
-  ;;  (load "dired-x")
-  (add-hook 'dired-load-hook
-            (lambda ()
-              (load "dired-x")
-              ;; Set dired-x global variables here.  For example:
-              ;; (setq dired-guess-shell-gnutar "gtar")
-              ;; (setq dired-x-hands-off-my-keys nil)
-              ))
-  (add-hook 'dired-mode-hook
-            (lambda ()
-              ;; Set dired-x buffer-local variables here.  For example:
-              ;; (dired-omit-mode 1)
-              ))
-#+end_src
-
-#+RESULTS: Dired-x
-| (lambda nil) | (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
+| (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
 
 
-Further customization that I originally had within the block on dired plus that I actually do not use!
-
-First I set dired listing options. Originally, among the options there was a =p= in =-alDhp= but in https://www.reddit.com/r/emacs/comments/9flask/dired_mode_move_directory/ they explain that this causes failure when moving directories. The =p= flag to =ls= appends a slash (=/=) indicator to directories.
-
-Then I added to option to list directories first that I found in https://www.emacswiki.org/emacs/DiredSorting
-
-Also, from https://emacs.stackexchange.com/questions/2722/dired-listing-switches-time-style-format-with-a-space I have added =--time-style \"+%m-%d-%Y %H:%M:%S\""=. Esta ha sido la clave para que Dired me dé la fecha completa. <<dired-date>>
-
-DGM 16 july 2019: Ojo: when Dired buffer sorted alphabetically, my powermode bar includes =-alDh --group-directories-first --time-style "+-Dired -alDh --group-directories-first= for some reason. This is meaningless there and leaves no roomf for time information, etc. It does not occur if I sort by date. Why?
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (if (eq system-type 'gnu/linux)
-      (setq dired-listing-switches "-alDh --group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\""))
-
-  (defun ensure-buffer-name-ends-in-slash ()
-    "change buffer name to end with slash"
-    (let ((name (buffer-name)))
-      (if (not (string-match "/$" name))
-          (rename-buffer (concat name "/") t))))
-
-  (add-hook 'dired-mode-hook 'ensure-buffer-name-ends-in-slash)
-
-  (add-hook 'dired-mode-hook
-            (lambda()
-              (setq truncate-lines 1)))
-#+END_SRC
-
-#+RESULTS:
-| (lambda nil (setq truncate-lines 1)) | ensure-buffer-name-ends-in-slash | (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
-
-Open files in external programs (from http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
-Consider replacing with https://github.com/thamer/runner.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (defun xah-open-in-external-app (&optional file)
-    "Open the current file or dired marked files in external app.
-  The app is chosen from your OS's preference."
-    (interactive)
-    (let (doIt
-          (myFileList
-           (cond
-            ((string-equal major-mode "dired-mode")
-             (dired-get-marked-files))
-            ((not file) (list (buffer-file-name)))
-            (file (list file)))))
-      (setq doIt (if (<= (length myFileList) 5)
-                     t
-                   (y-or-n-p "Open more than 5 files? ")))
-      (when doIt
-        (cond
-         ((string-equal system-type "windows-nt")
-          (mapc
-           (lambda (fPath)
-             (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" fPath t t)))
-           myFileList))
-         ((string-equal system-type "darwin")
-          (mapc
-           (lambda (fPath)
-             (shell-command (format "open \"%s\"" fPath)))
-           myFileList))
-         ((string-equal system-type "gnu/linux")
-          (mapc
-           (lambda (fPath)
-             (let ((process-connection-type nil))
-               (start-process "" nil "xdg-open" fPath))) myFileList))))))
-  ;; use zip/unzip to compress/uncompress zip archives
-  (with-eval-after-load "dired-aux"
-    (add-to-list 'dired-compress-file-suffixes
-                 '("\\.zip\\'" "" "unzip"))
-    ;; open files from dired with "E"
-    (define-key dired-mode-map (kbd "E") 'xah-open-in-external-app))
-#+END_SRC
-
-*** Dired open multiple files
-In dired mode, visit all marked files using. Bound to the "F" key.
-
-#+source: dired-F
-#+begin_src emacs-lisp :tangle yes
-  (eval-after-load "dired"
-    '(progn
-       (define-key dired-mode-map "F" 'my-dired-find-file)
-       (defun my-dired-find-file (&optional arg)
-         "Open each of the marked files, or the file under the point, or when prefix arg, the next N files "
-         (interactive "P")
-         (let* ((fn-list (dired-get-marked-files nil arg)))
-           (mapc 'find-file fn-list)))))
-#+end_src
-
-#+RESULTS: dired-F
-: my-dired-find-file
-
-*** Stripe Dired buffers
-
-Use different background colors for even and odd lines. Info here https://github.com/sabof/stripe-buffer
-
-With the help of library hl-line-mode yet another color can be used for the current line.
-
-**** highlight line
+** highlight line
 
 #+BEGIN_SRC emacs-lisp  :tangle yes
   (use-package hl-line)
@@ -267,45 +155,6 @@ DGM 20 jan 2020: nice idea but doing =M-x profiler-start= and then =M-x profiler
 
 So this could be the reason why the cursor is so slow! (see https://github.com/syl20bnr/spacemacs/issues/8905)
 
-#+name: stripe-dired
-#+begin_src emacs-lisp :tangle no
-  (use-package stripe-buffer
-    :config (progn
-              (add-hook 'dired-mode-hook #'turn-on-stripe-buffer-mode)))
-
-  (add-hook 'org-mode-hook 'org-table-stripes-enable)
-  ;; (add-hook 'dired-mode-hook 'stripe-listify-buffer)
-#+END_SRC
-
-*** diff-hl
-Emacs package for highlighting uncommitted changes. See https://github.com/dgutov/diff-hl
-
-diff-hl-mode highlights uncommitted changes on the left side of the window, allows you to jump between and revert them selectively.
-
-For the usage instructions and the list of commands, see the Commentary section inside the file.
-
-Tested with Git, Mercurial, Bazaar and SVN. May work with other VC backends, too.
-
-The package also contains auxiliary modes:
-
-diff-hl-dired-mode provides similar functionality in Dired.
-diff-hl-margin-mode changes the highlighting function to use the margin instead of the fringe.
-diff-hl-amend-mode shifts the reference revision back by one.
-diff-hl-flydiff-mode implements highlighting changes on the fly. It requires Emacs 24.4 or newer.
-
-Check out the Commentary section in each respective file for the usage instructions.
-
-#+begin_src emacs-lisp :tangle no
-  (use-package diff-hl)
-  (global-diff-hl-mode)
-  ;; (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
-  (remove-hook 'dired-mode-hook 'diff-hl-dired-mode)
-  (remove-hook 'dired-mode-hook 'hl-line-mode)
-#+END_SRC
-
-#+RESULTS:
-| (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
-
 ** Avy Mode
 From: http://oremacs.com/2016/01/23/avy-0.4.0/
 
@@ -324,7 +173,7 @@ Note I have binded to =C-o= instead of =M-t=:
 
 Further words from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs:
 
--  avy and why it’s the best thing in existence
+-  avy and why it's the best thing in existence
 Many times have I pondered how I can move around buffers even quicker. I’m glad to say, that avy is precisely what I needed, and it’s precisely what you need as well. In short, as you invoke one of avy’s functions, you will be prompted for a character that you’d like to jump to in the visible portion of the current buffer. Afterwards you will notice how all instances of said character have additional letter on top of them. Pressing those letters, that are next to your desired character will move your cursor over there. Admittedly, this sounds overly complicated and complex, but in reality takes a split second and improves your life tremendously.
 
 I like M-s for it, same as C-s is for moving by searching string, now M-s is moving by searching characters.
@@ -337,7 +186,7 @@ Now my main use =goto-char-timer= where I am prompted to write the text that I w
     :ensure t
     :bind
     ("s-i" . avy-goto-word-1)  ;; goes to word that starts with a given char
-    ("s-^" . avy-goto-char)
+    ("s-+" . avy-goto-char)
     ("s-l" . avy-goto-char-timer))
 
   ;; (define-key global-map (kbd "s-l") 'avy-goto-char-timer) ;;
@@ -752,152 +601,6 @@ Included in =starter-kit-completion.org=
 
 #+RESULTS: ibuffer-vc
 | mark | modified | read-only | vc-status-mini |   | (name 18 18 :left :elide) |   | (size 9 -1 :right) |   | (mode 16 16 :left :elide) |   | (vc-status 16 16 :left) |   | filename-and-process |
-
-*** Dired plus
-
-#+srcname: dired+
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (require 'dired+)
-
-  ;; copied  by dgm from: http://emacs-leuven.readthedocs.io/en/latest/?badge=latest
-
-  ;; Don't hide details in Dired.
-  ;;    (setq diredp-hide-details-initially-flag nil)
-
-  ;; Don't display the next Dired buffer the same way as the last.
-  ;;    (setq diredp-hide-details-propagate-flag nil)
-
-  ;; Don't wrap "next" command around to buffer beginning.
-  ;; (setq diredp-wrap-around-flag nil)
-
-  ;; Dired `find-file' commands reuse directories.
-  ;; (diredp-toggle-find-file-reuse-dir 1)
-
-  ;; Up, reusing Dired buffers.
-  ;; (define-key dired-mode-map (kbd "C-x C-j")
-  ;;  #'diredp-up-directory-reuse-dir-buffer)
-
-  ;; tips from Ista Zahn. Not sure if they require dired+
-  ;; https://github.com/izahn/dotemacs
-
-  ;;; Dired and Dired+ configuration
-  ;; this is commented as it is reapplied somewhere else in this file
-  ;; (add-hook 'dired-mode-hook
-  ;;          (lambda()
-  ;;            (diff-hl-dired-mode)
-  ;;            (diff-hl-margin-mode)))
-
-#+END_SRC
-
-Set emacs to open Bookmark+ on start. From Xah Emacs. Disabled now that I use =Dashboard=
-
-#+srcname: bookmarks
-#+BEGIN_SRC emacs-lisp :tangle no
-  ;; included by dgm
-  ;;   (setq inhibit-splash-screen t)
-  ;; (require 'bookmark+) ;; no longer available in MELPA
-  ;;  (bookmark-bmenu-list)
-  ;;  (switch-to-buffer "*Bookmark List*")
-  ;; '(initial-buffer-choice "*Bookmark List*")
-  ;; (setq initial-buffer-choice "*Bookmark List*")
-#+END_SRC
-
-
-#+RESULTS: bookmarks
-
-
-#+srcname: custom-setup
-#+BEGIN_SRC emacs-lisp :tangle no
-  ;;    Load the files in CustomDir using mapc:
-  ;; (mapc 'load (directory-files "~/.emacs.d/customDir" t ".*\.el"))
-  ;; (add-to-list 'load-path "~/.emacs.d/customDir/")
-  ;; (require 'setup-programming)
-#+END_SRC
-
-
-I disable this as flycheck makes emacs too slow.
-#+srcname: flycheck-tip
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;;  (require 'flycheck-tip)
-  ;;  (define-key global-map (kbd "\C-c \C-n") 'flycheck-tip-cycle)
-  ;;  (setq flycheck-display-errors-function 'ignore)
-#+END_SRC
-
-#+RESULTS: flycheck-tip
-: ignore
-
-#+RESULTS:
-: ignore
-
-
-For now, I deactivate the golden-ratio mode because it distract me too much.
-
-#+srcname: golden-ratio
-#+BEGIN_SRC emacs-lisp :tangle no
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; PACKAGE: golden-ratio                         ;;
-  ;;                                               ;;
-  ;; GROUP: Environment -> Windows -> Golden Ratio ;;
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  ;; activate for helm when helm is installed
-  ;; (require 'golden-ratio)
-
-  ;; (add-to-list 'golden-ratio-exclude-modes "ediff-mode")
-  ;; (add-to-list 'golden-ratio-exclude-modes "helm-mode")
-  ;; (add-to-list 'golden-ratio-exclude-modes "dired-mode")
-  ;; (add-to-list 'golden-ratio-exclude-modes "ess-mode")
-
-  ;; I dont want the golden ratio with the Helm window
-  ;;  (defun pl/helm-alive-p ()
-  ;;   (if (boundp 'helm-alive-p)
-  ;;       (symbol-value 'helm-alive-p)))
-
-  ;;  (add-to-list 'golden-ratio-inhibit-functions 'pl/helm-alive-p)
-
-  ;; do not enable golden-ratio in theses modes
-  ;;   (setq golden-ratio-exclude-modes '("ediff-mode"
-  ;;                                      "gud-mode"
-  ;;                                      "gdb-locals-mode"
-  ;;                                      "gdb-registers-mode"
-  ;;                                      "gdb-breakpoints-mode"
-  ;;                                      "gdb-threads-mode"
-  ;;                                      "gdb-frames-mode"
-  ;;                                      "gdb-inferior-io-mode"
-  ;;                                      "gud-mode"
-  ;;                                      "gdb-inferior-io-mode"
-  ;;                                      "gdb-disassembly-mode"
-  ;;                                      "gdb-memory-mode"
-  ;;   ;;                                   "magit-log-mode"
-  ;;   ;;                                   "magit-reflog-mode"
-  ;;   ;;                                   "magit-status-mode"
-  ;;                                      "IELM"
-  ;;                                      "eshell-mode"
-  ;;                                      "dired-mode"
-  ;;                                      "helm-mode"
-  ;;                                      "ess-mode"))
-  ;; delete "dired-mode"  from the above list if you want golden-ratio to apply to helm
-
-  ;;   (golden-ratio-mode)
-#+END_SRC
-
-#+RESULTS: golden-ratio :tangle no
-
-
-I disable this as it is dealt with in -misc.org
-#+srcname: frame-title
-#+BEGIN_SRC emacs-lisp :tangle no
-  ;; more useful frame title, that show either a file or a
-  ;; buffer name (if the buffer isn't visiting a file)
-  ;; taken from prelude-ui.el
-  ;; (setq frame-title-format
-  ;;      '("" invocation-name " - " (:eval (if (buffer-file-name)
-  ;;                                                    (abbreviate-file-name (buffer-file-name))
-  ;;                                                  "%b"))))
-#+END_SRC
-
-#+RESULTS: frame-title
-|   | invocation-name | - | (:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) %b)) |
 
 *** highlight-numbers-and-symbols
 
@@ -1789,19 +1492,25 @@ Rendered obsolete by =scratch= package? Not really because the scratch package f
 #+RESULTS:
 : hrs/generate-scratch-buffer
 
-*** Visit last dired buffer
 
-#+begin_src emacs-lisp :tangle yes
-  (defun hrs/visit-last-dired-file ()
-    "Open the last file in an open dired buffer."
-    (interactive)
-    (end-of-buffer)
-    (previous-line)
-    (dired-find-file))
-#+end_src
+*** Scratch package
+
+From: https://github.com/ieure/scratch-el
+Convenient package to create *scratch* buffers that are based on the current buffer's major mode. This is more convienent than manually creating a buffer to do some scratch work or reusing the initial *scratch* buffer.
+
+Se usa con =M-x scratch= y te crea un scratch buffer of the currently used mode. But you can choose another mode by doing =C-u M-x scratch=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package scratch
+    :ensure t
+    :commands scratch)
+
+ (global-set-key (kbd "s-^") 'scratch)
+#+END_SRC
 
 #+RESULTS:
-: hrs/visit-last-dired-file
+: scratch
+
 
 *** COMMENT Change window configuration
 
@@ -1920,17 +1629,6 @@ From his =main.el=
 
 #+RESULTS:
 : /home/dgm/.emacs.d/url/history
-
-** =dired= do what I mean
-- Tip from
-https://emacs.stackexchange.com/questions/5603/how-to-quickly-copy-move-file-in-emacs-dired
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq dired-dwim-target t)
-#+END_SRC
-
-#+RESULTS:
-: t
 
 ** gpastel
 
@@ -2843,6 +2541,7 @@ And again, the same as above but we make sure to not delete the source word.
 
 #+RESULTS:
 : daedreth/copy-whole-word
+
 ****** COMMENT Copy a line
 Regardless of where your cursor is, this quickly copies a line... (DGM: I don't understand this, plus =M-w= copies line already.
 
@@ -2885,7 +2584,7 @@ Emacs treats camelCase strings as a single word by default, this changes said be
 ****** Beacon
 While changing buffers or workspaces, the first thing you do is look for your cursor. Unless you know its position, you cannot move it efficiently. Every time you change buffers, the current position of your cursor will be briefly highlighted now.
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle yes
   (use-package beacon
     :ensure t
     :config
@@ -3025,21 +2724,6 @@ http://www.masteringemacs.org/article/smart-scan-jump-symbols-buffer
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23932 61038 299198 455000) :init (23932 61038 299059 616000) :config (23932 61038 299043 758000) :config-secs (0 0 3819 895000) :init-secs (0 0 3860 798000) :use-package-secs (0 0 4289 188000)))
-
-***** Scratch
-
-From: https://github.com/ieure/scratch-el
-Convenient package to create *scratch* buffers that are based on the current buffer’s major mode. This is more convienent than manually creating a buffer to do some scratch work or reusing the initial *scratch* buffer.
-
-Se usa con =M-x scratch= y te crea un scratch buffer of the currently used mode. But you can choose another mode by doing =C-u M-x scratch=
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package scratch
-    :ensure t
-    :commands scratch)
-#+END_SRC
-
-#+RESULTS:
 
 ***** Visible mode
 I found out about this mode by looking through =simple.el=.
@@ -4862,21 +4546,6 @@ deleted, as they produce an error when exporting to pdf (they are obsolote packa
 #+RESULTS:
 : tufte-book
 
-* Pragmatic Emacs
-** dired-narrow
-
-Narrow dired to match filter.  From: http://pragmaticemacs.com/emacs/dynamically-filter-directory-listing-with-dired-narrow/
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package dired-narrow
-    :ensure t
-    :bind (:map dired-mode-map
-                ("/" . dired-narrow)))
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23623 36409 259307 947000) :init (23623 36409 259186 945000) :init-secs (0 0 37 660000) :use-package-secs (0 0 224 478000)))
-
 * Input method
 
 I'd rather have Spanish prefix as the default. Tips from: https://emacs.stackexchange.com/questions/418/setting-and-activating-the-default-input-method
@@ -5287,7 +4956,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "Repeat most recently executed command")
     (cheatsheet-add :group 'Command
                     :key "C-h l"
-                    :description "view-lossage. Lists which keystrokes were hit last")
+                    :description "view-lossage. Display last few input keystrokes and the commands run")
     (cheatsheet-add :group 'Command
                     :key "C-x M-: OR C-x ESC ESC OR C-x M-ESC"
                     :description "repeat-complex-command. Edit and re-evaluate last complex command-one which used the minibuffer")
@@ -5383,7 +5052,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "s-l"
                     :description "avy-goto-char-timer. Start typing word you want to go to.")
     (cheatsheet-add :group 'Editing
-                    :key "s-^"
+                    :key "s-+"
                     :description "avy-goto-char. Jump to any char you view.")
     (cheatsheet-add :group 'Editing
                     :key "C-x C-w M-n"
@@ -5619,9 +5288,15 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'ESS
                     :key "C-RET"
                     :description "ess-eval-region-or-line-visibly-and-step. Evaluate region if active, otherwise the current line and step.")
+    (cheatsheet-add :group 'ESS
+                    :key "C-c C-l"
+                    :description "ess-load-file. Load FILENAME into an inferior ESS process.")
     (cheatsheet-add :group 'Expressions-Eval
                     :key "C-x C-e"
                     :description "sanityinc/eval-last-sexp-or-region")
+    (cheatsheet-add :group 'Expressions-Eval
+                    :key "C-j"
+                    :description "eval-print-last-sexp. Evaluate sexp before point; print value into current buffer.")
     (cheatsheet-add :group 'Expressions-Copying
                     :key "C-M w"
                     :description "sp-copy-sexp: Copies next bit of the sexp")
@@ -6484,8 +6159,8 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c r"
                     :description "Replace buffer text visited file on disk. C-u offers to revert from latest auto-save file")
     (cheatsheet-add :group 'Scratch
-                    :key "M-x scratch"
-                    :description "With C-u you choose mode, otherwise current mode is used")
+                    :key "s-^"
+                    :description "M-x scratch. With C-u s-^ you choose mode, otherwise current mode is used")
     (cheatsheet-add :group 'Search
                     :key "C-u C-r AND C-M r"
                     :description "isearch-backward. Do incremental search backward.")
@@ -6611,7 +6286,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24190 22681 503827 205000) :init (24190 22681 503767 231000) :init-secs (0 0 33 35000) :use-package-secs (0 0 206 869000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24191 39023 402475 210000) :init (24191 39023 402416 662000) :init-secs (0 0 25 51000) :use-package-secs (0 0 162 964000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
