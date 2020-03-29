@@ -119,13 +119,11 @@ With the help of library =hl-line-mode= yet another color can be used for the cu
 From: https://www.emacswiki.org/emacs/DiredSortBySizeAndExtension
 
 Commented out even though it works great, but I loose my customization for dates and size.
+Need to download it again, as I screw up its settings.
 
 #+begin_src emacs-lisp :tangle no
 (require 'dired-fixups)
 #+end_src
-
-#+RESULTS:
-: dired-fixups
 
 ** Date format
 
@@ -260,116 +258,6 @@ Work like two-panelled file manager if two dired buffers opened. Very cool!
 
 #+END_SRC
 
-Set emacs to open Bookmark+ on start. From Xah Emacs. Disabled now that I use =Dashboard=
-
-#+srcname: bookmarks
-#+BEGIN_SRC emacs-lisp :tangle no
-  ;; included by dgm
-  ;;   (setq inhibit-splash-screen t)
-  ;; (require 'bookmark+) ;; no longer available in MELPA
-  ;;  (bookmark-bmenu-list)
-  ;;  (switch-to-buffer "*Bookmark List*")
-  ;; '(initial-buffer-choice "*Bookmark List*")
-  ;; (setq initial-buffer-choice "*Bookmark List*")
-#+END_SRC
-
-
-#+RESULTS: bookmarks
-
-
-#+srcname: custom-setup
-#+BEGIN_SRC emacs-lisp :tangle no
-  ;;    Load the files in CustomDir using mapc:
-  ;; (mapc 'load (directory-files "~/.emacs.d/customDir" t ".*\.el"))
-  ;; (add-to-list 'load-path "~/.emacs.d/customDir/")
-  ;; (require 'setup-programming)
-#+END_SRC
-
-
-I disable this as flycheck makes emacs too slow.
-#+srcname: flycheck-tip
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;;  (require 'flycheck-tip)
-  ;;  (define-key global-map (kbd "\C-c \C-n") 'flycheck-tip-cycle)
-  ;;  (setq flycheck-display-errors-function 'ignore)
-#+END_SRC
-
-#+RESULTS: flycheck-tip
-: ignore
-
-#+RESULTS:
-: ignore
-
-
-For now, I deactivate the golden-ratio mode because it distract me too much.
-
-#+srcname: golden-ratio
-#+BEGIN_SRC emacs-lisp :tangle no
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; PACKAGE: golden-ratio                         ;;
-  ;;                                               ;;
-  ;; GROUP: Environment -> Windows -> Golden Ratio ;;
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  ;; activate for helm when helm is installed
-  ;; (require 'golden-ratio)
-
-  ;; (add-to-list 'golden-ratio-exclude-modes "ediff-mode")
-  ;; (add-to-list 'golden-ratio-exclude-modes "helm-mode")
-  ;; (add-to-list 'golden-ratio-exclude-modes "dired-mode")
-  ;; (add-to-list 'golden-ratio-exclude-modes "ess-mode")
-
-  ;; I dont want the golden ratio with the Helm window
-  ;;  (defun pl/helm-alive-p ()
-  ;;   (if (boundp 'helm-alive-p)
-  ;;       (symbol-value 'helm-alive-p)))
-
-  ;;  (add-to-list 'golden-ratio-inhibit-functions 'pl/helm-alive-p)
-
-  ;; do not enable golden-ratio in theses modes
-  ;;   (setq golden-ratio-exclude-modes '("ediff-mode"
-  ;;                                      "gud-mode"
-  ;;                                      "gdb-locals-mode"
-  ;;                                      "gdb-registers-mode"
-  ;;                                      "gdb-breakpoints-mode"
-  ;;                                      "gdb-threads-mode"
-  ;;                                      "gdb-frames-mode"
-  ;;                                      "gdb-inferior-io-mode"
-  ;;                                      "gud-mode"
-  ;;                                      "gdb-inferior-io-mode"
-  ;;                                      "gdb-disassembly-mode"
-  ;;                                      "gdb-memory-mode"
-  ;;   ;;                                   "magit-log-mode"
-  ;;   ;;                                   "magit-reflog-mode"
-  ;;   ;;                                   "magit-status-mode"
-  ;;                                      "IELM"
-  ;;                                      "eshell-mode"
-  ;;                                      "dired-mode"
-  ;;                                      "helm-mode"
-  ;;                                      "ess-mode"))
-  ;; delete "dired-mode"  from the above list if you want golden-ratio to apply to helm
-
-  ;;   (golden-ratio-mode)
-#+END_SRC
-
-#+RESULTS: golden-ratio :tangle no
-
-
-I disable this as it is dealt with in -misc.org
-#+srcname: frame-title
-#+BEGIN_SRC emacs-lisp :tangle no
-  ;; more useful frame title, that show either a file or a
-  ;; buffer name (if the buffer isn't visiting a file)
-  ;; taken from prelude-ui.el
-  ;; (setq frame-title-format
-  ;;      '("" invocation-name " - " (:eval (if (buffer-file-name)
-  ;;                                                    (abbreviate-file-name (buffer-file-name))
-  ;;                                                  "%b"))))
-#+END_SRC
-
-#+RESULTS: frame-title
-|   | invocation-name | - | (:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) %b)) |
-
 
 ** Visit last dired buffer
 
@@ -409,7 +297,3 @@ Narrow dired to match filter.  From: http://pragmaticemacs.com/emacs/dynamically
 #+begin_src emacs-lisp :tangle yes
   (message "Starter Kit Dired loaded.")
 #+end_src
-
-
-
-

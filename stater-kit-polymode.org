@@ -104,7 +104,6 @@ Assignment in ESS is shift-minus; by extension we'll use M-shift-minus for inser
   (reindent-then-newline-and-indent))
 (define-key ess-mode-map (kbd "M-_") 'my_pipe_operator)
 (define-key inferior-ess-mode-map (kbd "M-_") 'my_pipe_operator)
-
 #+end_src
 
 ** Add a Keyboard Shortcut for Rmd chunks
