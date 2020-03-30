@@ -1119,7 +1119,7 @@ Since ztree works with files and directories, let's consider it in group Files
 
 *** rebox2
 
-Ojo: solo funciona si se llama M-x rebox-mode
+Ojo: solo funciona si se llama M-x rebox-mode. Luego desactivalo porque interfiere con, por ejemplo, =M w=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rebox2)
@@ -5031,6 +5031,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c d"
                     :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
     (cheatsheet-add :group 'Editing
+                    :key "M-q"
+                    :description "rebox-dwin-fill. Call M-x rebox-mode first. Then turn off")
+    (cheatsheet-add :group 'Editing
+                    :key "Shift-M-q"
+                    :description "rebox-dwin-no-fill. Call M-x rebox-mode first. Then turn off")
+    (cheatsheet-add :group 'Editing
                     :key "C-x i"
                     :description "insert-file. Insert contents of file FILENAME into buffer after point. This function is meant for the user to run interactively")
     (cheatsheet-add :group 'Editing
@@ -6077,7 +6083,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "magit-reverse. Reverse the change at point, in a hunk of a commit, for example, in the working tree. Prefix causes the change to be applied to the index as well")
     (cheatsheet-add :group 'Pandoc
                     :key "C-c /"
-                    :description "pandoc-main-hydra/body. Call the body in the "pandoc-main-hydra" hydra.")
+                    :description "pandoc-main-hydra/body. Call the body in the pandoc-main-hydra hydra.")
     (cheatsheet-add :group 'Packages
                     :key "M-x try"
                     :description "Try a package before installing for good")
@@ -6293,7 +6299,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24193 48048 26521 803000) :init (24193 48048 26464 585000) :init-secs (0 0 25 270000) :use-package-secs (0 0 151 469000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24194 1647 783059 833000) :init (24194 1647 782966 511000) :init-secs (0 0 3316 356000) :use-package-secs (0 0 3474 975000) :config (24194 1647 782942 848000) :config-secs (0 0 3290 738000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
