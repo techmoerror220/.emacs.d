@@ -221,9 +221,10 @@ Tip from https://www.emacswiki.org/emacs/SmoothScrolling
 ** GROUP: Convenience -> Whitespace
 
 Whenever you create useless whitespace, the whitespace is highlighted
+DGM: I disable the hook as it is too invasive (=1= turned =-1=).
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace 1)))
+  (add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace -1)))
 
   ;; activate whitespace-mode to view all whitespace characters
   (global-set-key (kbd "C-c w") 'whitespace-mode)
@@ -5172,6 +5173,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "M-m"
                     :description "back-to-indentation. Move point to the first non-whitespace character on this line")
     (cheatsheet-add :group 'Editing
+                    :key "C-c w"
+                    :description "whitespace-mode. Toggle.")
+    (cheatsheet-add :group 'Editing
                     :key "C-c C-r"
                     :description "org-reveal. Display where point is if it is buried in invisible text to allow editing again")
     (cheatsheet-add :group 'Editing
@@ -6289,7 +6293,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24193 4180 557263 796000) :init (24193 4180 557210 843000) :init-secs (0 0 22 360000) :use-package-secs (0 0 138 352000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24193 48048 26521 803000) :init (24193 48048 26464 585000) :init-secs (0 0 25 270000) :use-package-secs (0 0 151 469000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
