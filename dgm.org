@@ -127,7 +127,8 @@ Check out the Commentary section in each respective file for the usage instructi
 
 ** highlight line
 
-#+BEGIN_SRC emacs-lisp  :tangle yes
+Voy a probar a vivir sin esto 
+#+BEGIN_SRC emacs-lisp  :tangle no
   (use-package hl-line)
   ;; (global-hl-line-mode t)
   ;;(set-face-background 'hl-line "#bebebe")
@@ -2585,7 +2586,7 @@ Emacs treats camelCase strings as a single word by default, this changes said be
 ****** Beacon
 While changing buffers or workspaces, the first thing you do is look for your cursor. Unless you know its position, you cannot move it efficiently. Every time you change buffers, the current position of your cursor will be briefly highlighted now.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package beacon
     :ensure t
     :config
@@ -5560,6 +5561,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c h k"
                     :description "helm-buffer-run-kill-persistent: Works on a helm menu like the one by C-x b")
     (cheatsheet-add :group 'Help
+                    :key "C-h C-p"
+                    :description "view-emacs-problems")
+    (cheatsheet-add :group 'Help
                     :key "C-h p"
                     :description "Search the standard Emacs Lisp libraries by topic keywords")
     (cheatsheet-add :group 'Help
@@ -6299,7 +6303,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24194 1647 783059 833000) :init (24194 1647 782966 511000) :init-secs (0 0 3316 356000) :use-package-secs (0 0 3474 975000) :config (24194 1647 782942 848000) :config-secs (0 0 3290 738000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24196 64219 486498 784000) :init (24196 64219 486439 205000) :init-secs (0 0 25 841000) :use-package-secs (0 0 158 633000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
