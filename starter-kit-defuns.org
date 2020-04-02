@@ -60,8 +60,8 @@ a lambda doesn't already exist in the list.
 ;;    (toggle-hl-line-when-idle)
 ;;    (hl-line-when-idle-interval 2))
 
-;; From uncle dave's dot files
-(when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
+;; From uncle dave's dot files; DGM turns it off to try and speed up editing (I can see it in an .R file)
+;; (when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
       
   (defun turn-on-save-place-mode ()
     (setq save-place t))
