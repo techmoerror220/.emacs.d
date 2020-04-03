@@ -1031,7 +1031,7 @@ For now I comment it out because following Drew's advice has meant that I've los
 - Stuff from http://tuhdo.github.io/emacs-tutor3.html
 
 *** New beginning of line
-Sometimes, we want to adjust or improve the behaviours of some commands in certain contexts. Consider this situation: C-a, which runs move-beginning-of-line, always move to the beginning of line. However, sometimes we don't always to move to the beginning of line, but move to the first non-whitespace character of that line.
+Sometimes, we want to adjust or improve the behaviours of some commands in certain contexts. Consider this situation: =C-a=, which runs =move-beginning-of-line=, always move to the beginning of line. However, sometimes we don't always to move to the beginning of line, but move to the first non-whitespace character of that line.
 
 See http://tuhdo.github.io/emacs-tutor3.html
 
@@ -3162,12 +3162,14 @@ New set up from https://www.reddit.com/r/emacs/comments/bge7tc/how_to_solve_lisp
     (setq-default pdf-view-display-size 'fit-page)
     ;; automatically annotate highlights
     (setq pdf-annot-activate-created-annotations t)
+    ;; DGM following advice: When pdf-view-continuous is non-nil, scrolling upward at the bottom edge of the page moves to the next page.  Otherwise, go to next page only on typing SPC (ARG is nil).
+    (setq pdf-view-continuous 1)
     ;; use normal isearch
     (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23756 1806 717499 856000) :init (23756 1806 717488 199000) :config (23756 1806 717282 366000) :config-secs (0 0 3952 597000) :init-secs (0 0 4544 781000) :use-package-secs (0 0 4590 657000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24199 18893 171843 813000) :init (24199 18893 171828 350000) :config (24199 18893 171623 699000) :config-secs (0 0 4680 327000) :init-secs (0 0 5228 111000) :use-package-secs (0 0 5335 407000)))
 
 ***** Fix for the error before first and last page
 From: https://www.reddit.com/r/emacs/comments/bge7tc/how_to_solve_lisp_error_error_no_such_page_12_in/
@@ -5561,6 +5563,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c h k"
                     :description "helm-buffer-run-kill-persistent: Works on a helm menu like the one by C-x b")
     (cheatsheet-add :group 'Help
+                    :key "C-h C-h"
+                    :description "which-key-C-h-dispatch. Helps navigate help keys")
+    (cheatsheet-add :group 'Help
                     :key "C-h C-p"
                     :description "view-emacs-problems")
     (cheatsheet-add :group 'Help
@@ -6106,6 +6111,18 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Password-Ivy
                     :key "RET"
                     :description "Copy password in kill ring")
+    (cheatsheet-add :group 'Pdf-Tools
+                    :key "SPC"
+                    :description "pdf-view-scroll-up-or-next-page. Move down in a page.")
+    (cheatsheet-add :group 'Pdf-Tools
+                    :key "DEL"
+                    :description "pdf-view-scroll-down-or-previous-page. Move up in a page.")
+    (cheatsheet-add :group 'Pdf-Tools
+                    :key "n"
+                    :description "pdf-view-next-page-command. View the previous page in the PDF.")
+    (cheatsheet-add :group 'Pdf-Tools
+                    :key "p"
+                    :description "pdf-view-previous-page-command. View the previous page in the PDF.")
     (cheatsheet-add :group 'Polymode
                     :key "M-n"
                     :description "Polymode prefix")
@@ -6303,7 +6320,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24199 14227 781625 716000) :init (24199 14227 781561 777000) :init-secs (0 0 30 330000) :use-package-secs (0 0 197 202000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24199 27412 370026 53000) :init (24199 27412 369962 746000) :init-secs (0 0 25 759000) :use-package-secs (0 0 155 919000)))
 
 
 * COMMENT Remapping =M-<= and =M->=

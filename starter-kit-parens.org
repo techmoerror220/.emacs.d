@@ -563,6 +563,8 @@ DGM, 22 jan 20. Trying to get the =[]= pair in latex
   (defvar markdown-electric-pairs '(
                                     (?* . ?*)
                                     (?` . ?`)
+                                    (?$ . ?$)
+                                    (?' . ?')
                                     ) "Electric pairs for markdown-mode.")
 
   (defun markdown-add-electric-pairs ()
@@ -573,7 +575,7 @@ DGM, 22 jan 20. Trying to get the =[]= pair in latex
 #+end_src
 
 #+RESULTS:
-| markdown-add-electric-pairs | latex-unicode-simplified | turn-off-auto-fill | pandoc-mode |
+| (lambda nil (highlight-symbol-mode 1)) | pandoc-mode | (lambda nil (define-key markdown-mode-map  [ 'markdown-reftex-citation)) | latex-unicode-simplified | markdown-add-electric-pairs | turn-off-auto-fill |
 
 
 * Alternative: autopair
