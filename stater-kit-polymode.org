@@ -8,80 +8,23 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 This file provides settings for Polymode
 
-* Markdown and Polymode 
+* Markdown 
 Polymode is a package that supports multiple modes inside a single buffer. It is aimed particularly at literate programming approaches and supports, e.g., R and markdown in a single =.Rmd= file. So it is very useful with knitr in R.
 
-#+source: Polymode
+#+source: markdown
 #+begin_src emacs-lisp :tangle yes :results silent
   (use-package markdown-mode
     :ensure t
     :mode
     (("README\\.md\\'" . gfm-mode)
      ("\\.md\\'" . markdown-mode)
-     ("\\.markdown\\'" . markdown-mode))
+     ("\\.markdown\\'" . markdown-mode)
+     ("\\.Rmd\\'" . markdown-mode)
+     ("\\.rmd\\'" . markdown-mode)
+     ("\\.Rmw\\'" . markdown-mode))
     :init
     (setq markdown-command "markdown")
     )
-
-  (use-package polymode
-    :ensure markdown-mode
-    :ensure poly-R
-    :ensure poly-noweb
-    :config
-    ;; R/tex polymodes
-    (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
-    (add-to-list 'auto-mode-alist '("\\.rnw" . poly-noweb+r-mode))
-    (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
-    ;; org-mode poly (not working at the moment)
-    ;; (add-to-list 'auto-mode-alist '("\\.org" . poly-org-mode))
-    ;; Make sure r-mode is loaded
-    ;; (autoload 'r-mode "ess-site.el" "Major mode for editing R source." t)
-    ;; Add a chunk for rmarkdown
-    ;; Need to add a keyboard shortcut
-    ;; https://emacs.stackexchange.com/questions/27405/insert-code-chunk-in-r-markdown-with-yasnippet-and-polymode
-    ;; (defun insert-r-chunk (header) 
-    ;;   "Insert an r-chunk in markdown mode. Necessary due to interactions between polymode and yas snippet" 
-    ;;   (interactive "sHeader: ") 
-    ;;   (insert (concat "```{r " header "}\n\n\n```")) 
-    ;;   (forward-line -2))
-    ;; (define-key poly-markdown+r-mode-map (kbd "M-c") #'insert-r-chunk)
-    )
-
-
-  (use-package poly-markdown
-    :ensure polymode
-    :defer t
-    )
-
-;;  Originally, the above had: 
-;;  :config
-;;  ;; Wrap lines at column limit, but don't put hard returns in
-;;  (add-hook 'markdown-mode-hook (lambda () (visual-line-mode -1)))
-;;  ;; Flyspell on
-;;  (add-hook 'markdown-mode-hook (lambda () (flyspell-mode -1))) 
-;;  ;; Add highligh-symbol 
-;;  (add-hook 'markdown-mode-hook (lambda () (highlight-symbol-mode 1)))  ;; now in =dgm.org=
-
-  ;; poly-R
-  (use-package poly-R
-    :ensure polymode
-    :ensure poly-markdown
-    :ensure poly-noweb
-    :defer t
-  )
-
-;; Originally the above had:
-    ;; :config
-    ;; Add a chunk for rmarkdown
-    ;; Need to add a keyboard shortcut
-    ;; https://emacs.stackexchange.com/questions/27405/insert-code-chunk-in-r-markdown-with-yasnippet-and-polymode
-    ;; (defun insert-r-chunk (header) 
-    ;;   "Insert an r-chunk in markdown mode. Necessary due to interactions between polymode and yas snippet" 
-    ;;   (interactive "sHeader: ") 
-    ;;   (insert (concat "```{r " header "}\n\n\n```")) 
-    ;;   (forward-line -2))
-    ;; (define-key poly-markdown+r-mode-map (kbd "M-c") #'insert-r-chunk)
-
 
   ;; Add yaml to markdown an .yml files
   (use-package yaml-mode
@@ -102,8 +45,8 @@ Assignment in ESS is shift-minus; by extension we'll use M-shift-minus for inser
   (just-one-space 1)
   (insert "%>%")
   (reindent-then-newline-and-indent))
-(define-key ess-mode-map (kbd "M-_") 'my_pipe_operator)
-(define-key inferior-ess-mode-map (kbd "M-_") 'my_pipe_operator)
+(define-key ess-mode-map (kbd "C->") 'my_pipe_operator)
+(define-key inferior-ess-mode-map (kbd "C->") 'my_pipe_operator) 
 #+end_src
 
 ** Add a Keyboard Shortcut for Rmd chunks
@@ -208,8 +151,7 @@ Bind modified reftex-citation to =C-c [=, without enabling =reftex-mode=:
    (define-key markdown-mode-map "\C-c [" 'markdown-reftex-citation)))
 #+end_src
 
-
-** Local Pandoc Support
+* Local Pandoc Support
 
 A pandoc menu for markdown and tex files.
 
@@ -227,6 +169,74 @@ A pandoc menu for markdown and tex files.
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24183 46334 164638 301000) :init (24183 46334 164624 693000) :config (24183 46334 164356 613000) :config-secs (0 0 468 902000) :init-secs (0 0 1027 418000) :use-package-secs (0 0 1110 6000)))
+
+
+* Polymode 
+
+Trying to work with markdown only, as polymode is too slow
+
+#+source: Polymode
+#+begin_src emacs-lisp :tangle no :results silent
+  (use-package polymode
+    :ensure markdown-mode
+    :ensure poly-R
+    :ensure poly-noweb
+    :config
+    ;; R/tex polymodes
+    (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
+    (add-to-list 'auto-mode-alist '("\\.rnw" . poly-noweb+r-mode))
+    (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
+    ;; org-mode poly (not working at the moment)
+    ;; (add-to-list 'auto-mode-alist '("\\.org" . poly-org-mode))
+    ;; Make sure r-mode is loaded
+    ;; (autoload 'r-mode "ess-site.el" "Major mode for editing R source." t)
+    ;; Add a chunk for rmarkdown
+    ;; Need to add a keyboard shortcut
+    ;; https://emacs.stackexchange.com/questions/27405/insert-code-chunk-in-r-markdown-with-yasnippet-and-polymode
+    ;; (defun insert-r-chunk (header) 
+    ;;   "Insert an r-chunk in markdown mode. Necessary due to interactions between polymode and yas snippet" 
+    ;;   (interactive "sHeader: ") 
+    ;;   (insert (concat "```{r " header "}\n\n\n```")) 
+    ;;   (forward-line -2))
+    ;; (define-key poly-markdown+r-mode-map (kbd "M-c") #'insert-r-chunk)
+    )
+
+
+  (use-package poly-markdown
+    :ensure polymode
+    :defer t
+    )
+
+;;  Originally, the above had: 
+;;  :config
+;;  ;; Wrap lines at column limit, but don't put hard returns in
+;;  (add-hook 'markdown-mode-hook (lambda () (visual-line-mode -1)))
+;;  ;; Flyspell on
+;;  (add-hook 'markdown-mode-hook (lambda () (flyspell-mode -1))) 
+;;  ;; Add highligh-symbol 
+;;  (add-hook 'markdown-mode-hook (lambda () (highlight-symbol-mode 1)))  ;; now in =dgm.org=
+
+  ;; poly-R
+  (use-package poly-R
+    :ensure polymode
+    :ensure poly-markdown
+    :ensure poly-noweb
+    :defer t
+  )
+
+;; Originally the above had:
+    ;; :config
+    ;; Add a chunk for rmarkdown
+    ;; Need to add a keyboard shortcut
+    ;; https://emacs.stackexchange.com/questions/27405/insert-code-chunk-in-r-markdown-with-yasnippet-and-polymode
+    ;; (defun insert-r-chunk (header) 
+    ;;   "Insert an r-chunk in markdown mode. Necessary due to interactions between polymode and yas snippet" 
+    ;;   (interactive "sHeader: ") 
+    ;;   (insert (concat "```{r " header "}\n\n\n```")) 
+    ;;   (forward-line -2))
+    ;; (define-key poly-markdown+r-mode-map (kbd "M-c") #'insert-r-chunk)
+#+end_src
+
 
 * Provide
 #+begin_src emacs-lisp :tangle yes :results silent

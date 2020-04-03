@@ -6303,7 +6303,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24196 64219 486498 784000) :init (24196 64219 486439 205000) :init-secs (0 0 25 841000) :use-package-secs (0 0 158 633000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24199 14227 781625 716000) :init (24199 14227 781561 777000) :init-secs (0 0 30 330000) :use-package-secs (0 0 197 202000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
