@@ -284,6 +284,17 @@ Narrow dired to match filter.  From: http://pragmaticemacs.com/emacs/dynamically
                 ("/" . dired-narrow)))
 #+END_SRC
 
+* Settings DGM gets from Emacs manual
+
+From p. 339
+
+#+begin_src emacs-lisp :tangle yes
+(setq dired-isearch-filenames 'dwim)
+(setq delete-by-moving-to-trash t)
+#+end_src
+
+#+RESULTS:
+: t
 
 * Provide
 

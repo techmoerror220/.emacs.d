@@ -423,7 +423,6 @@ column-number-mode t)
           inhibit-startup-message t
           transient-mark-mode t
         ;;  color-theme-is-global t
-          delete-by-moving-to-trash t
           shift-select-mode nil
           truncate-partial-width-windows nil
           whitespace-style '(trailing lines space-before-tab
