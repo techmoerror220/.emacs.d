@@ -4992,6 +4992,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-x d"
                     :description "helm-mode-dired. TAB to select; RET to jump to selection")
     (cheatsheet-add :group 'Dired
+                    :key "j"
+                    :description "dired-goto-file. Go to line describing file FILE in this Dired buffer")
+    (cheatsheet-add :group 'Dired
                     :key "J"
                     :description "bmkp-dired-jump. Jump to a Dired bookmark")
     (cheatsheet-add :group 'Dired
@@ -5006,9 +5009,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Dired
                     :key "("
                     :description "dired-hide-details-mode")
-    (cheatsheet-add :group 'Dired
-                    :key "$"
-                    :description "dired-hide-subdir. Hide or unhide the current subdirectory and move to next directory.")
     (cheatsheet-add :group 'Dired-Projectile
                     :key "C-d"
                     :description "Open dired when in P session")
@@ -6121,6 +6121,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "n"
                     :description "pdf-view-next-page-command. View the previous page in the PDF.")
     (cheatsheet-add :group 'Pdf-Tools
+                    :key "o"
+                    :description "pdf-outline")
+    (cheatsheet-add :group 'Pdf-Tools
                     :key "p"
                     :description "pdf-view-previous-page-command. View the previous page in the PDF.")
     (cheatsheet-add :group 'Polymode
@@ -6320,7 +6323,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24199 27412 370026 53000) :init (24199 27412 369962 746000) :init-secs (0 0 25 759000) :use-package-secs (0 0 155 919000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24203 39524 716792 611000) :init (24203 39524 716639 206000) :init-secs (0 0 2939 254000) :use-package-secs (0 0 3176 310000) :config (24203 39524 716616 2000) :config-secs (0 0 2905 655000)))
 
 
 * COMMENT Remapping =M-<= and =M->=

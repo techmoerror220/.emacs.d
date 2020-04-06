@@ -24,8 +24,8 @@ Polymode is a package that supports multiple modes inside a single buffer. It is
      ("\\.Rmw\\'" . markdown-mode))
     :init
     (setq markdown-command "markdown")
-    ;; DGM trying to make line-mode-visual work with visual lines rather than logical lines (nil)
-    (setq line-mode-visual t)
+    ;; DGM trying to make line-move-visual work with visual lines rather than logical lines (nil) (manual, p.19)
+    (setq line-move-visual t)
     )
 
   ;; Add yaml to markdown an .yml files
