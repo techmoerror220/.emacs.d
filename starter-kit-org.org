@@ -984,6 +984,7 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq org-directory "/home/dgm/Dropbox/gtd")
   ;; Set to <your Dropbox root directory>/MobileOrg.
+  
   (setq org-mobile-directory "/media/dgm/blue/documents/dropbox/mobileorg")
   ;; Set to the files (or directory of files) you want sync'd
   ;;   (setq org-agenda-files (quote ("/home/dgm/Dropbox/gtd")))  ;; this is the original line by kieran healy.
@@ -1001,8 +1002,6 @@ Shortcuts that should work in Org but do not. Besides, they used to be bound to 
                                "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org"
                                "/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org"))
 #+END_SRC
-
-
 
 From https://stackoverflow.com/questions/10635989/emacs-org-agenda-list-destroy-my-windows-splits. 
 
@@ -1726,9 +1725,8 @@ Basically you tell agenda to display events from calendar diary:
 ** Refiling
 
 From Caolan at https://caolan.org/dotfiles/emacs.html#orgd96aeb0. 
-Provide refile targets as paths, so a level 3 headline will be available as level1/level2/level3. Offer completions in hierarchical steps.
 
-Targets. (Nota que solo con =maxlevel= I get the refiling to someday's second level---two stars---to work).
+Provide refile targets as paths, so a level 3 headline will be available as level1/level2/level3. Offer completions in hierarchical steps.
 
 Explanation: 
 
@@ -1736,8 +1734,11 @@ Take for example =("/home/dgm/Dropbox/gtd/tickler.org" :level . 2)=. This gave l
 
 When I changed this to =("/home/dgm/Dropbox/gtd/tickler.org" :maxlevel . 2)= I got it working for low-level headings and for the upper-level heading =tickler=.s
 
+Similarly, nota que sólo con =maxlevel= I get the refiling to =someday.org='s second level---two stars---to work.
+
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (setq org-refile-targets '(("/home/dgm/Dropbox/gtd/gtd.org" :maxlevel . 3)
+  (setq org-refile-targets '(("/home/dgm/Dropbox/gtd/gtd.org" :maxlevel . 2)
                              ("/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" :level . 2)
                              ("/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org" :level . 2)
                              ("/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" :level . 2)
@@ -1774,12 +1775,12 @@ Create any missing parent nodes during refile (after asking for confirmation). (
 #+RESULTS:
 : confirm
 
-The last two variables are useful because I'm using helm. Instead of having to step through the headings Foo, Bar, and Go to the the Store, I just get a giant list of targets in the form Foo/Bar/Go to the Store. Makes it super easy to jump to whatever I'm looking for.
+The last two variables are useful because I'm using =helm=. Instead of having to step through the headings =Foo=, =Bar=, and =Go to the the Store=, I just get a giant list of targets in the form =Foo/Bar/Go to the Store=. Makes it super easy to jump to whatever I'm looking for.
+
 From: https://www.reddit.com/r/emacs/comments/4366f9/how_do_orgrefiletargets_work/
 
 Also, https://emacs.stackexchange.com/questions/32617/how-to-jump-directly-to-an-org-headline
-notes that 
-"Users of completion packages like ido/ivy/helm will probably want to change the following setting in order to see the whole target path at once:"
+notes that "Users of completion packages like ido/ivy/helm will probably want to change the following setting in order to see the whole target path at once:"
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq org-refile-use-outline-path t)          ;; show full paths to refiling

@@ -4183,7 +4183,7 @@ It can be difficult to remember the full names of Emacs commands, so I use =icom
 
 * Skeleton
 ** Latex
-- Recall to =eval-and-replace= =(article-skeleton)= with =C-c e=.
+- Recall to =eval-and-replace= =(lt-art)= with =C-c e=.
 - Nota que por alguna razon hace falta las dos declaraciones de Spanish.
 - Nota que ="#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"= is gone because now I compile =vc= in the makefile.
 
