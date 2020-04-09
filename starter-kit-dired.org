@@ -125,13 +125,16 @@ Need to download it again, as I screw up its settings.
 (require 'dired-fixups)
 #+end_src
 
+#+RESULTS:
+: dired-fixups
+
 ** Date format
 
 From: https://stackoverflow.com/questions/11269897/emacs-dired-how-to-set-date-time-format
 
 Pero parece que esto no ha afectado al formato de Dired. En cambio, el secreto lo ha dado la definición aquí: [[dired-date.]] Así que lo comento. El problema es que  [[dired-date]] fastidia a =dired-fixups.el=
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 ; use ISO dates (the first is for recent dates, second for old dates)
   
 (setq ls-lisp-format-time-list  '("%d.%m.%Y %H:%M:%S" "%d.%m.%Y %H:%M:%S")

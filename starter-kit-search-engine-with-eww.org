@@ -288,6 +288,10 @@ prefixed with =C-x /=:
   :browser 'browse-url-chromium
   :docstring "Mappin' it up.")
 
+(defengine rae
+  "https://dle.rae.es/?w=%s"
+  :keybinding "r")
+
 (defengine stack-overflow
   "https://stackoverflow.com/search?q=%s"
   :keybinding "s")

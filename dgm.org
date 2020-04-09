@@ -4945,7 +4945,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "eww-readable. Find text, leaving out navigation menus and the like.")
     (cheatsheet-add :group 'Browsing
                     :key "s-}"
-                    :description "Web browsing with engine-mode: Google maps and Wolfram included")
+                    :description "Web browsing with engine-mode: Google maps, RAE and Wolfram included")
     (cheatsheet-add :group 'Browsing
                     :key "M-x sos"
                     :description "StackOverflow only")
@@ -5018,6 +5018,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Dired
                     :key "&"
                     :description "dired-do-async-shell-command. Run a shell command COMMAND on the marked files asynchronously")
+    (cheatsheet-add :group 'Dired-Sorting
+                    :key "s"
+                    :description "dired-sort-toggle-or-edit. Toggle between alphabetical and date order and with prefix argument, edit listing switches")
+    (cheatsheet-add :group 'Dired-Sorting
+                    :key "C-u s"
+                    :description "Prompts for switches to sort: -t for time, newest 1st. -S for file size, largest 1st. -X for ext. -r for reversing. -U for directory order")
     (cheatsheet-add :group 'Dired-Projectile
                     :key "M-C"
                     :description "Copy marked files in P session to another opened Dired dir")
@@ -6323,7 +6329,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24203 39524 716792 611000) :init (24203 39524 716639 206000) :init-secs (0 0 2939 254000) :use-package-secs (0 0 3176 310000) :config (24203 39524 716616 2000) :config-secs (0 0 2905 655000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24207 38403 308078 201000) :init (24207 38403 308023 582000) :init-secs (0 0 23 948000) :use-package-secs (0 0 143 593000)))
 
 
 * COMMENT Remapping =M-<= and =M->=

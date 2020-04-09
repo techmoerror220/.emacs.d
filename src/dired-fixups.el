@@ -10,11 +10,7 @@
     ;; (defun ls-lisp-format-time (file-attr time-index now)
     ;;   "################")
 
-(setq ls-lisp-format-time-list  '("%d.%m.%Y %H:%M:%S" "%d.%m.%Y %H:%M:%S")
-      ls-lisp-use-localized-time-format t)
-
-(defun ls-lisp-format-time (file-attr time-index now)
-  "%d.%m.%Y %H:%M:%S" "%d.%m.%Y %H:%M:%S")
+(setq dired-listing-switches "-alDh --group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\"")
 
 (defun ls-lisp-format-file-size (file-size human-readable)
   "This is a redefinition of the function from `dired.el'. This
@@ -49,21 +45,21 @@ time, and extension. Cycling works the same.
 
             (cond
 
-             ((string-match "--group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\" -t\\'" dired-actual-switches)
+             ((string-match " -t\\'" dired-actual-switches)
               (concat
                (substring dired-actual-switches 0 (match-beginning 0))
                " -X"))
 
-             ((string-match "--group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\" -X\\'" dired-actual-switches)
+             ((string-match " -X\\'" dired-actual-switches)
               (concat
                (substring dired-actual-switches 0 (match-beginning 0))
                " -S"))
 
-             ((string-match "--group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\" -S\\'" dired-actual-switches)
+             ((string-match " -S\\'" dired-actual-switches)
               (substring dired-actual-switches 0 (match-beginning 0)))
 
              (t
-              (concat dired-actual-switches "--group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\" -t"))))
+              (concat dired-actual-switches " -t"))))
 
            (t
             ;; old toggle scheme: look for a sorting switch, one of [tUXS]
@@ -84,10 +80,12 @@ time, and extension. Cycling works the same.
               (concat
                "-l"
                ;; strip -l and any sorting switches
-               (dired-replace-in-string (concat "[-lt --group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\""
+               (dired-replace-in-string (concat "[-t "
                                                 dired-ls-sorting-switches "]")
                                         ""
-                                        dired-actual-switches)
+                                        dired-actual-switches
+                                        ""
+                                        dired-listing-switches)
                new-sorting-switch))))))
 
   (dired-sort-set-modeline)
