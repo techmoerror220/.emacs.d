@@ -7,3 +7,6 @@
 [submodule "quelpa/melpa"]
 	path = quelpa/melpa
 	url = https://github.com/melpa/melpa.git
+[submodule "ado"]
+	path = src/ado-mode
+	url = https://github.com/louabill/ado-mode.git

@@ -14,7 +14,7 @@ This file provides settings for ESS and R.
 ** Load ESS 
 
 #+src-name: ess-mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes :results silent
   ;; (use-package ess
   ;;  :ensure t
   ;;  :init (require 'ess-site))
@@ -72,7 +72,7 @@ Insert =_= if the preceding character is not a tab/space.
 
 Toggle with =ess-S-underscore-when-last-character-is-a-space=  Not enabled by default, so when I defined a varible with an underscore as in =my_packages=, I got a =<-= as soon as I typed the =_=.
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle yes :results silent 
 (setq ess-S-underscore-when-last-character-is-a-space t)
 #+end_src
 
@@ -81,14 +81,14 @@ Toggle with =ess-S-underscore-when-last-character-is-a-space=  Not enabled by de
 
 ** Coding Hooks
 #+source: ide-ess
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes :results silent
 (add-hook 'ess-mode-hook 'run-starter-kit-coding-hook)
 ;;  (add-hook 'ess-R-post-run-hook 'smartparens-mode)
 #+end_src
 
 ** Use Knitr to process Sweave documents
 #+source: knitr-swv
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes :results silent
   (setq ess-swv-processor "'knitr")
 #+end_src
  
@@ -101,7 +101,7 @@ Toggle with =ess-S-underscore-when-last-character-is-a-space=  Not enabled by de
  FelipeCsaszar. Adapted to split vertically instead of horizontally. 
 
 #+src-name: ess-shift-enter
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes :results silent
   (setq ess-ask-for-ess-directory nil)
   (setq ess-local-process-name "R")
   (setq ansi-color-for-comint-mode 'filter)
@@ -148,7 +148,7 @@ Toggle with =ess-S-underscore-when-last-character-is-a-space=  Not enabled by de
 dgm disables flycheck as it slows emacs down
 
 #+source: lintr
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes :results silent
 ;;  (add-hook 'after-init-hook #'global-flycheck-mode)
 ;;    (add-hook 'ess-mode-hook
 ;;              (lambda () (flycheck-mode t)))
@@ -162,7 +162,7 @@ dgm disables flycheck as it slows emacs down
 - See here:  https://stat.ethz.ch/pipermail/ess-help/2011-March/006734.html
 and here: https://stackoverflow.com/questions/13779399/emacs-ess-evaluating-slower-than-normal-r
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes :results silent
 (setq ess-eval-visibly-p nil)
 (setq ess-use-eldoc nil)
 ;;(setq ess-use-eldoc 'script-only)
@@ -170,11 +170,68 @@ and here: https://stackoverflow.com/questions/13779399/emacs-ess-evaluating-slow
 
 #+RESULTS:
 
+* COMMENT Indentation error
+When working in Stata I get an indentation error to do with the function: =ess-indent-new-comment-line()=
+
+I found one possible solution by Vitalie Spinu, the author of polymode (https://stat.ethz.ch/pipermail/ess-help/2014-May/009941.html):
+
+DGM: I've commented it out because I move my work in Stata from ESS to =ado-mode= by Bill Rising.
+
+#+begin_src emacs-lisp :tangle yes :results silent
+   (add-to-list 'ess-style-alist
+                '(my-style
+                  (ess-indent-level . 4)
+                  (ess-first-continued-statement-offset . 2)
+                  (ess-continued-statement-offset . 0)
+                  (ess-brace-offset . -4)
+                  (ess-expression-offset . 4)
+                  (ess-else-offset . 0)
+                  (ess-close-brace-offset . 0)
+                  (ess-brace-imaginary-offset . 0)
+                  (ess-continued-brace-offset . 0)
+                  (ess-arg-function-offset . 4)
+   	          (ess-arg-function-offset-new-line . '(4))
+                ))
+   
+   (setq ess-default-style 'my-style)
+#+end_src
+
+#+RESULTS:
+: my-style
+
+
+* Bill Rising's =ado-mode= for Stata
+
+https://www.louabill.org/Stata/ado-mode_install.html
+
+#+begin_src emacs-lisp :tangle yes :results silent 
+(add-to-list 'load-path "/home/dgm/.emacs.d/src/ado-mode/lisp")
+(require 'ado-mode)
+#+end_src
+
+#+RESULTS:
+: ado-mode
+
+If you also use ESS (Emacs Speaks Statistics), but you would rather
+use this ado-mode to code Stata, include the following in your .emacs
+file:
+
+#+begin_src emacs-lisp :tangle yes :results silent
+  (setq auto-mode-alist 
+        (append (list '("\\.ado\\'" . ado-mode)
+                      '("\\.do\\'"  . ado-mode)
+                      )
+                auto-mode-alist
+                ))
+#+end_src
+
+This will make ado-mode load when you open an ado or do file.
+
 * Provide
 
 Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes :results silent
 (provide 'starter-kit-stats)
 #+end_src
 
@@ -183,10 +240,12 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 * Final message
 #+source: message-line
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes :results silent
   (message "Starter Kit STATS file loaded.")
 #+end_src
 
 #+RESULTS: message-line
 : Starter Kit STATS file loaded.
+
+
 
