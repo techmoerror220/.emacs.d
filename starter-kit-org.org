@@ -5310,13 +5310,30 @@ These days I set many of =org-log-*= to note to keep verbose log of task progres
 
 * Org-pdfview
 
+See https://emacs.stackexchange.com/questions/19686/how-to-use-pdf-tools-pdf-view-mode-in-emacs to open everything with =pdf-tools= in emacs
+
+Switching from docview to pdf-tools happens 'automatically' when you install pdf-tools. Once you've done this, any time Emacs tries to open a pdf in Emacs, it will use pdf-tools. However, some packages will call out to the operating system, or use different config within Emacs, to decide if they should use Emacs or another program to open a pdf. So there is some 'tool-by-tool' configuration required to get all Emacs packages to use pdf-tools.
+
+If you want your pdfs opened in the same instance of Emacs, you need to have it running in daemon mode (i.e., start it with emacs --daemon), or call (server-start) in your init so that emacsclient will work.
+
+Out of the box, org-mode doesn't know about pdf-tools. However, you can add support for opening org links to pdf files with org-pdfview, which is available as a package on MELPA. Once it's installed, you can activate it with the following code in your .emacs:
+
 #+begin_src emacs-lisp :tangle yes
 (use-package org-pdfview
   :ensure t)
+
+(add-to-list 'org-file-apps 
+             '("\\.pdf\\'" . (lambda (file link)
+                                     (org-pdfview-open link))))
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24074 15478 667014 530000) :init (24074 15478 667006 645000) :config (24074 15478 666813 689000) :config-secs (0 0 5 30000) :init-secs (0 0 5960 581000) :use-package-secs (0 6 418812 42000)))
+: ((\.pdf\' lambda (file link) (org-pdfview-open link)) (auto-mode . emacs) (\.mm\' . default) (\.x?html?\' . default) (\.pdf\' . emacs))
+
+Doing this will provide a new completion target for adding links via =C-c C-l=, pdfview:, with support for jumping to specific pages. Full links use the format:
+
+=[[pdfview:/path/to/myfile.pdf::42][My file Description]]=
+
 
 * Org-graph view
 

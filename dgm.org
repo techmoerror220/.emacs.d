@@ -3171,6 +3171,7 @@ New set up from https://www.reddit.com/r/emacs/comments/bge7tc/how_to_solve_lisp
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24199 18893 171843 813000) :init (24199 18893 171828 350000) :config (24199 18893 171623 699000) :config-secs (0 0 4680 327000) :init-secs (0 0 5228 111000) :use-package-secs (0 0 5335 407000)))
 
+
 ***** Fix for the error before first and last page
 From: https://www.reddit.com/r/emacs/comments/bge7tc/how_to_solve_lisp_error_error_no_such_page_12_in/
 
@@ -3236,6 +3237,7 @@ Tweaking from Ambrevar's dot file. However, his original combination of colors w
 #+END_SRC
 
 #+RESULTS:
+
 
 * Tuhdo's customization
 ** Compilation
@@ -6096,6 +6098,21 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Magit
                     :key "v"
                     :description "magit-reverse. Reverse the change at point, in a hunk of a commit, for example, in the working tree. Prefix causes the change to be applied to the index as well")
+  (cheatsheet-add :group 'Magit
+                  :key "M-n and M-p"
+                  :description "Move thru whole blocks in status buffer.")
+  (cheatsheet-add :group 'Magit
+                  :key "n and p"
+                  :description "Move thru each header, hunks and blocks in status buffer.")
+  (cheatsheet-add :group 'Magit
+                  :key "1, 2, 3, 4"
+                  :description "Visibility levels from less to more. With Meta it applies to all headings.")
+  (cheatsheet-add :group 'Magit
+                  :key "- or +"
+                  :description "Reduce or increase context in hunk. With reduction I can split a hunk into two and state only one of them.")
+  (cheatsheet-add :group 'Magit
+                  :key "G"
+                  :description "Refresh all Magit buffes of current repo and revert all unmodified buffers visiting files tracked in the repo.")
     (cheatsheet-add :group 'Pandoc
                     :key "C-c /"
                     :description "pandoc-main-hydra/body. Call the body in the pandoc-main-hydra hydra.")
@@ -6329,7 +6346,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24207 38403 308078 201000) :init (24207 38403 308023 582000) :init-secs (0 0 23 948000) :use-package-secs (0 0 143 593000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24211 31860 577323 778000) :init (24211 31860 577264 126000) :init-secs (0 0 26 726000) :use-package-secs (0 0 167 665000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
