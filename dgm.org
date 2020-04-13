@@ -3146,6 +3146,7 @@ From Reddit: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgm
 
 From https://github.com/politza/pdf-tools
 
+
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package pdf-tools
     :ensure t)
@@ -3155,9 +3156,12 @@ From https://github.com/politza/pdf-tools
 
 New set up from https://www.reddit.com/r/emacs/comments/bge7tc/how_to_solve_lisp_error_error_no_such_page_12_in/
 
+Further customization from: https://github.com/dueyfinster/dotfiles/blob/master/conf/emacs.d/emacs-init.org#start-of-content
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package pdf-tools
-    :config (pdf-tools-install)
+    :mode (("\\.pdf\\'" . pdf-view-mode))
+    :magic ("%PDF" . pdf-view-mode)
+    :config (pdf-tools-install :no-query)
     ;; open pdfs scaled to fit page
     (setq-default pdf-view-display-size 'fit-page)
     ;; automatically annotate highlights
@@ -3169,7 +3173,7 @@ New set up from https://www.reddit.com/r/emacs/comments/bge7tc/how_to_solve_lisp
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24199 18893 171843 813000) :init (24199 18893 171828 350000) :config (24199 18893 171623 699000) :config-secs (0 0 4680 327000) :init-secs (0 0 5228 111000) :use-package-secs (0 0 5335 407000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24212 13932 869920 589000) :init (24212 13932 869911 55000) :config (24212 13932 869893 128000) :config-secs (0 0 5772 564000) :init-secs (0 0 5817 162000) :use-package-secs (0 0 6032 803000)))
 
 
 ***** Fix for the error before first and last page

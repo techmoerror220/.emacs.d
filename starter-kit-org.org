@@ -5322,13 +5322,33 @@ Out of the box, org-mode doesn't know about pdf-tools. However, you can add supp
 (use-package org-pdfview
   :ensure t)
 
-(add-to-list 'org-file-apps 
-             '("\\.pdf\\'" . (lambda (file link)
-                                     (org-pdfview-open link))))
+(add-hook 'org-mode-hook
+           '(lambda ()
+            (delete '("\\.pdf\\'" . default) org-file-apps)
+            (add-to-list 'org-file-apps '("\\.pdf\\'" . "org-pdfview-open %s"))))
+
+(eval-after-load "org"
+  '(progn
+     (setcdr (assoc "\\.pdf\\'" org-file-apps) "org-pdfview-open %s")))
 #+end_src
 
 #+RESULTS:
-: ((\.pdf\' lambda (file link) (org-pdfview-open link)) (auto-mode . emacs) (\.mm\' . default) (\.x?html?\' . default) (\.pdf\' . emacs))
+: org-pdfview-open %s
+
+Original (DGM tweaked it on 13 April 2020)
+
+#+BEGIN_EXAMPLE
+(add-to-list 'org-file-apps 
+             '("\\.pdf\\'" . (lambda (file link)
+                                     (org-pdfview-open link))))
+#+END_EXAMPLE
+
+Example from =org-file-apps=
+
+#+BEGIN_EXAMPLE
+("pdf" . "evince %s")
+#+END_EXAMPLE
+
 
 Doing this will provide a new completion target for adding links via =C-c C-l=, pdfview:, with support for jumping to specific pages. Full links use the format:
 
