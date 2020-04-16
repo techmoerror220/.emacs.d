@@ -1912,6 +1912,8 @@ Originally this got stata working when I called it interactively with =M-x stata
 
 However, once I used the script sent from Stata Corp. to make stata work after updating it, this does not work. So I have changed it to:
 
+/usr/local/bin/econ
+
 #+BEGIN_SRC emacs-lisp :tangle no
   ;; (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin/stata"))
   ;; (setq exec-path (append exec-path '("/usr/local/bin/stata")))
@@ -1920,6 +1922,15 @@ However, once I used the script sent from Stata Corp. to make stata work after u
 #+RESULTS:
 
 However, I've tangled it up to "no" because I think this is not needed now that I use Purcell's package =exec-path-from-shell=.
+
+DGM 14 april 2020: version with the helper file =stata= renamed =econ=
+
+#+BEGIN_SRC emacs-lisp :tangle no
+   (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin/econ"))
+   (setq exec-path (append exec-path '("/usr/local/bin/econ")))
+#+END_SRC
+
+
 
 *** Flyspell and flycheck
 When I start the shell I get a backtrace error related to not finding flyspell, so I get it here. The message is:
@@ -6102,21 +6113,45 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Magit
                     :key "v"
                     :description "magit-reverse. Reverse the change at point, in a hunk of a commit, for example, in the working tree. Prefix causes the change to be applied to the index as well")
-  (cheatsheet-add :group 'Magit
-                  :key "M-n and M-p"
-                  :description "Move thru whole blocks in status buffer.")
-  (cheatsheet-add :group 'Magit
-                  :key "n and p"
-                  :description "Move thru each header, hunks and blocks in status buffer.")
-  (cheatsheet-add :group 'Magit
-                  :key "1, 2, 3, 4"
-                  :description "Visibility levels from less to more. With Meta it applies to all headings.")
-  (cheatsheet-add :group 'Magit
-                  :key "- or +"
-                  :description "Reduce or increase context in hunk. With reduction I can split a hunk into two and state only one of them.")
-  (cheatsheet-add :group 'Magit
-                  :key "G"
-                  :description "Refresh all Magit buffes of current repo and revert all unmodified buffers visiting files tracked in the repo.")
+    (cheatsheet-add :group 'Magit
+                    :key "M-n and M-p"
+                    :description "Move thru whole blocks in status buffer.")
+    (cheatsheet-add :group 'Magit
+                    :key "n and p"
+                    :description "Move thru each header, hunks and blocks in status buffer.")
+    (cheatsheet-add :group 'Magit
+                    :key "1, 2, 3, 4"
+                    :description "Visibility levels from less to more. With Meta it applies to all headings.")
+    (cheatsheet-add :group 'Magit
+                    :key "TAB and S-TAB"
+                    :description "Cycle visibility")
+    (cheatsheet-add :group 'Magit
+                    :key "j"
+                    :description "Jump to different sections in the status buffer. C-u j shows all options")
+    (cheatsheet-add :group 'Magit
+                    :key "C-x C-j"
+                    :description "Magit dired jump. Takes me from Magits status buffer to the file in a Dired buffer")
+    (cheatsheet-add :group 'Magit
+                    :key "D"
+                    :description "Diff settings. Opens new buffer with customization choices the - and = signs. Then refresh view with g to see changes")
+    (cheatsheet-add :group 'Magit
+                    :key "d"
+                    :description "Diffs only for the file your cursor is in with customized choices if you want, without changing the view of anything other in the status display. Gets a separate buffer for this diff.")
+    (cheatsheet-add :group 'Magit
+                    :key "- or +"
+                    :description "Reduce or increase context in hunk. With reduction I can split a hunk into two and state only one of them.")
+    (cheatsheet-add :group 'Magit
+                    :key "G"
+                    :description "Refresh all Magit buffes of current repo and revert all unmodified buffers visiting files tracked in the repo.")
+    (cheatsheet-add :group 'Magit
+                    :key "C-c C-t"
+                    :description "You are in a diff. View the history of all the commits that changed a definition.")
+    (cheatsheet-add :group 'Magit
+                    :key "C-c C-e"
+                    :description "You are on a diff, edit thing that is under the cursor. That thing may only live in history and you get there thru rebase. You can stage from there the changes that you make and commit the changes you make in that file that existed no more.")
+    (cheatsheet-add :group 'Ediff
+                    :key "E"
+                    :description "View changes in Ediff. With a modified file you see 1st what is on the head of your repo, then on the index, and then on your working tree. From here you can stage and unstage.")
     (cheatsheet-add :group 'Pandoc
                     :key "C-c /"
                     :description "pandoc-main-hydra/body. Call the body in the pandoc-main-hydra hydra.")
@@ -6350,7 +6385,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24211 31860 577323 778000) :init (24211 31860 577264 126000) :init-secs (0 0 26 726000) :use-package-secs (0 0 167 665000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24216 50978 508318 405000) :init (24216 50978 508240 49000) :init-secs (0 0 37 681000) :use-package-secs (0 0 263 583000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
