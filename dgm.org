@@ -5769,6 +5769,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "W"
                     :description "Widen in Org subtree")
     (cheatsheet-add :group 'Org
+                    :key "TAB or C-i"
+                    :description "On a list, insert a lower level item moving, for example, from - to +")
+    (cheatsheet-add :group 'Org
                     :key "C->"
                     :description "org-time-stamp. Prompt for a date/time and insert a time stamp.")
     (cheatsheet-add :group 'Org
@@ -6385,7 +6388,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24216 50978 508318 405000) :init (24216 50978 508240 49000) :init-secs (0 0 37 681000) :use-package-secs (0 0 263 583000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24217 49437 188637 207000) :init (24217 49437 188579 524000) :init-secs (0 0 25 0) :use-package-secs (0 0 153 382000)))
 
 
 * COMMENT Remapping =M-<= and =M->=

@@ -33,8 +33,11 @@ loading the =zenburn= and =anti-zenburn= themes.
 
 
 ;; From https://github.com/andschwa/.emacs.d/blob/master/init.el and https://github.com/bbatsov/solarized-emacs
+;; DGM adds ensure and defer following https://github.com/GuidoSchmidt/circadian.el
 
 (use-package solarized-theme
+  :ensure
+  :defer
   :init 
   (setq solarized-distinct-fringe-background t) ;; make the fringe stand out from the background 
   (setq solarized-use-variable-pitch nil)       ;; Don't change the font for some headings and titles
@@ -82,7 +85,8 @@ loading the =zenburn= and =anti-zenburn= themes.
       (set-face-attribute 'helm-source-header
                           nil
                           :foreground "#dcdcdc"))))
-  (load-theme 'solarized-light t))
+;;  (load-theme 'solarized-light t)
+)
 
 (bind-key "s-!" 'toggle-theme)
 
@@ -130,6 +134,7 @@ loading the =zenburn= and =anti-zenburn= themes.
 
 #+RESULTS:
 : t
+
 *** COMMENT Joe Di Castro bit
 
 - Objective: to make toggling themes smoother.
@@ -205,7 +210,7 @@ His explanation: I tend to switch themes more often than normal. For example, sw
  (load-theme theme t)) 
 #+END_EXAMPLE
 
-*** Change theme depending on hour of day
+*** COMMENT Change theme depending on hour of day
 - From 9 am to 8 pm, light theme. Otherwise, dark theme.
 - https://blog.jft.rocks/emacs/time-based-theme.html
 
@@ -251,6 +256,52 @@ If you want your Emacs automatically switch between the color schemes when the t
 
 #+RESULTS:
 : [nil 24021 32824 946091 3600 theme-switcher nil nil 677000]
+
+*** Same as above, but using the Circadian package
+
+- https://github.com/GuidoSchmidt/circadian.el
+
+No estoy seguro de si el package =apropospriate= use =auto-dim=
+
+#+begin_src emacs-lisp 
+(use-package auto-dim-other-buffers)
+
+    (add-hook 'after-init-hook (lambda ()
+      (when (fboundp 'auto-dim-other-buffers-mode)
+        (auto-dim-other-buffers-mode t))))
+#+end_src
+
+#+RESULTS:
+| (lambda nil (when (fboundp 'auto-dim-other-buffers-mode) (auto-dim-other-buffers-mode t))) | my-pkg-init | #[0 \303\211\235\203 \304"\301\305!\210\210	\205 \306 \210\307\211\207 [command-line-args desktop-save-mode inhibit-startup-screen --no-desktop delete 0 desktop-read t] 4] | global-company-mode | x-wm-set-size-hint | tramp-register-archive-file-name-handler | (lambda nil (setq file-name-handler-alist file-name-handler-alist-old gc-cons-threshold 10000000) (garbage-collect)) | table--make-cell-map | magit-auto-revert-mode--init-kludge | magit-startup-asserts | magit-version |
+
+
+#+begin_src emacs-lisp
+  ;; Install additinal themes from melpa
+  ;; make sure to use :defer keyword
+  (use-package apropospriate-theme :ensure :defer)
+  (use-package nord-theme :ensure :defer)
+  (use-package tao-theme 
+    :ensure 
+    :defer
+    :custom
+    (tao-theme-use-sepia t)
+    (tao-theme-use-boxes nil))
+
+  (use-package circadian
+    :ensure t
+    :config
+    (setq calendar-latitude 40.4)
+    (setq calendar-longitude -3.7)
+    (setq circadian-themes '((:sunrise . tao-yang)
+                             (:sunset  . tao-yin)))
+    (circadian-setup))
+  ;;  (setq circadian-themes '((:sunrise . solarized-light)
+  ;;                           (:sunset  . solarized-dark))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24218 7863 410266 435000) :init (24218 7863 410257 310000) :config (24218 7863 410111 153000) :config-secs (0 0 257879 121000) :init-secs (0 0 258900 201000) :use-package-secs (0 0 258977 721000)))
+
 
 ** Mode-line customization
 
@@ -621,6 +672,20 @@ DGM says: yes, but I activate it elsewhere.
 ;;  (powerline-default-theme)
 #+end_src
 
+** COMMENT From Tao a modeline
+
+#+begin_src emacs-lisp 
+(use-package    taoline
+  :ensure       t
+  :custom
+  (taoline-show-git-branch      t)
+  (taoline-show-dir             t)
+  (taoline-show-time            nil)
+  (taoline-show-previous-buffer nil)
+  :config
+  (taoline-mode t))
+#+end_src
+
 ** Hippie expand: at times perhaps too hip
 
 #+begin_src emacs-lisp
@@ -665,4 +730,3 @@ DGM says: yes, but I activate it elsewhere.
 #+begin_src emacs-lisp
   (message "Starter Kit Misc loaded.")
 #+end_src
-
