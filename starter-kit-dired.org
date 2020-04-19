@@ -290,6 +290,9 @@ Narrow dired to match filter.  From: http://pragmaticemacs.com/emacs/dynamically
 * Settings DGM gets from Emacs manual
 
 From p. 339
+In 344: 
+
+=(setq dired-copy-preserve-time t)= not needed because it is alreay non-nil so copying with =C= preserves the modification time of the old file in the copy. 
 
 #+begin_src emacs-lisp :tangle yes
 (setq dired-isearch-filenames 'dwim)

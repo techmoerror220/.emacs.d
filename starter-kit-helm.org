@@ -233,12 +233,17 @@ On semantic, read https://tuhdo.github.io/helm-intro.html: Semantic is a package
 
 Helm offers an interface to both Semantic and Imenu at the same time: If `semantic-mode' is active in the current buffer, then use semantic for generating tags, otherwise fall back to imenu. If point is on a symbol, helm feeds the symbol into input prompt by default.
 
+On =(setq helm-follow-input-idle-delay 0.5) ;; https://tech.toryanderson.com/posts/image-previews-with-helm-follow-mode/=: 
+Image previews with helm-follow-mode: When using helm-find-file you can use helm-follow-mode to cause images to show themselves as you move over them, replacing the need to start up some other program to preview images. The shortcut for that while within helm-find-file is C-c C-f.
+By default, you will be ejected from the follow mode as soon as you move over a non-image file. The following customizatoin will give it a little more tolerance:
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq helm-recentf-fuzzy-match    t)
 
 ;; Command: helm-find-files
 ;; helm-find-files is file navigation on steroids:
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+(setq helm-follow-input-idle-delay 0.5) ;; https://tech.toryanderson.com/posts/image-previews-with-helm-follow-mode/
 ;;(global-set-key (kbd "<s-escape>") 'helm-recentf)
 
 ;; Command: helm-semantic-or-imenu

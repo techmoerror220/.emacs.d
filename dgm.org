@@ -709,7 +709,7 @@ Included in =starter-kit-completion.org=
 Only turn on if a window system is available. This prevents error under terminal that does not support X.
 
 #+srcname: nyan-mode
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package nyan-mode)
 
   (case window-system
@@ -2597,7 +2597,7 @@ Emacs treats camelCase strings as a single word by default, this changes said be
 ****** Beacon
 While changing buffers or workspaces, the first thing you do is look for your cursor. Unless you know its position, you cannot move it efficiently. Every time you change buffers, the current position of your cursor will be briefly highlighted now.
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle yes
   (use-package beacon
     :ensure t
     :config
@@ -3307,12 +3307,16 @@ Delete Selection mode lets you treat an Emacs region much like a typical text se
 
 Provides a minor mode which displays current match and total matches information in the mode-line in various search modes.
 
+=(setq anzu-cons-mode-line-p nil)= inserted as told in https://github.com/TheBB/spaceline#the-default-themes
+
 #+begin_src emacs-lisp :tangle yes
   (use-package anzu
     :init
     ;; (global-anzu-mode)
     (global-set-key (kbd "M-%") 'anzu-query-replace)
     (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp))
+
+(setq anzu-cons-mode-line-p nil) 
 #+end_src
 
 #+RESULTS:
@@ -4227,11 +4231,12 @@ It can be difficult to remember the full names of Emacs commands, so I use =icom
     "#+SUBTITLE:\n"
     "#+AUTHOR:\n"
     "#+DATE:\n"
-    "#+OPTIONS: toc:4\n"
-    "#+OPTIONS: H:2 num:nil toc:nil \\n:nil @:t ::t |:t ^:{} _:{} *:t TeX:t LaTeX:t\n"
-    "#+PROPERTY: header-args :tangle yes\n"
+    "#+LaTeX_CLASS: memarticle\n"
+    "#+LaTeX_CLASS_OPTIONS: [11pt,oneside,a4paper,article]\n"
     "#+LATEX_HEADER: \\usepackage{org-preamble-pdflatex}\n"
-
+    "#+OPTIONS: toc:4\n"
+    "#+OPTIONS: H:2 num:nil \\n:nil @:t ::t |:t ^:{} _:{} *:t TeX:t LaTeX:t\n"
+    "#+PROPERTY: header-args :tangle yes\n"
     "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
     "#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"
     "#+LATEX_HEADER: \\input{vc}\n"
@@ -4303,7 +4308,7 @@ as I think the =memarticle= class contains it.
     "#+AUTHOR:\n"
     "#+DATE:\n"
     "#+LaTeX_CLASS: memarticle\n"
-    "#+LaTeX_CLASS_OPTIONS: [11pt,oneside, article]\n"
+    "#+LaTeX_CLASS_OPTIONS: [11pt,oneside,a4paper,article]\n"
     "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
     "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
     "#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"
@@ -4330,7 +4335,7 @@ Note the minimalistic =vc= information included with ="\thispagestyle{kjhgit}=. 
     "# -*- coding: utf-8 -*-\n"
     "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
     "#+LaTeX_CLASS: memarticle\n"
-    "#+LaTeX_CLASS_OPTIONS: [11pt,oneside, article]\n"
+    "#+LaTeX_CLASS_OPTIONS: [11pt,oneside,a4paper,article]\n"
     "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
     "#+LATEX_HEADER: \\def\\myauthor{Author}\n"
     "#+LATEX_HEADER: \\def\\mytitle{Title}\n"
@@ -4405,7 +4410,7 @@ NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
     "#+AUTHOR: Daniel Guinea, Dept. Sociología I, \\textsc{uned}\n"
     "#+DATE:\\today\n"
     "#+LaTeX_CLASS: memarticle\n"
-    "#+LaTeX_CLASS_OPTIONS: [11pt,oneside, article]\n"
+    "#+LaTeX_CLASS_OPTIONS: [11pt,oneside,a4paper,article]\n"
     "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
     "#+LATEX_CMD: xelatex\n"
     "\n\n"
@@ -5003,6 +5008,48 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c C-s"
                     :description "diary-show-all-entries")
     (cheatsheet-add :group 'Dired
+                    :key "M"
+                    :description "dired-do-chmod. Change permission bits of a file to, for example, 755, to make it executable")
+    (cheatsheet-add :group 'Dired
+                    :key "O"
+                    :description "dired-do-chown. Change owner. Only superuser can do it. See p.345 of manual")
+    (cheatsheet-add :group 'Dired
+                    :key "Z"
+                    :description "dired-do-compress. Compress and uncompress specified files with gzip and tar")
+    (cheatsheet-add :group 'Dired
+                    :key "c"
+                    :description "dired-do-compress-to. Like Z but into archive anywhere on the file system.")
+    (cheatsheet-add :group 'Dired
+                    :key "L"
+                    :description "dired-do-load. Load the specified Emacs Lisp files")
+    (cheatsheet-add :group 'Dired
+                    :key "B"
+                    :description "dired-do-byte-compile. Byte compile the specified Emacs Lisp files.")
+    (cheatsheet-add :group 'Dired
+                    :key "A regexp RET"
+                    :description "dired-do-find-regexp. variant of xref-find-references. Search all specified files for the regexp. Allows working on xref buffer that is created")
+    (cheatsheet-add :group 'Dired
+                    :key "Q regexp RET to RET"
+                    :description "dired-do-find-regexp-and-replace. Perform query-replace-regexp on each of the specified files. Allows working on xref buffer that is created")
+    (cheatsheet-add :group 'Dired
+                    :key "% m regexp RET"
+                    :description "dired-mark-files-regexp. Mark all files whose names match the regexp.")
+    (cheatsheet-add :group 'Dired
+                    :key "% g regexp RET"
+                    :description "dired-mark-files-containing-regexp. Mark all files whose contents match the regexp.")
+    (cheatsheet-add :group 'Dired
+                    :key ":d"
+                    :description "epa-dired-do-decrypt. Works with PG Assistant.")
+    (cheatsheet-add :group 'Dired
+                    :key ":e"
+                    :description "epa-dired-do-encrypt. Encrypts the specified files. Works with PG Assistant.")
+    (cheatsheet-add :group 'Dired
+                    :key ":v"
+                    :description "epa-dired-do-verify. Verify digital signatures on specified files. Works with PG Assistant.")
+    (cheatsheet-add :group 'Dired
+                    :key ":s"
+                    :description "epa-dired-do-sign. Digitally sign the specified files. Works with PG Assistant.")
+    (cheatsheet-add :group 'Dired
                     :key "shift-t (T)"
                     :description "Change timestamp on file under cursor")
     (cheatsheet-add :group 'Dired
@@ -5068,7 +5115,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Editing
                     :key "C-x ="
                     :description "what-cursor-position. Print info on cursor position. Also describe the character after point, give its character code
-  in octal, decimal and hex. With prefix C-u, all info is shown in separate window")
+    in octal, decimal and hex. With prefix C-u, all info is shown in separate window")
     (cheatsheet-add :group 'Editing
                     :key "C-x C-+ OR C-x C-- OR C-x C-0"
                     :description "text-scale-adjust. Adjust the height of the default face. + increases, - descreases, 0 resets")
@@ -6388,7 +6435,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24217 49437 188637 207000) :init (24217 49437 188579 524000) :init-secs (0 0 25 0) :use-package-secs (0 0 153 382000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24220 9861 594768 818000) :init (24220 9861 594664 834000) :init-secs (0 0 51 167000) :use-package-secs (0 0 322 575000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
@@ -7237,6 +7284,22 @@ I disable this as it is dealt with in -misc.org
 #+RESULTS: frame-title
 |   | invocation-name | - | (:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) %b)) |
 
+
+* Activate minions!
+
+#+begin_src emacs-lisp :tangle yes
+  (minions-mode 1)
+
+  (spaceline-define-segment minor-modes
+    (if (bound-and-true-p minions-mode)
+        (format-mode-line minions-mode-line-modes)
+      (spaceline-minor-modes-default)))
+
+  (format-mode-line minions-mode-line-modes)
+#+end_src
+
+#+RESULTS:
+: (Org [+]) 
 
 
 * Provide

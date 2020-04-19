@@ -95,7 +95,6 @@ Summary: with this setup I can now easily export to LaTeX, XeLaTeX and also Beam
 
 
 * The /XeLaTeX/ way
-
 ** XeLaTeX and pdfLaTeX Org Export Settings 
 :PROPERTIES:
 :ID:       e9f6cdbc-2253-4c86-a7b2-d77ded4807e9
@@ -171,58 +170,6 @@ Turn off the default toc behavior; deal with it properly in headers to files.
 
 #+RESULTS:
 : org-latex-no-toc
-
-**** Style of memoir class articles, etc 
-:PROPERTIES:
-:ID:       562fc8d9-c2cb-4476-92c7-b530cf9ed6ab
-:END:
-
-Now I define the style of memoir-class articles and others. Note the insertion of the =\input= statement for the vc information (now deleted as I include it in the skeleton for XeLaTeX outputs)
-
-DGM 12 dic 2019: note that ="\\usepackage[minted]{org-preamble-xelatex}\n"= cannot go here below ="memarticle"= because the processs would output it after =\begin{document}=.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(add-to-list 'org-latex-classes
-               '("memarticle"
-                 "\\documentclass[11pt,oneside,article]{memoir}\n"
-                  ("\\section{%s}" . "\\section*{%s}")
-                  ("\\subsection{%s}" . "\\subsection*{%s}")
-                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-(add-to-list 'org-latex-classes
-               '("membook"
-                 "\\documentclass[11pt,oneside]{memoir}\n"
-                 ("\\chapter{%s}" . "\\chapter*{%s}")
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
- #+END_SRC
-
- #+RESULTS:
- | membook | \documentclass[11pt,oneside]{memoir} |
-
-Default packages included in the tex file. As before, =org-preamble-xelatex= is part of =latex-custom-kjh=. There's =org-preamble-pdflatex= as well, if you wish to use that instead.
-DGM note: This code calls on the stuff in the =~/texmf= directory that allows using fonts a la MinionPro etc. Specifically, it uses the =org-preamble-xelatex= style file. 
-DGM note on 13 may: I'ved tangled to no as this conflicted with my export to beamer. Now I have included these lines in the =org-skeleton= code.
-Things I've learnt today that are key: =org export=  inputs a whole bunch of packages that maybe it's not what you wanted and some of them may conflict with packages you do want to have. To get rid of them you need =(gsetq org-latex-default-packages-alist nil)=
-
-Then, if I uncomment the rest I'll have the call to =org-preamble-xelatex= in every latex file but it happens that this call is great for articles but not for beamer presentations. So I have disabled it here and I have added to the skeleton template. By the way, I also need a beamer skeleton!
-
-#+BEGIN_SRC emacs-lisp :tangle yes
- (setq org-latex-default-packages-alist nil)     
-;; (setq org-latex-packages-alist
-;;        '(("minted" "org-preamble-xelatex" t)
-;;          ("" "graphicx" t)
-;;          ("" "longtable" nil)
-;;          ("" "float" ))) 
-   #+END_SRC
-
-   #+RESULTS:
-
-   #+RESULTS: orgmode-latex-export
-   : ox-latex
 
 ** My default =sty= file with XeLaTeX
 Problema: if I leave this, every time I export to LaTeX I get this and the process fails. I better include the line in the skeleton for XeLaTeX documents.
@@ -354,6 +301,65 @@ Also, if I change to latex instead of xelatex, then change tangle option to no o
 
 #+RESULTS:
 | latexmk -synctex=1 -shell-escape -bibtex -f -pdf %f |
+
+* Style of Memoir Class
+:PROPERTIES:
+:ID:       562fc8d9-c2cb-4476-92c7-b530cf9ed6ab
+:END:
+
+Now I define the style of memoir-class articles and others. Note the insertion of the =\input= statement for the vc information (now deleted as I include it in the skeleton for XeLaTeX outputs)
+
+DGM 12 dic 2019: note that ="\\usepackage[minted]{org-preamble-xelatex}\n"= cannot go here below ="memarticle"= because the processs would output it after =\begin{document}=.
+
+DGM 19 april 2020: Originally, I thought these were settings for XeLaTeX only but now I think they work for both pdflatex and xelatex.
+
+Originally it had: ="\\documentclass[11pt,oneside,a4paper,article]{memoir}\n"= but I include the options in the skeleton, so I guess I don't need them.
+
+
+#+BEGIN_SRC emacs-lisp :tangle yesn
+(add-to-list 'org-latex-classes
+               '("memarticle"
+                 "\\documentclass{memoir}\n"
+                  ("\\section{%s}" . "\\section*{%s}")
+                  ("\\subsection{%s}" . "\\subsection*{%s}")
+                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+               '("membook"
+                 "\\documentclass{memoir}\n"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+ #+END_SRC
+
+ #+RESULTS:
+ | membook | \documentclass[11pt,oneside]{memoir} |
+
+Default packages included in the tex file. As before, =org-preamble-xelatex= is part of =latex-custom-kjh=. There's =org-preamble-pdflatex= as well, if you wish to use that instead.
+DGM note: This code calls on the stuff in the =~/texmf= directory that allows using fonts a la MinionPro etc. Specifically, it uses the =org-preamble-xelatex= style file. 
+DGM note on 13 may: I'ved tangled to no as this conflicted with my export to beamer. Now I have included these lines in the =org-skeleton= code.
+Things I've learnt today that are key: =org export=  inputs a whole bunch of packages that maybe it's not what you wanted and some of them may conflict with packages you do want to have. To get rid of them you need =(gsetq org-latex-default-packages-alist nil)=
+
+Then, if I uncomment the rest I'll have the call to =org-preamble-xelatex= in every latex file but it happens that this call is great for articles but not for beamer presentations. So I have disabled it here and I have added to the skeleton template. By the way, I also need a beamer skeleton!
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+ (setq org-latex-default-packages-alist nil)     
+;; (setq org-latex-packages-alist
+;;        '(("minted" "org-preamble-xelatex" t)
+;;          ("" "graphicx" t)
+;;          ("" "longtable" nil)
+;;          ("" "float" ))) 
+   #+END_SRC
+
+   #+RESULTS:
+
+   #+RESULTS: orgmode-latex-export
+   : ox-latex
+
+
 
 * Beamer
 
