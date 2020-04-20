@@ -16,205 +16,104 @@ maintained by Bozhidar Batsov. Load it with =M-x load-theme
 solarized-dark= or =M-x load-theme solarized-light=. You can also try
 loading the =zenburn= and =anti-zenburn= themes. 
 
-*** Solarized Theme
-#+source: colors
-#+begin_src emacs-lisp
-;;  add (setq custom-safe-themes t) to your init file before you load your theme. This will treat all themes as safe, which could be a risk in theory, but if ;; you are only installing themes from trusted sources, I don't see any issue 
-;; https://emacs.stackexchange.com/questions/18932/stop-emacs-asking-if-a-theme-is-safe
-(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
-(setq custom-safe-themes t)
+** My Mode-line Customization
 
-;;(use-package solarized-theme
-;;  :defer 10
-;;  :init
-;;  (setq solarized-use-variable-pitch nil)
-;;  (setq solarized-height-plus-1 1.0)
-;;  :ensure t)
-
-
-;; From https://github.com/andschwa/.emacs.d/blob/master/init.el and https://github.com/bbatsov/solarized-emacs
-;; DGM adds ensure and defer following https://github.com/GuidoSchmidt/circadian.el
-
-(use-package solarized-theme
-  :ensure
-  :defer
-  :init 
-  (setq solarized-distinct-fringe-background t) ;; make the fringe stand out from the background 
-  (setq solarized-use-variable-pitch nil)       ;; Don't change the font for some headings and titles
-  (setq solarized-high-contrast-mode-line nil)    ;; make the modeline high contrast (change to t if you want it)
-  ;;  (setq solarized-use-less-bold t)              ;; Use less bolding
-  ;;  (setq solarized-use-more-italic t)            ;; Use more italics
-  (setq solarized-emphasize-indicators nil)     ;; Use less colors for indicators such as git: gutter, flycheck and similar
-  (setq solarized-scale-org-headlines nil)      ;; Don't change size of org-mode headlines (but keep other size-changes)
-  ;; Avoid all font-size changes
-  (setq solarized-height-minus-1 1.0)
-  (setq solarized-height-plus-1 1.0)
-  (setq solarized-height-plus-2 1.0)
-  (setq solarized-height-plus-3 1.0)
-  (setq solarized-height-plus-4 1.0)
-  (setq x-underline-at-descent-line t)
-  (set-face-attribute 'helm-selection nil 
-                      :background nil
-                      :foreground "Orange3")
-  (set-face-attribute 'helm-source-header
-                      nil
-                      :foreground "#dcdcdc")
-  :config
-  (set-face-attribute 'helm-selection nil 
-                      :background nil
-                      :foreground "Orange3")
-  (set-face-attribute 'helm-source-header
-                      nil
-                      :foreground "#dcdcdc")
-  (defun toggle-theme ()
-    "Switch between Solarized variants."
-    (interactive)
-    (cond
-     ((member 'solarized-dark custom-enabled-themes)
-      (disable-theme 'solarized-dark)
-      (load-theme 'solarized-light t)
-      (set-face-attribute 'helm-selection nil 
-                          :background nil
-                          :foreground "Orange3"))
-     ((member 'solarized-light custom-enabled-themes)
-      (disable-theme 'solarized-light)
-      (load-theme 'solarized-dark t)
-      (set-face-attribute 'helm-selection nil 
-                          :background nil
-                          :foreground "Orange3")
-      (set-face-attribute 'helm-source-header
-                          nil
-                          :foreground "#dcdcdc"))))
-;;  (load-theme 'solarized-light t)
-)
-
-(bind-key "s-!" 'toggle-theme)
-
-;;  (load-theme 'solarized-dark t))
-
-;;  (load-theme 'zenburn t)
-;;  (load-theme 'solarized-dark t)
-;;  (load-theme 'solarized-light t)
-;;  (load-theme 'darktooth t)
-;;  (load-theme 'soothe t)
-;;  (load-theme 'clues t)
-
-;; from https://github.com/kuanyui/moe-theme.el
-;;    (require 'moe-theme)
-;;    (powerline-moe-theme)
-
-;; Show highlighted buffer-id as decoration. (Default: nil)
-;;    (setq moe-theme-highlight-buffer-id t)
-
-;; Resize titles (optional).
-;;    (setq moe-theme-resize-markdown-title '(1.5 1.4 1.3 1.2 1.0 1.0))
-;;    (setq moe-theme-resize-org-title '(1.5 1.4 1.3 1.2 1.1 1.0 1.0 1.0 1.0))
-;;    (setq moe-theme-resize-rst-title '(1.5 1.4 1.3 1.2 1.1 1.0))
-
-;;    Choose a color for mode-line.(Default: blue)
-;;    (moe-theme-set-color 'orange)
-
-;; Finally, apply moe-theme now.
-;; Choose what you like, (moe-light) or (moe-dark)
-;;    (moe-dark)    
-
-;; If you use Emacs build-in show-paren-mode, I recommend set the value of show-paren-style to expression for optimized visual experience:
-
-;;    (show-paren-mode t)
-;;    (setq show-paren-style 'expression)
-
-;; trying to improve the looks of dired+ with solarized dark: http://unix.stackexchange.com/questions/20519/dired-on-dark-color-themes
-;; (add-to-list 'default-frame-alist '(background-mode . dark))
-;;  (load-theme 'spacemacs-dark t)
-;;  (load-theme 'misterioso t)
+#+begin_src emacs-lisp :tangle yes 
+(setq display-time-day-and-date t)
+(setq display-time-24hr-format t)
+(display-time-mode 1)
+;;(require 'lunar-mode-line)
+;;(display-lunar-phase)
 #+end_src
-
-#+RESULTS: colors
-: toggle-theme
 
 #+RESULTS:
 : t
 
-*** COMMENT Joe Di Castro bit
+New attempt to distinguish window with focus from other windows in current frame. 
 
-- Objective: to make toggling themes smoother.
-- Joe says: This another code is to provide a hook to do some things after loading a theme, like overwriting a face in a particular theme or
-always reload the smart-mode-line theme.
+See: https://stackoverflow.com/questions/9446673/asking-emacs-to-highlight-more-clearly-which-window-pane-has-the-focus-cursor
 
-#+BEGIN_EXAMPLE
-(defvar after-load-theme-hook nil
-   "Hook run after a color theme is loaded using `load-theme'.")
+;; "#f5f5f5"
+;; "#b58900" 
+;; "DarkGoldenrod2"
+;; "orange"
 
-(defadvice load-theme (after run-after-load-theme-hook activate)
-   "Run `after-load-theme-hook'."
-   (run-hooks 'after-load-theme-hook))
-#+END_EXAMPLE
+#+begin_src emacs-lisp :tangle yes
+(set-face-attribute  'mode-line
+                 nil 
+                 :foreground "#3E3D31"
+                 :background "#b58900"
+                 :box '(:line-width 1 :style released-button))
+(set-face-attribute  'mode-line-inactive
+                 nil 
+                 :foreground "gray30"
+                 :background "gray80"
+                 :box '(:line-width 1 :style released-button))
+(set-face-attribute 'mode-line-buffer-id nil :foreground "#3E3D31")
+#+end_src
 
-*** COMMENT Sacha Chua's tweaks 
+#+RESULTS:
 
-Some more tweaks to solarized:
-
-#+BEGIN_EXAMPLE
-;; (when window-system
-;;  (custom-set-faces
-;;   '(erc-input-face ((t (:foreground "antique white"))))
-;;   '(helm-selection ((t (:background "#4682b4" :foreground "black"))))
-;;   '(org-agenda-clocking ((t (:inherit secondary-selection :foreground "black"))) t)
-;;   '(org-agenda-done ((t (:foreground "dim gray" :strike-through nil))))
-;;;;;;;   '(org-done ((t (:foreground "PaleGreen" :weight normal :strike-through t))))
-;;   '(org-clock-overlay ((t (:background "SkyBlue4" :foreground "black"))))
-;;;;;;;   '(org-headline-done ((((class color) (min-colors 16) (background dark)) (:foreground "LightSalmon" :strike-through t))))
-;;   '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "cornflower blue"))))))
-#+END_EXAMPLE
-
-*** COMMENT Theme function for changing theme and disabling themes
-
-From https://github.com/danielmai/.emacs.d/blob/master/config.org
-His explanation: I tend to switch themes more often than normal. For example, switching to a lighter theme (such as the default) or to a different theme depending on the time of day or my mood. Normally, switching themes is a multi-step process with disable-theme and load-theme. The switch-theme function will do that in one swoop. I just choose which theme I want to go to.
+*** Minions
+- Bundle all minor modes under a =[+]= symbol
+- Not compatible with =spaceline= out of the box
+- Customizations I do without now that I use =spaceline=:
+- How to make it compatible with =spaceline=.
 
 #+BEGIN_EXAMPLE
-(defun switch-theme (theme)
-  "Disables any currently active themes and loads THEME."
-  ;; This interactive call is taken from `load-theme'
-  (interactive
-   (list
-    (intern (completing-read "Load custom theme: "
-                             (mapc 'symbol-name
-                                   (custom-available-themes))))))
-  (let ((enabled-themes custom-enabled-themes))
-    (mapc #'disable-theme custom-enabled-themes)
-    (load-theme theme t)))
-
-(defun disable-active-themes ()
-  "Disables any currently active themes listed in `custom-enabled-themes'."
-  (interactive)
-  (mapc #'disable-theme custom-enabled-themes))
-
-(bind-key "s-<f12>" 'switch-theme)
-(bind-key "s-<f11>" 'disable-active-themes)
+  (setq display-time-24hr-format t)
+  (setq display-time-default-load-average t)
+  (setq display-time-mail-string "") ;; no mail alert
+  (display-time-mode 1)
 #+END_EXAMPLE
 
-*** COMMENT Another try for switching themes neatly
+#+begin_src emacs-lisp :tangle yes
+  (use-package minions
+;;    :after (circadian)
+    :init (minions-mode 1)
+    :config
+    (setq minions-mode-line-lighter "[+]"))
 
-- From https://emacs.stackexchange.com/questions/3112/how-to-reset-color-theme
-... but I see no difference
+(global-set-key [S-down-mouse-3] 'minions-minor-modes-menu)
+#+end_src
 
-#+BEGIN_EXAMPLE
-(defadvice load-theme (before theme-dont-propagate activate)
- (mapc #'disable-theme custom-enabled-themes))
-;; (mapcar #'disable-theme custom-enabled-themes)) ;; asked by emacs on initialization to change mapcar to either mapc or dolist
+#+RESULTS:
+: minions-minor-modes-menu
 
-(defun enab-theme (theme) 
- (if current-t43m3 (disable-theme current-t43m3))
- (setq current-t43m3 theme) 
- (load-theme theme t)) 
-#+END_EXAMPLE
+*** Solarized Theme
 
-*** COMMENT Change theme depending on hour of day
+New, simplified customization. I leave =(load-theme 'solarized-light t)= as I guess the theme is chosen according to the time.
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package solarized-theme
+    :ensure t
+    ;;  :defer
+    :init 
+    (setq solarized-distinct-fringe-background t) ;; make the fringe stand out from the background 
+    (setq solarized-use-variable-pitch nil)       ;; Don't change the font for some headings and titles
+    (setq solarized-high-contrast-mode-line nil)  ;; make the modeline high contrast (change to t if you want it)
+    ;;  (setq solarized-use-less-bold t)          ;; Use less bolding
+    ;;  (setq solarized-use-more-italic t)        ;; Use more italics
+    (setq solarized-emphasize-indicators nil)     ;; Use less colors for indicators such as git: gutter, flycheck and similar
+    (setq solarized-scale-org-headlines nil)      ;; Don't change size of org-mode headlines (but keep other size-changes)
+    ;; Avoid all font-size changes
+    (setq solarized-height-minus-1 1.0)
+    (setq solarized-height-plus-1 1.0)
+    (setq solarized-height-plus-2 1.0)
+    (setq solarized-height-plus-3 1.0)
+    (setq solarized-height-plus-4 1.0)
+    (setq x-underline-at-descent-line t))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24222 4795 692087 759000) :init (24222 4795 692069 16000) :config (24222 4795 691645 876000) :config-secs (0 0 11 978000) :init-secs (0 0 5236 527000) :use-package-secs (0 0 5343 18000)))
+
+*** Change theme depending on hour of day
 - From 9 am to 8 pm, light theme. Otherwise, dark theme.
 - https://blog.jft.rocks/emacs/time-based-theme.html
+- Disabled so that I simplify it
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun set-light-theme ()
   "Set the light theme with some customization if needed."
   (interactive)
@@ -244,8 +143,51 @@ His explanation: I tend to switch themes more often than normal. For example, sw
 #+RESULTS:
 
 If you want your Emacs automatically switch between the color schemes when the time come, you can use run-with-timer function to do the check every hour. But hey, if if I switch theme manually, theme is switched back to what it was after one hour.
+- New, simplified costumization.
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun set-light-theme ()
+    "Set the light theme with some customization if needed."
+    (interactive)
+    (load-theme 'solarized-light t)
+    (set-face-attribute  'mode-line
+                         nil 
+                         :foreground "#3E3D31"
+                         :background "#b58900"
+                         :box '(:line-width 1 :style released-button))
+    (set-face-attribute  'mode-line-inactive
+                         nil 
+                         :foreground "gray30"
+                         :background "gray80"
+                         :box '(:line-width 1 :style released-button))
+    (set-face-attribute 'mode-line-buffer-id nil :foreground "#3E3D31"))
+
+
+  (defun set-dark-theme ()
+    "Set the dark theme with some customization if needed."
+    (interactive)
+    (load-theme 'solarized-dark t)
+    (set-face-attribute  'mode-line
+                         nil 
+                         :foreground "#3E3D31"
+                         :background "#b58900"
+                         :box '(:line-width 1 :style released-button))
+    (set-face-attribute  'mode-line-inactive
+                         nil 
+                         :foreground "gray30"
+                         :background "gray80"
+                         :box '(:line-width 1 :style released-button))
+    (set-face-attribute 'mode-line-buffer-id nil :foreground "#3E3D31"))
+
+  (let ((current-hour (string-to-number (format-time-string "%H"))))
+    (if (or (< current-hour 9) (> current-hour 20)) (set-dark-theme) (set-light-theme)))
+#+END_SRC
+
+#+RESULTS:
+
+- DGM disables on april 2020 to see if above works
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun theme-switcher ()
   (let ((current-hour (string-to-number (format-time-string "%H"))))
     (if (or (< current-hour 11) (> current-hour 17)) (set-dark-theme) (set-light-theme))))
@@ -263,7 +205,7 @@ If you want your Emacs automatically switch between the color schemes when the t
 
 Buena idea pero el resultado es muy feo. No es "dim" sino que cambia el color, incluyendo el minibuffer, que se transforma en algo horrendo.
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle no
 ;; (use-package auto-dim-other-buffers)
 
 ;;    (add-hook 'after-init-hook (lambda ()
@@ -271,10 +213,10 @@ Buena idea pero el resultado es muy feo. No es "dim" sino que cambia el color, i
 ;;        (auto-dim-other-buffers-mode t))))
 #+end_src
 
-ahh, circadian llama a auto-dim!! cambiar esto!!
-*** Same as my switching of themes based on time, but using the Circadian package
+=apropospriate=  llama a auto-dim!! ahhrggh!!
+*** COMMENT Same as my switching of themes based on time, but using the Circadian package
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Install additinal themes from melpa
   ;; make sure to use :defer keyword
   ;; (use-package apropospriate-theme :ensure :defer)
@@ -302,262 +244,10 @@ ahh, circadian llama a auto-dim!! cambiar esto!!
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24218 48994 447004 355000) :init (24218 48994 446989 277000) :config (24218 48994 446757 16000) :config-secs (0 5 712945 93000) :init-secs (0 5 714390 787000) :use-package-secs (0 5 714593 791000)))
 
-
-** Mode-line customization
-
-New attempt to distinguish window with focus from other windows in current frame. 
-
-See: https://stackoverflow.com/questions/9446673/asking-emacs-to-highlight-more-clearly-which-window-pane-has-the-focus-cursor
-
-#+BEGIN_EXAMPLE
-(set-face-attribute  'mode-line
-                 nil 
-                 :foreground "#f5f5f5"
-                 :background "#b58900" 
-                 :box '(:line-width 1 :style released-button))
-
-(set-face-attribute  'mode-line-inactive
-                 nil 
-                 :foreground "gray30"
-                 :background "gray80"
-                 :box '(:line-width 1 :style released-button))
-
-(set-face-attribute 'mode-line-buffer-id nil :foreground "#f5f5f5")
-
-#+END_EXAMPLE
-
-*** Minions
-- Bundle all minor modes under a =[+]= symbol
-- Not compatible with =spaceline= out of the box
-- Customizations I do without now that I use =spaceline=:
-- How to make it compatible with =spaceline=.
-
-#+BEGIN_EXAMPLE
-  (setq display-time-24hr-format t)
-  (setq display-time-default-load-average t)
-  (setq display-time-mail-string "") ;; no mail alert
-  (display-time-mode 1)
-#+END_EXAMPLE
-
-#+begin_src emacs-lisp
-  (use-package minions
-    :after (circadian)
-    :init (minions-mode 1)
-    :config
-    (setq minions-mode-line-lighter "[+]"))
-
-(global-set-key [S-down-mouse-3] 'minions-minor-modes-menu)
-#+end_src
-
-#+RESULTS:
-: minions-minor-modes-menu
-
-*** Spaceline
-- https://www.reddit.com/r/emacs/comments/3mq61l/spaceline_spacemacs_modeline_extracted_as_a/
-- https://github.com/TheBB/spaceline/tree/master#why-does-it-look-different
-
-To play in future:  (from https://daemons.it/pages/mi-configuracion-de-emacs/)
-
-#+BEGIN_EXAMPLE
-(setq powerline-default-separator "wave")
-#+END_EXAMPLE
-
-#+begin_src emacs-lisp 
-  (use-package spaceline
-    :after (circadian minions)
-    :init
-    (minions-mode 1)
-    (require 'spaceline-config)
-    :config
-    (spaceline-emacs-theme)
-    (spaceline-helm-mode 1)
-    (spaceline-info-mode 1)
-    (spaceline-toggle-org-clock-on)
-    (spaceline-toggle-version-control-on)
-    (spaceline-toggle-selection-info-on)
-    (spaceline-toggle-buffer-encoding-on)
-    (spaceline-toggle-buffer-encoding-abbrev-on)
-    (spaceline-toggle-hud-on)
-    (spaceline-toggle-anzu-on)
-    (spaceline-toggle-projectile-root-on)
-    (spaceline-toggle-which-function-on)
-    (spaceline-toggle-major-mode-off)
-    (spaceline-toggle-minor-modes-on) ;; or else minions don't work
-    (setq powerline-default-separator 'rounded)
-    (spaceline-define-segment line-column
-      "The current line and column numbers."
-      "l:%l c:%2c")
-    (spaceline-define-segment time
-      "The current time."
-      (format-time-string "%H:%M"))
-    (spaceline-define-segment date
-      "The current date."
-      (format-time-string "%h %d"))
-    (spaceline-toggle-time-on)
-    (spaceline-emacs-theme 'date 'time)
-    )
-#+end_src
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24220 30766 282997 112000) :init (24220 30766 282959 706000) :config (24220 30766 282763 993000) :config-secs (0 1 895181 651000) :init-secs (0 1 896199 854000) :use-package-secs (0 1 896698 413000)))
-
-NB: parece que adding this does not make that minions are used. Minions only take effect when I run manually the above chunk, why??? Aclarar en =use-package= si :config es para cosas que se ponen antes o luego
-
-#+BEGIN_EXAMPLE
-    (spaceline-define-segment minor-modes
-      (if (bound-and-true-p minions-mode)
-          (format-mode-line minions-mode-line-modes)
-        (spaceline-minor-modes-default)))
-
-    (format-mode-line minions-mode-line-modes)
-#+END_EXAMPLE
-
-
-*** COMMENT Smart mode line
-
-From: https://github.com/Malabarba/smart-mode-line
-
-Interesting. To experiment further in future. 
-
-#+begin_src emacs-lisp 
-(use-package smart-mode-line)
-(sml/setup)
-#+end_src
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24219 4737 472515 20000) :init (24219 4737 472502 325000) :config (24219 4737 472197 211000) :config-secs (0 0 7 340000) :init-secs (0 0 78018 100000) :use-package-secs (0 3 23061 911000)))
-
-*** Powerline 
-- Powerline (original setup that I had on until I changed to Diego Vicente's)
-
-#+BEGIN_EXAMPLE
-;; dgm added customizations intended for modeline, following https://github.com/bbatsov/solarized-emacs
-
-;; make the modeline high contrast
-;; (setq solarized-high-contrast-mode-line t)
-
-;; powerline by milkman
-(use-package powerline)
-(display-time-mode 1)
-(powerline-default-theme)
-#+END_EXAMPLE
-
-- Powerline setup from https://wolfecub.github.io/dotfiles/ (17 july 2019) but with it I don't get the clock and other things... so I revert to milkman'ss
-
-#+BEGIN_EXAMPLE
-(if (or (display-graphic-p) (daemonp))
-    (use-package powerline
-      :config
-      (setq powerline-arrow-shape 'curve
-            powerline-display-buffer-size nil
-            powerline-display-mule-info nil)
-      (powerline-default-theme)
-      (remove-hook 'focus-out-hook 'powerline-unset-selected-window)
-      (setq powerline-height 24)
-      (defpowerline powerline-minor-modes ""))
-
-  (setq-default
-   mode-line-format
-   (list
-    " "
-    ;; is this buffer read-only?
-    '(:eval (when buffer-read-only
-              (propertize "RO"
-                          'face 'font-lock-type-face
-                          'help-echo "Buffer is read-only")))
-
-    ;; was this buffer modified since the last save?
-    '(:eval (when (buffer-modified-p)
-              (propertize "M"
-                          'face 'font-lock-warning-face
-                          'help-echo "Buffer has been modified")))
-
-    " "
-    ;; the buffer name; the file name as a tool tip
-    '(:eval (propertize "%b " 'face 'font-lock-keyword-face
-                        'help-echo (buffer-file-name)))
-
-
-    ;; the current major mode for the buffer.
-    "["
-
-    '(:eval (propertize (format-mode-line mode-name) 'face '(:family "Arial")
-                        'help-echo buffer-file-coding-system))
-    '(:eval (propertize (format-mode-line minor-mode-alist)
-                        'face '(:family "Arial")))
-    "]             "
-
-    ;; line and column
-    "(" ;; '%02' to set to 2 chars at least; prevents flickering
-    (propertize "%02l" 'face 'font-lock-type-face) ","
-    (propertize "%02c" 'face 'font-lock-type-face)
-    ") "
-
-    ;; relative position, size of file
-    "["
-    (propertize "%p" 'face 'font-lock-constant-face) ;; % above top
-    "/"
-    (propertize "%I" 'face 'font-lock-constant-face) ;; size
-    "] "
-
-    ;; add the time, with the date and the emacs uptime in the tooltip
-    '(:eval (propertize (format-time-string "%H:%M")
-                        'help-echo
-                        (concat (format-time-string "%c; ")
-                                (emacs-uptime "Uptime:%hh")))))))
-#+END_EXAMPLE
-
-
-*** COMMENT Mode-line configuration by Diego Vicente
-
-After trying most of the alternatives available to customizing the mode-line
-(=smart-mode-line=, =powerline=, =airline=, =spaceline=...), I finally settled
-with this minimal configuration. These two packages, developed by the great
-[[https://github.com/tarsius][Jonas Bernoulli]], provide a beautiful and simple mode-line that shows all the
-information I need in a beautiful way, being less flashy and prone to errors
-than other packages. The general mode-line aesthetics and distribution is
-provided by =moody=, while =minions= provide an on-click menu to show minor
-modes. While you might be thinking "on-click menu? Wasn't the point of all this
-editor thing not to use the mouse?", just notice that the previous setup used
-=delight= to hide all minor modes. This does the same thing, saving me the
-effort of writing =:delight= in most package declarations and provides a nice
-menu if I need to check the minor modes at some points.
-
-
-DGM: disables this on 23 jan 2020 because I think moody can slow down emacs.
-
-
-#+BEGIN_EXAMPLE
-(use-package moody
-:ensure t
-:config
-(moody-replace-mode-line-buffer-identification)
-(moody-replace-vc-mode)
-
-(defun set-moody-face (frame)
-(let ((line (face-attribute 'mode-line :underline frame)))
-(set-face-attribute 'mode-line          frame :overline   line)
-(set-face-attribute 'mode-line-inactive frame :overline   line)
-(set-face-attribute 'mode-line-inactive frame :underline  line)
-(set-face-attribute 'mode-line          frame :box        nil)
-(set-face-attribute 'mode-line-inactive frame :box        nil)))
-
-;; (defun set-current-moody-face (&optional args)
-;;   (interactive)
-;;   (set-moody-face (selected-frame)))
-
-(setq-default x-underline-at-descent-line t
-column-number-mode t)
-
-(add-to-list 'after-make-frame-functions 'set-moody-face t))
-;; (add-to-list 'after-make-frame-functions 'set-current-moody-face t))
-#+END_EXAMPLE
-
-
 ** Window system 
 
 #+srcname: starter-kit-window-view-stuff
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle yes 
     (when window-system
 ;;      (setq frame-title-format '(buffer-file-name "%f" ("%b")))
       (setq frame-title-format (concat "%b" (unless (daemonp) " [serverless]"))) ;; from ambrevar's main.el
@@ -600,7 +290,7 @@ column-number-mode t)
 Thin window dividers and no scroll bars. Toggle with `C-c C-s`.
 
 #+source: minimal-mode-on
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (minimal-mode)
 #+end_src
 
@@ -608,12 +298,12 @@ Thin window dividers and no scroll bars. Toggle with `C-c C-s`.
 : t
 
 ** Transparently open compressed files
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (auto-compression-mode t)
 #+end_src
 
 ** COMMENT Enable syntax highlighting 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 ;;(global-font-lock-mode t)
 #+end_src
 
@@ -622,7 +312,7 @@ If launching Emacs as in windowing system, show the menu. If launching in a tty/
 
 Note by dgm on 16 sept 2018: I'm trying to use =exwm= so I am not going to use menu-bar-mode.
 #+source: starter-kit-no-menu-in-tty
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 ;;  (if window-system
 ;      (menu-bar-mode t)
 ;;      (menu-bar-mode -1)
@@ -634,7 +324,7 @@ Note by dgm on 16 sept 2018: I'm trying to use =exwm= so I am not going to use m
 ** Save place last visited in buffer
 
 #+srcname: starter-kit-saveplace
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 ;; Code by Kieran Healy:
 ;; saveplace remembers your location in a file when saving files
 ;;  (require 'saveplace)
@@ -659,7 +349,7 @@ Note by dgm on 16 sept 2018: I'm trying to use =exwm= so I am not going to use m
 Ido-mode is like magic pixie dust!
 
 #+srcname: starter-kit-loves-ido-mode
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle yes 
 ;;  (when (> emacs-major-version 21)
 ;;    (require 'flx-ido) 
 ;;    (ido-mode t)
@@ -697,7 +387,7 @@ With helm-mode active, to use Emacs default completion instead of either Helm or
 (find-alternate-file . nil)
 
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;;(use-package ido
 ;;  :ensure t
 ;;  :init
@@ -731,7 +421,7 @@ With helm-mode active, to use Emacs default completion instead of either Helm or
 #+RESULTS:
 
 ** Other, tabs, imenu and a coding hook
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle yes 
   (set-default 'indent-tabs-mode nil)
   (set-default 'indicate-empty-lines t)
   (set-default 'imenu-auto-rescan t)
@@ -757,7 +447,7 @@ With helm-mode active, to use Emacs default completion instead of either Helm or
 #+end_src
 
 *** functions for prettier source code
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (defun starter-kit-pretty-lambdas ()
   (font-lock-add-keywords
    nil `(("(\\(lambda\\>\\)"
@@ -774,14 +464,14 @@ A nicer modeline.
 DGM says: yes, but I activate it elsewhere.
 
 #+source: powerline-load
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;;  (require 'powerline)
 ;;  (powerline-default-theme)
 #+end_src
 
 ** COMMENT From Tao a modeline
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle no
 (use-package    taoline
   :ensure       t
   :custom
@@ -795,19 +485,19 @@ DGM says: yes, but I activate it elsewhere.
 
 ** Hippie expand: at times perhaps too hip
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (delete 'try-expand-line hippie-expand-try-functions-list)
 (delete 'try-expand-list hippie-expand-try-functions-list)
 #+end_src
 
 ** Don't clutter up directories with files~
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (setq backup-directory-alist `(("." . ,(expand-file-name
                                         (concat dotfiles-dir "backups")))))
 #+end_src
 
 ** Associate modes with file extensions
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
 (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
 ;; (require 'yaml-mode) ;; dgm comments out as I don't know what it is for
@@ -818,13 +508,13 @@ DGM says: yes, but I activate it elsewhere.
 
 
 ** Default to unified diffs
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (setq diff-switches "-u")
 #+end_src
 
 * Provide
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 (provide 'starter-kit-misc)
 #+END_SRC
 
@@ -834,6 +524,6 @@ DGM says: yes, but I activate it elsewhere.
 * Final Message
 
 #+source: message-line
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (message "Starter Kit Misc loaded.")
 #+end_src

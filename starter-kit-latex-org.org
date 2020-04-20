@@ -316,7 +316,7 @@ DGM 19 april 2020: Originally, I thought these were settings for XeLaTeX only bu
 Originally it had: ="\\documentclass[11pt,oneside,a4paper,article]{memoir}\n"= but I include the options in the skeleton, so I guess I don't need them.
 
 
-#+BEGIN_SRC emacs-lisp :tangle yesn
+#+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'org-latex-classes
                '("memarticle"
                  "\\documentclass{memoir}\n"

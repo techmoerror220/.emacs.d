@@ -720,16 +720,6 @@ Only turn on if a window system is available. This prevents error under terminal
 : t
 
 
-#+srcname: spaceline
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (require 'spaceline-config)
-  ;; (spaceline-emacs-theme)
-  ;; (spaceline-helm-mode)
-#+END_SRC
-
-#+RESULTS: spaceline
-: t
-
 
 #+srcname: powerline
 #+begin_src emacs-lisp :tangle no
@@ -1613,6 +1603,7 @@ From his =main.el=
   ;;; it to 0 to deactivate.
   (setq show-paren-delay 0)
   (setq show-paren-when-point-inside-paren t)
+  ;; (setq show-paren-style 'expression) ;; highligths not only the parens but also the whole expression
 
   ;;; Replace `kill-buffer' binding by `kill-this-buffer'.
   (global-set-key (kbd "C-x k") 'kill-this-buffer)
@@ -1688,8 +1679,6 @@ Situation with =uniquify= solved here: https://github.com/jwiegley/use-package/i
 
 Uniquify buffer names is useful for when you have buffers with many similar names, as when there are various open files from different folders named =analysis.R= or similar.
 
-
-
 #+BEGIN_SRC emacs-lisp :tangle yes
   (require 'uniquify)
   (setq ;;(setq uniquify-buffer-name-style 'reverse)
@@ -1735,19 +1724,27 @@ Other stuff from Technomancy's better defaults
 From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
 
 *** Ediff
-Some tips taken from the post Setting up Ediff.
+
+Some tips taken from the post =Setting up Ediff=.
 
 Don't use the weird setup with a control panel in a separate frame, use a normal Emacs window instead.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain
+        ediff-diff-options "-w")
 #+END_SRC
 
-Split the windows horizontally instead of vertically as I find it easier to follow.
+#+RESULTS:
+: -w
+
+Split the windows horizontally as in =C-x 2= instead of vertically as in =C-x 3= because with a smallish window I find it easier to follow.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (setq ediff-split-window-function 'split-window-horizontally)
+  (setq ediff-split-window-function 'split-window-vertically)
 #+END_SRC
+
+#+RESULTS:
+: split-window-vertically
 
 Restore the windows after Ediff quits. By default, when you quit the Ediff session with =q=, it just leaves the two diff windows around, instead of restoring the window configuration from when Ediff was started.
 
@@ -5080,6 +5077,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "$"
                     :description "dired-hide-subdir. Hide or unhide the current subdirectory and move to next directory")
     (cheatsheet-add :group 'Dired
+                    :key "!"
+                    :description "dired-do-shell-command. Run a shell command COMMAND on one or more files")
+    (cheatsheet-add :group 'Dired
                     :key "&"
                     :description "dired-do-async-shell-command. Run a shell command COMMAND on the marked files asynchronously")
     (cheatsheet-add :group 'Dired-Sorting
@@ -6199,6 +6199,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Magit
                     :key "C-c C-e"
                     :description "You are on a diff, edit thing that is under the cursor. That thing may only live in history and you get there thru rebase. You can stage from there the changes that you make and commit the changes you make in that file that existed no more.")
+    (cheatsheet-add :group 'Magit
+                    :key "E"
+                    :description "View changes on a file that you are seeing in the Magit status buffer in Ediff instead.")
     (cheatsheet-add :group 'Ediff
                     :key "E"
                     :description "View changes in Ediff. With a modified file you see 1st what is on the head of your repo, then on the index, and then on your working tree. From here you can stage and unstage.")
@@ -6435,7 +6438,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24220 9861 594768 818000) :init (24220 9861 594664 834000) :init-secs (0 0 51 167000) :use-package-secs (0 0 322 575000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24221 20437 382927 912000) :init (24221 20437 382863 358000) :init-secs (0 0 31 767000) :use-package-secs (0 0 206 57000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
@@ -7287,7 +7290,9 @@ I disable this as it is dealt with in -misc.org
 
 * Activate minions!
 
-#+begin_src emacs-lisp :tangle yes
+It ain't working
+
+#+begin_src emacs-lisp :tangle no
   (minions-mode 1)
 
   (spaceline-define-segment minor-modes
