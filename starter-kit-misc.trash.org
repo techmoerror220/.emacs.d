@@ -1,3 +1,130 @@
+  ;; Install additinal themes from melpa
+  ;; make sure to use :defer keyword
+  ;; (use-package apropospriate-theme :ensure :defer)
+  ;; (use-package nord-theme :ensure :defer)
+  ;; (use-package tao-theme 
+  ;;  :ensure 
+  ;;  :defer
+  ;;  :custom
+  ;;  (tao-theme-use-sepia t)
+  ;;  (tao-theme-use-boxes nil)
+  ;;  (tao-theme-sepia-saturation 1.5))
+
+If you want your Emacs automatically switch between the color schemes when the time come, you can use run-with-timer function to do the check every hour. But hey, if if I switch theme manually, theme is switched back to what it was after one hour.
+- New, simplified costumization.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (defun set-light-theme ()
+    "Set the light theme with some customization if needed."
+    (interactive)
+    (load-theme 'solarized-light t))
+
+  (defun set-dark-theme ()
+    "Set the dark theme with some customization if needed."
+    (interactive)
+    (load-theme 'solarized-dark t))
+
+  (let ((current-hour (string-to-number (format-time-string "%H"))))
+    (if (or (< current-hour 9) (> current-hour 20)) (set-dark-theme) (set-light-theme)))
+#+END_SRC
+
+#+RESULTS:
+
+- DGM disables on april 2020 to see if above works
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun theme-switcher ()
+  (let ((current-hour (string-to-number (format-time-string "%H"))))
+    (if (or (< current-hour 11) (> current-hour 17)) (set-dark-theme) (set-light-theme))))
+
+;; Run at every 3600 seconds, after 0s delay; DGM commented this out on 24 august 2019 so it did not switch back by itself 
+(run-with-timer 0 3600 'theme-switcher)
+#+END_SRC
+
+#+RESULTS:
+: [nil 24021 32824 946091 3600 theme-switcher nil nil 677000]
+
+** My Mode-line Customization
+
+#+begin_src emacs-lisp :tangle yes 
+(setq display-time-day-and-date t)
+(setq display-time-24hr-format t)
+(display-time-mode 1)
+;;(require 'lunar-mode-line)
+;;(display-lunar-phase)
+#+end_src
+
+#+RESULTS:
+: t
+
+New attempt to distinguish window with focus from other windows in current frame. 
+
+See: https://stackoverflow.com/questions/9446673/asking-emacs-to-highlight-more-clearly-which-window-pane-has-the-focus-cursor
+
+;; "#f5f5f5"
+;; "#b58900" 
+;; "DarkGoldenrod2"
+;; "orange"
+
+#+begin_src emacs-lisp :tangle yes
+(set-face-attribute  'mode-line
+                 nil 
+                 :foreground "#3E3D31"
+                 :background "#b58900"
+                 :box '(:line-width 1 :style released-button))
+
+(set-face-attribute  'mode-line-inactive
+                 nil 
+                 :foreground "gray30"
+                 :background "gray80"
+                 :box '(:line-width 1 :style released-button))
+
+(set-face-attribute 'mode-line-buffer-id 
+                 nil :foreground "#3E3D31") ;; this puts this foreground to the buffer name and letter at the left of it all.
+#+end_src
+
+#+RESULTS:
+
+** COMMENT Powerline provides a nicer modeline
+A nicer modeline. 
+DGM says: yes, but I activate it elsewhere.
+
+#+source: powerline-load
+#+begin_src emacs-lisp :tangle no
+;;  (require 'powerline)
+;;  (powerline-default-theme)
+#+end_src
+
+** COMMENT From Tao a modeline
+
+#+begin_src emacs-lisp :tangle no
+(use-package    taoline
+  :ensure       t
+  :custom
+  (taoline-show-git-branch      t)
+  (taoline-show-dir             t)
+  (taoline-show-time            nil)
+  (taoline-show-previous-buffer nil)
+  :config
+  (taoline-mode t))
+#+end_src
+
+
+***  COMMENT Dim buffers where focus is not
+
+- https://github.com/GuidoSchmidt/circadian.el
+
+Buena idea pero el resultado es muy feo. No es "dim" sino que cambia el color, incluyendo el minibuffer, que se transforma en algo horrendo.
+
+#+begin_src emacs-lisp :tangle no
+;; (use-package auto-dim-other-buffers)
+
+;;    (add-hook 'after-init-hook (lambda ()
+;;      (when (fboundp 'auto-dim-other-buffers-mode)
+;;        (auto-dim-other-buffers-mode t))))
+#+end_src
+
+=apropospriate=  llama a auto-dim!! ahhrggh!!
 *** COMMENT Joe Di Castro bit
 
 - Objective: to make toggling themes smoother.

@@ -8,6 +8,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 * Starter Kit Misc
 Things that don't fit anywhere else.
+
 ** Color Themes
 Emacs 24 introduces a streamlined theming system that replaces an
 older, messier one. The Starter Kit comes with Ethan Schoonover's
@@ -16,69 +17,24 @@ maintained by Bozhidar Batsov. Load it with =M-x load-theme
 solarized-dark= or =M-x load-theme solarized-light=. You can also try
 loading the =zenburn= and =anti-zenburn= themes. 
 
-** My Mode-line Customization
 
-#+begin_src emacs-lisp :tangle yes 
-(setq display-time-day-and-date t)
-(setq display-time-24hr-format t)
-(display-time-mode 1)
-;;(require 'lunar-mode-line)
-;;(display-lunar-phase)
+*** Theme customization
+Add =(setq custom-safe-themes t)= to your init file before you load your theme.
+This will treat all themes as safe, which could be a risk in theory, but if 
+you are only installing themes from trusted sources, I don't see any issue 
+ https://emacs.stackexchange.com/questions/18932/stop-emacs-asking-if-a-theme-is-safe
+
+If you don't set this up, then =load-theme= does not work.
+
+#+source: colors
+#+begin_src emacs-lisp :tangle yes
+(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
+(setq custom-safe-themes t)
 #+end_src
 
-#+RESULTS:
+#+RESULTS: colors
 : t
 
-New attempt to distinguish window with focus from other windows in current frame. 
-
-See: https://stackoverflow.com/questions/9446673/asking-emacs-to-highlight-more-clearly-which-window-pane-has-the-focus-cursor
-
-;; "#f5f5f5"
-;; "#b58900" 
-;; "DarkGoldenrod2"
-;; "orange"
-
-#+begin_src emacs-lisp :tangle yes
-(set-face-attribute  'mode-line
-                 nil 
-                 :foreground "#3E3D31"
-                 :background "#b58900"
-                 :box '(:line-width 1 :style released-button))
-(set-face-attribute  'mode-line-inactive
-                 nil 
-                 :foreground "gray30"
-                 :background "gray80"
-                 :box '(:line-width 1 :style released-button))
-(set-face-attribute 'mode-line-buffer-id nil :foreground "#3E3D31")
-#+end_src
-
-#+RESULTS:
-
-*** Minions
-- Bundle all minor modes under a =[+]= symbol
-- Not compatible with =spaceline= out of the box
-- Customizations I do without now that I use =spaceline=:
-- How to make it compatible with =spaceline=.
-
-#+BEGIN_EXAMPLE
-  (setq display-time-24hr-format t)
-  (setq display-time-default-load-average t)
-  (setq display-time-mail-string "") ;; no mail alert
-  (display-time-mode 1)
-#+END_EXAMPLE
-
-#+begin_src emacs-lisp :tangle yes
-  (use-package minions
-;;    :after (circadian)
-    :init (minions-mode 1)
-    :config
-    (setq minions-mode-line-lighter "[+]"))
-
-(global-set-key [S-down-mouse-3] 'minions-minor-modes-menu)
-#+end_src
-
-#+RESULTS:
-: minions-minor-modes-menu
 
 *** Solarized Theme
 
@@ -87,7 +43,6 @@ New, simplified customization. I leave =(load-theme 'solarized-light t)= as I gu
 #+begin_src emacs-lisp :tangle yes
   (use-package solarized-theme
     :ensure t
-    ;;  :defer
     :init 
     (setq solarized-distinct-fringe-background t) ;; make the fringe stand out from the background 
     (setq solarized-use-variable-pitch nil)       ;; Don't change the font for some headings and titles
@@ -106,129 +61,46 @@ New, simplified customization. I leave =(load-theme 'solarized-light t)= as I gu
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24222 4795 692087 759000) :init (24222 4795 692069 16000) :config (24222 4795 691645 876000) :config-secs (0 0 11 978000) :init-secs (0 0 5236 527000) :use-package-secs (0 0 5343 18000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24222 42903 935690 928000) :init (24222 42903 935661 793000) :config (24222 42903 935104 956000) :config-secs (0 0 12 934000) :init-secs (0 0 938 344000) :use-package-secs (0 0 1094 360000)))
 
 *** Change theme depending on hour of day
 - From 9 am to 8 pm, light theme. Otherwise, dark theme.
 - https://blog.jft.rocks/emacs/time-based-theme.html
 - Disabled so that I simplify it
 
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun set-light-theme ()
-  "Set the light theme with some customization if needed."
-  (interactive)
-  (load-theme 'solarized-light t)
-  (set-face-attribute 'helm-selection nil 
-                      :background nil
-                      :foreground "Orange3")
-  (set-face-attribute 'helm-source-header
-                      nil
-                      :foreground "#dcdcdc"))
-
-(defun set-dark-theme ()
-  "Set the dark theme with some customization if needed."
-  (interactive)
-  (load-theme 'solarized-dark t)
-  (set-face-attribute 'helm-selection nil 
-                      :background nil
-                      :foreground "Orange3")
-  (set-face-attribute 'helm-source-header
-                      nil
-                      :foreground "#dcdcdc"))
-
-(let ((current-hour (string-to-number (format-time-string "%H"))))
-  (if (or (< current-hour 10) (> current-hour 19)) (set-dark-theme) (set-light-theme)))
-#+END_SRC
-
-#+RESULTS:
-
-If you want your Emacs automatically switch between the color schemes when the time come, you can use run-with-timer function to do the check every hour. But hey, if if I switch theme manually, theme is switched back to what it was after one hour.
-- New, simplified costumization.
-
 #+BEGIN_SRC emacs-lisp :tangle yes
   (defun set-light-theme ()
     "Set the light theme with some customization if needed."
     (interactive)
     (load-theme 'solarized-light t)
-    (set-face-attribute  'mode-line
-                         nil 
-                         :foreground "#3E3D31"
-                         :background "#b58900"
-                         :box '(:line-width 1 :style released-button))
-    (set-face-attribute  'mode-line-inactive
-                         nil 
-                         :foreground "gray30"
-                         :background "gray80"
-                         :box '(:line-width 1 :style released-button))
-    (set-face-attribute 'mode-line-buffer-id nil :foreground "#3E3D31"))
-
+    (set-face-attribute 'helm-selection nil 
+                        :background nil
+                        :foreground "Orange3")
+    (set-face-attribute 'helm-source-header
+                        nil
+                        :foreground "#dcdcdc"))
 
   (defun set-dark-theme ()
     "Set the dark theme with some customization if needed."
     (interactive)
     (load-theme 'solarized-dark t)
-    (set-face-attribute  'mode-line
-                         nil 
-                         :foreground "#3E3D31"
-                         :background "#b58900"
-                         :box '(:line-width 1 :style released-button))
-    (set-face-attribute  'mode-line-inactive
-                         nil 
-                         :foreground "gray30"
-                         :background "gray80"
-                         :box '(:line-width 1 :style released-button))
-    (set-face-attribute 'mode-line-buffer-id nil :foreground "#3E3D31"))
+    (set-face-attribute 'helm-selection nil 
+                        :background nil
+                        :foreground "Orange3")
+    (set-face-attribute 'helm-source-header
+                        nil
+                        :foreground "#dcdcdc"))
 
-  (let ((current-hour (string-to-number (format-time-string "%H"))))
-    (if (or (< current-hour 9) (> current-hour 20)) (set-dark-theme) (set-light-theme)))
+  ;;(let ((current-hour (string-to-number (format-time-string "%H"))))
+  ;;    (if (or (< current-hour 10) (> current-hour 19)) (set-dark-theme) (set-light-theme)))
 #+END_SRC
 
 #+RESULTS:
 
-- DGM disables on april 2020 to see if above works
 
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun theme-switcher ()
-  (let ((current-hour (string-to-number (format-time-string "%H"))))
-    (if (or (< current-hour 11) (> current-hour 17)) (set-dark-theme) (set-light-theme))))
+*** Same as my switching of themes based on time, but using the Circadian package
 
-;; Run at every 3600 seconds, after 0s delay; DGM commented this out on 24 august 2019 so it did not switch back by itself 
-(run-with-timer 0 3600 'theme-switcher)
-#+END_SRC
-
-#+RESULTS:
-: [nil 24021 32824 946091 3600 theme-switcher nil nil 677000]
-
-***  COMMENT Dim buffers where focus is not
-
-- https://github.com/GuidoSchmidt/circadian.el
-
-Buena idea pero el resultado es muy feo. No es "dim" sino que cambia el color, incluyendo el minibuffer, que se transforma en algo horrendo.
-
-#+begin_src emacs-lisp :tangle no
-;; (use-package auto-dim-other-buffers)
-
-;;    (add-hook 'after-init-hook (lambda ()
-;;      (when (fboundp 'auto-dim-other-buffers-mode)
-;;        (auto-dim-other-buffers-mode t))))
-#+end_src
-
-=apropospriate=  llama a auto-dim!! ahhrggh!!
-*** COMMENT Same as my switching of themes based on time, but using the Circadian package
-
-#+begin_src emacs-lisp :tangle no
-  ;; Install additinal themes from melpa
-  ;; make sure to use :defer keyword
-  ;; (use-package apropospriate-theme :ensure :defer)
-  ;; (use-package nord-theme :ensure :defer)
-  ;; (use-package tao-theme 
-  ;;  :ensure 
-  ;;  :defer
-  ;;  :custom
-  ;;  (tao-theme-use-sepia t)
-  ;;  (tao-theme-use-boxes nil)
-  ;;  (tao-theme-sepia-saturation 1.5))
-
+#+begin_src emacs-lisp :tangle yes
   (use-package circadian
     :ensure t
     :config
@@ -243,6 +115,105 @@ Buena idea pero el resultado es muy feo. No es "dim" sino que cambia el color, i
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24218 48994 447004 355000) :init (24218 48994 446989 277000) :config (24218 48994 446757 16000) :config-secs (0 5 712945 93000) :init-secs (0 5 714390 787000) :use-package-secs (0 5 714593 791000)))
+
+*** Minions
+- Bundle all minor modes under a =[+]= symbol
+- Not compatible with =spaceline= out of the box
+- Customizations I do without now that I use =spaceline=:
+- How to make it compatible with =spaceline=.
+
+#+BEGIN_EXAMPLE
+  (setq display-time-24hr-format t)
+  (setq display-time-default-load-average t)
+  (setq display-time-mail-string "") ;; no mail alert
+  (display-time-mode 1)
+#+END_EXAMPLE
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package minions
+    :after (circadian)
+    :init (minions-mode 1)
+    :config
+    (setq minions-mode-line-lighter "[+]"))
+
+(global-set-key [S-down-mouse-3] 'minions-minor-modes-menu)
+#+end_src
+
+#+RESULTS:
+: minions-minor-modes-menu
+
+
+*** Spaceline
+- https://www.reddit.com/r/emacs/comments/3mq61l/spaceline_spacemacs_modeline_extracted_as_a/
+- https://github.com/TheBB/spaceline/tree/master#why-does-it-look-different
+
+- Es la mejor mode line so far but as all, a bit invasive. With it, some outcomes in =ewww= had a very weird formatting, going across the window to the right and with a huge empty space in the middle. Don't know why.
+
+To play in future:  (from https://daemons.it/pages/mi-configuracion-de-emacs/)
+
+#+BEGIN_EXAMPLE
+(setq powerline-default-separator "wave")
+
+option:
+    :after (circadian minions)
+
+#+END_EXAMPLE
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package spaceline
+    :after (circadian minions)
+    :init
+    (minions-mode 1)
+    (require 'spaceline-config)
+    :config
+    (spaceline-emacs-theme)
+    (minions-mode 1)
+    (spaceline-helm-mode 1)
+    (spaceline-info-mode 1)
+    (spaceline-toggle-org-clock-on)
+    (spaceline-toggle-version-control-on)
+    (spaceline-toggle-selection-info-on)
+    (spaceline-toggle-buffer-encoding-on)
+    (spaceline-toggle-buffer-encoding-abbrev-on)
+    (spaceline-toggle-hud-on)
+    (spaceline-toggle-anzu-on)
+    (spaceline-toggle-projectile-root-on)
+    (spaceline-toggle-which-function-on)
+    (spaceline-toggle-major-mode-off)
+    (spaceline-toggle-minor-modes-on) ;; or else minions don't work
+    (setq powerline-default-separator 'rounded)
+    (spaceline-define-segment line-column
+      "The current line and column numbers."
+      "l:%l c:%2c")
+    (spaceline-define-segment time
+      "The current time."
+      (format-time-string "%H:%M"))
+    (spaceline-define-segment date
+      "The current date."
+      (format-time-string "%h %d"))
+    (spaceline-toggle-time-on)
+    (spaceline-emacs-theme 'date 'time)
+    (spaceline-define-segment minor-modes
+      (if (bound-and-true-p minions-mode)
+          (format-mode-line minions-mode-line-modes)
+        (spaceline-minor-modes-default)))
+    (format-mode-line minions-mode-line-modes)
+    )
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24222 58376 715390 838000) :init (24222 58376 715370 364000) :config (24222 58376 715202 63000) :config-secs (0 1 410668 421000) :init-secs (0 1 411392 417000) :use-package-secs (0 1 411699 634000)))
+
+NB: parece que adding this does not make that minions are used. Minions only take effect when I run manually the above chunk, why??? Aclarar en =use-package= si :config es para cosas que se ponen antes o luego
+
+#+BEGIN_EXAMPLE
+    (spaceline-define-segment minor-modes
+      (if (bound-and-true-p minions-mode)
+          (format-mode-line minions-mode-line-modes)
+        (spaceline-minor-modes-default)))
+
+    (format-mode-line minions-mode-line-modes)
+#+END_EXAMPLE
 
 ** Window system 
 
@@ -365,7 +336,7 @@ Ido-mode is like magic pixie dust!
 New setup from https://github.com/danielmai/.emacs.d/blob/master/config.org 
 But I disable it as of 12 nov 2019 because it seems that you have to choose either helm or ido! 
 See https://github.com/emacs-helm/helm/issues/2085 and https://github.com/emacs-helm/helm/wiki/FAQ#helm-mode-conflict-with-ido-everywhere
- and https://github.com/emacs-helm/helm/issues/1527 and, finally, https://github.com/emacs-helm/helm/wiki where it says 
+and https://github.com/emacs-helm/helm/issues/1527 and, finally, https://github.com/emacs-helm/helm/wiki where it says 
 
 *** Customize helm-mode
 
@@ -459,30 +430,6 @@ With helm-mode active, to use Emacs default completion instead of either Helm or
 #+RESULTS:
 : starter-kit-pretty-lambdas
 
-** Powerline provides a nicer modeline
-A nicer modeline. 
-DGM says: yes, but I activate it elsewhere.
-
-#+source: powerline-load
-#+begin_src emacs-lisp :tangle no
-;;  (require 'powerline)
-;;  (powerline-default-theme)
-#+end_src
-
-** COMMENT From Tao a modeline
-
-#+begin_src emacs-lisp :tangle no
-(use-package    taoline
-  :ensure       t
-  :custom
-  (taoline-show-git-branch      t)
-  (taoline-show-dir             t)
-  (taoline-show-time            nil)
-  (taoline-show-previous-buffer nil)
-  :config
-  (taoline-mode t))
-#+end_src
-
 ** Hippie expand: at times perhaps too hip
 
 #+begin_src emacs-lisp :tangle yes
@@ -508,6 +455,9 @@ DGM says: yes, but I activate it elsewhere.
 
 
 ** Default to unified diffs
+From documentation: A string or list of strings specifying switches to be passed to =diff=.
+=-u, -U NUM, --unified[=NUM]= is an option for: "output NUM (default 3) lines of unified context" (man pages for =diff=).
+
 #+begin_src emacs-lisp :tangle yes
 (setq diff-switches "-u")
 #+end_src

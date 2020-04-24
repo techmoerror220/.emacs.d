@@ -3313,7 +3313,7 @@ Provides a minor mode which displays current match and total matches information
     (global-set-key (kbd "M-%") 'anzu-query-replace)
     (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp))
 
-(setq anzu-cons-mode-line-p nil) 
+;; (setq anzu-cons-mode-line-p nil) 
 #+end_src
 
 #+RESULTS:
@@ -5005,6 +5005,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c C-s"
                     :description "diary-show-all-entries")
     (cheatsheet-add :group 'Dired
+                    :key "E or Shift-e"
+                    :description "Opens nemo on Dired buffer")
+    (cheatsheet-add :group 'Dired
                     :key "M"
                     :description "dired-do-chmod. Change permission bits of a file to, for example, 755, to make it executable")
     (cheatsheet-add :group 'Dired
@@ -5115,7 +5118,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Editing
                     :key "C-x ="
                     :description "what-cursor-position. Print info on cursor position. Also describe the character after point, give its character code
-    in octal, decimal and hex. With prefix C-u, all info is shown in separate window")
+      in octal, decimal and hex. With prefix C-u, all info is shown in separate window")
     (cheatsheet-add :group 'Editing
                     :key "C-x C-+ OR C-x C-- OR C-x C-0"
                     :description "text-scale-adjust. Adjust the height of the default face. + increases, - descreases, 0 resets")
@@ -5220,7 +5223,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "Inserts numbers or letters in column. Read dgm.org")
     (cheatsheet-add :group 'Editing
                     :key "C-x a"
-                    :description "Join this line to previous and fix up whitespace at join")
+                    :description "Join this line to previous and fix up whitespace at join. Not working anymore as this is prefix for abbrev mode.")
     (cheatsheet-add :group 'Editing
                     :key "s-\\"
                     :description "align-regexp")
@@ -6158,6 +6161,21 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "Shift-<up><down>"
                     :description "Increment/decrement stamp")
     (cheatsheet-add :group 'Magit
+                    :key "z w"
+                    :description "magit-stash-worktree. Create a stash of unstaged changes in the working tree")
+    (cheatsheet-add :group 'Magit
+                    :key "z a"
+                    :description "magit-stash-apply. Apply a stash to the working tree but keep the stash.")
+    (cheatsheet-add :group 'Magit
+                    :key "z k"
+                    :description "magit-stash-drop. Remove a stash from the stash list.")
+    (cheatsheet-add :group 'Magit
+                    :key "z p"
+                    :description "magit-stash-pop. Apply a stash to the working tree and remove it from the stash list.")
+    (cheatsheet-add :group 'Magit
+                    :key "%"
+                    :description "magit-worktree. Act on a worktree.")
+    (cheatsheet-add :group 'Magit
                     :key "f a X h"
                     :description "Force pull from remote: f a, then move point to remote head, X h")
     (cheatsheet-add :group 'Magit
@@ -6171,7 +6189,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "Move thru each header, hunks and blocks in status buffer.")
     (cheatsheet-add :group 'Magit
                     :key "1, 2, 3, 4"
-                    :description "Visibility levels from less to more. With Meta it applies to all headings.")
+                    :description "Local visibility levels from less to more. With Meta it applies globally to all headings.")
     (cheatsheet-add :group 'Magit
                     :key "TAB and S-TAB"
                     :description "Cycle visibility")
@@ -6188,6 +6206,18 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "d"
                     :description "Diffs only for the file your cursor is in with customized choices if you want, without changing the view of anything other in the status display. Gets a separate buffer for this diff.")
     (cheatsheet-add :group 'Magit
+                    :key "d u"
+                    :description "magit-diff-unstaged. Opens a new buffer comparing your working tree changes with respect to the index.")
+    (cheatsheet-add :group 'Magit
+                    :key "d w"
+                    :description "magit-diff-working-tree. Opens a new buffer comparing your working tree changes with respect head.")
+    (cheatsheet-add :group 'Magit
+                    :key "d s"
+                    :description "magit diff staging area. Opens a new buffer comparing your index changes with respect to head.")
+    (cheatsheet-add :group 'Magit
+                    :key "d r"
+                    :description "diff range, for example, origin/master...my-branch. Opens a new buffer comparing your branch and where master was when you branched off, rather than the differences between my branch and current master.")
+    (cheatsheet-add :group 'Magit
                     :key "- or +"
                     :description "Reduce or increase context in hunk. With reduction I can split a hunk into two and state only one of them.")
     (cheatsheet-add :group 'Magit
@@ -6195,16 +6225,28 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "Refresh all Magit buffes of current repo and revert all unmodified buffers visiting files tracked in the repo.")
     (cheatsheet-add :group 'Magit
                     :key "C-c C-t"
-                    :description "You are in a diff. View the history of all the commits that changed a definition.")
+                    :description "You are in a diff. View the history of all the commits that changed a definition from a well-known language.")
     (cheatsheet-add :group 'Magit
                     :key "C-c C-e"
                     :description "You are on a diff, edit thing that is under the cursor. That thing may only live in history and you get there thru rebase. You can stage from there the changes that you make and commit the changes you make in that file that existed no more.")
     (cheatsheet-add :group 'Magit
                     :key "E"
-                    :description "View changes on a file that you are seeing in the Magit status buffer in Ediff instead.")
-    (cheatsheet-add :group 'Ediff
-                    :key "E"
-                    :description "View changes in Ediff. With a modified file you see 1st what is on the head of your repo, then on the index, and then on your working tree. From here you can stage and unstage.")
+                    :description "View and choose changes in Ediff. With a modified file you see 1st what is on the head of your repo, then on the index, and then on your working tree. From here you can stage and unstage.")
+    (cheatsheet-add :group 'Magit
+                    :key "E u"
+                    :description "magit-ediff-show-unstaged. ediffs the Index and the working tree.")
+    (cheatsheet-add :group 'Magit
+                    :key "E i"
+                    :description "magit-ediff-show-staged. ediffs the HEAD and Index.")
+    (cheatsheet-add :group 'Magit
+                    :key "E w"
+                    :description "magit-ediff-show-working-tree. ediffs the HEAD and the working tree.")
+    (cheatsheet-add :group 'Magit
+                    :key "E E"
+                    :description "magit-ediff-dwim. Ediff Head, Index and Working tree if all three differ.")
+    (cheatsheet-add :group 'Magit
+                    :key "E z"
+                    :description "magit-ediff-show-stash. Show changes to a file introduced by a stash. With many stashes, it compares stashes.")
     (cheatsheet-add :group 'Pandoc
                     :key "C-c /"
                     :description "pandoc-main-hydra/body. Call the body in the pandoc-main-hydra hydra.")
@@ -6438,7 +6480,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24221 20437 382927 912000) :init (24221 20437 382863 358000) :init-secs (0 0 31 767000) :use-package-secs (0 0 206 57000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24225 32406 92117 43000) :init (24225 32406 92052 485000) :init-secs (0 0 3408 496000) :use-package-secs (0 0 3570 818000) :config (24225 32406 92039 245000) :config-secs (0 0 3391 733000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
@@ -7286,25 +7328,6 @@ I disable this as it is dealt with in -misc.org
 
 #+RESULTS: frame-title
 |   | invocation-name | - | (:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) %b)) |
-
-
-* Activate minions!
-
-It ain't working
-
-#+begin_src emacs-lisp :tangle no
-  (minions-mode 1)
-
-  (spaceline-define-segment minor-modes
-    (if (bound-and-true-p minions-mode)
-        (format-mode-line minions-mode-line-modes)
-      (spaceline-minor-modes-default)))
-
-  (format-mode-line minions-mode-line-modes)
-#+end_src
-
-#+RESULTS:
-: (Org [+]) 
 
 
 * Provide
