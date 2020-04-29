@@ -163,7 +163,7 @@ DGM: 28 march 2020. Commented out or else =dired-fixups.el= does not work.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (if (eq system-type 'gnu/linux)
-      (setq dired-listing-switches "-alDh --group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\""))
+      (setq dired-listing-switches "-laDGh1v --group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\""))
 
   (defun ensure-buffer-name-ends-in-slash ()
     "change buffer name to end with slash"
@@ -287,7 +287,7 @@ Narrow dired to match filter.  From: http://pragmaticemacs.com/emacs/dynamically
                 ("/" . dired-narrow)))
 #+END_SRC
 
-* Settings DGM gets from Emacs manual
+* Settings taken from Emacs manual
 
 From p. 339
 In 344: 
@@ -301,6 +301,30 @@ In 344:
 
 #+RESULTS:
 : t
+
+** Auto-revert dired buffer 
+.... automatically when you revisit it. See this link: [[pdfview:/media/dgm/blue/documents/programming/emacs/manuals/official/emacs26-2019.pdf::373][dired-auto-revert-buffer in manual]]
+
+#+begin_src emacs-lisp :tangle yes
+(setq dired-auto-revert-buffer t)
+#+end_src
+
+#+RESULTS:
+: t
+
+** Automatic garbage collection for latex
+
+p. 341. Syntax for customizing this from: https://oremacs.com/2015/01/21/dired-shortcuts/
+s
+#+begin_src emacs-lisp :tangle yes
+  (setq dired-garbage-files-regexp
+        "\\.fdb_latexmk$\\|\\.fls$\\|\\.synctex(busy)$\\|\\.bbl$\\|\\.aux$\\|\\.blg$\\|
+  \\.out$\\|\\.tag$\\|\\.pp$\\|\\.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\|pyg\\)\\)\\'")
+#+end_src
+
+#+RESULTS:
+: \.fdb_latexmk$\|\.fls$\|\.synctex(busy)$\|\.bbl$\|\.aux$\|\.blg$\|
+: \.out$\|\.tag$\|\.pp$\|\.synctex.gz$\|\(?:\.\(?:aux\|bak\|dvi\|log\|orig\|rej\|toc\|pyg\)\)\'
 
 * Provide
 

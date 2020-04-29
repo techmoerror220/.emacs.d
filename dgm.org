@@ -4975,6 +4975,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-l"
                     :description "Mark url")
     (cheatsheet-add :group 'Command
+                    :key "C-m"
+                    :description "Enter or Return")
+    (cheatsheet-add :group 'Command
+                    :key "C-i"
+                    :description "TAB")
+    (cheatsheet-add :group 'Command
                     :key "C-x z"
                     :description "Repeat most recently executed command")
     (cheatsheet-add :group 'Command
@@ -5004,6 +5010,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Diary
                     :key "C-c C-s"
                     :description "diary-show-all-entries")
+(cheatsheet-add :group 'Dired
+                    :key "% &"
+                    :description "dired-flag-garbage-file. Useful for marking for delation TeX auxiliary files.")
     (cheatsheet-add :group 'Dired
                     :key "E or Shift-e"
                     :description "Opens nemo on Dired buffer")
@@ -5819,6 +5828,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "W"
                     :description "Widen in Org subtree")
     (cheatsheet-add :group 'Org
+                    :key "#"
+                    :description "Comments heading")    
+(cheatsheet-add :group 'Org
                     :key "TAB or C-i"
                     :description "On a list, insert a lower level item moving, for example, from - to +")
     (cheatsheet-add :group 'Org
@@ -6320,6 +6332,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-x r k"
                     :description "kill-rectangle")
     (cheatsheet-add :group 'RefTeX
+                    :key "C-c -"
+                    :description "reftex-toc-recenter. Display the TOC window and highlight line corresponding to current position.")    
+(cheatsheet-add :group 'RefTeX
                     :key "C-c ="
                     :description "reftex-toc. Shows a table of contents. Press ? to get help.")
     (cheatsheet-add :group 'RefTeX
@@ -6480,7 +6495,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24225 32406 92117 43000) :init (24225 32406 92052 485000) :init-secs (0 0 3408 496000) :use-package-secs (0 0 3570 818000) :config (24225 32406 92039 245000) :config-secs (0 0 3391 733000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24228 36674 657554 175000) :init (24228 36674 657489 401000) :init-secs (0 0 30 378000) :use-package-secs (0 0 185 485000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
