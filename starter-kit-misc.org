@@ -35,8 +35,57 @@ Things that don't fit anywhere else.
 #+RESULTS:
 : minions-minor-modes-menu
 
+** My mode line 
+https://emacs.stackexchange.com/questions/10033/change-mode-line-buffer-id-face-for-inactive-windows/22682#22682
 
-** Spaceline
+#+begin_src emacs-lisp :tangle yes
+(setq display-time-day-and-date t)
+(setq display-time-24hr-format t)
+(display-time-mode 1)
+
+(defvar ml-selected-window nil)
+
+(defun ml-record-selected-window ()
+  (setq ml-selected-window (selected-window)))
+
+(defun ml-update-all ()
+  (force-mode-line-update t))
+
+(add-hook 'post-command-hook 'ml-record-selected-window)
+
+(add-hook 'buffer-list-update-hook 'ml-update-all)
+
+(defface ml-active-window-face
+   '((t (:foreground "#b58900")))
+   "Face for active buffer identification.")
+
+(defface ml-inactive-window-face
+   '((t (:foreground "#bebebe")))
+   "Face for inactive buffer identification.")
+
+(defun ml-propertized-buffer-identification (fmt)
+  "Return a list suitable for `mode-line-buffer-identification'.
+FMT is a format specifier such as \"%12b\".  This function adds
+text properties for face, help-echo, and local-map to it."
+  (list (propertize fmt
+        'face
+          (if (eq ml-selected-window (selected-window))
+            'ml-active-window-face
+            'ml-inactive-window-face)
+        'help-echo
+        (purecopy "Buffer name
+mouse-1: Previous buffer\nmouse-3: Next buffer")
+        'mouse-face 'mode-line-highlight
+        'local-map mode-line-buffer-identification-keymap)))
+
+(setq-default mode-line-buffer-identification
+  '(:eval (ml-propertized-buffer-identification "%12b")))
+#+end_src
+
+#+RESULTS:
+| :eval | (ml-propertized-buffer-identification %12b) |
+
+** COMMENT Spaceline
 - https://www.reddit.com/r/emacs/comments/3mq61l/spaceline_spacemacs_modeline_extracted_as_a/
 - https://github.com/TheBB/spaceline/tree/master#why-does-it-look-different
 
@@ -52,7 +101,7 @@ option:
 
 #+END_EXAMPLE
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (use-package spaceline
     :after (minions)
     :init
@@ -95,7 +144,7 @@ option:
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24229 24847 106015 760000) :init (24229 24847 105986 117000) :config (24229 24847 105761 37000) :config-secs (0 1 625202 558000) :init-secs (0 1 625918 36000) :use-package-secs (0 1 626144 950000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24236 33258 615065 656000) :init (24236 33258 615057 423000) :config (24236 33258 614949 293000) :config-secs (0 1 387482 0) :init-secs (0 1 387884 767000) :use-package-secs (0 1 388088 433000)))
 
 NB: parece que adding this does not make that minions are used. Minions only take effect when I run manually the above chunk, why??? Aclarar en =use-package= si :config es para cosas que se ponen antes o luego
 
@@ -109,11 +158,11 @@ NB: parece que adding this does not make that minions are used. Minions only tak
 #+END_EXAMPLE
 
 
-*** My =get-spaceline-working= function
+*** COMMENT My =get-spaceline-working= function
 
 Goal: to make colors and minions work whenever I toggle solarized theme.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 ;; my function to get spaceline powerline working
 
 (defun get-spaceline-working ()
@@ -237,14 +286,12 @@ to the function =get-spaceline-working=
   (defun set-light-theme ()
     "Set the light theme with some customization if needed."
     (interactive)
-    (load-theme 'solarized-light t)
-    (get-spaceline-working))
+    (load-theme 'solarized-light t))
 
   (defun set-dark-theme ()
     "Set the dark theme with some customization if needed."
     (interactive)
-    (load-theme 'solarized-dark t)
-    (get-spaceline-working))
+    (load-theme 'solarized-dark t))
 
   ;;(let ((current-hour (string-to-number (format-time-string "%H"))))
   ;;    (if (or (< current-hour 10) (> current-hour 19)) (set-dark-theme) (set-light-theme)))
@@ -265,7 +312,6 @@ to the function =get-spaceline-working=
     (setq circadian-themes '((:sunrise . solarized-light)
                              (:sunset  . solarized-dark)))
     (minions-mode 1)  
-    (get-spaceline-working)  
     (circadian-setup))
   ;;    (setq circadian-themes '((:sunrise . tao-yang)
   ;;                             (:sunset  . tao-yin)))

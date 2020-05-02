@@ -67,6 +67,26 @@ See: https://stackoverflow.com/questions/9446673/asking-emacs-to-highlight-more-
 ;; "orange"
 
 #+begin_src emacs-lisp :tangle yes
+(defvar ml-selected-window nil)
+
+(defun ml-record-selected-window ()
+  (setq ml-selected-window (selected-window)))
+
+(defun ml-update-all ()
+  (force-mode-line-update t))
+
+(add-hook 'post-command-hook 'ml-record-selected-window)
+
+(add-hook 'buffer-list-update-hook 'ml-update-all)
+
+(setq-default mode-line-format
+  '(:eval
+      (if (eq ml-selected-window (selected-window))
+        (set-face-attribute 'mode-line-buffer-id 
+                 nil :foreground "#3E3D31") 
+        "INACTIVE")))
+
+
 (set-face-attribute  'mode-line
                  nil 
                  :foreground "#3E3D31"
@@ -81,6 +101,7 @@ See: https://stackoverflow.com/questions/9446673/asking-emacs-to-highlight-more-
 
 (set-face-attribute 'mode-line-buffer-id 
                  nil :foreground "#3E3D31") ;; this puts this foreground to the buffer name and letter at the left of it all.
+	
 #+end_src
 
 #+RESULTS:
@@ -523,8 +544,3 @@ column-number-mode t)
 (add-to-list 'after-make-frame-functions 'set-moody-face t))
 ;; (add-to-list 'after-make-frame-functions 'set-current-moody-face t))
 #+END_EXAMPLE
-
-
-
-
-
