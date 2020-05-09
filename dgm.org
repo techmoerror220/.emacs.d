@@ -234,15 +234,6 @@ DGM: I disable the hook as it is too invasive (=1= turned =-1=).
 #+RESULTS:
 : whitespace-mode
 
-*** speed-type
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package speed-type)
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23592 62602 668192 845000) :init (23592 62602 668160 862000) :config (23592 62602 667754 576000) :config-secs (0 0 16 248000) :init-secs (0 0 713 570000) :use-package-secs (0 0 795 338000)))
-
 *** iedit mode
 Edit multiple regions in the same way simultaneously
 
@@ -762,18 +753,6 @@ Only turn on if a window system is available. This prevents error under terminal
   ;;      (add-to-list 'sml/replacer-regexp-list '("^:CODE:investor-bridge" ":IB:"))
   ;;      (add-to-list 'sml/replacer-regexp-list '("^~/.*/lib/ruby/gems" ":GEMS" ))))
 #+end_src
-
-*** Stata
-
-Disabled in order to use ESS default stata mode because this =ado= mode does not allow interacting with Stata (only does for MacOs and Windows).
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (add-to-list 'load-path "/home/dgm/.emacs.d/src/ado-mode-1.15.1.4/lisp")
-  (require 'ado-mode)
-#+END_SRC
-
-#+RESULTS:
-: ado-mode
 
 *** Which-key
 This mode shows a keymap when an incomplete command is entered. It is especially useful for families of commands with a prefix, e.g., =C-c C-o= for outline-mode commands, or ==C-c C-v= for org-babel commands. Just start ktyping your command and pause if you want a hint.
@@ -2586,7 +2565,9 @@ Emacs treats camelCase strings as a single word by default, this changes said be
 ****** Beacon
 While changing buffers or workspaces, the first thing you do is look for your cursor. Unless you know its position, you cannot move it efficiently. Every time you change buffers, the current position of your cursor will be briefly highlighted now.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+As much as I like it, it produces interferences.
+
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package beacon
     :ensure t
     :config
@@ -4345,6 +4326,8 @@ Note the minimalistic =vc= information included with ="\thispagestyle{kjhgit}=. 
     "#+LATEX_HEADER: \\def\\mykeywords{Sociología, Guía, Grado, Sociología, TFG}\n"
     "#+LATEX_HEADER: \\def\\mysubtitle{Grado en Sociología}\n"
     "#+LATEX_HEADER: \\def\\mytitle{{\\LARGE \\textsc{Guía del} \\newline} \\HUGE Trabajo Fin de Grado}\n"
+    "#+LATEX_HEADER: \\usepackage{prelim2e}\n"
+    "#+LATEX_HEADER: \\immediate\\write18{sh ./vc}\n"
     "#+LATEX_HEADER: \\input{vc}\n"
     "#+LATEX_CMD: xelatex\n"
     "#+begin_src latex\n"
@@ -7368,9 +7351,49 @@ To get rid of it, for example in Chromium, do =M-x visual-fill-column-mode=.
 
 https://emacshorrors.com/posts/longlines-mode.html
 
-#+begin_src emacs-lisp :tangle yes
+This enables line wrapping at the 80th column everywhere:
+
+#+begin_src emacs-lisp :tangle no
   (add-hook 'visual-line-mode-hook 'visual-fill-column-mode)
 #+end_src
+
+Now I'm going to try and activate it only in text and programming modes (see https://emacs.stackexchange.com/questions/21624/enable-visual-fill-column-mode-only-in-text-and-programming-mode)
+
+#+begin_src emacs-lisp :tangle yes
+  (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'text-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'prog-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'prog-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'org-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'TeX-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'TeX-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'latex-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'latex-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'markdown-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'markdown-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'ado-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'ado-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'ess-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'ess-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'inferior-ess-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'inferior-ess-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'ess-stata-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'ess-stata-mode-hook 'visual-fill-column-mode)
+  #+end_src
+
+#+RESULTS:
+| visual-fill-column-mode | turn-on-visual-line-mode |
+
 
 * Emacs flickers
 
@@ -7387,6 +7410,80 @@ On flickering, check https://www.facebook.com/notes/daniel-colascione/buttery-sm
 
 #+RESULTS:
 : ((inhibit-double-bufferinf . t) (line-spacing . 0.06) (font . Pragmata Pro Mono-16) (buffer-predicate . exwm-layout--other-buffer-predicate))
+
+* Touch type
+
+** Speed type
+
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package speed-type)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24246 50919 212493 896000) :init (24246 50919 212488 235000) :config (24246 50919 212383 56000) :config-secs (0 0 4 492000) :init-secs (0 0 206 420000) :use-package-secs (0 0 243 744000)))
+
+
+** My typing tutor
+From: https://www.reddit.com/r/emacs/comments/cmf1m2/touch_typing_tutor_for_emacs/
+
+
+Originally:
+
+#+begin_src latex
+  "`" "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" "-" "=" ;top row
+  "~" "!" "@" "#" "$" "%" "^" "&" "*" "(" ")" "_" "+" ;Shift top row
+  "[" "]" "{" "}"
+ #+end_src
+
+
+#+begin_src emacs-lisp :tangle yes
+(require 'cl-lib)
+(random t) ;seed random with time
+
+(defun rand (min max)
+  (+ min (random (+ 1 (- max min)))))
+
+(defun my-type-tutor-insert-buffer (chars lines groups-per-line group-size)
+  (save-excursion
+    (cl-loop with chars-len = (1- (length chars))
+             for l from 0 to (1- lines) do
+             (cl-loop for gpl from 0 to (1- groups-per-line) do
+                      (cl-loop for gs from 0 to (1- group-size) do
+                               (insert (nth (rand 0 chars-len)
+                                            chars)))
+                      ;; skip space on last one
+                      (unless (= gpl (1- groups-per-line))
+                        (insert " ")))
+             (insert "\n\n\n")))
+  (print 'forward-line)
+  (forward-line))
+
+(defun my-type-tutor ()
+  (interactive)
+  (let ((lines 7)
+        (groups-per-line 7)
+        (group-size 9)
+        (char-lst
+         (list
+          "'" "," "." "p" "y" "f" "g" "c" "r" "l"        ; top row
+          "a" "o" "e" "u" "i" "d" "h" "t" "n" "s"        ; home row 
+          ";" ":" "q" "j" "k" "x" "b" "m" "w" "v" "z"))) ; bottom row
+    ;; new buff in text-mode
+    (switch-to-buffer (get-buffer-create "*type-tutor*"))
+    (text-mode)
+    ;; insert text
+    (my-type-tutor-insert-buffer char-lst lines groups-per-line group-size)))
+#+end_src
+
+#+RESULTS:
+: my-type-tutor
+
+
+** Remember external apt `typespeed'
+
+Read: https://emacsnotes.wordpress.com/2018/06/01/a-finger-typer-makes-a-horrible-emacs-user-learn-to-touch-type-with-typespeed/
+
 
 * Provide
 

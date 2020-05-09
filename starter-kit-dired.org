@@ -315,16 +315,29 @@ In 344:
 ** Automatic garbage collection for latex
 
 p. 341. Syntax for customizing this from: https://oremacs.com/2015/01/21/dired-shortcuts/
-s
+
+
 #+begin_src emacs-lisp :tangle yes
   (setq dired-garbage-files-regexp
         "\\.fdb_latexmk$\\|\\.fls$\\|\\.synctex(busy)$\\|\\.bbl$\\|\\.aux$\\|\\.blg$\\|
-  \\.out$\\|\\.tag$\\|\\.pp$\\|\\.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\|pyg\\)\\)\\'")
+  \\.bcf$\\|\\.out$\\|\\.tag$\\|\\.pp$\\|\\.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\|pyg\\)\\)\\'")
 #+end_src
 
 #+RESULTS:
 : \.fdb_latexmk$\|\.fls$\|\.synctex(busy)$\|\.bbl$\|\.aux$\|\.blg$\|
-: \.out$\|\.tag$\|\.pp$\|\.synctex.gz$\|\(?:\.\(?:aux\|bak\|dvi\|log\|orig\|rej\|toc\|pyg\)\)\'
+: \.bcf$\|\.out$\|\.tag$\|\.pp$\|\.synctex.gz$\|\(?:\.\(?:aux\|bak\|dvi\|log\|orig\|rej\|toc\|pyg\)\)\'
+
+** Editing the dired buffer like text
+
+p. 352
+
+#+begin_src emacs-lisp :tangle yes
+(setq wdired-allow-to-change-permissions t)
+#+end_src
+
+#+RESULTS:
+: t
+
 
 * Provide
 

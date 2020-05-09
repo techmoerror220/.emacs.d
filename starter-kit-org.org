@@ -3411,7 +3411,7 @@ DGM: check how to make this work.. but way too complicated for me!
   (require 'org-wiki)
   (setq org-wiki-location "/media/dgm/blue/documents/dropbox/notes/org-wiki")
 
-(global-set-key (kbd "s-.") 'org-wiki-helm)
+(global-set-key (kbd "s-,") 'org-wiki-helm)
 #+end_src
 
 #+RESULTS:
@@ -3423,7 +3423,7 @@ DGM: check how to make this work.. but way too complicated for me!
   (require 'org-recipes)
   (setq org-recipes-file-list '("/media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org" "/media/dgm/blue/documents/dropbox/notes/cheatSheets/emacsCheatSheet.org"))
 
-(global-set-key (kbd "s-,") 'org-recipes)
+(global-set-key (kbd "s-.") 'org-recipes)
 #+end_src
 
 #+RESULTS:

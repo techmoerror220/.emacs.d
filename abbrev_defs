@@ -99,6 +99,8 @@
 
 (define-abbrev-table 'change-log-mode-abbrev-table '())
 
+(define-abbrev-table 'cheatsheet-mode-abbrev-table '())
+
 (define-abbrev-table 'chess-pgn-mode-abbrev-table '())
 
 (define-abbrev-table 'comint-mode-abbrev-table '())
@@ -128,6 +130,8 @@
 (define-abbrev-table 'diff-mode-abbrev-table '())
 
 (define-abbrev-table 'dig-mode-abbrev-table '())
+
+(define-abbrev-table 'display-time-world-mode-abbrev-table '())
 
 (define-abbrev-table 'doctex-mode-abbrev-table '())
 
@@ -301,7 +305,7 @@
     ("cammpo" "campo" nil :count 1)
     ("cant" "can't" nil :count 4)
     ("caulquier" "cualquier" nil :count 2)
-    ("ce" "¿cómo estás?" nil :count 10)
+    ("ce" "¿cómo estás?" nil :count 12)
     ("censsu" "census" nil :count 3)
     ("changnes" "changes" nil :count 1)
     ("chatper" "chapter" nil :count 1)
@@ -348,6 +352,7 @@
     ("cumplimetnar" "cumplimentar" nil :count 1)
     ("daneil" "Daniel" nil :count 2)
     ("datta" "data" nil :count 1)
+    ("dec" "decomposition" nil :count 2)
     ("decisioens" "decisiones" nil :count 1)
     ("decommpose" "decompose" nil :count 1)
     ("decommpositin" "decomposition" nil :count 1)
@@ -399,6 +404,7 @@
     ("doesnt" "doesn't" nil :count 4)
     ("dont" "don't" nil :count 19)
     ("doucmentos" "documentos" nil :count 1)
+    ("ds" "{\\tt dseg}" nil :count 2)
     ("dvt" "development" nil :count 3)
     ("ealidad" "realidad" nil :count 1)
     ("económicso" "económicos" nil :count 1)
@@ -486,7 +492,7 @@
     ("hwen" "when" nil :count 1)
     ("hwere" "where" nil :count 2)
     ("hwich" "which" nil :count 1)
-    ("ie" "i.e.," nil :count 100)
+    ("ie" "i.e.," nil :count 103)
     ("iether" "either" nil :count 1)
     ("implmentación" "implementación" nil :count 1)
     ("imporntate" "importante" nil :count 1)
@@ -679,6 +685,7 @@
     ("pueramente" "puramente" nil :count 1)
     ("putno" "punto" nil :count 1)
     ("páginsa" "páginas" nil :count 1)
+    ("q" "que" nil :count 3)
     ("qeu" "que" nil :count 38)
     ("qt" "¿qué tal?" nil :count 2)
     ("queires" "quieres" nil :count 1)
@@ -720,6 +727,7 @@
     ("seaman" "semana" nil :count 1)
     ("seciton" "section" nil :count 1)
     ("secudnaria" "secundaria" nil :count 1)
+    ("seg" "segregation" nil :count 13)
     ("segergations" "segregations" nil :count 1)
     ("segreation" "segregation" nil :count 1)
     ("segregadso" "segregados" nil :count 1)
@@ -834,7 +842,7 @@
     ("uqien" "quien" nil :count 1)
     ("uqieres" "quieres" nil :count 3)
     ("urgano" "urbano" nil :count 1)
-    ("usal" "Un saludo, Daniel " nil :count 8)
+    ("usal" "Un saludo, Daniel " nil :count 10)
     ("usch" "such" nil :count 1)
     ("useing" "using" nil :count 1)
     ("vacacioens" "vacaciones" nil :count 2)
@@ -1075,6 +1083,8 @@
 
 (define-abbrev-table 'use-package-statistics-mode-abbrev-table '())
 
+(define-abbrev-table 'vc-bzr-log-view-mode-abbrev-table '())
+
 (define-abbrev-table 'vc-git-log-edit-mode-abbrev-table '())
 
 (define-abbrev-table 'vc-git-log-view-mode-abbrev-table '())
@@ -1082,6 +1092,8 @@
 (define-abbrev-table 'vc-git-region-history-mode-abbrev-table '())
 
 (define-abbrev-table 'vc-svn-log-view-mode-abbrev-table '())
+
+(define-abbrev-table 'wordnut-mode-abbrev-table '())
 
 (define-abbrev-table 'xref--xref-buffer-mode-abbrev-table '())
 
