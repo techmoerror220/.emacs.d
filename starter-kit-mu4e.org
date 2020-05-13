@@ -270,9 +270,6 @@ Tip from http://www.macs.hw.ac.uk/~rs46/posts/2014-11-16-mu4e-signatures.html fo
             (lambda () (local-set-key (kbd "C-c C-w") #'my/mu4e-choose-signature)))
 #+END_SRC
 
-#+RESULTS:
-| (lambda nil (local-set-key (kbd C-c C-w) #'my/mu4e-choose-signature)) | my-do-compose-stuff | ambrevar/message-github | (lambda nil (set-fill-column 72) (auto-fill-mode 0) (visual-fill-column-mode) (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow)) (visual-line-mode)) | (lambda nil (local-set-key (kbd C-c C-w) #'my-mu4e-choose-signature)) |
-
 
 Set default signature to nil ("") orginally, now to Daniel
 
@@ -1174,14 +1171,16 @@ From: https://etienne.depar.is/emacs.d/mu4e.html
 
 From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(add-hook 'mu4e-compose-mode-hook
-          (lambda ()
-            (set-fill-column 72)
-            (auto-fill-mode 0)
-            ;;(visual-fill-column-mode)
-            (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))))
-            ;;(visual-line-mode)))
+Already set in another bit of this file.
+#+BEGIN_SRC emacs-lisp :tangle no
+  (add-hook 'mu4e-compose-mode-hook
+            (lambda ()
+              (set-fill-column 72)
+              (auto-fill-mode 1)
+              (visual-line-mode)))
+  ;;(visual-fill-column-mode)
+  ;; (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))))
+  ;;(visual-line-mode)))
 
 
   ;; I want to see full From header, not only name
@@ -1189,7 +1188,7 @@ From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
 #+END_SRC
 
 #+RESULTS:
-| my-do-compose-stuff | ambrevar/message-github | (lambda nil (set-fill-column 72) (auto-fill-mode 0) (visual-fill-column-mode) (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow)) (visual-line-mode)) |
+: t
 
 Store a link to a mu4e query or message, setting various properties for use in capture templates. Basic support is provided by =org-mu4e=, but this uses some code from Using =org-capture-templates= with =mu4e= to extend the properties available to templates.
 
@@ -2323,6 +2322,17 @@ Read https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
 #+begin_src emacs-lisp :tangle yes
 ;; (setq mu4e-headers-sort-field :date)
 #+end_src
+
+* See full header
+
+I want to see full From header, not only name
+
+#+begin_src emacs-lisp :tangle yes
+  (setq mu4e-view-show-addresses t)
+#+end_src
+
+#+RESULTS:
+: t
 
 * Provide 
 

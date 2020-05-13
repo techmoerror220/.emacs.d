@@ -5556,6 +5556,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
       (cheatsheet-add :group 'Find-Files-Projectile
                       :key "s-\`"
                       :description "helm-projectile-find-other-file: Same name, different extension")
+      (cheatsheet-add :group 'Find-Ocurrences
+                      :key "C-o"
+                      :description "Occur inside a regular search with C-s or C-r")
       (cheatsheet-add :group 'Find-Occurrences
                       :key "s-o"
                       :description "helm-occur: TAB to temporarily move to highlighted match")
@@ -6473,7 +6476,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24237 36957 243131 86000) :init (24237 36957 243089 283000) :init-secs (0 0 21 580000) :use-package-secs (0 0 111 360000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24247 45488 779593 862000) :init (24247 45488 779555 444000) :init-secs (0 0 14 801000) :use-package-secs (0 0 91 2000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
@@ -7389,10 +7392,12 @@ Now I'm going to try and activate it only in text and programming modes (see htt
 
   (add-hook 'ess-stata-mode-hook 'turn-on-visual-line-mode)
   (add-hook 'ess-stata-mode-hook 'visual-fill-column-mode)
+
+;; don't show bent arrows
+  (setq visual-line-fringe-indicators '(nil nil))
   #+end_src
 
 #+RESULTS:
-| visual-fill-column-mode | turn-on-visual-line-mode |
 
 
 * Emacs flickers
@@ -7484,6 +7489,12 @@ Originally:
 
 Read: https://emacsnotes.wordpress.com/2018/06/01/a-finger-typer-makes-a-horrible-emacs-user-learn-to-touch-type-with-typespeed/
 
+
+* Disable the scroll bar  
+
+#+begin_src emacs-lisp :tangle yes
+(scroll-bar-mode -1)
+#+end_src
 
 * Provide
 
