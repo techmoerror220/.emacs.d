@@ -544,6 +544,7 @@ not included as they were obstrusive.
 https://tex.stackexchange.com/questions/75697/auctex-how-to-cause-math-mode-dollars-to-be-closed-automatically-with-electric
 
 DGM, 22 jan 20. Trying to get the =[]= pair in latex
+
 #+begin_src emacs-lisp :tangle yes
 (add-hook 'LaTeX-mode-hook
           '(lambda ()
@@ -552,7 +553,31 @@ DGM, 22 jan 20. Trying to get the =[]= pair in latex
 #+end_src
 
 #+RESULTS:
-| (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command) (define-key LaTeX-mode-map (kbd [) 'self-insert-command)) | preview-mode-setup | (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command)) | TeX-PDF-mode | turn-on-reftex | latex-unicode-simplified |
+| (lambda nil (local-set-key (kbd $) 'brf-TeX-dollarm)) | (lambda nil (highlight-symbol-mode)) | (lambda nil (paredit-mode) (auto-complete-mode) (visual-line-mode) (advice-add 'paredit-backward-delete :around #'paredit-backward-delete-advice) (advice-add 'paredit-forward-delete :around #'paredit-forward-delete-advice) (advice-add 'paredit-doublequote :override #'paredit-nonsmart-doublequote)) | (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command) (define-key LaTeX-mode-map (kbd [) 'self-insert-command)) | TeX-PDF-mode | turn-on-reftex | latex-unicode-simplified |
+
+But it is not working. I try this:
+
+#+begin_src emacs-lisp :tangle no
+(defun brf-TeX-Inserting (sta stb stc num)
+  " after entering stb insert stc and go back with the cursor by num positions.
+    With prefix nothings gets replaced. If the previous char was sta nothing will be 
+    replaces as well." 
+  (if (null current-prefix-arg)
+      (progn
+        (if (= (preceding-char) sta )
+            (insert stb)
+          (progn (insert stc) (backward-char num))))
+    (insert stb)))
+
+(defun brf-TeX-dollarm () (interactive) (brf-TeX-Inserting ?\\ "$"  "$$" 1))
+
+(add-hook 'LaTeX-mode-hook
+   (function (lambda ()
+       (local-set-key (kbd "$")      'brf-TeX-dollarm))))
+#+end_src
+
+#+RESULTS:
+| (lambda nil (local-set-key (kbd $) 'brf-TeX-dollarm)) | (lambda nil (highlight-symbol-mode)) | (lambda nil (paredit-mode) (auto-complete-mode) (visual-line-mode) (advice-add 'paredit-backward-delete :around #'paredit-backward-delete-advice) (advice-add 'paredit-forward-delete :around #'paredit-forward-delete-advice) (advice-add 'paredit-doublequote :override #'paredit-nonsmart-doublequote)) | (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command) (define-key LaTeX-mode-map (kbd [) 'self-insert-command)) | TeX-PDF-mode | turn-on-reftex | latex-unicode-simplified |
 
 ** Electric Pair for Markdown
 
@@ -581,6 +606,274 @@ DGM, 22 jan 20. Trying to get the =[]= pair in latex
 * Alternative: autopair
 - https://github.com/joaotavora/autopair
 
+
+* =paredit=: technomancy's and JohnW's way
+
+From: http://emacslife.com/emacs-chats/chat-phil-hagelberg.html
+
+Original quote by Technomancy: "If you think paredit is not for you then you need to become the kind of person that paredit is for."
+
+Sacha: "If you are not the kind of person who can deal with paredit or smartparens, you become that kind of person." 
+
+Phil: It's not for everyone, just for the kind of person you should aspire to be. laughs 
+
+Sacha: What is it like for you? How do you wrap your brain around not just the slurping and barfing, but all the other things you can do with it? 
+
+Phil: The main thing people get tripped up on, I think, is that paredit will refuse to do certain things hen it can tell that those operations will result in broken pairing. 
+
+Sacha: The number of times I've hit C-q )! 
+
+Phil: Right, yeah. It's trying to set you on the right path, so it does that by just making sure that all the operations it does are protected. Every time you insert a paren, you have
+to insert a matching one. Every time you kill, you can only kill up to the end. Otherwise that would leave your code in an invalid state. As long as you limit yourself to the
+commands it knows about, it provides this guarantee. C-w (kill-region) is not one of those commands, so you have to train yourself to avoid that. When you use kill-region, you're
+saying, "No, paredit, I know better than you," which is usually not the case. But once you've internalised that, you end up working on a higher level where you're not thinking in
+terms of characters any more, but in terms of expressions. You're saying, "I want to kill this whole string or this whole form", not, "I want to kill from this point up to this point".
+It's higher level commands, I would say. Especially people who are new to Lisp, they think this is so intimidating, seeing all these parentheses everywhere. If you have paredit on,
+it's… it does take some adaptation, but it's no additional mental overhead for you. You're changing the structure directly. 
+
+Sacha: Okay, so basically, just keep at it, and keep your fingers off of C-w, and eventually you'll get the hang of it. 
+
+Phil: One thing you can do is unbind C-w temporarily, or change it to another binding. Actually, one thing I did when I started using my (inaudible) keyboard–this is my travel
+board that I designed. You can see it has 42 keys. I had to move tab way off into the corner. It's not very convenient. Most programs that are Unix-y, anything running in a
+terminal will interpret C-i as a tab, because inside a terminal, they are literally the same. Pressing TAB sends a C-i (inaudible), but Emacs does the translation, even when it's in a
+GUI. I was able to teach my web browser to do the same. That was great when I was on here. But it was so tempting… I kept wanting to push this key here that doesn't actually
+exist. So what I ended up doing was taking my regular keyboard that I use when I'm in the office, and plucking out that key, so there's no more key cap there any more. You learn
+really quick then. 
+
+Sacha: That's really hardcore. I remember the time I bound my left control to ring a bell, because I was trying to get used to the Caps as control thing. Negative reinforcement or
+just making things less functional to force yourself into new ways. I'm a little curious, because you mentioned 42 keys… You'd imagine, with Emacs, you'd want to add more keys
+instead of reducing the number of keys. How does it work with key chords and stuff? 
+
+Phil: Well, a big part of it is that you can see, as with the two here, it just puts way more on your thumbs. These are Control and Alt. These are way more accessible. That's Shift.
+So that doesn't make more room available, but it does make it nicer on your hands. But then also most of the punctuation is on the Fn layer, so you have to hold down Fn and hit
+the punctuation. For a lot of the punctuation, you need shift for it anyway. For example, with parentheses, you are pressing Shift then moving way up to the top Right. On this
+keyboard, the parenteses are on the home row, so it's actually less reaching overall anyway. 
+
+Settings actually copied from https://github.com/bbatsov/emacs.d
+
+- Need to read: https://stackoverflow.com/q/5242380
+- Summary:
+   + C-u and C-q will allow you to escape the next keystroke. 
+
+Give paredit mode a chance. I, too, was really annoyed with it automatically closing my parens, and refusing to delete just a single
+paren for me.
+
+But doing this enables it to be certain at all times that the buffer is a well-balanced sexp, so it can perform many useful sexp-oriented tasks for you instead of just text-oriented
+tasks. For example, I use the followign all the time:
+
+ =M-(= to wrap a sexp with a new one, eg turn (map f some-list) into (doto (map f some-list) println)
+ =C-)= to "slurp" another sexp into the current one, eg turn (let [x 10]) (println x) into (let [x 10] (println x))
+ =M-<UP>= and/or =M-r= to pull the sexp at point a level "higher" in the source tree, destroying the thing that was wrapping it, eg to turn (first (map f some-list)) into (map f some-list) or (first some-list)
+
+There are zillions of useful features like this, that let you start editing code instead of text. And while there are plenty of excellent Lisp hackers who don't like paredit mode, I
+advise you not to decide against it before you realize the awesome stuff it can do for you.
+
+- I absolutely agree. I hated paredit at first, but I soon missed it enough in every other language mode that I bound some of paredit's functions in those modes too. For example,
+ M-( for paredit-wrap-round, which encloses the following expressing in parens. Most programming language modes have a concept of sexps for that language's expressions and
+ tokens, so the paredit functions often just Do The Right Thing. 
+
+** Emacs Rocks's Tutorial 
+- Paredit is about treating the code not as text to be inserted and erased, but as a tree to be manipulated.
+- =M-(= for =wrap-round= or start a =(= and enclose in it the following expression.
+- =C-<right> for =forward-slurp-sexp=: include next expresion inside brackets.
+- =C-<left> for =forward-barf-sexp=
+- =M-r= for =raise-sexp= or te quedas con uno de los dos predicados en una expression. Replaces the entire paren with the child.
+- =M-<up>= for =splice-sexp-killing-backward= or kill all that comes earlier in the expression.
+- =M-?= for =convolute-sexp= for when you have two nested expressions. This will make the inner expression the outer one and vice versa. This is called "convoluting" an expression, though I still need to understand it better.
+- =C-k= for =paredit-kill=
+- =M-S= for =paredit-split-sexp= to split an sexp by, for example, inserting a pair of =""= and then a pair of =()=.
+- =M-J= for =join-sexps= 
+
+
+
+His examples are:
+
+#+BEGIN_EXAMPLE
+(defun mi-command ()
+  (interactive)
+  (save-excursion
+   (do-some-things))
+  (do-more-things)
+  (conclude-doing,things))
+
+
+
+(defun my-other-command ()
+  (when (and (this-predicate)
+             (that-predicate))
+    (do-something)
+    (do-some-more)
+    (do-a-third-thing)))
+
+
+(defun another-command ()
+  (when (and (some-predicate)
+             (some-other-predicate))
+    (let ((v (calculate-v))
+          (x (calculate-x)))
+      (do-that-thing)
+      (do-something-more)
+      (do-even-more))))
+
+
+(defun some-command ()
+  (do-stuff "this here ") (" is a string" 123)
+  (do-stuff (more-stuff "something"
+                        "and more")))
+
+
+(ns adventur-engine.execute-room
+    (:use adventur-engine.utils)
+    (:require [adventur-core-ast-traverser :as ast])
+    (:require [adventur-core-ast-traverser :as ast])
+    (:require [adventur-core-ast-traverser :as ast])
+    (:require [adventurcore-ast-traverser :as ast])
+    (:require [adventur-core-ast-traverser :as ast]))
+#+END_EXAMPLE
+
+
+** Extreme barfarge and slurpage by John Wiegly
+- https://www.emacswiki.org/emacs/ParEdit
+
+#+begin_src emacs-lisp :tangle yes
+  (defun paredit-barf-all-the-way-backward ()
+    (interactive)
+    (paredit-split-sexp)
+    (paredit-backward-down)
+    (paredit-splice-sexp))
+  (defun paredit-barf-all-the-way-forward ()
+    (interactive)
+    (paredit-split-sexp)
+    (paredit-forward-down)
+    (paredit-splice-sexp)
+    (if (eolp) (delete-horizontal-space)))
+  (defun paredit-slurp-all-the-way-backward ()
+    (interactive)
+    (catch 'done
+      (while (not (bobp))
+        (save-excursion
+          (paredit-backward-up)
+          (if (eq (char-before) ?\()
+              (throw 'done t)))
+        (paredit-backward-slurp-sexp))))
+  (defun paredit-slurp-all-the-way-forward ()
+    (interactive)
+    (catch 'done
+      (while (not (eobp))
+        (save-excursion
+          (paredit-forward-up)
+          (if (eq (char-after) ?\))
+              (throw 'done t)))
+        (paredit-forward-slurp-sexp))))
+  (nconc paredit-commands
+         '("Extreme Barfage & Slurpage"
+           (("C-M-)")
+                        paredit-slurp-all-the-way-forward
+                        ("(foo (bar |baz) quux zot)"
+                         "(foo (bar |baz quux zot))")
+                        ("(a b ((c| d)) e f)"
+                         "(a b ((c| d)) e f)"))
+           (("C-M-}" "M-F")
+                        paredit-barf-all-the-way-forward
+                        ("(foo (bar |baz quux) zot)"
+                         "(foo (bar|) baz quux zot)"))
+           (("C-M-(")
+                        paredit-slurp-all-the-way-backward
+                        ("(foo bar (baz| quux) zot)"
+                         "((foo bar baz| quux) zot)")
+                        ("(a b ((c| d)) e f)"
+                         "(a b ((c| d)) e f)"))
+           (("C-M-{" "M-B")
+                        paredit-barf-all-the-way-backward
+                        ("(foo (bar baz |quux) zot)"
+                         "(foo bar baz (|quux) zot)"))))
+  (paredit-define-keys)
+  (paredit-annotate-mode-with-examples)
+  (paredit-annotate-functions-with-examples)
+#+end_src
+
+#+RESULTS:
+
+
+ 
+** Costumization 
+DGM: I took this out
+    
+=(add-hook 'eval-expression-minibuffer-setup-hook #'paredit-mode)=
+=(add-hook 'lisp-interaction-mode-hook #'paredit-mode)=
+
+Probably it is what makes =C-{= not work as a keybinding. 
+
+Note: 
+
+#+BEGIN_EXAMPLE
+    (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+    (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+    (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+    ;; enable in the *scratch* buffer
+    (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+    (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+    (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+    (add-hook 'prog-mode-hook             #'enable-paredit-mode)
+    (add-hook 'org-mode-hook              #'enable-paredit-mode)
+    (add-hook 'latex-mode-hook            #'enable-paredit-mode)
+    (add-hook 'TeX-mode-hook              #'enable-paredit-mode)
+    (add-hook 'ado-mode-hook              #'enable-paredit-mode)
+    (add-hook 'ess-mode-hook              #'enable-paredit-mode)
+    (add-hook 'inferior-ess-mode-hook     #'enable-paredit-mode)
+    (add-hook 'ess-stata-mode-hook        #'enable-paredit-mode)
+    (add-hook 'ledger-mode-hook           #'enable-paredit-mode) 
+#+END_EXAMPLE
+
+Doesn't work. 
+   
+#+begin_src emacs-lisp :tangle yes
+  (use-package paredit
+    :ensure t
+    :config
+    (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+    ;; above seems not to work. I try as follows
+    (add-hook 'emacs-lisp-mode-hook       'paredit-mode)
+    (add-hook 'eval-expression-minibuffer-setup-hook 'paredit-mode)
+    (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
+    (add-hook 'ielm-mode-hook             'paredit-mode)
+    (add-hook 'lisp-mode-hook             'paredit-mode)
+    (add-hook 'scheme-mode-hook           'paredit-mode)
+    (add-hook 'prog-mode-hook             'paredit-mode)
+    (add-hook 'org-mode-hook              'enable-paredit-mode)
+    (add-hook 'latex-mode-hook            'paredit-mode)
+    (add-hook 'TeX-mode-hook              'paredit-mode)
+    (add-hook 'ado-mode-hook              'paredit-mode)
+    (add-hook 'ess-mode-hook              'paredit-mode)
+    (add-hook 'inferior-ess-mode-hook     'paredit-mode)
+    (add-hook 'ess-stata-mode-hook        'paredit-mode)
+    (add-hook 'ledger-mode-hook           'paredit-mode) 
+    )
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24274 27793 407308 252000) :init (24274 27793 407297 499000) :config (24274 27793 407138 364000) :config-secs (0 0 423 962000) :init-secs (0 0 927 325000) :use-package-secs (0 0 1094 468000)))
+
+Alternative from: http://wikemacs.org/wiki/Paredit-mode
+
+#+BEGIN_EXAMPLE
+(autoload 'enable-paredit-mode "paredit"
+  "Turn on pseudo-structural editing of Lisp code."
+  t)
+(add-hook 'emacs-lisp-mode-hook       'enable-paredit-mode)
+(add-hook 'lisp-mode-hook             'enable-paredit-mode)
+(add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
+(add-hook 'scheme-mode-hook           'enable-paredit-mode)
+#+END_EXAMPLE
+
+** Trying to make paredit work with latex
+
+No funciona, no se' por que'
+
+#+begin_src emacs-lisp :tangle no
+(require 'latex-paredit-hack)
+#+end_src
+
 * Provide
 
 Trying this on 28 dic 2018. I don't really know why it is needed or not.
@@ -597,13 +890,3 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 #+begin_src emacs-lisp :tangle yes
 (message "Starter Kit Parens File loaded.")
 #+end_src
- 
-
-
-
-
-
-
-
-
-

@@ -316,16 +316,13 @@ In 344:
 
 p. 341. Syntax for customizing this from: https://oremacs.com/2015/01/21/dired-shortcuts/
 
-
 #+begin_src emacs-lisp :tangle yes
   (setq dired-garbage-files-regexp
-        "\\.fdb_latexmk$\\|\\.fls$\\|\\.synctex(busy)$\\|\\.bbl$\\|\\.aux$\\|\\.blg$\\|
-  \\.bcf$\\|\\.out$\\|\\.tag$\\|\\.pp$\\|\\.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\|pyg\\)\\)\\'")
+        "\\.fdb_latexmk$\\|\\.fls$\\|\\.synctex(busy)$\\|\\.bbl$\\|\\.aux$\\|\\.blg$\\ \\.bcf$\\|\\.out$\\|\\.tag$\\|\\.pp$\\|\\.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\|pyg\\)\\)\\'")
 #+end_src
 
 #+RESULTS:
-: \.fdb_latexmk$\|\.fls$\|\.synctex(busy)$\|\.bbl$\|\.aux$\|\.blg$\|
-: \.bcf$\|\.out$\|\.tag$\|\.pp$\|\.synctex.gz$\|\(?:\.\(?:aux\|bak\|dvi\|log\|orig\|rej\|toc\|pyg\)\)\'
+: \.fdb_latexmk$\|\.fls$\|\.synctex(busy)$\|\.bbl$\|\.aux$\|\.blg$\ \.bcf$\|\.out$\|\.tag$\|\.pp$\|\.synctex.gz$\|\(?:\.\(?:aux\|bak\|dvi\|log\|orig\|rej\|toc\|pyg\)\)\'
 
 ** Editing the dired buffer like text
 

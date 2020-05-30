@@ -1641,6 +1641,10 @@ From
 #+END_SRC
 
 ** Better defaults
+- The `uniquify` library makes it so that when you visit two files
+  with the same name in different directories, the buffer names have
+  the directory name appended to them instead of the silly `hello<2>`
+  names you get by default.
 
 This is useful for when you have buffers with many similar names, as when there are various open files from different folders named =analysis.R= or similar.
 
@@ -4299,7 +4303,7 @@ Note the minimalistic =vc= information included with ="\thispagestyle{kjhgit}=. 
 
 #+begin_src emacs-lisp :tangle yes
   (define-skeleton xlt-syllabus
-    "Inserts a XeLaTeX  skeleton for syllabus writing.
+    "Inserts a XeLaTeX skeleton for syllabus writing.
   Recall deleting inputVC and kjhgit if VC not used."
     "\n"
     "# -*- coding: utf-8 -*-\n"
@@ -4856,1627 +4860,1633 @@ See https://github.com/darksmile/cheatsheet/blob/master/cheatsheet.el
 Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-    (use-package cheatsheet
-      :ensure t
-      :config
-      (cheatsheet-add :group 'Bindings
-                      :key "describe-personal-keybinding"
-                      :description "Personal bindings")
-      (cheatsheet-add :group 'Bindings
-                      :key "C-h m"
-                      :description "Bindings for all modes active in buffer")
-      (cheatsheet-add :group 'Bookmarks
-                      :key "C-x r m"
-                      :description "Create bookmark")
-      (cheatsheet-add :group 'Bookmarks
-                      :key "C-x r l"
-                      :description "List bookmark")
-      (cheatsheet-add :group 'Bookmark
-                      :key "C-u a"
-                      :description "In list of bookmarks, annotate bookmark where point is")
-      (cheatsheet-add :group 'Bookmarks
-                      :key "a"
-                      :description "In list of bookmarks, read note on bookmark where point is")
-      (cheatsheet-add :group 'Bookmarks
-                      :key "s--"
-                      :description "bookmark-set")
-      (cheatsheet-add :group 'Bookmarks
-                      :key "s-_"
-                      :description "bookmark-bmenu-list")
-      (cheatsheet-add :group 'Buffer-Cycling
-                      :key "C-c b"
-                      :description "buffer-flip")
-      (cheatsheet-add :group 'Buffer-Cycling
-                      :key "s-<tab>"
-                      :description "buffer-flip-forward")
-      (cheatsheet-add :group 'Buffer-Cycling
-                      :key "C-M-<tab>"
-                      :description "buffer-flip-backward")
-      (cheatsheet-add :group 'Buffer-Cycling
-                      :key "C-g"
-                      :description "buffer-flip-abort")
-      (cheatsheet-add :group 'Buffer-Cycling
-                      :key "C-x b"
-                      :description "helm-mini. Cycles EXWM buffers")
-      (cheatsheet-add :group 'Buffer-Cycling
-                      :key "s-l"
-                      :description "ido-switch-buffer: C-c b when in an external app")
-      (cheatsheet-add :group 'Buffer-Cycling
-                      :key "s-n"
-                      :description "helm-projectile-switch-to-buffer. Includes current P's and EXWM buffers")
-      (cheatsheet-add :group 'Buffer-Cycling
-                      :key "C-c y"
-                      :description "bury-buffer")
-      (cheatsheet-add :group 'Buffer-Cycling
-                      :key "C-'"
-                      :description "Ivy-switch-buffer")
-      (cheatsheet-add :group 'Buffer-List
-                      :key "s-z"
-                      :description "iBuffer. List of buffers for editing")
-      (cheatsheet-add :group 'Buffer-List
-                      :key "C-x C-b"
-                      :description "iBuffer. List of buffers for editing")
-      (cheatsheet-add :group 'Buffer-Closing
-                      :key "C-M-s-k"
-                      :description "Close-all-buffers. s is the super key")
-      (cheatsheet-add :group 'Browsing
-                      :key "&"
-                      :description "Open eww url in Chromium")
-      (cheatsheet-add :group 'Browing
-                      :key "M-n and M-p"
-                      :description "bmkp-previous-url-bookmark. Jump to the Nth-previous url bookmark.")
-      (cheatsheet-add :group 'Browsing
-                      :key "C-c h g"
-                      :description "helm-google-suggest gives Google results in Helm buffer. Type slow")
-      (cheatsheet-add :group 'Browsing
-                      :key "s-b"
-                      :description "helm-surfraw")
-      (cheatsheet-add :group 'Browsing
-                      :key "C-\{"
-                      :description "daedreth/launch-browser")
-      (cheatsheet-add :group 'Browsing
-                      :key "R"
-                      :description "eww-readable. Find text, leaving out navigation menus and the like.")
-      (cheatsheet-add :group 'Browsing
-                      :key "s-}"
-                      :description "Web browsing with engine-mode: Google maps, RAE and Wolfram included")
-      (cheatsheet-add :group 'Browsing
-                      :key "M-x sos"
-                      :description "StackOverflow only")
-      (cheatsheet-add :group 'Browsing
-                      :key "M-x my-helm-stackoverflow-lookup"
-                      :description "Alternative for StackOverflow only")
-      (cheatsheet-add :group 'Chromium
-                      :key "C-l"
-                      :description "Mark url")
-      (cheatsheet-add :group 'Command
-                      :key "C-m"
-                      :description "Enter or Return")
-      (cheatsheet-add :group 'Command
-                      :key "C-i"
-                      :description "TAB")
-      (cheatsheet-add :group 'Command
-                      :key "C-x z"
-                      :description "Repeat most recently executed command")
-      (cheatsheet-add :group 'Command
-                      :key "C-h l"
-                      :description "view-lossage. Display last few input keystrokes and the commands run")
-      (cheatsheet-add :group 'Command
-                      :key "C-x M-: OR C-x ESC ESC OR C-x M-ESC"
-                      :description "repeat-complex-command. Edit and re-evaluate last complex command-one which used the minibuffer")
-      (cheatsheet-add :group 'Command
-                      :key "M-x M-p"
-                      :description "Open helm-M-x and M-p cycles thru history")
-      (cheatsheet-add :group 'Command
-                      :key "C-h w"
-                      :description "where-is. Print message listing key sequences that invoke the command DEFINITION")  
-      (cheatsheet-add :group 'Common
-                      :key "C-x C-c"
-                      :description "save-buffers-kill-emacs")
-      (cheatsheet-add :group 'Debugging
-                      :key "M-x gdb"
-                      :description "IDE-like interface, with specialized buffers for controlling breakpoints, stack frames, and other aspects of the debugger state.")
-      (cheatsheet-add :group 'Diary
-                      :key "i"
-                      :description "org-agenda-diary-entry. Works from Org-agenda and calendar")
-      (cheatsheet-add :group 'Diary
-                      :key "C-c C-q"
-                      :description "quit-window")
-      (cheatsheet-add :group 'Diary
-                      :key "C-c C-s"
-                      :description "diary-show-all-entries")
-  (cheatsheet-add :group 'Dired
-                      :key "% &"
-                      :description "dired-flag-garbage-file. Useful for marking for delation TeX auxiliary files.")
-      (cheatsheet-add :group 'Dired
-                      :key "E or Shift-e"
-                      :description "Opens nemo on Dired buffer")
-      (cheatsheet-add :group 'Dired
-                      :key "M"
-                      :description "dired-do-chmod. Change permission bits of a file to, for example, 755, to make it executable")
-      (cheatsheet-add :group 'Dired
-                      :key "O"
-                      :description "dired-do-chown. Change owner. Only superuser can do it. See p.345 of manual")
-      (cheatsheet-add :group 'Dired
-                      :key "Z"
-                      :description "dired-do-compress. Compress and uncompress specified files with gzip and tar")
-      (cheatsheet-add :group 'Dired
-                      :key "c"
-                      :description "dired-do-compress-to. Like Z but into archive anywhere on the file system.")
-      (cheatsheet-add :group 'Dired
-                      :key "L"
-                      :description "dired-do-load. Load the specified Emacs Lisp files")
-      (cheatsheet-add :group 'Dired
-                      :key "B"
-                      :description "dired-do-byte-compile. Byte compile the specified Emacs Lisp files.")
-      (cheatsheet-add :group 'Dired
-                      :key "A regexp RET"
-                      :description "dired-do-find-regexp. variant of xref-find-references. Search all specified files for the regexp. Allows working on xref buffer that is created")
-      (cheatsheet-add :group 'Dired
-                      :key "Q regexp RET to RET"
-                      :description "dired-do-find-regexp-and-replace. Perform query-replace-regexp on each of the specified files. Allows working on xref buffer that is created")
-      (cheatsheet-add :group 'Dired
-                      :key "% m regexp RET"
-                      :description "dired-mark-files-regexp. Mark all files whose names match the regexp.")
-      (cheatsheet-add :group 'Dired
-                      :key "% g regexp RET"
-                      :description "dired-mark-files-containing-regexp. Mark all files whose contents match the regexp.")
-      (cheatsheet-add :group 'Dired
-                      :key ":d"
-                      :description "epa-dired-do-decrypt. Works with PG Assistant.")
-      (cheatsheet-add :group 'Dired
-                      :key ":e"
-                      :description "epa-dired-do-encrypt. Encrypts the specified files. Works with PG Assistant.")
-      (cheatsheet-add :group 'Dired
-                      :key ":v"
-                      :description "epa-dired-do-verify. Verify digital signatures on specified files. Works with PG Assistant.")
-      (cheatsheet-add :group 'Dired
-                      :key ":s"
-                      :description "epa-dired-do-sign. Digitally sign the specified files. Works with PG Assistant.")
-      (cheatsheet-add :group 'Dired
-                      :key "shift-t (T)"
-                      :description "Change timestamp on file under cursor")
-      (cheatsheet-add :group 'Dired
-                      :key "C-x d"
-                      :description "helm-mode-dired. TAB to select; RET to jump to selection")
-      (cheatsheet-add :group 'Dired
-                      :key "j"
-                      :description "dired-goto-file. Go to line describing file FILE in this Dired buffer")
-      (cheatsheet-add :group 'Dired
-                      :key "J"
-                      :description "bmkp-dired-jump. Jump to a Dired bookmark")
-      (cheatsheet-add :group 'Dired
-                      :key "/"
-                      :description "Dired narrow to match filter")
-      (cheatsheet-add :group 'Dired
-                      :key "C-l"
-                      :description "Delete directory in path")
-      (cheatsheet-add :group 'Dired
-                      :key "C-k"
-                      :description "Delete path to write a new path")
-      (cheatsheet-add :group 'Dired
-                      :key "("
-                      :description "dired-hide-details-mode")
-      (cheatsheet-add :group 'Dired-Projectile
-                      :key "C-d"
-                      :description "Open dired when in P session")
-      (cheatsheet-add :group 'Dired
-                      :key "$"
-                      :description "dired-hide-subdir. Hide or unhide the current subdirectory and move to next directory")
-      (cheatsheet-add :group 'Dired
-                      :key "!"
-                      :description "dired-do-shell-command. Run a shell command COMMAND on one or more files")
-      (cheatsheet-add :group 'Dired
-                      :key "&"
-                      :description "dired-do-async-shell-command. Run a shell command COMMAND on the marked files asynchronously")
-      (cheatsheet-add :group 'Dired-Sorting
-                      :key "s"
-                      :description "dired-sort-toggle-or-edit. Toggle between alphabetical and date order and with prefix argument, edit listing switches")
-      (cheatsheet-add :group 'Dired-Sorting
-                      :key "C-u s"
-                      :description "Prompts for switches to sort: -t for time, newest 1st. -S for file size, largest 1st. -X for ext. -r for reversing. -U for directory order")
-      (cheatsheet-add :group 'Dired-Projectile
-                      :key "M-C"
-                      :description "Copy marked files in P session to another opened Dired dir")
-      (cheatsheet-add :group 'Dired-Projectile
-                      :key "M-R"
-                      :description "Move files in P session to another opened Dired dir")
-      (cheatsheet-add :group 'Dired-Projectile
-                      :key "C-c f"
-                      :description "Create Virtual Dired buffer with files marked in helm-projectile-find-files: s-u")
-      (cheatsheet-add :group 'Dired-Projectile
-                      :key "C-c a"
-                      :description "Add files marked to Virtual Dired buffer in helm-projectile-find-files: s-u")
-      (cheatsheet-add :group 'Dired-Projectile
-                      :key "C-c d"
-                      :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
-      (cheatsheet-add :group 'Editing
-                      :key "M-q"
-                      :description "rebox-dwin-fill. Call M-x rebox-mode first. Then turn off")
-      (cheatsheet-add :group 'Editing
-                      :key "Shift-M-q"
-                      :description "rebox-dwin-no-fill. Call M-x rebox-mode first. Then turn off")
-      (cheatsheet-add :group 'Editing
-                      :key "C-x i"
-                      :description "insert-file. Insert contents of file FILENAME into buffer after point. This function is meant for the user to run interactively")
-      (cheatsheet-add :group 'Editing
-                      :key "C-x ="
-                      :description "what-cursor-position. Print info on cursor position. Also describe the character after point, give its character code
-        in octal, decimal and hex. With prefix C-u, all info is shown in separate window")
-      (cheatsheet-add :group 'Editing
-                      :key "C-x C-+ OR C-x C-- OR C-x C-0"
-                      :description "text-scale-adjust. Adjust the height of the default face. + increases, - descreases, 0 resets")
-      (cheatsheet-add :group 'Editing
-                      :key "C-o"
-                      :description "open-line. Insert a newline and leave point before it.")
-      (cheatsheet-add :group 'Editing
-                      :key "C-x C-u"
-                      :description "upcase-region")
-      (cheatsheet-add :group 'Editing
-                      :key "s-i"
-                      :description "avy-goto-word-1. Type first char of word you want to go to.")
-      (cheatsheet-add :group 'Editing
-                      :key "s-l"
-                      :description "avy-goto-char-timer. Start typing word you want to go to.")
-      (cheatsheet-add :group 'Editing
-                      :key "s-+"
-                      :description "avy-goto-char. Jump to any char you view.")
-      (cheatsheet-add :group 'Editing
-                      :key "C-x C-w M-n"
-                      :description "Current filename will be inserted for you. Edit what you want and hit RET to save the file to this new name.")
-      (cheatsheet-add :group 'Editing
-                      :key "C-c x"
-                      :description "my-clean-buffer.Cleans buffer by re-indenting,removing tabs and trailing whitespace.")
-      (cheatsheet-add :group 'Editing
-                      :key "C-$"
-                      :description "palimpsest-move-region-to-trash")
-      (cheatsheet-add :group 'Editing
-                      :key "C-o"
-                      :description "org-open-line. Insert a new row in tables, call open-line elsewhere.")
-      (cheatsheet-add :group 'Editing
-                      :key "C-x C-o"
-                      :description "delete-blank-lines. The opposite of org-open-line.")
-      (cheatsheet-add :group 'Editing
-                      :key "M-;"
-                      :description "comment-dwim and org-comment-dwim.")
-      (cheatsheet-add :group 'Editing
-                      :key "s-:"
-                      :description "Cheatsheet")
-      (cheatsheet-add :group 'Editing
-                      :key "C-c f"
-                      :description "focus-mode")
-      (cheatsheet-add :group 'Editing
-                      :key "C-c F"
-                      :description "focus-read-only-mode")
-      (cheatsheet-add :group 'Editing
-                      :key "C-x l"
-                      :description "count-lines-page")
-      (cheatsheet-add :group 'Editing
-                      :key "C-x 8-"
-                      :description "Prefix to insert symbols")
-      (cheatsheet-add :group 'Editing
-                      :key "C-M-SPC M-w"
-                      :description "Select word or sexp after point and put it in the kill-ring")
-      (cheatsheet-add :group 'Editing
-                      :key "M--c"
-                      :description "Upper case last word: Mientras haces M-- dale a la c")
-      (cheatsheet-add :group 'Editing
-                      :key "s-@"
-                      :description "daedreth/copy-whole-word")
-      (cheatsheet-add :group 'Editing
-                      :key "C-x C-q"
-                      :description "read-only-mode")
-      (cheatsheet-add :group 'Editing
-                      :key "s-v"
-                      :description "See raw contents that usually are invisible-like hyperlinks")
-      (cheatsheet-add :group 'Editing
-                      :key "M-SPC"
-                      :description "just-one-space: Delete all spaces and tabs around point, leaving one space-or N spaces")
-      (cheatsheet-add :group 'Editing
-                      :key "M-D"
-                      :description "Duplicate line or region")
-      (cheatsheet-add :group 'Editing
-                      :key "comment-box"
-                      :description "Puts region inside a box")
-      (cheatsheet-add :group 'Editing
-                      :key "C-c ;"
-                      :description "Comment and uncomment region")
-      (cheatsheet-add :group 'Editing
-                      :key "C-}"
-                      :description "Toggle Iedit mode. Highlight occurrences and edit simultaneously")
-      (cheatsheet-add :group 'Editing
-                      :key "s-k"
-                      :description "daedreth/kill-inner-word. Kills the entire word your cursor is in")
-      (cheatsheet-add :group 'Editing
-                      :key "M-z"
-                      :description "zap-up-to-char")
-      (cheatsheet-add :group 'Editing
-                      :key "s-%"
-                      :description "Kills whole line where your cursor is in")
-      (cheatsheet-add :group 'Editing
-                      :key "yank-file-name"
-                      :description "Yanks current buffer file name and its path to the kill ring")
-      (cheatsheet-add :group 'Editing
-                      :key "C-`"
-                      :description "ido-find-file-in-tag-files")
-      (cheatsheet-add :group 'Editing
-                      :key "M-x reverse-paragraphs"
-                      :description "Reverse the order of paragraphs in a region")
-      (cheatsheet-add :group 'Editing
-                      :key "M-x xah-insert-column-az"
-                      :description "Inserts numbers or letters in column. Read dgm.org")
-      (cheatsheet-add :group 'Editing
-                      :key "C-x a"
-                      :description "Join this line to previous and fix up whitespace at join. Not working anymore as this is prefix for abbrev mode.")
-      (cheatsheet-add :group 'Editing
-                      :key "s-\\"
-                      :description "align-regexp")
-      (cheatsheet-add :group 'Editing
-                      :key "s-/"
-                      :description "indent-region")
-      (cheatsheet-add :group 'Editing
-                      :key "s->"
-                      :description "indent-region-or-buffer")
-      (cheatsheet-add :group 'Editing
-                      :key "M-/"
-                      :description "hippie-expand")
-      (cheatsheet-add :group 'Editing
-                      :key "s-!"
-                      :description "toggle-theme")
-      (cheatsheet-add :group 'Editing
-                      :key "s-y"
-                      :description "ivy-yasnippet")
-      (cheatsheet-add :group 'Editing
-                      :key "C-c k"
-                      :description "yas-expand. Expand a snippet before point.")
-      (cheatsheet-add :group 'Editing
-                      :key "s-#"
-                      :description "sudo-edit")
-      (cheatsheet-add :group 'Editing
-                      :key "C-x C-i"
-                      :description "indent-rigidly. Indent all lines starting in the region. Then <right>/<left> or <S-right>/<S-left> to actually indent")
-      (cheatsheet-add :group 'Editing
-                      :key "M-m"
-                      :description "back-to-indentation. Move point to the first non-whitespace character on this line")
-      (cheatsheet-add :group 'Editing
-                      :key "C-c w"
-                      :description "whitespace-mode. Toggle.")
-      (cheatsheet-add :group 'Editing
-                      :key "C-c C-r"
-                      :description "org-reveal. Display where point is if it is buried in invisible text to allow editing again")
-      (cheatsheet-add :group 'Editing
-                      :key "M-k"
-                      :description "kill-sentence. Kill from point to end of sentence.")
-      (cheatsheet-add :group 'Editing
-                      :key "C-;"
-                      :description "dont-kill-line. Copy from point to end of sentence.")
-      (cheatsheet-add :group 'Editing-Killing
-                      :key "M-w"
-                      :description "kill-ring-save: Save the region as if killed, but don’t kill it. When no active region, copy a single line instead")
-      (cheatsheet-add :group 'Editing-Killing
-                      :key "C-w"
-                      :description "kill-region: Kill text between point and mark. When no active region, kill single line instead")
-      (cheatsheet-add :group 'Editing-Killing
-                      :key "C-k"
-                      :description "kill-line and kill-visual-line. kill a line, including whitespace characters until next non-whitespace character of next line")
-      (cheatsheet-add :group 'Editing-MultipleRegions
-                      :key "s-q"
-                      :description "mark-next-like-this. Mark next occurence of a region and edit all at once")
-      (cheatsheet-add :group 'Editing-MultipleCursors
-                      :key "C-c C-m l"
-                      :description "mc/edit-lines: When active region spans multiple lines, add cursor to each line")
-      (cheatsheet-add :group 'Editing-MultipleCursors
-                      :key "C-c C-m a"
-                      :description "mc/edit-beginnings-of-lines")
-      (cheatsheet-add :group 'Editing-MultipleCursors
-                      :key "C-c C-m e"
-                      :description "mc/edit-ends-of-lines")
-      (cheatsheet-add :group 'Editing-MultipleCursors
-                      :key "C-c C-m E"
-                      :description "mc/mark-more-like-this-extended")
-      (cheatsheet-add :group 'Editing-MultipleCursors
-                      :key "C-c C-m N"
-                      :description "mc/mark-next-like-this. MC not based on continuous lines, but on keywords")
-      (cheatsheet-add :group 'Editing-MultipleCursors
-                      :key "C-c C-m P"
-                      :description "mc/mark-previous-like-this. MC not based on continuous lines, but on keywords")
-      (cheatsheet-add :group 'Editing-MultipleCursors
-                      :key "C-c C-m u"
-                      :description "mc/unmark-next-like-this. MC not based on continuous lines, but on keywords")
-      (cheatsheet-add :group 'Editing-MultipleCursors
-                      :key "C-c C-m U"
-                      :description "mc/unmark-previous-like-this. MC not based on continuous lines, but on keywords")
-      (cheatsheet-add :group 'Editing-MultipleCursors
-                      :key "C-c C-m A"
-                      :description "mc/mark-all-like-this: Works on same line. Mark region 1st. MC based on keywords")
-      (cheatsheet-add :group 'Editing-MultipleCursors
-                      :key "C-c C-m z"
-                      :description "mc/insert-numbers")
-      (cheatsheet-add :group 'Editing-MultipleCursors
-                      :key "C-c C-m r"
-                      :description "mc/mark-all-in-region")
-      (cheatsheet-add :group 'Editing-MultipleCursors
-                      :key "C-c C-m h"
-                      :description "mc-hide-unmatched-lines-mode")
-      (cheatsheet-add :group 'Emacs
-                      :key "C-<digit>"
-                      :description "digit-argument. No need to do C-u <digit>. Could do M-<digit> too.")
-      (cheatsheet-add :group 'Email
-                      :key "\\"
-                      :description "mu4e-headers-query-prev. Previous query. Execute the previous query from the query stacks.")
-      (cheatsheet-add :group 'Email
-                      :key "M-<right>"
-                      :description "mu4e-headers-query-next. Next query. Execute the next query from the query stacks.")
-      (cheatsheet-add :group 'Email
-                      :key "O"
-                      :description "mu4e-headers-change-sorting. Change the sorting/threading parameters. Useful to see latest emails. Not to use with threading option, only if you search for a set of messages")
-      (cheatsheet-add :group 'Email
-                      :key "C-*"
-                      :description "mu4e")
-      (cheatsheet-add :group 'Email
-                      :key "aV"
-                      :description "View message in browser. Use it once inside the message.")
-      (cheatsheet-add :group 'Email
-                      :key "S-a"
-                      :description "mu4e-view-attachment-action")
-      (cheatsheet-add :group 'Email
-                      :key "SPC"
-                      :description "cua-scroll-up. Equivalent to C-v: scroll down")
-      (cheatsheet-add :group 'Email
-                      :key "S-SPC"
-                      :description "cua-scroll-down. Equivalent to M-v: scroll up")
-      (cheatsheet-add :group 'Email
-                      :key "C-c C-k"
-                      :description "mu4e-message-kill-buffer")
-      (cheatsheet-add :group 'Email
-                      :key "a"
-                      :description "mu4e-view-action. Lists possible actions when inside message like Show In Browser or Show Thread")
-      (cheatsheet-add :group 'Email
-                      :key "e"
-                      :description "mu4e-view-save-attachmen. Offer to save multiple email attachments from the current message.")
-      (cheatsheet-add :group 'Email
-                      :key "A"
-                      :description "mu4e-view-attachment-action")
-      (cheatsheet-add :group 'Email
-                      :key "g"
-                      :description "mu4e-view-go-to-url. Open URL")
-      (cheatsheet-add :group 'Email
-                      :key "S"
-                      :description "helm-mu. Defined in mu4e-main-mode-map")
-      (cheatsheet-add :group 'Email
-                      :key "C-i"
-                      :description "helm-execute-persistent-action. In helm-mu, execute action, open email at point in another window and move point there, without quitting helm")
-      (cheatsheet-add :group 'Email
-                      :key "M-x helm-mu-contacts"
-                      :description "Greps contacts so regexp allowed. M-SPC to select multiple sources. Available actions with C-z are insert selected contacts at point and copy selected contacts to clipboard.")
-      (cheatsheet-add :group 'ESS
-                      :key "C-c C-j"
-                      :description "ess-eval-line. Send the current line to the inferior ESS process")
-      (cheatsheet-add :group 'ESS
-                      :key "C-c C-r"
-                      :description "ess-eval-region. Send the region from START to END to the inferior ESS process")
-      (cheatsheet-add :group 'ESS
-                      :key "C-RET"
-                      :description "ess-eval-region-or-line-visibly-and-step. Evaluate region if active, otherwise the current line and step.")
-      (cheatsheet-add :group 'ESS
-                      :key "C-c C-l"
-                      :description "ess-load-file. Load FILENAME into an inferior ESS process.")
-      (cheatsheet-add :group 'Expressions-Eval
-                      :key "C-x C-e"
-                      :description "sanityinc/eval-last-sexp-or-region")
-      (cheatsheet-add :group 'Expressions-Eval
-                      :key "C-j"
-                      :description "eval-print-last-sexp. Evaluate sexp before point; print value into current buffer.")
-      (cheatsheet-add :group 'Expressions-Copying
-                      :key "C-M w"
-                      :description "sp-copy-sexp: Copies next bit of the sexp")
-      (cheatsheet-add :group 'Expressions-Copying
-                      :key "M-x my/org-insert-defun"
-                      :description "Inserts an Org source block with the definition for FUNCTION")
-      (cheatsheet-add :group 'Expressions-Find
-                      :key "C-c f"
-                      :description "find-function")
-      (cheatsheet-add :group 'Expressions-Find
-                      :key "C-c ."
-                      :description "find-function-at-point")
-      (cheatsheet-add :group 'Expressions-Find
-                      :key "M-."
-                      :description "xref-find-definitions. See function in source file; jump to nodes in Texinfo, if etags has recorded the nodes")
-      (cheatsheet-add :group 'Expressions-Find
-                      :key "M-,"
-                      :description "Go back from xref-find-definitions")
-      (cheatsheet-add :group 'Expressions-Killing
-                      :key "C-M k"
-                      :description "sp-kill-sexp: Kills next bit of the sexp")
-      (cheatsheet-add :group 'Expressions-Killing
-                      :key "C-k"
-                      :description "sp-kill-hybrid-sexp: Kills sexp from point onwards")
-      (cheatsheet-add :group 'Expressions-Killing
-                      :key "M-k"
-                      :description "sp-backward-kill-sexp: Kills previous bit of sexp")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-M a"
-                      :description "Begin of function")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-M e"
-                      :description "End of function")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-M f"
-                      :description "sp-forward-sexp: Block movement")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-M b"
-                      :description "sp-backward-sexp: Block movement")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-M n"
-                      :description "sp-next-sexp: Top-level-ish transversal")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-M p"
-                      :description "sp-previous-sexp: Top-level-ish transversal")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-M-+"
-                      :description "smartscan-symbol-go-forward. Set in elpa/smartscan.el")
-      (cheatsheet-add :group 'Expressionps-Movement
-                      :key "C-M-*"
-                      :description "smartscan-symbol-go-backward. Set in elpa/smartscan.el")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "M-'"
-                      :description "smartscan-symbol-replace. Set in smartscan.el")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-<down>"
-                      :description "sp-down-exp: Traversing lists")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-<up>"
-                      :description "sp-up-exp: Traversing lists")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "M-<down>"
-                      :description "sp-backward-down-sexp: Traversing lists")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "M-<up>"
-                      :description "sp-backward-up-sexp: Traversing lists")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-M a"
-                      :description "Begin of function")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-M e"
-                      :description "End of function")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-M f"
-                      :description "sp-forward-sexp: Block movement")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-M b"
-                      :description "sp-backward-sexp: Block movement")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-M n"
-                      :description "sp-next-sexp: Top-level-ish transversal")
-      (cheatsheet-add :group 'Expressions-Movement
-                      :key "C-S b"
-                      :description "sp-backward-symbol: Free-form movement")
-      (cheatsheet-add :group 'Expressions-Movements
-                      :key "C-S f"
-                      :description "sp-forward-symbol: Free-form movement")
-      (cheatsheet-add :group 'Expressions-Marking
-                      :key "C-M SPC"
-                      :description "mark-sexp function of lisp.el")
-      (cheatsheet-add :group 'Expressions-Org
-                      :key "s-~"
-                      :description "Wrap region with matching tilde in Org")
-      (cheatsheet-add :group 'Expressions-Org
-                      :key "s-="
-                      :description "Wrap region with matching equality in Org")
-      (cheatsheet-add :group 'Expressions-Wrapping
-                      :key "C-M SPC and Wrapping symbol"
-                      :description "Wrap region with matching characters-parentheses, brackets, etc-depending on mode")
-      (cheatsheet-add :group 'Expressions-Wrapping
-                      :key "C-c and Parenthesis"
-                      :description "Wrap word with matching characters-parentheses, brackets, etc")
-      (cheatsheet-add :group 'Expressions-Wrapping-Slurp
-                      :key "C-<right>"
-                      :description "sp-forward-slurp-sexp: Slurping extends the inclusion of parentheses")
-      (cheatsheet-add :group 'Expressions-Wrapping-Slurp
-                      :key "C-<left>"
-                      :description "sp-backward-slurp-sexp: Slurping extends the inclusion of parentheses")
-      (cheatsheet-add :group 'Expressions-Wrapping-Barf
-                      :key "M-<right>"
-                      :description "sp-forward-barf-sexp: Burfing contracts the extension of parentheses")
-      (cheatsheet-add :group 'Expressions-Wrapping-Barf
-                      :key "M-<left>"
-                      :description "sp-backward-barf-sexp: Barfing contracts the extension of parentheses")
-      (cheatsheet-add :group 'Expressions-Unwrapping
-                      :key "M-\["
-                      :description "sp-backward-unwrap-sex: Unwraps current exp")
-      (cheatsheet-add :group 'Expressions-Unwrapping
-                      :key "M-\]"
-                      :description "sp-unwrap-sex: Unwrapps next exp")
-      (cheatsheet-add :group 'Expressions-Swapping
-                      :key "C-M t"
-                      :description "sp-transpose-sexp")
-      (cheatsheet-add :group 'EXWM
-                      :key "s-e"
-                      :description "helm-run-external-command")
-      (cheatsheet-add :group 'EXWM
-                      :key "s-r"
-                      :description "exwm-reset: Reset the state of the selected window: non-fullscreen, line-mode, etc")
-      (cheatsheet-add :group 'EXWM
-                      :key "C-q"
-                      :description "exwm-input-send-next-key: the next key is sent literally to the application")
-      (cheatsheet-add :group 'EXWM
-                      :key "s-&"
-                      :description "ambrevar/exwm-start: Open in external application")
-      (cheatsheet-add :group 'EXWM
-                      :key "C-c-t-f"
-                      :description "Resize frame from external app-Usually when saving something")
-      (cheatsheet-add :group 'Find-Files
-                      :key "C-x f"
-                      :description "ido-recentf-open: Find recent file")
-      (cheatsheet-add :group 'Find-Files
-                      :key "C-& or C-x C-r"
-                      :description "recentf-open-files. Long list of recent files")
-      (cheatsheet-add :group 'Find-Files
-                      :key "C-x C-f"
-                      :description "helm-find-files")
-      (cheatsheet-add :group 'Find-Files
-                      :key "M-x helm-for-files"
-                      :description "Find in opened, recent, bookmarked files; files in current dir; files anywhere with locate")
-      ;;    (cheatsheet-add :group 'Find-Files
-      ;;                    :key "C-x C-g"
-      ;;                    :description "deft-find-file")
-      ;;    (cheatsheet-add :group 'Find-Files
-      ;;                    :key "C-c d"
-      ;;                    :description "deft. Switch to Deft buffer and load files.")
-      ;;    (cheatsheet-add :group 'Find-Files
-      ;;                    :key "C-c C-c"
-      ;;                    :description "deft-filter-clear")
-      (cheatsheet-add :group 'Find-Files
-                      :key "C-c C-q"
-                      :description "quit-window. Works in Deft")
-      (cheatsheet-add :group 'Find-Files
-                      :key "s-'"
-                      :description "deft-find-file")
-      (cheatsheet-add :group 'Find-Files
-                      :key "C-c C-q"
-                      :description "quit-window. Works with deft")
-      (cheatsheet-add :group 'Find-Files
-                      :key "s-d"
-                      :description "helm-find frontend for *nix FIND command in current dir; C-u chooses dir")
-      (cheatsheet-add :group 'Find-Files
-                      :key "s-D"
-                      :description "helm-locate frontend of *unix LOCATE command")
-      (cheatsheet-add :group 'Find-Dirs-Projectile
-                      :key "s-+"
-                      :description "helm-projectile-find-dir: Find dirs in current P project")
-      (cheatsheet-add :group 'Find-Files-Projectile
-                      :key "C-c p a"
-                      :description "List files with same name, different extensions in current P project")
-      (cheatsheet-add :group 'Find-Files-Projectile
-                      :key "s-|"
-                      :description "helm-projectile-find-file-dwim: Find file in P project based on context at point")
-      (cheatsheet-add :group 'Find-Files-Projectile
-                      :key "C-c p e"
-                      :description "List recently visited files in current P project")
-      (cheatsheet-add :group 'Find-Files-Projectile
-                      :key "s-\`"
-                      :description "helm-projectile-find-other-file: Same name, different extension")
-      (cheatsheet-add :group 'Find-Ocurrences
-                      :key "C-o"
-                      :description "Occur inside a regular search with C-s or C-r")
-      (cheatsheet-add :group 'Find-Occurrences
-                      :key "s-o"
-                      :description "helm-occur: TAB to temporarily move to highlighted match")
-      (cheatsheet-add :group 'Find-Occurences
-                      :key "s-\""
-                      :description "helm-regexp to test regexp interactively and save it. Actions on C-z")
-      (cheatsheet-add :group 'Find-Ocurrences
-                      :key "M-x helm-swoop"
-                      :description "Show lines matching a pattern; cursor jumps to the line we go to")
-      (cheatsheet-add :group 'Find-Org
-                      :key "s-p"
-                      :description "helm-org-in-buffer-headings: Find Org heading")
-      (cheatsheet-add :group 'Find-Org
-                      :key "s-u"
-                      :description "Rifle search in Org files")
-      (cheatsheet-add :group 'Grep
-                      :key "search-all-buffers"
-                      :description "Greps all opened buffers")
-      (cheatsheet-add :group 'Grep
-                      :key "s-f"
-                      :description "helm-ag: grep-like program implemented in C")
-      (cheatsheet-add :group 'Grep-Helm
-                      :key "C-c h w"
-                      :description "wgrep-helm: Edit a helm-grep-mode buffer and apply those changes to the file buffer")
-      (cheatsheet-add :group 'Grep-Projectile
-                      :key "s-g"
-                      :description "helm-projectile-grep: Search symbol at point. If region active, searches region")
-      (cheatsheet-add :group 'Grep-Projectile
-                      :key "C-s"
-                      :description "Grep in project when using P. C-u for recursive grep")
-  (cheatsheet-add :group 'Helm-M-x
-                  :key "C-i"
-                  :description "See file in separate window")
-      (cheatsheet-add :group 'Helm
-                      :key "C-c TAB"
-                      :description "Yank selected candidate in Helm session at point")
-      (cheatsheet-add :group 'Helm
-                      :key "M-SPC"
-                      :description "Select multiple sources")
-      (cheatsheet-add :group 'Helm
-                      :key "s-r"
-                      :description "helm-resume previous H session, inputs included. C-u lets choose Helm buffer. C-c n inside Helm session")
-      (cheatsheet-add :group 'Helm
-                      :key "C-c o"
-                      :description "In H session, open selected candidate in another window")
-      (cheatsheet-add :group 'Helm
-                      :key "C-c h"
-                      :description "Helm prefix / If in C-x C-f session, list visited files/dirs")
-      (cheatsheet-add :group 'Helm
-                      :key "C-c C-i"
-                      :description "Insert selection: columns")
-      (cheatsheet-add :group 'Helm
-                      :key "C-w"
-                      :description "Yank word at point into Helm prompt")
-      (cheatsheet-add :group 'Helm
-                      :key "M-n"
-                      :description "Yank symbol at point into Helm prompt")
-      (cheatsheet-add :group 'Helm-Bibtex
-                      :key "C-c \]"
-                      :description "helm-bibtex: In Org mode, search BibTeX files for refs to insert into the current document")
-      (cheatsheet-add :group 'Helm-Menu
-                      :key "C-c h w"
-                      :description "helm-buffer-switch-other-window: Works on a helm menu like the one by C-x b")
-      (cheatsheet-add :group 'Helm-Menu
-                      :key "C-c h k"
-                      :description "helm-buffer-run-kill-persistent: Works on a helm menu like the one by C-x b")
-      (cheatsheet-add :group 'Help
-                      :key "C-h C-h"
-                      :description "which-key-C-h-dispatch. Helps navigate help keys")
-      (cheatsheet-add :group 'Help
-                      :key "C-h C-p"
-                      :description "view-emacs-problems")
-      (cheatsheet-add :group 'Help
-                      :key "C-h p"
-                      :description "Search the standard Emacs Lisp libraries by topic keywords")
-      (cheatsheet-add :group 'Help
-                      :key "C-h i m"
-                      :description "Search the info system and open the menu. Then type something, like 'org' and RET")
-      (cheatsheet-add :group 'Help
-                      :key "C-h C-a"
-                      :description "about-emacs: For information about GNU Emacs and the GNU system")
-      (cheatsheet-add :group 'Help
-                      :key "C-h m"
-                      :description "describe-mode")
-      (cheatsheet-add :group 'Help
-                      :key "helm-descbinds"
-                      :description "Currently active key bindings are searcheable")
-      (cheatsheet-add :group 'Help
-                      :key "C-c ?"
-                      :description "Help in a Helm session")
-      (cheatsheet-add :group 'Help
-                      :key "s-m"
-                      :description "helm-man-woman: Manual entries for *nix commands")
-      (cheatsheet-add :group 'Help
-                      :key "s-a"
-                      :description "helm-apropos for commands, functions, variables and faces. Original in C-h d")
-      (cheatsheet-add :group 'Help
-                      :key "s-\)"
-                      :description "Search emacs, elisp and CL info pages")
-      (cheatsheet-add :group 'Help
-                      :key "helm-info-*"
-                      :description "Search info nodes for various topics like emacs, elisp, gdb, etc. TAB to view")
-      (cheatsheet-add :group 'Help
-                      :key "C-h f"
-                      :description "helpful-callable: Show help for function, macro or special form named SYMBOL")
-      (cheatsheet-add :group 'Help
-                      :key "C-h k"
-                      :description "helpful-key")
-      (cheatsheet-add :group 'Help
-                      :key "C-h v"
-                      :description "helpful-variable")
-      (cheatsheet-add :group 'Help
-                      :key "s-,"
-                      :description "org-recipe")
-      (cheatsheet-add :group 'Help
-                      :key "s-."
-                      :description "org-wiki-helm")
-      (cheatsheet-add :group 'Help-Org
-                      :key "?"
-                      :description "With cursor on heading's stars, ? opens window with shortcuts available")
-      (cheatsheet-add :group 'History
-                      :key "C-c C-l"
-                      :description "History in Eshell, Shell and Minibuffer")
-      (cheatsheet-add :group 'iMenu
-                      :key "s-?"
-                      :description "ido-goto-symbol. Refresh imenu and jump to a place in the buffer using Ido")
-      (cheatsheet-add :group 'iMenu
-                      :key "M-i"
-                      :description "helm-semantic-or-imenu")
-      (cheatsheet-add :group 'Input
-                      :key "s-s"
-                      :description "mrb/set-input-method: Change input method to Spanish prefix")
-      (cheatsheet-add :group 'Input
-                      :key "C-\\"
-                      :description "toggle-input-method. Use one back slash")
-      (cheatsheet-add :group 'Kill
-                      :key "M-y"
-                      :description "helm-show-kill-ring")
-      (cheatsheet-add :group 'Kill-Projectile
-                      :key "M-D"
-                      :description "Kill marked item in P session")
-      (cheatsheet-add :group 'Latex
-                      :key "C-c ]"
-                      :description "LaTeX-close-environment")
-      (cheatsheet-add :group 'Lisp
-                      :key "C-c h TAB"
-                      :description "helm-lisp-completion-at-point for elisp")
-      (cheatsheet-add :group 'Lisp
-                      :key "M-:"
-                      :description "Evaluate EXPRESSION and pretty-print its value.")
-      (cheatsheet-add :group 'Lisp
-                      :key "s-\("
-                      :description "helm-eval-expression-with-eldoc interactively evaluates elisp exp")
-      (cheatsheet-add :group 'Lisp
-                      :key "s-\)"
-                      :description "ap/helm-info-emacs-elisp-cl: Emacs and eLisp manual with Helm")
-      (cheatsheet-add :group 'Mark
-                      :key "C-x C-x"
-                      :description "cua-exchange-point-and-mark")
-      (cheatsheet-add :group 'Mark
-                      :key "C-x h"
-                      :description "mark-whole-buffer")
-      (cheatsheet-add :group 'Mark
-                      :key "C-."
-                      :description "Pushes point to mark-ring and does not activate the region")
-      (cheatsheet-add :group 'Mark
-                      :key "C-SPC"
-                      :description "cua-set-mark: Set mark at where point is, clear mark, or jump to mark.")
-      (cheatsheet-add :group 'Mark
-                      :key "M-`"
-                      :description "Jumps to the local mark, respecting the mark-ring order. C-u C-SPC does it too")
-      (cheatsheet-add :group 'Mark
-                      :key "s-RET"
-                      :description "helm-all-mark-rings: Find mark in local and global rings")
-      (cheatsheet-add :group 'Mark
-                      :key "s-SPC"
-                      :description "er/expand-region")
-      (cheatsheet-add :group 'Mark
-                      :key "s-BKSPC"
-                      :description "er/contract-region")
-      (cheatsheet-add :group 'Mark
-                      :key "C-x C-x"
-                      :description "Exchange point and mark without activating region")
-      (cheatsheet-add :group 'Mark
-                      :key "M-h"
-                      :description "org-mark-element. Put point at beginning of this element, mark at end")
-      (cheatsheet-add :group 'Mark
-                      :key "C-c @"
-                      :description "org-mark-subtree. Mark the subtree at point. Repeat to mark subsequent subtrees of the same level")
-      (cheatsheet-add :group 'Markdown
-                      :key "C-c C-s C"
-                      :description "markdown-insert-gfm-code-block. Insert GFM code block for language LANG. Can also use the rb snippet")
-      (cheatsheet-add :group 'Markdown
-                      :key "C-c C-s c"
-                      :description "markdown-insert-code. Insert markup to make a region or word an inline code fragment. Can also use the ` snippet")
-      (cheatsheet-add :group 'Markdown
-                      :key "M-_"
-                      :description "my_pipe_operator by KHealy. Insert R/ESS %>% operator")
-      (cheatsheet-add :group 'Markdown
-                      :key "C-c i"
-                      :description "kjh-insert-r-chunk. Insert an r-chunk in markdown mode. By KHealy")
-      (cheatsheet-add :group 'Markdown
-                      :key "markdown-reftex-citation"
-                      :description "Insert markdown citation formats. By Kleinschmidt.")
-      (cheatsheet-add :group 'Minibuffer
-                      :key "C-M-e"
-                      :description "Miniedit: enter minibuffer edit")
-      (cheatsheet-add :group 'Minibuffer
-                      :key "C-c C-c"
-                      :description "Miniedit: exit minibuffer edit")
-      (cheatsheet-add :group 'Movement
-                      :key "M-r"
-                      :description "move-to-window-line-top-bottom. Without moving the text on the screen, move point to top, bottom, middle")
-      (cheatsheet-add :group 'Movement
-                      :key "C-c C-j"
-                      :description "org-goto. Look up a different location in the current file. Go back with org-mark-ring-goto")
-      (cheatsheet-add :group 'Movement
-                      :key "M-<"
-                      :description "beginning-of-buffer")
-      (cheatsheet-add :group 'Movement
-                      :key "M->"
-                      :description "end-of-buffer")
-      (cheatsheet-add :group 'Narrowing
-                      :key "C-x n b"
-                      :description "Narrows to block in org-src block, for example")
-      (cheatsheet-add :group 'Narrowing
-                      :key "C-x n d"
-                      :description "Narrows to defun")
-      (cheatsheet-add :group 'Narrowing
-                      :key "C-x n e"
-                      :description "Narrows to element-A line, for ex.")
-      (cheatsheet-add :group 'Narrowing
-                      :key "C-x n n"
-                      :description "Narrows to region")
-      (cheatsheet-add :group 'Narrowing
-                      :key "C-x n p"
-                      :description "Narrows to page")
-      (cheatsheet-add :group 'Narrowing
-                      :key "C-x n s"
-                      :description "Narrows to subtree in Org")
-      (cheatsheet-add :group 'Narrowing
-                      :key "C-x n w"
-                      :description "Widens ")
-      (cheatsheet-add :group 'Narrowing
-                      :key "N"
-                      :description "org-narrow-to-subtree")
-      (cheatsheet-add :group 'Narrowing
-                      :key "W"
-                      :description "Widen in Org subtree")
-      (cheatsheet-add :group 'Org
-                      :key "#"
-                      :description "Comments heading")    
-  (cheatsheet-add :group 'Org
-                      :key "TAB or C-i"
-                      :description "On a list, insert a lower level item moving, for example, from - to +")
-      (cheatsheet-add :group 'Org
-                      :key "C->"
-                      :description "org-time-stamp. Prompt for a date/time and insert a time stamp.")
-      (cheatsheet-add :group 'Org
-                      :key "C-i"
-                      :description "org-cycle. Toggle fold-unfold heading")
-      (cheatsheet-add :group 'Org
-                      :key "C-c C-v C-t"
-                      :description "org-babel-tangle. Write code blocks to source-specific files")
-      (cheatsheet-add :group 'Org
-                      :key "s-<"
-                      :description "org-cut-subtree: cut tree and paste it elsewhere in the hierarchy.")
-      (cheatsheet-add :group 'Org
-                      :key "C-c @"
-                      :description "Insert as Org link current highlighted file in P session")
-      (cheatsheet-add :group 'Org
-                      :key "M-Shift-<right/left>"
-                      :description "org-metaright; org-metaleft. Demote/Promote heading BUT not subheadings. Same as typing =r/l= on the heading")
-      (cheatsheet-add :group 'Org
-                      :key "M--<right/left>"
-                      :description "org-shiftmetaright/left. Demote/Promote heading AND subheadings. Same as typing =R/L= on the heading")
-      (cheatsheet-add :group 'Org
-                      :key "Shift-<left/right>"
-                      :description "org-shiftright. On subtree heading, cycles TODO word")
-      (cheatsheet-add :group 'Org
-                      :key "r"
-                      :description "Positioned on stars of heading, demote heading BUT not subheadings")
-      (cheatsheet-add :group 'Org
-                      :key "R"
-                      :description "Positioned on stars of heading, demote heading AND all subheadings")
-      (cheatsheet-add :group 'Org
-                      :key "C-c C-o"
-                      :description "org-open-at-point: Open links")
-      (cheatsheet-add :group 'Org
-                      :key "C-c C-x M-w"
-                      :description "org-copy-subtree. Copy subtree to kill ring. With a numeric prefix argument N, copy the N sequential subtrees")
-      (cheatsheet-add :group 'Org
-                      :key "C-c C-x C-w"
-                      :description "org-cut-subtree. i.e., remove it from buffer but save in kill ring. With a numeric prefix argument N, kill N sequential subtrees")
-      (cheatsheet-add :group 'Org
-                      :key "a"
-                      :description "org-archive-subtree-default. Place cursor at start of heading. a will archive it")
-      (cheatsheet-add :group 'Org
-                      :key "i"
-                      :description "Place cursor at start of heading. i will open clock menu")
-      (cheatsheet-add :group 'Org
-                      :key "t"
-                      :description "Place cursor at start of heading. Toggle todo state. SPC to clear")
-      (cheatsheet-add :group 'Org
-                      :key "T"
-                      :description "Place cursor at start of heading. Column view with effort and clocksum")
-      (cheatsheet-add :group 'Org
-                      :key "SPC"
-                      :description "Place cursor at start of heading. See hierachical path to this heading")
-      (cheatsheet-add :group 'Org
-                      :key "C-c C-w"
-                      :description "org-refile")
-      (cheatsheet-add :group 'Org
-                      :key "C-u C-u C-c C-o"
-                      :description "org-open-at-point. Open link outside Emacs with external app-such as Libreoffice")
-      (cheatsheet-add :group 'Org
-                      :key "g"
-                      :description "org-refile. Works if you place cursor on stars")
-      (cheatsheet-add :group 'Org
-                      :key "C-c C-x p"
-                      :description "org-set-property. Edit a task's properties,e.g.,set STYLE to habit")
-      (cheatsheet-add :group 'Org
-                      :key "N"
-                      :description "org-narrow-to-subtree")
-      (cheatsheet-add :group 'Org
-                      :key "W"
-                      :description "Widen")
-      (cheatsheet-add :group 'Org
-                      :key "S"
-                      :description "org-sort. Sorts subtrees")
-      (cheatsheet-add :group 'Org
-                      :key "S-<up><down>"
-                      :description "On heading, add priority tag")
-      (cheatsheet-add :group 'Org
-                      :key "S-<left><right>"
-                      :description "On heading, add or change TODO status")
-      (cheatsheet-add :group 'Org
-                      :key "M-x org-repair-property-drawers"
-                      :description "Fix properties drawers in current buffer. To use when habits or schedules don't show rightly")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "E"
-                      :description "org-agenda-entry-text-mode. Toggle entry text mode in an agenda buffer. It shows context in original entry")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "j"
-                      :description "org-agenda-goto-date. Jump to DATE in agenda")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "."
-                      :description "org-agenda-goto-today.")
-      (cheatsheet-add :group 'Org-Agenda
-                      :key ","
-                      :description "org-agenda-priority. Set the priority of line at point, also in Org file")
-      (cheatsheet-add :group 'Org-Agenda
-                      :key "d"
-                      :description "org-agenda-day-view.")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "."
-                      :description "org-agenda-goto-today")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "C-x C-w"
-                      :description "Write the agenda view to a file: .html, ps, pdf. Any other extension results in plain ASCII file")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "A"
-                      :description "Interactively select another agenda view and append it to the current view")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "G"
-                      :description "org-agenda-toggle-time-grid")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "k"
-                      :description "org-agenda-capture. Call org-capture with the date at point")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "B"
-                      :description "org-agenda-bulk-action. Mark with m0")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "o"
-                      :description "When in agenda view, delete other windows")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "T or < C-c a t"
-                      :description "my/org-agenda-for-subtree")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "t"
-                      :description "org-agenda-todo. When in an agenda's item, choose state")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "K"
-                      :description "Toggle org-habits")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "C-, and C-'"
-                      :description "org-cycle-agenda-files. Has to be located in heading of agenda file")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "R"
-                      :description "org-agenda-clockreport-mode. Toggle clocktable mode. Info about clocked time in the displayed period")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "SPC"
-                      :description "org-agenda-show-and-scroll-up. Display the original location of the item in another window. If repeated, scroll that other window")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "TAB"
-                      :description "org-agenda-goto. Go to the original location of the item in another window")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "RET"
-                      :description "org-agenda-switch-to. Go to the original location of the item and delete other windows")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "="
-                      :description "org-agenda-filter-by-regexp. Filter agenda entries by regular expressions. With one prefix argument, filter out entries matching the regexp")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "\\"
-                      :description "org-agenda-filter-by-tag. Filter agenda entries by tab. To clear the filter, press \\ twice")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "<"
-                      :description "org-agenda-filter-by-category. Filter lines in the agenda buffer that have a specific category.If cursor with a given category, show only entries of that category.With a C-u prefix argument, exclude the lines of that category.")
-      (cheatsheet-add :group 'Org-agenda
-                      :key ">"
-                      :description "org-agenda-date-prompt. Change the date of this item.  Date is prompted for, with default today.")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "J"
-                      :description "org-agenda-clock-goto. Go to the currently clocked-in task in the agenda buffer")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "F"
-                      :description "org-agenda-follow-mode. Toggle Follow mode. As you move the cursor through the agenda buffer, the other window shows the corresponding location in the Org file")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "v"
-                      :description "Choose time spam in view and more")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "v R"
-                      :description "org-agenda-clockreport-mode. Toggle clock table. A quick report on time usage. Works directly with R only")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "b"
-                      :description "org-agenda-earlier. Move back one day or week")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "f"
-                      :description "org-agenda-later. Move forward one day or week")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "l"
-                      :description "org-agenda-log-mode. Shows entries marked DONE while logging was on and are entries clocked on that day, recording their timing")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "v L"
-                      :description "org-agenda-log-mode. how all possible logbook entries, including state changes")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "G"
-                      :description "org-agenda-toggle-time-grid. Toggle the time grid on and off")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "J"
-                      :description "org-agenda-clock-goto. Jump to the currently clocked in task within the agenda")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "s"
-                      :description "org-save-all-org-buffers. Save all Org buffers in the current Emacs session, and also the locations of IDs")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "S"
-                      :description "Show sunrise/Sunset times")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "M"
-                      :description "Show lunar phases")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "z OR C-c C-z"
-                      :description "org-agenda-add-note. Add a time-stamped note to the entry at point")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "C"
-                      :description "org-agenda-convert-date. Show date in/Convert date to other calendars. Place cursor on a given date.")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "M-x my/org-show-active-projects"
-                      :description "Show my current projects. From Sacha")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "g"
-                      :description "org-agenda-redo-all. Rebuild all agenda views in the current buffer")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "SPC"
-                      :description "org-agenda-show-and-scroll-up. Display the Org file which contains the item at point. If repeated, scroll that Org file")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "DEL"
-                      :description "org-agenda-show-scroll-down. Scroll down the window showing the agenda")
-      (cheatsheet-add :group 'Org-agenda
-                      :key "1"
-                      :description "bjm/org-agenda-item-to-top")
-      (cheatsheet-add :group 'Org-capture
-                      :key "C-c C-c"
-                      :description "On heading of Org-captured entry, choose tag")
-      (cheatsheet-add :group 'Org-capture
-                      :key "SPC"
-                      :description "Clear tag selection")
-      (cheatsheet-add :group 'Org-capture
-                      :key "C-c C-r"
-                      :description "my/org-refile-and-jump org-capture-mode-map. Refile a capture and then jump to the new location... Leaves one hanging buffer. I think C-c C-w is better")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c j"
-                      :description "org-clock-goto. jump to current task from anywhere")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c C-x C-e"
-                      :description "org-clock-modify-effort-estimate. Manually set the effort for a particular headline")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c C-x e"
-                      :description "Prompted for an effort estimation")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c C-x C-c"
-                      :description "org-agenda-columns. Turn on org-columns reporting your time use-Quit with q")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c C-x i"
-                      :description "Generate a local column view-Quit with q-Not working!")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c C-x C-i"
-                      :description "org-clock-in. Clock in to the section you're currently in or clock-in to a different task")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c I"
-                      :description "eos/org-clock-in. History of tasks to pick from when I clock in to things")
-      (cheatsheet-add :group 'Org-clock
-                      :key "I"
-                      :description "In org-agenda, clock in highlighted task or clock-in to a different task")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c C-x C-o"
-                      :description "org-clock-out. Clock out of whatever you're clocked in to")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c O"
-                      :description "org-clock-out. Clock out of whatever you're clocked in to")
-      (cheatsheet-add :group 'Org-clock
-                      :key "O"
-                      :description "In org-agenda, clock out of highlighted task")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c C-x C-x"
-                      :description "org-clock-in-last. Clock in to the last clocked task")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c C-x C-j"
-                      :description "org-clock-goto. Jump to whatever headline you are currently clocked in to or to the most recently clocked one")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c C-x C-q"
-                      :description "org-clock-cancel. Cancel the current clock-removes all of its current time ")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c C-x C-d"
-                      :description "org-clock-display. Display clock times for headlines in current file")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c C-x C-r"
-                      :description "org-clock-report. Generate a report for clock activity.NOT WORKING")
-      (cheatsheet-add :group 'Org-clock
-                      :key "C-c C-x C-z"
-                      :description "org-resolve-clocks. Resolve any half-open clocks")
-      (cheatsheet-add :group 'Org-clock
-                      :key "v c"
-                      :description "Show overlapping clock entries, clocking gaps, and other clocking problems in the current agenda range. Use b to go back one day, l to exit")
-      (cheatsheet-add :group 'Org-clock
-                      :key "Fn-Shift-<left><right>"
-                      :description "On date entry will shift the days; On brackets will change them to <>")
-      (cheatsheet-add :group 'Org-clock
-                      :key "Fn-Shift-<up><down>"
-                      :description "On clock entry will shift the time")
-      (cheatsheet-add :group 'Org-latex
-                      :key "C-c C-x C-l"
-                      :description "org-toggle-latex-fragment. C-c C-c to show the equation code")
-      (cheatsheet-add :group 'Org-movement
-                      :key "M-Shift-<up/down>"
-                      :description "org-shiftmetaup. Moves subtree heading BUT not its contents. Drag the line at point up.In a table, kill the current row.On a clock timestamp, update the value of the timestamp like S-<up>")
-      (cheatsheet-add :group 'Org-movement
-                      :key "M-<up><down>"
-                      :description "org-move-subtree-up or -down. On same level, swaps subtree with other subtrees--heading and contents or other subtrees. Same as typing =U/D=")
-      (cheatsheet-add :group 'Org-movement
-                      :key "M-{"
-                      :description "org-backward-element. Move to the previous element at the same level, when possible")
-      (cheatsheet-add :group 'Org-movement
-                      :key "M-}"
-                      :description "org-forward-element. Move to the next element at the same level, when possible")
-      (cheatsheet-add :group 'Org-movement
-                      :key "n"
-                      :description "Place cursor at start of heading, n will move to next heading of any level. C-M-n and C-c C-n do the same")
-      (cheatsheet-add :group 'Org-movement
-                      :key "p"
-                      :description "Place cursor at start of heading, b will move to previous heading. C-M-p and C-c C-p do the same")
-      (cheatsheet-add :group 'Org-movement
-                      :key "avy-org-refile-as-child"
-                      :description "Refiling of Org heading under different heading in same document.")
-      (cheatsheet-add :group 'Org-recipes
-                      :key "C-c i"
-                      :description "Insert raw code under a heading")
-      (cheatsheet-add :group 'Org-Skeleton
-                      :key "M-x article-skeleton"
-                      :description "Inserts a skeleton for Org-export to LaTeX")
-      (cheatsheet-add :group 'Org-Skeleton
-                      :key "M-x beamer-skeleton"
-                      :description "Inserts a  for Org-export to Beamer")
-      (cheatsheet-add :group 'Org-table
-                      :key "M-Shift-<down>"
-                      :description "Insert a new row above the current row. With a prefix argument, the line is created below the current one. Can do the same with C-o")
-      (cheatsheet-add :group 'Org-table
-                      :key "C-c ^-"
-                      :description "org-sort. With cursor on a column, a will short the table alphabetically; n numerically. Capitals reverse sorting")
-      (cheatsheet-add :group 'Org-table
-                      :key "M-Shift-<left>"
-                      :description "Delete column")
-      (cheatsheet-add :group 'Org-table
-                      :key "Shift-TAB"
-                      :description "Re-align, move to previous field-like previous cell")
-      (cheatsheet-add :group 'Org-table
-                      :key "Shift-TAB"
-                      :description "Re-align, move to previous field-like previous cell")
-      (cheatsheet-add :group 'Org-table
-                      :key "TAB"
-                      :description "Re-align the table, move to the next field. Creates a new row if necessary")
-      (cheatsheet-add :group 'Org-timestamps
-                      :key "Shift-<up><down>"
-                      :description "Increment/decrement stamp")
-      (cheatsheet-add :group 'Magit
-                      :key "z w"
-                      :description "magit-stash-worktree. Create a stash of unstaged changes in the working tree")
-      (cheatsheet-add :group 'Magit
-                      :key "z a"
-                      :description "magit-stash-apply. Apply a stash to the working tree but keep the stash.")
-      (cheatsheet-add :group 'Magit
-                      :key "z k"
-                      :description "magit-stash-drop. Remove a stash from the stash list.")
-      (cheatsheet-add :group 'Magit
-                      :key "z p"
-                      :description "magit-stash-pop. Apply a stash to the working tree and remove it from the stash list.")
-      (cheatsheet-add :group 'Magit
-                      :key "%"
-                      :description "magit-worktree. Act on a worktree.")
-      (cheatsheet-add :group 'Magit
-                      :key "f a X h"
-                      :description "Force pull from remote: f a, then move point to remote head, X h")
-      (cheatsheet-add :group 'Magit
-                      :key "v"
-                      :description "magit-reverse. Reverse the change at point, in a hunk of a commit, for example, in the working tree. Prefix causes the change to be applied to the index as well")
-      (cheatsheet-add :group 'Magit
-                      :key "M-n and M-p"
-                      :description "Move thru whole blocks in status buffer.")
-      (cheatsheet-add :group 'Magit
-                      :key "n and p"
-                      :description "Move thru each header, hunks and blocks in status buffer.")
-      (cheatsheet-add :group 'Magit
-                      :key "1, 2, 3, 4"
-                      :description "Local visibility levels from less to more. With Meta it applies globally to all headings.")
-      (cheatsheet-add :group 'Magit
-                      :key "TAB and S-TAB"
-                      :description "Cycle visibility")
-      (cheatsheet-add :group 'Magit
-                      :key "j"
-                      :description "Jump to different sections in the status buffer. C-u j shows all options")
-      (cheatsheet-add :group 'Magit
-                      :key "C-x C-j"
-                      :description "Magit dired jump. Takes me from Magits status buffer to the file in a Dired buffer")
-      (cheatsheet-add :group 'Magit
-                      :key "D"
-                      :description "Diff settings. Opens new buffer with customization choices the - and = signs. Then refresh view with g to see changes")
-      (cheatsheet-add :group 'Magit
-                      :key "d"
-                      :description "Diffs only for the file your cursor is in with customized choices if you want, without changing the view of anything other in the status display. Gets a separate buffer for this diff.")
-      (cheatsheet-add :group 'Magit
-                      :key "d u"
-                      :description "magit-diff-unstaged. Opens a new buffer comparing your working tree changes with respect to the index.")
-      (cheatsheet-add :group 'Magit
-                      :key "d w"
-                      :description "magit-diff-working-tree. Opens a new buffer comparing your working tree changes with respect head.")
-      (cheatsheet-add :group 'Magit
-                      :key "d s"
-                      :description "magit diff staging area. Opens a new buffer comparing your index changes with respect to head.")
-      (cheatsheet-add :group 'Magit
-                      :key "d r"
-                      :description "diff range, for example, origin/master...my-branch. Opens a new buffer comparing your branch and where master was when you branched off, rather than the differences between my branch and current master.")
-      (cheatsheet-add :group 'Magit
-                      :key "- or +"
-                      :description "Reduce or increase context in hunk. With reduction I can split a hunk into two and state only one of them.")
-      (cheatsheet-add :group 'Magit
-                      :key "G"
-                      :description "Refresh all Magit buffes of current repo and revert all unmodified buffers visiting files tracked in the repo.")
-      (cheatsheet-add :group 'Magit
-                      :key "C-c C-t"
-                      :description "You are in a diff. View the history of all the commits that changed a definition from a well-known language.")
-      (cheatsheet-add :group 'Magit
-                      :key "C-c C-e"
-                      :description "You are on a diff, edit thing that is under the cursor. That thing may only live in history and you get there thru rebase. You can stage from there the changes that you make and commit the changes you make in that file that existed no more.")
-      (cheatsheet-add :group 'Magit
-                      :key "E"
-                      :description "View and choose changes in Ediff. With a modified file you see 1st what is on the head of your repo, then on the index, and then on your working tree. From here you can stage and unstage.")
-      (cheatsheet-add :group 'Magit
-                      :key "E u"
-                      :description "magit-ediff-show-unstaged. ediffs the Index and the working tree.")
-      (cheatsheet-add :group 'Magit
-                      :key "E i"
-                      :description "magit-ediff-show-staged. ediffs the HEAD and Index.")
-      (cheatsheet-add :group 'Magit
-                      :key "E w"
-                      :description "magit-ediff-show-working-tree. ediffs the HEAD and the working tree.")
-      (cheatsheet-add :group 'Magit
-                      :key "E E"
-                      :description "magit-ediff-dwim. Ediff Head, Index and Working tree if all three differ.")
-      (cheatsheet-add :group 'Magit
-                      :key "E z"
-                      :description "magit-ediff-show-stash. Show changes to a file introduced by a stash. With many stashes, it compares stashes.")
-      (cheatsheet-add :group 'Pandoc
-                      :key "C-c /"
-                      :description "pandoc-main-hydra/body. Call the body in the pandoc-main-hydra hydra.")
-      (cheatsheet-add :group 'Packages
-                      :key "M-x try"
-                      :description "Try a package before installing for good")
-      (cheatsheet-add :group 'Password
-                      :key "M-x password-store"
-                      :description "password-store")
-      (cheatsheet-add :group 'Password
-                      :key "M-x helm-pass"
-                      :description "helm-pass")
-      (cheatsheet-add :group 'Password
-                      :key "C-x #"
-                      :description "Save and exit")
-      (cheatsheet-add :group 'Password-Ivy
-                      :key "M-i"
-                      :description "Select entry in Ivy-Pass")
-      (cheatsheet-add :group 'Password-Ivy
-                      :key "RET"
-                      :description "Copy password in kill ring")
-      (cheatsheet-add :group 'Pdf-Tools
-                      :key "SPC"
-                      :description "pdf-view-scroll-up-or-next-page. Move down in a page.")
-      (cheatsheet-add :group 'Pdf-Tools
-                      :key "DEL"
-                      :description "pdf-view-scroll-down-or-previous-page. Move up in a page.")
-      (cheatsheet-add :group 'Pdf-Tools
-                      :key "n"
-                      :description "pdf-view-next-page-command. View the previous page in the PDF.")
-      (cheatsheet-add :group 'Pdf-Tools
-                      :key "o"
-                      :description "pdf-outline")
-      (cheatsheet-add :group 'Pdf-Tools
-                      :key "p"
-                      :description "pdf-view-previous-page-command. View the previous page in the PDF.")
-      (cheatsheet-add :group 'Polymode
-                      :key "M-n"
-                      :description "Polymode prefix")
-      (cheatsheet-add :group 'Polymode
-                      :key "M-n E"
-                      :description "polymode-set-exporter. Normally I choose markdown-ess")
-      (cheatsheet-add :group 'Polymode
-                      :key "M-n e"
-                      :description "polymode-export. Export current file. When FROM or TO are missing they are determined automatically from the current exporters specifications and files extension.")
-      (cheatsheet-add :group 'Prefixes
-                      :key "C-x r"
-                      :description "Registers and bookmarks")
-      (cheatsheet-add :group 'Prefixes
-                      :key "C-c"
-                      :description "Org commands")
-      (cheatsheet-add :group 'Projectile
-                      :key "s-h"
-                      :description "helm-projectile: select project and buffers/files")
-      (cheatsheet-add :group 'Projectile
-                      :key "s-j"
-                      :description "helm-projectile-find-file: Powerful P session for file management")
-      (cheatsheet-add :group 'Python
-                      :key "M-x run-python"
-                      :description "Launch iPython")
-      (cheatsheet-add :group 'Reading
-                      :key "xah-toggle-margin-right"
-                      :description "For reading novel or documentation: Toggle right margin")
-      (cheatsheet-add :group 'Redshift
-                      :key "C-\("
-                      :description "Redshift on. If repeated, intensity increases")
-      (cheatsheet-add :group 'Redshift
-                      :key "C-\)"
-                      :description "Redshift off")
-      (cheatsheet-add :group 'Rectangle-editing
-                      :key "C-x r k"
-                      :description "kill-rectangle")
-      (cheatsheet-add :group 'RefTeX
-                      :key "C-c -"
-                      :description "reftex-toc-recenter. Display the TOC window and highlight line corresponding to current position.")    
-  (cheatsheet-add :group 'RefTeX
-                      :key "C-c ="
-                      :description "reftex-toc. Shows a table of contents. Press ? to get help.")
-      (cheatsheet-add :group 'RefTeX
-                      :key "C-c ("
-                      :description "reftex-label. Inserts a label at point.")
-      (cheatsheet-add :group 'RefTeX
-                      :key "C-c )"
-                      :description "reftex-reference. Makes a reference.Shows an outline with all labels of a certain type and some context.")
-      (cheatsheet-add :group 'RefTeX
-                      :key "C-c ["
-                      :description "reftex-label. Asks for a regexp to search BibTeX file.")
-      (cheatsheet-add :group 'RefTeX
-                      :key "C-c \\"
-                      :description "reftex-index-phrase-selection-or-word. Add current selection or word at point to the phrases buffer. Don't know what is this but seems interesting")
-      (cheatsheet-add :group 'Register
-                      :key "s-x"
-                      :description "helm-register. Then TAB or RET to insert. Equivalent to C-x r i")
-      (cheatsheet-add :group 'Replace
-                      :key "C-c s"
-                      :description "vr/replace. Global replacement by dynamically building regular expressions")
-      (cheatsheet-add :group 'Replace
-                      :key "C-c q"
-                      :description "vr/query-replace. Decide to replace per match by dynamically building regular expressions")
-      (cheatsheet-add :group 'Replace
-                      :key "M-%"
-                      :description "anzu-query-replace")
-      (cheatsheet-add :group 'Replace
-                      :key "C-M-%"
-                      :description "anzu-query-replace-regexp")
-      (cheatsheet-add :group 'Revert
-                      :key "C-c r"
-                      :description "Replace buffer text visited file on disk. C-u offers to revert from latest auto-save file")
-      (cheatsheet-add :group 'Scratch
-                      :key "s-^"
-                      :description "M-x scratch. With C-u s-^ you choose mode, otherwise current mode is used")
-      (cheatsheet-add :group 'Search
-                      :key "C-u C-r AND C-M r"
-                      :description "isearch-backward. Do incremental search backward.")
-      (cheatsheet-add :group 'Security
-                      :key "s-_"
-                      :description "daedreth/lock-screen")
-      (cheatsheet-add :group 'Shell
-                      :key "C-x m"
-                      :description "Open eshell")
-      (cheatsheet-add :group 'Shell
-                      :key "C-x M"
-                      :description "Open eshell even if one is active")
-      (cheatsheet-add :group 'Shell
-                      :key "M-e"
-                      :description "Open Eshell when in P session")
-      (cheatsheet-add :group 'Shell
-                      :key "C-c C-l"
-                      :description "comint-dynamic-list-input-ring.  Display the buffer's history of shell commands in another window")
-      (cheatsheet-add :group 'Spelling
-                      :key "C-M-$"
-                      :description "Change dictionary")
-      (cheatsheet-add :group 'Spelling
-                      :key "M-$"
-                      :description "Spellcheck word or region")
-      (cheatsheet-add :group 'Spelling
-                      :key "C-\""
-                      :description "endless/ispell-word-then-abbrev. Call ispell-word, then create an abbrev for it.")
-      (cheatsheet-add :group 'System
-                      :key "s-t"
-                      :description "helm-top for TOP program to display Linux processes")
-      (cheatsheet-add :group 'System
-                      :key "\(process-list\)"
-                      :description "Return a list of all processes that are Emacs sub-processes.")
-      (cheatsheet-add :group 'Typing
-                      :key "M-x typing-of-emacs"
-                      :description "Practise typing")
-      (cheatsheet-add :group 'Typing
-                      :key "my/org-entry-wpm"
-                      :description "Curious about how fast I type. Works under Org tree")
-      (cheatsheet-add :group 'Undo-Propose
-                      :key "M-x undo-propose"
-                      :description "Cycle through the list of undo's as normal in a new temporary buffer")
-      (cheatsheet-add :group 'Undo-Propose
-                      :key "C-c C-c"
-                      :description "Add the chain of undo's as a single edit to the undo history")
-      (cheatsheet-add :group 'Undo-Propose
-                      :key "C-c C-d"
-                      :description "Ediff the proposed chain of undo's")
-      (cheatsheet-add :group 'Undo-Propose
-                      :key "C-c C-k"
-                      :description "Cancel undo-propose")
-      (cheatsheet-add :group 'Undo-Tree
-                      :key "C-z"
-                      :description "undo-tree-undo: Undo changes. C-u limits it to current region")
-      (cheatsheet-add :group 'Undo-Tree
-                      :key "C-x u"
-                      :description "undo-tree-visualize: undo. Visualize the current buffer's undo tree")
-      (cheatsheet-add :group 'Utilities
-                      :key "s-c"
-                      :description "calendar")
-      (cheatsheet-add :group 'Weather
-                      :key "M-x forecast"
-                      :description "forecast package")
-      (cheatsheet-add :group 'Weather
-                      :key "M-x wttrin"
-                      :description "forecast package with drawings")
-      (cheatsheet-add :group 'Weather
-                      :key "M-x sunrise-sunset"
-                      :description "Shows times for sunrise and sunset in minibuffer. More settings in dgm.org")
-      (cheatsheet-add :group 'Windows
-                      :key "C-x 1"
-                      :description "zygospore-toggle-delete-other-windows RET: lets you revert C-x 1-delete-other-window-by pressing C-x 1 again")
-      (cheatsheet-add :group 'Windows
-                      :key "C-x 4 c"
-                      :description "clone-indirect-buffer-other-window. Splits buffer in two and makes them independent")
-      (cheatsheet-add :group 'Windows
-                      :key "M-P"
-                      :description "ace-window")
-      (cheatsheet-add :group 'Windows
-                      :key "C-x 2"
-                      :description "Vertical split windows and move to new window")
-      (cheatsheet-add :group 'Windows
-                      :key "C-x 3"
-                      :description "Horizontal split windows and move to new window")
-      (cheatsheet-add :group 'Windows
-                      :key "s-z"
-                      :description "ambrevar/toggle-window-split: Transpose windows")
-      (cheatsheet-add :group 'Windows
-                      :key "s-;"
-                      :description "Rotate windows")
-      (cheatsheet-add :group 'Windows
-                      :key "s-M-<left>"
-                      :description "shrink-window-horizontally")
-      (cheatsheet-add :group 'Windows
-                      :key "s-M-<right>"
-                      :description "enlarge-window-horizontally")
-      (cheatsheet-add :group 'Windows
-                      :key "s-M-<down>"
-                      :description "shrink-window")
-      (cheatsheet-add :group 'Windows
-                      :key "s-M-<up>"
-                      :description "enlarge-window")
-      (cheatsheet-add :group 'Windows
-                      :key "C-c <left>"
-                      :description "winner-undo: Switch back to earlier window config; undo changes in window config")
-      (cheatsheet-add :group 'Windows
-                      :key "C-c <right> or <down>"
-                      :description "winner-redo: Restore a more recent window configuration saved by Winner mode")
-      (cheatsheet-add :group 'Window-Movement
-                      :key "s-<left>"
-                      :description "windmove-left")
-      (cheatsheet-add :group 'Window-Movement
-                      :key "s-<right>"
-                      :description "windmove-right")
-      (cheatsheet-add :group 'Window-Movement
-                      :key "s-<up>"
-                      :description "windmove-up")
-      (cheatsheet-add :group 'Window-Movement
-                      :key "s-<down>"
-                      :description "windmove-down")
-      :bind ("s-[" . cheatsheet-show)
-      )
+      (use-package cheatsheet
+        :ensure t
+        :config
+        (cheatsheet-add :group 'Bindings
+                        :key "describe-personal-keybinding"
+                        :description "Personal bindings")
+        (cheatsheet-add :group 'Bindings
+                        :key "C-h m"
+                        :description "Bindings for all modes active in buffer")
+        (cheatsheet-add :group 'Bookmarks
+                        :key "C-x r m"
+                        :description "Create bookmark")
+        (cheatsheet-add :group 'Bookmarks
+                        :key "C-x r l"
+                        :description "List bookmark")
+        (cheatsheet-add :group 'Bookmark
+                        :key "C-u a"
+                        :description "In list of bookmarks, annotate bookmark where point is")
+        (cheatsheet-add :group 'Bookmarks
+                        :key "a"
+                        :description "In list of bookmarks, read note on bookmark where point is")
+        (cheatsheet-add :group 'Bookmarks
+                        :key "s--"
+                        :description "bookmark-set")
+        (cheatsheet-add :group 'Bookmarks
+                        :key "s-_"
+                        :description "bookmark-bmenu-list")
+        (cheatsheet-add :group 'Buffer-Cycling
+                        :key "C-c b"
+                        :description "buffer-flip")
+        (cheatsheet-add :group 'Buffer-Cycling
+                        :key "s-<tab>"
+                        :description "buffer-flip-forward")
+        (cheatsheet-add :group 'Buffer-Cycling
+                        :key "C-M-<tab>"
+                        :description "buffer-flip-backward")
+        (cheatsheet-add :group 'Buffer-Cycling
+                        :key "C-g"
+                        :description "buffer-flip-abort")
+        (cheatsheet-add :group 'Buffer-Cycling
+                        :key "C-x b"
+                        :description "helm-mini. Cycles EXWM buffers")
+        (cheatsheet-add :group 'Buffer-Cycling
+                        :key "s-l"
+                        :description "ido-switch-buffer: C-c b when in an external app")
+        (cheatsheet-add :group 'Buffer-Cycling
+                        :key "s-n"
+                        :description "helm-projectile-switch-to-buffer. Includes current P's and EXWM buffers")
+        (cheatsheet-add :group 'Buffer-Cycling
+                        :key "C-c y"
+                        :description "bury-buffer")
+        (cheatsheet-add :group 'Buffer-Cycling
+                        :key "C-'"
+                        :description "Ivy-switch-buffer")
+        (cheatsheet-add :group 'Buffer-List
+                        :key "s-z"
+                        :description "iBuffer. List of buffers for editing")
+        (cheatsheet-add :group 'Buffer-List
+                        :key "C-x C-b"
+                        :description "iBuffer. List of buffers for editing")
+        (cheatsheet-add :group 'Buffer-Closing
+                        :key "C-M-s-k"
+                        :description "Close-all-buffers. s is the super key")
+        (cheatsheet-add :group 'Browsing
+                        :key "&"
+                        :description "Open eww url in Chromium")
+        (cheatsheet-add :group 'Browing
+                        :key "M-n and M-p"
+                        :description "bmkp-previous-url-bookmark. Jump to the Nth-previous url bookmark.")
+        (cheatsheet-add :group 'Browsing
+                        :key "C-c h g"
+                        :description "helm-google-suggest gives Google results in Helm buffer. Type slow")
+        (cheatsheet-add :group 'Browsing
+                        :key "s-b"
+                        :description "helm-surfraw")
+        (cheatsheet-add :group 'Browsing
+                        :key "C-\{"
+                        :description "daedreth/launch-browser")
+        (cheatsheet-add :group 'Browsing
+                        :key "R"
+                        :description "eww-readable. Find text, leaving out navigation menus and the like.")
+        (cheatsheet-add :group 'Browsing
+                        :key "s-}"
+                        :description "Web browsing with engine-mode: Google maps, RAE and Wolfram included")
+        (cheatsheet-add :group 'Browsing
+                        :key "M-x sos"
+                        :description "StackOverflow only")
+        (cheatsheet-add :group 'Browsing
+                        :key "M-x my-helm-stackoverflow-lookup"
+                        :description "Alternative for StackOverflow only")
+        (cheatsheet-add :group 'Chromium
+                        :key "C-l"
+                        :description "Mark url")
+        (cheatsheet-add :group 'Command
+                        :key "C-m"
+                        :description "Enter or Return")
+        (cheatsheet-add :group 'Command
+                        :key "C-i"
+                        :description "TAB")
+        (cheatsheet-add :group 'Command
+                        :key "C-x z"
+                        :description "Repeat most recently executed command")
+        (cheatsheet-add :group 'Command
+                        :key "C-h l"
+                        :description "view-lossage. Display last few input keystrokes and the commands run")
+        (cheatsheet-add :group 'Command
+                        :key "C-x M-: OR C-x ESC ESC OR C-x M-ESC"
+                        :description "repeat-complex-command. Edit and re-evaluate last complex command-one which used the minibuffer")
+        (cheatsheet-add :group 'Command
+                        :key "M-x M-p"
+                        :description "Open helm-M-x and M-p cycles thru history")
+        (cheatsheet-add :group 'Command
+                        :key "C-h w"
+                        :description "where-is. Print message listing key sequences that invoke the command DEFINITION")  
+        (cheatsheet-add :group 'Common
+                        :key "C-x C-c"
+                        :description "save-buffers-kill-emacs")
+        (cheatsheet-add :group 'Debugging
+                        :key "M-x gdb"
+                        :description "IDE-like interface, with specialized buffers for controlling breakpoints, stack frames, and other aspects of the debugger state.")
+        (cheatsheet-add :group 'Diary
+                        :key "i"
+                        :description "org-agenda-diary-entry. Works from Org-agenda and calendar")
+        (cheatsheet-add :group 'Diary
+                        :key "C-c C-q"
+                        :description "quit-window")
+        (cheatsheet-add :group 'Diary
+                        :key "C-c C-s"
+                        :description "diary-show-all-entries")
+    (cheatsheet-add :group 'Dired
+                        :key "% &"
+                        :description "dired-flag-garbage-file. Useful for marking for delation TeX auxiliary files.")
+        (cheatsheet-add :group 'Dired
+                        :key "E or Shift-e"
+                        :description "Opens nemo on Dired buffer")
+        (cheatsheet-add :group 'Dired
+                        :key "M"
+                        :description "dired-do-chmod. Change permission bits of a file to, for example, 755, to make it executable")
+        (cheatsheet-add :group 'Dired
+                        :key "O"
+                        :description "dired-do-chown. Change owner. Only superuser can do it. See p.345 of manual")
+        (cheatsheet-add :group 'Dired
+                        :key "Z"
+                        :description "dired-do-compress. Compress and uncompress specified files with gzip and tar")
+        (cheatsheet-add :group 'Dired
+                        :key "c"
+                        :description "dired-do-compress-to. Like Z but into archive anywhere on the file system.")
+        (cheatsheet-add :group 'Dired
+                        :key "L"
+                        :description "dired-do-load. Load the specified Emacs Lisp files")
+        (cheatsheet-add :group 'Dired
+                        :key "B"
+                        :description "dired-do-byte-compile. Byte compile the specified Emacs Lisp files.")
+        (cheatsheet-add :group 'Dired
+                        :key "A regexp RET"
+                        :description "dired-do-find-regexp. variant of xref-find-references. Search all specified files for the regexp. Allows working on xref buffer that is created")
+        (cheatsheet-add :group 'Dired
+                        :key "Q regexp RET to RET"
+                        :description "dired-do-find-regexp-and-replace. Perform query-replace-regexp on each of the specified files. Allows working on xref buffer that is created")
+        (cheatsheet-add :group 'Dired
+                        :key "% m regexp RET"
+                        :description "dired-mark-files-regexp. Mark all files whose names match the regexp.")
+        (cheatsheet-add :group 'Dired
+                        :key "% g regexp RET"
+                        :description "dired-mark-files-containing-regexp. Mark all files whose contents match the regexp.")
+        (cheatsheet-add :group 'Dired
+                        :key ":d"
+                        :description "epa-dired-do-decrypt. Works with PG Assistant.")
+        (cheatsheet-add :group 'Dired
+                        :key ":e"
+                        :description "epa-dired-do-encrypt. Encrypts the specified files. Works with PG Assistant.")
+        (cheatsheet-add :group 'Dired
+                        :key ":v"
+                        :description "epa-dired-do-verify. Verify digital signatures on specified files. Works with PG Assistant.")
+        (cheatsheet-add :group 'Dired
+                        :key ":s"
+                        :description "epa-dired-do-sign. Digitally sign the specified files. Works with PG Assistant.")
+        (cheatsheet-add :group 'Dired
+                        :key "shift-t (T)"
+                        :description "Change timestamp on file under cursor")
+        (cheatsheet-add :group 'Dired
+                        :key "C-x d"
+                        :description "helm-mode-dired. TAB to select; RET to jump to selection")
+        (cheatsheet-add :group 'Dired
+                        :key "j"
+                        :description "dired-goto-file. Go to line describing file FILE in this Dired buffer")
+        (cheatsheet-add :group 'Dired
+                        :key "J"
+                        :description "bmkp-dired-jump. Jump to a Dired bookmark")
+        (cheatsheet-add :group 'Dired
+                        :key "/"
+                        :description "Dired narrow to match filter")
+        (cheatsheet-add :group 'Dired
+                        :key "C-l"
+                        :description "Delete directory in path")
+        (cheatsheet-add :group 'Dired
+                        :key "C-k"
+                        :description "Delete path to write a new path")
+        (cheatsheet-add :group 'Dired
+                        :key "("
+                        :description "dired-hide-details-mode")
+        (cheatsheet-add :group 'Dired-Projectile
+                        :key "C-d"
+                        :description "Open dired when in P session")
+        (cheatsheet-add :group 'Dired
+                        :key "$"
+                        :description "dired-hide-subdir. Hide or unhide the current subdirectory and move to next directory")
+        (cheatsheet-add :group 'Dired
+                        :key "!"
+                        :description "dired-do-shell-command. Run a shell command COMMAND on one or more files")
+        (cheatsheet-add :group 'Dired
+                        :key "&"
+                        :description "dired-do-async-shell-command. Run a shell command COMMAND on the marked files asynchronously")
+        (cheatsheet-add :group 'Dired-Sorting
+                        :key "s"
+                        :description "dired-sort-toggle-or-edit. Toggle between alphabetical and date order and with prefix argument, edit listing switches")
+        (cheatsheet-add :group 'Dired-Sorting
+                        :key "C-u s"
+                        :description "Prompts for switches to sort: -t for time, newest 1st. -S for file size, largest 1st. -X for ext. -r for reversing. -U for directory order")
+        (cheatsheet-add :group 'Dired-Projectile
+                        :key "M-C"
+                        :description "Copy marked files in P session to another opened Dired dir")
+        (cheatsheet-add :group 'Dired-Projectile
+                        :key "M-R"
+                        :description "Move files in P session to another opened Dired dir")
+        (cheatsheet-add :group 'Dired-Projectile
+                        :key "C-c f"
+                        :description "Create Virtual Dired buffer with files marked in helm-projectile-find-files: s-u")
+        (cheatsheet-add :group 'Dired-Projectile
+                        :key "C-c a"
+                        :description "Add files marked to Virtual Dired buffer in helm-projectile-find-files: s-u")
+        (cheatsheet-add :group 'Dired-Projectile
+                        :key "C-c d"
+                        :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
+        (cheatsheet-add :group 'Editing
+                        :key "M-q"
+                        :description "rebox-dwin-fill. Call M-x rebox-mode first. Then turn off")
+        (cheatsheet-add :group 'Editing
+                        :key "Shift-M-q"
+                        :description "rebox-dwin-no-fill. Call M-x rebox-mode first. Then turn off")
+        (cheatsheet-add :group 'Editing
+                        :key "C-x i"
+                        :description "insert-file. Insert contents of file FILENAME into buffer after point. This function is meant for the user to run interactively")
+        (cheatsheet-add :group 'Editing
+                        :key "C-x ="
+                        :description "what-cursor-position. Print info on cursor position. Also describe the character after point, give its character code
+          in octal, decimal and hex. With prefix C-u, all info is shown in separate window")
+        (cheatsheet-add :group 'Editing
+                        :key "C-x C-+ OR C-x C-- OR C-x C-0"
+                        :description "text-scale-adjust. Adjust the height of the default face. + increases, - descreases, 0 resets")
+        (cheatsheet-add :group 'Editing
+                        :key "C-o"
+                        :description "open-line. Insert a newline and leave point before it.")
+        (cheatsheet-add :group 'Editing
+                        :key "C-x C-u"
+                        :description "upcase-region")
+        (cheatsheet-add :group 'Editing
+                        :key "s-i"
+                        :description "avy-goto-word-1. Type first char of word you want to go to.")
+        (cheatsheet-add :group 'Editing
+                        :key "s-l"
+                        :description "avy-goto-char-timer. Start typing word you want to go to.")
+        (cheatsheet-add :group 'Editing
+                        :key "s-+"
+                        :description "avy-goto-char. Jump to any char you view.")
+        (cheatsheet-add :group 'Editing
+                        :key "C-x C-w M-n"
+                        :description "Current filename will be inserted for you. Edit what you want and hit RET to save the file to this new name.")
+        (cheatsheet-add :group 'Editing
+                        :key "C-c x"
+                        :description "my-clean-buffer.Cleans buffer by re-indenting,removing tabs and trailing whitespace.")
+        (cheatsheet-add :group 'Editing
+                        :key "C-$"
+                        :description "palimpsest-move-region-to-trash")
+        (cheatsheet-add :group 'Editing
+                        :key "C-o"
+                        :description "org-open-line. Insert a new row in tables, call open-line elsewhere.")
+        (cheatsheet-add :group 'Editing
+                        :key "C-x C-o"
+                        :description "delete-blank-lines. The opposite of org-open-line.")
+        (cheatsheet-add :group 'Editing
+                        :key "M-;"
+                        :description "comment-dwim and org-comment-dwim.")
+        (cheatsheet-add :group 'Editing
+                        :key "s-:"
+                        :description "Cheatsheet")
+        (cheatsheet-add :group 'Editing
+                        :key "C-c f"
+                        :description "focus-mode")
+        (cheatsheet-add :group 'Editing
+                        :key "C-c F"
+                        :description "focus-read-only-mode")
+        (cheatsheet-add :group 'Editing
+                        :key "C-x l"
+                        :description "count-lines-page")
+        (cheatsheet-add :group 'Editing
+                        :key "C-x 8-"
+                        :description "Prefix to insert symbols")
+        (cheatsheet-add :group 'Editing
+                        :key "C-M-SPC M-w"
+                        :description "Select word or sexp after point and put it in the kill-ring")
+        (cheatsheet-add :group 'Editing
+                        :key "M--c"
+                        :description "Upper case last word: Mientras haces M-- dale a la c")
+        (cheatsheet-add :group 'Editing
+                        :key "s-@"
+                        :description "daedreth/copy-whole-word")
+        (cheatsheet-add :group 'Editing
+                        :key "C-x C-q"
+                        :description "read-only-mode")
+        (cheatsheet-add :group 'Editing
+                        :key "s-v"
+                        :description "See raw contents that usually are invisible-like hyperlinks")
+        (cheatsheet-add :group 'Editing
+                        :key "M-SPC"
+                        :description "just-one-space: Delete all spaces and tabs around point, leaving one space-or N spaces")
+        (cheatsheet-add :group 'Editing
+                        :key "M-D"
+                        :description "Duplicate line or region")
+        (cheatsheet-add :group 'Editing
+                        :key "comment-box"
+                        :description "Puts region inside a box")
+        (cheatsheet-add :group 'Editing
+                        :key "C-c ;"
+                        :description "Comment and uncomment region")
+        (cheatsheet-add :group 'Editing
+                        :key "C-}"
+                        :description "Toggle Iedit mode. Highlight occurrences and edit simultaneously")
+        (cheatsheet-add :group 'Editing
+                        :key "s-k"
+                        :description "daedreth/kill-inner-word. Kills the entire word your cursor is in")
+        (cheatsheet-add :group 'Editing
+                        :key "M-z"
+                        :description "zap-up-to-char")
+        (cheatsheet-add :group 'Editing
+                        :key "s-%"
+                        :description "Kills whole line where your cursor is in")
+        (cheatsheet-add :group 'Editing
+                        :key "yank-file-name"
+                        :description "Yanks current buffer file name and its path to the kill ring")
+        (cheatsheet-add :group 'Editing
+                        :key "C-`"
+                        :description "ido-find-file-in-tag-files")
+        (cheatsheet-add :group 'Editing
+                        :key "M-x reverse-paragraphs"
+                        :description "Reverse the order of paragraphs in a region")
+        (cheatsheet-add :group 'Editing
+                        :key "M-x xah-insert-column-az"
+                        :description "Inserts numbers or letters in column. Read dgm.org")
+        (cheatsheet-add :group 'Editing
+                        :key "C-x a"
+                        :description "Join this line to previous and fix up whitespace at join. Not working anymore as this is prefix for abbrev mode.")
+        (cheatsheet-add :group 'Editing
+                        :key "s-\\"
+                        :description "align-regexp")
+        (cheatsheet-add :group 'Editing
+                        :key "s-/"
+                        :description "indent-region")
+        (cheatsheet-add :group 'Editing
+                        :key "s->"
+                        :description "indent-region-or-buffer")
+        (cheatsheet-add :group 'Editing
+                        :key "M-/"
+                        :description "hippie-expand")
+        (cheatsheet-add :group 'Editing
+                        :key "s-!"
+                        :description "toggle-theme")
+        (cheatsheet-add :group 'Editing
+                        :key "s-y"
+                        :description "ivy-yasnippet")
+        (cheatsheet-add :group 'Editing
+                        :key "C-c k"
+                        :description "yas-expand. Expand a snippet before point.")
+        (cheatsheet-add :group 'Editing
+                        :key "s-#"
+                        :description "sudo-edit")
+        (cheatsheet-add :group 'Editing
+                        :key "C-x C-i"
+                        :description "indent-rigidly. Indent all lines starting in the region. Then <right>/<left> or <S-right>/<S-left> to actually indent")
+        (cheatsheet-add :group 'Editing
+                        :key "M-m"
+                        :description "back-to-indentation. Move point to the first non-whitespace character on this line")
+        (cheatsheet-add :group 'Editing
+                        :key "C-c w"
+                        :description "whitespace-mode. Toggle.")
+        (cheatsheet-add :group 'Editing
+                        :key "C-c C-r"
+                        :description "org-reveal. Display where point is if it is buried in invisible text to allow editing again")
+        (cheatsheet-add :group 'Editing
+                        :key "M-k"
+                        :description "kill-sentence. Kill from point to end of sentence.")
+        (cheatsheet-add :group 'Editing
+                        :key "C-;"
+                        :description "dont-kill-line. Copy from point to end of sentence.")
+        (cheatsheet-add :group 'Editing-Killing
+                        :key "M-w"
+                        :description "kill-ring-save: Save the region as if killed, but don’t kill it. When no active region, copy a single line instead")
+        (cheatsheet-add :group 'Editing-Killing
+                        :key "C-w"
+                        :description "kill-region: Kill text between point and mark. When no active region, kill single line instead")
+        (cheatsheet-add :group 'Editing-Killing
+                        :key "C-k"
+                        :description "kill-line and kill-visual-line. kill a line, including whitespace characters until next non-whitespace character of next line")
+        (cheatsheet-add :group 'Editing-MultipleRegions
+                        :key "s-q"
+                        :description "mark-next-like-this. Mark next occurence of a region and edit all at once")
+        (cheatsheet-add :group 'Editing-MultipleCursors
+                        :key "C-c C-m l"
+                        :description "mc/edit-lines: When active region spans multiple lines, add cursor to each line")
+        (cheatsheet-add :group 'Editing-MultipleCursors
+                        :key "C-c C-m a"
+                        :description "mc/edit-beginnings-of-lines")
+        (cheatsheet-add :group 'Editing-MultipleCursors
+                        :key "C-c C-m e"
+                        :description "mc/edit-ends-of-lines")
+        (cheatsheet-add :group 'Editing-MultipleCursors
+                        :key "C-c C-m E"
+                        :description "mc/mark-more-like-this-extended")
+        (cheatsheet-add :group 'Editing-MultipleCursors
+                        :key "C-c C-m N"
+                        :description "mc/mark-next-like-this. MC not based on continuous lines, but on keywords")
+        (cheatsheet-add :group 'Editing-MultipleCursors
+                        :key "C-c C-m P"
+                        :description "mc/mark-previous-like-this. MC not based on continuous lines, but on keywords")
+        (cheatsheet-add :group 'Editing-MultipleCursors
+                        :key "C-c C-m u"
+                        :description "mc/unmark-next-like-this. MC not based on continuous lines, but on keywords")
+        (cheatsheet-add :group 'Editing-MultipleCursors
+                        :key "C-c C-m U"
+                        :description "mc/unmark-previous-like-this. MC not based on continuous lines, but on keywords")
+        (cheatsheet-add :group 'Editing-MultipleCursors
+                        :key "C-c C-m A"
+                        :description "mc/mark-all-like-this: Works on same line. Mark region 1st. MC based on keywords")
+        (cheatsheet-add :group 'Editing-MultipleCursors
+                        :key "C-c C-m z"
+                        :description "mc/insert-numbers")
+        (cheatsheet-add :group 'Editing-MultipleCursors
+                        :key "C-c C-m r"
+                        :description "mc/mark-all-in-region")
+        (cheatsheet-add :group 'Editing-MultipleCursors
+                        :key "C-c C-m h"
+                        :description "mc-hide-unmatched-lines-mode")
+        (cheatsheet-add :group 'Emacs
+                        :key "C-<digit>"
+                        :description "digit-argument. No need to do C-u <digit>. Could do M-<digit> too.")
+        (cheatsheet-add :group 'Email
+                        :key "\\"
+                        :description "mu4e-headers-query-prev. Previous query. Execute the previous query from the query stacks.")
+        (cheatsheet-add :group 'Email
+                        :key "M-<right>"
+                        :description "mu4e-headers-query-next. Next query. Execute the next query from the query stacks.")
+        (cheatsheet-add :group 'Email
+                        :key "O"
+                        :description "mu4e-headers-change-sorting. Change the sorting/threading parameters. Useful to see latest emails. Not to use with threading option, only if you search for a set of messages")
+        (cheatsheet-add :group 'Email
+                        :key "C-*"
+                        :description "mu4e")
+        (cheatsheet-add :group 'Email
+                        :key "aV"
+                        :description "View message in browser. Use it once inside the message.")
+        (cheatsheet-add :group 'Email
+                        :key "S-a"
+                        :description "mu4e-view-attachment-action")
+        (cheatsheet-add :group 'Email
+                        :key "SPC"
+                        :description "cua-scroll-up. Equivalent to C-v: scroll down")
+        (cheatsheet-add :group 'Email
+                        :key "S-SPC"
+                        :description "cua-scroll-down. Equivalent to M-v: scroll up")
+        (cheatsheet-add :group 'Email
+                        :key "C-c C-k"
+                        :description "mu4e-message-kill-buffer")
+        (cheatsheet-add :group 'Email
+                        :key "a"
+                        :description "mu4e-view-action. Lists possible actions when inside message like Show In Browser or Show Thread")
+        (cheatsheet-add :group 'Email
+                        :key "e"
+                        :description "mu4e-view-save-attachmen. Offer to save multiple email attachments from the current message.")
+        (cheatsheet-add :group 'Email
+                        :key "A"
+                        :description "mu4e-view-attachment-action")
+        (cheatsheet-add :group 'Email
+                        :key "g"
+                        :description "mu4e-view-go-to-url. Open URL")
+        (cheatsheet-add :group 'Email
+                        :key "S"
+                        :description "helm-mu. Defined in mu4e-main-mode-map")
+        (cheatsheet-add :group 'Email
+                        :key "C-i"
+                        :description "helm-execute-persistent-action. In helm-mu, execute action, open email at point in another window and move point there, without quitting helm")
+        (cheatsheet-add :group 'Email
+                        :key "M-x helm-mu-contacts"
+                        :description "Greps contacts so regexp allowed. M-SPC to select multiple sources. Available actions with C-z are insert selected contacts at point and copy selected contacts to clipboard.")
+        (cheatsheet-add :group 'ESS
+                        :key "C-c C-j"
+                        :description "ess-eval-line. Send the current line to the inferior ESS process")
+        (cheatsheet-add :group 'ESS
+                        :key "C-c C-r"
+                        :description "ess-eval-region. Send the region from START to END to the inferior ESS process")
+        (cheatsheet-add :group 'ESS
+                        :key "C-RET"
+                        :description "ess-eval-region-or-line-visibly-and-step. Evaluate region if active, otherwise the current line and step.")
+        (cheatsheet-add :group 'ESS
+                        :key "C-c C-l"
+                        :description "ess-load-file. Load FILENAME into an inferior ESS process.")
+        (cheatsheet-add :group 'Expressions-Eval
+                        :key "C-x C-e"
+                        :description "sanityinc/eval-last-sexp-or-region")
+        (cheatsheet-add :group 'Expressions-Eval
+                        :key "C-j"
+                        :description "eval-print-last-sexp. Evaluate sexp before point; print value into current buffer.")
+        (cheatsheet-add :group 'Expressions-Copying
+                        :key "C-M w"
+                        :description "sp-copy-sexp: Copies next bit of the sexp")
+        (cheatsheet-add :group 'Expressions-Copying
+                        :key "M-x my/org-insert-defun"
+                        :description "Inserts an Org source block with the definition for FUNCTION")
+        (cheatsheet-add :group 'Expressions-Find
+                        :key "C-c f"
+                        :description "find-function")
+        (cheatsheet-add :group 'Expressions-Find
+                        :key "C-c ."
+                        :description "find-function-at-point")
+        (cheatsheet-add :group 'Expressions-Find
+                        :key "M-."
+                        :description "xref-find-definitions. See function in source file; jump to nodes in Texinfo, if etags has recorded the nodes")
+        (cheatsheet-add :group 'Expressions-Find
+                        :key "M-,"
+                        :description "Go back from xref-find-definitions")
+        (cheatsheet-add :group 'Expressions-Killing
+                        :key "C-M k"
+                        :description "sp-kill-sexp: Kills next bit of the sexp")
+        (cheatsheet-add :group 'Expressions-Killing
+                        :key "C-k"
+                        :description "sp-kill-hybrid-sexp: Kills sexp from point onwards")
+        (cheatsheet-add :group 'Expressions-Killing
+                        :key "M-k"
+                        :description "sp-backward-kill-sexp: Kills previous bit of sexp")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-M a"
+                        :description "Begin of function")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-M e"
+                        :description "End of function")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-M f"
+                        :description "sp-forward-sexp: Block movement")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-M b"
+                        :description "sp-backward-sexp: Block movement")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-M n"
+                        :description "sp-next-sexp: Top-level-ish transversal")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-M p"
+                        :description "sp-previous-sexp: Top-level-ish transversal")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-M-+"
+                        :description "smartscan-symbol-go-forward. Set in elpa/smartscan.el")
+        (cheatsheet-add :group 'Expressionps-Movement
+                        :key "C-M-*"
+                        :description "smartscan-symbol-go-backward. Set in elpa/smartscan.el")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "M-'"
+                        :description "smartscan-symbol-replace. Set in smartscan.el")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-<down>"
+                        :description "sp-down-exp: Traversing lists")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-<up>"
+                        :description "sp-up-exp: Traversing lists")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "M-<down>"
+                        :description "sp-backward-down-sexp: Traversing lists")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "M-<up>"
+                        :description "sp-backward-up-sexp: Traversing lists")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-M a"
+                        :description "Begin of function")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-M e"
+                        :description "End of function")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-M f"
+                        :description "sp-forward-sexp: Block movement")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-M b"
+                        :description "sp-backward-sexp: Block movement")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-M n"
+                        :description "sp-next-sexp: Top-level-ish transversal")
+        (cheatsheet-add :group 'Expressions-Movement
+                        :key "C-S b"
+                        :description "sp-backward-symbol: Free-form movement")
+        (cheatsheet-add :group 'Expressions-Movements
+                        :key "C-S f"
+                        :description "sp-forward-symbol: Free-form movement")
+        (cheatsheet-add :group 'Expressions-Marking
+                        :key "C-M SPC"
+                        :description "mark-sexp function of lisp.el")
+        (cheatsheet-add :group 'Expressions-Org
+                        :key "s-~"
+                        :description "Wrap region with matching tilde in Org")
+        (cheatsheet-add :group 'Expressions-Org
+                        :key "s-="
+                        :description "Wrap region with matching equality in Org")
+        (cheatsheet-add :group 'Expressions-Wrapping
+                        :key "C-M SPC and Wrapping symbol"
+                        :description "Wrap region with matching characters-parentheses, brackets, etc-depending on mode")
+        (cheatsheet-add :group 'Expressions-Wrapping
+                        :key "C-c and Parenthesis"
+                        :description "Wrap word with matching characters-parentheses, brackets, etc")
+        (cheatsheet-add :group 'Expressions-Wrapping-Slurp
+                        :key "C-<right>"
+                        :description "sp-forward-slurp-sexp: Slurping extends the inclusion of parentheses")
+        (cheatsheet-add :group 'Expressions-Wrapping-Slurp
+                        :key "C-<left>"
+                        :description "sp-backward-slurp-sexp: Slurping extends the inclusion of parentheses")
+        (cheatsheet-add :group 'Expressions-Wrapping-Barf
+                        :key "M-<right>"
+                        :description "sp-forward-barf-sexp: Burfing contracts the extension of parentheses")
+        (cheatsheet-add :group 'Expressions-Wrapping-Barf
+                        :key "M-<left>"
+                        :description "sp-backward-barf-sexp: Barfing contracts the extension of parentheses")
+        (cheatsheet-add :group 'Expressions-Unwrapping
+                        :key "M-\["
+                        :description "sp-backward-unwrap-sex: Unwraps current exp")
+        (cheatsheet-add :group 'Expressions-Unwrapping
+                        :key "M-\]"
+                        :description "sp-unwrap-sex: Unwrapps next exp")
+        (cheatsheet-add :group 'Expressions-Swapping
+                        :key "C-M t"
+                        :description "sp-transpose-sexp")
+        (cheatsheet-add :group 'EXWM
+                        :key "s-e"
+                        :description "helm-run-external-command")
+        (cheatsheet-add :group 'EXWM
+                        :key "s-r"
+                        :description "exwm-reset: Reset the state of the selected window: non-fullscreen, line-mode, etc")
+        (cheatsheet-add :group 'EXWM
+                        :key "C-q"
+                        :description "exwm-input-send-next-key: the next key is sent literally to the application")
+        (cheatsheet-add :group 'EXWM
+                        :key "s-&"
+                        :description "ambrevar/exwm-start: Open in external application")
+        (cheatsheet-add :group 'EXWM
+                        :key "C-c-t-f"
+                        :description "Resize frame from external app-Usually when saving something")
+        (cheatsheet-add :group 'Find-Files
+                        :key "C-x f"
+                        :description "ido-recentf-open: Find recent file")
+        (cheatsheet-add :group 'Find-Files
+                        :key "C-& or C-x C-r"
+                        :description "recentf-open-files. Long list of recent files")
+        (cheatsheet-add :group 'Find-Files
+                        :key "C-x C-f"
+                        :description "helm-find-files")
+        (cheatsheet-add :group 'Find-Files
+                        :key "M-x helm-for-files"
+                        :description "Find in opened, recent, bookmarked files; files in current dir; files anywhere with locate")
+        ;;    (cheatsheet-add :group 'Find-Files
+        ;;                    :key "C-x C-g"
+        ;;                    :description "deft-find-file")
+        ;;    (cheatsheet-add :group 'Find-Files
+        ;;                    :key "C-c d"
+        ;;                    :description "deft. Switch to Deft buffer and load files.")
+        ;;    (cheatsheet-add :group 'Find-Files
+        ;;                    :key "C-c C-c"
+        ;;                    :description "deft-filter-clear")
+        (cheatsheet-add :group 'Find-Files
+                        :key "C-c C-q"
+                        :description "quit-window. Works in Deft")
+        (cheatsheet-add :group 'Find-Files
+                        :key "s-'"
+                        :description "deft-find-file")
+        (cheatsheet-add :group 'Find-Files
+                        :key "C-c C-q"
+                        :description "quit-window. Works with deft")
+        (cheatsheet-add :group 'Find-Files
+                        :key "s-d"
+                        :description "helm-find frontend for *nix FIND command in current dir; C-u chooses dir")
+        (cheatsheet-add :group 'Find-Files
+                        :key "s-D"
+                        :description "helm-locate frontend of *unix LOCATE command")
+        (cheatsheet-add :group 'Find-Dirs-Projectile
+                        :key "s-+"
+                        :description "helm-projectile-find-dir: Find dirs in current P project")
+        (cheatsheet-add :group 'Find-Files-Projectile
+                        :key "C-c p a"
+                        :description "List files with same name, different extensions in current P project")
+        (cheatsheet-add :group 'Find-Files-Projectile
+                        :key "s-|"
+                        :description "helm-projectile-find-file-dwim: Find file in P project based on context at point")
+        (cheatsheet-add :group 'Find-Files-Projectile
+                        :key "C-c p e"
+                        :description "List recently visited files in current P project")
+        (cheatsheet-add :group 'Find-Files-Projectile
+                        :key "s-\`"
+                        :description "helm-projectile-find-other-file: Same name, different extension")
+        (cheatsheet-add :group 'Find-Ocurrences
+                        :key "C-o"
+                        :description "Occur inside a regular search with C-s or C-r")
+        (cheatsheet-add :group 'Find-Occurrences
+                        :key "s-o"
+                        :description "helm-occur: TAB to temporarily move to highlighted match")
+        (cheatsheet-add :group 'Find-Occurences
+                        :key "s-\""
+                        :description "helm-regexp to test regexp interactively and save it. Actions on C-z")
+        (cheatsheet-add :group 'Find-Ocurrences
+                        :key "M-x helm-swoop"
+                        :description "Show lines matching a pattern; cursor jumps to the line we go to")
+        (cheatsheet-add :group 'Find-Org
+                        :key "s-p"
+                        :description "helm-org-in-buffer-headings: Find Org heading")
+        (cheatsheet-add :group 'Find-Org
+                        :key "s-u"
+                        :description "Rifle search in Org files")
+        (cheatsheet-add :group 'Grep
+                        :key "search-all-buffers"
+                        :description "Greps all opened buffers")
+        (cheatsheet-add :group 'Grep
+                        :key "s-f"
+                        :description "helm-ag: grep-like program implemented in C")
+        (cheatsheet-add :group 'Grep-Helm
+                        :key "C-c h w"
+                        :description "wgrep-helm: Edit a helm-grep-mode buffer and apply those changes to the file buffer")
+        (cheatsheet-add :group 'Grep-Projectile
+                        :key "s-g"
+                        :description "helm-projectile-grep: Search symbol at point. If region active, searches region")
+        (cheatsheet-add :group 'Grep-Projectile
+                        :key "C-s"
+                        :description "Grep in project when using P. C-u for recursive grep")
+    (cheatsheet-add :group 'Helm-M-x
+                    :key "C-i"
+                    :description "See file in separate window")
+        (cheatsheet-add :group 'Helm
+                        :key "C-c TAB"
+                        :description "Yank selected candidate in Helm session at point")
+        (cheatsheet-add :group 'Helm
+                        :key "M-SPC"
+                        :description "Select multiple sources")
+        (cheatsheet-add :group 'Helm
+                        :key "s-r"
+                        :description "helm-resume previous H session, inputs included. C-u lets choose Helm buffer. C-c n inside Helm session")
+        (cheatsheet-add :group 'Helm
+                        :key "C-c o"
+                        :description "In H session, open selected candidate in another window")
+        (cheatsheet-add :group 'Helm
+                        :key "C-c h"
+                        :description "Helm prefix / If in C-x C-f session, list visited files/dirs")
+        (cheatsheet-add :group 'Helm
+                        :key "C-c C-i"
+                        :description "Insert selection: columns")
+        (cheatsheet-add :group 'Helm
+                        :key "C-w"
+                        :description "Yank word at point into Helm prompt")
+        (cheatsheet-add :group 'Helm
+                        :key "M-n"
+                        :description "Yank symbol at point into Helm prompt")
+        (cheatsheet-add :group 'Helm-Bibtex
+                        :key "C-c \]"
+                        :description "helm-bibtex: In Org mode, search BibTeX files for refs to insert into the current document")
+        (cheatsheet-add :group 'Helm-Menu
+                        :key "C-c h w"
+                        :description "helm-buffer-switch-other-window: Works on a helm menu like the one by C-x b")
+        (cheatsheet-add :group 'Helm-Menu
+                        :key "C-c h k"
+                        :description "helm-buffer-run-kill-persistent: Works on a helm menu like the one by C-x b")
+        (cheatsheet-add :group 'Help
+                        :key "C-h C-h"
+                        :description "which-key-C-h-dispatch. Helps navigate help keys")
+        (cheatsheet-add :group 'Help
+                        :key "C-h C-p"
+                        :description "view-emacs-problems")
+        (cheatsheet-add :group 'Help
+                        :key "C-h p"
+                        :description "Search the standard Emacs Lisp libraries by topic keywords")
+        (cheatsheet-add :group 'Help
+                        :key "C-h i m"
+                        :description "Search the info system and open the menu. Then type something, like 'org' and RET")
+        (cheatsheet-add :group 'Help
+                        :key "C-h C-a"
+                        :description "about-emacs: For information about GNU Emacs and the GNU system")
+        (cheatsheet-add :group 'Help
+                        :key "C-h m"
+                        :description "describe-mode")
+        (cheatsheet-add :group 'Help
+                        :key "helm-descbinds"
+                        :description "Currently active key bindings are searcheable")
+        (cheatsheet-add :group 'Help
+                        :key "C-c ?"
+                        :description "Help in a Helm session")
+        (cheatsheet-add :group 'Help
+                        :key "s-m"
+                        :description "helm-man-woman: Manual entries for *nix commands")
+        (cheatsheet-add :group 'Help
+                        :key "s-a"
+                        :description "helm-apropos for commands, functions, variables and faces. Original in C-h d")
+        (cheatsheet-add :group 'Help
+                        :key "s-\)"
+                        :description "Search emacs, elisp and CL info pages")
+        (cheatsheet-add :group 'Help
+                        :key "helm-info-*"
+                        :description "Search info nodes for various topics like emacs, elisp, gdb, etc. TAB to view")
+        (cheatsheet-add :group 'Help
+                        :key "C-h f"
+                        :description "helpful-callable: Show help for function, macro or special form named SYMBOL")
+        (cheatsheet-add :group 'Help
+                        :key "C-h k"
+                        :description "helpful-key")
+        (cheatsheet-add :group 'Help
+                        :key "C-h v"
+                        :description "helpful-variable")
+        (cheatsheet-add :group 'Help
+                        :key "s-,"
+                        :description "org-recipe")
+        (cheatsheet-add :group 'Help
+                        :key "s-."
+                        :description "org-wiki-helm")
+        (cheatsheet-add :group 'Help-Org
+                        :key "?"
+                        :description "With cursor on heading's stars, ? opens window with shortcuts available")
+        (cheatsheet-add :group 'History
+                        :key "C-c C-l"
+                        :description "History in Eshell, Shell and Minibuffer")
+        (cheatsheet-add :group 'iMenu
+                        :key "s-?"
+                        :description "ido-goto-symbol. Refresh imenu and jump to a place in the buffer using Ido")
+        (cheatsheet-add :group 'iMenu
+                        :key "M-i"
+                        :description "helm-semantic-or-imenu")
+        (cheatsheet-add :group 'Input
+                        :key "s-s"
+                        :description "mrb/set-input-method: Change input method to Spanish prefix")
+        (cheatsheet-add :group 'Input
+                        :key "C-\\"
+                        :description "toggle-input-method. Use one back slash")
+        (cheatsheet-add :group 'Kill
+                        :key "M-y"
+                        :description "helm-show-kill-ring")
+        (cheatsheet-add :group 'Kill-Projectile
+                        :key "M-D"
+                        :description "Kill marked item in P session")
+        (cheatsheet-add :group 'Latex
+                        :key "C-c ]"
+                        :description "LaTeX-close-environment")
+        (cheatsheet-add :group 'Latex
+                        :key "C-j"
+                        :description "tex-terminate-paragraph. Insert para break and check prev para for unbalanced braces or dollar signs")
+        (cheatsheet-add :group 'Latex
+                        :key "M-x..."
+                        :description "tex-validate-region. Check for unbalanced braces or dollar signs")
+        (cheatsheet-add :group 'Lisp
+                        :key "C-c h TAB"
+                        :description "helm-lisp-completion-at-point for elisp")
+        (cheatsheet-add :group 'Lisp
+                        :key "M-:"
+                        :description "Evaluate EXPRESSION and pretty-print its value.")
+        (cheatsheet-add :group 'Lisp
+                        :key "s-\("
+                        :description "helm-eval-expression-with-eldoc interactively evaluates elisp exp")
+        (cheatsheet-add :group 'Lisp
+                        :key "s-\)"
+                        :description "ap/helm-info-emacs-elisp-cl: Emacs and eLisp manual with Helm")
+        (cheatsheet-add :group 'Mark
+                        :key "C-x C-x"
+                        :description "cua-exchange-point-and-mark")
+        (cheatsheet-add :group 'Mark
+                        :key "C-x h"
+                        :description "mark-whole-buffer")
+        (cheatsheet-add :group 'Mark
+                        :key "C-."
+                        :description "Pushes point to mark-ring and does not activate the region")
+        (cheatsheet-add :group 'Mark
+                        :key "C-SPC"
+                        :description "cua-set-mark: Set mark at where point is, clear mark, or jump to mark.")
+        (cheatsheet-add :group 'Mark
+                        :key "M-`"
+                        :description "Jumps to the local mark, respecting the mark-ring order. C-u C-SPC does it too")
+        (cheatsheet-add :group 'Mark
+                        :key "s-RET"
+                        :description "helm-all-mark-rings: Find mark in local and global rings")
+        (cheatsheet-add :group 'Mark
+                        :key "s-SPC"
+                        :description "er/expand-region")
+        (cheatsheet-add :group 'Mark
+                        :key "s-BKSPC"
+                        :description "er/contract-region")
+        (cheatsheet-add :group 'Mark
+                        :key "C-x C-x"
+                        :description "Exchange point and mark without activating region")
+        (cheatsheet-add :group 'Mark
+                        :key "M-h"
+                        :description "org-mark-element. Put point at beginning of this element, mark at end")
+        (cheatsheet-add :group 'Mark
+                        :key "C-c @"
+                        :description "org-mark-subtree. Mark the subtree at point. Repeat to mark subsequent subtrees of the same level")
+        (cheatsheet-add :group 'Markdown
+                        :key "C-c C-s C"
+                        :description "markdown-insert-gfm-code-block. Insert GFM code block for language LANG. Can also use the rb snippet")
+        (cheatsheet-add :group 'Markdown
+                        :key "C-c C-s c"
+                        :description "markdown-insert-code. Insert markup to make a region or word an inline code fragment. Can also use the ` snippet")
+        (cheatsheet-add :group 'Markdown
+                        :key "M-_"
+                        :description "my_pipe_operator by KHealy. Insert R/ESS %>% operator")
+        (cheatsheet-add :group 'Markdown
+                        :key "C-c i"
+                        :description "kjh-insert-r-chunk. Insert an r-chunk in markdown mode. By KHealy")
+        (cheatsheet-add :group 'Markdown
+                        :key "markdown-reftex-citation"
+                        :description "Insert markdown citation formats. By Kleinschmidt.")
+        (cheatsheet-add :group 'Minibuffer
+                        :key "C-M-e"
+                        :description "Miniedit: enter minibuffer edit")
+        (cheatsheet-add :group 'Minibuffer
+                        :key "C-c C-c"
+                        :description "Miniedit: exit minibuffer edit")
+        (cheatsheet-add :group 'Movement
+                        :key "M-r"
+                        :description "move-to-window-line-top-bottom. Without moving the text on the screen, move point to top, bottom, middle")
+        (cheatsheet-add :group 'Movement
+                        :key "C-c C-j"
+                        :description "org-goto. Look up a different location in the current file. Go back with org-mark-ring-goto")
+        (cheatsheet-add :group 'Movement
+                        :key "M-<"
+                        :description "beginning-of-buffer")
+        (cheatsheet-add :group 'Movement
+                        :key "M->"
+                        :description "end-of-buffer")
+        (cheatsheet-add :group 'Narrowing
+                        :key "C-x n b"
+                        :description "Narrows to block in org-src block, for example")
+        (cheatsheet-add :group 'Narrowing
+                        :key "C-x n d"
+                        :description "Narrows to defun")
+        (cheatsheet-add :group 'Narrowing
+                        :key "C-x n e"
+                        :description "Narrows to element-A line, for ex.")
+        (cheatsheet-add :group 'Narrowing
+                        :key "C-x n n"
+                        :description "Narrows to region")
+        (cheatsheet-add :group 'Narrowing
+                        :key "C-x n p"
+                        :description "Narrows to page")
+        (cheatsheet-add :group 'Narrowing
+                        :key "C-x n s"
+                        :description "Narrows to subtree in Org")
+        (cheatsheet-add :group 'Narrowing
+                        :key "C-x n w"
+                        :description "Widens ")
+        (cheatsheet-add :group 'Narrowing
+                        :key "N"
+                        :description "org-narrow-to-subtree")
+        (cheatsheet-add :group 'Narrowing
+                        :key "W"
+                        :description "Widen in Org subtree")
+        (cheatsheet-add :group 'Org
+                        :key "#"
+                        :description "Comments heading")    
+    (cheatsheet-add :group 'Org
+                        :key "TAB or C-i"
+                        :description "On a list, insert a lower level item moving, for example, from - to +")
+        (cheatsheet-add :group 'Org
+                        :key "C->"
+                        :description "org-time-stamp. Prompt for a date/time and insert a time stamp.")
+        (cheatsheet-add :group 'Org
+                        :key "C-i"
+                        :description "org-cycle. Toggle fold-unfold heading")
+        (cheatsheet-add :group 'Org
+                        :key "C-c C-v C-t"
+                        :description "org-babel-tangle. Write code blocks to source-specific files")
+        (cheatsheet-add :group 'Org
+                        :key "s-<"
+                        :description "org-cut-subtree: cut tree and paste it elsewhere in the hierarchy.")
+        (cheatsheet-add :group 'Org
+                        :key "C-c @"
+                        :description "Insert as Org link current highlighted file in P session")
+        (cheatsheet-add :group 'Org
+                        :key "M-Shift-<right/left>"
+                        :description "org-metaright; org-metaleft. Demote/Promote heading BUT not subheadings. Same as typing =r/l= on the heading")
+        (cheatsheet-add :group 'Org
+                        :key "M--<right/left>"
+                        :description "org-shiftmetaright/left. Demote/Promote heading AND subheadings. Same as typing =R/L= on the heading")
+        (cheatsheet-add :group 'Org
+                        :key "Shift-<left/right>"
+                        :description "org-shiftright. On subtree heading, cycles TODO word")
+        (cheatsheet-add :group 'Org
+                        :key "r"
+                        :description "Positioned on stars of heading, demote heading BUT not subheadings")
+        (cheatsheet-add :group 'Org
+                        :key "R"
+                        :description "Positioned on stars of heading, demote heading AND all subheadings")
+        (cheatsheet-add :group 'Org
+                        :key "C-c C-o"
+                        :description "org-open-at-point: Open links")
+        (cheatsheet-add :group 'Org
+                        :key "C-c C-x M-w"
+                        :description "org-copy-subtree. Copy subtree to kill ring. With a numeric prefix argument N, copy the N sequential subtrees")
+        (cheatsheet-add :group 'Org
+                        :key "C-c C-x C-w"
+                        :description "org-cut-subtree. i.e., remove it from buffer but save in kill ring. With a numeric prefix argument N, kill N sequential subtrees")
+        (cheatsheet-add :group 'Org
+                        :key "a"
+                        :description "org-archive-subtree-default. Place cursor at start of heading. a will archive it")
+        (cheatsheet-add :group 'Org
+                        :key "i"
+                        :description "Place cursor at start of heading. i will open clock menu")
+        (cheatsheet-add :group 'Org
+                        :key "t"
+                        :description "Place cursor at start of heading. Toggle todo state. SPC to clear")
+        (cheatsheet-add :group 'Org
+                        :key "T"
+                        :description "Place cursor at start of heading. Column view with effort and clocksum")
+        (cheatsheet-add :group 'Org
+                        :key "SPC"
+                        :description "Place cursor at start of heading. See hierachical path to this heading")
+        (cheatsheet-add :group 'Org
+                        :key "C-c C-w"
+                        :description "org-refile")
+        (cheatsheet-add :group 'Org
+                        :key "C-u C-u C-c C-o"
+                        :description "org-open-at-point. Open link outside Emacs with external app-such as Libreoffice")
+        (cheatsheet-add :group 'Org
+                        :key "g"
+                        :description "org-refile. Works if you place cursor on stars")
+        (cheatsheet-add :group 'Org
+                        :key "C-c C-x p"
+                        :description "org-set-property. Edit a task's properties,e.g.,set STYLE to habit")
+        (cheatsheet-add :group 'Org
+                        :key "N"
+                        :description "org-narrow-to-subtree")
+        (cheatsheet-add :group 'Org
+                        :key "W"
+                        :description "Widen")
+        (cheatsheet-add :group 'Org
+                        :key "S"
+                        :description "org-sort. Sorts subtrees")
+        (cheatsheet-add :group 'Org
+                        :key "S-<up><down>"
+                        :description "On heading, add priority tag")
+        (cheatsheet-add :group 'Org
+                        :key "S-<left><right>"
+                        :description "On heading, add or change TODO status")
+        (cheatsheet-add :group 'Org
+                        :key "M-x org-repair-property-drawers"
+                        :description "Fix properties drawers in current buffer. To use when habits or schedules don't show rightly")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "E"
+                        :description "org-agenda-entry-text-mode. Toggle entry text mode in an agenda buffer. It shows context in original entry")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "j"
+                        :description "org-agenda-goto-date. Jump to DATE in agenda")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "."
+                        :description "org-agenda-goto-today.")
+        (cheatsheet-add :group 'Org-Agenda
+                        :key ","
+                        :description "org-agenda-priority. Set the priority of line at point, also in Org file")
+        (cheatsheet-add :group 'Org-Agenda
+                        :key "d"
+                        :description "org-agenda-day-view.")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "."
+                        :description "org-agenda-goto-today")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "C-x C-w"
+                        :description "Write the agenda view to a file: .html, ps, pdf. Any other extension results in plain ASCII file")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "A"
+                        :description "Interactively select another agenda view and append it to the current view")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "G"
+                        :description "org-agenda-toggle-time-grid")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "k"
+                        :description "org-agenda-capture. Call org-capture with the date at point")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "B"
+                        :description "org-agenda-bulk-action. Mark with m0")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "o"
+                        :description "When in agenda view, delete other windows")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "T or < C-c a t"
+                        :description "my/org-agenda-for-subtree")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "t"
+                        :description "org-agenda-todo. When in an agenda's item, choose state")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "K"
+                        :description "Toggle org-habits")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "C-, and C-'"
+                        :description "org-cycle-agenda-files. Has to be located in heading of agenda file")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "R"
+                        :description "org-agenda-clockreport-mode. Toggle clocktable mode. Info about clocked time in the displayed period")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "SPC"
+                        :description "org-agenda-show-and-scroll-up. Display the original location of the item in another window. If repeated, scroll that other window")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "TAB"
+                        :description "org-agenda-goto. Go to the original location of the item in another window")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "RET"
+                        :description "org-agenda-switch-to. Go to the original location of the item and delete other windows")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "="
+                        :description "org-agenda-filter-by-regexp. Filter agenda entries by regular expressions. With one prefix argument, filter out entries matching the regexp")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "\\"
+                        :description "org-agenda-filter-by-tag. Filter agenda entries by tab. To clear the filter, press \\ twice")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "<"
+                        :description "org-agenda-filter-by-category. Filter lines in the agenda buffer that have a specific category.If cursor with a given category, show only entries of that category.With a C-u prefix argument, exclude the lines of that category.")
+        (cheatsheet-add :group 'Org-agenda
+                        :key ">"
+                        :description "org-agenda-date-prompt. Change the date of this item.  Date is prompted for, with default today.")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "J"
+                        :description "org-agenda-clock-goto. Go to the currently clocked-in task in the agenda buffer")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "F"
+                        :description "org-agenda-follow-mode. Toggle Follow mode. As you move the cursor through the agenda buffer, the other window shows the corresponding location in the Org file")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "v"
+                        :description "Choose time spam in view and more")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "v R"
+                        :description "org-agenda-clockreport-mode. Toggle clock table. A quick report on time usage. Works directly with R only")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "b"
+                        :description "org-agenda-earlier. Move back one day or week")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "f"
+                        :description "org-agenda-later. Move forward one day or week")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "l"
+                        :description "org-agenda-log-mode. Shows entries marked DONE while logging was on and are entries clocked on that day, recording their timing")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "v L"
+                        :description "org-agenda-log-mode. how all possible logbook entries, including state changes")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "G"
+                        :description "org-agenda-toggle-time-grid. Toggle the time grid on and off")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "J"
+                        :description "org-agenda-clock-goto. Jump to the currently clocked in task within the agenda")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "s"
+                        :description "org-save-all-org-buffers. Save all Org buffers in the current Emacs session, and also the locations of IDs")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "S"
+                        :description "Show sunrise/Sunset times")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "M"
+                        :description "Show lunar phases")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "z OR C-c C-z"
+                        :description "org-agenda-add-note. Add a time-stamped note to the entry at point")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "C"
+                        :description "org-agenda-convert-date. Show date in/Convert date to other calendars. Place cursor on a given date.")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "M-x my/org-show-active-projects"
+                        :description "Show my current projects. From Sacha")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "g"
+                        :description "org-agenda-redo-all. Rebuild all agenda views in the current buffer")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "SPC"
+                        :description "org-agenda-show-and-scroll-up. Display the Org file which contains the item at point. If repeated, scroll that Org file")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "DEL"
+                        :description "org-agenda-show-scroll-down. Scroll down the window showing the agenda")
+        (cheatsheet-add :group 'Org-agenda
+                        :key "1"
+                        :description "bjm/org-agenda-item-to-top")
+        (cheatsheet-add :group 'Org-capture
+                        :key "C-c C-c"
+                        :description "On heading of Org-captured entry, choose tag")
+        (cheatsheet-add :group 'Org-capture
+                        :key "SPC"
+                        :description "Clear tag selection")
+        (cheatsheet-add :group 'Org-capture
+                        :key "C-c C-r"
+                        :description "my/org-refile-and-jump org-capture-mode-map. Refile a capture and then jump to the new location... Leaves one hanging buffer. I think C-c C-w is better")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c j"
+                        :description "org-clock-goto. jump to current task from anywhere")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c C-x C-e"
+                        :description "org-clock-modify-effort-estimate. Manually set the effort for a particular headline")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c C-x e"
+                        :description "Prompted for an effort estimation")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c C-x C-c"
+                        :description "org-agenda-columns. Turn on org-columns reporting your time use-Quit with q")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c C-x i"
+                        :description "Generate a local column view-Quit with q-Not working!")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c C-x C-i"
+                        :description "org-clock-in. Clock in to the section you're currently in or clock-in to a different task")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c I"
+                        :description "eos/org-clock-in. History of tasks to pick from when I clock in to things")
+        (cheatsheet-add :group 'Org-clock
+                        :key "I"
+                        :description "In org-agenda, clock in highlighted task or clock-in to a different task")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c C-x C-o"
+                        :description "org-clock-out. Clock out of whatever you're clocked in to")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c O"
+                        :description "org-clock-out. Clock out of whatever you're clocked in to")
+        (cheatsheet-add :group 'Org-clock
+                        :key "O"
+                        :description "In org-agenda, clock out of highlighted task")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c C-x C-x"
+                        :description "org-clock-in-last. Clock in to the last clocked task")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c C-x C-j"
+                        :description "org-clock-goto. Jump to whatever headline you are currently clocked in to or to the most recently clocked one")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c C-x C-q"
+                        :description "org-clock-cancel. Cancel the current clock-removes all of its current time ")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c C-x C-d"
+                        :description "org-clock-display. Display clock times for headlines in current file")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c C-x C-r"
+                        :description "org-clock-report. Generate a report for clock activity.NOT WORKING")
+        (cheatsheet-add :group 'Org-clock
+                        :key "C-c C-x C-z"
+                        :description "org-resolve-clocks. Resolve any half-open clocks")
+        (cheatsheet-add :group 'Org-clock
+                        :key "v c"
+                        :description "Show overlapping clock entries, clocking gaps, and other clocking problems in the current agenda range. Use b to go back one day, l to exit")
+        (cheatsheet-add :group 'Org-clock
+                        :key "Fn-Shift-<left><right>"
+                        :description "On date entry will shift the days; On brackets will change them to <>")
+        (cheatsheet-add :group 'Org-clock
+                        :key "Fn-Shift-<up><down>"
+                        :description "On clock entry will shift the time")
+        (cheatsheet-add :group 'Org-latex
+                        :key "C-c C-x C-l"
+                        :description "org-toggle-latex-fragment. C-c C-c to show the equation code")
+        (cheatsheet-add :group 'Org-movement
+                        :key "M-Shift-<up/down>"
+                        :description "org-shiftmetaup. Moves subtree heading BUT not its contents. Drag the line at point up.In a table, kill the current row.On a clock timestamp, update the value of the timestamp like S-<up>")
+        (cheatsheet-add :group 'Org-movement
+                        :key "M-<up><down>"
+                        :description "org-move-subtree-up or -down. On same level, swaps subtree with other subtrees--heading and contents or other subtrees. Same as typing =U/D=")
+        (cheatsheet-add :group 'Org-movement
+                        :key "M-{"
+                        :description "org-backward-element. Move to the previous element at the same level, when possible")
+        (cheatsheet-add :group 'Org-movement
+                        :key "M-}"
+                        :description "org-forward-element. Move to the next element at the same level, when possible")
+        (cheatsheet-add :group 'Org-movement
+                        :key "n"
+                        :description "Place cursor at start of heading, n will move to next heading of any level. C-M-n and C-c C-n do the same")
+        (cheatsheet-add :group 'Org-movement
+                        :key "p"
+                        :description "Place cursor at start of heading, b will move to previous heading. C-M-p and C-c C-p do the same")
+        (cheatsheet-add :group 'Org-movement
+                        :key "avy-org-refile-as-child"
+                        :description "Refiling of Org heading under different heading in same document.")
+        (cheatsheet-add :group 'Org-recipes
+                        :key "C-c i"
+                        :description "Insert raw code under a heading")
+        (cheatsheet-add :group 'Org-Skeleton
+                        :key "M-x article-skeleton"
+                        :description "Inserts a skeleton for Org-export to LaTeX")
+        (cheatsheet-add :group 'Org-Skeleton
+                        :key "M-x beamer-skeleton"
+                        :description "Inserts a  for Org-export to Beamer")
+        (cheatsheet-add :group 'Org-table
+                        :key "M-Shift-<down>"
+                        :description "Insert a new row above the current row. With a prefix argument, the line is created below the current one. Can do the same with C-o")
+        (cheatsheet-add :group 'Org-table
+                        :key "C-c ^-"
+                        :description "org-sort. With cursor on a column, a will short the table alphabetically; n numerically. Capitals reverse sorting")
+        (cheatsheet-add :group 'Org-table
+                        :key "M-Shift-<left>"
+                        :description "Delete column")
+        (cheatsheet-add :group 'Org-table
+                        :key "Shift-TAB"
+                        :description "Re-align, move to previous field-like previous cell")
+        (cheatsheet-add :group 'Org-table
+                        :key "Shift-TAB"
+                        :description "Re-align, move to previous field-like previous cell")
+        (cheatsheet-add :group 'Org-table
+                        :key "TAB"
+                        :description "Re-align the table, move to the next field. Creates a new row if necessary")
+        (cheatsheet-add :group 'Org-timestamps
+                        :key "Shift-<up><down>"
+                        :description "Increment/decrement stamp")
+        (cheatsheet-add :group 'Magit
+                        :key "z w"
+                        :description "magit-stash-worktree. Create a stash of unstaged changes in the working tree")
+        (cheatsheet-add :group 'Magit
+                        :key "z a"
+                        :description "magit-stash-apply. Apply a stash to the working tree but keep the stash.")
+        (cheatsheet-add :group 'Magit
+                        :key "z k"
+                        :description "magit-stash-drop. Remove a stash from the stash list.")
+        (cheatsheet-add :group 'Magit
+                        :key "z p"
+                        :description "magit-stash-pop. Apply a stash to the working tree and remove it from the stash list.")
+        (cheatsheet-add :group 'Magit
+                        :key "%"
+                        :description "magit-worktree. Act on a worktree.")
+        (cheatsheet-add :group 'Magit
+                        :key "f a X h"
+                        :description "Force pull from remote: f a, then move point to remote head, X h")
+        (cheatsheet-add :group 'Magit
+                        :key "v"
+                        :description "magit-reverse. Reverse the change at point, in a hunk of a commit, for example, in the working tree. Prefix causes the change to be applied to the index as well")
+        (cheatsheet-add :group 'Magit
+                        :key "M-n and M-p"
+                        :description "Move thru whole blocks in status buffer.")
+        (cheatsheet-add :group 'Magit
+                        :key "n and p"
+                        :description "Move thru each header, hunks and blocks in status buffer.")
+        (cheatsheet-add :group 'Magit
+                        :key "1, 2, 3, 4"
+                        :description "Local visibility levels from less to more. With Meta it applies globally to all headings.")
+        (cheatsheet-add :group 'Magit
+                        :key "TAB and S-TAB"
+                        :description "Cycle visibility")
+        (cheatsheet-add :group 'Magit
+                        :key "j"
+                        :description "Jump to different sections in the status buffer. C-u j shows all options")
+        (cheatsheet-add :group 'Magit
+                        :key "C-x C-j"
+                        :description "Magit dired jump. Takes me from Magits status buffer to the file in a Dired buffer")
+        (cheatsheet-add :group 'Magit
+                        :key "D"
+                        :description "Diff settings. Opens new buffer with customization choices the - and = signs. Then refresh view with g to see changes")
+        (cheatsheet-add :group 'Magit
+                        :key "d"
+                        :description "Diffs only for the file your cursor is in with customized choices if you want, without changing the view of anything other in the status display. Gets a separate buffer for this diff.")
+        (cheatsheet-add :group 'Magit
+                        :key "d u"
+                        :description "magit-diff-unstaged. Opens a new buffer comparing your working tree changes with respect to the index.")
+        (cheatsheet-add :group 'Magit
+                        :key "d w"
+                        :description "magit-diff-working-tree. Opens a new buffer comparing your working tree changes with respect head.")
+        (cheatsheet-add :group 'Magit
+                        :key "d s"
+                        :description "magit diff staging area. Opens a new buffer comparing your index changes with respect to head.")
+        (cheatsheet-add :group 'Magit
+                        :key "d r"
+                        :description "diff range, for example, origin/master...my-branch. Opens a new buffer comparing your branch and where master was when you branched off, rather than the differences between my branch and current master.")
+        (cheatsheet-add :group 'Magit
+                        :key "- or +"
+                        :description "Reduce or increase context in hunk. With reduction I can split a hunk into two and state only one of them.")
+        (cheatsheet-add :group 'Magit
+                        :key "G"
+                        :description "Refresh all Magit buffes of current repo and revert all unmodified buffers visiting files tracked in the repo.")
+        (cheatsheet-add :group 'Magit
+                        :key "C-c C-t"
+                        :description "You are in a diff. View the history of all the commits that changed a definition from a well-known language.")
+        (cheatsheet-add :group 'Magit
+                        :key "C-c C-e"
+                        :description "You are on a diff, edit thing that is under the cursor. That thing may only live in history and you get there thru rebase. You can stage from there the changes that you make and commit the changes you make in that file that existed no more.")
+        (cheatsheet-add :group 'Magit
+                        :key "E"
+                        :description "View and choose changes in Ediff. With a modified file you see 1st what is on the head of your repo, then on the index, and then on your working tree. From here you can stage and unstage.")
+        (cheatsheet-add :group 'Magit
+                        :key "E u"
+                        :description "magit-ediff-show-unstaged. ediffs the Index and the working tree.")
+        (cheatsheet-add :group 'Magit
+                        :key "E i"
+                        :description "magit-ediff-show-staged. ediffs the HEAD and Index.")
+        (cheatsheet-add :group 'Magit
+                        :key "E w"
+                        :description "magit-ediff-show-working-tree. ediffs the HEAD and the working tree.")
+        (cheatsheet-add :group 'Magit
+                        :key "E E"
+                        :description "magit-ediff-dwim. Ediff Head, Index and Working tree if all three differ.")
+        (cheatsheet-add :group 'Magit
+                        :key "E z"
+                        :description "magit-ediff-show-stash. Show changes to a file introduced by a stash. With many stashes, it compares stashes.")
+        (cheatsheet-add :group 'Pandoc
+                        :key "C-c /"
+                        :description "pandoc-main-hydra/body. Call the body in the pandoc-main-hydra hydra.")
+        (cheatsheet-add :group 'Packages
+                        :key "M-x try"
+                        :description "Try a package before installing for good")
+        (cheatsheet-add :group 'Password
+                        :key "M-x password-store"
+                        :description "password-store")
+        (cheatsheet-add :group 'Password
+                        :key "M-x helm-pass"
+                        :description "helm-pass")
+        (cheatsheet-add :group 'Password
+                        :key "C-x #"
+                        :description "Save and exit")
+        (cheatsheet-add :group 'Password-Ivy
+                        :key "M-i"
+                        :description "Select entry in Ivy-Pass")
+        (cheatsheet-add :group 'Password-Ivy
+                        :key "RET"
+                        :description "Copy password in kill ring")
+        (cheatsheet-add :group 'Pdf-Tools
+                        :key "SPC"
+                        :description "pdf-view-scroll-up-or-next-page. Move down in a page.")
+        (cheatsheet-add :group 'Pdf-Tools
+                        :key "DEL"
+                        :description "pdf-view-scroll-down-or-previous-page. Move up in a page.")
+        (cheatsheet-add :group 'Pdf-Tools
+                        :key "n"
+                        :description "pdf-view-next-page-command. View the previous page in the PDF.")
+        (cheatsheet-add :group 'Pdf-Tools
+                        :key "o"
+                        :description "pdf-outline")
+        (cheatsheet-add :group 'Pdf-Tools
+                        :key "p"
+                        :description "pdf-view-previous-page-command. View the previous page in the PDF.")
+        (cheatsheet-add :group 'Polymode
+                        :key "M-n"
+                        :description "Polymode prefix")
+        (cheatsheet-add :group 'Polymode
+                        :key "M-n E"
+                        :description "polymode-set-exporter. Normally I choose markdown-ess")
+        (cheatsheet-add :group 'Polymode
+                        :key "M-n e"
+                        :description "polymode-export. Export current file. When FROM or TO are missing they are determined automatically from the current exporters specifications and files extension.")
+        (cheatsheet-add :group 'Prefixes
+                        :key "C-x r"
+                        :description "Registers and bookmarks")
+        (cheatsheet-add :group 'Prefixes
+                        :key "C-c"
+                        :description "Org commands")
+        (cheatsheet-add :group 'Projectile
+                        :key "s-h"
+                        :description "helm-projectile: select project and buffers/files")
+        (cheatsheet-add :group 'Projectile
+                        :key "s-j"
+                        :description "helm-projectile-find-file: Powerful P session for file management")
+        (cheatsheet-add :group 'Python
+                        :key "M-x run-python"
+                        :description "Launch iPython")
+        (cheatsheet-add :group 'Reading
+                        :key "xah-toggle-margin-right"
+                        :description "For reading novel or documentation: Toggle right margin")
+        (cheatsheet-add :group 'Redshift
+                        :key "C-\("
+                        :description "Redshift on. If repeated, intensity increases")
+        (cheatsheet-add :group 'Redshift
+                        :key "C-\)"
+                        :description "Redshift off")
+        (cheatsheet-add :group 'Rectangle-editing
+                        :key "C-x r k"
+                        :description "kill-rectangle")
+        (cheatsheet-add :group 'RefTeX
+                        :key "C-c -"
+                        :description "reftex-toc-recenter. Display the TOC window and highlight line corresponding to current position.")    
+    (cheatsheet-add :group 'RefTeX
+                        :key "C-c ="
+                        :description "reftex-toc. Shows a table of contents. Press ? to get help.")
+        (cheatsheet-add :group 'RefTeX
+                        :key "C-c ("
+                        :description "reftex-label. Inserts a label at point.")
+        (cheatsheet-add :group 'RefTeX
+                        :key "C-c )"
+                        :description "reftex-reference. Makes a reference.Shows an outline with all labels of a certain type and some context.")
+        (cheatsheet-add :group 'RefTeX
+                        :key "C-c ["
+                        :description "reftex-label. Asks for a regexp to search BibTeX file.")
+        (cheatsheet-add :group 'RefTeX
+                        :key "C-c \\"
+                        :description "reftex-index-phrase-selection-or-word. Add current selection or word at point to the phrases buffer. Don't know what is this but seems interesting")
+        (cheatsheet-add :group 'Register
+                        :key "s-x"
+                        :description "helm-register. Then TAB or RET to insert. Equivalent to C-x r i")
+        (cheatsheet-add :group 'Replace
+                        :key "C-c s"
+                        :description "vr/replace. Global replacement by dynamically building regular expressions")
+        (cheatsheet-add :group 'Replace
+                        :key "C-c q"
+                        :description "vr/query-replace. Decide to replace per match by dynamically building regular expressions")
+        (cheatsheet-add :group 'Replace
+                        :key "M-%"
+                        :description "anzu-query-replace")
+        (cheatsheet-add :group 'Replace
+                        :key "C-M-%"
+                        :description "anzu-query-replace-regexp")
+        (cheatsheet-add :group 'Revert
+                        :key "C-c r"
+                        :description "Replace buffer text visited file on disk. C-u offers to revert from latest auto-save file")
+        (cheatsheet-add :group 'Scratch
+                        :key "s-^"
+                        :description "M-x scratch. With C-u s-^ you choose mode, otherwise current mode is used")
+        (cheatsheet-add :group 'Search
+                        :key "C-u C-r AND C-M r"
+                        :description "isearch-backward. Do incremental search backward.")
+        (cheatsheet-add :group 'Security
+                        :key "s-_"
+                        :description "daedreth/lock-screen")
+        (cheatsheet-add :group 'Shell
+                        :key "C-x m"
+                        :description "Open eshell")
+        (cheatsheet-add :group 'Shell
+                        :key "C-x M"
+                        :description "Open eshell even if one is active")
+        (cheatsheet-add :group 'Shell
+                        :key "M-e"
+                        :description "Open Eshell when in P session")
+        (cheatsheet-add :group 'Shell
+                        :key "C-c C-l"
+                        :description "comint-dynamic-list-input-ring.  Display the buffer's history of shell commands in another window")
+        (cheatsheet-add :group 'Spelling
+                        :key "C-M-$"
+                        :description "Change dictionary")
+        (cheatsheet-add :group 'Spelling
+                        :key "M-$"
+                        :description "Spellcheck word or region")
+        (cheatsheet-add :group 'Spelling
+                        :key "C-\""
+                        :description "endless/ispell-word-then-abbrev. Call ispell-word, then create an abbrev for it.")
+        (cheatsheet-add :group 'System
+                        :key "s-t"
+                        :description "helm-top for TOP program to display Linux processes")
+        (cheatsheet-add :group 'System
+                        :key "\(process-list\)"
+                        :description "Return a list of all processes that are Emacs sub-processes.")
+        (cheatsheet-add :group 'Typing
+                        :key "M-x typing-of-emacs"
+                        :description "Practise typing")
+        (cheatsheet-add :group 'Typing
+                        :key "my/org-entry-wpm"
+                        :description "Curious about how fast I type. Works under Org tree")
+        (cheatsheet-add :group 'Undo-Propose
+                        :key "M-x undo-propose"
+                        :description "Cycle through the list of undo's as normal in a new temporary buffer")
+        (cheatsheet-add :group 'Undo-Propose
+                        :key "C-c C-c"
+                        :description "Add the chain of undo's as a single edit to the undo history")
+        (cheatsheet-add :group 'Undo-Propose
+                        :key "C-c C-d"
+                        :description "Ediff the proposed chain of undo's")
+        (cheatsheet-add :group 'Undo-Propose
+                        :key "C-c C-k"
+                        :description "Cancel undo-propose")
+        (cheatsheet-add :group 'Undo-Tree
+                        :key "C-z"
+                        :description "undo-tree-undo: Undo changes. C-u limits it to current region")
+        (cheatsheet-add :group 'Undo-Tree
+                        :key "C-x u"
+                        :description "undo-tree-visualize: undo. Visualize the current buffer's undo tree")
+        (cheatsheet-add :group 'Utilities
+                        :key "s-c"
+                        :description "calendar")
+        (cheatsheet-add :group 'Weather
+                        :key "M-x forecast"
+                        :description "forecast package")
+        (cheatsheet-add :group 'Weather
+                        :key "M-x wttrin"
+                        :description "forecast package with drawings")
+        (cheatsheet-add :group 'Weather
+                        :key "M-x sunrise-sunset"
+                        :description "Shows times for sunrise and sunset in minibuffer. More settings in dgm.org")
+        (cheatsheet-add :group 'Windows
+                        :key "C-x 1"
+                        :description "zygospore-toggle-delete-other-windows RET: lets you revert C-x 1-delete-other-window-by pressing C-x 1 again")
+        (cheatsheet-add :group 'Windows
+                        :key "C-x 4 c"
+                        :description "clone-indirect-buffer-other-window. Splits buffer in two and makes them independent")
+        (cheatsheet-add :group 'Windows
+                        :key "M-P"
+                        :description "ace-window")
+        (cheatsheet-add :group 'Windows
+                        :key "C-x 2"
+                        :description "Vertical split windows and move to new window")
+        (cheatsheet-add :group 'Windows
+                        :key "C-x 3"
+                        :description "Horizontal split windows and move to new window")
+        (cheatsheet-add :group 'Windows
+                        :key "s-z"
+                        :description "ambrevar/toggle-window-split: Transpose windows")
+        (cheatsheet-add :group 'Windows
+                        :key "s-;"
+                        :description "Rotate windows")
+        (cheatsheet-add :group 'Windows
+                        :key "s-M-<left>"
+                        :description "shrink-window-horizontally")
+        (cheatsheet-add :group 'Windows
+                        :key "s-M-<right>"
+                        :description "enlarge-window-horizontally")
+        (cheatsheet-add :group 'Windows
+                        :key "s-M-<down>"
+                        :description "shrink-window")
+        (cheatsheet-add :group 'Windows
+                        :key "s-M-<up>"
+                        :description "enlarge-window")
+        (cheatsheet-add :group 'Windows
+                        :key "C-c <left>"
+                        :description "winner-undo: Switch back to earlier window config; undo changes in window config")
+        (cheatsheet-add :group 'Windows
+                        :key "C-c <right> or <down>"
+                        :description "winner-redo: Restore a more recent window configuration saved by Winner mode")
+        (cheatsheet-add :group 'Window-Movement
+                        :key "s-<left>"
+                        :description "windmove-left")
+        (cheatsheet-add :group 'Window-Movement
+                        :key "s-<right>"
+                        :description "windmove-right")
+        (cheatsheet-add :group 'Window-Movement
+                        :key "s-<up>"
+                        :description "windmove-up")
+        (cheatsheet-add :group 'Window-Movement
+                        :key "s-<down>"
+                        :description "windmove-down")
+        :bind ("s-[" . cheatsheet-show)
+        )
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24247 45488 779593 862000) :init (24247 45488 779555 444000) :init-secs (0 0 14 801000) :use-package-secs (0 0 91 2000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24274 30781 164 433000) :init (24274 30781 103 735000) :init-secs (0 0 22 536000) :use-package-secs (0 0 150 27000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
@@ -7392,6 +7402,18 @@ Now I'm going to try and activate it only in text and programming modes (see htt
 
   (add-hook 'ess-stata-mode-hook 'turn-on-visual-line-mode)
   (add-hook 'ess-stata-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'ledger-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'ledger-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'emacs-lisp-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'emacs-lisp-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'lisp-interaction-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'lisp-interaction-mode-hook 'visual-fill-column-mode)
+ 
+  (add-hook 'ielm-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'ielm-mode-hook 'visual-fill-column-mode)
 
 ;; don't show bent arrows
   (setq visual-line-fringe-indicators '(nil nil))

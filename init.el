@@ -7,6 +7,38 @@
 ;; This is the first thing to get loaded.
 
 
+;;,-----------------------------
+;;| Technomancy's recommendation
+;;`-----------------------------
+
+;; This avoids many
+;; [common](https://glyph.twistedmatrix.com/2015/11/editor-malware.html)
+;; [problems](https://github.com/melpa/melpa/issues/2342) with `package.el`, and
+;; it allows you to seamlessly roll back upgrades which introduce breaking
+;; changes as well as guaranteeing that all machines you work on share the same
+;; versions.
+
+;; (defun pnh-reinit-libs ()
+;;   (interactive)
+;;   (let ((generated-autoload-file (concat user-emacs-directory "my-autoload.el")))
+;;     (dolist (d (directory-files (concat user-emacs-directory "lib") t "^[^\.]"))
+;;       (dolist (f (directory-files d t "\\.el$"))
+;;         (byte-compile-file f))
+;;       (update-directory-autoloads d))))
+
+;; (dolist (l (directory-files (concat user-emacs-directory "lib") nil "^[^\.]"))
+;;   (add-to-list 'load-path (concat user-emacs-directory "lib/" l))
+;;   (autoload (intern l) (concat l ".el")))
+
+;; (when (not (file-exists-p (concat user-emacs-directory "my-autoload.el")))
+;;   (pnh-reinit-libs))
+
+;; (load (concat user-emacs-directory "my-autoload.el"))
+
+
+;; DGM: I've commented out because I've created the "lib" directory BUT I don't know what is meant to be in the
+;; "my-autoload.el" file
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; John Wiegley's setup tweaked
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

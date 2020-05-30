@@ -274,6 +274,7 @@ Note by dgm on 16 sept 2018: I'm trying to use =exwm= so I am not going to use m
 #+RESULTS: starter-kit-no-menu-in-tty
 
 ** Save place last visited in buffer
+The `saveplace` library saves the location of the point when you kill a buffer and returns to it next time you visit the associated file
 
 #+srcname: starter-kit-saveplace
 #+begin_src emacs-lisp :tangle yes

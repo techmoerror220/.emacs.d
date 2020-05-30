@@ -29,6 +29,18 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23591 16504 904146 174000) :init (23591 16504 904134 645000) :config (23591 16504 904107 391000) :config-secs (0 0 27 37000) :init-secs (0 0 4442 159000) :use-package-secs (0 0 4784 315000)))
 
+** Eldoc and Par Edit
+- https://www.emacswiki.org/emacs/ParEdit
+
+#+begin_src emacs-lisp
+    (require 'eldoc) ; if not already loaded
+    (eldoc-add-command
+     'paredit-backward-delete
+     'paredit-close-round)
+#+end_src
+
+#+RESULTS:
+
 ** Define keys
 #+srcname: starter-kit-define-lisp-keys
 #+begin_src emacs-lisp 
