@@ -5,6 +5,7 @@
 ;;         ono hiroko (kuanyui) <azazabc123@gmail.com>
 ;; Version: 0.2.0
 ;; Package-Version: 20170614.1206
+;; Package-Commit: df5427ce2a5ad4dab652dbb1c4a1834d7ddc2abc
 ;; Package-Requires: ((emacs "24.4") (xterm-color "1.0"))
 ;; Keywords: comm, weather, wttrin
 ;; URL: https://github.com/bcbcarl/emacs-wttrin
@@ -34,9 +35,13 @@
   :type '(list)
   )
 
+;; Fixing this as told here: https://github.com/bcbcarl/emacs-wttrin/issues/16
+;; (defun wttrin-fetch-raw-string (query)
+;;   "Get the weather information based on your QUERY."
+;;   (let ((url-request-extra-headers '(("User-Agent" . "curl"))))
 (defun wttrin-fetch-raw-string (query)
   "Get the weather information based on your QUERY."
-  (let ((url-request-extra-headers '(("User-Agent" . "curl"))))
+  (let ((url-user-agent "curl"))
     (add-to-list 'url-request-extra-headers wttrin-default-accept-language)
     (with-current-buffer
         (url-retrieve-synchronously

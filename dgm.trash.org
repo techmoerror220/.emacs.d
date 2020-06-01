@@ -1,0 +1,127 @@
+*** Pragmatic Emacs alternative with =wttrin=
+The only problem is that if the Emacs frame is not wide enough and the lines in the wttrin buffer wrap, it becomes unreadable.
+
+My solution is to save the window and frame configuration, then resize the frame to be big enough for the wttrin buffer. The previous configuration is then restored when exiting wttrin. These functions take care of that for us:
+
+Disabled by DGM as it makes wttrin fail to work.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;;advise wttrin to save frame arrangement
+  ;;requires frame-cmds package
+  (defun bjm/wttrin-save-frame ()
+    "Save frame and window configuration and then expand frame for wttrin."
+    ;;save window arrangement to a register
+    (window-configuration-to-register :pre-wttrin)
+    (delete-other-windows)
+    ;;save frame setup and resize
+    (save-frame-config)
+    (set-frame-width (selected-frame) 130)
+    (set-frame-height (selected-frame) 48)
+    )
+  (advice-add 'wttrin :before #'bjm/wttrin-save-frame)
+
+  (defun bjm/wttrin-restore-frame ()
+    "Restore frame and window configuration saved prior to launching wttrin."
+    (interactive)
+    (jump-to-frame-config-register)
+    (jump-to-register :pre-wttrin)
+    )
+  (advice-add 'wttrin-exit :after #'bjm/wttrin-restore-frame)
+#+END_SRC
+
+#+RESULTS:
+
+**** Update: open wttrin with default city
+
+By default wttrin prompts you to chose the city from your list when it starts. This function starts wttrin with the first city on your list. You can always change this by hitting =g=.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; function to open wttrin with first city on list
+  (defun bjm/wttrin ()
+    "Open `wttrin' without prompting, using first city in `wttrin-default-cities'"
+    (interactive)
+    ;; save window arrangement to register
+    (window-configuration-to-register :pre-wttrin)
+    (delete-other-windows)
+    ;; save frame setup
+    (save-frame-config)
+    (set-frame-width (selected-frame) 130)
+    (set-frame-height (selected-frame) 48)
+    ;; call wttrin
+    (wttrin-query (car wttrin-default-cities))
+    )
+#+END_SRC
+
+#+RESULTS:
+: bjm/wttrin
+
+
+**** Update: open wttrin with default city
+
+By default wttrin prompts you to chose the city from your list when it starts. This function starts wttrin with the first city on your list. You can always change this by hitting =g=.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; function to open wttrin with first city on list
+  (defun bjm/wttrin ()
+    "Open `wttrin' without prompting, using first city in `wttrin-default-cities'"
+    (interactive)
+    ;; save window arrangement to register
+    (window-configuration-to-register :pre-wttrin)
+    (delete-other-windows)
+    ;; save frame setup
+    (save-frame-config)
+    (set-frame-width (selected-frame) 130)
+    (set-frame-height (selected-frame) 48)
+    ;; call wttrin
+    (wttrin-query (car wttrin-default-cities))
+    )
+#+END_SRC
+
+#+RESULTS:
+: bjm/wttrin
+
+
+** NOAA
+- https://github.com/thomp/noaa
+
+#+begin_src emacs-lisp :tangle no
+(use-package noaa)
+
+;; set latitude and longitude for noaa.el
+(setq noaa-latitude 40.4)
+(setq noaa-longitude -3.7)
+#+end_src
+
+#+RESULTS:
+: -3.7
+
+** Sunshine
+
+No me funciona
+#+begin_src emacs-lisp :tangle no
+  (use-package sunshine
+    :ensure t
+    :commands (bnb/get-forecast-data)
+    :config
+    (defun bnb/get-forecast-data (b e)
+      (let* ((url (sunshine-make-url sunshine-location sunshine-units sunshine-appid))
+             (forecast (if (sunshine-forecast-cache-expired url)
+                           (with-current-buffer (url-retrieve-synchronously url)
+                             (goto-char (point-min))
+                             (sunshine-extract-response))
+                         (with-temp-buffer
+                           (mm-disable-multibyte)
+                           (url-cache-extract (url-cache-create-filename url))
+                           (sunshine-extract-response)))))
+        (cl-loop for day across (cdr (assoc 'list forecast)) collect
+                 (make-cfw:event
+                  :title (format "%s/%s°, %s"
+                                 (round (cdr (assoc 'min (cdr (assoc 'temp day)))))
+                                 (round (cdr (assoc 'max (cdr (assoc 'temp day)))))
+                                 (cdr (assoc 'main (elt (cdr (assoc 'weather day)) 0))))
+                  :start-date (cfw:emacs-to-calendar (seconds-to-time (cdr (assoc 'dt day)))))))))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24275 52106 222610 708000) :init (24275 52106 222591 880000) :init-secs (0 0 105 286000) :use-package-secs (0 1 651141 160000)))
+

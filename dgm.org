@@ -3866,198 +3866,6 @@ http://emacsredux.com/blog/2013/03/27/copy-filename-to-the-clipboard/ https://gi
   (use-package edit-list :commands edit-list)
 #+END_SRC
 
-** Weather forecast
-
-Sacha has this but it doesn't work because it doesn't interpret my latitude and longitude as numbers.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package forecast
-    :config
-    (setq forecast-latitude  40.4
-          forecast-longitude -3.7
-          forecast-city "Madrid"
-          forecast-country "Spain"
-          forecast-api-key "b580b82a056cdb3f6089f08ece4b2eb6"
-          )
-    )
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23735 33070 905741 448000) :init (23735 33070 905733 834000) :config (23735 33070 905590 741000) :config-secs (0 0 254 799000) :init-secs (0 0 543 959000) :use-package-secs (0 0 599 374000)))
-
-** Sunrise/sunset
-
-Special calendar commands can tell you, to within a minute or two, the times of sunrise
-and sunset for any date.
-
-mouse-3 Sunrise/sunset
-S
-Display times of sunrise and sunset for the selected date (calendar-sunrise-sunset).
-=M-x sunrise-sunset=
-Display times of sunrise and sunset for today's date.
-=C-u M-x sunrise-sunset=
-Display times of sunrise and sunset for a specified date.
-=M-x calendar-sunrise-sunset-month=
-Display times of sunrise and sunset for the selected month.
-
-Within the calendar, to display the local times of sunrise and sunset in the echo area,
-move point to the date you want, and type S. Alternatively, click mouse-3 on the date,
-then choose ‘Sunrise/sunset’ from the menu that appears. The command M-x
-sunrise-sunset is available outside the calendar to display this information for today's
-date or a specified date. To specify a date other than today, use C-u M-x
-sunrise-sunset, which prompts for the year, month, and day.
-
-You can display the times of sunrise and sunset for any location and any date with C-u
-=C-u M-x sunrise-sunset=. This asks you for a longitude, latitude, number of minutes
-difference from Coordinated Universal Time, and date, and then tells you the times of
-sunrise and sunset for that location on that date.
-
-Because the times of sunrise and sunset depend on the location on earth, you need to tell Emacs your latitude, longitude, and location name before using these commands.
-
-Here is an example of what to set:
-
-#+BEGIN_EXAMPLE
-     (setq calendar-latitude 40.1)
-     (setq calendar-longitude -88.2)
-     (setq calendar-location-name "Urbana, IL")
-#+END_EXAMPLE
-
-Use one decimal place in the values of calendar-latitude and calendar-longitude.
-
-Your time zone also affects the local time of sunrise and sunset. Emacs usually gets time zone information from the operating system, but if these values are not what you want (or if the operating system does not supply them), you must set them yourself. Here is an example:
-
-#+BEGIN_EXAMPLE
-     (setq calendar-time-zone -360)
-     (setq calendar-standard-time-zone-name "CST")
-     (setq calendar-daylight-time-zone-name "CDT")
-#+END_EXAMPLE
-
-The value of calendar-time-zone is the number of minutes difference between your
-local standard time and Coordinated Universal Time (Greenwich time). The values of
-calendar-standard-time-zone-name and calendar-daylight-time-zone-name are the
-abbreviations used in your time zone. Emacs displays the times of sunrise and sunset corrected for daylight saving time. See Daylight Saving, for how daylight saving time is determined.
-
-As a user, you might find it convenient to set the calendar location variables for your usual physical location in your .emacs file. If you are a system administrator, you may want to set these variables for all users in a default.el file. See Init File.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq calendar-latitude 40.4)
-  (setq calendar-longitude -3.7)
-  (setq calendar-location-name "Madrid, Spain")
-#+END_SRC
-
-#+RESULTS:
-: Madrid, Spain
-
-*** Pragmatic Emacs alternative
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package wttrin
-    :ensure t
-    :commands (wttrin)
-    :init
-    (setq wttrin-default-cities '("Madrid"
-                                  "Fuengirola"
-                                  "Malaga")))
-
-  (setq wttrin-default-accept-language '("Accept-Language" . "en-US"))
-#+END_SRC
-
-#+RESULTS:
-: (Accept-Language . en-US)
-
-The only problem is that if the Emacs frame is not wide enough and the lines in the wttrin buffer wrap, it becomes unreadable.
-
-My solution is to save the window and frame configuration, then resize the frame to be big enough for the wttrin buffer. The previous configuration is then restored when exiting wttrin. These functions take care of that for us:
-
-Disabled by DGM as it makes wttrin fail to work.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  ;;advise wttrin to save frame arrangement
-  ;;requires frame-cmds package
-  (defun bjm/wttrin-save-frame ()
-    "Save frame and window configuration and then expand frame for wttrin."
-    ;;save window arrangement to a register
-    (window-configuration-to-register :pre-wttrin)
-    (delete-other-windows)
-    ;;save frame setup and resize
-    (save-frame-config)
-    (set-frame-width (selected-frame) 130)
-    (set-frame-height (selected-frame) 48)
-    )
-  (advice-add 'wttrin :before #'bjm/wttrin-save-frame)
-
-  (defun bjm/wttrin-restore-frame ()
-    "Restore frame and window configuration saved prior to launching wttrin."
-    (interactive)
-    (jump-to-frame-config-register)
-    (jump-to-register :pre-wttrin)
-    )
-  (advice-add 'wttrin-exit :after #'bjm/wttrin-restore-frame)
-#+END_SRC
-
-#+RESULTS:
-
-**** Update: open wttrin with default city
-
-By default wttrin prompts you to chose the city from your list when it starts. This function starts wttrin with the first city on your list. You can always change this by hitting =g=.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; function to open wttrin with first city on list
-  (defun bjm/wttrin ()
-    "Open `wttrin' without prompting, using first city in `wttrin-default-cities'"
-    (interactive)
-    ;; save window arrangement to register
-    (window-configuration-to-register :pre-wttrin)
-    (delete-other-windows)
-    ;; save frame setup
-    (save-frame-config)
-    (set-frame-width (selected-frame) 130)
-    (set-frame-height (selected-frame) 48)
-    ;; call wttrin
-    (wttrin-query (car wttrin-default-cities))
-    )
-#+END_SRC
-
-#+RESULTS:
-: bjm/wttrin
-
-
-** Typing of Emacs
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package typing
-    :init
-    (autoload 'typing-of-emacs "typing" nil t)
-    :config
-    (progn
-      (setq toe-starting-length 6)
-      (setq toe-starting-time-per-word 2)
-      (setq toe-max-length 20)))
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23592 62164 535459 40000) :init (23592 62164 535445 976000) :config (23592 62164 535242 82000) :config-secs (0 0 354 294000) :init-secs (0 0 5340 661000) :use-package-secs (0 9 443861 775000)))
-
-** Sentences end with a single space
-
-In my world, sentences end with a single space. This makes sentence navigation commands work for me.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq sentence-end-double-space nil)
-#+END_SRC
-
-** Killing text
-
-From https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (defadvice kill-region (before slick-cut activate compile)
-    "When called interactively with no active region, kill a single line instead."
-    (interactive
-     (if mark-active (list (region-beginning) (region-end))
-       (list (line-beginning-position)
-             (line-beginning-position 2)))))
-#+END_SRC
 
 ** Help - guide-key
 
@@ -7517,6 +7325,136 @@ Read: https://emacsnotes.wordpress.com/2018/06/01/a-finger-typer-makes-a-horribl
 #+begin_src emacs-lisp :tangle yes
 (scroll-bar-mode -1)
 #+end_src
+
+* Weather forecast
+** Weather forecast
+
+Sacha has this but it doesn't work because it doesn't interpret my latitude and longitude as numbers.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package forecast
+    :config
+    (setq forecast-latitude  40.4
+          forecast-longitude -3.7
+          forecast-city "Madrid"
+          forecast-country "Spain"
+          forecast-api-key "b580b82a056cdb3f6089f08ece4b2eb6"
+          )
+    )
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23735 33070 905741 448000) :init (23735 33070 905733 834000) :config (23735 33070 905590 741000) :config-secs (0 0 254 799000) :init-secs (0 0 543 959000) :use-package-secs (0 0 599 374000)))
+
+** Sunrise/sunset
+
+Special calendar commands can tell you, to within a minute or two, the times of sunrise and sunset for any date.
+
+mouse-3 Sunrise/sunset
+S
+Display times of sunrise and sunset for the selected date (calendar-sunrise-sunset).
+=M-x sunrise-sunset=
+Display times of sunrise and sunset for today's date.
+=C-u M-x sunrise-sunset=
+Display times of sunrise and sunset for a specified date.
+=M-x calendar-sunrise-sunset-month=
+Display times of sunrise and sunset for the selected month.
+
+Within the calendar, to display the local times of sunrise and sunset in the echo area, move point to the date you want, and type S. Alternatively, click mouse-3 on the date, then choose ‘Sunrise/sunset’ from the menu that appears. The command =M-x sunrise-sunset= is available outside the calendar to display this information for today's date or a specified date. To specify a date other than today, use =C-u M-x sunrise-sunset=, which prompts for the year, month, and day.
+
+You can display the times of sunrise and sunset for any location and any date with =C-u=: =C-u M-x sunrise-sunset=. This asks you for a longitude, latitude, number of minutes difference from Coordinated Universal Time, and date, and then tells you the times of sunrise and sunset for that location on that date.
+
+Because the times of sunrise and sunset depend on the location on earth, you need to tell Emacs your latitude, longitude, and location name before using these commands.
+
+Here is an example of what to set:
+
+#+BEGIN_EXAMPLE
+     (setq calendar-latitude 40.1)
+     (setq calendar-longitude -88.2)
+     (setq calendar-location-name "Urbana, IL")
+#+END_EXAMPLE
+
+Use one decimal place in the values of calendar-latitude and calendar-longitude.
+
+Your time zone also affects the local time of sunrise and sunset. Emacs usually gets time zone information from the operating system, but if these values are not what you want (or if the operating system does not supply them), you must set them yourself. Here is an example:
+
+#+BEGIN_EXAMPLE
+     (setq calendar-time-zone -360)
+     (setq calendar-standard-time-zone-name "CST")
+     (setq calendar-daylight-time-zone-name "CDT")
+#+END_EXAMPLE
+
+The value of calendar-time-zone is the number of minutes difference between your
+local standard time and Coordinated Universal Time (Greenwich time). The values of
+calendar-standard-time-zone-name and calendar-daylight-time-zone-name are the
+abbreviations used in your time zone. Emacs displays the times of sunrise and sunset corrected for daylight saving time. See Daylight Saving, for how daylight saving time is determined.
+
+As a user, you might find it convenient to set the calendar location variables for your usual physical location in your .emacs file. If you are a system administrator, you may want to set these variables for all users in a default.el file. See Init File.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq calendar-latitude 40.4)
+  (setq calendar-longitude -3.7)
+  (setq calendar-location-name "Madrid, Spain")
+#+END_SRC
+
+#+RESULTS:
+: Madrid, Spain
+
+** Wttrin
+
+- Check out fix here: 
+https://github.com/bcbcarl/emacs-wttrin/issues/16
+
+Step by step clarification, in case someone else like me finds this:
+
+- Go to the directory where your packages are kept (mine are under ~/.emacs.d/elpa/wttrin*
+- Edit the wttrin.el as emacle wrote above, replacing the line (let ((url-request-extra-headers...) with the (let ((url-user agent...) statement.
+move or delete the file that ends in .elc:
+
+#+BEGIN_EXAMPLE
+(defun wttrin-fetch-raw-string (query)
+  "Get the weather information based on your QUERY."
+  (let ((url-request-extra-headers '(("User-Agent" . "curl"))))
+#+END_EXAMPLE
+
+change to:
+
+#+BEGIN_EXAMPLE
+(defun wttrin-fetch-raw-string (query)
+  "Get the weather information based on your QUERY."	
+ (let ((url-user-agent "curl"))
+#+END_EXAMPLE
+
+
+- If you're using use-package for your config, just relaunch emacs. There are probably other ways, but was the easiest for me. It will recreate the .elc file that you moved/deleted using the newly modified .el file.
+Thank you for the fix emacle!
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package wttrin
+    :ensure t
+    :commands (wttrin)
+    :init
+    (setq wttrin-default-cities '("Madrid"
+                                  "Fuengirola"
+                                  "Malaga")))
+
+  (setq wttrin-default-accept-language '("Accept-Language" . "en-US"))
+#+END_SRC
+
+#+RESULTS:
+: (Accept-Language . en-US)
+
+
+** Metar
+Este es minimalista y funciona bien. 
+
+#+begin_src emacs-lisp :tangle yes
+(use-package metar)
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24275 51905 88336 730000) :init (24275 51905 88321 152000) :config (24275 51905 88091 385000) :config-secs (0 0 9 83000) :init-secs (0 0 109760 320000) :use-package-secs (0 1 398261 112000)))
+
 
 * Provide
 

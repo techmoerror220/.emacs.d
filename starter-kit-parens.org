@@ -335,7 +335,7 @@ respectively."
  ("C-<backspace>" . sp-backward-kill-word)
  ([remap sp-backward-kill-word] . backward-kill-word)
 
- ("M-[" . sp-backward-unwrap-sexp)
+ ("M-[" . sp-backward-unwrap-sexp)p
  ("M-]" . sp-unwrap-sexp)
 
  ("C-x C-t" . sp-transpose-hybrid-sexp)
@@ -732,70 +732,6 @@ His examples are:
 #+END_EXAMPLE
 
 
-** Extreme barfarge and slurpage by John Wiegly
-- https://www.emacswiki.org/emacs/ParEdit
-
-#+begin_src emacs-lisp :tangle yes
-  (defun paredit-barf-all-the-way-backward ()
-    (interactive)
-    (paredit-split-sexp)
-    (paredit-backward-down)
-    (paredit-splice-sexp))
-  (defun paredit-barf-all-the-way-forward ()
-    (interactive)
-    (paredit-split-sexp)
-    (paredit-forward-down)
-    (paredit-splice-sexp)
-    (if (eolp) (delete-horizontal-space)))
-  (defun paredit-slurp-all-the-way-backward ()
-    (interactive)
-    (catch 'done
-      (while (not (bobp))
-        (save-excursion
-          (paredit-backward-up)
-          (if (eq (char-before) ?\()
-              (throw 'done t)))
-        (paredit-backward-slurp-sexp))))
-  (defun paredit-slurp-all-the-way-forward ()
-    (interactive)
-    (catch 'done
-      (while (not (eobp))
-        (save-excursion
-          (paredit-forward-up)
-          (if (eq (char-after) ?\))
-              (throw 'done t)))
-        (paredit-forward-slurp-sexp))))
-  (nconc paredit-commands
-         '("Extreme Barfage & Slurpage"
-           (("C-M-)")
-                        paredit-slurp-all-the-way-forward
-                        ("(foo (bar |baz) quux zot)"
-                         "(foo (bar |baz quux zot))")
-                        ("(a b ((c| d)) e f)"
-                         "(a b ((c| d)) e f)"))
-           (("C-M-}" "M-F")
-                        paredit-barf-all-the-way-forward
-                        ("(foo (bar |baz quux) zot)"
-                         "(foo (bar|) baz quux zot)"))
-           (("C-M-(")
-                        paredit-slurp-all-the-way-backward
-                        ("(foo bar (baz| quux) zot)"
-                         "((foo bar baz| quux) zot)")
-                        ("(a b ((c| d)) e f)"
-                         "(a b ((c| d)) e f)"))
-           (("C-M-{" "M-B")
-                        paredit-barf-all-the-way-backward
-                        ("(foo (bar baz |quux) zot)"
-                         "(foo bar baz (|quux) zot)"))))
-  (paredit-define-keys)
-  (paredit-annotate-mode-with-examples)
-  (paredit-annotate-functions-with-examples)
-#+end_src
-
-#+RESULTS:
-
-
- 
 ** Costumization 
 DGM: I took this out
     
@@ -823,26 +759,27 @@ Note:
     (add-hook 'inferior-ess-mode-hook     #'enable-paredit-mode)
     (add-hook 'ess-stata-mode-hook        #'enable-paredit-mode)
     (add-hook 'ledger-mode-hook           #'enable-paredit-mode) 
+
+
+    (add-hook 'org-mode-hook              'paredit-mode)
+    (add-hook 'latex-mode-hook            'paredit-mode)
+    (add-hook 'TeX-mode-hook              'paredit-mode)
 #+END_EXAMPLE
 
-Doesn't work. 
+Doesn't work.  
    
 #+begin_src emacs-lisp :tangle yes
   (use-package paredit
     :ensure t
     :config
     (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-    ;; above seems not to work. I try as follows
+    (add-hook 'prog-mode-hook             'paredit-mode)
     (add-hook 'emacs-lisp-mode-hook       'paredit-mode)
     (add-hook 'eval-expression-minibuffer-setup-hook 'paredit-mode)
     (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
     (add-hook 'ielm-mode-hook             'paredit-mode)
     (add-hook 'lisp-mode-hook             'paredit-mode)
     (add-hook 'scheme-mode-hook           'paredit-mode)
-    (add-hook 'prog-mode-hook             'paredit-mode)
-    (add-hook 'org-mode-hook              'enable-paredit-mode)
-    (add-hook 'latex-mode-hook            'paredit-mode)
-    (add-hook 'TeX-mode-hook              'paredit-mode)
     (add-hook 'ado-mode-hook              'paredit-mode)
     (add-hook 'ess-mode-hook              'paredit-mode)
     (add-hook 'inferior-ess-mode-hook     'paredit-mode)
@@ -865,6 +802,81 @@ Alternative from: http://wikemacs.org/wiki/Paredit-mode
 (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
 (add-hook 'scheme-mode-hook           'enable-paredit-mode)
 #+END_EXAMPLE
+
+
+** Extreme barfarge and slurpage by John Wiegly
+- https://www.emacswiki.org/emacs/ParEdit
+
+- Commented out as =paredit-commands= is not defined.
+
+#+begin_src emacs-lisp :tangle yes
+  (defun paredit-barf-all-the-way-backward ()
+    (interactive)
+    (paredit-split-sexp)
+    (paredit-backward-down)
+    (paredit-splice-sexp))
+
+  (defun paredit-barf-all-the-way-forward ()
+    (interactive)
+    (paredit-split-sexp)
+    (paredit-forward-down)
+    (paredit-splice-sexp)
+    (if (eolp) (delete-horizontal-space)))
+
+  (defun paredit-slurp-all-the-way-backward ()
+    (interactive)
+    (catch 'done
+      (while (not (bobp))
+        (save-excursion
+          (paredit-backward-up)
+          (if (eq (char-before) ?\()
+              (throw 'done t)))
+        (paredit-backward-slurp-sexp))))
+
+  (defun paredit-slurp-all-the-way-forward ()
+    (interactive)
+    (catch 'done
+      (while (not (eobp))
+        (save-excursion
+          (paredit-forward-up)
+          (if (eq (char-after) ?\))
+              (throw 'done t)))
+        (paredit-forward-slurp-sexp))))
+
+  (nconc paredit-commands
+         '("Extreme Barfage & Slurpage"
+           (("C-M-)")
+            paredit-slurp-all-the-way-forward
+            ("(foo (bar |baz) quux zot)"
+             "(foo (bar |baz quux zot))")
+            ("(a b ((c| d)) e f)"
+             "(a b ((c| d)) e f)"))
+           (("C-M-}" "M-F")
+            paredit-barf-all-the-way-forward
+            ("(foo (bar |baz quux) zot)"
+             "(foo (bar|) baz quux zot)"))
+           (("C-M-(")
+            paredit-slurp-all-the-way-backward
+            ("(foo bar (baz| quux) zot)"
+             "((foo bar baz| quux) zot)")
+            ("(a b ((c| d)) e f)"
+             "(a b ((c| d)) e f)"))
+           (("C-M-{" "M-B")
+            paredit-barf-all-the-way-backward
+            ("(foo (bar baz |quux) zot)"
+             "(foo bar baz (|quux) zot)"))))
+
+  (paredit-define-keys)
+
+  (paredit-annotate-mode-with-examples)
+
+  (paredit-annotate-functions-with-examples)
+#+end_src
+
+#+RESULTS:
+
+
+
 
 ** Trying to make paredit work with latex
 
@@ -890,3 +902,9 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 #+begin_src emacs-lisp :tangle yes
 (message "Starter Kit Parens File loaded.")
 #+end_src
+
+
+
+
+
+

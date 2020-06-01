@@ -160,6 +160,45 @@ In CSV mode, the following commands are available:
 #+RESULTS:
 | text-mode-hook-identify |
 
+
+** Sentences end with a single space
+
+In my world, sentences end with a single space. This makes sentence navigation commands work for me.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq sentence-end-double-space nil)
+#+END_SRC
+
+** Killing text
+
+From https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defadvice kill-region (before slick-cut activate compile)
+    "When called interactively with no active region, kill a single line instead."
+    (interactive
+     (if mark-active (list (region-beginning) (region-end))
+       (list (line-beginning-position)
+             (line-beginning-position 2)))))
+#+END_SRC
+
+
+* Typing
+** Typing of Emacs
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package typing
+    :init
+    (autoload 'typing-of-emacs "typing" nil t)
+    :config
+    (progn
+      (setq toe-starting-length 6)
+      (setq toe-starting-time-per-word 2)
+      (setq toe-max-length 20)))
+#+END_SRC
+
+
+
 * Provide 
 
 #+BEGIN_SRC emacs-lisp 

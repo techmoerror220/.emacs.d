@@ -1,0 +1,114 @@
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; (setq dired-listing-switches "-l --group-directories-first --time-style \"+%d-%m-%Y %H:%M:%S\"")
+
+  (defun ensure-buffer-name-ends-in-slash ()
+    "change buffer name to end with slash"
+    (let ((name (buffer-name)))
+      (if (not (string-match "/$" name))
+          (rename-buffer (concat name "/") t))))
+
+  (add-hook 'dired-mode-hook 'ensure-buffer-name-ends-in-slash)
+
+  (add-hook 'dired-mode-hook
+            (lambda()
+              (setq truncate-lines 1)))
+#+END_SRC
+
+** Stripe Dired buffers
+
+Use different background colors for even and odd lines. Info here https://github.com/sabof/stripe-buffer
+
+With the help of library =hl-line-mode= yet another color can be used for the current line.
+
+#+name: stripe-dired
+#+begin_src emacs-lisp :tangle no
+  (use-package stripe-buffer
+    :config (progn
+              (add-hook 'dired-mode-hook #'turn-on-stripe-buffer-mode)))
+
+  (add-hook 'org-mode-hook 'org-table-stripes-enable)
+  ;; (add-hook 'dired-mode-hook 'stripe-listify-buffer)
+#+END_SRC
+
+
+** Date format
+
+From: https://stackoverflow.com/questions/11269897/emacs-dired-how-to-set-date-time-format
+
+Pero parece que esto no ha afectado al formato de Dired. En cambio, el secreto lo ha dado la definición aquí: [[dired-date.]] Así que lo comento. El problema es que  [[dired-date]] fastidia a =dired-fixups.el=
+
+#+BEGIN_SRC emacs-lisp :tangle no
+; use ISO dates (the first is for recent dates, second for old dates)
+  
+(setq ls-lisp-format-time-list  '("%d.%m.%Y %H:%M:%S" "%d.%m.%Y %H:%M:%S")
+      ls-lisp-use-localized-time-format t)
+
+(defun ls-lisp-format-time (file-attr time-index now)
+    "%d.%m.%Y %H:%M:%S" "%d.%m.%Y %H:%M:%S")
+#+END_SRC
+
+#+RESULTS:
+: t
+
+** Dired Sort By Size And Extension
+From: https://www.emacswiki.org/emacs/DiredSortBySizeAndExtension
+
+Commented out even though it works great, but I loose my customization for dates and size.
+Need to download it again, as I screw up its settings.
+
+#+begin_src emacs-lisp :tangle no
+(require 'dired-fixups)
+#+end_src
+
+#+RESULTS:
+: dired-fixups
+
+** Sort settings
+
+From https://www.reddit.com/r/emacs/comments/4agkye/how_do_you_customize_dired/
+
+Commented out as I don't control what's going on.
+
+#+begin_src emacs-lisp :tangle no
+;;Sort settings
+(require 'dired-sort-menu+)
+(add-hook 'dired-load-hook
+          (lambda () (require 'dired-sort-menu)))
+#+end_src
+
+** Dired plus
+
+#+srcname: dired+
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; (require 'dired+)
+
+  ;; copied  by dgm from: http://emacs-leuven.readthedocs.io/en/latest/?badge=latest
+
+  ;; Don't hide details in Dired.
+  ;;    (setq diredp-hide-details-initially-flag nil)
+
+  ;; Don't display the next Dired buffer the same way as the last.
+  ;;    (setq diredp-hide-details-propagate-flag nil)
+
+  ;; Don't wrap "next" command around to buffer beginning.
+  ;; (setq diredp-wrap-around-flag nil)
+
+  ;; Dired `find-file' commands reuse directories.
+  ;; (diredp-toggle-find-file-reuse-dir 1)
+
+  ;; Up, reusing Dired buffers.
+  ;; (define-key dired-mode-map (kbd "C-x C-j")
+  ;;  #'diredp-up-directory-reuse-dir-buffer)
+
+  ;; tips from Ista Zahn. Not sure if they require dired+
+  ;; https://github.com/izahn/dotemacs
+
+  ;;; Dired and Dired+ configuration
+  ;; this is commented as it is reapplied somewhere else in this file
+  ;; (add-hook 'dired-mode-hook
+  ;;          (lambda()
+  ;;            (diff-hl-dired-mode)
+  ;;            (diff-hl-margin-mode)))
+#+END_SRC
+

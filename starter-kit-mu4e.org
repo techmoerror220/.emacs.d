@@ -2334,6 +2334,19 @@ I want to see full From header, not only name
 #+RESULTS:
 : t
 
+
+* Gnus-based viewer
+
+Creo que no me acaba de gustar cómo se ve (tipo =html=), y como =html= lo puedo recuperar haciendo =a V= o =a E=.
+
+#+begin_src emacs-lisp :tangle no
+(setq mu4e-view-use-gnus t)
+#+end_src
+
+#+RESULTS:
+: t
+
+
 * Provide 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
