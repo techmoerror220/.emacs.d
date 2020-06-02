@@ -5,7 +5,7 @@
     (esxml "0.3.4")
     (s "1.10.0")
     (request "0.3.0"))
-  :keywords
+  :commit "ebc7888f4f4cad26ec1298edd7bf606a5ea2d564" :keywords
   '("hypermedia" "outlines" "org" "web")
   :authors
   '(("Adam Porter" . "adam@alphapapa.net"))

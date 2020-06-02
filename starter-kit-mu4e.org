@@ -536,7 +536,7 @@ I don't know the use of this but I had it, so...
 ** New bookmarks inspired by the great Royal Holloway Albertch
 - https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
 
-#+begin_src emacs-lisp :tangle yes :results silent
+#+begin_src emacs-lisp :tangle yes
   ;; empty current defs
   (defvar mu4e-bookmarks
     `( ,(())))
@@ -2364,4 +2364,11 @@ Creo que no me acaba de gustar cómo se ve (tipo =html=), y como =html= lo puedo
 
 #+RESULTS: message-line
 : Starter Kit User Mu4e File loaded.
+
+
+
+
+
+
+
 

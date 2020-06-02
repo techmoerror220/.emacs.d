@@ -6585,8 +6585,9 @@ DGM: I've tried it but not convinced...
 : bookmark-bmenu-list
 
 * Pomidor
+2 jun 2020: problems with update
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (use-package pomidor
     ;; :bind (("s-@" . pomidor))
     :config (setq pomidor-sound-tick nil

@@ -326,11 +326,11 @@ Higham prefers closing brace on its own line after cleaning BibTeX entry. I don'
 #+END_SRC
  
 *** Bibtex
-
+Disappear in upgrade 2 june 2020
 #+begin_src emacs-lisp :tangle yes
 ;; emacs-lisp from https://github.com/nkicg6/emacs-config
 ;; org-bibtex
-(require 'ox-bibtex)
+;; (require 'ox-bibtex)
 #+end_src
 
 #+RESULTS:

@@ -3547,7 +3547,7 @@ Add the following to your =.emacs=
 #+begin_src emacs-lisp
   (add-to-list 'load-path (expand-file-name "~/git/org-mode/contrib/lisp"))
 
-  (require 'org-checklist)
+;;  (require 'org-checklist)
 #+end_src
 
 #+begin_src emacs-lisp :tangle yes 
@@ -3559,7 +3559,7 @@ Add the following to your =.emacs=
   ;;    (add-to-list 'load-path org-mode-user-contrib-lisp-path)
   ;;  (add-to-list 'load-path (expand-file-name "~/git/org-mode/contrib/lisp")))
 
-  (require 'org-checklist)
+;;  (require 'org-checklist)
 #+end_src
 
 #+RESULTS:
@@ -3567,6 +3567,8 @@ Add the following to your =.emacs=
 
 and then to use it in a task you simply set the property =RESET_CHECK_BOXES= to =t= 
 like this
+
+(2 june 2020: with the update org-checklist has disappeared)
 
 #+begin_src org :exports src
   ,* TODO Invoicing and Archive Tasks [0/7]
@@ -4304,7 +4306,8 @@ and any minor edits before sending it off.
 
 - https://kitchingroup.cheme.cmu.edu/blog/2016/10/29/Sending-html-emails-from-org-mode-with-org-mime/
 
-#+begin_src emacs-lisp :tangle yes
+(2 jun 2020: org-mime has dissappeared)
+#+begin_src emacs-lisp :tangle no
   (require 'org-mime)
 
   (advice-add 'org-mime-org-buffer-htmlize :after-while
@@ -5060,7 +5063,9 @@ c Select default clocking task
 
 org-ql is a lispy query language for Org files. It allows you to find Org entries matching certain criteria and return a list of them or perform actions on them. Commands are also provided which display matching results.
 
-#+begin_src emacs-lisp :tangle yes
+(2 jun 2020: dissappeared)
+
+#+begin_src emacs-lisp :tangle no
   (require 'org-ql)
 
   (use-package org-ql)
@@ -5268,7 +5273,9 @@ These days I set many of =org-log-*= to note to keep verbose log of task progres
 
 * Org-contacts
 
-#+begin_src emacs-lisp :tangle yes
+2 jun 2020: this package has dissappeared.
+
+#+begin_src emacs-lisp :tangle no
   (use-package org-contacts
     :ensure nil
     :after org
@@ -5277,7 +5284,7 @@ These days I set many of =org-log-*= to note to keep verbose log of task progres
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23971 22201 764284 712000) :init (23971 22201 764185 251000) :config (23971 22201 763607 281000) :config-secs (0 0 15 830000) :init-secs (0 0 990 627000) :use-package-secs (0 0 1149 302000) ...))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24278 34649 321489 403000) :init (24278 34649 321451 454000) :init-secs (0 0 102037 207000) :use-package-secs (0 0 102263 96000)))
 
 * Remapping of keys for headings' movement
 

@@ -4,6 +4,7 @@
 ;;
 ;; Version: 0.6 (2009-Nov-04)
 ;; Package-Version: 20150708.641
+;; Package-Commit: 081efeca91d790c7fbc90871ac22c40935f4833b
 ;;
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
