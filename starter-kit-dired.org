@@ -37,6 +37,74 @@ Modified following the advice in the *info* node on installation of =dired-x=.
 | (lambda nil) | (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
 
 
+*** Default external apps for opening files
+
+Tip found in: https://www.reddit.com/r/emacs/comments/ct0x2q/how_to_open_docx_xlsx_and_pdf_with_external/
+
+#+BEGIN_EXAMPLE
+                                     ("\\.mkv\\'"  "mpv")
+                                     ("\\.avi\\'"  "mpv")
+                                     ("\\.mp4\\'"  "mpv")
+                                     ("\\.m4v\\'"  "mpv")
+                                     ("\\.flv\\'"  "mpv")
+                                     ("\\.wmv\\'"  "mpv")
+                                     ("\\.mpg\\'"  "mpv")
+                                     ("\\.mpeg\\'" "mpv")
+                                     ("\\.webm\\'"  "mpv")                                     
+                                     ("\\.pdf\\'"  "evince")
+                                     ("\\.djvu\\'" "evince")
+#+END_EXAMPLE
+
+
+#+begin_src emacs-lisp :tangle yes
+(setq dired-guess-shell-alist-user '(("\\.mp3\\'" "vlc ? &")
+                                     ("\\.mp4\\'" "vlc ? &")
+                                     ("\\.pdf\\'"  "evince  ? &")
+                                     ("\\.djvu\\'" "evince  ? &")
+                                     ("\\.ods\\'" "libreoffice  ? &")
+                                     ("\\.odt\\'" "libreoffice  ? &")
+                                     ("\\.xls\\'" "libreoffice  ? &")
+                                     ("\\.xlsx\\'" "libreoffice  ? &")
+                                     ("\\.doc\\'" "libreoffice  ? &")
+                                     ("\\.docx\\'" "libreoffice  ? &")
+                                     ("\\.pages\\'" "libreoffice  ? &")))
+#+end_src
+
+#+RESULTS:
+| \.mp3\'   | vlc ? &          |
+| \.mp4\'   | vlc ? &          |
+| \.pdf\'   | evince  ? &      |
+| \.djvu\'  | evince  ? &      |
+| \.ods\'   | libreoffice  ? & |
+| \.odt\'   | libreoffice  ? & |
+| \.xls\'   | libreoffice  ? & |
+| \.xlsx\'  | libreoffice  ? & |
+| \.doc\'   | libreoffice  ? & |
+| \.docx\'  | libreoffice  ? & |
+| \.pages\' | libreoffice  ? & |
+
+
+Then avoid the "Async Shell Command" buffer:
+(https://stackoverflow.com/questions/13901955/how-to-avoid-pop-up-of-async-shell-command-buffer-in-emacs)
+
+#+begin_src emacs-lisp :tangle yes
+(add-to-list 'display-buffer-alist
+  (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
+#+end_src
+
+#+RESULTS:
+| \*Async Shell Command\*.* | display-buffer-no-window        |                       |
+| \*Bookmark List\*         | display-buffer-same-window      | (inhibit-same-window) |
+| \*password-store\*        | display-buffer-same-window      | (inhibit-same-window) |
+| \*cheatsheet\*            | display-buffer-same-window      | (inhibit-same-window) |
+| \*stata\*                 | display-buffer-same-window      | (inhibit-same-window) |
+| \*Python\*                | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython\*               | display-buffer-same-window      | (inhibit-same-window) |
+| \*IPython3\*              | display-buffer-same-window      | (inhibit-same-window) |
+| \*shell\*                 | display-buffer-same-window      | (inhibit-same-window) |
+| \`\*Calendar\*\'          | (display-buffer-below-selected) |                       |
+| \*Calendar\*              | my-position-calendar-buffer     |                       |
+
 ** Open files in external programs
 Open files in external programs (from http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
 Consider replacing with https://github.com/thamer/runner.
