@@ -6,7 +6,6 @@
 ;;
 ;; This is the first thing to get loaded.
 
-
 ;;,-----------------------------
 ;;| Technomancy's recommendation
 ;;`-----------------------------
@@ -17,27 +16,36 @@
 ;; it allows you to seamlessly roll back upgrades which introduce breaking
 ;; changes as well as guaranteeing that all machines you work on share the same
 ;; versions.
+;; in:
+;; /media/dgm/blue/documents/programming/emacs/CoolEmacsGuys/technomancy/emacs-starter-kit/README.markdown
+;; where it says "ini.el", it originally says "my-autoload.el".
 
 ;; (defun pnh-reinit-libs ()
-;;   (interactive)
-;;   (let ((generated-autoload-file (concat user-emacs-directory "my-autoload.el")))
-;;     (dolist (d (directory-files (concat user-emacs-directory "lib") t "^[^\.]"))
-;;       (dolist (f (directory-files d t "\\.el$"))
-;;         (byte-compile-file f))
-;;       (update-directory-autoloads d))))
+;;  (interactive)
+;;  (let ((generated-autoload-file (concat user-emacs-directory "init.el")))
+;;    (dolist (d (directory-files (concat user-emacs-directory "lib") t "^[^\.]"))
+;;      (dolist (f (directory-files d t "\\.el$"))
+;;        (byte-compile-file f))
+;;      (update-directory-autoloads d))))
 
 ;; (dolist (l (directory-files (concat user-emacs-directory "lib") nil "^[^\.]"))
-;;   (add-to-list 'load-path (concat user-emacs-directory "lib/" l))
-;;   (autoload (intern l) (concat l ".el")))
+;;  (add-to-list 'load-path (concat user-emacs-directory "lib/" l))
+;;   (autoload (internl) (concat l ".el")))
 
-;; (when (not (file-exists-p (concat user-emacs-directory "my-autoload.el")))
-;;   (pnh-reinit-libs))
+;; (when (not (file-exists-p (concat user-emacs-directory "init.el")))
+;;  (pnh-reinit-libs))
 
-;; (load (concat user-emacs-directory "my-autoload.el"))
+;; (load (concat user-emacs-directory "init.el"))
 
 
 ;; DGM: I've commented out because I've created the "lib" directory BUT I don't know what is meant to be in the
 ;; "my-autoload.el" file
+
+;; But this produces this:
+
+;; Warning (initialization): An error occurred while loading  ‘/home/dgm/.emacs.d/init.el’:
+
+;; error: Recursive load, /home/dgm/.emacs.d/init.el, /home/dgm/.emacs.d/init.el, /home/dgm/.emacs.d/init.el, /home/dgm/.emacs.d/init.el, /home/dgm/.emacs.d/init.el
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; John Wiegley's setup tweaked

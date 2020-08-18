@@ -57,10 +57,13 @@ Tip found in: https://www.reddit.com/r/emacs/comments/ct0x2q/how_to_open_docx_xl
 
 
 #+begin_src emacs-lisp :tangle yes
-(setq dired-guess-shell-alist-user '(("\\.mp3\\'" "vlc ? &")
+(setq dired-guess-shell-alist-user '(("\\.epub\\'" "calibre ? &")
+                                     ("\\.avi\\'" "vlc ? &")
+                                     ("\\.mp3\\'" "vlc ? &")
                                      ("\\.mp4\\'" "vlc ? &")
                                      ("\\.pdf\\'"  "evince  ? &")
                                      ("\\.djvu\\'" "evince  ? &")
+                                     ("\\.html\\'" "chromium  ? &")
                                      ("\\.ods\\'" "libreoffice  ? &")
                                      ("\\.odt\\'" "libreoffice  ? &")
                                      ("\\.xls\\'" "libreoffice  ? &")
@@ -71,10 +74,13 @@ Tip found in: https://www.reddit.com/r/emacs/comments/ct0x2q/how_to_open_docx_xl
 #+end_src
 
 #+RESULTS:
+| \.epub\'  | calibre ? &      |
+| \.avi\'   | vlc ? &          |
 | \.mp3\'   | vlc ? &          |
 | \.mp4\'   | vlc ? &          |
 | \.pdf\'   | evince  ? &      |
 | \.djvu\'  | evince  ? &      |
+| \.html\'  | chromium  ? &    |
 | \.ods\'   | libreoffice  ? & |
 | \.odt\'   | libreoffice  ? & |
 | \.xls\'   | libreoffice  ? & |

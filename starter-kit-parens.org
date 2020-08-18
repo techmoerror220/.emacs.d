@@ -1,4 +1,4 @@
-,# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Parens costumization
@@ -623,31 +623,18 @@ Phil: The main thing people get tripped up on, I think, is that paredit will ref
 
 Sacha: The number of times I've hit C-q )! 
 
-Phil: Right, yeah. It's trying to set you on the right path, so it does that by just making sure that all the operations it does are protected. Every time you insert a paren, you have
-to insert a matching one. Every time you kill, you can only kill up to the end. Otherwise that would leave your code in an invalid state. As long as you limit yourself to the
-commands it knows about, it provides this guarantee. C-w (kill-region) is not one of those commands, so you have to train yourself to avoid that. When you use kill-region, you're
-saying, "No, paredit, I know better than you," which is usually not the case. But once you've internalised that, you end up working on a higher level where you're not thinking in
-terms of characters any more, but in terms of expressions. You're saying, "I want to kill this whole string or this whole form", not, "I want to kill from this point up to this point".
-It's higher level commands, I would say. Especially people who are new to Lisp, they think this is so intimidating, seeing all these parentheses everywhere. If you have paredit on,
-it's… it does take some adaptation, but it's no additional mental overhead for you. You're changing the structure directly. 
+Phil: Right, yeah. It's trying to set you on the right path, so it does that by just making sure that all the operations it does are protected. Every time you insert a paren, you have to insert a matching one. Every time you kill, you can only kill up to the end. Otherwise that would leave your code in an invalid state. As long as you limit yourself to the commands it knows about, it provides this guarantee. C-w (kill-region) is not one of those commands, so you have to train yourself to avoid that. When you use kill-region, you're
+saying, "No, paredit, I know better than you," which is usually not the case. But once you've internalised that, you end up working on a higher level where you're not thinking in terms of characters any more, but in terms of expressions. You're saying, "I want to kill this whole string or this whole form", not, "I want to kill from this point up to this point".
+It's higher level commands, I would say. Especially people who are new to Lisp, they think this is so intimidating, seeing all these parentheses everywhere. If you have paredit on, it's... it does take some adaptation, but it's no additional mental overhead for you. You're changing the structure directly. 
 
 Sacha: Okay, so basically, just keep at it, and keep your fingers off of C-w, and eventually you'll get the hang of it. 
 
-Phil: One thing you can do is unbind C-w temporarily, or change it to another binding. Actually, one thing I did when I started using my (inaudible) keyboard–this is my travel
-board that I designed. You can see it has 42 keys. I had to move tab way off into the corner. It's not very convenient. Most programs that are Unix-y, anything running in a
-terminal will interpret C-i as a tab, because inside a terminal, they are literally the same. Pressing TAB sends a C-i (inaudible), but Emacs does the translation, even when it's in a
-GUI. I was able to teach my web browser to do the same. That was great when I was on here. But it was so tempting… I kept wanting to push this key here that doesn't actually
-exist. So what I ended up doing was taking my regular keyboard that I use when I'm in the office, and plucking out that key, so there's no more key cap there any more. You learn
-really quick then. 
+Phil: One thing you can do is unbind C-w temporarily, or change it to another binding. Actually, one thing I did when I started using my (inaudible) keyboard–this is my travel board that I designed. You can see it has 42 keys. I had to move tab way off into the corner. It's not very convenient. Most programs that are Unix-y, anything running in a terminal will interpret C-i as a tab, because inside a terminal, they are literally the same. Pressing TAB sends a C-i (inaudible), but Emacs does the translation, even when it's in a
+GUI. I was able to teach my web browser to do the same. That was great when I was on here. But it was so tempting… I kept wanting to push this key here that doesn't actually exist. So what I ended up doing was taking my regular keyboard that I use when I'm in the office, and plucking out that key, so there's no more key cap there any more. You learnreally quick then. 
 
-Sacha: That's really hardcore. I remember the time I bound my left control to ring a bell, because I was trying to get used to the Caps as control thing. Negative reinforcement or
-just making things less functional to force yourself into new ways. I'm a little curious, because you mentioned 42 keys… You'd imagine, with Emacs, you'd want to add more keys
-instead of reducing the number of keys. How does it work with key chords and stuff? 
+Sacha: That's really hardcore. I remember the time I bound my left control to ring a bell, because I was trying to get used to the Caps as control thing. Negative reinforcement or just making things less functional to force yourself into new ways. I'm a little curious, because you mentioned 42 keys… You'd imagine, with Emacs, you'd want to add more keys instead of reducing the number of keys. How does it work with key chords and stuff? 
 
-Phil: Well, a big part of it is that you can see, as with the two here, it just puts way more on your thumbs. These are Control and Alt. These are way more accessible. That's Shift.
-So that doesn't make more room available, but it does make it nicer on your hands. But then also most of the punctuation is on the Fn layer, so you have to hold down Fn and hit
-the punctuation. For a lot of the punctuation, you need shift for it anyway. For example, with parentheses, you are pressing Shift then moving way up to the top Right. On this
-keyboard, the parenteses are on the home row, so it's actually less reaching overall anyway. 
+Phil: Well, a big part of it is that you can see, as with the two here, it just puts way more on your thumbs. These are Control and Alt. These are way more accessible. That's Shift.So that doesn't make more room available, but it does make it nicer on your hands. But then also most of the punctuation is on the Fn layer, so you have to hold down Fn and hit the punctuation. For a lot of the punctuation, you need shift for it anyway. For example, with parentheses, you are pressing Shift then moving way up to the top Right. On this keyboard, the parenteses are on the home row, so it's actually less reaching overall anyway. 
 
 Settings actually copied from https://github.com/bbatsov/emacs.d
 
@@ -665,11 +652,9 @@ tasks. For example, I use the followign all the time:
  =C-)= to "slurp" another sexp into the current one, eg turn (let [x 10]) (println x) into (let [x 10] (println x))
  =M-<UP>= and/or =M-r= to pull the sexp at point a level "higher" in the source tree, destroying the thing that was wrapping it, eg to turn (first (map f some-list)) into (map f some-list) or (first some-list)
 
-There are zillions of useful features like this, that let you start editing code instead of text. And while there are plenty of excellent Lisp hackers who don't like paredit mode, I
-advise you not to decide against it before you realize the awesome stuff it can do for you.
+There are zillions of useful features like this, that let you start editing code instead of text. And while there are plenty of excellent Lisp hackers who don't like paredit mode, I advise you not to decide against it before you realize the awesome stuff it can do for you.
 
-- I absolutely agree. I hated paredit at first, but I soon missed it enough in every other language mode that I bound some of paredit's functions in those modes too. For example,
- M-( for paredit-wrap-round, which encloses the following expressing in parens. Most programming language modes have a concept of sexps for that language's expressions and
+- I absolutely agree. I hated paredit at first, but I soon missed it enough in every other language mode that I bound some of paredit's functions in those modes too. For example, M-( for paredit-wrap-round, which encloses the following expressing in parens. Most programming language modes have a concept of sexps for that language's expressions and
  tokens, so the paredit functions often just Do The Right Thing. 
 
 ** Emacs Rocks's Tutorial 
@@ -683,8 +668,6 @@ advise you not to decide against it before you realize the awesome stuff it can 
 - =C-k= for =paredit-kill=
 - =M-S= for =paredit-split-sexp= to split an sexp by, for example, inserting a pair of =""= and then a pair of =()=.
 - =M-J= for =join-sexps= 
-
-
 
 His examples are:
 
@@ -781,15 +764,16 @@ Doesn't work.
     (add-hook 'lisp-mode-hook             'paredit-mode)
     (add-hook 'scheme-mode-hook           'paredit-mode)
     (add-hook 'ado-mode-hook              'paredit-mode)
-    (add-hook 'ess-mode-hook              'paredit-mode)
-    (add-hook 'inferior-ess-mode-hook     'paredit-mode)
-    (add-hook 'ess-stata-mode-hook        'paredit-mode)
     (add-hook 'ledger-mode-hook           'paredit-mode) 
     )
 #+end_src
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24274 27793 407308 252000) :init (24274 27793 407297 499000) :config (24274 27793 407138 364000) :config-secs (0 0 423 962000) :init-secs (0 0 927 325000) :use-package-secs (0 0 1094 468000)))
+
+;;    (add-hook 'ess-mode-hook              'paredit-mode)
+;;    (add-hook 'inferior-ess-mode-hook     'paredit-mode)
+;;    (add-hook 'ess-stata-mode-hook        'paredit-mode)
 
 Alternative from: http://wikemacs.org/wiki/Paredit-mode
 
@@ -874,8 +858,6 @@ Alternative from: http://wikemacs.org/wiki/Paredit-mode
 #+end_src
 
 #+RESULTS:
-
-
 
 
 ** Trying to make paredit work with latex

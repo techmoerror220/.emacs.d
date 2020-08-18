@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 # name: sh
 # key: sh
+# expand-env: ((yas-wrap-around-region t))
 # --
 #+begin_src sh
-$1
-#+end_src
 $0
+#+end_src

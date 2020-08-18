@@ -870,10 +870,7 @@ From: https://lists.gnu.org/archive/html/emacs-orgmode/2014-05/msg00527.html
 #+RESULTS:
 : ((73 . textcite:%l) (73 . textcite:%l))
 
-
-
 ** Goodies
-
 Template Lists from Daniel Mai at https://github.com/danielmai/.emacs.d/blob/master/config.org.
 
 I don't know why it doesn't work 
