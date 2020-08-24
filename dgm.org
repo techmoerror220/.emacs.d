@@ -3158,7 +3158,7 @@ Further customization from: https://github.com/dueyfinster/dotfiles/blob/master/
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24212 13932 869920 589000) :init (24212 13932 869911 55000) :config (24212 13932 869893 128000) :config-secs (0 0 5772 564000) :init-secs (0 0 5817 162000) :use-package-secs (0 0 6032 803000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24383 43606 973654 385000) :init (24383 43606 973645 683000) :config (24383 43606 973632 34000) :config-secs (0 0 27128 719000) :init-secs (0 0 27152 272000) :use-package-secs (0 0 27213 303000)))
 
 
 ***** Fix for the error before first and last page
@@ -6786,10 +6786,12 @@ With the solarized-dark theme, math notation is too dark to see.
 After I change to Spanish with =s-z=, I toggle the input method with =C-\=
 
 DGM on march, 3rd: I've made spanish-prefix the default so this is not needed
-March 6: well, it's not working exactly. It works after I set up the new input method. But before it does not. So I need my shortcut back
+March 6: well, it's not working exactly. It works after I set up the new input method. But before it does not. So I need my shortcut back.
 But now that I've changed some lines in the bit on input method in =dgm.org= this =mrb= stuff does not work at all...
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+(setq default-input-method "spanish-prefix")
+
   (defun mrb/set-input-method()
     (interactive)
     (setq default-input-method "spanish-prefix")

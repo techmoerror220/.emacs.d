@@ -756,7 +756,7 @@ Doesn't work.
     :ensure t
     :config
     (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-    (add-hook 'prog-mode-hook             'paredit-mode)
+;;    (add-hook 'prog-mode-hook             'paredit-mode)
     (add-hook 'emacs-lisp-mode-hook       'paredit-mode)
     (add-hook 'eval-expression-minibuffer-setup-hook 'paredit-mode)
     (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
@@ -769,7 +769,7 @@ Doesn't work.
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24274 27793 407308 252000) :init (24274 27793 407297 499000) :config (24274 27793 407138 364000) :config-secs (0 0 423 962000) :init-secs (0 0 927 325000) :use-package-secs (0 0 1094 468000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24385 13579 28422 538000) :init (24385 13579 28412 78000) :config (24385 13579 28214 289000) :config-secs (0 0 17203 372000) :init-secs (0 0 17564 298000) :use-package-secs (0 0 17633 922000)))
 
 ;;    (add-hook 'ess-mode-hook              'paredit-mode)
 ;;    (add-hook 'inferior-ess-mode-hook     'paredit-mode)

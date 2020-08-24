@@ -36,7 +36,7 @@ This file provides settings for ESS and R.
     :ensure t
     :after ess)
 
-  (require 'ob-stata)
+;;  (require 'ob-stata)
   (require 'ob-ledger)
 
   (org-babel-do-load-languages
@@ -48,7 +48,7 @@ This file provides settings for ESS and R.
      (python . t)
      (js . t)
      (haskell . t)
-     (stata . t)
+;;     (stata . t)
      (shell . t)
      (latex . t)
      (ledger . t)
