@@ -1589,6 +1589,8 @@ And guess what?? It works!!!
                                "/home/dgm/Dropbox/gtd/divorcio_gtd.org" 
                                "/media/dgm/blue/documents/proyectos/mutual-stata/gtd/mutual_gtd.org" 
                                "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org"
+                               "/media/dgm/blue/documents/proyectos/curso-ayuntamiento-madrid/gtd/curso-disenoInvestigacionI.org"
+                               "/media/dgm/blue/documents/My-Academic-Stuff/acreditacion-titular/gtd/titularidad-gtd.org"
                                "/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org")))
 #+END_SRC
 
@@ -1741,6 +1743,8 @@ Similarly, nota que sólo con =maxlevel= I get the refiling to =someday.org='s s
                                ("/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org" :level . 2)
                                ("/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" :level . 2)
                                ("/media/dgm/blue/documents/proyectos/mutual-stata/gtd/mutual_gtd.org" :maxlevel . 2)
+                               ("/media/dgm/blue/documents/proyectos/curso-ayuntamiento-madrid/gtd/curso-disenoInvestigacionI.org" :maxlevel . 2)
+                               ("/media/dgm/blue/documents/My-Academic-Stuff/acreditacion-titular/gtd/titularidad-gtd.org" :maxlevel . 2)
                                ("/home/dgm/Dropbox/gtd/divorcio_gtd.org" :level . 2)
                                ("/home/dgm/Dropbox/gtd/someday.org" :maxlevel . 2)
                                ("/home/dgm/Dropbox/gtd/inbox.org" :maxlevel . 1)
@@ -5288,7 +5292,7 @@ These days I set many of =org-log-*= to note to keep verbose log of task progres
 #+RESULTS:
 : [nil 24003 24132 0 3600 org-save-all-org-buffers nil nil 0]
 
-* Org-pdfview
+* Org-pdfview (obsolete): links to PDF documents
 
 See https://emacs.stackexchange.com/questions/19686/how-to-use-pdf-tools-pdf-view-mode-in-emacs to open everything with =pdf-tools= in emacs
 
@@ -5299,6 +5303,7 @@ If you want your pdfs opened in the same instance of Emacs, you need to have it 
 Out of the box, org-mode doesn't know about pdf-tools. However, you can add support for opening org links to pdf files with org-pdfview, which is available as a package on MELPA. Once it's installed, you can activate it with the following code in your .emacs:
 
 21 august 2020: org-pdfview is not found any more in =list-packages=
+
 #+begin_src emacs-lisp :tangle no
 (use-package org-pdfview
   :ensure t)
@@ -5334,6 +5339,23 @@ Example from =org-file-apps=
 Doing this will provide a new completion target for adding links via =C-c C-l=, pdfview:, with support for jumping to specific pages. Full links use the format:
 
 =[[pdfview:/path/to/myfile.pdf::42][My file Description]]=
+
+* org-pdftools: links to PDF documents
+- https://github.com/fuxialexander/org-pdftools
+- https://www.reddit.com/r/emacs/comments/clxa9p/orgpdftools_a_custom_org_link_type_for_pdftools/
+#+begin_src emacs-lisp :tangle yes
+(use-package org-pdftools
+  :hook (org-load . org-pdftools-setup-link))
+
+(use-package org-noter-pdftools
+  :after org-noter
+  :config
+  (with-eval-after-load 'pdf-annot
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24414 35057 626683 516000) :use-package-secs (0 0 73 857000)))
 
 
 * Org-graph view

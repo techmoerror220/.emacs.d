@@ -539,46 +539,6 @@ These pairs
 
 not included as they were obstrusive.
 
-** Electric Pair for LaTeX
-
-https://tex.stackexchange.com/questions/75697/auctex-how-to-cause-math-mode-dollars-to-be-closed-automatically-with-electric
-
-DGM, 22 jan 20. Trying to get the =[]= pair in latex
-
-#+begin_src emacs-lisp :tangle yes
-(add-hook 'LaTeX-mode-hook
-          '(lambda ()
-            (define-key LaTeX-mode-map (kbd "$") 'self-insert-command)
-            (define-key LaTeX-mode-map (kbd "[") 'self-insert-command)))
-#+end_src
-
-#+RESULTS:
-| (lambda nil (local-set-key (kbd $) 'brf-TeX-dollarm)) | (lambda nil (highlight-symbol-mode)) | (lambda nil (paredit-mode) (auto-complete-mode) (visual-line-mode) (advice-add 'paredit-backward-delete :around #'paredit-backward-delete-advice) (advice-add 'paredit-forward-delete :around #'paredit-forward-delete-advice) (advice-add 'paredit-doublequote :override #'paredit-nonsmart-doublequote)) | (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command) (define-key LaTeX-mode-map (kbd [) 'self-insert-command)) | TeX-PDF-mode | turn-on-reftex | latex-unicode-simplified |
-
-But it is not working. I try this:
-
-#+begin_src emacs-lisp :tangle no
-(defun brf-TeX-Inserting (sta stb stc num)
-  " after entering stb insert stc and go back with the cursor by num positions.
-    With prefix nothings gets replaced. If the previous char was sta nothing will be 
-    replaces as well." 
-  (if (null current-prefix-arg)
-      (progn
-        (if (= (preceding-char) sta )
-            (insert stb)
-          (progn (insert stc) (backward-char num))))
-    (insert stb)))
-
-(defun brf-TeX-dollarm () (interactive) (brf-TeX-Inserting ?\\ "$"  "$$" 1))
-
-(add-hook 'LaTeX-mode-hook
-   (function (lambda ()
-       (local-set-key (kbd "$")      'brf-TeX-dollarm))))
-#+end_src
-
-#+RESULTS:
-| (lambda nil (local-set-key (kbd $) 'brf-TeX-dollarm)) | (lambda nil (highlight-symbol-mode)) | (lambda nil (paredit-mode) (auto-complete-mode) (visual-line-mode) (advice-add 'paredit-backward-delete :around #'paredit-backward-delete-advice) (advice-add 'paredit-forward-delete :around #'paredit-forward-delete-advice) (advice-add 'paredit-doublequote :override #'paredit-nonsmart-doublequote)) | (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command) (define-key LaTeX-mode-map (kbd [) 'self-insert-command)) | TeX-PDF-mode | turn-on-reftex | latex-unicode-simplified |
-
 ** Electric Pair for Markdown
 
 - https://stackoverflow.com/questions/27871876/custom-pairs-in-emacs-electric-pair-mode/27871987#27871987
@@ -859,6 +819,41 @@ Alternative from: http://wikemacs.org/wiki/Paredit-mode
 
 #+RESULTS:
 
+* Latex-related tweaks
+** Electric Pair for LaTeX
+
+https://tex.stackexchange.com/questions/75697/auctex-how-to-cause-math-mode-dollars-to-be-closed-automatically-with-electric
+
+DGM, 22 jan 20. Trying to get the =[]= pair in latex
+
+#+begin_src emacs-lisp :tangle no
+(add-hook 'LaTeX-mode-hook
+          '(lambda ()
+            (define-key LaTeX-mode-map (kbd "$") 'self-insert-command)
+            (define-key LaTeX-mode-map (kbd "[") 'self-insert-command)))
+#+end_src
+
+But it is not working. I try this:
+
+#+begin_src emacs-lisp :tangle no
+(defun brf-TeX-Inserting (sta stb stc num)
+  " after entering stb insert stc and go back with the cursor by num positions.
+    With prefix nothings gets replaced. If the previous char was sta nothing will be 
+    replaces as well." 
+  (if (null current-prefix-arg)
+      (progn
+        (if (= (preceding-char) sta )
+            (insert stb)
+          (progn (insert stc) (backward-char num))))
+    (insert stb)))
+
+(defun brf-TeX-dollarm () (interactive) (brf-TeX-Inserting ?\\ "$"  "$$" 1))
+
+(add-hook 'LaTeX-mode-hook
+   (function (lambda ()
+       (local-set-key (kbd "$")      'brf-TeX-dollarm))))
+#+end_src
+
 
 ** Trying to make paredit work with latex
 
@@ -867,6 +862,50 @@ No funciona, no se' por que'
 #+begin_src emacs-lisp :tangle no
 (require 'latex-paredit-hack)
 #+end_src
+
+** AUCTeX pairing braces
+This is what solved it for braces and the like but not for math delimiters!!!
+
+AUCTeX has a built in support for pairing braces: 
+- https://www.gnu.org/software/auctex/manual/auctex.html#Braces
+
+- https://emacs.stackexchange.com/questions/27084/electric-pair-of-any-length-using-auctex
+
+
+#+begin_src emacs-lisp :tangle yes
+  (setq TeX-electric-math t) 
+
+  (add-hook 'plain-TeX-mode-hook
+            (lambda () (set (make-local-variable 'TeX-electric-math)
+                            (cons "$" "$"))))
+  (add-hook 'LaTeX-mode-hook
+            (lambda () (set (make-local-variable 'TeX-electric-math)
+                            (cons "\\(" "\\)"))))
+
+  (setq LaTeX-electric-left-right-brace t)
+
+  (setq blink-matching-paren t)
+#+end_src
+
+#+RESULTS:
+: t
+
+Things I've tried:  
+
+#+BEGIN_EXAMPLE
+(add-hook 'plain-TeX-mode-hook
+	  (lambda () (set (make-local-variable 'TeX-electric-math)
+			  (cons "$" "$"))))
+(add-hook 'LaTeX-mode-hook
+	  (lambda () (set (make-local-variable 'TeX-electric-math)
+			  (cons "\\(" "\\)"))))
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+(add-hook 'LaTeX-mode-hook
+          '(lambda ()
+            (define-key LaTeX-mode-map (kbd "$") 'self-insert-command)))
+#+END_EXAMPLE
 
 * Provide
 

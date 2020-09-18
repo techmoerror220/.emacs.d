@@ -4776,7 +4776,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "Repeat most recently executed command")
     (cheatsheet-add :group 'Command
                     :key "C-h l"
-                    :description "view-lossage. Display last few input keystrokes and the commands run")
+                    :description "view-lossage. Display last few input keystrokes-keybindings and the commands run")
     (cheatsheet-add :group 'Command
                     :key "C-x M-: OR C-x ESC ESC OR C-x M-ESC"
                     :description "repeat-complex-command. Edit and re-evaluate last complex command-one which used the minibuffer")
@@ -4785,7 +4785,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "Open helm-M-x and M-p cycles thru history")
     (cheatsheet-add :group 'Command
                     :key "C-h w"
-                    :description "where-is. Print message listing key sequences that invoke the command DEFINITION")  
+                    :description "where-is. Print message listing key sequences that invoke the command DEFINITION")
     (cheatsheet-add :group 'Common
                     :key "C-x C-c"
                     :description "save-buffers-kill-emacs")
@@ -4912,6 +4912,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Dired-Projectile
                     :key "C-c d"
                     :description "Remove entries from Virtual Dired buffer from helm-projectile-find-files session: s-u")
+    (cheatsheet-add :group 'Ediff
+                    :key "B"
+                    :description "ediff-toggle-read-only. If buffer is under version control and locked, check it out first.")
     (cheatsheet-add :group 'Editing
                     :key "M-q"
                     :description "rebox-dwin-fill. Call M-x rebox-mode first. Then turn off")
@@ -5525,9 +5528,45 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Kill-Projectile
                     :key "M-D"
                     :description "Kill marked item in P session")
-  (cheatsheet-add :group 'Latex
-                  :key "C-c C-x \\"
-                  :description "C-c C-x \. org-toggle-pretty-entities. Toggle the composition display of entities as UTF8 characters, i.e., toggle Latex/MathJax buffer symbol conversion in org-mode")
+    (cheatsheet-add :group 'Latex
+                    :key "C-c C-f p"
+                    :description "Insert template for font change command.")
+    (cheatsheet-add :group 'Latex
+                    :key "Reindent"
+                    :description "TAB for lines, M-q for paragraph, M-x LaTeX-fill-buffer RET for whole buffer")
+    (cheatsheet-add :group 'Latex
+                    :key "C-c C-s"
+                    :description "Entering sectioning commands.")
+    (cheatsheet-add :group 'Latex
+                    :key "C-c C-e"
+                    :description "Entering environment commands.")
+    (cheatsheet-add :group 'Latex
+                    :key "C-c C-r"
+                    :description "Execute Latex only on marked region")
+    (cheatsheet-add :group 'Latex
+                    :key "C-c ;"
+                    :description "Comment line")
+    (cheatsheet-add :group 'Latex
+                    :key "C-c C-a"
+                    :description "TeX-command-run-all. Compile docu until ready and then run the viewer.")
+    (cheatsheet-add :group 'Latex
+                    :key "C-c `"
+                    :description "Get to the place where the first compilation occurred. Repeat.")
+    (cheatsheet-add :group 'Latex
+                    :key "C-c C-w"
+                    :description "TeX-toggle-debug-boxes. Notifies of overfull and underfull boxes and of regular errors.")
+    (cheatsheet-add :group 'Latex
+                    :key "TeX-error-overview RET"
+                    :description "Nicely formatted list of all errors and warnings.")
+    (cheatsheet-add :group 'Latex
+                    :key "C-c C-k"
+                    :description "Stop execution of infinite loop.")
+    (cheatsheet-add :group 'Latex
+                    :key "C-c %"
+                    :description "Comment whole paragraph")
+    (cheatsheet-add :group 'Latex
+                    :key "C-c C-x \\"
+                    :description "org-toggle-pretty-entities. Toggle the composition display of entities as UTF8 characters. Latex symbol conversion in org-mode")
     (cheatsheet-add :group 'Latex
                     :key "C-c ]"
                     :description "LaTeX-close-environment")
@@ -5644,7 +5683,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "Widen in Org subtree")
     (cheatsheet-add :group 'Org
                     :key "#"
-                    :description "Comments heading")    
+                    :description "Comments heading")
     (cheatsheet-add :group 'Org
                     :key "TAB or C-i"
                     :description "On a list, insert a lower level item moving, for example, from - to +")
@@ -5965,7 +6004,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "Inserts a skeleton for Org-export to LaTeX")
     (cheatsheet-add :group 'Org-Skeleton
                     :key "M-x beamer-skeleton"
-                    :description "Inserts a  for Org-export to Beamer")
+                    :description "Inserts a skeleton for Org-export to Beamer")
     (cheatsheet-add :group 'Org-table
                     :key "M-Shift-<down>"
                     :description "Insert a new row above the current row. With a prefix argument, the line is created below the current one. Can do the same with C-o")
@@ -5987,6 +6026,12 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Org-timestamps
                     :key "Shift-<up><down>"
                     :description "Increment/decrement stamp")
+    (cheatsheet-add :group 'Magit
+                    :key "SPC"
+                    :description "magit-diff-show-or-scroll-down. Either prompt for a commit, show the commit at point or scroll the buffer down if already on a commit.")
+    (cheatsheet-add :group 'Magit
+                    :key "DEL"
+                    :description "magit-diff-show-or-scroll-up. Either prompt for a commit, show the commit at point or scroll the buffer up if already on a commit.")
     (cheatsheet-add :group 'Magit
                     :key "z w"
                     :description "magit-stash-worktree. Create a stash of unstaged changes in the working tree")
@@ -6154,7 +6199,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "kill-rectangle")
     (cheatsheet-add :group 'RefTeX
                     :key "C-c -"
-                    :description "reftex-toc-recenter. Display the TOC window and highlight line corresponding to current position.")    
+                    :description "reftex-toc-recenter. Display the TOC window and highlight line corresponding to current position.")
     (cheatsheet-add :group 'RefTeX
                     :key "C-c ="
                     :description "reftex-toc. Shows a table of contents. Press ? to get help.")
@@ -6313,10 +6358,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "windmove-down")
     :bind ("s-[" . cheatsheet-show)
     )
-#+END_SRC
+ #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24374 45727 511576 952000) :init (24374 45727 511508 441000) :init-secs (0 0 3188 529000) :use-package-secs (0 0 3335 107000) :config (24374 45727 511496 917000) :config-secs (0 0 3171 969000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24395 49043 464430 18000) :init (24395 49043 464364 340000) :init-secs (0 0 3610 481000) :use-package-secs (0 0 3740 332000) :config (24395 49043 464350 739000) :config-secs (0 0 3592 427000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
@@ -6610,6 +6655,8 @@ DGM: I've tried it but not convinced...
 2 jun 2020: problems with update
 
 #+begin_src emacs-lisp :tangle no
+  (use-package alert)
+
   (use-package pomidor
     ;; :bind (("s-@" . pomidor))
     :config (setq pomidor-sound-tick nil
@@ -6619,7 +6666,7 @@ DGM: I've tried it but not convinced...
                             (setq left-fringe-width 0 right-fringe-width 0)
                             (setq left-margin-width 2 right-margin-width 0)
                             ;; force fringe update
-                            (set-window-buffer nil (current-buffer)))))
+                     n       (set-window-buffer nil (current-buffer)))))
 #+end_src
 
 #+RESULTS:
@@ -7481,6 +7528,32 @@ Este es minimalista y funciona bien.
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24275 51905 88336 730000) :init (24275 51905 88321 152000) :config (24275 51905 88091 385000) :config-secs (0 0 9 83000) :init-secs (0 0 109760 320000) :use-package-secs (0 1 398261 112000)))
 
 
+* Goodies
+** Academic phrases
+When writing your academic paper, you might get stuck trying to find the
+right phrase that captures your intention. This package tries to alleviate
+that problem by presenting you with a list of phrases organized by the topic
+or by the paper section that you are writing. This package has around 600
+phrases so far.
+
+Using this package is easy, just call `M-x academic-phrases` to
+get a list of phrases organized by topic, or call
+`academic-phrases-by-section` to browse the phrases by the paper
+section and fill-in the blanks if required.
+
+This work was based on the freely available PDF titled "English
+for Writing Research - Papers Useful Phrases" which can be found
+here <https://www.springer.com/gb/book/9783319260921>. This work
+was done with the kind permission of Springer Nature and Adrian
+Wallwork.
+
+#+begin_src emacs-lisp :tangle yes
+(use-package academic-phrases)
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24407 26767 442212 933000) :init (24407 26767 442204 72000) :config (24407 26767 441976 330000) :config-secs (0 0 4 943000) :init-secs (0 0 16095 740000) :use-package-secs (0 2 760242 710000)))
+
 * Provide
 
 Trying this on 28 dic 2018. I don't really know why it is needed or not.
@@ -7500,3 +7573,12 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+
+
+
+
+
+
+
+
+
