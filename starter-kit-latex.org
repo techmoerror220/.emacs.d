@@ -17,6 +17,7 @@ Also see https://emacs.stackexchange.com/questions/41332/how-to-automatically-in
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package tex
+  :defer t
   :ensure auctex)
 #+END_SRC
 
@@ -82,8 +83,8 @@ Set up AUCTeX to work with the Evince PDF viewer.
   (setq TeX-view-program-list
        '(("PDF Viewer" "/usr/bin/evince -b -g %n %o %b")))
 
-  ;;  Make emacs aware of multi-file projects
-  (setq-default TeX-master nil)
+  ;; Make emacs aware of multi-file projects
+  ;; (setq-default TeX-master nil)
 
     ;; Auto-raise Emacs on activation (from Skim, usually)
 ;;    (defun raise-emacs-on-aqua()
@@ -372,7 +373,6 @@ Original code on =bib=
 #+begin_src emacs-lisp :tangle yes
   (use-package ebib
     :defer t
-    :ensure t
     :preface
     (use-package parsebib)
     :custom
@@ -504,7 +504,6 @@ A nice complement to ebib is =biblio=, a library to query various databases, suc
 #+begin_src emacs-lisp :tangle yes
 (use-package biblio
   :defer t
-  :ensure t
   :custom
   (biblio-arxiv-bibtex-header "misc")
   :init
@@ -690,7 +689,7 @@ DGM 27 august 2020: turned off cos I don't like prettifying symbols any more.
 #+source: latex-pretty-symbols 
 #+begin_src emacs-lisp :tangle no
 (use-package latex-pretty-symbols
-  :ensure t)
+  :defer t)
 (add-hook 'LaTeX-mode-hook 'latex-unicode-simplified) 
 #+END_SRC
 

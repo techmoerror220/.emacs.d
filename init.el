@@ -233,8 +233,7 @@ ARCHIVE is the string name of the package archive.")
 ;;   :init
 ;;   (gcmh-mode 1))
 
-(use-package bind-key
-  :ensure t)
+(use-package bind-key)
 
 ;; tip from https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=810640
 
@@ -245,7 +244,8 @@ ARCHIVE is the string name of the package archive.")
 ;; https://github.com/danielmai/.emacs.d/blob/master/config.org
 ;; TRAMP (Transparent Remote Access, Multiple Protocols) is a package for editing remote files, similar to AngeFtp or efs. Whereas the others use FTP to connect to the remote host and to transfer the files, TRAMP uses a remote shell connection (rlogin, telnet, ssh). It can transfer the files using rcp or a similar program, or it can encode the file contents (using uuencode or base64) and transfer them right through the shell connection.
 ;; Tramp was formerly called RCP or rcp.el.
-(use-package tramp)
+(use-package tramp
+  :defer t)
 
 ;; Do this to quicken startup:
 ;; https://emacs.stackexchange.com/questions/14708/debugging-slowness-in-init-file-not-hostname-related

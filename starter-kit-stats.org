@@ -20,20 +20,20 @@ This file provides settings for ESS and R.
   ;;  :init (require 'ess-site))
 
   (use-package ess
-    :ensure t)
+    :defer t)
 
   (require 'ess-site)
 
   (use-package ess-smart-underscore
-    :ensure t
+    :defer t
     :after ess)
 
   (use-package ess-view
-    :ensure t
+    :defer t
     :after ess)
 
   (use-package ess-R-data-view
-    :ensure t
+    :defer t
     :after ess)
 
 ;;  (require 'ob-stata)

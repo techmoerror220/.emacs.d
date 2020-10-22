@@ -119,7 +119,6 @@ New, simplified customization. I leave =(load-theme 'solarized-light t)= as I gu
 
 #+begin_src emacs-lisp :tangle yes
   (use-package solarized-theme
-    :ensure t
     :init 
     (setq solarized-distinct-fringe-background t) ;; make the fringe stand out from the background 
     (setq solarized-use-variable-pitch nil)       ;; Don't change the font for some headings and titles
@@ -138,7 +137,7 @@ New, simplified customization. I leave =(load-theme 'solarized-light t)= as I gu
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24222 42903 935690 928000) :init (24222 42903 935661 793000) :config (24222 42903 935104 956000) :config-secs (0 0 12 934000) :init-secs (0 0 938 344000) :use-package-secs (0 0 1094 360000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 13727 622135 792000) :init (24463 13727 622118 656000) :config (24463 13727 621806 582000) :config-secs (0 0 9 912000) :init-secs (0 0 628 310000) :use-package-secs (0 0 740 55000)))
 
 *** Change theme depending on hour of day
 - From 9 am to 8 pm, light theme. Otherwise, dark theme.
@@ -181,7 +180,6 @@ to the function =get-spaceline-working=
 
 #+begin_src emacs-lisp :tangle yes
   (use-package circadian
-    :ensure t
     :config
     (setq calendar-latitude 40.4)
     (setq calendar-longitude -3.7)
@@ -194,7 +192,7 @@ to the function =get-spaceline-working=
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24229 14523 970736 698000) :init (24229 14523 970729 512000) :config (24229 14523 970606 58000) :config-secs (0 0 948408 908000) :init-secs (0 0 948686 318000) :use-package-secs (0 0 948795 165000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 13741 994955 24000) :init (24463 13741 994947 477000) :init-secs (0 2 587425 218000) :use-package-secs (0 2 587556 295000) :config (24463 13741 994831 72000) :config-secs (0 0 2997 664000)))
 
 ** Window system 
 
@@ -355,7 +353,6 @@ With helm-mode active, to use Emacs default completion instead of either Helm or
 ;;  (use-package flx-ido
 ;;    :ensure t) 
 (use-package ido-vertical-mode
-    :ensure t
     :defer t
     :init (ido-vertical-mode 1)
     (setq ido-vertical-define-keys 'C-n-and-C-p-only)

@@ -15,7 +15,7 @@ Support for editing list dialects including [[* Emacs Lisp][Emacs Lisp]], [[* Sc
 Eldoc provides minibuffer hints when working with Emacs Lisp. 
 
 #+BEGIN_SRC emacs-lisp 
-(use-package "eldoc"
+(use-package eldoc
   :diminish eldoc-mode
   :commands turn-on-eldoc-mode
   :defer t
@@ -27,7 +27,7 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23591 16504 904146 174000) :init (23591 16504 904134 645000) :config (23591 16504 904107 391000) :config-secs (0 0 27 37000) :init-secs (0 0 4442 159000) :use-package-secs (0 0 4784 315000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 10570 103189 728000) :init (24463 10570 103178 48000) :config (24463 10570 103148 276000) :config-secs (0 0 29 219000) :init-secs (0 0 111 407000) :use-package-secs (0 0 314 813000)))
 
 ** Eldoc and Par Edit
 - https://www.emacswiki.org/emacs/ParEdit
@@ -50,6 +50,9 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
 (define-key lisp-mode-shared-map (kbd "C-\\") 'lisp-complete-symbol)
 (define-key lisp-mode-shared-map (kbd "C-c v") 'eval-buffer)
 #+end_src
+
+#+RESULTS: starter-kit-define-lisp-keys
+: eval-buffer
 
 ** Non-obtrusive parenthesis faces
 
@@ -245,7 +248,7 @@ Turned off as it seems Geiser works better.
 
 #+BEGIN_SRC emacs-lisp 
 (use-package racket-mode
-  :ensure t
+  :defer t
   :commands racket-mode
   :mode 
   ("\\.rkt[dl]?\\'" . racket-mode) ;; to enable racket-mode when I open a .rkt file. See http://coldnew.github.io/coldnew-emacs/#orgheadline1
@@ -302,7 +305,6 @@ From http://www.maxxcan.com/racket-en-emacs/ I get it that =geiser= is the way o
 
 #+BEGIN_SRC emacs-lisp
 ;;(use-package geiser
-;;  :ensure t
 ;;  :defer t
 ;;  :config
 ;;  (setq geiser-active-implementations '(racket chicken guile)) 

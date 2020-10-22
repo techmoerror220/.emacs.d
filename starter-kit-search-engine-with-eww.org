@@ -441,7 +441,7 @@ https://github.com/rudolfolah/emacs-sos
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package sos
-  :ensure t)
+  :defer t)
 #+END_SRC
 g
 #+RESULTS:

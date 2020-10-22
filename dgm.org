@@ -79,21 +79,6 @@ DGM: not needed with EXWM
 #+RESULTS: fullscreen-4
 | fullscreen | x-dnd-init-frame |
 
-*** COMMENT Mac Key mode
-Used with Mitsuharu Yamamoto's carbon-patched Emacs, which turns
-off support for default mac bindings. Turned off by default.
-#+srcname: mac-keys
-#+begin_src emacs-lisp :tangle yes
-  (require 'mac-key-mode)
-  (mac-key-mode 1)
-  (add-hook 'mac-key-mode-hook
-            (lambda()
-              (interactive)
-              (if mac-key-mode
-                  (setq mac-option-modifier 'meta)
-                (setq mac-option-modifier nil)
-                )))
-#+end_src
 
 ** diff-hl
 Emacs package for highlighting uncommitted changes. See https://github.com/dgutov/diff-hl
@@ -184,13 +169,14 @@ Now my main use =goto-char-timer= where I am prompted to write the text that I w
 #+name: avy-mode
 #+begin_src emacs-lisp :tangle yes
   (use-package avy
-    :ensure t
+    :defer t
     :bind
     ("s-i" . avy-goto-word-1)  ;; goes to word that starts with a given char
     ("s-+" . avy-goto-char)
     ("s-l" . avy-goto-char-timer))
 
-  ;; (define-key global-map (kbd "s-l") 'avy-goto-char-timer) ;;
+   ;; (define-key global-map (kbd "s-l") 'avy-goto-char-timer) ;;
+
 #+end_src
 
 #+RESULTS: avy-mode
@@ -241,6 +227,7 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 
 #+begin_src emacs-lisp :tangle yes
   (use-package iedit
+    :defer t
     :bind (("C-}" . iedit-mode))
     :init
     (setq iedit-toggle-key-default nil))
@@ -446,6 +433,7 @@ A minor mode that guesses the indentation offset originally used for creating so
 
 #+begin_src emacs-lisp :tangle yes
   (use-package dtrt-indent
+    :defer t
     :init
     (dtrt-indent-mode 1)
     (setq dtrt-indent-verbosity 0))
@@ -464,6 +452,7 @@ A minor mode that guesses the indentation offset originally used for creating so
 
 #+begin_src emacs-lisp :tangle yes
   (use-package ws-butler
+    :defer t
     :init
     (add-hook 'prog-mode-hook 'ws-butler-mode)
     (add-hook 'text-mode 'ws-butler-mode)
@@ -559,7 +548,8 @@ Included in =starter-kit-completion.org=
 
 #+srcname: duplicate
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package duplicate-thing)
+  (use-package duplicate-thing
+    :defer t)
   (global-set-key (kbd "M-D") 'duplicate-thing)
 #+END_SRC
 
@@ -591,8 +581,10 @@ Included in =starter-kit-completion.org=
 
 #+srcname: highlight-numbers-and-symbols
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package highlight-numbers)
-  (use-package highlight-symbol)
+  (use-package highlight-numbers
+    :defer t)
+  (use-package highlight-symbol
+    :defer t)
 
   (add-hook 'prog-mode-hook 'highlight-numbers-mode)
 
@@ -653,7 +645,7 @@ Included in =starter-kit-completion.org=
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (use-package rainbow-mode
-    :ensure t
+    :defer t
     :config
     (add-hook 'prog-mode-hook         #'rainbow-mode)
     (add-hook 'html-mode-hook         #'rainbow-mode)
@@ -681,7 +673,7 @@ Included in =starter-kit-completion.org=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package kurecolor
-    :ensure t)
+    :defer t)
 #+END_SRC
 
 #+RESULTS:
@@ -761,7 +753,7 @@ tip from: https://github.com/izahn/dotemacs
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package which-key
-    :ensure t
+    :defer t
     :config
     (which-key-mode))
 #+END_SRC
@@ -779,7 +771,7 @@ Load eval-in-repl for bash, elisp, and python interaction.
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; require the main file containing common functions
   (use-package eval-in-repl
-    :ensure t
+    :defer t
     :config
     (setq comint-process-echoes t)
     ;; truncate lines in comint buffers
@@ -844,7 +836,7 @@ Enhance comint-mode. See https://github.com/riscy/shx-for-emacsl
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package shx
-    :ensure t
+    :defer t
     :init (shx-global-mode 1))
 #+END_SRC
 
@@ -855,6 +847,7 @@ Alternativa from https://github.com/malb/emacs.d/blob/master/malb.org
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package shx
+    :defer t
     :after comint
     :config (progn
               ;;(with-eval-after-load 'python
@@ -1037,7 +1030,7 @@ Recentf is a minor mode that builds a list of recently opened files. This list i
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package recentf
-    :ensure t)
+    :defer t)
 
   (recentf-mode 1)
   (setq recentf-max-menu-items 25)
@@ -1063,7 +1056,7 @@ By default, Recentf saves the list of recent files on exiting Emacs (specificall
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package recentf-ext
-    :ensure t)
+    :defer t)
 #+END_SRC
 
 *** ztree
@@ -1071,7 +1064,8 @@ By default, Recentf saves the list of recent files on exiting Emacs (specificall
 Since ztree works with files and directories, let's consider it in group Files
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package ztree)
+  (use-package ztree 
+    :defer t)
   ;;(use-package ztree-diff)
   ;;(use-package ztree-dir)
 #+END_SRC
@@ -1084,7 +1078,8 @@ Since ztree works with files and directories, let's consider it in group Files
 Ojo: solo funciona si se llama M-x rebox-mode. Luego desactivalo porque interfiere con, por ejemplo, =M w=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package rebox2)
+  (use-package rebox2 
+    :defer t)
   (global-set-key [(meta q)] 'rebox-dwin-fill)
   (global-set-key [(shift meta q)] 'rebox-dwin-no-fill)
 #+END_SRC
@@ -1096,7 +1091,8 @@ https://github.com/Wilfred/helpful
 Note that the built-in `describe-function' includes both functions and macros. `helpful-function' is functions only, so we provide `helpful-callable' as a drop-in replacement.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package helpful)
+  (use-package helpful 
+    :defer t)
 
   (global-set-key (kbd "\C-h f") #'helpful-callable)
   (global-set-key (kbd "\C-h v") #'helpful-variable)
@@ -1205,8 +1201,7 @@ I have commented this out because with =exwm= I think I don't need =eyebrowse= a
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package eyebrowse
-    :ensure t
-    :defer 1
+    :defer t
     :init
     (setq eyebrowse-keymap-prefix (kbd "C-c z"))
     (global-unset-key (kbd "C-c C-w"))
@@ -1269,7 +1264,6 @@ Magit depends on this. Copied from https://github.com/jwiegley/dot-emacs/blob/ma
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ghub
-    :ensure t
     :config
     (require 'auth-source-pass)
     (defvar my-ghub-token-cache nil)
@@ -1281,12 +1275,11 @@ Magit depends on this. Copied from https://github.com/jwiegley/dot-emacs/blob/ma
              (setq my-ghub-token-cache
                    (funcall orig-func host username package nocreate forge))))))
 
-  (use-package ghub+
-    :defer t)
+  (use-package ghub+)
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23934 47113 548749 897000) :init (23934 47113 548708 930000) :init-secs (0 0 173 741000) :use-package-secs (0 0 452 911000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24465 62373 305577 299000) :init (24465 62373 305569 148000) :init-secs (0 0 25571 573000) :use-package-secs (0 0 25651 441000) :config (24465 62373 305397 25000) :config-secs (0 0 2 334000)))
 
 ** Magit
 
@@ -1303,9 +1296,7 @@ Whether to show word-granularity differences within diff hunks.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package magit
-    :ensure t
     :after (ghub)
-    :defer t
     :bind (("C-x g" . magit-status)
            ("C-x M-l" . magit-log-buffer-file)
            ("C-x M-b" . magit-blame)))
@@ -1356,7 +1347,7 @@ Other example edit servers can be found at the project homepage. There is no rea
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package edit-server
-    :ensure t
+    :defer t
     :config
     (when (locate-library "edit-server")
       (require 'edit-server)
@@ -1373,7 +1364,7 @@ Not working for me. So I try =atomic-chrome= (see https://github.com/alpha22jp/a
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package atomic-chrome
-    :ensure t
+    :defer t
     :custom
     (atomic-chrome-url-major-mode-alist
      '(("reddit\\.com" . markdown-mode)
@@ -1465,7 +1456,7 @@ Se usa con =M-x scratch= y te crea un scratch buffer of the currently used mode.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package scratch
-    :ensure t
+    :defer t
     :commands scratch)
 
  (global-set-key (kbd "s-^") 'scratch)
@@ -1600,7 +1591,7 @@ After updating packages, this returns error.
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package gpastel
-    :ensure t
+    :defer t
     :config
     (gpastel-start-listening))
 #+END_SRC
@@ -1635,7 +1626,8 @@ DGM on 29 dic 2018: this is set in =starter-kit-misc.org=
 From
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package fortune)
+  (use-package fortune
+    :defer t)
   (setq fortune-dir "/usr/share/games/fortunes"
         fortune-file "/usr/share/games/fortunes/fortunes")
 #+END_SRC
@@ -1825,7 +1817,7 @@ However, I disable it or else the copy/paste emacs bindings won't work in extern
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package whole-line-or-region
-    :ensure t)
+    :defer t)
 
   (add-to-list 'whole-line-or-region-extensions-alist
                '(comment-dwim whole-line-or-region-comment-dwim nil))
@@ -1941,8 +1933,9 @@ UUUGGHHGGHGH: tangled to no. The message refers to flycheck-mode, not flyspell!!
 Now, I follow https://github.com/flycheck/flycheck/blob/master/doc/user/installation.rst
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package flycheck)
-  ;;  :ensure t)
+  (use-package flycheck
+    :defer t)
+  ;;  :defer t)
   ;;  :init (global-flycheck-mode))
 #+END_SRC
 
@@ -1971,7 +1964,7 @@ However, to actually get the colors, I followed  http://amitp.blogspot.com/2007/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package shell-pop
-    :ensure t
+    :defer t
     :bind ("<s-escape>" . shell-pop))
 
   ;;  (setq shell-pop-default-directory "/home/dgm")
@@ -2029,7 +2022,7 @@ Enable dumb-jump-mode globally:
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dumb-jump
-    :ensure t
+    :defer t
     :init (lambda ()
             (dumb-jump-mode)))
 #+END_SRC
@@ -2043,7 +2036,7 @@ Reads EditorConfig files to set coding style options according to current projec
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package editorconfig
-    :ensure t
+    :defer t
     :config
     (editorconfig-mode 1))
 #+END_SRC
@@ -2062,7 +2055,7 @@ NOTE: this requires you to install wordnet
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package synosaurus
-    :ensure t
+    :defer t
     :config (progn
               (setq synosaurus-backend 'synosaurus-backend-wordnet)
               (setq synosaurus-choose-method 'default)))
@@ -2076,7 +2069,7 @@ Since I already use a local Wordnet as a thesaurus, I'm using it for a dictionar
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package wordnut
-    :ensure t
+    :defer t
     :bind
     ("s-$" . wordnut-search))
 #+END_SRC
@@ -2089,7 +2082,7 @@ A minor mode for a nice writing environment.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package olivetti
-    :ensure t
+    :defer t
     :config (setq olivetti-body-width 90))
 #+END_SRC
 
@@ -2108,7 +2101,7 @@ Already in =init.el=
   ;; possible, pretty useful.
 
   ;;(use-package async
-  ;;  :ensure t
+  ;;  :defer t
   ;;  :init (dired-async-mode 1))
 
   ;;(setq async-bytecomp-allowed-packages '(all))
@@ -2136,7 +2129,7 @@ DGM: Shortcuts commented out as I don't use them that often.
       (message "Cheese!")
       (sit-for 1)
       (start-process "screenshot" nil "import" "-window" "root"
-    p                 (concat (getenv "HOME") "/Pictures/screenshots/" (subseq (number-to-string (float-time)) 0 10) ".png"))
+                     (concat (getenv "HOME") "/Pictures/screenshots/" (subseq (number-to-string (float-time)) 0 10) ".png"))
       (message "Screenshot taken!")))
   ;;(global-set-key (kbd "s-[") 'daedreth/take-screenshot)
 #+END_SRC
@@ -2168,7 +2161,7 @@ symon can be toggled on and off with =super+h=.
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package symon
-    :ensure t
+    :defer t
     :bind
     ("s-h" . symon-mode))
 #+END_SRC
@@ -2206,7 +2199,7 @@ I think this will is too powerful a shortcut for this. I'd rather use it for =sw
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ivy
-    :ensure t)
+    :defer t)
 
   (setq ivy-display-style 'fancy)
 #+END_SRC
@@ -2259,7 +2252,7 @@ This makes it so =C-n-=ing and =C-p-= ing won't make the buffer jump around so m
 
 #+BEGIN_SRC emacs-lisp :tangle no
   ;; (use-package smooth-scrolling
-  ;;  :ensure t
+  ;;  :defer t
   ;;  :config
   ;;  (smooth-scrolling-mode))
 #+END_SRC
@@ -2337,7 +2330,7 @@ Tips from https://pastebin.com/MnSsUWeZ
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ace-window
-    :ensure t
+    :defer t
     :config
     (ace-window-display-mode)
     (setq aw-dispatch-always t)
@@ -2371,7 +2364,7 @@ DGM: I suspect that this package is responsible for my disappearing-cursor probl
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package switch-window
-    :ensure t
+    :defer t
     :config
     (setq switch-window-input-style 'minibuffer)
     (setq switch-window-increase 4)
@@ -2414,7 +2407,7 @@ I like me some searching, the default search is very meh. In emacs, you mostly u
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package swiper
-    :ensure t)
+    :defer t)
 #+END_SRC
 
 DGM: I have removed =:bind ("s-i" . 'swiper)= becuase I don't use it much really.
@@ -2471,7 +2464,7 @@ Note: I disable this as I find it not very useful and dizzling by way of the mov
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package linum-relative
-    :ensure t
+    :defer t
     :config
     (setq linum-relative-current-symbol "")
     (add-hook 'prog-mode-hook 'linum-relative-mode))
@@ -2487,7 +2480,7 @@ I can barely contain my joy. This extension allows you to quickly mark the next 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package mark-multiple
-    :ensure t
+    :defer t
     :bind ("s-q" . 'mark-next-like-this))
 #+END_SRC
 
@@ -2573,7 +2566,7 @@ As much as I like it, it produces interferences.
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package beacon
-    :ensure t
+    :defer t
     :config
     (beacon-mode 1))
 #+END_SRC
@@ -2588,7 +2581,7 @@ Note, however, that Sacha Chua doesn't automatically turn this on because she th
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rainbow-delimiters
-    :ensure t
+    :defer t
     :init
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 #+END_SRC
@@ -2602,7 +2595,7 @@ DGM: I am commenting this out as I found it annoying when, for example, editing 
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package hungry-delete
-    :ensure t
+    :defer t
     :config
     (global-hungry-delete-mode))
 #+END_SRC
@@ -2617,7 +2610,7 @@ DGM: nice, but i prefer to use helm to browse the kill ring.
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package popup-kill-ring
-    :ensure t
+    :defer t
     :bind ("M-y" . popup-kill-ring))
 #+END_SRC
 
@@ -2634,7 +2627,7 @@ Here we make page-break characters look pretty, instead of appearing as ^L in Em
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package page-break-lines
-    :ensure t)
+    :defer t)
 #+END_SRC
 
 #+RESULTS:
@@ -2669,7 +2662,7 @@ Commented out because I don't work with frames and because this functionality is
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package transpose-frame
-    :ensure t
+    :defer t
     :bind ("C-c t" . transpose-frame))
 #+END_SRC
 
@@ -2685,7 +2678,7 @@ Commented out as =C-o= does the same and =s-z= even better as it applies to any 
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package ace-jump-mode
-    :ensure t
+    :defer t
     :diminish ace-jump-mode
     :commands ace-jump-mode
     :bind ("C-s-s" . ace-jump-mode))
@@ -2702,7 +2695,7 @@ http://www.masteringemacs.org/article/smart-scan-jump-symbols-buffer
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package smartscan
-    :ensure t
+    :defer t
     :config (global-smartscan-mode 1)
     :bind (("C-M-+" . smartscan-symbol-go-forward)
            ("C-M-*" . smartscan-symbol-go-backward))
@@ -2739,7 +2732,7 @@ Sets prefix to =C-x /=. Then
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package pulseaudio-control
-    :ensure t)
+    :defer t)
 
   (with-eval-after-load 'pulseaudio-control
     ;; REVIEW: Upstream should set path dynamically.
@@ -2776,7 +2769,7 @@ I leave it out as it doesn't work with =exwm=
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package dashboard
-    :ensure t
+    :defer t
     :config
     (dashboard-setup-startup-hook)
                                           ;    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
@@ -2929,7 +2922,6 @@ Too disruptive. I confuse point for mark and vice versa.
   (setq visible-mark-faces `(visible-mark-face1 visible-mark-face2))
 
   (use-package visible-mark
-    :ensure t
     :defer 1
     :init
     (global-visible-mark-mode nil)) ;; too disruptive
@@ -3034,34 +3026,36 @@ If you use my code below, you can use C-. to find by file in the TAGS file, like
 I don’t remember if I wrote the code below (or if I simply snarfed it from somewhere and modified it.)
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package etags)
-  (defun ido-find-tag ()
-    "Find a tag using ido"
-    (interactive)
-    (tags-completion-table)
-    (let (tag-names)
-      (mapc (lambda (x)
-              (unless (integerp x)
-                (push (prin1-to-string x t) tag-names)))
-            tags-completion-table)
-      (find-tag (ido-completing-read "Tag: " tag-names))))
+  (use-package etags
+    :defer t
+    :config 
+     (defun ido-find-tag ()
+       "Find a tag using ido"
+       (interactive)
+       (tags-completion-table)
+       (let (tag-names)
+         (mapc (lambda (x)
+                 (unless (integerp x)
+                   (push (prin1-to-string x t) tag-names)))
+               tags-completion-table)
+         (find-tag (ido-completing-read "Tag: " tag-names))))
 
-  (defun ido-find-file-in-tag-files ()
-    (interactive)
-    (save-excursion
-      (let ((enable-recursive-minibuffers t))
-        (visit-tags-table-buffer))
-      (find-file
-       (expand-file-name
-        (ido-completing-read
-         "Project file: " (tags-table-files) nil t)))))
+     (defun ido-find-file-in-tag-files ()
+       (interactive)
+       (save-excursion
+         (let ((enable-recursive-minibuffers t))
+           (visit-tags-table-buffer))
+         (find-file
+          (expand-file-name
+           (ido-completing-read
+            "Project file: " (tags-table-files) nil t)))))
 
-  (global-set-key [remap find-tag] 'ido-find-tag)
-  (global-set-key (kbd "C-`") 'ido-find-file-in-tag-files)
+     (global-set-key [remap find-tag] 'ido-find-tag)
+     (global-set-key (kbd "C-`") 'ido-find-file-in-tag-files))
 #+END_SRC
 
 #+RESULTS:
-: ido-find-file-in-tag-files
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 18086 766944 94000) :init (24463 18086 766936 904000) :config (24463 18086 766921 557000) :config-secs (0 0 621 191000) :init-secs (0 0 681 786000) :use-package-secs (0 0 832 930000)))
 
 ***** Mark functionality
 ****** Explicitly set the mark
@@ -3122,7 +3116,7 @@ From Reddit: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgm
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package interleave
-    :ensure t)
+    :defer t)
 #+END_SRC
 
 #+RESULTS:
@@ -3131,19 +3125,12 @@ From Reddit: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgm
 
 From https://github.com/politza/pdf-tools
 
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package pdf-tools
-    :ensure t)
-
-  ;; (pdf-tools-install) ;; commented out as I think it gets activated below
-#+END_SRC
-
 New set up from https://www.reddit.com/r/emacs/comments/bge7tc/how_to_solve_lisp_error_error_no_such_page_12_in/
 
 Further customization from: https://github.com/dueyfinster/dotfiles/blob/master/conf/emacs.d/emacs-init.org#start-of-content
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package pdf-tools
+    :defer t
     :mode (("\\.pdf\\'" . pdf-view-mode))
     :magic ("%PDF" . pdf-view-mode)
     :config (pdf-tools-install :no-query)
@@ -3158,7 +3145,7 @@ Further customization from: https://github.com/dueyfinster/dotfiles/blob/master/
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24383 43606 973654 385000) :init (24383 43606 973645 683000) :config (24383 43606 973632 34000) :config-secs (0 0 27128 719000) :init-secs (0 0 27152 272000) :use-package-secs (0 0 27213 303000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 18907 963212 56000) :init (24463 18907 963201 803000) :init-secs (0 0 21987 115000) :use-package-secs (0 0 22049 605000) :config (24463 18907 963185 848000) :config-secs (0 0 21960 815000)))
 
 
 ***** Fix for the error before first and last page
@@ -3285,6 +3272,7 @@ Provides a minor mode which displays current match and total matches information
 
 #+begin_src emacs-lisp :tangle yes
   (use-package anzu
+    :defer t
     :init
     ;; (global-anzu-mode)
     (global-set-key (kbd "M-%") 'anzu-query-replace)
@@ -3596,7 +3584,7 @@ Originally:
 
 #+BEGIN_EXAMPLE
 (use-package ledger-mode
-  :ensure t
+  :defer t
   :init
   (setq ledger-clear-whole-transactions 1)
   ;;:config
@@ -3609,7 +3597,7 @@ Next, copied from: https://www.reddit.com/r/emacs/comments/8x4xtt/tip_how_i_use_
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ledger-mode
-    :ensure t
+    :defer t
     :init
     (setq ledger-clear-whole-transactions 1)
     :mode ("\\.dat\\'"
@@ -3672,7 +3660,8 @@ Originally here:
 But then the guy turned it into a minor mode! See
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package vi-tilde-fringe)
+  (use-package vi-tilde-fringe
+    :defer t)
   (global-vi-tilde-fringe-mode 1)
 #+END_SRC
 
@@ -3833,6 +3822,7 @@ Sometimes you want to be able to do fancy things with the text that you're enter
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package miniedit
+    :defer t
     :commands minibuffer-edit
     :init (miniedit-install))
 #+END_SRC
@@ -3863,7 +3853,9 @@ http://emacsredux.com/blog/2013/03/27/copy-filename-to-the-clipboard/ https://gi
 =M-x edit-list= makes it easier to edit an Emacs Lisp list.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package edit-list :commands edit-list)
+  (use-package edit-list   
+    :defer t
+    :commands edit-list)
 #+END_SRC
 
 
@@ -4444,7 +4436,8 @@ Read:
 - https://www.reddit.com/r/emacs/comments/atykf9/undopropose_simple_and_safe_undo_in_emacs/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package undo-propose)
+  (use-package undo-propose
+    :defer t)
 #+END_SRC
 
 * Reverse paragraphs
@@ -4523,7 +4516,7 @@ Recommended by the great Mike Zamansky at https://www.youtube.com/watch?v=49kBWM
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package try
-    :ensure t)
+    :defer t)
 #+END_SRC
 
 #+RESULTS:
@@ -4627,7 +4620,8 @@ DGM: not sure it is better.
 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package twittering-mode)
+  (use-package twittering-mode
+    :defer t)
 #+END_SRC
 
 #+RESULTS:
@@ -4673,7 +4667,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package cheatsheet
-    :ensure t
+    :defer t
     :config
     (cheatsheet-add :group 'Bindings
                     :key "describe-personal-keybinding"
@@ -4762,6 +4756,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Browsing
                     :key "M-x my-helm-stackoverflow-lookup"
                     :description "Alternative for StackOverflow only")
+    (cheatsheet-add :group 'Calendar
+                    :key "M-="
+                    :description "calendar-count-days-region. The numbers of days printed is inclusive; that is, it includes the days specified by mark and point")
     (cheatsheet-add :group 'Chromium
                     :key "C-l"
                     :description "Mark url")
@@ -5454,6 +5451,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c h k"
                     :description "helm-buffer-run-kill-persistent: Works on a helm menu like the one by C-x b")
     (cheatsheet-add :group 'Help
+                    :key "M-x describe-personal-keybindings"
+                    :description "Describes personal keybindings")
+    (cheatsheet-add :group 'Help
                     :key "C-h C-h"
                     :description "which-key-C-h-dispatch. Helps navigate help keys")
     (cheatsheet-add :group 'Help
@@ -5528,6 +5528,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Kill-Projectile
                     :key "M-D"
                     :description "Kill marked item in P session")
+    (cheatsheet-add :group 'Latex
+                    :key "$"
+                    :description "TeX-electric-math. Surround active region as math or math display")
     (cheatsheet-add :group 'Latex
                     :key "C-c C-f p"
                     :description "Insert template for font change command.")
@@ -6254,6 +6257,15 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Shell
                     :key "C-c C-l"
                     :description "comint-dynamic-list-input-ring.  Display the buffer's history of shell commands in another window")
+    (cheatsheet-add :group 'Snippet-org
+                    :key "ps"
+                    :description "BEAMER: pause")
+    (cheatsheet-add :group 'Snippet-org
+                    :key "pd"
+                    :description "==pending")
+    (cheatsheet-add :group 'Snippet-R
+                    :key "gg"
+                    :description "ggplot template")
     (cheatsheet-add :group 'Spelling
                     :key "C-M-$"
                     :description "Change dictionary")
@@ -6361,7 +6373,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
  #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24395 49043 464430 18000) :init (24395 49043 464364 340000) :init-secs (0 0 3610 481000) :use-package-secs (0 0 3740 332000) :config (24395 49043 464350 739000) :config-secs (0 0 3592 427000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24433 62995 983170 789000) :init (24433 62995 983106 148000) :init-secs (0 0 29 300000) :use-package-secs (0 0 179 343000)))
 
 
 * COMMENT Remapping =M-<= and =M->=
@@ -6459,7 +6471,8 @@ This package updates the GPG keys used by the ELPA package manager
 from the GNU ELPA archive.
 
 #+begin_src emacs-lisp :tangle yes
-  (use-package gnu-elpa-keyring-update)
+  (use-package gnu-elpa-keyring-update
+    :defer t)
 #+end_src
 
 ** Making Emacs secure
@@ -6542,7 +6555,7 @@ Dim everything except for the thing-at-point. Improves focus when reading code a
 
 #+begin_src emacs-lisp :tangle yes
   (use-package focus
-    :ensure t
+    :defer t
     :bind
     ("C-c f" . focus-mode)
     ("C-c F" . focus-read-only-mode))
@@ -6558,14 +6571,13 @@ Dim everything except for the thing-at-point. Improves focus when reading code a
 #+begin_src emacs-lisp :tangle yes
   ;; :quelpa keyword
   (use-package quelpa
-    :ensure t
     :defer t)
                                           ;:custom
                                           ;  (quelpa-update-melpa-p nil "Don't update the MELPA git repo.")
                                           ;)
 
   (use-package quelpa-use-package
-    :ensure t)
+    :defer t)
 #+end_src
 
 #+RESULTS:
@@ -6586,6 +6598,7 @@ Next time you're writing fiction, non-fiction, a journalistic piece or a blog po
 
 #+begin_src emacs-lisp :tangle yes
   (use-package palimpsest
+    :defer t
     :diminish palimpsest-mode
     :bind ("C-$" . palimpsest-move-region-to-trash)
     :config
@@ -6655,9 +6668,12 @@ DGM: I've tried it but not convinced...
 2 jun 2020: problems with update
 
 #+begin_src emacs-lisp :tangle no
-  (use-package alert)
+  (use-package alert
+    :defer t)
 
   (use-package pomidor
+    :defer t
+    :ensure alert
     ;; :bind (("s-@" . pomidor))
     :config (setq pomidor-sound-tick nil
                   pomidor-sound-tack nil)
@@ -6670,7 +6686,7 @@ DGM: I've tried it but not convinced...
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23981 29936 785167 905000) :init (23981 29936 785126 11000) :init-secs (0 0 102457 208000) :use-package-secs (0 0 102787 632000) :config (23981 29936 784913 633000) :config-secs (0 0 217 811000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 18316 643762 877000) :init (24463 18316 643742 843000) :init-secs (0 0 48 432000) :use-package-secs (0 0 124 516000)))
 
 * Calendar
 Remember: =q= to exit
@@ -6803,7 +6819,7 @@ With the solarized-dark theme, math notation is too dark to see.
 
 #+begin_src emacs-lisp :tangle yes
   (use-package buffer-flip
-    :ensure t
+    :defer t
     :bind  (("C-c b"      . buffer-flip)
             :map buffer-flip-map
             ( "s-<tab>"   . buffer-flip-forward)
@@ -6887,7 +6903,8 @@ Package Repository.  Use `M-x list-packages RET' to show information about,
 and install, the current version.
 
 #+begin_src emacs-lisp :tangle yes
-  (use-package chess)
+  (use-package chess
+    :defer t)
 #+end_src
 
 #+RESULTS:
@@ -7324,7 +7341,8 @@ On flickering, check https://www.facebook.com/notes/daniel-colascione/buttery-sm
 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package speed-type)
+  (use-package speed-type
+    :defer t)
 #+END_SRC
 
 #+RESULTS:
@@ -7405,6 +7423,7 @@ Sacha has this but it doesn't work because it doesn't interpret my latitude and 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package forecast
+    :defer t
     :config
     (setq forecast-latitude  40.4
           forecast-longitude -3.7
@@ -7503,7 +7522,7 @@ Thank you for the fix emacle!
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package wttrin
-    :ensure t
+    :defer t
     :commands (wttrin)
     :init
     (setq wttrin-default-cities '("Madrid"
@@ -7521,12 +7540,21 @@ Thank you for the fix emacle!
 Este es minimalista y funciona bien. 
 
 #+begin_src emacs-lisp :tangle yes
-(use-package metar)
+(use-package metar 
+  :defer t)
 #+end_src
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24275 51905 88336 730000) :init (24275 51905 88321 152000) :config (24275 51905 88091 385000) :config-secs (0 0 9 83000) :init-secs (0 0 109760 320000) :use-package-secs (0 1 398261 112000)))
 
+* Long lines 
+This will drop you out of your major mode into =so-long-mode=, giving you a chanch to fix a long line before switching to the original mode.
+
+The long line may be responsable of org mode hanging. See https://stackoverflow.com/questions/59990932/slow-cursor-movement-in-large-org-mode-file-and-the-org-do-latex-and-related-f/63697566#63697566
+
+#+begin_src emacs-lisp :tangle no
+(global-so-long-mode 1)
+#+end_src
 
 * Goodies
 ** Academic phrases
@@ -7548,7 +7576,8 @@ was done with the kind permission of Springer Nature and Adrian
 Wallwork.
 
 #+begin_src emacs-lisp :tangle yes
-(use-package academic-phrases)
+(use-package academic-phrases 
+  :defer t)
 #+end_src
 
 #+RESULTS:
@@ -7573,12 +7602,3 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
-
-
-
-
-
-
-
-
-

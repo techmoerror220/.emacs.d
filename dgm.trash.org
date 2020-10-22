@@ -1,3 +1,27 @@
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package pdf-tools
+    :defer t)
+
+  ;; (pdf-tools-install) ;; commented out as I think it gets activated below
+#+END_SRC
+
+*** COMMENT Mac Key mode
+Used with Mitsuharu Yamamoto's carbon-patched Emacs, which turns
+off support for default mac bindings. Turned off by default.
+#+srcname: mac-keys
+#+begin_src emacs-lisp :tangle no
+  (require 'mac-key-mode)
+  (mac-key-mode 1)
+  (add-hook 'mac-key-mode-hook
+            (lambda()
+              (interactive)
+              (if mac-key-mode
+                  (setq mac-option-modifier 'meta)
+                (setq mac-option-modifier nil)
+                )))
+#+end_src
+
 *** Pragmatic Emacs alternative with =wttrin=
 The only problem is that if the Emacs frame is not wide enough and the lines in the wttrin buffer wrap, it becomes unreadable.
 

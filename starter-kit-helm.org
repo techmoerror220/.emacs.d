@@ -22,7 +22,6 @@ See https://github.com/emacs-helm/helm/issues/2085
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package helm
-  :ensure t
   :diminish helm-mode
   :init 
   (helm-mode 1)
@@ -176,7 +175,6 @@ Conclusion: it's like a helm-occur bound to =s-;=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package helm-swoop
-  :ensure t
   :after helm-mode
   :bind (("C-c h o" . helm-swoop)
          ("C-c s" . helm-multi-swoop-all))
@@ -616,8 +614,7 @@ Disabled as it gives rise to lisp error
 List active key bindings:
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package helm-descbinds
-	:ensure t)
+(use-package helm-descbinds)
 (helm-descbinds-mode)
 #+END_SRC
 
@@ -645,7 +642,7 @@ Old setup
 
 #+begin_src emacs-lisp :tangle no
 (use-package helm-gtags
-	:ensure t
+	:defer t
     :init
     ;; Enable helm-gtags-mode
     (add-hook 'dired-mode-hook 'helm-gtags-mode)
@@ -675,25 +672,25 @@ New setup from Tuhdo's =setup-helm-gtags.el=
 
 #+begin_src emacs-lisp :tangle yes
 (use-package ggtags
-  :ensure t)
+   :defer t
+   :config 
+   (add-hook 'c-mode-common-hook
+             (lambda ()
+               (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+                 (ggtags-mode 1))))
 
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-              (ggtags-mode 1))))
+   (define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+   (define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+   (define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+   (define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+   (define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+   (define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
 
-(define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
-(define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
-(define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
-(define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
-(define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
-(define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
-
-(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
+   (define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark))
 #+end_src
 
 #+RESULTS:
-: pop-tag-mark
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 12322 384705 237000) :init (24463 12322 384688 421000) :config (24463 12322 384660 250000) :config-secs (0 0 975 273000) :init-secs (0 0 1054 890000) :use-package-secs (0 0 1179 11000)))
 
 And now on to helm. 
 
@@ -703,6 +700,7 @@ And now on to helm.
 (setq helm-gtags-prefix-key "\C-cg")
 
 (use-package helm-gtags
+  :defer t
   :init
   (progn
     (setq helm-gtags-ignore-case t
@@ -746,8 +744,7 @@ From https://github.com/tmalsburg/helm-bibtex: Helm-bibtex and ivy-bibtex allow 
 
 #+begin_src emacs-lisp :tangle yes
 ;; (setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
-(use-package helm-bibtex
-  :ensure t)
+(use-package helm-bibtex)
 ;; (global-set-key (kbd "<s-backspace>") 'helm-bibtex) ;; not needed. Already in =C-c ]=. <s-backspace> relocated to helm-swoop. Aunque ojo que en Olivetti mode =C-c ]= esta' bound to another thing.
 #+end_src
 
@@ -850,7 +847,6 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; Projectile
 (use-package projectile
-  :ensure t
   :config 
   (projectile-global-mode t)
   (setq projectile-project-search-path '("~/"
@@ -927,7 +923,7 @@ Not needed, I think as the they are included in =.git= of =~/=.
 
 #+begin_src emacs-lisp :tangle no
 (use-package projectile
-  :init
+   :init
   (projectile-global-mode)
   (setq projectile-enable-caching t))
 #+end_src
@@ -940,7 +936,6 @@ Not needed, I think as the they are included in =.git= of =~/=.
 #+srcname: helm-projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package helm-projectile
-  :ensure t
   :after helm-mode 
   :init     
   (helm-projectile-on)
@@ -1085,14 +1080,15 @@ With helm-man-woman, you can quickly jump to any man entry using the Helm interf
 DGM, 4 sept 2019: not sure ack is better than grep.
 
 #+begin_src emacs-lisp :tangle no
-(use-package helm-ack)
-
-(when (executable-find "ack-grep")
-  (setq helm-grep-default-command "ack-grep -Hn --no-group --no-color %e %p %f"
-        helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f"))
+(use-package helm-ack
+  :config 
+  (when (executable-find "ack-grep")
+    (setq helm-grep-default-command "ack-grep -Hn --no-group --no-color %e %p %f"
+          helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f")))
 #+end_src
 
 #+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 12502 133331 166000) :init (24463 12502 133312 827000) :init-secs (0 0 41 20000) :use-package-secs (0 0 114 969000)))
 
 ** Grep in Projectile project
 
@@ -1144,11 +1140,9 @@ NB: =helm-projectile-ag= resulta en un formato ilegible. =helm-ag= resulta en un
 ;;  (define-key global-map "\C-x\C-a" 'helm-ag) 
 ;;  (define-key global-map "\C-x\C-r" 'helm-ag-regexp)
 
-(use-package ag 
-  :ensure t)
+(use-package ag)
 
 (use-package helm-ag
-  :ensure t
   :after (helm-mode ag)
   :bind ("s-f" . helm-ag)
   :init (setq helm-ag-base-command "/usr/bin/ag"
@@ -1261,7 +1255,6 @@ Run one of the rifle commands, type some words, and results will be displayed, g
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package helm-org-rifle
-  :ensure t
   :bind ("s-u" . helm-org-rifle))
 #+END_SRC
 
@@ -1273,7 +1266,6 @@ Customization by the great malb: (https://github.com/malb/emacs.d/blob/master/ma
 
 #+begin_src emacs-lisp :tangle yes
 (use-package helm-org-rifle
-  :ensure t
   :commands (helm-org-rifle-agenda-files helm-org-rifle-occur-agenda-files malb/helm-org-rifle-agenda-files)
   :config (progn
             (defun malb/helm-org-rifle-agenda-files (arg)
@@ -1411,37 +1403,32 @@ I don't use it that much...
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'helm-bookmark)
 
-(use-package helm-exwm)
-;; (when (require 'helm-exwm nil t)
-(add-to-list 'helm-source-names-using-follow "EXWM buffers")
-(setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
-(setq helm-exwm-source (helm-exwm-build-source))
-(setq helm-mini-default-sources `(helm-exwm-emacs-buffers-source
-                                  helm-exwm-source
-                                  helm-source-buffers-list
-                                  helm-source-recentf
-                                  ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
-                                  helm-source-bookmarks
-                                  helm-source-bookmark-set
-                                  helm-source-buffer-not-found))
-
-;; Not sure how this works
-;;(ambrevar/define-keys helm-exwm-map
-;;   "s-!" 'helm-buffer-run-kill-persistent
-;;   "s-#" 'helm-buffer-switch-other-window)
-;; The above does not work and I don't know what is meant to do
-
-;; next two lines work in the context of a helm menu like the one triggered with =C-x b=
-(global-set-key (kbd "C-c h w") 'helm-buffer-switch-other-window)
-(global-set-key (kbd "C-c h k") 'helm-buffer-run-kill-persistent)
-
-;; Launcher
-(exwm-input-set-key (kbd "s-e") 'helm-run-external-command)
+(use-package helm-exwm
+  :config
+  (add-to-list 'helm-source-names-using-follow "EXWM buffers")
+  (setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
+  (setq helm-exwm-source (helm-exwm-build-source))
+  (setq helm-mini-default-sources `(helm-exwm-emacs-buffers-source
+                                    helm-exwm-source
+                                    helm-source-buffers-list
+                                    helm-source-recentf
+                                    ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
+                                    helm-source-bookmarks
+                                    helm-source-bookmark-set
+                                    helm-source-buffer-not-found))
+   ;; next two lines work in the context of a helm menu like the one triggered with =C-x b=
+   (global-set-key (kbd "C-c h w") 'helm-buffer-switch-other-window)
+   (global-set-key (kbd "C-c h k") 'helm-buffer-run-kill-persistent)
+   ;; Launcher
+   (exwm-input-set-key (kbd "s-e") 'helm-run-external-command))
 
 ;; Web browser. Turned off by DGM on 22 august 2019
 ;; (exwm-input-set-key (kbd "M-s-j") #'helm-exwm-switch-browser)               ;; I don't use these two and I don't see the user case.
 ;; (exwm-input-set-key (kbd "s-j")   #'helm-exwm-switch-browser-other-window)  ;; not using it
 #+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 12977 279403 709000) :init (24463 12977 279377 503000) :init-secs (0 0 65 316000) :use-package-secs (0 0 220 680000)))
 
 
 Basic commands with for interfacing with =exwm= with =helm=

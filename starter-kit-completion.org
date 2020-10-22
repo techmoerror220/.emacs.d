@@ -25,15 +25,15 @@ This is the old configuration.
 ;; above line replaced with the following use-package from uncle dave
 ;; https://github.com/daedreth/UncleDavesEmacs
 (use-package yasnippet
-  :ensure t
+  :defer t
   :init
   (add-hook 'prog-mode-hook 'yas-minor-mode))
 
 (use-package yasnippet-snippets
-  :ensure t)
+  :defer t)
 
 (use-package yasnippet-classic-snippets
-  :ensure t)
+  :defer t)
 
 ;; Setting yas-indent-line to =’fixed= fixes Python indentation behavior when typing a templated snippet. 
 ;; Tip from https://github.com/danielmai/.emacs.d/blob/master/config.org
@@ -60,7 +60,7 @@ The new config from Daniel Mai's config files is this:
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package yasnippet
-  :ensure t
+  :defer t
   :diminish yas-minor-mode
   :config
 (setq yas-snippet-dirs '("~/.emacs.d/mysnippets"
@@ -142,7 +142,7 @@ Another:
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package yasnippet
-  :ensure t
+  :defer t
   :init
   (add-hook 'prog-mode-hook 'yas-minor-mode)
   :config
@@ -162,10 +162,10 @@ of the folder in the collection) and their keys can be expanded using =TAB=.
 
 #+begin_src emacs-lisp :tangle yes
 (use-package yasnippet-snippets
-  :ensure t)
+  :defer t)
 
 (use-package yasnippet-classic-snippets
-  :ensure t)
+  :defer t)
 #+end_src
 
 #+RESULTS:
@@ -175,7 +175,7 @@ of the folder in the collection) and their keys can be expanded using =TAB=.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ivy-yasnippet
-  :ensure t
+  :defer t
   :bind ("s-y" . ivy-yasnippet))
 #+END_SRC
 
@@ -205,7 +205,7 @@ Daniel Guinea Martín: I disable it for text modes and now that I don't have it 
 ;;;;;;; (require 'company) ;; commented out by dgm in favor of uncle dave's use-package from https://github.com/daedreth/UncleDavesEmacs
 
 (use-package company
-  ;; :ensure t
+  ;; :defer t
   :config
   (setq company-tooltip-limit 20)
 ;;  (setq company-idle-delay 0.01)
@@ -317,7 +317,7 @@ Each category also has additional settings.
 **** flycheck
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package flycheck-clang-analyzer
-  :ensure t
+  :defer t
   :config
   (with-eval-after-load 'flycheck
     (require 'flycheck-clang-analyzer)
@@ -332,16 +332,16 @@ DGM 7 Nov 2019: when activated, I lost company mode in email and ledger, even th
   (add-hook 'c-mode-hook 'company-mode))
 
 (use-package company-c-headers
-  :ensure t)
+  :defer t)
 
 (use-package company-irony
-  :ensure t
+  :defer t
   :config
   (setq company-backends '((company-c-headers
                             company-dabbrev-code
                             company-irony))))
 (use-package irony
-  :ensure t
+  :defer t
   :config
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
@@ -373,7 +373,8 @@ DGM 7 Nov 2019: when activated, I lost company mode in email and ledger, even th
 (setq c-default-style "linux") ;; set style to "linux"
 
 ;; dgm comments out as c-mode-map is reported to be a void variable.
-(use-package cc-mode)
+(use-package cc-mode
+  :defer t)
 ;;  :init
 ;;  (define-key c-mode-map  [(tab)] 'company-complete)
 ;;  (define-key c++-mode-map  [(tab)] 'company-complete))
@@ -394,7 +395,7 @@ This is currently tangled to =yes=.
 ;;    (add-hook 'python-mode-hook 'company-mode))
 
 ;;(use-package company-jedi
-;;  :ensure t
+;;  :defer t
 ;;  :config
 ;;    (require 'company)
 ;;    (add-to-list 'company-backends 'company-jedi)
@@ -428,13 +429,13 @@ I comment this out for the time being as it seems to use a keybinding that confl
 (add-hook 'emacs-lisp-mode-hook 'company-mode)
 
 ;;(use-package slime
-;;  :ensure t
+;;  :defer t
 ;;  :config
 ;;  (setq inferior-lisp-program "/usr/bin/sbcl")
 ;;  (setq slime-contribs '(slime-fancy)))
 
 ;; (use-package slime-company
-;;  :ensure t
+;;  :defer t
 ;;  :init
 ;;    (require 'company)
 ;;    (slime-setup '(slime-fancy slime-company)))
@@ -447,7 +448,7 @@ I comment this out for the time being as it seems to use a keybinding that confl
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package company-shell
-  :ensure t
+  :defer t
   :config
     (require 'company)
     (add-hook 'shell-mode-hook 'shell-mode-company-init))

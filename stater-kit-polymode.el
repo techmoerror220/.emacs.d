@@ -1,5 +1,5 @@
 (use-package markdown-mode
-  :ensure t
+  :defer t
   :mode
   (("README\\.md\\'" . gfm-mode)
    ("\\.md\\'" . markdown-mode)
@@ -15,7 +15,7 @@
 
 ;; Add yaml to markdown an .yml files
 (use-package yaml-mode
-  :ensure t
+  :defer t
   :mode (("\\.yml\\'" . yaml-mode)))
 
 (defun my_pipe_operator ()
@@ -90,7 +90,7 @@
    (define-key markdown-mode-map "\C-c [" 'markdown-reftex-citation)))
 
 (use-package pandoc-mode
-  :ensure t
+  :defer t
   :config
   (add-hook 'markdown-mode-hook 'pandoc-mode)
   (add-hook 'TeX-mode-hook 'pandoc-mode)  

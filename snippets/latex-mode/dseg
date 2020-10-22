@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: dseg
+# key: ds
+# --
+\texttt{dseg}$0

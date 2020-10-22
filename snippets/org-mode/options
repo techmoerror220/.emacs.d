@@ -1,5 +1,5 @@
-#name : OPTIONS
-#contributor : Rick Moynihan <rick@sourcesmouth.co.uk>
+# -*- mode: snippet -*-
+# name: ps
+# key: ps
 # --
-#+OPTIONS: ${0}
-
+#+BEAMER: \pause

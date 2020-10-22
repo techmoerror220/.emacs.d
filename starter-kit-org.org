@@ -73,7 +73,7 @@ Following Daniel Mai we add the exporter for Pandoc as well (remember to install
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ox-pandoc
-    :ensure t)
+    :defer t)
 #+END_SRC
 
 #+RESULTS:
@@ -133,7 +133,7 @@ Create =html= files form the =org= sources, to help with documentation. To set u
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ox-twbs
-    :ensure t)
+    :defer t)
 #+END_SRC
 
 #+RESULTS:
@@ -160,7 +160,7 @@ It’s important that you download =tufte css= and place it on your server (with
       (add-to-list 'load-path "/home/dgm/.emacs.d/src/ox-tufte")
       (require 'ox-tufte))
   (use-package ox-tufte
-    :ensure t
+    :defer t
     :init (require 'ox-tufte)))
 
  (require 'ox-tufte)
@@ -301,7 +301,6 @@ Suggested here: https://www.reddit.com/r/emacs/comments/ek37ri/i_cant_get_indent
 #+begin_src emacs-lisp :tangle yes
 (use-package org-indent
   :ensure nil
-  :defer t
   :init
   (add-hook 'org-mode-hook 'org-indent-mode))
 
@@ -601,7 +600,7 @@ We'll need the =htmlize= package for syntax highlighting of code blocks (in Caol
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package htmlize
-    :ensure t)
+    :defer t)
 #+END_SRC
 
 #+RESULTS:
@@ -640,7 +639,7 @@ I've used ("◉" "○ ""►" "•" "•"))
 #+name: org-bullets
 #+begin_src emacs-lisp :tangle no
   (use-package org-bullets
-    :ensure t
+    :defer t
     :config
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
 #+end_src
@@ -770,7 +769,7 @@ The default value is -77, which is weird for smaller width windows. I’d rather
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package org-ref
-    :ensure t
+    :defer t
     :init
     (setq org-ref-completion-library 'org-ref-helm-bibtex)
     (setq org-ref-notes-directory "/media/dgm/blue/documents/elibrary/org/references"
@@ -1588,6 +1587,7 @@ And guess what?? It works!!!
                                "/home/dgm/Dropbox/gtd/calendar.org"
                                "/home/dgm/Dropbox/gtd/divorcio_gtd.org" 
                                "/media/dgm/blue/documents/proyectos/mutual-stata/gtd/mutual_gtd.org" 
+                               "/media/dgm/blue/documents/proyectos/caixa2019-bartik/gtd/bartik-gtd.org"
                                "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org"
                                "/media/dgm/blue/documents/proyectos/curso-ayuntamiento-madrid/gtd/curso-disenoInvestigacionI.org"
                                "/media/dgm/blue/documents/My-Academic-Stuff/acreditacion-titular/gtd/titularidad-gtd.org"
@@ -1743,6 +1743,7 @@ Similarly, nota que sólo con =maxlevel= I get the refiling to =someday.org='s s
                                ("/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org" :level . 2)
                                ("/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" :level . 2)
                                ("/media/dgm/blue/documents/proyectos/mutual-stata/gtd/mutual_gtd.org" :maxlevel . 2)
+                               ("/media/dgm/blue/documents/proyectos/caixa2019-bartik/gtd/bartik-gtd.org" :maxlevel . 2)
                                ("/media/dgm/blue/documents/proyectos/curso-ayuntamiento-madrid/gtd/curso-disenoInvestigacionI.org" :maxlevel . 2)
                                ("/media/dgm/blue/documents/My-Academic-Stuff/acreditacion-titular/gtd/titularidad-gtd.org" :maxlevel . 2)
                                ("/home/dgm/Dropbox/gtd/divorcio_gtd.org" :level . 2)
@@ -2393,7 +2394,7 @@ On the other hand, https://www.youtube.com/watch?v=wwW_1BQKGZ0 recommends using 
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package org-drill
-    :ensure t)
+    :defer t)
 #+END_SRC
 
 #+RESULTS:
@@ -3402,7 +3403,7 @@ DGM: check how to make this work.. but way too complicated for me!
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-web-tools
-    :ensure t)
+    :defer t)
 #+END_SRC
 
 #+RESULTS:
@@ -4987,7 +4988,7 @@ c Select default clocking task
   (setq org-agenda-custom-commands nil)
 
   (use-package org-super-agenda
-    :ensure t
+    :defer t
     :quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
     :config
     (org-super-agenda-mode t))
@@ -5306,7 +5307,7 @@ Out of the box, org-mode doesn't know about pdf-tools. However, you can add supp
 
 #+begin_src emacs-lisp :tangle no
 (use-package org-pdfview
-  :ensure t)
+  :defer t)
 
 (add-hook 'org-mode-hook
            '(lambda ()
@@ -5359,6 +5360,8 @@ Doing this will provide a new completion target for adding links via =C-c C-l=, 
 
 
 * Org-graph view
+- https://github.com/alphapapa/org-graph-view
+- View org buffers as a clickable, graphical mind gap. 
 
 #+begin_src emacs-lisp :tangle yes
 (require 'graph)

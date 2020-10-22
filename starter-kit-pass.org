@@ -37,6 +37,7 @@ I don't really need this function
 
 #+begin_src emacs-lisp :tangle yes
 (use-package auth-source-pass
+  :defer t
   :config
   (auth-source-pass-enable))
 #+end_src
@@ -80,6 +81,7 @@ I don't really need this function
 
 #+begin_src emacs-lisp :tangle yes
 (use-package pass
+  :defer t
   :commands (pass pass-view-mode)
   :mode ("\\.passwords/.*\\.gpg\\'" . pass-view-mode)
   :preface
@@ -119,8 +121,10 @@ I don't really need this function
 ** Helm and Ivy interfaces
 
 #+begin_src emacs-lisp :tangle yes
-(use-package helm-pass)
+(use-package helm-pass
+  :defer t)
 (use-package ivy-pass
+  :defer t
   :commands ivy-pass)
 #+end_src
 

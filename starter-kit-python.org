@@ -132,9 +132,11 @@ Ideally this segment belongs at lisp/progmodes/python.el:3292
 
 #+srcname: python-customization
 #+begin_src emacs-lisp
-(use-package elpy)
+(use-package elpy
+  :defer t)
 (elpy-enable)
-(use-package live-py-mode)
+(use-package live-py-mode
+  :defer t)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 ;; (elpy-use-ipython)
 ;; (elpy-use-ipython "ipython3") ;; error "elpy-use-ipython is deprecated; see https://elpy.readthedocs.io/en/latest/ide.html#interpreter-setup")
@@ -156,7 +158,8 @@ Ideally this segment belongs at lisp/progmodes/python.el:3292
 ;;  (add-hook 'elpy-mode-hook 'flycheck-mode))
 
 ;; Now if we make pep8 errors when we save the file the errors will be corrected automatically
-(use-package py-autopep8)
+(use-package py-autopep8
+  :defer t)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 
 

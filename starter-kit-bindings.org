@@ -100,7 +100,7 @@ Building regular expressions in Emacs is kind of a pain.  The =visual-regexp= pa
   (global-set-key (kbd "C-M-r") 'isearch-backward)
 
   (use-package visual-regexp
-    :ensure t)
+    :defer t)
   (define-key global-map (kbd "C-c s") 'vr/replace) 
   (define-key global-map (kbd "C-c q") 'vr/query-replace)
   #+end_src
@@ -133,7 +133,7 @@ Make searches case-insensitive. Should be on by default but I've realized it is 
   ;;   :defer)
 
   ;; (use-package visual-regexp-steroids
-  ;;   :ensure
+  ;;   :defer
   ;;   :demand
   ;;   :bind (("C-M-r" . vr/isearch-backward)
   ;;          ("C-M-s" . vr/isearch-forward)
@@ -715,7 +715,7 @@ The reason is that in many data science programs, the great ista zahn binds the 
 
 #+begin_src emacs-lisp
 (use-package expand-region
-  :ensure t
+  :defer t
   :bind (("s-<SPC>"       . er/expand-region)
          ("s-<backspace>" . er/contract-region)))
 #+end_src
@@ -747,7 +747,7 @@ HOWEVER, this is the possible cause of choppy cursor movement!! See https://www.
 #+source: multiple-cursors
 #+begin_src emacs-lisp
 ;;(use-package multiple-cursors
-;;  :ensure t
+;;  :defer t
 ;;  :bind
 ;;  ("C-c C-m l"   . mc/edit-lines) ; When you have an active region that spans multiple lines, add a cursor to each line
 ;;  ("C-c C-m d"   . mc/mark-all-dwim)

@@ -241,7 +241,7 @@ I have no need to directly edit files over SSH, but what I do need is a way to e
 Pretty self-explanatory, useful as hell if you use exwm.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package sudo-edit
-  :ensure t
+  :defer t
   :bind
     ("s-\#" . sudo-edit))
 #+END_SRC

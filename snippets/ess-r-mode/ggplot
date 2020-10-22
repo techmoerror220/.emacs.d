@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: ggplot
+# key: gg
+# --
+ggplot(data = ${1:data}) +
+    geom_${2:function}(mapping = aes(x = $3, y = $0))

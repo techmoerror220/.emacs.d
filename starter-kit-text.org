@@ -100,7 +100,8 @@ Markdown and Pandoc, as well as spellchecking and line-wrapping.
 
 #+srcname deft-mode
 #+begin_src emacs-lisp
-(use-package deft)
+(use-package deft
+  :defer t)
 (setq deft-extensions '("org" "txt" "tex" "Rnw" "md" "markdown"))
 (add-to-list 'auto-mode-alist '("/deft/.*\\.txt\\'" . org))
 (setq deft-directory "/media/dgm/blue/documents/dropbox/notes")
@@ -190,6 +191,7 @@ From https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el
 
 #+BEGIN_SRC emacs-lisp 
   (use-package typing
+    :defer t
     :init
     (autoload 'typing-of-emacs "typing" nil t)
     :config

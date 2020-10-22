@@ -15,7 +15,7 @@ Smart autopairing of quotes and parentheses. The original config was this, but i
 
 #+begin_src emacs-lisp :tangle no
 (use-package smartparens
-  :ensure t
+  :defer t
   :diminish smartparens-mode
   :config
   (progn
@@ -712,48 +712,20 @@ Note:
 Doesn't work.  
    
 #+begin_src emacs-lisp :tangle yes
-  (use-package paredit
-    :ensure t
-    :config
-    (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-;;    (add-hook 'prog-mode-hook             'paredit-mode)
-    (add-hook 'emacs-lisp-mode-hook       'paredit-mode)
-    (add-hook 'eval-expression-minibuffer-setup-hook 'paredit-mode)
-    (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
-    (add-hook 'ielm-mode-hook             'paredit-mode)
-    (add-hook 'lisp-mode-hook             'paredit-mode)
-    (add-hook 'scheme-mode-hook           'paredit-mode)
-    (add-hook 'ado-mode-hook              'paredit-mode)
-    (add-hook 'ledger-mode-hook           'paredit-mode) 
-    )
-#+end_src
+    (use-package paredit
+      :defer t
+      :config
+      (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+  ;;    (add-hook 'prog-mode-hook             'paredit-mode)
+      (add-hook 'emacs-lisp-mode-hook       'paredit-mode)
+      (add-hook 'eval-expression-minibuffer-setup-hook 'paredit-mode)
+      (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
+      (add-hook 'ielm-mode-hook             'paredit-mode)
+      (add-hook 'lisp-mode-hook             'paredit-mode)
+      (add-hook 'scheme-mode-hook           'paredit-mode)
+      (add-hook 'ado-mode-hook              'paredit-mode)
+      (add-hook 'ledger-mode-hook           'paredit-mode)
 
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24385 13579 28422 538000) :init (24385 13579 28412 78000) :config (24385 13579 28214 289000) :config-secs (0 0 17203 372000) :init-secs (0 0 17564 298000) :use-package-secs (0 0 17633 922000)))
-
-;;    (add-hook 'ess-mode-hook              'paredit-mode)
-;;    (add-hook 'inferior-ess-mode-hook     'paredit-mode)
-;;    (add-hook 'ess-stata-mode-hook        'paredit-mode)
-
-Alternative from: http://wikemacs.org/wiki/Paredit-mode
-
-#+BEGIN_EXAMPLE
-(autoload 'enable-paredit-mode "paredit"
-  "Turn on pseudo-structural editing of Lisp code."
-  t)
-(add-hook 'emacs-lisp-mode-hook       'enable-paredit-mode)
-(add-hook 'lisp-mode-hook             'enable-paredit-mode)
-(add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
-(add-hook 'scheme-mode-hook           'enable-paredit-mode)
-#+END_EXAMPLE
-
-
-** Extreme barfarge and slurpage by John Wiegly
-- https://www.emacswiki.org/emacs/ParEdit
-
-- Commented out as =paredit-commands= is not defined.
-
-#+begin_src emacs-lisp :tangle yes
   (defun paredit-barf-all-the-way-backward ()
     (interactive)
     (paredit-split-sexp)
@@ -814,11 +786,35 @@ Alternative from: http://wikemacs.org/wiki/Paredit-mode
 
   (paredit-annotate-mode-with-examples)
 
-  (paredit-annotate-functions-with-examples)
+  (paredit-annotate-functions-with-examples)    
+      )
 #+end_src
 
 #+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 18589 418140 756000) :init (24463 18589 418116 844000) :init-secs (0 0 38 546000) :use-package-secs (0 0 143 288000)))
 
+;;    (add-hook 'ess-mode-hook              'paredit-mode)
+;;    (add-hook 'inferior-ess-mode-hook     'paredit-mode)
+;;    (add-hook 'ess-stata-mode-hook        'paredit-mode)
+
+Alternative from: http://wikemacs.org/wiki/Paredit-mode
+
+#+BEGIN_EXAMPLE
+(autoload 'enable-paredit-mode "paredit"
+  "Turn on pseudo-structural editing of Lisp code."
+  t)
+(add-hook 'emacs-lisp-mode-hook       'enable-paredit-mode)
+(add-hook 'lisp-mode-hook             'enable-paredit-mode)
+(add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
+(add-hook 'scheme-mode-hook           'enable-paredit-mode)
+#+END_EXAMPLE
+
+
+** Extreme barfarge and slurpage by John Wiegly
+- https://www.emacswiki.org/emacs/ParEdit
+
+- Included in the =use-package= call.
+  
 * Latex-related tweaks
 ** Electric Pair for LaTeX
 
@@ -826,12 +822,16 @@ https://tex.stackexchange.com/questions/75697/auctex-how-to-cause-math-mode-doll
 
 DGM, 22 jan 20. Trying to get the =[]= pair in latex
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
+(electric-pair-mode)
 (add-hook 'LaTeX-mode-hook
           '(lambda ()
             (define-key LaTeX-mode-map (kbd "$") 'self-insert-command)
             (define-key LaTeX-mode-map (kbd "[") 'self-insert-command)))
 #+end_src
+
+#+RESULTS:
+| (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command) (define-key LaTeX-mode-map (kbd [) 'self-insert-command)) | preview-mode-setup | (lambda nil (highlight-symbol-mode)) | TeX-PDF-mode | turn-on-reftex |
 
 But it is not working. I try this:
 
@@ -868,11 +868,9 @@ This is what solved it for braces and the like but not for math delimiters!!!
 
 AUCTeX has a built in support for pairing braces: 
 - https://www.gnu.org/software/auctex/manual/auctex.html#Braces
-
 - https://emacs.stackexchange.com/questions/27084/electric-pair-of-any-length-using-auctex
 
-
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (setq TeX-electric-math t) 
 
   (add-hook 'plain-TeX-mode-hook

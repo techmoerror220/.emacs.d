@@ -68,6 +68,7 @@ Tip found in: https://www.reddit.com/r/emacs/comments/ct0x2q/how_to_open_docx_xl
                                      ("\\.odt\\'" "libreoffice  ? &")
                                      ("\\.xls\\'" "libreoffice  ? &")
                                      ("\\.xlsx\\'" "libreoffice  ? &")
+                                     ("\\.pptx\\'" "libreoffice  ? &")
                                      ("\\.doc\\'" "libreoffice  ? &")
                                      ("\\.docx\\'" "libreoffice  ? &")
                                      ("\\.pages\\'" "libreoffice  ? &")))
@@ -85,6 +86,7 @@ Tip found in: https://www.reddit.com/r/emacs/comments/ct0x2q/how_to_open_docx_xl
 | \.odt\'   | libreoffice  ? & |
 | \.xls\'   | libreoffice  ? & |
 | \.xlsx\'  | libreoffice  ? & |
+| \.pptx\'  | libreoffice  ? & |
 | \.doc\'   | libreoffice  ? & |
 | \.docx\'  | libreoffice  ? & |
 | \.pages\' | libreoffice  ? & |
@@ -248,7 +250,7 @@ Narrow dired to match filter.  From: http://pragmaticemacs.com/emacs/dynamically
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package dired-narrow
-    :ensure t
+    :defer t
     :bind (:map dired-mode-map
                 ("/" . dired-narrow)))
 #+END_SRC
@@ -284,11 +286,11 @@ p. 341. Syntax for customizing this from: https://oremacs.com/2015/01/21/dired-s
 
 #+begin_src emacs-lisp :tangle yes
   (setq dired-garbage-files-regexp
-        "\\.fdb_latexmk$\\|\\.fls$\\|\\.synctex(busy)$\\|\\.bbl$\\|\\.aux$\\|\\.blg$\\|\\.bcf$\\|\\.out$\\| \\.tag$\\|\\.pp$\\|\\.tag$\\|\\.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\|pyg\\)\\)\\'")
+        "\\.fdb_latexmk$\\|\\.fls$\\|\\.synctex(busy)$\\|\\.bbl$\\|\\.aux$\\|\\.blg$\\|\\.bcf$\\|\\.out$\\|\\.nav$\\|\\.snm$\\| \\.tag$\\|\\.pp$\\|\\.tag$\\|\\.synctex.gz$\\|\\(?:\\.\\(?:aux\\|bak\\|dvi\\|orig\\|rej\\|toc\\|pyg\\)\\)\\'")
 #+end_src
 
 #+RESULTS:
-: \.fdb_latexmk$\|\.fls$\|\.synctex(busy)$\|\.bbl$\|\.aux$\|\.blg$\|\.bcf$\|\.out$\| \.tag$\|\.pp$\|\.tag$\|\.synctex.gz$\|\(?:\.\(?:aux\|bak\|dvi\|log\|orig\|rej\|toc\|pyg\)\)\'
+: \.fdb_latexmk$\|\.fls$\|\.synctex(busy)$\|\.bbl$\|\.aux$\|\.blg$\|\.bcf$\|\.out$\|\.nav$\|\.snm$\| \.tag$\|\.pp$\|\.tag$\|\.synctex.gz$\|\(?:\.\(?:aux\|bak\|dvi\|orig\|rej\|toc\|pyg\)\)\'
 
 ** Editing the dired buffer like text
 
