@@ -1,0 +1,349 @@
+** COMMENT via Benjamin Beckwith
+*** COMMENT Org Super Agenda
+- https://github.com/alphapapa/org-super-agenda/issues/51
+- http://bnbeckwith.com/bnb-emacs/#orga483373
+
+#+begin_src emacs-lisp :tangle yes
+  (setq org-agenda-block-separator "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+#+end_src
+
+#+RESULTS:
+: ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+** COMMENT Examples by Alphapapa
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package org-super-agenda
+    :quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
+    :config
+    (org-super-agenda-mode t))
+
+  (setq org-super-agenda-groups
+        '((:name "Next Items"
+                 :time-grid t
+                 :habit t
+                 :tag ("NEXT"))
+          (:name "Projects"
+                 :children t
+                 :todo ("NEXT" "TODO" "WAITING")
+                 :order 1)
+          ))
+
+#+end_src
+
+#+RESULTS:
+| :name | Next Items | :time-grid | t | :habit | t                   | :tag   | (NEXT) |
+| :name | Projects   | :children  | t | :todo  | (NEXT TODO WAITING) | :order |      1 |
+
+#+begin_src emacs-lisp :tangle no
+  ;; Reset everything to nil
+  (setq org-agenda-custom-commands nil)
+
+  (use-package org-super-agenda
+    :defer t
+    :quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
+    :config
+    (org-super-agenda-mode t))
+
+  (setq org-agenda-custom-commands
+        '(("z" "Super zaen view"
+           ((agenda "" ((org-agenda-span 'day)
+                        (org-super-agenda-groups
+                         '((:name "Today"
+                                  :time-grid t
+                                  :date today
+                                  :todo "TODAY"
+                                  :scheduled today
+                                  :order 1)
+                           (:name "Quick Picks"
+                                  :effort <= "0:30")
+                           ))
+                        )))
+           (alltodo "" ((org-agenda-overriding-header "")
+                        (org-super-agenda-groups
+                         '((:name "Next to do"
+                                  :todo "NEXT"
+                                  :order 1)
+                           (:name "Waiting"
+                                  :todo "WAITING"
+                                  :order 20)
+                           (:name "Due Today"
+                                  :deadline today
+                                  :order 2)
+                           (:name "Due Soon"
+                                  :deadline future
+                                  :order 8)
+                           (:name "Overdue"
+                                  :deadline past
+                                  :order 7)
+                           (:name "Projects"
+                                  :tag "project"
+                                  :order 14)
+                           ;; (:discard (:tag ("Chore" "Routine" "Daily")))
+                           ))))))))
+
+#+end_src
+
+#+RESULTS:
+| z | Super zaen view | ((agenda  ((org-agenda-span 'day) (org-super-agenda-groups '((:name Today :time-grid t :date today :todo TODAY :scheduled today :order 1) (:name Quick Picks :effort <= 0:30)))))) | (alltodo  ((org-agenda-overriding-header ) (org-super-agenda-groups '((:name Next to do :todo NEXT :order 1) (:name Waiting :todo WAITING :order 20) (:name Due Today :deadline today :order 2) (:name Due Soon :deadline future :order 8) (:name Overdue :deadline past :order 7) (:name Projects :tag project :order 14))))) |
+
+**** COMMENT Views 
+The key to knowing what work there is the agenda views. These provide a landscape to list, filter or manipulate tasks. org-agenda-custom-commands defines which views are available by default.
+
+First, I define a little helper function (from Sacha Chua) to display a note with agenda.
+
+#+begin_src emacs-lisp :tangle yes
+  (defun bnb/org-agenda-with-tip (arg)
+    (org-agenda-list arg)
+    (let ((inhibit-read-only t)
+          (pos (point)))
+      (goto-char (pnnoint-max))
+      (goto-char pos)))
+#+end_src
+
+#+RESULTS:
+: bnb/org-agenda-with-tip
+
+WIP from: https://github.com/fniessen/emacs-leuven/blob/master/org-custom-agenda-views.el
+
+#+begin_src emacs-lisp :tangle yes
+  ;; Reset everything to nil
+  (setq org-agenda-custom-commands nil)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("b" "Agenda" bnb/org-agenda-with-tip))
+
+  (add-to-list 'org-agenda-custom-commands
+               '("c" . "COLLECT...") t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("cb" "CollectBox"
+                 ((alltodo ""))))
+
+  (add-to-list 'org-agenda-custom-commands
+               '("f" . "FOCUS...") t)
+
+  (add-to-list 'org-agenda-custom-commands
+               `("f." "Today"
+                 ((agenda ""
+                          ((org-agenda-entry-types '(:timestamp :sexp))
+                           (org-agenda-overriding-header
+                            (concat "CALENDAR Today"
+                                    (format-time-string "%a %d" (current-time))))
+                           (org-agenda-span 'day)))
+                  (tags-todo "LEVEL=1+REFILE"
+                             ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")))
+                  (tags-todo "DEADLINE=\"<+0d>\""
+                             ((org-agenda-overriding-header "DUE TODAY")
+                              (org-agenda-skip-function
+                               '(org-agenda-skip-entry-if 'notedeadline))
+                              (org-agenda-sorting-strategy '(priority-down))))
+                  (tags-todo "DEADLINE<\"<+0d>\""
+                             ((org-agenda-overriding-header "OVERDUE")
+                              (org-agenda-skip-function
+                               '(org-agenda-skip-entry-if 'notedeadline))
+                              (org-agenda-sorting-strategy '(priority-down))))
+                  (agenda ""
+                          ((org-agenda-entry-types '(:scheduled))
+                           (org-agenda-overriding-header "SCHEDULED")
+                           (org-agenda-skip-function
+                            '(org-agenda-skip-entry-if 'todo 'done))
+                           (org-agenda-sorting-strategy
+                            '(priority-down time-down))
+                           (org-agenda-span 'day)
+                           (org-agenda-start-on-weekday nil)
+                           (org-agenda-time-grid nil)))
+                  (todo "DONE"
+                        ((org-agenda-overriding-header "COMPLETED"))))
+                 ((org-agenda-format-date "")
+                  (org-agenda-start-with-clockreport-mode nil))) t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("fh" "Hotlist"
+                 ((tags-todo "DEADLINE<\"<+0d>\""
+                             ((org-agenda-overriding-header "OVERDUE")))
+                  (tags-todo "DEADLINE>=\"<+0d>\"+DEADLINE<=\"<+1w>\""
+                             ((org-agenda-overriding-header "DUE IN NEXT 7 DAYS")))
+                  (tags-todo "DEADLINE=\"\"+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
+                             ((org-agenda-overriding-header "FLAGGED"))))
+                 ((org-agenda-todo-ignore-scheduled 'future)))  t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("r" . "REVIEW...") t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("ra" . "All Tasks...") t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("rad" "All Tasks (grouped by Due Date)"
+                 ((tags-todo "DEADLINE<\"<+0d>\""
+                             ((org-agenda-overriding-header "OVERDUE")
+                              (org-agenda-skip-function
+                               '(org-agenda-skip-entry-if 'notdeadline))))
+                  (tags-todo "DEADLINE=\"<+0d>\""
+                             ((org-agenda-overriding-header "DUE TODAY")
+                              (org-agenda-skip-function
+                               '(org-agenda-skip-entry-if 'notdeadline))))
+                  (tags-todo "DEADLINE=\"<+1d>\""
+                             ((org-agenda-overriding-header "DUE TOMORROW")
+                              (org-agenda-skip-function
+                               '(org-agenda-skip-entry-if 'notdeadline))))
+                  (tags-todo "DEADLINE>\"<+1d>\"+DEADLINE<=\"<+7d>\""
+                             ((org-agenda-overriding-header "DUE WITHIN A WEEK")
+                              (org-agenda-skip-function
+                               '(org-agenda-skip-entry-if 'notdeadline))))
+                  (tags-todo "DEADLINE>\"<+7d>\"+DEADLINE<=\"<+28d>\""
+                             ((org-agenda-overriding-header "DUE WITHIN A MONTH")
+                              (org-agenda-skip-function
+                               '(org-agenda-skip-entry-if 'notdeadline))))
+                  (tags-todo "DEADLINE>\"<+28d>\""
+                             ((org-agenda-overriding-header "DUE LATER")
+                              (org-agenda-skip-function
+                               '(org-agenda-skip-entry-if 'notdeadline))))
+                  (tags-todo "TODO={WAIT}"
+                             ((org-agenda-overriding-header "WAITING FOR")
+                              (org-agenda-skip-function
+                               '(org-agenda-skip-entry-if 'deadline))))
+                  (todo ""
+                        ((org-agenda-overriding-header "WAITING FOR")
+                         (org-agenda-skip-function
+                          '(org-agenda-skip-entry-if 'deadline)))))
+                 ((org-agenda-sorting-strategy '(priority-down))
+                  (org-agenda-write-buffer-name "All Tasks (grouped by Due Date)"))
+                 "~/Documents/Org/all-tasks-by-due-date.pdf") t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("ra1" "All Tasks with a due date"
+                 ((alltodo ""))
+                 ((org-agenda-overriding-header "All Tasks (sorted by Due Date)")
+                  (org-agenda-skip-function
+                   '(org-agenda-skip-entry-if 'notdeadline))
+                  (org-agenda-sorting-strategy '(deadline-up)))) t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("rag" "Grouped Tasks")
+               ())
+
+  (add-to-list 'org-agenda-custom-commands
+               '("rt" . "Timesheet...") t)
+
+  ;; Show what happened today.
+  (add-to-list 'org-agenda-custom-commands
+               '("rtd" "Daily Timesheet"
+                 ((agenda ""))
+                 ((org-agenda-log-mode-items '(clock closed))
+                  (org-agenda-overriding-header "DAILY TIMESHEET")
+                  (org-agenda-show-log 'clockcheck)
+                  (org-agenda-span 'day)
+                  (org-agenda-start-with-clockreport-mode t)
+                  (org-agenda-time-grid nil))) t)
+
+  ;; Show what happened this week.
+  (add-to-list 'org-agenda-custom-commands
+               '("rtw" "Weekly Timesheet"
+                 ((agenda ""))
+                 (
+                  ;; (org-agenda-format-date "")
+                  (org-agenda-overriding-header "WEEKLY TIMESHEET")
+                  (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp))
+                  (org-agenda-span 'week)
+                  (org-agenda-start-on-weekday 1)
+                  (org-agenda-start-with-clockreport-mode t)
+                  (org-agenda-time-grid nil))) t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("rc" . "Calendar...") t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("rc7" "Events and appointments for 7 days"
+                 ((agenda ""))
+                 ((org-agenda-entry-types '(:timestamp :sexp))
+                  ;; (org-agenda-overriding-header "Calendar for 7 days")
+                  (org-agenda-span 'week)
+                  (org-agenda-format-date "\n%a %d")
+                  ;; (org-agenda-date-weekend ... new face ...)
+                  (org-agenda-time-grid nil))) t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("rw" "Weekly review"
+                 ((tags "CATEGORY={@REFILE}&LEVEL<=2"
+                        ((org-agenda-overriding-header "NEW TASKS")))
+                  (agenda ""
+                          ((org-agenda-clockreport-mode t)
+                           (org-agenda-format-date
+                            (concat "\n"
+                                    "%Y-%m-%d" " %a "
+                                    (make-string (window-width) ?_)))
+                           (org-agenda-overriding-header "PAST WEEK")
+                           (org-agenda-prefix-format " %?-11t %i %-12:c% s")
+                           (org-agenda-show-log 'clockcheck)
+                           (org-agenda-span 7)
+                           (org-agenda-start-day "-1w")
+                           (org-deadline-warning-days 0)))
+                  (agenda ""
+                          ((org-agenda-overriding-header "NEXT MONTH")
+                           (org-agenda-span 'month)
+                           (org-agenda-start-day "+0d")
+                           (org-deadline-warning-days 0)))
+                  (todo "PROJECT"
+                        ((org-agenda-overriding-header "PROJECT LIST")))
+                  (todo "DONE|PROJECTDONE"
+                        ((org-agenda-overriding-header
+                          "Candidates to be archived"))))))
+
+  (use-package org-super-agenda
+    :ensure t
+    :quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
+    :config
+    (org-super-agenda-mode t)
+    (add-to-list 'org-agenda-custom-commands
+                 '("rag" "Grouped Tasks"
+                   ((todo "" ((org-super-agenda-groups
+                               '((:name "All Tasks"
+                                        :auto-category t))))))))
+    (add-to-list 'org-agenda-custom-commands
+                 '("f1" "Projects"
+                   ((tags "+project" ((org-super-agenda-groups
+                                       '((:name "Projects"
+                                                :auto-category t
+                                                :children t
+                                                :todo ("NEXT" "TODO" "WAITING")
+                                                :order 1))))))))
+    (add-to-list 'org-agenda-custom-commands
+                 '("f2" "Score 2 Tasks"
+                   ((tags "+Score=2" ((org-super-agenda-groups
+                                       '((:name "Score 1 Tasks" :auto-category t))))))))
+    (add-to-list 'org-agenda-custom-commands
+                 '("f3" "Score 3 Tasks"
+                   ((tags "+Score=3" ((org-super-agenda-groups
+                                       '((:name "Score 1 Tasks" :auto-category t))))))))
+    (add-to-list 'org-agenda-custom-commands
+                 '("f5" "Score 5 Tasks"
+                   ((tags "+Score=5" ((org-super-agenda-groups
+                                       '((:name "Score 1 Tasks" :auto-category t))))))))
+    (add-to-list 'org-agenda-custom-commands
+                 '("f8" "Score 8 Tasks"
+                   ((tags "+Score=8" ((org-super-agenda-groups
+                                       '((:name "Score 1 Tasks" :auto-category t)))))))))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23954 59890 535382 601000) :init (23954 59890 535343 195000) :config (23954 59890 534977 377000) :config-secs (0 0 839 245000) :init-secs (0 0 1423 687000) :use-package-secs (0 0 1750 202000)))
+
+Phew! That is a lot of lisp! It is easiest to describe each view by the key that triggers it.
+
+a Agenda with tip (keystroke tip)
+w Tasks waiting on something
+r Refile New notes and tasks
+n Next Any task with the NEXT tag
+A Tasks ready for Archive
+u Upcoming tasks Scheduled or due in the next week.
+U Unscheduled tasks
+P Printable agenda Formats tasks at the top with upcoming items below.
+S Scoreless tasks Use this to get the scoreless tasks and edit in column mode
+h Habits
+# Stuck projects
+z Agenda with Personal Files
+c Select default clocking task
+

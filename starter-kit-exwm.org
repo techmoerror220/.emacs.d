@@ -7,47 +7,6 @@
 
 This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
-* COMMENT Set up of EXWM: emacs as desktop manager!
-
-First step with =use-package= moved to init.
-
-
-Tip from Uncle Dave's emacs. 
-
-Emacs as a daemon means you can use =emacsclient <filename>= to seamlessly edit files from the terminal directly.
-Plus in https://github.com/ch11ng/exwm/wiki/Configuration-Example the developer puts this line before =(require 'exwm)=, so that is why I've taken it out of the bit on exwm. 
-From https://caolan.org/dotfiles/emacs.html#orgd96aeb0,  run server if using =emacsclient= as default EDITOR also useful for =org-protocol capture= https://www.emacswiki.org/emacs/EmacsClient
-
-
-#+source: exwm-starting
-#+begin_src emacs-lisp :tangle no
-
-;; (server-start)
-
-;;  (use-package exwm 
-;;    :ensure t
-;;    :config 
-  
-;;    ;; necessary to configure exwm manually
-;;    (require 'exwm-config)
-
-;;    ;; fringe size, most people prefer 1 (uncle dave's setup)
-;;    (fringe-mode 3)
-
-;; dgm comments this as it appears to not be working!! reverts to old (server-star)
-;;    (require 'server)
-;;      (unless (server-running-p)
-;;        (server-start))
-
-;;    (exwm-config-default))
-
-    ;; this just enables exwm, it started automatically once everything is ready
-;; commented out now that I have the Ferguson setup    (exwm-enable))  
-      #+end_src
-
-      #+RESULTS: exwm-starting
-      : t
-
 * Further configuration
 
 When stating the client from .xinitrc, =save-buffer-kill-terminal= will =force-kill= Emacs before it can run through =kill-emacs-hook=.
@@ -63,7 +22,7 @@ When stating the client from .xinitrc, =save-buffer-kill-terminal= will =force-k
 
 Rename buffer to window title.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun ambrevar/exwm-rename-buffer-to-title () (exwm-workspace-rename-buffer exwm-title))
 (add-hook 'exwm-update-title-hook 'ambrevar/exwm-rename-buffer-to-title)
 
@@ -73,7 +32,7 @@ Rename buffer to window title.
 
 Allow non-floating resizing with mouse.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq window-divider-default-bottom-width 2
       window-divider-default-right-width 2)
 (window-divider-mode)
@@ -84,7 +43,7 @@ Allow non-floating resizing with mouse.
 
 ** System tray
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (require 'exwm-systemtray)
 (exwm-systemtray-enable)
 (setq exwm-systemtray-height 16)
@@ -94,10 +53,10 @@ Allow non-floating resizing with mouse.
 These cannot be set globally: if Emacs were to be run in another WM, the =s-= prefix would conflict with the WM bindings.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(exwm-input-set-key (kbd "s-<left>") #'windmove-left)
-(exwm-input-set-key (kbd "s-<down>") #'windmove-down)
-(exwm-input-set-key (kbd "s-<up>") #'windmove-up)
-(exwm-input-set-key (kbd "s-<right>") #'windmove-right)
+;(exwm-input-set-key (kbd "s-<left>") #'windmove-left)
+;(exwm-input-set-key (kbd "s-<down>") #'windmove-down)
+;(exwm-input-set-key (kbd "s-<up>") #'windmove-up)
+;(exwm-input-set-key (kbd "s-<right>") #'windmove-right)
 ;; (exwm-input-set-key (kbd "s-r") #'exwm-reset) 
 ;; (exwm-input-set-key (kbd "s-b") #'eww) ;; commented out as I now use starter-kit-search-engine-with-eww.org
 ;; (exwm-input-set-key (kbd "s-D") #'kill-this-buffer) I don't need a shortcut for this
@@ -117,7 +76,7 @@ These cannot be set globally: if Emacs were to be run in another WM, the =s-= pr
 
 The following can only apply to EXWM buffers, else it could have unexpected effects.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (push ?\s-  exwm-input-prefix-keys)
 ;; (exwm-input-set-key (kbd "s-i") #'follow-delete-other-windows-and-split) ;; no lo veo claro 
 ;; (exwm-input-set-key (kbd "s-o") #'ambrevar/toggle-single-window) ;; not working... =s-o= not recognized, don't know why. 
@@ -126,11 +85,12 @@ The following can only apply to EXWM buffers, else it could have unexpected effe
 #+END_SRC
 
 #+RESULTS:
+
 ** External application shortcuts.
 
 I comment out =s-r= because it is already defined for =helm-run-external-command= in =starter-kit-helm.org=.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun ambrevar/exwm-start (command)
   (interactive (list (read-shell-command "$ ")))
   (start-process-shell-command command nil command))
@@ -142,20 +102,11 @@ I comment out =s-r= because it is already defined for =helm-run-external-command
 ;; (exwm-input-set-key (kbd "s-r") #'ambrevar/exwm-start) 
 
 
-** COMMENT Magit shortcut 
-
-I don't need this shortcut as I already have =C-x g= for =magit-status=.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(when (fboundp 'magit-status)
-  (exwm-input-set-key (kbd "s-v") #'magit-status))
-#+END_SRC
-
 ** Send key literally 
 
 From Damien Cassou.  Bind =C-q= so that the next key is sent literally to the application. 
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (add-to-list 'exwm-input-prefix-keys ?\C-q)
     (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 #+END_SRC
@@ -169,7 +120,7 @@ From  https://github.com/ch11ng/exwm/wiki/Configuration-Example.
 
 Note that with the package =whole-line-or-region-kill-save= these simulation keys stop working on chromium, so there I use the native keybind =C-c= after doing =C-q= for sending the key straight down to the native process. I think it is worthwhile because whole-line is very handy in emacs.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq exwm-input-simulation-keys
       '(
         ;; movement
@@ -201,34 +152,6 @@ Note that with the package =whole-line-or-region-kill-save= these simulation key
 #+RESULTS:
 : (([2] . [left]) ([134217826] . [C-left]) ([6] . [right]) ([134217830] . [C-right]) ([16] . [up]) ([14] . [down]) ([1] . [home]) ([5] . [end]) ([134217846] . [prior]) ([22] . [next]) ([4] . [delete]) ([11] . [S-end delete]) ([134217832] . [S-end select]) ([134217828] . [C-S-right 24]) ([M-backspace] . [C-S-left 24]) ([7] . [escape]) ([23] . [24]) ([134217847] . [3]) ([25] . [22]) ([19] . [6]))
 
-* Ambrevar's functions
-
-Commenting out =switch-to-last-buffer= function as I am going to try =buffer-flip=
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; (require 'functions) ;; this is the first thing loaded in the whole process so no need to use it here again
-;; (exwm-input-set-key (kbd "s-<tab>") #'ambrevar/switch-to-last-buffer)
-#+END_SRC
-
-** COMMENT Lock screen 
-
-Commented out as I use Daedreth's way because it uses =async=. 
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun ambrevar/exwm-start-lock () (interactive) (start-process "slock" nil "slock"))
-(exwm-input-set-key (kbd "s-_") #'ambrevar/exwm-start-lock)
-#+END_SRC
-
-** COMMENT Screenshot 
-
-Superseded by Daedreth's stuff
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun ambrevar/exwm-start-screenshot () (interactive) (start-process-shell-command "scrot" nil "scrot ~/temp/screen-%F-%T.png"))
-(exwm-input-set-key (kbd "s->") #'ambrevar/exwm-start-screenshot)
-#+END_SRC
-
-#+RESULTS:
 
 * More goodies 
 ** Remote editing
@@ -241,7 +164,6 @@ I have no need to directly edit files over SSH, but what I do need is a way to e
 Pretty self-explanatory, useful as hell if you use exwm.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package sudo-edit
-  :defer t
   :bind
     ("s-\#" . sudo-edit))
 #+END_SRC
@@ -265,7 +187,7 @@ Pretty self-explanatory, useful as hell if you use exwm.
 
 Some programs such as 'emacs' are better off being started in char-mode.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun ambrevar/exwm-start-in-char-mode ()
   (when (string-prefix-p "emacs" exwm-instance-name)
     (exwm-input-release-keyboard (exwm--buffer->id (window-buffer)))))
@@ -280,7 +202,7 @@ Some programs such as 'emacs' are better off being started in char-mode.
 ** Workspaces
 Read https://u.teknik.io/AZvQe.jpg and [[id:a42887e9-5ba3-4072-8834-aed5c0c2731d][this]].
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq exwm-workspace-number 9
       exwm-workspace-show-all-buffers nil ;; if t, allows showing buffers on other workspaces.dgm: i'm going to try and isolate buffers so that EXWM only shows X windows belonging to current workspace
       exwm-layout-show-all-buffers t) ;;  allow switching to buffers on other workspaces.
@@ -291,7 +213,7 @@ Read https://u.teknik.io/AZvQe.jpg and [[id:a42887e9-5ba3-4072-8834-aed5c0c2731d
 
 The next loop will bind =s-<number>= to switch to the corresponding workspace from https://github.com/daedreth/UncleDavesEmacs.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
     (dotimes (i 10)
       (exwm-input-set-key (kbd (format "s-%d" i))
                           `(lambda ()
@@ -304,7 +226,7 @@ The next loop will bind =s-<number>= to switch to the corresponding workspace fr
 
 ** Making the audio keys work
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
   (dolist (k '(("<XF86AudioLowerVolume>"
                 "amixer sset Master 5%-")
                ("<XF86AudioRaiseVolume>"
@@ -325,7 +247,7 @@ Since I do not use a GUI launcher and do not have an external one like dmenu or 
 ** Functions to start processes
 I guess this goes without saying but you absolutely have to change the arguments to suit the software that you are using. What good is a launcher for discord if you don’t use it at all.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun exwm-async-run (name)
   (interactive)
   (start-process name nil name))
@@ -350,7 +272,7 @@ I guess this goes without saying but you absolutely have to change the arguments
 
 I've selected an unlikely combination to avoid locking the screen accidentally. But it is not too hard to type either as I need =super= and =shift= together and the the key with the minus sign ~-~.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (global-set-key (kbd "C-\{") 'daedreth/launch-browser) ;; commented out as <s-w> also launches the browser and <s-W> does so in other window
 ;;(global-set-key (kbd "s-_") 'daedreth/lock-screen)
 #+END_SRC
@@ -385,34 +307,6 @@ sudo apt install redshift redshift-gtk
                     (lambda () (interactive) (start-process "" nil "redshift" "-O" "3500")))
 #+END_SRC
 
-
-* COMMENT Setting bindings to be available in EXWM buffers
-
-From https://www.reddit.com/r/emacs/comments/bfhepc/does_exwmsetinputkey_work_in_exwm_windows/
-
-Someone says: 
-
-     #+BEGIN_QUOTE
-There are some weird interactions between EXWM, Emacs, and managed X clients. In this case, you're best off customizing exwm-input-global-keys instead of calling exwm-input-set-key after things have started up.
-     #+END_QUOTE
-
-     #+BEGIN_QUOTE
-     You have to set bindings you want available in EXWM buffers in exwm-input-global-keys.
-     #+END_QUOTE
-
-Then read https://github.com/ch11ng/exwm/wiki/Configuration-Example
-and 
-https://git.sr.ht/~jakob/.emacs.d/tree/703f2c9a60773989a8e434d00b2e32a8cd9afcbd/jakob.org
-
-#+begin_src emacs-lisp :tangle no
-  (setq exwm-input-global-keys
-        `(,(kbd "s-<tab>") . buffer-flip))
-#+end_src
-
-#+RESULTS:
-: ([s-TAB] . buffer-flip)
-
-DGM: commented out as it screwed up my dotfiles. Don't know why.
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes

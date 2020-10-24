@@ -259,10 +259,10 @@ ARCHIVE is the string name of the package archive.")
 ;; also, uncle dave says: Lets us use asynchronous processes wherever
 ;; possible, pretty useful.
 (use-package async
-  :ensure t
-  :init (dired-async-mode 1))
-
-(setq async-bytecomp-allowed-packages '(all))
+  :init (dired-async-mode 1)
+  :config
+   (setq async-bytecomp-allowed-packages '(all))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  exwm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -279,21 +279,149 @@ ARCHIVE is the string name of the package archive.")
 (or (server-running-p) (server-start))
 
   (use-package exwm
-    :ensure t
     :config
     ;; necessary to configure exwm manually
     (require 'exwm-config)
     ;; fringe size, most people prefer 1 (uncle dave's setup)
     (fringe-mode 3)
+    (exwm-config-default)
+
+    (setq window-divider-default-bottom-width 2
+          window-divider-default-right-width 2)
+    (window-divider-mode)
+
+    (require 'exwm-systemtray)
+    (exwm-systemtray-enable)
+    (setq exwm-systemtray-height 16)
+
+    (push ?\s-  exwm-input-prefix-keys)
+
+    (add-to-list 'exwm-input-prefix-keys ?\C-q)
+    (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+
+    (setq exwm-input-simulation-keys
+          '(
+            ;; movement
+            ([?\C-b] . [left])
+            ([?\M-b] . [C-left])
+            ([?\C-f] . [right])
+            ([?\M-f] . [C-right])
+            ([?\C-p] . [up])
+            ([?\C-n] . [down])
+            ([?\C-a] . [home])
+            ([?\C-e] . [end])
+            ([?\M-v] . [prior])
+            ([?\C-v] . [next])
+            ([?\C-d] . [delete])
+            ([?\C-k] . [S-end delete])
+            ([?\M-h] . [S-end select])
+            ([?\M-d] . [C-S-right ?\C-x])
+            ([M-backspace] . [C-S-left ?\C-x])
+            ;; escape
+            ([?\C-g] . [escape])
+            ;; cut/paste.
+            ([?\C-w] . [?\C-x])
+            ([?\M-w] . [?\C-c])
+            ([?\C-y] . [?\C-v])
+            ;; search
+            ([?\C-s] . [?\C-f])))
+
+
+    (setq exwm-workspace-number 9
+          exwm-workspace-show-all-buffers nil ;; if t, allows showing buffers on other workspaces.dgm: i'm going to try and isolate buffers so that EXWM only shows X windows belonging to current workspace
+          exwm-layout-show-all-buffers t) ;;  allow switching to buffers on
+    ;;  other workspaces.
+
+    (dotimes (i 10)
+      (exwm-input-set-key (kbd (format "s-%d" i))
+                          `(lambda ()
+                             (interactive)
+                             (exwm-workspace-switch-create ,i))))
+
+    (defun ambrevar/exwm-rename-buffer-to-title ()
+      (exwm-workspace-rename-buffer exwm-title))
+    (add-hook 'exwm-update-title-hook 'ambrevar/exwm-rename-buffer-to-title)
+
+    (add-hook 'exwm-floating-setup-hook 'exwm-layout-hide-mode-line)
+    (add-hook 'exwm-floating-exit-hook 'exwm-layout-show-mode-line)
+
+    (exwm-input-set-key (kbd "s-<left>") #'windmove-left)
+    (exwm-input-set-key (kbd "s-<down>") #'windmove-down)
+    (exwm-input-set-key (kbd "s-<up>") #'windmove-up)
+    (exwm-input-set-key (kbd "s-<right>") #'windmove-right)
+
+    (defun ambrevar/exwm-start (command)
+      (interactive (list (read-shell-command "$ ")))
+      (start-process-shell-command command nil command))
+    (exwm-input-set-key (kbd "s-&") #'ambrevar/exwm-start)
+
+    (defun ambrevar/exwm-start-in-char-mode ()
+      (when (string-prefix-p "emacs" exwm-instance-name)
+        (exwm-input-release-keyboard (exwm--buffer->id (window-buffer)))))
+    (add-hook 'exwm-manage-finish-hook 'ambrevar/exwm-start-in-char-mode)
+
+   ;; Media keys
+   (exwm-input-set-key
+   (kbd "<XF86AudioRaiseVolume>")
+   (lambda ()
+   (interactive) (start-process-shell-command
+   "pactl" nil "pactl set-sink-volume 0 +5% && pactl set-sink-volume 1 +5%")))
+   (exwm-input-set-key
+   (kbd "<XF86AudioLowerVolume>")
+   (lambda ()
+   (interactive) (start-process-shell-command
+   "pactl" nil "pactl set-sink-volume 0 -5% && pactl set-sink-volume 1 -5%")))
+   (exwm-input-set-key
+   (kbd "<XF86AudioMute>")
+   (lambda ()
+   (interactive) (start-process-shell-command
+   "pactl" nil "pactl set-sink-mute 0 toggle && pactl set-sink-mute 1 toggle")))
+
+   (defun display-backlight-brightness ()
+   (message "Backlight at %s"
+   (car (split-string
+   (shell-command-to-string "xbacklight -get")
+   "\\." t))))
+
+   (exwm-input-set-key
+   (kbd "<XF86MonBrightnessUp>")
+   (lambda ()
+   (interactive)
+   (start-process-shell-command
+   "xbacklight" nil "xbacklight -inc 5")
+   (display-backlight-brightness)
+   ))
+
+   (exwm-input-set-key
+   (kbd "<XF86MonBrightnessDown>")
+   (lambda ()
+   (interactive)
+   (start-process-shell-command
+   "xbacklight" nil "xbacklight -dec 5")
+   (display-backlight-brightness)))
+
+    (defun exwm-async-run (name)
+      (interactive)
+      (start-process name nil name))
+
+    (defun daedreth/launch-browser ()
+      (interactive)
+      (exwm-async-run "chromium"))
+
+    (defun daedreth/lock-screen ()
+      (interactive)
+      (exwm-async-run "slock"))
+
+    (global-set-key (kbd "C-\{") 'daedreth/launch-browser)
+    )
+
 ;; dgm comments this as it appears to not be working!! reverts to old (server-star)
 ;;    (require 'server)
 ;;      (unless (server-running-p)
 ;;        (server-start))
-    (exwm-config-default))
 
     ;; this just enables exwm, it started automatically once everything is ready
 ;; commented out now that I have the Ferguson setup    (exwm-enable))
-
 
 ;;;;; multiple screens when working on the laptop
 ;; From: https://github.com/ch11ng/exwm/wiki#randr-multi-screen
@@ -359,11 +487,12 @@ ARCHIVE is the string name of the package archive.")
            "--output" default-output "--off")
           (setq exwm-randr-workspace-output-plist (list 0 (match-string 1))))))))
 
+(use-package delight)
+
 ;;; debug options from https://github.com/ch11ng/exwm/wiki
 (setq debug-on-error t)
 ;; (setq debug-on-quit t)
 (setq edebug-all-forms t)
-
 
 ;; Ambrevar's functions
 (load "/home/dgm/.emacs.d/src/ambrevar/functions.el")
@@ -515,8 +644,7 @@ ARCHIVE is the string name of the package archive.")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; PATH ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/purcell/exec-path-from-shell
 
-(use-package exec-path-from-shell
-  :ensure t)
+(use-package exec-path-from-shell)
 
 (setq-default exec-path-from-shell-arguments nil)
 (setq exec-path-from-shell-arguments nil)

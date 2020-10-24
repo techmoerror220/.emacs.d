@@ -151,7 +151,7 @@ Another:
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23923 32537 660264 971000) :init (23923 32537 660257 748000) :config (23923 32537 660130 30000) :config-secs (0 2 377979 308000) :init-secs (0 2 378602 627000) :use-package-secs (0 2 378691 775000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 18817 217265 513000) :init (24468 18817 217259 863000) :init-secs (0 0 388269 681000) :use-package-secs (0 0 388311 39000) :config (24468 18817 217245 263000) :config-secs (0 0 388226 517000)))
 
 In the =/snippets= folder in this repository you can see my snippets
 collection. A good guide to understand the syntax used is in [[https://joaotavora.github.io/yasnippet/snippet-development.html][the manual for

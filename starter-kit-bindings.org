@@ -198,7 +198,7 @@ Si lo pongo en =nil= I get iBuffer in on whole window, replacing whatever I have
 (setq ibuffer-use-other-window nil)
 #+END_SRC
 
-*** Use Human readable Size column
+*** COMMENT Use Human readable Size column
 From: https://www.emacswiki.org/emacs/IbufferMode
 
 I don’t like default “Size” column, so I write a human readable column instead of original one. – coldnew

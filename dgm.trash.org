@@ -1,3 +1,594 @@
+* Disabled goodies
+
+** Bookmarks on Start
+Set emacs to open Bookmark+ on start. From Xah Emacs. Disabled now that I use =Dashboard=
+
+#+srcname: bookmarks
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; included by dgm
+  ;;   (setq inhibit-splash-screen t)
+  ;; (require 'bookmark+) ;; no longer available in MELPA
+  ;;  (bookmark-bmenu-list)
+  ;;  (switch-to-buffer "*Bookmark List*")
+  ;; '(initial-buffer-choice "*Bookmark List*")
+  ;; (setq initial-buffer-choice "*Bookmark List*")
+#+END_SRC
+
+
+#+RESULTS: bookmarks
+
+
+#+srcname: custom-setup
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;;    Load the files in CustomDir using mapc:
+  ;; (mapc 'load (directory-files "~/.emacs.d/customDir" t ".*\.el"))
+  ;; (add-to-list 'load-path "~/.emacs.d/customDir/")
+  ;; (require 'setup-programming)
+#+END_SRC
+
+
+
+** Flycheck
+I disable this as flycheck makes emacs too slow.
+#+srcname: flycheck-tip
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;;  (require 'flycheck-tip)
+  ;;  (define-key global-map (kbd "\C-c \C-n") 'flycheck-tip-cycle)
+  ;;  (setq flycheck-display-errors-function 'ignore)
+#+END_SRC
+
+#+RESULTS: flycheck-tip
+: ignore
+
+#+RESULTS:
+: ignore
+
+** Golden Ratio
+
+For now, I deactivate the golden-ratio mode because it distract me too much.
+
+#+srcname: golden-ratio
+#+BEGIN_SRC emacs-lisp :tangle no
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; PACKAGE: golden-ratio                         ;;
+  ;;                                               ;;
+  ;; GROUP: Environment -> Windows -> Golden Ratio ;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;; activate for helm when helm is installed
+  ;; (require 'golden-ratio)
+
+  ;; (add-to-list 'golden-ratio-exclude-modes "ediff-mode")
+  ;; (add-to-list 'golden-ratio-exclude-modes "helm-mode")
+  ;; (add-to-list 'golden-ratio-exclude-modes "dired-mode")
+  ;; (add-to-list 'golden-ratio-exclude-modes "ess-mode")
+
+  ;; I dont want the golden ratio with the Helm window
+  ;;  (defun pl/helm-alive-p ()
+  ;;   (if (boundp 'helm-alive-p)
+  ;;       (symbol-value 'helm-alive-p)))
+
+  ;;  (add-to-list 'golden-ratio-inhibit-functions 'pl/helm-alive-p)
+
+  ;; do not enable golden-ratio in theses modes
+  ;;   (setq golden-ratio-exclude-modes '("ediff-mode"
+  ;;                                      "gud-mode"
+  ;;                                      "gdb-locals-mode"
+  ;;                                      "gdb-registers-mode"
+  ;;                                      "gdb-breakpoints-mode"
+  ;;                                      "gdb-threads-mode"
+  ;;                                      "gdb-frames-mode"
+  ;;                                      "gdb-inferior-io-mode"
+  ;;                                      "gud-mode"
+  ;;                                      "gdb-inferior-io-mode"
+  ;;                                      "gdb-disassembly-mode"
+  ;;                                      "gdb-memory-mode"
+  ;;   ;;                                   "magit-log-mode"
+  ;;   ;;                                   "magit-reflog-mode"
+  ;;   ;;                                   "magit-status-mode"
+  ;;                                      "IELM"
+  ;;                                      "eshell-mode"
+  ;;                                      "dired-mode"
+  ;;                                      "helm-mode"
+  ;;                                      "ess-mode"))
+  ;; delete "dired-mode"  from the above list if you want golden-ratio to apply to helm
+
+  ;;   (golden-ratio-mode)
+#+END_SRC
+
+#+RESULTS: golden-ratio :tangle no
+
+
+** Frame title
+I disable this as it is dealt with in -misc.org
+#+srcname: frame-title
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; more useful frame title, that show either a file or a
+  ;; buffer name (if the buffer isn't visiting a file)
+  ;; taken from prelude-ui.el
+  ;; (setq frame-title-format
+  ;;      '("" invocation-name " - " (:eval (if (buffer-file-name)
+  ;;                                                    (abbreviate-file-name (buffer-file-name))
+  ;;                                                  "%b"))))
+#+END_SRC
+
+#+RESULTS: frame-title
+|   | invocation-name | - | (:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) %b)) |
+
+
+* COMMENT Resize minibuffer
+
+#+begin_src emacs-lisp :tangle no
+  ;; (setq resize-mini-windows t)
+  ;; (setq max-mini-window-height 0.50)
+#+end_src
+
+#+RESULTS:
+: 0.5
+
+* COMMENT Window highlight
+
+Too funky
+
+#+begin_src emacs-lisp :tangle no
+  (require 'window-highlight)
+
+  (apply
+   #'custom-set-faces
+   (let ((inactive-color "#ffffe2")
+         (where '((type x w32 ns))))
+     `((default
+         ((,where
+           :background ,inactive-color)))
+       (fringe
+        ((,where
+          :background ,inactive-color)))
+       )))
+
+  (window-highlight-mode 1)
+#+end_src
+
+** Trying EXWM keybind
+
+#+begin_src emacs-lisp :tangle no
+  ;;;(setq exwm-input-global-keys
+  ;;;        `(,(kbd "s-<tab>") . buffer-flip))
+#+end_src
+
+
+** Bookmarks on Start
+Set emacs to open Bookmark+ on start. From Xah Emacs. Disabled now that I use =Dashboard=
+
+#+srcname: bookmarks
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; included by dgm
+  ;;   (setq inhibit-splash-screen t)
+  ;; (require 'bookmark+) ;; no longer available in MELPA
+  ;;  (bookmark-bmenu-list)
+  ;;  (switch-to-buffer "*Bookmark List*")
+  ;; '(initial-buffer-choice "*Bookmark List*")
+  ;; (setq initial-buffer-choice "*Bookmark List*")
+#+END_SRC
+
+
+#+RESULTS: bookmarks
+
+
+#+srcname: custom-setup
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;;    Load the files in CustomDir using mapc:
+  ;; (mapc 'load (directory-files "~/.emacs.d/customDir" t ".*\.el"))
+  ;; (add-to-list 'load-path "~/.emacs.d/customDir/")
+  ;; (require 'setup-programming)
+#+END_SRC
+
+** Bookmarks on Start
+Set emacs to open Bookmark+ on start. From Xah Emacs. Disabled now that I use =Dashboard=
+
+#+srcname: bookmarks
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; included by dgm
+  ;;   (setq inhibit-splash-screen t)
+  ;; (require 'bookmark+) ;; no longer available in MELPA
+  ;;  (bookmark-bmenu-list)
+  ;;  (switch-to-buffer "*Bookmark List*")
+  ;; '(initial-buffer-choice "*Bookmark List*")
+  ;; (setq initial-buffer-choice "*Bookmark List*")
+#+END_SRC
+
+
+#+RESULTS: bookmarks
+
+
+#+srcname: custom-setup
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;;    Load the files in CustomDir using mapc:
+  ;; (mapc 'load (directory-files "~/.emacs.d/customDir" t ".*\.el"))
+  ;; (add-to-list 'load-path "~/.emacs.d/customDir/")
+  ;; (require 'setup-programming)
+#+END_SRC
+
+
+* COMMENT Resize minibuffer
+
+#+begin_src emacs-lisp :tangle no
+  ;; (setq resize-mini-windows t)
+  ;; (setq max-mini-window-height 0.50)
+#+end_src
+
+#+RESULTS:
+: 0.5
+
+*** Math notation
+
+With the solarized-dark theme, math notation is too dark to see.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; (setq font-latex-math-face :foreground grey)
+#+END_SRC
+
+* COMMENT Management of window configurations
+From https://emacs.stackexchange.com/questions/2710/switching-between-window-layouts
+
+DGM: I've tried it but not convinced...
+#+begin_src emacs-lisp :tangle yes
+  (defvar winstack-stack '()
+    "A Stack holding window configurations.
+  Use `winstack-push' and
+  `winstack-pop' to modify it.")
+
+  (defun winstack-push()
+    "Push the current window configuration onto `winstack-stack'."
+    (interactive)
+    (if (and (window-configuration-p (first winstack-stack))
+             (compare-window-configurations (first winstack-stack) (current-window-configuration)))
+        (message "Current config already pushed")
+      (progn (push (current-window-configuration) winstack-stack)
+             (message (concat "pushed " (number-to-string
+                                         (length (window-list (selected-frame)))) " frame config")))))
+
+  (defun winstack-pop()
+    "Pop the last window configuration off `winstack-stack' and apply it."
+    (interactive)
+    (if (first winstack-stack)
+        (progn (set-window-configuration (pop winstack-stack))
+               (message "popped"))
+      (message "End of window stack")))
+
+  ;;(global-set-key (kbd "s-,") 'winstack-push)
+  ;;(global-set-key (kbd "s-.") 'winstack-pop)
+#+end_src
+
+#+RESULTS:
+: winstack-pop
+
+* COMMENT Face of comments
+
+#+begin_src emacs-lisp :tangle no
+  (set-face-attribute 'font-lock-comment-delimiter-face nil :foreground "#268bd2")
+  (set-face-attribute 'font-lock-comment-face nil :foreground "#268bd2")
+#+end_src
+
+#+RESULTS:
+
+* COMMENT Remapping =M-<= and =M->=
+
+#+begin_src emacs-lisp :tangle no
+  (global-set-key (kbd "s-,") 'beginning-of-buffer)
+  (global-set-key (kbd "s-.") 'end-of-buffer)
+#+end_src
+
+#+RESULTS:
+: end-of-buffer
+
+* COMMENT Better line numbers
+Joe di Castro says: Display a more appealing line numbers. I don't use them too much because is a very slow feature, but sometimes it comes handy.
+
+DGM: not sure it is better.
+#+BEGIN_SRC emacs-lisp :tangle no
+                                          ; 2014-04-04: Holy moly its effort to get line numbers like vim!
+                                          ; http://www.emacswiki.org/emacs/LineNumbers#toc6
+  (unless window-system
+    (add-hook 'linum-before-numbering-hook
+              (lambda ()
+                (setq-local linum-format-fmt
+                            (let ((w (length (number-to-string
+                                              (count-lines (point-min) (point-max))))))
+                              (concat "%" (number-to-string w) "d"))))))
+
+  (defun joe-linum-format-func (line)
+    (concat
+     (propertize (format linum-format-fmt line) 'face 'linum)
+     (propertize " " 'face 'linum)))
+
+  (unless window-system
+    (setq linum-format 'joe-linum-format-func))
+#+END_SRC
+
+#+RESULTS:
+
+**** COMMENT Dashboard
+
+I leave it out as it doesn't work with =exwm=
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package dashboard
+    :defer t
+    :config
+    (dashboard-setup-startup-hook)
+                                          ;    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
+    (setq dashboard-items '((recents   . 10)
+                            (bookmarks . 10)
+                            (projects  . 10)))
+    (setq dashboard-banner-logo-title ""))
+  (message "Testing 2 dashboard chunk is evaluated.")
+#+END_SRC
+
+#+RESULTS:
+: Testing 2 dashboard chunk is evaluated.
+
+**** COMMENT Mark current word
+From https://www.emacswiki.org/emacs/MarkCommands#toc7
+
+Commented out as =s-/= does the same and with a better shortcut, as defined  [[select]]
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (defun my-mark-current-word (&optional arg allow-extend)
+    "Put point at beginning of current word, set mark at end."
+    (interactive "p\np")
+    (setq arg (if arg arg 1))
+    (if (and allow-extend
+             (or (and (eq last-command this-command) (mark t))
+                 (region-active-p)))
+        (set-mark
+         (save-excursion
+           (when (< (mark) (point))
+             (setq arg (- arg)))
+           (goto-char (mark))
+           (forward-word arg)
+           (point)))
+      (let ((wbounds (bounds-of-thing-at-point 'word)))
+        (unless (consp wbounds)
+          (error "No word at point"))
+        (if (>= arg 0)
+            (goto-char (car wbounds))
+          (goto-char (cdr wbounds)))
+        (push-mark (save-excursion
+                     (forward-word arg)
+                     (point)))
+        (activate-mark))))
+
+  (define-key global-map (kbd "C-c x") 'my-mark-current-word)
+#+END_SRC
+
+#+RESULTS:
+: my-mark-current-word
+
+***** COMMENT Transpose frame
+
+Check it out here: https://www.emacswiki.org/emacs/TransposeFrame
+Commented out because I don't work with frames and because this functionality is already implemented with =s-\=
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package transpose-frame
+    :defer t
+    :bind ("C-c t" . transpose-frame))
+#+END_SRC
+
+#+RESULTS :
+: transpose-frame
+
+***** COMMENT Ace-jump
+A quick way to jump around text in buffers.
+
+See Emacs Rocks Episode 10 for a screencast: http://emacsrocks.com/e10.html
+
+Commented out as =C-o= does the same and =s-z= even better as it applies to any letter anywhere in the buffer.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package ace-jump-mode
+    :defer t
+    :diminish ace-jump-mode
+    :commands ace-jump-mode
+    :bind ("C-s-s" . ace-jump-mode))
+#+END_SRC
+
+#+RESULTS:
+: ace-jump-mode
+***** popup-kill-ring
+Out of all the packages I tried out, this one, being the simplest, appealed to me most. With a simple M-y you can now browse your kill-ring like browsing autocompletion items. C-n and C-p totally work for this.
+
+DGM: nice, but i prefer to use helm to browse the kill ring.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package popup-kill-ring
+    :defer t
+    :bind ("M-y" . popup-kill-ring))
+#+END_SRC
+
+#+RESULTS:
+: popup-kill-ring
+
+***** COMMENT Hungry deletion
+On the list of things I like doing, deleting big whitespaces is pretty close to the bottom. Backspace or Delete will get rid of all whitespace until the next non-whitespace character is encountered. You may not like it, thus disable it if you must, but it’s pretty decent.
+
+DGM: I am commenting this out as I found it annoying when, for example, editing ledger files and wanting to delete spaces one by one I found the cursor deleting all the white space and thus indening lines in the wrong manner. La sensacion era como si el buffer estuviera tabify when it wasn't... So I wasn't understanding what was going on until I recalled I had this mode enabled.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package hungry-delete
+    :defer t
+    :config
+    (global-hungry-delete-mode))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23554 33611 672389 982000) :init (23554 33611 672357 93000) :config (23554 33611 672016 76000) :config-secs (0 0 2391 739000) :init-secs (0 0 3160 173000) :use-package-secs (0 0 3365 347000)))
+
+****** Beacon
+While changing buffers or workspaces, the first thing you do is look for your cursor. Unless you know its position, you cannot move it efficiently. Every time you change buffers, the current position of your cursor will be briefly highlighted now.
+
+As much as I like it, it produces interferences.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package beacon
+    :defer t
+    :config
+    (beacon-mode 1))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24174 25303 116491 741000) :init (24174 25303 116448 801000) :config (24174 25303 115167 252000) :config-secs (0 0 2126 491000) :init-secs (0 0 4012 662000) :use-package-secs (0 0 4173 185000)))
+
+
+***** line numbers and programming
+Every now and then all of us feel the urge to be productive and write some code. In the event that this happens, the following bit of configuration makes sure that we have access to relative line numbering in programming-related modes. I highly recommend not enabling linum-relative-mode globally, as it messed up something like ansi-term for instance.
+
+Note: I disable this as I find it not very useful and dizzling by way of the moving numbers
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package linum-relative
+    :config
+    (setq linum-relative-current-symbol "")
+    (add-hook 'prog-mode-hook 'linum-relative-mode))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+******* COMMENT switch-window
+This magnificent package takes care of this issue. It’s unnoticeable if you have <3 panes open, but with 3 or more, upon pressing C-x o you will notice how your buffers turn a solid color and each buffer is asigned a letter (the list below shows the letters, you can modify them to suit your liking), upon pressing a letter asigned to a window, your will be taken to said window, easy to remember, quick to use and most importantly, it annihilates a big issue I had with emacs. An alternative is ace-window, however by default it also changes the behaviour of C-x o even if only 2 windows are open, this is bad, it also works less well with exwm for some reason.
+
+DGM: I suspect that this package is responsible for my disappearing-cursor problem because it has always happened when moving across windows... the only other suspect I have is Dired as I think it has involved moving files across windows and directories.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package switch-window
+    :defer t
+    :config
+    (setq switch-window-input-style 'minibuffer)
+    (setq switch-window-increase 4)
+    (setq switch-window-threshold 2)
+    (setq switch-window-shortcut-style 'qwerty)
+    (setq switch-window-qwerty-shortcuts
+          '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
+    :bind
+    ([remap other-window] . switch-window))
+#+END_SRC
+
+#+RESULTS:
+: switch-window
+
+******* COMMENT Following window splits
+After you split a window, your focus remains in the prebbbbvious one. This annoyed me so much I wrote these two, they take care of it.
+Note: I've commented this out because below I implement the same functionality. See [[split]]
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (defun split-and-follow-horizontally ()
+    (interactive)
+    (split-window-below)
+    (balance-windows)
+    (other-window 1))
+  (global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
+
+  (defun split-and-follow-vertically ()
+    (interactive)
+    (split-window-right)
+    (balance-windows)
+    (other-window 1))
+  (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
+#+END_SRC
+
+#+RESULTS:
+: split-and-follow-vertically
+
+*** COMMENT shx
+
+Commented out in an attempt to speed up evaluation in R and Stata... and BINGO!!! this was the little motherfucker that made R and Stata super slow interactively. It also caused an error on exit.
+
+Enhance comint-mode. See https://github.com/riscy/shx-for-emacsl
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package shx
+    :defer t
+    :init (shx-global-mode 1))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23563 38338 822346 339000) :init (23563 38338 822317 934000) :config (23563 38338 821844 459000) :config-secs (0 0 13 374000) :init-secs (0 0 2171 786000) :use-package-secs (0 0 2344 520000)))
+
+Alternativa from https://github.com/malb/emacs.d/blob/master/malb.org
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package shx
+    :defer t
+    :after comint
+    :config (progn
+              ;;(with-eval-after-load 'python
+              ;;  (add-hook 'inferior-python-mode-hook #'shx-mode))
+              ;; (with-eval-after-load 'sage-shell-mode
+              ;;   (add-hook 'sage-shell-mode-hook #'shx-mode))
+              (with-eval-after-load 'shell
+                (add-hook 'shell-mode-hook #'shx-mode)))
+    ;; from https://github.com/riscy/shx-for-emacs
+    (setq
+     ;; vastly improve display performance by breaking up long output lines
+     shx-max-output 1024
+     ;; prevent input longer than macOS's typeahead buffer from going through
+     shx-max-input 1024
+     ;; prefer inlined images to have a height of 250 pixels
+     shx-img-height 250
+     ;; don't show any incidental hint messages about how to use shx
+     shx-show-hints nil
+     ;; flash the previous comint prompt for a full second when using C-c C-p
+     shx-flash-prompt-time 1.0
+     ;; use `#' to prefix shx commands instead of the default `:'
+     shx-leader "#"))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23563 39460 592701 842000) :init (23563 39460 592655 127000) :config (23563 39460 592361 613000) :config-secs (0 0 651 835000) :init-secs (0 0 1187 492000) :use-package-secs (0 0 1286 219000)))
+
+*** COMMENT Run R in emacs (ESS)
+Tip from: https://github.com/izahn/dotemacs
+
+Support for R in Emacs is good, thanks to http://ess.r-project.org/. As with other programming languages this configuration enables completion via the tab key and code evaluation with C-ret. Many more features are provided by ESS, refer to http://ess.r-project.org/ for details.
+
+#+begin_src emacs-lisp :tangle yes
+    ;;;  ESS (Emacs Speaks Statistics)
+
+  ;; ;; Start R in the working directory by default
+  ;; (setq ess-ask-for-ess-directory nil)
+  ;;
+  ;; ;; Make sure ESS is loaded before we configure it
+  ;; (autoload 'julia "ess-julia" "Start a Julia REPL." t)
+  ;; (with-eval-after-load "ess-site"
+  ;;   ;; disable ehoing input
+  ;;   (setq ess-eval-visibly nil)
+  ;;   ;; Start R in the working directory by default
+  ;;   (setq ess-ask-for-ess-directory nil)
+  ;;   ;; Use tab completion
+  ;;   (setq ess-tab-complete-in-script t)
+  ;;   ;; extra ESS stuff inspired by https://github.com/gaborcsardi/dot-emacs/blob/master/.emacs
+  ;;   (ess-toggle-underscore nil)
+  ;;   (defun my-ess-execute-screen-options (foo)
+  ;;     "cycle through windows whose major mode is inferior-ess-mode and fix width"
+  ;;     (interactive)
+  ;;     (setq my-windows-list (window-list))
+  ;;     (while my-windows-list
+  ;;       (when (with-selected-window (car my-windows-list) (string= "inferior-ess-mode" ;; major-mode))
+  ;;         (with-selected-window (car my-windows-list) (ess-execute-screen-options t)))
+  ;;       (setq my-windows-list (cdr my-windows-list))))
+  ;;   (add-to-list 'window-size-change-functions 'my-ess-execute-screen-options)
+  ;;   (define-key ess-mode-map (kbd "<C-return>") ;; 'ess-eval-region-or-function-or-paragraph-and-step)
+  ;;   ;; truncate long lines in R source files
+  ;;   (add-hook 'ess-mode-hook
+  ;;             (lambda()
+  ;;               ;; don't wrap long lines
+  ;;               (toggle-truncate-lines t)
+  ;;               (outline-minor-mode t))))
+#+end_src
+
+Note: for me "C-return" does not work... Comento todo esto porque me temo que entra en conflicto con la costumization del gran Kieran Healy en =starter-kit-stats.org= donde veo que la evaluación está bound a =shift-return= and that works indeed for me.
+
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package pdf-tools

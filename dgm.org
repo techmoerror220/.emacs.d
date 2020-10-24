@@ -169,7 +169,6 @@ Now my main use =goto-char-timer= where I am prompted to write the text that I w
 #+name: avy-mode
 #+begin_src emacs-lisp :tangle yes
   (use-package avy
-    :defer t
     :bind
     ("s-i" . avy-goto-word-1)  ;; goes to word that starts with a given char
     ("s-+" . avy-goto-char)
@@ -227,7 +226,6 @@ Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-
 
 #+begin_src emacs-lisp :tangle yes
   (use-package iedit
-    :defer t
     :bind (("C-}" . iedit-mode))
     :init
     (setq iedit-toggle-key-default nil))
@@ -402,9 +400,12 @@ Read this:
 
 #+srcname: volatile
 #+BEGIN_SRC emacs-lisp :tangle no
-  (use-package volatile-highlights)
-  (volatile-highlights-mode t)
+  (use-package volatile-highlights
+    :config (volatile-highlights-mode t))
 #+END_SRC
+
+#+RESULTS: volatile
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 8689 559807 31000) :init (24467 8689 559796 572000) :config (24467 8689 559583 338000) :config-secs (0 0 9584 263000) :init-secs (0 0 25213 758000) :use-package-secs (0 0 25285 736000)))
 
 *** Clean-indent
 Emacs extension for clean auto-indent and backspace unindent.
@@ -414,7 +415,7 @@ Includes:
 - An unindent function (M-backspace) that aligns the cursor position to match indentation of best candidate from lines above
 - Simple auto-indent mode (activate via M-x customize) that disregards smart language based indentation and instead consistently aligns only based on indentation of the line above
 
-#+srcname: clean-indent
+#+srcname: clean-indent-original
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package clean-aindent-mode)
   (add-hook 'prog-mode-hook 'clean-aindent-mode)
@@ -427,20 +428,35 @@ Includes:
   (add-hook 'after-init-hook 'my-pkg-init)
 #+END_SRC
 
+#+srcname: clean-indent-dgm
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package clean-aindent-mode
+    :init
+    (defun my-pkg-init()
+      (electric-indent-mode -1)  ; no electric indent, auto-indent is sufficient
+      (clean-aindent-mode t)
+      (setq clean-aindent-is-simple-indent t)
+      (define-key global-map (kbd "RET") 'newline-and-indent))  
+    (add-hook 'prog-mode-hook #'clean-aindent-mode)
+    (add-hook 'after-init-hook #'my-pkg-init))
+#+END_SRC
+
+#+RESULTS: clean-indent-dgm
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 9043 35206 147000) :init (24467 9043 35191 986000) :config (24467 9043 34941 58000) :config-secs (0 0 7 603000) :init-secs (0 0 520 314000) :use-package-secs (0 0 603 403000)))
+
 
 *** dtrt-indent
 A minor mode that guesses the indentation offset originally used for creating source code files and transparently adjusts the corresponding settings in Emacs, making it more convenient to edit foreign files.
 
 #+begin_src emacs-lisp :tangle yes
   (use-package dtrt-indent
-    :defer t
-    :init
+    :config
     (dtrt-indent-mode 1)
     (setq dtrt-indent-verbosity 0))
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23923 32766 535721 489000) :init (23923 32766 535713 86000) :config (23923 32766 535556 330000) :config-secs (0 0 5 314000) :init-secs (0 0 50666 683000) :use-package-secs (0 2 301402 504000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 9080 432026 631000) :init (24467 9080 432014 925000) :config (24467 9080 431849 104000) :config-secs (0 0 56998 176000) :init-secs (0 0 57395 628000) :use-package-secs (0 0 57480 336000)))
 
 *** ws-butler -- an unobtrusive way to trim spaces from end of line
 
@@ -452,7 +468,6 @@ A minor mode that guesses the indentation offset originally used for creating so
 
 #+begin_src emacs-lisp :tangle yes
   (use-package ws-butler
-    :defer t
     :init
     (add-hook 'prog-mode-hook 'ws-butler-mode)
     (add-hook 'text-mode 'ws-butler-mode)
@@ -477,17 +492,17 @@ This lets you use C-x u (undo-tree-visualize) to visually walk through the chang
     (progn
       (global-undo-tree-mode 1)
       (setq undo-tree-visualizer-timestamps t)
-      (setq undo-tree-visualizer-diff t)))
-
-  ;; make ctrl-z undo
-  (global-set-key (kbd "C-z") 'undo)
-  ;; make ctrl-Z redo
-  (defalias 'redo 'undo-tree-redo)
-  (global-set-key (kbd "C-S-z") 'redo)
+      (setq undo-tree-visualizer-diff t))
+    ;; make ctrl-z undo
+    (global-set-key (kbd "C-z") 'undo)
+    ;; make ctrl-Z redo
+    (defalias 'redo 'undo-tree-redo)
+    (global-set-key (kbd "C-S-z") 'redo)
+    (global-undo-tree-mode))
 #+END_SRC
 
 #+RESULTS: undo-tree
-: redo
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 10059 742302 284000) :init (24467 10059 742292 643000) :config (24467 10059 742157 73000) :config-secs (0 0 10504 382000) :init-secs (0 0 10845 246000) :use-package-secs (0 0 10906 22000)))
 
 See https://www.reddit.com/r/emacs/comments/5h7k1r/undo_lost_hours_of_work//
 Also read http://ergoemacs.org/emacs/emacs_undo_cult_problem.html
@@ -546,12 +561,16 @@ Included in =starter-kit-completion.org=
 
 *** Duplicate-thing
 
+#  (global-set-key (kbd "M-D") 'duplicate-thing)
+
 #+srcname: duplicate
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package duplicate-thing
-    :defer t)
-  (global-set-key (kbd "M-D") 'duplicate-thing)
+    :bind (("M-D" . duplicate-thing)))
 #+END_SRC
+
+#+RESULTS: duplicate
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 9727 439760 900000) :init (24467 9727 439612 346000) :init-secs (0 0 52 689000) :use-package-secs (0 0 356 518000) :config (24467 9727 439588 915000) :config-secs (0 0 7 213000)))
 
 #+srcname: ibuffer-vc
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -582,42 +601,38 @@ Included in =starter-kit-completion.org=
 #+srcname: highlight-numbers-and-symbols
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package highlight-numbers
-    :defer t)
+    :init 
+    (add-hook 'prog-mode-hook 'highlight-numbers-mode))
+
+
   (use-package highlight-symbol
-    :defer t)
+    :init
+    (add-hook 'prog-mode-hook (lambda () (highlight-symbol-mode)))
+    (add-hook 'org-mode-hook (lambda () (highlight-symbol-mode)))
+    (add-hook 'LaTeX-mode-hook (lambda () (highlight-symbol-mode)))
+    (add-hook 'latex-mode-hook (lambda () (highlight-symbol-mode)))
+    (add-hook 'text-mode-hook (lambda () (highlight-symbol-mode)))
+    (add-hook 'markdown-mode-hook (lambda () (highlight-symbol-mode 1)))
+    (highlight-symbol-nav-mode)
+    (setq highlight-symbol-idle-delay 0.2
+          highlight-symbol-on-navigation-p t)
+    (global-set-key [(control shift mouse-1)]
+                    (lambda (event)
+                      (interactive "e")
+                      (goto-char (posn-point (event-start event)))
+                      (highlight-symbol-at-point))))
 
-  (add-hook 'prog-mode-hook 'highlight-numbers-mode)
-
-  (highlight-symbol-nav-mode)
-
-  (add-hook 'prog-mode-hook (lambda () (highlight-symbol-mode)))
-  (add-hook 'org-mode-hook (lambda () (highlight-symbol-mode)))
-  (add-hook 'LaTeX-mode-hook (lambda () (highlight-symbol-mode)))
-  (add-hook 'latex-mode-hook (lambda () (highlight-symbol-mode)))
-  (add-hook 'text-mode-hook (lambda () (highlight-symbol-mode)))
-  (add-hook 'markdown-mode-hook (lambda () (highlight-symbol-mode 1)))
-
-
-  (setq highlight-symbol-idle-delay 0.2
-        highlight-symbol-on-navigation-p t)
-
-  (global-set-key [(control shift mouse-1)]
-                  (lambda (event)
-                    (interactive "e")
-                    (goto-char (posn-point (event-start event)))
-                    (highlight-symbol-at-point)))
-
-  ;; keybinds conflict so...
-  ;;(global-set-key (kbd "M-n") 'highlight-symbol-next)
-  ;;(global-set-key (kbd "M-p") 'highlight-symbol-prev)
+    ;; keybinds conflict so...
+    ;;(global-set-key (kbd "M-n") 'highlight-symbol-next)
+    ;;(global-set-key (kbd "M-p") 'highlight-symbol-prev)
 #+END_SRC
 
 #+RESULTS: highlight-numbers-and-symbols
-| lambda | (event) | (interactive e) | (goto-char (posn-point (event-start event))) | (highlight-symbol-at-point) |
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 10201 32342 51000) :init (24467 10201 32327 81000) :init-secs (0 0 643 626000) :use-package-secs (0 0 740 848000) :config (24467 10201 32034 213000) :config-secs (0 0 8 255000)))
 
-*** Info Plus
+*** COMMENT Info Plus
 #+srcname: info+
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
   ;; (use-package info+) ;;no longer available in MELPA?
 #+END_SRC
 
@@ -645,8 +660,7 @@ Included in =starter-kit-completion.org=
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (use-package rainbow-mode
-    :defer t
-    :config
+    :init
     (add-hook 'prog-mode-hook         #'rainbow-mode)
     (add-hook 'html-mode-hook         #'rainbow-mode)
     (add-hook 'css-mode-hook          #'rainbow-mode)
@@ -661,7 +675,7 @@ Included in =starter-kit-completion.org=
 #+END_SRC
 
 #+RESULTS: rainbow-mode
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23593 1042 76652 672000) :init (23593 1042 76606 522000) :config (23593 1042 76259 444000) :config-secs (0 0 777 90000) :init-secs (0 0 1377 923000) :use-package-secs (0 0 1502 38000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 10335 475765 838000) :init (24467 10335 475756 419000) :init-secs (0 0 24066 216000) :use-package-secs (0 0 24192 89000) :config (24467 10335 475645 294000) :config-secs (0 0 3 233000)))
 
 *** Kurecolor
 
@@ -753,7 +767,6 @@ tip from: https://github.com/izahn/dotemacs
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package which-key
-    :defer t
     :config
     (which-key-mode))
 #+END_SRC
@@ -771,13 +784,13 @@ Load eval-in-repl for bash, elisp, and python interaction.
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; require the main file containing common functions
   (use-package eval-in-repl
-    :defer t
-    :config
-    (setq comint-process-echoes t)
+    :init
     ;; truncate lines in comint buffers
     (add-hook 'comint-mode-hook
               (lambda()
                 (setq truncate-lines 1)))
+    :config
+    (setq comint-process-echoes t)
     ;; Scroll down for input and output
     (setq comint-scroll-to-bottom-on-input t)
     (setq comint-scroll-to-bottom-on-output t)
@@ -785,7 +798,7 @@ Load eval-in-repl for bash, elisp, and python interaction.
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23547 54059 64969 29000) :init (23547 54059 64933 102000) :config (23547 54059 64322 241000) :config-secs (0 0 1142 991000) :init-secs (0 0 2390 167000) :use-package-secs (0 0 2547 628000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 10421 684228 640000) :init (24467 10421 684195 389000) :init-secs (0 0 1983 59000) :use-package-secs (0 0 2179 670000) :config (24467 10421 683659 308000) :config-secs (0 0 1058 262000)))
 
 *** Comint fix
 
@@ -828,94 +841,6 @@ For =(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)= to have an effe
 #+RESULTS:
 | ansi-color-process-output | comint-postoutput-scroll-to-bottom | comint-watch-for-password-prompt |
 
-*** COMMENT shx
-
-Commented out in an attempt to speed up evaluation in R and Stata... and BINGO!!! this was the little motherfucker that made R and Stata super slow interactively. It also caused an error on exit.
-
-Enhance comint-mode. See https://github.com/riscy/shx-for-emacsl
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package shx
-    :defer t
-    :init (shx-global-mode 1))
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23563 38338 822346 339000) :init (23563 38338 822317 934000) :config (23563 38338 821844 459000) :config-secs (0 0 13 374000) :init-secs (0 0 2171 786000) :use-package-secs (0 0 2344 520000)))
-
-Alternativa from https://github.com/malb/emacs.d/blob/master/malb.org
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package shx
-    :defer t
-    :after comint
-    :config (progn
-              ;;(with-eval-after-load 'python
-              ;;  (add-hook 'inferior-python-mode-hook #'shx-mode))
-              ;; (with-eval-after-load 'sage-shell-mode
-              ;;   (add-hook 'sage-shell-mode-hook #'shx-mode))
-              (with-eval-after-load 'shell
-                (add-hook 'shell-mode-hook #'shx-mode)))
-    ;; from https://github.com/riscy/shx-for-emacs
-    (setq
-     ;; vastly improve display performance by breaking up long output lines
-     shx-max-output 1024
-     ;; prevent input longer than macOS's typeahead buffer from going through
-     shx-max-input 1024
-     ;; prefer inlined images to have a height of 250 pixels
-     shx-img-height 250
-     ;; don't show any incidental hint messages about how to use shx
-     shx-show-hints nil
-     ;; flash the previous comint prompt for a full second when using C-c C-p
-     shx-flash-prompt-time 1.0
-     ;; use `#' to prefix shx commands instead of the default `:'
-     shx-leader "#"))
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23563 39460 592701 842000) :init (23563 39460 592655 127000) :config (23563 39460 592361 613000) :config-secs (0 0 651 835000) :init-secs (0 0 1187 492000) :use-package-secs (0 0 1286 219000)))
-
-*** Run R in emacs (ESS)
-Tip from: https://github.com/izahn/dotemacs
-
-Support for R in Emacs is good, thanks to http://ess.r-project.org/. As with other programming languages this configuration enables completion via the tab key and code evaluation with C-ret. Many more features are provided by ESS, refer to http://ess.r-project.org/ for details.
-
-#+begin_src emacs-lisp :tangle yes
-    ;;;  ESS (Emacs Speaks Statistics)
-
-  ;; ;; Start R in the working directory by default
-  ;; (setq ess-ask-for-ess-directory nil)
-  ;;
-  ;; ;; Make sure ESS is loaded before we configure it
-  ;; (autoload 'julia "ess-julia" "Start a Julia REPL." t)
-  ;; (with-eval-after-load "ess-site"
-  ;;   ;; disable ehoing input
-  ;;   (setq ess-eval-visibly nil)
-  ;;   ;; Start R in the working directory by default
-  ;;   (setq ess-ask-for-ess-directory nil)
-  ;;   ;; Use tab completion
-  ;;   (setq ess-tab-complete-in-script t)
-  ;;   ;; extra ESS stuff inspired by https://github.com/gaborcsardi/dot-emacs/blob/master/.emacs
-  ;;   (ess-toggle-underscore nil)
-  ;;   (defun my-ess-execute-screen-options (foo)
-  ;;     "cycle through windows whose major mode is inferior-ess-mode and fix width"
-  ;;     (interactive)
-  ;;     (setq my-windows-list (window-list))
-  ;;     (while my-windows-list
-  ;;       (when (with-selected-window (car my-windows-list) (string= "inferior-ess-mode" ;; major-mode))
-  ;;         (with-selected-window (car my-windows-list) (ess-execute-screen-options t)))
-  ;;       (setq my-windows-list (cdr my-windows-list))))
-  ;;   (add-to-list 'window-size-change-functions 'my-ess-execute-screen-options)
-  ;;   (define-key ess-mode-map (kbd "<C-return>") ;; 'ess-eval-region-or-function-or-paragraph-and-step)
-  ;;   ;; truncate long lines in R source files
-  ;;   (add-hook 'ess-mode-hook
-  ;;             (lambda()
-  ;;               ;; don't wrap long lines
-  ;;               (toggle-truncate-lines t)
-  ;;               (outline-minor-mode t))))
-#+end_src
-
-Note: for me "C-return" does not work... Comento todo esto porque me temo que entra en conflicto con la costumization del gran Kieran Healy en =starter-kit-stats.org= donde veo que la evaluación está bound a =shift-return= and that works indeed for me.
 
 *** emacs lisp REPL (ielm)
 Tip from: https://github.com/izahn/dotemacs
@@ -1022,26 +947,28 @@ See http://tuhdo.github.io/emacs-tutor3.html
 #+RESULTS:
 : prelude-move-beginning-of-line
 
-*** Recent files.
+*** Recentf: recent files.
 
 Info from  https://www.emacswiki.org/emacs/RecentFiles
 
 Recentf is a minor mode that builds a list of recently opened files. This list is is automatically saved across sessions on exiting Emacs - you can then access this list through a command or the menu.
 
+    (global-set-key "\C-x\ \C-r" 'recentf-open-files)
+    (global-set-key (kbd "C-&") 'recentf-open-files)
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package recentf
-    :defer t)
-
-  (recentf-mode 1)
-  (setq recentf-max-menu-items 25)
-  (setq recentf-max-saved-items 25)
-  (global-set-key "\C-x\ \C-r" 'recentf-open-files)
-  (global-set-key (kbd "C-&") 'recentf-open-files)
-  (setq recentf-auto-cleanup 'never)
+    :bind (("\C-x\ \C-r" . recentf-open-files)
+           ("C-&"        . recentf-open-files))
+    :config
+    (recentf-mode 1)
+    (setq recentf-max-menu-items 25)
+    (setq recentf-max-saved-items 25)
+    (setq recentf-auto-cleanup 'never))
 #+END_SRC
 
 #+RESULTS:
-: never
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 18585 148462 193000) :init (24468 18585 148112 259000) :config (24468 18585 148076 824000) :config-secs (0 0 803 107000) :init-secs (0 0 860 20000) :use-package-secs (0 0 1368 201000)))
 
 By default, Recentf saves the list of recent files on exiting Emacs (specifically, `recentf-save-list` is called on `kill-emacs-hook`). If Emacs exits abruptly for some reason the recent file list will be lost - therefore you may wish to call `recentf-save-list` periodically, e.g. every 5 minutes:
 (DGM disables it because I find it too invasive)
@@ -1056,7 +983,7 @@ By default, Recentf saves the list of recent files on exiting Emacs (specificall
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package recentf-ext
-    :defer t)
+    :after recentf)
 #+END_SRC
 
 *** ztree
@@ -1064,8 +991,7 @@ By default, Recentf saves the list of recent files on exiting Emacs (specificall
 Since ztree works with files and directories, let's consider it in group Files
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package ztree 
-    :defer t)
+  (use-package ztree)
   ;;(use-package ztree-diff)
   ;;(use-package ztree-dir)
 #+END_SRC
@@ -1075,14 +1001,18 @@ Since ztree works with files and directories, let's consider it in group Files
 
 *** rebox2
 
-Ojo: solo funciona si se llama M-x rebox-mode. Luego desactivalo porque interfiere con, por ejemplo, =M w=
+Ojo: solo funciona si se llama M-x rebox-mode. Luego desactívalo porque interfiere con, por ejemplo, =M w=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rebox2 
-    :defer t)
-  (global-set-key [(meta q)] 'rebox-dwin-fill)
-  (global-set-key [(shift meta q)] 'rebox-dwin-no-fill)
+    :defer t
+    :config 
+     (global-set-key [(meta q)] 'rebox-dwin-fill)
+     (global-set-key [(shift meta q)] 'rebox-dwin-no-fill))
 #+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 14570 490939 591000) :init (24467 14570 490920 202000) :init-secs (0 0 53 696000) :use-package-secs (0 0 142 76000)))
 
 *** helpful
 
@@ -1090,14 +1020,19 @@ https://github.com/Wilfred/helpful
 
 Note that the built-in `describe-function' includes both functions and macros. `helpful-function' is functions only, so we provide `helpful-callable' as a drop-in replacement.
 
+     (global-set-key (kbd "\C-h f") #'helpful-callable)
+     (global-set-key (kbd "\C-h v") #'helpful-variable)
+     (global-set-key (kbd "\C-h k") #'helpful-key))
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package helpful 
-    :defer t)
-
-  (global-set-key (kbd "\C-h f") #'helpful-callable)
-  (global-set-key (kbd "\C-h v") #'helpful-variable)
-  (global-set-key (kbd "\C-h k") #'helpful-key)
+    :bind (("\C-h f" . helpful-callable)
+           ("\C-h v" . helpful-variable)
+           ("\C-h k" . helpful-key)))
 #+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 18425 758151 735000) :init (24468 18425 757853 379000) :config (24468 18425 757826 961000) :config-secs (0 0 13 351000) :init-secs (0 0 101 364000) :use-package-secs (0 0 546 447000)))
 
 *** Lookup
 
@@ -1267,7 +1202,6 @@ Magit depends on this. Copied from https://github.com/jwiegley/dot-emacs/blob/ma
     :config
     (require 'auth-source-pass)
     (defvar my-ghub-token-cache nil)
-
     (advice-add
      'ghub--token :around
      #'(lambda (orig-func host username package &optional nocreate forge)
@@ -1275,7 +1209,8 @@ Magit depends on this. Copied from https://github.com/jwiegley/dot-emacs/blob/ma
              (setq my-ghub-token-cache
                    (funcall orig-func host username package nocreate forge))))))
 
-  (use-package ghub+)
+  (use-package ghub+
+    :after ghub)
 #+END_SRC
 
 #+RESULTS:
@@ -1296,19 +1231,28 @@ Whether to show word-granularity differences within diff hunks.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package magit
-    :after (ghub)
-    :bind (("C-x g" . magit-status)
+    :after (ghub ghub+)
+    :bind (("C-x g"   . magit-status)
            ("C-x M-l" . magit-log-buffer-file)
-           ("C-x M-b" . magit-blame)))
-
-  (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
-
-  (setq magit-diff-refine-hunk 'all)
-  (setq magit-save-repository-buffers 'dontask)
+           ("C-x M-b" . magit-blame))  
+    :config 
+     (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+     (setq magit-diff-refine-hunk 'all)
+     (setq magit-save-repository-buffers 'dontask))
+   ;; Magnar Sveen
+    (defadvice magit-status (around magit-fullscreen activate)
+      (window-configuration-to-register :magit-fullscreen)
+      ad-do-it
+      (delete-other-windows))
+    (defun magit-quit-session ()
+      "Restores the previous window configuration and kills the magit buffer"
+      (interactive)
+      (kill-buffer)
+      (jump-to-register :magit-fullscreen))
 #+END_SRC
 
 #+RESULTS:
-: dontask
+: magit-quit-session
 
 The following code makes magit-status run alone in the frame, and then restores the old window configuration when you quit out of magit.
 
@@ -1316,7 +1260,7 @@ No more juggling windows after commiting. It’s magit bliss.
 
 Source: Magnar Sveen
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
   ;; full screen magit-status
   (defadvice magit-status (around magit-fullscreen activate)
     (window-configuration-to-register :magit-fullscreen)
@@ -1385,7 +1329,7 @@ https://emacsnotes.wordpress.com/2018/05/14/editing-html-textareas-with-emacs-by
 (emacs_chrome, GhostText, It's All Text!, Textern, withExEditor.)
 
 *** Make sure time stamps are in English
-
+ 
 Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-of-time-stamps
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1456,16 +1400,15 @@ Se usa con =M-x scratch= y te crea un scratch buffer of the currently used mode.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package scratch
-    :defer t
-    :commands scratch)
-
- (global-set-key (kbd "s-^") 'scratch)
+     :commands scratch
+     :bind (("s-^" . scratch)))
 #+END_SRC
 
 #+RESULTS:
-: scratch
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 15524 144245 674000) :init (24467 15524 144092 270000) :init-secs (0 0 65 521000) :use-package-secs (0 0 322 115000) :config (24467 15524 144061 238000) :config-secs (0 0 12 714000)))
 
-
+#  (global-set-key (kbd "s-^") 'scratch))
+ 
 *** COMMENT Change window configuration
 
 Tip from https://stackoverflow.com/questions/14881020/emacs-shortcut-to-switch-from-a-horizontal-split-to-a-vertical-split-in-one-move
@@ -1591,7 +1534,6 @@ After updating packages, this returns error.
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package gpastel
-    :defer t
     :config
     (gpastel-start-listening))
 #+END_SRC
@@ -1627,10 +1569,14 @@ From
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package fortune
-    :defer t)
-  (setq fortune-dir "/usr/share/games/fortunes"
-        fortune-file "/usr/share/games/fortunes/fortunes")
+    :defer t
+    :config
+    (setq fortune-dir "/usr/share/games/fortunes"
+          fortune-file "/usr/share/games/fortunes/fortunes"))
 #+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 15576 448059 99000) :init (24467 15576 448052 365000) :init-secs (0 0 11319 721000) :use-package-secs (0 0 11404 919000) :config (24467 15576 447951 617000) :config-secs (0 0 318 950000)))
 
 ** Better defaults
 - The `uniquify` library makes it so that when you visit two files
@@ -1817,16 +1763,14 @@ However, I disable it or else the copy/paste emacs bindings won't work in extern
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package whole-line-or-region
-    :defer t)
-
-  (add-to-list 'whole-line-or-region-extensions-alist
-               '(comment-dwim whole-line-or-region-comment-dwim nil))
-
-  (whole-line-or-region-global-mode 1)
+    :config
+    (add-to-list 'whole-line-or-region-extensions-alist
+                 '(comment-dwim whole-line-or-region-comment-dwim nil))
+    (whole-line-or-region-global-mode 1))
 #+END_SRC
 
 #+RESULTS:
-: t
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 15634 244978 315000) :init (24467 15634 244962 817000) :config (24467 15634 244718 370000) :config-secs (0 0 605975 41000) :init-secs (0 0 610183 599000) :use-package-secs (0 8 611849 589000)))
 *** Place cursor at beginning of search matches
 From: http://www.emacswiki.org/emacs/IncrementalSearch#toc4. With this hook, both ‘C-g’ and ‘RET’ exit the search at the begining of the search string rather than the end. To get back to where you started the search, just use ‘C-x C-x’. This works because isearch sets the mark at the search start.
 
@@ -1894,8 +1838,6 @@ DGM 14 april 2020: version with the helper file =stata= renamed =econ=
    (setq exec-path (append exec-path '("/usr/local/bin/econ")))
 #+END_SRC
 
-
-
 *** Flyspell and flycheck
 When I start the shell I get a backtrace error related to not finding flyspell, so I get it here. The message is:
 
@@ -1921,7 +1863,7 @@ Note =flyspell= is part of emacs so you don't need =use-package=.
 
 UUUGGHHGGHGH: tangled to no. The message refers to flycheck-mode, not flyspell!!!
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
   (require 'flyspell)
   (setq flyspell-mode-on t)
 #+END_SRC
@@ -1929,18 +1871,16 @@ UUUGGHHGGHGH: tangled to no. The message refers to flycheck-mode, not flyspell!!
 #+RESULTS:
 : t
 
-
 Now, I follow https://github.com/flycheck/flycheck/blob/master/doc/user/installation.rst
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package flycheck
     :defer t)
-  ;;  :defer t)
   ;;  :init (global-flycheck-mode))
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23562 65398 372429 797000) :init (23562 65398 372385 594000) :config (23562 65398 371859 359000) :config-secs (0 0 22 237000) :init-secs (0 0 962 713000) :use-package-secs (0 0 1171 921000)))
+: t
 
 *** Shell pop-up terminal
 
@@ -1957,7 +1897,6 @@ and I added the bit of code here and
 
 ~PS1="\[\e[00;32m\]\u\[\e[00m\]@\[\e[00;36m\]\h\[\e[00m\]:\[\e[00;34m\]\w\[\e[00m\]\n\$(printf \"[\[\e[01;31m\]%.*s\[\e[00m\]]\" \$? \$?) \$ "~
 
-
 in =.bashrc=.
 
 However, to actually get the colors, I followed  http://amitp.blogspot.com/2007/04/emacs-color-in-shell-buffers.html and his choice of colors
@@ -1965,22 +1904,22 @@ However, to actually get the colors, I followed  http://amitp.blogspot.com/2007/
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package shell-pop
     :defer t
-    :bind ("<s-escape>" . shell-pop))
-
-  ;;  (setq shell-pop-default-directory "/home/dgm")
-  (setq shell-pop-set-internal-mode "shell")
-  (setq shell-pop-set-internal-mode-shell "/bin/bash")
-  (setq shell-pop-set-window-height 30) ;the number for the percentage of the selected window. if 100, shell-pop use the whole of selected window, not spliting.
-  (setq shell-pop-set-window-position "bottom") ;shell-pop-up position. You can choose "top" or "bottom".
-
-  ;; https://emacs.stackexchange.com/questions/14876/how-can-i-make-ansi-color-codes-inside-the-prompt-show-up-in-shell-mode
-  (set-face-attribute 'comint-highlight-prompt nil
-                      :inherit nil)
+    :bind ("<s-escape>" . shell-pop)
+    :config
+    ;;  (setq shell-pop-default-directory "/home/dgm")
+    (setq shell-pop-set-internal-mode "shell")
+    (setq shell-pop-set-internal-mode-shell "/bin/bash")
+    (setq shell-pop-set-window-height 30) ;the number for the percentage of the selected window. if 100, shell-pop use the whole of selected window, not spliting.
+    (setq shell-pop-set-window-position "bottom") ;shell-pop-up position. You can choose "top" or "bottom".
+    ;; https://emacs.stackexchange.com/questions/14876/how-can-i-make-ansi-color-codes-inside-the-prompt-show-up-in-shell-mode
+    (set-face-attribute 'comint-highlight-prompt nil
+                        :inherit nil)
+    (setq ansi-color-names-vector ; better contrast colors
+          ["black" "red4" "green4" "yellow4"
+           "blue3" "magenta4" "cyan4" "white"]))
 
     ;;;;;;;;;;;;;;;;;;;;;; http://amitp.blogspot.com/2007/04/emacs-color-in-shell-buffers.html
-  (setq ansi-color-names-vector ; better contrast colors
-        ["black" "red4" "green4" "yellow4"
-         "blue3" "magenta4" "cyan4" "white"])
+
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
   ;; (setq shell-pop-window-size 30)
@@ -1994,7 +1933,7 @@ However, to actually get the colors, I followed  http://amitp.blogspot.com/2007/
 #+END_SRC
 
 #+RESULTS:
-| ansi-color-for-comint-mode-on | company-mode | flycheck-mode | yas-minor-mode | shell-mode-company-init | ess-r-package-activate-directory-tracker |
+| ansi-color-for-comint-mode-on | company-mode | flycheck-mode | yas-minor-mode | ess-r-package-activate-directory-tracker |
 
 
 *** COMMENT Start a regular shell at the bottom.
@@ -2015,6 +1954,7 @@ And open it at the bottom of current window
 #+END_SRC
 
 #+RESULTS:
+
 *** Using dumb-jump to jump to definitions
 The dumb-jump package provides 'jump to definition' support for multiple languages by simply searching for possible definitions using The Silver Searcher ag, ripgrep rg, or grep. It does not require building stored indexes (TAGS) or background processes etc.
 
@@ -2028,6 +1968,7 @@ Enable dumb-jump-mode globally:
 #+END_SRC
 
 #+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 18666 343483 821000) :init (24468 18666 343474 962000) :config (24468 18666 343457 437000) :config-secs (0 0 5 264000) :init-secs (0 0 52 364000) :use-package-secs (0 0 246 437000)))
 
 If The Silver Searcher is installed it will use it, otherwise it will revert back to =grep=.
 
@@ -2036,13 +1977,24 @@ Reads EditorConfig files to set coding style options according to current projec
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package editorconfig
-    :defer t
     :config
     (editorconfig-mode 1))
 #+END_SRC
 
 #+RESULTS:
 : t
+
+*** Dictionary
+Since I already use a local Wordnet as a thesaurus, I'm using it for a dictionary as well via the wordnut package.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package wordnut
+    :bind
+    ("s-$" . wordnut-search))
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23920 55701 21899 53000) :init (23920 55701 21702 363000) :config (23920 55701 21638 620000) :config-secs (0 0 15 446000) :init-secs (0 0 104 86000) :use-package-secs (0 0 460 241000)))
 
 *** Thesaurus
 Many of the thesaurus packages use an online service, synosaurus gives you the option of using a local Wordnet install. It also has a nice 'replace word' interface.
@@ -2055,7 +2007,7 @@ NOTE: this requires you to install wordnet
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package synosaurus
-    :defer t
+    :after wordnut
     :config (progn
               (setq synosaurus-backend 'synosaurus-backend-wordnet)
               (setq synosaurus-choose-method 'default)))
@@ -2063,19 +2015,6 @@ NOTE: this requires you to install wordnet
 
 #+RESULTS:
 : t
-
-*** Dictionary
-Since I already use a local Wordnet as a thesaurus, I'm using it for a dictionary as well via the wordnut package.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package wordnut
-    :defer t
-    :bind
-    ("s-$" . wordnut-search))
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23920 55701 21899 53000) :init (23920 55701 21702 363000) :config (23920 55701 21638 620000) :config-secs (0 0 15 446000) :init-secs (0 0 104 86000) :use-package-secs (0 0 460 241000)))
 
 *** Olivetti minor mode
 A minor mode for a nice writing environment.
@@ -2157,7 +2096,7 @@ DGM: Shortcuts commented out as I don't use them that often.
 *** System monitor
 A teeny-tiny system monitor that can be enabled or disabled at runtime, useful for checking performance with power-hungry processes in ansi-term
 
-symon can be toggled on and off with =super+h=.
+symon can be toggled on and off with =super+h= (keybinding already in use!)
 
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package symon
@@ -2199,13 +2138,12 @@ I think this will is too powerful a shortcut for this. I'd rather use it for =sw
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ivy
-    :defer t)
-
-  (setq ivy-display-style 'fancy)
+    :config
+     (setq ivy-display-style 'fancy))
 #+END_SRC
 
 #+RESULTS:
-: fancy
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 16086 450809 944000) :init (24467 16086 450795 185000) :init-secs (0 0 943 571000) :use-package-secs (0 0 1032 715000) :config (24467 16086 450554 136000) :config-secs (0 0 461 990000)))
 
 *** Smoothscrolling
 I don't know to be honest, but this little bit of code makes scrolling with emacs a lot nicer.
@@ -2244,8 +2182,6 @@ Originally I had all this set to 0 in =starter-kit-text.org= as follows:
 #+END_EXAMPLE
 
 **** Smooth-scrolling package and scrolling setup
-
-
 Another option is this package.
 
 This makes it so =C-n-=ing and =C-p-= ing won't make the buffer jump around so much.
@@ -2330,7 +2266,6 @@ Tips from https://pastebin.com/MnSsUWeZ
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ace-window
-    :defer t
     :config
     (ace-window-display-mode)
     (setq aw-dispatch-always t)
@@ -2357,60 +2292,14 @@ Tips from https://pastebin.com/MnSsUWeZ
 
 Problema: if I am in an external app within =exwm=, then =ace-window= does not work and I'd rather use =switch-window=.
 
-******* COMMENT switch-window
-This magnificent package takes care of this issue. It’s unnoticeable if you have <3 panes open, but with 3 or more, upon pressing C-x o you will notice how your buffers turn a solid color and each buffer is asigned a letter (the list below shows the letters, you can modify them to suit your liking), upon pressing a letter asigned to a window, your will be taken to said window, easy to remember, quick to use and most importantly, it annihilates a big issue I had with emacs. An alternative is ace-window, however by default it also changes the behaviour of C-x o even if only 2 windows are open, this is bad, it also works less well with exwm for some reason.
-
-DGM: I suspect that this package is responsible for my disappearing-cursor problem because it has always happened when moving across windows... the only other suspect I have is Dired as I think it has involved moving files across windows and directories.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package switch-window
-    :defer t
-    :config
-    (setq switch-window-input-style 'minibuffer)
-    (setq switch-window-increase 4)
-    (setq switch-window-threshold 2)
-    (setq switch-window-shortcut-style 'qwerty)
-    (setq switch-window-qwerty-shortcuts
-          '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
-    :bind
-    ([remap other-window] . switch-window))
-#+END_SRC
-
-#+RESULTS:
-: switch-window
-
-******* COMMENT Following window splits
-After you split a window, your focus remains in the prebbbbvious one. This annoyed me so much I wrote these two, they take care of it.
-Note: I've commented this out because below I implement the same functionality. See [[split]]
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (defun split-and-follow-horizontally ()
-    (interactive)
-    (split-window-below)
-    (balance-windows)
-    (other-window 1))
-  (global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
-
-  (defun split-and-follow-vertically ()
-    (interactive)
-    (split-window-right)
-    (balance-windows)
-    (other-window 1))
-  (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
-#+END_SRC
-
-#+RESULTS:
-: split-and-follow-vertically
-
 ***** =swiper=
 I like me some searching, the default search is very meh. In emacs, you mostly use search to get around your buffer, much like with avy, but sometimes it doesn’t hurt to search for entire words or mode, swiper makes sure this is more efficient.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package swiper
-    :defer t)
+  (use-package swiper)
 #+END_SRC
 
-DGM: I have removed =:bind ("s-i" . 'swiper)= becuase I don't use it much really.
+DGM: I have removed =:bind ("s-i" . 'swiper)= because I don't use it much really.
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23919 51355 179006 615000) :init (23919 51355 178791 891000) :config (23919 51355 178416 764000) :config-secs (0 0 17 871000) :init-secs (0 0 713 525000) :use-package-secs (0 0 1105 560000)))
@@ -2457,22 +2346,6 @@ This can be invoked using C-M-s-k. This keybinding makes sure you don’t hit it
 #+RESULTS:
 : close-all-buffers
 
-***** line numbers and programming
-Every now and then all of us feel the urge to be productive and write some code. In the event that this happens, the following bit of configuration makes sure that we have access to relative line numbering in programming-related modes. I highly recommend not enabling linum-relative-mode globally, as it messed up something like ansi-term for instance.
-
-Note: I disable this as I find it not very useful and dizzling by way of the moving numbers
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package linum-relative
-    :defer t
-    :config
-    (setq linum-relative-current-symbol "")
-    (add-hook 'prog-mode-hook 'linum-relative-mode))
-#+END_SRC
-
-#+RESULTS:
-: t
-
 ***** Text manipulation
 Here I shall collect self-made functions that make editing text easier.
 ****** Mark-Multiple
@@ -2480,7 +2353,6 @@ I can barely contain my joy. This extension allows you to quickly mark the next 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package mark-multiple
-    :defer t
     :bind ("s-q" . 'mark-next-like-this))
 #+END_SRC
 
@@ -2559,21 +2431,6 @@ Emacs treats camelCase strings as a single word by default, this changes said be
   (global-subword-mode 1)
 #+END_SRC
 
-****** Beacon
-While changing buffers or workspaces, the first thing you do is look for your cursor. Unless you know its position, you cannot move it efficiently. Every time you change buffers, the current position of your cursor will be briefly highlighted now.
-
-As much as I like it, it produces interferences.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package beacon
-    :defer t
-    :config
-    (beacon-mode 1))
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24174 25303 116491 741000) :init (24174 25303 116448 801000) :config (24174 25303 115167 252000) :config-secs (0 0 2126 491000) :init-secs (0 0 4012 662000) :use-package-secs (0 0 4173 185000)))
-
 ****** Rainbow delimiters
 Colors parentheses and other delimiters depending on their depth, useful for any language using them, especially lisp.
 
@@ -2581,41 +2438,12 @@ Note, however, that Sacha Chua doesn't automatically turn this on because she th
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package rainbow-delimiters
-    :defer t
     :init
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 #+END_SRC
 
 #+RESULTS:
 
-***** COMMENT Hungry deletion
-On the list of things I like doing, deleting big whitespaces is pretty close to the bottom. Backspace or Delete will get rid of all whitespace until the next non-whitespace character is encountered. You may not like it, thus disable it if you must, but it’s pretty decent.
-
-DGM: I am commenting this out as I found it annoying when, for example, editing ledger files and wanting to delete spaces one by one I found the cursor deleting all the white space and thus indening lines in the wrong manner. La sensacion era como si el buffer estuviera tabify when it wasn't... So I wasn't understanding what was going on until I recalled I had this mode enabled.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package hungry-delete
-    :defer t
-    :config
-    (global-hungry-delete-mode))
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23554 33611 672389 982000) :init (23554 33611 672357 93000) :config (23554 33611 672016 76000) :config-secs (0 0 2391 739000) :init-secs (0 0 3160 173000) :use-package-secs (0 0 3365 347000)))
-
-***** popup-kill-ring
-Out of all the packages I tried out, this one, being the simplest, appealed to me most. With a simple M-y you can now browse your kill-ring like browsing autocompletion items. C-n and C-p totally work for this.
-
-DGM: nice, but i prefer to use helm to browse the kill ring.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package popup-kill-ring
-    :defer t
-    :bind ("M-y" . popup-kill-ring))
-#+END_SRC
-
-#+RESULTS:
-: popup-kill-ring
 
 **** Daniel Mai
 
@@ -2626,8 +2454,7 @@ https://github.com/danielmai/.emacs.d/blob/master/config.org
 Here we make page-break characters look pretty, instead of appearing as ^L in Emacs. Here’s an informative article called "Using Page-Breaks in GNU Emacs" by Eric J. M. Ritz.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package page-break-lines
-    :defer t)
+  (use-package page-break-lines)
 #+END_SRC
 
 #+RESULTS:
@@ -2655,37 +2482,6 @@ Whenever I split windows, I usually do so and also switch to the other window as
 #+RESULTS:
 : hsplit-other-window
 
-***** COMMENT Transpose frame
-
-Check it out here: https://www.emacswiki.org/emacs/TransposeFrame
-Commented out because I don't work with frames and because this functionality is already implemented with =s-\=
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package transpose-frame
-    :defer t
-    :bind ("C-c t" . transpose-frame))
-#+END_SRC
-
-#+RESULTS :
-: transpose-frame
-
-***** COMMENT Ace-jump
-A quick way to jump around text in buffers.
-
-See Emacs Rocks Episode 10 for a screencast: http://emacsrocks.com/e10.html
-
-Commented out as =C-o= does the same and =s-z= even better as it applies to any letter anywhere in the buffer.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package ace-jump-mode
-    :defer t
-    :diminish ace-jump-mode
-    :commands ace-jump-mode
-    :bind ("C-s-s" . ace-jump-mode))
-#+END_SRC
-
-#+RESULTS:
-: ace-jump-mode
 ***** Smartscan
 Quickly jumps between other symbols found at point in Emacs.
 
@@ -2695,11 +2491,10 @@ http://www.masteringemacs.org/article/smart-scan-jump-symbols-buffer
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package smartscan
-    :defer t
     :config (global-smartscan-mode 1)
     :bind (("C-M-+" . smartscan-symbol-go-forward)
            ("C-M-*" . smartscan-symbol-go-backward))
-    ("C-M-'" . smartscan-symbol-replace))
+           ("C-M-'" . smartscan-symbol-replace))
 #+END_SRC
 
 #+RESULTS:
@@ -2732,24 +2527,17 @@ Sets prefix to =C-x /=. Then
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package pulseaudio-control
-    :defer t)
-
-  (with-eval-after-load 'pulseaudio-control
-    ;; REVIEW: Upstream should set path dynamically.
-    ;; https://github.com/flexibeast/pulseaudio-control/issues/7
-    (setq pulseaudio-control-pactl-path (executable-find "pactl")
-          pulseaudio-control-volume-step "2%"))
+    :config 
+    (with-eval-after-load 'pulseaudio-control
+      ;; REVIEW: Upstream should set path dynamically.
+      ;; https://github.com/flexibeast/pulseaudio-control/issues/7
+      (setq pulseaudio-control-pactl-path (executable-find "pactl")
+            pulseaudio-control-volume-step "2%"))
+      (pulseaudio-control-default-keybindings))
 #+END_SRC
 
 #+RESULTS:
-: 2%
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (pulseaudio-control-default-keybindings)
-#+END_SRC
-
-#+RESULTS:
-: pulseaudio-control-map
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 16364 93457 243000) :init (24467 16364 93440 469000) :init-secs (0 0 1365 893000) :use-package-secs (0 0 1490 229000) :config (24467 16364 93144 30000) :config-secs (0 0 721 654000)))
 
 ***** Enabling various commands for up/down casing, etc.
 
@@ -2762,63 +2550,6 @@ From https://github.com/danielmai/.emacs.d/blob/master/config.org and http://tob
   (put 'dired-find-alternate-file 'disabled nil)
   (put 'set-goal-column 'disabled nil)
 #+END_SRC
-
-**** COMMENT Dashboard
-
-I leave it out as it doesn't work with =exwm=
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package dashboard
-    :defer t
-    :config
-    (dashboard-setup-startup-hook)
-                                          ;    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
-    (setq dashboard-items '((recents   . 10)
-                            (bookmarks . 10)
-                            (projects  . 10)))
-    (setq dashboard-banner-logo-title ""))
-  (message "Testing 2 dashboard chunk is evaluated.")
-#+END_SRC
-
-#+RESULTS:
-: Testing 2 dashboard chunk is evaluated.
-
-**** COMMENT Mark current word
-From https://www.emacswiki.org/emacs/MarkCommands#toc7
-
-Commented out as =s-/= does the same and with a better shortcut, as defined  [[select]]
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (defun my-mark-current-word (&optional arg allow-extend)
-    "Put point at beginning of current word, set mark at end."
-    (interactive "p\np")
-    (setq arg (if arg arg 1))
-    (if (and allow-extend
-             (or (and (eq last-command this-command) (mark t))
-                 (region-active-p)))
-        (set-mark
-         (save-excursion
-           (when (< (mark) (point))
-             (setq arg (- arg)))
-           (goto-char (mark))
-           (forward-word arg)
-           (point)))
-      (let ((wbounds (bounds-of-thing-at-point 'word)))
-        (unless (consp wbounds)
-          (error "No word at point"))
-        (if (>= arg 0)
-            (goto-char (car wbounds))
-          (goto-char (cdr wbounds)))
-        (push-mark (save-excursion
-                     (forward-word arg)
-                     (point)))
-        (activate-mark))))
-
-  (define-key global-map (kbd "C-c x") 'my-mark-current-word)
-#+END_SRC
-
-#+RESULTS:
-: my-mark-current-word
 
 **** IRC
 
@@ -3027,7 +2758,6 @@ I don’t remember if I wrote the code below (or if I simply snarfed it from som
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package etags
-    :defer t
     :config 
      (defun ido-find-tag ()
        "Find a tag using ido"
@@ -3115,8 +2845,7 @@ The exchange-point-and-mark, bound to C-x C-x, will by default activate the regi
 From Reddit: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package interleave
-    :defer t)
+  (use-package interleave)
 #+END_SRC
 
 #+RESULTS:
@@ -3130,7 +2859,6 @@ New set up from https://www.reddit.com/r/emacs/comments/bge7tc/how_to_solve_lisp
 Further customization from: https://github.com/dueyfinster/dotfiles/blob/master/conf/emacs.d/emacs-init.org#start-of-content
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package pdf-tools
-    :defer t
     :mode (("\\.pdf\\'" . pdf-view-mode))
     :magic ("%PDF" . pdf-view-mode)
     :config (pdf-tools-install :no-query)
@@ -3141,11 +2869,17 @@ Further customization from: https://github.com/dueyfinster/dotfiles/blob/master/
     ;; DGM following advice: When pdf-view-continuous is non-nil, scrolling upward at the bottom edge of the page moves to the next page.  Otherwise, go to next page only on typing SPC (ARG is nil).
     (setq pdf-view-continuous 1)
     ;; use normal isearch
-    (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
+    (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+    (when (require 'pdf-tools nil t)
+      ;; (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
+      ;; (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; Amber's original combination. Too agressive for me.
+      (setq pdf-view-midnight-colors '("black" . "#EDD1B9" )) ; peach is the answer.
+      (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
+      (pdf-tools-install t t t)))
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 18907 963212 56000) :init (24463 18907 963201 803000) :init-secs (0 0 21987 115000) :use-package-secs (0 0 22049 605000) :config (24463 18907 963185 848000) :config-secs (0 0 21960 815000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 16533 330966 952000) :init (24467 16533 330957 564000) :init-secs (0 0 46136 115000) :use-package-secs (0 0 46226 992000) :config (24467 16533 330942 460000) :config-secs (0 0 46102 454000)))
 
 
 ***** Fix for the error before first and last page
@@ -3200,10 +2934,9 @@ There is a command very similar to =pdf-view-next-page=, pdf-view-next-page-comm
 : pdf-view-scroll-down-or-previous-page
 
 ***** pdf colors
-
 Tweaking from Ambrevar's dot file. However, his original combination of colors was too aggresive for me. Researching on the web, I came across this article https://www.cs.cmu.edu/~jbigham/pubs/pdfs/2017/colors.pdf and it looks cool now.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
   (when (require 'pdf-tools nil t)
     ;; (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
     ;; (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; Amber's original combination. Too agressive for me.
@@ -3236,7 +2969,7 @@ Automatically indent when press RET
 #+begin_src emacs-lisp :tangle yes
   (use-package zygospore
     :bind (("C-x 1" . zygospore-toggle-delete-other-windows)
-           ("RET" .   newline-and-indent)))
+           ("RET"   .   newline-and-indent)))
 #+end_src
 
 #+RESULTS:
@@ -3272,7 +3005,6 @@ Provides a minor mode which displays current match and total matches information
 
 #+begin_src emacs-lisp :tangle yes
   (use-package anzu
-    :defer t
     :init
     ;; (global-anzu-mode)
     (global-set-key (kbd "M-%") 'anzu-query-replace)
@@ -3285,7 +3017,6 @@ Provides a minor mode which displays current match and total matches information
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23923 33334 299974 138000) :init (23923 33334 299966 754000) :config (23923 33334 299811 570000) :config-secs (0 0 5 573000) :init-secs (0 0 18581 875000) :use-package-secs (0 1 712419 760000)))
 
 ** Killing
-
 Costumization of simple functions.. check wheather I like them.
 #+begin_src emacs-lisp :tangle yes
   (defadvice kill-ring-save (before slick-copy activate compile)
@@ -3597,17 +3328,22 @@ Next, copied from: https://www.reddit.com/r/emacs/comments/8x4xtt/tip_how_i_use_
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package ledger-mode
-    :defer t
-    :init
-    (setq ledger-clear-whole-transactions 1)
     :mode ("\\.dat\\'"
-           "\\.ledger\\'"))
-
-  (add-hook 'ledger-mode-hook #'ledger-flymake-enable)
+           "\\.ledger\\'")
+    :init
+    (add-hook 'ledger-mode-hook
+              (lambda ()
+                (setq-local tab-always-indent 'complete)
+                (setq-local completion-cycle-threshold t)
+                (setq-local ledger-complete-in-steps t)))
+    (add-hook 'ledger-mode-hook #'ledger-flymake-enable)
+    :config
+    (setq ledger-clear-whole-transactions 1)
+    )
 #+END_SRC
 
 #+RESULTS:
-| visual-fill-column-mode | turn-on-visual-line-mode | (lambda nil (set (make-local-variable 'tab-always-indent) 'complete) (set (make-local-variable 'completion-cycle-threshold) t) (set (make-local-variable 'ledger-complete-in-steps) t)) | ledger-flymake-enable | paredit-mode |
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 16751 949890 380000) :init (24467 16751 949746 632000) :init-secs (0 0 325 560000) :use-package-secs (0 0 1037 816000)))
 
 DGM takes this bit out:
 
@@ -3632,7 +3368,7 @@ From "2.2 Adding Transactions": https://www.ledger-cli.org/3.0/doc/ledger-mode.h
 
 Also read: "1.3.1 Quick Add" (aahhh, that is for adding a transation, not adding up!!)
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (add-hook 'ledger-mode-hook
             (lambda ()
               (setq-local tab-always-indent 'complete)
@@ -3661,12 +3397,12 @@ But then the guy turned it into a minor mode! See
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package vi-tilde-fringe
-    :defer t)
-  (global-vi-tilde-fringe-mode 1)
+    :config
+     (global-vi-tilde-fringe-mode 1))
 #+END_SRC
 
 #+RESULTS:
-: t
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 16829 148258 151000) :init (24467 16829 148238 643000) :init-secs (0 0 1727 777000) :use-package-secs (0 0 1845 121000) :config (24467 16829 147932 494000) :config-secs (0 0 1109 293000)))
 
 To turn it on automatically only for programming modes:
 
@@ -3822,13 +3558,12 @@ Sometimes you want to be able to do fancy things with the text that you're enter
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package miniedit
-    :defer t
     :commands minibuffer-edit
     :init (miniedit-install))
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23912 62075 948264 318000) :init (23912 62075 948249 876000) :config (23912 62075 948229 579000) :config-secs (0 0 3 966000) :init-secs (0 0 47 445000) :use-package-secs (0 0 116 827000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 16853 192437 708000) :init (24467 16853 192425 326000) :config (24467 16853 192398 373000) :config-secs (0 0 11 777000) :init-secs (0 0 102 507000) :use-package-secs (0 0 231 436000)))
 
 ** Copy filename to clipboard
 
@@ -3854,9 +3589,11 @@ http://emacsredux.com/blog/2013/03/27/copy-filename-to-the-clipboard/ https://gi
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package edit-list   
-    :defer t
     :commands edit-list)
 #+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 16860 666812 85000) :init (24467 16860 666787 662000) :init-secs (0 0 69 69000) :use-package-secs (0 0 231 307000)))
 
 
 ** Help - guide-key
@@ -3865,13 +3602,15 @@ It's hard to remember keyboard shortcuts. The =guide-key= package pops up help a
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package guide-key
-    :defer t
     :diminish guide-key-mode
     :config
     (progn
       (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
       (guide-key-mode 1)))  ; Enable guide-key-mode
 #+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 16866 86654 610000) :init (24467 16866 86647 480000) :init-secs (0 0 18565 660000) :use-package-secs (0 0 18706 192000) :config (24467 16866 86538 675000) :config-secs (0 0 208 392000)))
 
 ** Reading
 
@@ -4436,8 +4175,7 @@ Read:
 - https://www.reddit.com/r/emacs/comments/atykf9/undopropose_simple_and_safe_undo_in_emacs/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package undo-propose
-    :defer t)
+  (use-package undo-propose)
 #+END_SRC
 
 * Reverse paragraphs
@@ -4515,8 +4253,7 @@ Result:
 Recommended by the great Mike Zamansky at https://www.youtube.com/watch?v=49kBWM3RQQ8&list=PL1J8_tSSqnK4yrmlxd1ArVpP5ZgnPIeKZ&index=13&t=0s
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package try
-    :defer t)
+  (use-package try)
 #+END_SRC
 
 #+RESULTS:
@@ -4590,35 +4327,8 @@ Usage:
 - Type =65= (unicode codepoint of letter =A=. =a= is =97=).
 - Remove the default =%2d=, type =%c=.  (the =%c= is for character format).
 
-* COMMENT Better line numbers
-Joe di Castro says: Display a more appealing line numbers. I don't use them too much because is a very slow feature, but sometimes it comes handy.
-
-DGM: not sure it is better.
-#+BEGIN_SRC emacs-lisp :tangle no
-                                          ; 2014-04-04: Holy moly its effort to get line numbers like vim!
-                                          ; http://www.emacswiki.org/emacs/LineNumbers#toc6
-  (unless window-system
-    (add-hook 'linum-before-numbering-hook
-              (lambda ()
-                (setq-local linum-format-fmt
-                            (let ((w (length (number-to-string
-                                              (count-lines (point-min) (point-max))))))
-                              (concat "%" (number-to-string w) "d"))))))
-
-  (defun joe-linum-format-func (line)
-    (concat
-     (propertize (format linum-format-fmt line) 'face 'linum)
-     (propertize " " 'face 'linum)))
-
-  (unless window-system
-    (setq linum-format 'joe-linum-format-func))
-#+END_SRC
-
-#+RESULTS:
 
 * Twitter
-
-
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package twittering-mode
     :defer t)
@@ -6376,16 +6086,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24433 62995 983170 789000) :init (24433 62995 983106 148000) :init-secs (0 0 29 300000) :use-package-secs (0 0 179 343000)))
 
 
-* COMMENT Remapping =M-<= and =M->=
-
-#+begin_src emacs-lisp :tangle no
-  (global-set-key (kbd "s-,") 'beginning-of-buffer)
-  (global-set-key (kbd "s-.") 'end-of-buffer)
-#+end_src
-
-#+RESULTS:
-: end-of-buffer
-
 * Get various new windows at the bottom of the screen
 
 This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try and get the shell and IPython at the bottom of the screen
@@ -6471,8 +6171,7 @@ This package updates the GPG keys used by the ELPA package manager
 from the GNU ELPA archive.
 
 #+begin_src emacs-lisp :tangle yes
-  (use-package gnu-elpa-keyring-update
-    :defer t)
+  (use-package gnu-elpa-keyring-update)
 #+end_src
 
 ** Making Emacs secure
@@ -6555,7 +6254,6 @@ Dim everything except for the thing-at-point. Improves focus when reading code a
 
 #+begin_src emacs-lisp :tangle yes
   (use-package focus
-    :defer t
     :bind
     ("C-c f" . focus-mode)
     ("C-c F" . focus-read-only-mode))
@@ -6570,14 +6268,12 @@ Dim everything except for the thing-at-point. Improves focus when reading code a
 
 #+begin_src emacs-lisp :tangle yes
   ;; :quelpa keyword
-  (use-package quelpa
-    :defer t)
+  (use-package quelpa)
                                           ;:custom
                                           ;  (quelpa-update-melpa-p nil "Don't update the MELPA git repo.")
                                           ;)
 
-  (use-package quelpa-use-package
-    :defer t)
+  (use-package quelpa-use-package)
 #+end_src
 
 #+RESULTS:
@@ -6598,7 +6294,6 @@ Next time you're writing fiction, non-fiction, a journalistic piece or a blog po
 
 #+begin_src emacs-lisp :tangle yes
   (use-package palimpsest
-    :defer t
     :diminish palimpsest-mode
     :bind ("C-$" . palimpsest-move-region-to-trash)
     :config
@@ -6608,51 +6303,8 @@ Next time you're writing fiction, non-fiction, a journalistic piece or a blog po
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24087 22692 542633 663000) :init (24087 22692 542407 533000) :init-secs (0 0 1025 235000) :use-package-secs (0 0 1542 697000) :config (24087 22692 542358 823000) :config-secs (0 0 941 319000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 17041 975872 578000) :init (24467 17041 975739 641000) :init-secs (0 0 673 549000) :use-package-secs (0 0 889 761000) :config (24467 17041 975711 404000) :config-secs (0 0 628 303000)))
 
-* COMMENT Face of comments
-
-#+begin_src emacs-lisp :tangle no
-  (set-face-attribute 'font-lock-comment-delimiter-face nil :foreground "#268bd2")
-  (set-face-attribute 'font-lock-comment-face nil :foreground "#268bd2")
-#+end_src
-
-#+RESULTS:
-
-* COMMENT Management of window configurations
-From https://emacs.stackexchange.com/questions/2710/switching-between-window-layouts
-
-DGM: I've tried it but not convinced...
-#+begin_src emacs-lisp :tangle yes
-  (defvar winstack-stack '()
-    "A Stack holding window configurations.
-  Use `winstack-push' and
-  `winstack-pop' to modify it.")
-
-  (defun winstack-push()
-    "Push the current window configuration onto `winstack-stack'."
-    (interactive)
-    (if (and (window-configuration-p (first winstack-stack))
-             (compare-window-configurations (first winstack-stack) (current-window-configuration)))
-        (message "Current config already pushed")
-      (progn (push (current-window-configuration) winstack-stack)
-             (message (concat "pushed " (number-to-string
-                                         (length (window-list (selected-frame)))) " frame config")))))
-
-  (defun winstack-pop()
-    "Pop the last window configuration off `winstack-stack' and apply it."
-    (interactive)
-    (if (first winstack-stack)
-        (progn (set-window-configuration (pop winstack-stack))
-               (message "popped"))
-      (message "End of window stack")))
-
-  ;;(global-set-key (kbd "s-,") 'winstack-push)
-  ;;(global-set-key (kbd "s-.") 'winstack-pop)
-#+end_src
-
-#+RESULTS:
-: winstack-pop
 
 * Quick bookmark bindings
 
@@ -6668,11 +6320,9 @@ DGM: I've tried it but not convinced...
 2 jun 2020: problems with update
 
 #+begin_src emacs-lisp :tangle no
-  (use-package alert
-    :defer t)
+  (use-package alert)
 
   (use-package pomidor
-    :defer t
     :ensure alert
     ;; :bind (("s-@" . pomidor))
     :config (setq pomidor-sound-tick nil
@@ -6682,11 +6332,11 @@ DGM: I've tried it but not convinced...
                             (setq left-fringe-width 0 right-fringe-width 0)
                             (setq left-margin-width 2 right-margin-width 0)
                             ;; force fringe update
-                     n       (set-window-buffer nil (current-buffer)))))
+                            (set-window-buffer nil (current-buffer)))))
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 18316 643762 877000) :init (24463 18316 643742 843000) :init-secs (0 0 48 432000) :use-package-secs (0 0 124 516000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 17080 755880 261000) :init (24467 17080 755870 985000) :config (24467 17080 755763 33000) :config-secs (0 0 280 587000) :init-secs (0 0 15863 665000) :use-package-secs (0 0 15932 615000)))
 
 * Calendar
 Remember: =q= to exit
@@ -6802,14 +6452,6 @@ Note: I think this is overriden by the setting in [[id:494c8267-adf5-466c-8fad-d
           ))
 #+END_SRC
 
-*** Math notation
-
-With the solarized-dark theme, math notation is too dark to see.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  ;; (setq font-latex-math-face :foreground grey)
-#+END_SRC
-
 
 * Buffer-flip
 
@@ -6819,7 +6461,6 @@ With the solarized-dark theme, math notation is too dark to see.
 
 #+begin_src emacs-lisp :tangle yes
   (use-package buffer-flip
-    :defer t
     :bind  (("C-c b"      . buffer-flip)
             :map buffer-flip-map
             ( "s-<tab>"   . buffer-flip-forward)
@@ -6835,14 +6476,6 @@ With the solarized-dark theme, math notation is too dark to see.
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23998 36743 215870 19000) :init (23998 36743 215259 86000) :init-secs (0 0 1241 542000) :use-package-secs (0 0 2208 661000) :config (23998 36743 215223 779000) :config-secs (0 0 1184 806000)))
-
-** Trying EXWM keybind
-
-#+begin_src emacs-lisp :tangle no
-  ;;;(setq exwm-input-global-keys
-  ;;;        `(,(kbd "s-<tab>") . buffer-flip))
-#+end_src
-
 
 * Input method shortcut
 =defun= defined in Marcel van der Boom's configuration files.
@@ -6953,27 +6586,6 @@ consecutive new lines and tabs.
 #+RESULTS:
 : my-clean-buffer
 
-* COMMENT Window highlight
-
-Too funky
-
-#+begin_src emacs-lisp :tangle no
-  (require 'window-highlight)
-
-  (apply
-   #'custom-set-faces
-   (let ((inactive-color "#ffffe2")
-         (where '((type x w32 ns))))
-     `((default
-         ((,where
-           :background ,inactive-color)))
-       (fringe
-        ((,where
-          :background ,inactive-color)))
-       )))
-
-  (window-highlight-mode 1)
-#+end_src
 
 * Week number in calendar
 - From https://www.emacswiki.org/emacs/CalendarWeekNumbers
@@ -7048,15 +6660,6 @@ From: https://endlessparentheses.com/ispell-and-abbrev-the-perfect-auto-correct.
 #+RESULTS:
 : endless/ispell-word-then-abbrev
 
-* COMMENT Resize minibuffer
-
-#+begin_src emacs-lisp :tangle no
-  ;; (setq resize-mini-windows t)
-  ;; (setq max-mini-window-height 0.50)
-#+end_src
-
-#+RESULTS:
-: 0.5
 
 * Performace
 
@@ -7115,122 +6718,6 @@ From: https://endlessparentheses.com/ispell-and-abbrev-the-perfect-auto-correct.
 #+RESULTS:
 : /usr/share/ditaa/ditaa.jar
 
-* Disabled goodies
-
-** Bookmarks on Start
-Set emacs to open Bookmark+ on start. From Xah Emacs. Disabled now that I use =Dashboard=
-
-#+srcname: bookmarks
-#+BEGIN_SRC emacs-lisp :tangle no
-  ;; included by dgm
-  ;;   (setq inhibit-splash-screen t)
-  ;; (require 'bookmark+) ;; no longer available in MELPA
-  ;;  (bookmark-bmenu-list)
-  ;;  (switch-to-buffer "*Bookmark List*")
-  ;; '(initial-buffer-choice "*Bookmark List*")
-  ;; (setq initial-buffer-choice "*Bookmark List*")
-#+END_SRC
-
-
-#+RESULTS: bookmarks
-
-
-#+srcname: custom-setup
-#+BEGIN_SRC emacs-lisp :tangle no
-  ;;    Load the files in CustomDir using mapc:
-  ;; (mapc 'load (directory-files "~/.emacs.d/customDir" t ".*\.el"))
-  ;; (add-to-list 'load-path "~/.emacs.d/customDir/")
-  ;; (require 'setup-programming)
-#+END_SRC
-
-
-
-** Flycheck
-I disable this as flycheck makes emacs too slow.
-#+srcname: flycheck-tip
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;;  (require 'flycheck-tip)
-  ;;  (define-key global-map (kbd "\C-c \C-n") 'flycheck-tip-cycle)
-  ;;  (setq flycheck-display-errors-function 'ignore)
-#+END_SRC
-
-#+RESULTS: flycheck-tip
-: ignore
-
-#+RESULTS:
-: ignore
-
-** Golden Ratio
-
-For now, I deactivate the golden-ratio mode because it distract me too much.
-
-#+srcname: golden-ratio
-#+BEGIN_SRC emacs-lisp :tangle no
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; PACKAGE: golden-ratio                         ;;
-  ;;                                               ;;
-  ;; GROUP: Environment -> Windows -> Golden Ratio ;;
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  ;; activate for helm when helm is installed
-  ;; (require 'golden-ratio)
-
-  ;; (add-to-list 'golden-ratio-exclude-modes "ediff-mode")
-  ;; (add-to-list 'golden-ratio-exclude-modes "helm-mode")
-  ;; (add-to-list 'golden-ratio-exclude-modes "dired-mode")
-  ;; (add-to-list 'golden-ratio-exclude-modes "ess-mode")
-
-  ;; I dont want the golden ratio with the Helm window
-  ;;  (defun pl/helm-alive-p ()
-  ;;   (if (boundp 'helm-alive-p)
-  ;;       (symbol-value 'helm-alive-p)))
-
-  ;;  (add-to-list 'golden-ratio-inhibit-functions 'pl/helm-alive-p)
-
-  ;; do not enable golden-ratio in theses modes
-  ;;   (setq golden-ratio-exclude-modes '("ediff-mode"
-  ;;                                      "gud-mode"
-  ;;                                      "gdb-locals-mode"
-  ;;                                      "gdb-registers-mode"
-  ;;                                      "gdb-breakpoints-mode"
-  ;;                                      "gdb-threads-mode"
-  ;;                                      "gdb-frames-mode"
-  ;;                                      "gdb-inferior-io-mode"
-  ;;                                      "gud-mode"
-  ;;                                      "gdb-inferior-io-mode"
-  ;;                                      "gdb-disassembly-mode"
-  ;;                                      "gdb-memory-mode"
-  ;;   ;;                                   "magit-log-mode"
-  ;;   ;;                                   "magit-reflog-mode"
-  ;;   ;;                                   "magit-status-mode"
-  ;;                                      "IELM"
-  ;;                                      "eshell-mode"
-  ;;                                      "dired-mode"
-  ;;                                      "helm-mode"
-  ;;                                      "ess-mode"))
-  ;; delete "dired-mode"  from the above list if you want golden-ratio to apply to helm
-
-  ;;   (golden-ratio-mode)
-#+END_SRC
-
-#+RESULTS: golden-ratio :tangle no
-
-
-** Frame title
-I disable this as it is dealt with in -misc.org
-#+srcname: frame-title
-#+BEGIN_SRC emacs-lisp :tangle no
-  ;; more useful frame title, that show either a file or a
-  ;; buffer name (if the buffer isn't visiting a file)
-  ;; taken from prelude-ui.el
-  ;; (setq frame-title-format
-  ;;      '("" invocation-name " - " (:eval (if (buffer-file-name)
-  ;;                                                    (abbreviate-file-name (buffer-file-name))
-  ;;                                                  "%b"))))
-#+END_SRC
-
-#+RESULTS: frame-title
-|   | invocation-name | - | (:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) %b)) |
 
 * Visual line mode
 
@@ -7338,7 +6825,6 @@ On flickering, check https://www.facebook.com/notes/daniel-colascione/buttery-sm
 * Touch type
 
 ** Speed type
-
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package speed-type
@@ -7527,16 +7013,15 @@ Thank you for the fix emacle!
     :init
     (setq wttrin-default-cities '("Madrid"
                                   "Fuengirola"
-                                  "Malaga")))
-
-  (setq wttrin-default-accept-language '("Accept-Language" . "en-US"))
+                                  "Malaga"))
+    (setq wttrin-default-accept-language '("Accept-Language" . "en-US")))
 #+END_SRC
 
 #+RESULTS:
-: (Accept-Language . en-US)
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 17360 70919 130000) :init (24467 17360 70896 282000) :init-secs (0 0 54 566000) :use-package-secs (0 0 145 625000)))
 
 
-** Metar
+** Metar (weather)
 Este es minimalista y funciona bien. 
 
 #+begin_src emacs-lisp :tangle yes

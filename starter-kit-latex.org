@@ -15,6 +15,8 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 Following advice from https://emacs.stackexchange.com/questions/41321/when-to-specify-a-package-name-in-use-packages-ensure-tag
 Also see https://emacs.stackexchange.com/questions/41332/how-to-automatically-install-auctex-if-certain-package-is-unable-to-be-activated
 
+Once installed, =auctex= overrides the =tex= packagu. This means that to get =auctex= working, you need the following:
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package tex
   :defer t

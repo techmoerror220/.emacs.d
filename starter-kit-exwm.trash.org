@@ -1,0 +1,108 @@
+
+* COMMENT Setting bindings to be available in EXWM buffers
+
+From https://www.reddit.com/r/emacs/comments/bfhepc/does_exwmsetinputkey_work_in_exwm_windows/
+
+Someone says: 
+
+     #+BEGIN_QUOTE
+There are some weird interactions between EXWM, Emacs, and managed X clients. In this case, you're best off customizing exwm-input-global-keys instead of calling exwm-input-set-key after things have started up.
+     #+END_QUOTE
+
+     #+BEGIN_QUOTE
+     You have to set bindings you want available in EXWM buffers in exwm-input-global-keys.
+     #+END_QUOTE
+
+Then read https://github.com/ch11ng/exwm/wiki/Configuration-Example
+and 
+https://git.sr.ht/~jakob/.emacs.d/tree/703f2c9a60773989a8e434d00b2e32a8cd9afcbd/jakob.org
+
+#+begin_src emacs-lisp :tangle no
+  (setq exwm-input-global-keys
+        `(,(kbd "s-<tab>") . buffer-flip))
+#+end_src
+
+#+RESULTS:
+: ([s-TAB] . buffer-flip)
+
+DGM: commented out as it screwed up my dotfiles. Don't know why.
+
+* Ambrevar's functions
+
+Commenting out =switch-to-last-buffer= function as I am going to try =buffer-flip=
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (require 'functions) ;; this is the first thing loaded in the whole process so no need to use it here again
+;; (exwm-input-set-key (kbd "s-<tab>") #'ambrevar/switch-to-last-buffer)
+#+END_SRC
+
+** COMMENT Lock screen 
+
+Commented out as I use Daedreth's way because it uses =async=. 
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun ambrevar/exwm-start-lock () (interactive) (start-process "slock" nil "slock"))
+(exwm-input-set-key (kbd "s-_") #'ambrevar/exwm-start-lock)
+#+END_SRC
+
+** COMMENT Screenshot 
+
+Superseded by Daedreth's stuff
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun ambrevar/exwm-start-screenshot () (interactive) (start-process-shell-command "scrot" nil "scrot ~/temp/screen-%F-%T.png"))
+(exwm-input-set-key (kbd "s->") #'ambrevar/exwm-start-screenshot)
+#+END_SRC
+
+#+RESULTS:
+
+** COMMENT Magit shortcut 
+
+I don't need this shortcut as I already have =C-x g= for =magit-status=.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(when (fboundp 'magit-status)
+  (exwm-input-set-key (kbd "s-v") #'magit-status))
+#+END_SRC
+
+* COMMENT Set up of EXWM: emacs as desktop manager!
+
+First step with =use-package= moved to init.
+
+
+Tip from Uncle Dave's emacs. 
+
+Emacs as a daemon means you can use =emacsclient <filename>= to seamlessly edit files from the terminal directly.
+Plus in https://github.com/ch11ng/exwm/wiki/Configuration-Example the developer puts this line before =(require 'exwm)=, so that is why I've taken it out of the bit on exwm. 
+From https://caolan.org/dotfiles/emacs.html#orgd96aeb0,  run server if using =emacsclient= as default EDITOR also useful for =org-protocol capture= https://www.emacswiki.org/emacs/EmacsClient
+
+
+#+source: exwm-starting
+#+begin_src emacs-lisp :tangle no
+
+;; (server-start)
+
+;;  (use-package exwm 
+;;    :ensure t
+;;    :config 
+  
+;;    ;; necessary to configure exwm manually
+;;    (require 'exwm-config)
+
+;;    ;; fringe size, most people prefer 1 (uncle dave's setup)
+;;    (fringe-mode 3)
+
+;; dgm comments this as it appears to not be working!! reverts to old (server-star)
+;;    (require 'server)
+;;      (unless (server-running-p)
+;;        (server-start))
+
+;;    (exwm-config-default))
+
+    ;; this just enables exwm, it started automatically once everything is ready
+;; commented out now that I have the Ferguson setup    (exwm-enable))  
+      #+end_src
+
+      #+RESULTS: exwm-starting
+      : t
+

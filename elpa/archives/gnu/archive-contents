@@ -131,7 +131,7 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:keywords "async"))])
  (auctex .
-	 [(12 2 5)
+	 [(12 3 1)
 	  ((emacs
 	    (24 1))
 	   (cl-lib
@@ -650,7 +650,7 @@
 	      (:maintainer "Markus Triska" . "triska@metalevel.at")
 	      (:url . "https://www.metalevel.at/ediprolog/"))])
  (eev .
-      [(20200928)
+      [(20201013)
        ((emacs
 	 (24 1)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -764,7 +764,7 @@
 		    ("Matthew L. Fidler" . "matthew.fidler@gmail.com"))
 		   (:keywords "convenience"))])
  (excorporate .
-	      [(0 9 0)
+	      [(0 9 1)
 	       ((emacs
 		 (24 1))
 		(fsm
@@ -979,6 +979,14 @@
 	     ("Michelangelo Rodriguez" . "michelangelo.rodriguez@gmail.com"))
 	    (:keywords "tools" "accessibility")
 	    (:url . "http://elpa.gnu.org/packages/greader.html"))])
+ (greenbar .
+	   [(1 0)
+	    nil "Mark comint output with \"greenbar\" background" single
+	    ((:url . "http://elpa.gnu.org/packages/greenbar.html")
+	     (:keywords "faces" "terminals")
+	     (:authors
+	      ("Michael R. Mauger" . "michael@mauger.com"))
+	     (:maintainer "Michael R. Mauger" . "michael@mauger.com"))])
  (guess-language .
 		 [(0 0 1)
 		  ((cl-lib
@@ -1090,6 +1098,21 @@
 		  ("Clemens Radermacher" . "clemera@posteo.net"))
 		 (:maintainer "Clemens Radermacher" . "clemera@posteo.net")
 		 (:url . "https://github.com/clemera/ivy-explorer"))])
+ (ivy-posframe .
+	       [(0 5 1)
+		((emacs
+		  (26 0))
+		 (posframe
+		  (0 8 0))
+		 (ivy
+		  (0 13 0)))
+		"Using posframe to show Ivy" single
+		((:keywords "abbrev" "convenience" "matching" "ivy")
+		 (:authors
+		  ("Feng Shu" . "tumashu@163.com")
+		  ("Naoya Yamashita" . "conao3@gmail.com"))
+		 (:maintainer "Feng Shu" . "tumashu@163.com")
+		 (:url . "https://github.com/tumashu/ivy-posframe"))])
  (javaimp .
 	  [(0 7 1)
 	   nil "Add and reorder Java import statements in Maven/Gradle projects" tar
@@ -1513,7 +1536,7 @@
 	      ("Ian Dunn" . "dunni@gnu.org"))
 	     (:keywords "convenience" "text" "org"))])
  (org-translate .
-		[(0 1 1)
+		[(0 1 2)
 		 ((emacs
 		   (25 1))
 		  (org
@@ -1608,7 +1631,7 @@
 	     ("Phillip Lord" . "phillip.lord@russet.org.uk"))
 	    (:url . "http://elpa.gnu.org/packages/persist.html"))])
  (phps-mode .
-	    [(0 3 62)
+	    [(0 3 65)
 	     ((emacs
 	       (26)))
 	     "Major mode for PHP with Semantic integration" tar
@@ -1634,7 +1657,7 @@
 	   ("Mario Lang" . "mlang@delysid.org"))
 	  (:maintainer "Mario Lang" . "mlang@delysid.org"))])
  (posframe .
-	   [(0 8 0)
+	   [(0 8 1)
 	    ((emacs
 	      (26)))
 	    "Pop a posframe (just a frame) at point" single
@@ -1669,7 +1692,7 @@
 	       ("Scott Andrew Borton" . "scott@pp.htv.fi"))
 	      (:maintainer "John Darrington" . "john@darrington.wattle.id.au"))])
  (python .
-	 [(0 26 1)
+	 [(0 27)
 	  ((emacs
 	    (24 1))
 	   (cl-lib
@@ -2075,7 +2098,7 @@
 		("Alex Harsanyi" . "AlexHarsanyi@gmail.com"))
 	       (:keywords "languages" "sql"))])
  (ssh-deploy .
-	     [(3 1 11)
+	     [(3 1 12)
 	      ((emacs
 		(25)))
 	      "Deployment via Tramp, global or per directory." tar
@@ -2236,7 +2259,7 @@
 	      (:maintainer "Toby Cubitt" . "toby-undo-tree@dr-qubit.org")
 	      (:url . "http://www.dr-qubit.org/emacs.php"))])
  (uni-confusables .
-		  [(0 1)
+		  [(0 2)
 		   nil "Unicode confusables table" tar
 		   ((:maintainer "Teodor Zlatanov" . "tzz@lifelogs.com")
 		    (:url . "http://elpa.gnu.org/packages/uni-confusables.html"))])
@@ -2348,7 +2371,7 @@
 	(:maintainer "Andrey Kotlarski" . "m00naticus@gmail.com")
 	(:keywords "large files" "utilities"))])
  (wcheck-mode .
-	      [(2019 6 17)
+	      [(2020 10 4)
 	       nil "General interface for text checkers" single
 	       ((:keywords "text" "spell" "check" "languages" "ispell")
 		(:authors
