@@ -2,7 +2,19 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(#1=(#("Mutual.pdf" 0 10
+(#1=(#("init.el" 0 7
+      (bmkp-full-record #1#))
+    (filename . "~/.emacs.d/init.el")
+    (buffer-name . "init.el")
+    (front-context-string . "  ;; necessary t")
+    (rear-context-string . "wser)\n  :config\n")
+    (front-context-region-string)
+    (rear-context-region-string)
+    (visits . 0)
+    (time . #2=(24469 18260 816362 265000))
+    (created . #2#)
+    (position . 12635))
+#1=(#("Mutual.pdf" 0 10
       (bmkp-full-record #1#))
     (filename . "/media/dgm/blue/documents/proyectos/mutual-stata/text/Mutual.pdf")
     (buffer-name . "Mutual.pdf")
@@ -221,16 +233,16 @@
       (bmkp-full-record #1#))
     (annotation)
     (tags)
-    (filename . "~/Dropbox/gtd/tickler.org")
-    (buffer-name . "tickler.org")
-    (front-context-string . "** Complemento r")
-    (rear-context-string . " -*-\n\n* Tickler\n")
+    (filename . "~/Dropbox/gtd/inbox.org")
+    (buffer-name . "inbox.org")
+    (front-context-string . "** TODO isearch ")
+    (rear-context-string . "erview\n\n* Tasks\n")
     (front-context-region-string)
     (rear-context-region-string)
     (visits . 0)
-    (time . #2=(24466 40090 776495 404000))
+    (time . #2=(24469 25473 99185 614000))
     (created . #2#)
-    (position . 35))
+    (position . 67))
 #1=(#("cdd-pdf" 0 7
       (bmkp-full-record #1#))
     (buffer-name . "*eww*")

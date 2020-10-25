@@ -94,8 +94,8 @@ Building regular expressions in Emacs is kind of a pain.  The =visual-regexp= pa
 - On =visual-regexp= see https://github.com/benma/visual-regexp.el
 
 #+begin_src emacs-lisp 
-  (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-  (global-set-key (kbd "\C-r") 'isearch-backward-regexp)
+  (global-set-key (kbd "C-s")   'isearch-forward-regexp)
+  (global-set-key (kbd "\C-r")  'isearch-backward-regexp)
   (global-set-key (kbd "C-M-s") 'isearch-forward)
   (global-set-key (kbd "C-M-r") 'isearch-backward)
 
@@ -105,11 +105,7 @@ Building regular expressions in Emacs is kind of a pain.  The =visual-regexp= pa
   (define-key global-map (kbd "C-c q") 'vr/query-replace)
   #+end_src
 
-
-
 Make searches case-insensitive. Should be on by default but I've realized it is not when working with an org file. I tried the following. At first it did not work. Then I toogled mode from latex back to org and the case-insensitive search worked.
-
-
 
 #+begin_src emacs-lisp 
  ;;  (setq case-fold-search nil) ; make searches case sensitive

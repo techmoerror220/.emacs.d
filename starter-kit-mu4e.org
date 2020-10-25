@@ -537,71 +537,77 @@ I don't know the use of this but I had it, so...
 - https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
 
 #+begin_src emacs-lisp :tangle yes
-  ;; empty current defs
-  (defvar mu4e-bookmarks
-    `( ,(())))
+    ;; empty current defs
+    (defvar mu4e-bookmarks
+      `( ,(())))
 
-  (add-to-list 'mu4e-bookmarks
-               (make-mu4e-bookmark
-                :name  "Unread messages (Work inbox)"
-                :query "flag:unread AND maildir:\"/work/INBOX\" AND NOT flag:trashed"
-                :key ?x) t)
+    (add-to-list 'mu4e-bookmarks
+                 (make-mu4e-bookmark
+                  :name  "Unread messages (Work inbox)"
+                  :query "flag:unread AND maildir:\"/work/INBOX\" AND NOT flag:trashed"
+                  :key ?x) t)
+
+    (add-to-list
+     'mu4e-bookmarks
+     '("(maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Kenedy Alva\" OR from:kenedy@gmail.com OR from:\"Paz Torrente\" OR from:paztorrente@gmail.com OR from:\"Javier Martín\" OR from:javiermartinr@gmail.com OR from:\"Canal de Isabel II\" OR from:comunicaciones.comerciales@canaldeisabelsegunda.es OR from:\"Jazztel\" OR from:att.cliente.jazztel@jazztel.com)"
+       "Ave María" ?a) t)
+
+    (add-to-list
+     'mu4e-bookmarks
+     '("from:\"BICI\" OR from:bici@adm.uned.es)"
+       "BICI" ?b) t)
+
+    (add-to-list
+     'mu4e-bookmarks
+     '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:convalid.empresariales@adm.uned.es OR from:\"Negociado de atención al estudiante\" OR from:estudiantes.polisoci@adm.uned.es OR from:\"CARMEN DIAZ BRAGADO\" OR from:cadiaz@pas.uned.es OR subject:convalidación OR subject:convalidacion OR subject:convalidaciones OR body:convalidación OR body:convalidacion  OR body:convalidaciones OR subject:reconocimiento OR subject:Reconocimiento OR subject:reconocimientos OR subject:Reconocimientos OR body:reconocimiento OR body:Reconocimiento OR body:reconocimientos OR body:Reconocimientos)"
+       "Convalidaciones" ?c) t)
+
+    (add-to-list
+     'mu4e-bookmarks
+     '("(maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Paula Zingoni\" OR from:paulazingoni@gmail.com OR from:\"Croydon County\" OR from:\"Family\" OR from:family.croydon.countycourt@justice.gov.uk OR from:\"Jose Antonio Arcila\" OR from:joseantonio@arcila-abogados.es OR from:\"Elena Benítez Imedio\" OR from:ebi@ayuelajimenez.es OR from:ebi@ebiroy.com OR from:\"Juan Antonio Montoro\" OR from:jmontoro@euroconsejo.org OR from:\"Pablo Velasco Espinosa\" OR from:pvelasco@euroconsejo.org OR from:mensajeria@phidias.es OR from:\"Montessori School\" OR from:\"Mataespesa Montessori School\" OR from:mataespesa@montessorischool.es OR from:\"Laura Romay\" OR from:\"Anna Dick\" OR from:anna.dick@montessorischool.es OR form:\"Gema Baeza Gómez\" OR from:gbg@ayuelajimenez.es)"
+       "Operation D" ?d) t)
+
+    (add-to-list
+     'mu4e-bookmarks
+     '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:\"SCHWEIKLE-HILGNER Nicoletta\" OR from:nicoletta.schweikle-hilgner@ec.europa.eu) OR from:ESTAT-Microdata-access@ec.europa.eu OR from:estat-microdata-access@ec.europa.eu OR from:Fabienne.MONTAIGNE@ec.europa.eu OR from:Patrick.PILLARD@ec.europa.eu OR from:Karien.Reinig@ec.europa.eu OR from:S-CIRCABC@nomail.ec.europa.eu OR from:\"Dominique REUTER-WAGNER\")"
+       "Eurostat" ?e) t)
+
+    (add-to-list
+     'mu4e-bookmarks
+     '("(maidlir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Belén Barreiro\" OR from:bbarreiro@40db.es OR from:40db.es OR from:\"Mónica Méndez\" OR from:monica.mendez@cis.es) OR from:\"Luis Manuel Ayuso Sanchez\" Or from:luis.ayuso@uma.es OR from:\"Juan Ignacio Martinez Pastor\" OR from:jimartinez@poli.uned.es OR from:ecb@uma.es)"
+       "Work-hunt" ?h) t)
+
+    (add-to-list
+     'mu4e-bookmarks
+     '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\"  OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND ((from:\"Maria Angel\" OR from:departamentos.polisoci@adm.uned.es OR from:secretaria.poli.soci@adm.uned.es OR from:decanato.polisoci@adm.uned.es OR from:negociado-pruebas-presenciales@adm.uned.es OR from:vicepruebas@adm.uned.es OR from:vrector-pruebas-presen@adm.uned.es OR from:coord.pruebas@adm.uned.es OR from:pruebaspresenciales@adm.uned.es OR from:gastosextraordinariospruebas@adm.uned.es OR from:\"Secretaria Docente\" OR from:\"Secretaría Docente\" OR from:secdoc.cee@adm.uned.es OR from:secretaria-ecoemp@adm.uned.es OR from:\"Secretaría Facultad CC. Economicas\" OR from:secadi.polisoci@adm.uned.es OR from:\"Secadi\" OR from:\"GUADALUPE DAMAS JURADO\" OR from:gdamas@pas.uned.es OR from:llosada@edu.uned.es OR from:egiralde@pas.uned.es OR from:\"MARIA GOMEZ ESCARDA\" OR from:mgomez@poli.uned.es OR from:sociologiauno@adm.uned.es OR from:vrector-profesorado@adm.uned.es OR from:\"Vicerrectorado de Profesorado\" OR from:vrector-gradoyposgrado@adm.uned.es OR from:vadj.grado@adm.uned.es OR from:alba.vrector@adm.uned.es) OR (subject:tfg OR subject:TFG OR body:tfg OR body:TFG OR subject:\"trabajo fin de grado\" OR body:\"trabajo fin de grado\" OR subject:\"/ex.men.*/\" OR body:\"/ex.men.*/\" OR subject:\"sociologia aplicada\"  OR body:\"sociologia aplicada\" OR subject:/modelo.*/))"
+       "Fac., Dept., Vicerrec., TFG, Exámenes, Económicas" ?f) t)
+
+    (add-to-list
+     'mu4e-bookmarks
+     '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (subject:tfm OR subject:TFM OR body:tfm OR body:TFM OR subject:\"trabajo fin de master\" OR body:\"trabajo fin de master\" OR from:\"Ana María González\" OR from:gabriela.topa1@gmail.com OR from:\"Gabriela Topa\" OR from:gtopa@psi.uned.es OR from:\"Máster Formación Profesorado\" OR from:master-formacionprofesorado@adm.uned.es OR from:\"M. Angeles Serrano Garcia\" OR from:maserrano@pas.uned.es OR from:\"M. del Puerto Hojas Rosales\" OR from:mhojas@pas.uned.es OR from:\"Ana María González\" OR from:amgonzalez@edu.uned.es OR subjetc:\"TFM\")"
+       "Master FOL" ?m) t)
+
+    (add-to-list
+     'mu4e-bookmarks
+     '("(maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:ricardo.mora.villarrubia@gmail.com OR from:ricardo.mora@uc3m.es OR from:ricardo.mora.villarrubia@outlook.com OR from:\"Ricardo Mora\" OR from:ricmora@eco.uc3m.es OR from:\"Adelheid Holl\" OR from:a.holl@csic.es)"
+       "Ricardo" ?r) t)
+
+    (add-to-list
+     'mu4e-bookmarks
+     '("(maildir:\"/personal/[personal].Sent Mail\" OR maildir:\"/work/[work].Sent Mail\") AND date:7d..now"
+       "Sent in last 7 days" ?s) t)
 
   (add-to-list
    'mu4e-bookmarks
-   '("(maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Kenedy Alva\" OR from:kenedy@gmail.com OR from:\"Paz Torrente\" OR from:paztorrente@gmail.com OR from:\"Javier Martín\" OR from:javiermartinr@gmail.com OR from:\"Canal de Isabel II\" OR from:comunicaciones.comerciales@canaldeisabelsegunda.es OR from:\"Jazztel\" OR from:att.cliente.jazztel@jazztel.com)"
-     "Ave María" ?a) t)
+   '("(maildir:\"/personal/INBOX\") AND (from:SC3074602a@schoolcomms.com OR from:\"TWYFORD CE HIGH SCHOOL\" OR from:a.holl@csic.es OR from:6thform@twyford.ealing.sch.uk OR from:\"6th Form - TWY\" OR from:Admissions@twyford.ealing.sch.uk OR from:\"Admissions - TWY\" OR from:marthur@twyford.ealing.sch.uk OR from:\"Michael Arthur\" OR from:\"Lucille De Costa\")"
+     "Twyford" ?y) t)
 
-  (add-to-list
-   'mu4e-bookmarks
-   '("from:\"BICI\" OR from:bici@adm.uned.es)"
-     "BICI" ?b) t)
-
-  (add-to-list
-   'mu4e-bookmarks
-   '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:convalid.empresariales@adm.uned.es OR from:\"Negociado de atención al estudiante\" OR from:estudiantes.polisoci@adm.uned.es OR from:\"CARMEN DIAZ BRAGADO\" OR from:cadiaz@pas.uned.es OR subject:convalidación OR subject:convalidacion OR subject:convalidaciones OR body:convalidación OR body:convalidacion  OR body:convalidaciones OR subject:reconocimiento OR subject:Reconocimiento OR subject:reconocimientos OR subject:Reconocimientos OR body:reconocimiento OR body:Reconocimiento OR body:reconocimientos OR body:Reconocimientos)"
-     "Convalidaciones" ?c) t)
-
-  (add-to-list
-   'mu4e-bookmarks
-   '("(maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Paula Zingoni\" OR from:paulazingoni@gmail.com OR from:\"Croydon County\" OR from:\"Family\" OR from:family.croydon.countycourt@justice.gov.uk OR from:\"Jose Antonio Arcila\" OR from:joseantonio@arcila-abogados.es OR from:\"Elena Benítez Imedio\" OR from:ebi@ayuelajimenez.es OR from:ebi@ebiroy.com OR from:\"Juan Antonio Montoro\" OR from:jmontoro@euroconsejo.org OR from:\"Pablo Velasco Espinosa\" OR from:pvelasco@euroconsejo.org OR from:mensajeria@phidias.es OR from:\"Montessori School\" OR from:\"Mataespesa Montessori School\" OR from:mataespesa@montessorischool.es OR from:\"Laura Romay\" OR from:\"Anna Dick\" OR from:anna.dick@montessorischool.es OR form:\"Gema Baeza Gómez\" OR from:gbg@ayuelajimenez.es)"
-     "Operation D" ?d) t)
-
-  (add-to-list
-   'mu4e-bookmarks
-   '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:\"SCHWEIKLE-HILGNER Nicoletta\" OR from:nicoletta.schweikle-hilgner@ec.europa.eu) OR from:ESTAT-Microdata-access@ec.europa.eu OR from:estat-microdata-access@ec.europa.eu OR from:Fabienne.MONTAIGNE@ec.europa.eu OR from:Patrick.PILLARD@ec.europa.eu OR from:Karien.Reinig@ec.europa.eu OR from:S-CIRCABC@nomail.ec.europa.eu OR from:\"Dominique REUTER-WAGNER\")"
-     "Eurostat" ?e) t)
-
-  (add-to-list
-   'mu4e-bookmarks
-   '("(maidlir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Belén Barreiro\" OR from:bbarreiro@40db.es OR from:40db.es OR from:\"Mónica Méndez\" OR from:monica.mendez@cis.es) OR from:\"Luis Manuel Ayuso Sanchez\" Or from:luis.ayuso@uma.es OR from:\"Juan Ignacio Martinez Pastor\" OR from:jimartinez@poli.uned.es OR from:ecb@uma.es)"
-     "Work-hunt" ?h) t)
-
-  (add-to-list
-   'mu4e-bookmarks
-   '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\"  OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND ((from:\"Maria Angel\" OR from:departamentos.polisoci@adm.uned.es OR from:secretaria.poli.soci@adm.uned.es OR from:decanato.polisoci@adm.uned.es OR from:negociado-pruebas-presenciales@adm.uned.es OR from:vicepruebas@adm.uned.es OR from:vrector-pruebas-presen@adm.uned.es OR from:coord.pruebas@adm.uned.es OR from:pruebaspresenciales@adm.uned.es OR from:gastosextraordinariospruebas@adm.uned.es OR from:\"Secretaria Docente\" OR from:\"Secretaría Docente\" OR from:secdoc.cee@adm.uned.es OR from:secretaria-ecoemp@adm.uned.es OR from:\"Secretaría Facultad CC. Economicas\" OR from:secadi.polisoci@adm.uned.es OR from:\"Secadi\" OR from:\"GUADALUPE DAMAS JURADO\" OR from:gdamas@pas.uned.es OR from:llosada@edu.uned.es OR from:egiralde@pas.uned.es OR from:\"MARIA GOMEZ ESCARDA\" OR from:mgomez@poli.uned.es OR from:sociologiauno@adm.uned.es OR from:vrector-profesorado@adm.uned.es OR from:\"Vicerrectorado de Profesorado\" OR from:vrector-gradoyposgrado@adm.uned.es OR from:vadj.grado@adm.uned.es OR from:alba.vrector@adm.uned.es) OR (subject:tfg OR subject:TFG OR body:tfg OR body:TFG OR subject:\"trabajo fin de grado\" OR body:\"trabajo fin de grado\" OR subject:\"/ex.men.*/\" OR body:\"/ex.men.*/\" OR subject:\"sociologia aplicada\"  OR body:\"sociologia aplicada\" OR subject:/modelo.*/))"
-     "Fac., Dept., Vicerrec., TFG, Exámenes, Económicas" ?f) t)
-
-  (add-to-list
-   'mu4e-bookmarks
-   '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (subject:tfm OR subject:TFM OR body:tfm OR body:TFM OR subject:\"trabajo fin de master\" OR body:\"trabajo fin de master\" OR from:\"Ana María González\" OR from:gabriela.topa1@gmail.com OR from:\"Gabriela Topa\" OR from:gtopa@psi.uned.es OR from:\"Máster Formación Profesorado\" OR from:master-formacionprofesorado@adm.uned.es OR from:\"M. Angeles Serrano Garcia\" OR from:maserrano@pas.uned.es OR from:\"M. del Puerto Hojas Rosales\" OR from:mhojas@pas.uned.es OR from:\"Ana María González\" OR from:amgonzalez@edu.uned.es OR subjetc:\"TFM\")"
-     "Master FOL" ?m) t)
-
-  (add-to-list
-   'mu4e-bookmarks
-   '("(maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:ricardo.mora.villarrubia@gmail.com OR from:ricardo.mora@uc3m.es OR from:ricardo.mora.villarrubia@outlook.com OR from:\"Ricardo Mora\" OR from:ricmora@eco.uc3m.es OR from:\"Adelheid Holl\" OR from:a.holl@csic.es)"
-     "Ricardo" ?r) t)
-
-  (add-to-list
-   'mu4e-bookmarks
-   '("(maildir:\"/personal/[personal].Sent Mail\" OR maildir:\"/work/[work].Sent Mail\") AND date:7d..now"
-     "Sent in last 7 days" ?s) t)
-
-  ;;(add-to-list
-  ;; 'mu4e-bookmarks
-  ;; '("mime:application/* AND NOT mime:application/pgp* AND (maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\")"
-  ;;   "Messages with attachments for me." ?i) t)
+    ;;(add-to-list
+    ;; 'mu4e-bookmarks
+    ;; '("mime:application/* AND NOT mime:application/pgp* AND (maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\")"
+    ;;   "Messages with attachments for me." ?i) t)
 #+end_src
+
 
 ** COMMENT New item in Basics (Main View): =helm-mu=
 

@@ -177,8 +177,11 @@ I substitute =scheme-mode= for =racket-mode=
                                           t))) 
       (when filename 
         (find-file (cdr (assoc filename 
-                               file-assoc-list)))))) 
+                               file-assoc-list))))))
 #+end_src
+
+#+RESULTS: starter-kit-recentf-ido-find-file
+: recentf-ido-find-file
 
 ** Other
 Useful when a large block of text is required (e.g. for testing)

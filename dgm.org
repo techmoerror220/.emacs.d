@@ -953,9 +953,6 @@ Info from  https://www.emacswiki.org/emacs/RecentFiles
 
 Recentf is a minor mode that builds a list of recently opened files. This list is is automatically saved across sessions on exiting Emacs - you can then access this list through a command or the menu.
 
-    (global-set-key "\C-x\ \C-r" 'recentf-open-files)
-    (global-set-key (kbd "C-&") 'recentf-open-files)
-
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package recentf
     :bind (("\C-x\ \C-r" . recentf-open-files)
@@ -2527,6 +2524,7 @@ Sets prefix to =C-x /=. Then
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package pulseaudio-control
+    :defer t
     :config 
     (with-eval-after-load 'pulseaudio-control
       ;; REVIEW: Upstream should set path dynamically.
@@ -2845,10 +2843,12 @@ The exchange-point-and-mark, bound to C-x C-x, will by default activate the regi
 From Reddit: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package interleave)
+  (use-package interleave
+    :defer t)
 #+END_SRC
 
 #+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24469 39883 587177 46000) :init (24469 39883 587168 991000) :config (24469 39883 587153 980000) :config-secs (0 0 7 282000) :init-secs (0 0 56 309000) :use-package-secs (0 0 134 53000)))
 
 **** pdf-tools
 
@@ -2859,6 +2859,7 @@ New set up from https://www.reddit.com/r/emacs/comments/bge7tc/how_to_solve_lisp
 Further customization from: https://github.com/dueyfinster/dotfiles/blob/master/conf/emacs.d/emacs-init.org#start-of-content
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package pdf-tools
+    :defer t
     :mode (("\\.pdf\\'" . pdf-view-mode))
     :magic ("%PDF" . pdf-view-mode)
     :config (pdf-tools-install :no-query)
@@ -3005,6 +3006,7 @@ Provides a minor mode which displays current match and total matches information
 
 #+begin_src emacs-lisp :tangle yes
   (use-package anzu
+    :defer t
     :init
     ;; (global-anzu-mode)
     (global-set-key (kbd "M-%") 'anzu-query-replace)
@@ -6268,16 +6270,18 @@ Dim everything except for the thing-at-point. Improves focus when reading code a
 
 #+begin_src emacs-lisp :tangle yes
   ;; :quelpa keyword
-  (use-package quelpa)
-                                          ;:custom
-                                          ;  (quelpa-update-melpa-p nil "Don't update the MELPA git repo.")
-                                          ;)
+  (use-package quelpa
+     :defer t)
+ ;:custom
+ ;;  (quelpa-update-melpa-p nil "Don't update the MELPA git repo.")
+  ;)
 
-  (use-package quelpa-use-package)
+  (use-package quelpa-use-package
+    :defer t)
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23960 64404 983820 211000) :init (23960 64404 983767 258000) :config (23960 64404 982937 260000) :config-secs (0 0 23 583000) :init-secs (0 0 1502 136000) :use-package-secs (0 0 1716 812000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24469 39980 861656 933000) :init (24469 39980 861646 158000) :config (24469 39980 861630 65000) :config-secs (0 0 7 803000) :init-secs (0 0 47 781000) :use-package-secs (0 0 121 200000)))
 
 * Palimpsest
 
@@ -6348,7 +6352,8 @@ Remember: =q= to exit
 : calendar
 
 * avy-org-refile-as-child
-#+begin_src emacs-lisp :tangle yes
+Este keybinding ya lo uso para una función de Ambrevar que cambia el layop de las ventanas.
+#+begin_src emacs-lisp :tangle no
   (global-set-key (kbd "s-:") 'avy-org-refile-as-child)
 #+end_src
 
@@ -7067,6 +7072,22 @@ Wallwork.
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24407 26767 442212 933000) :init (24407 26767 442204 72000) :config (24407 26767 441976 330000) :config-secs (0 0 4 943000) :init-secs (0 0 16095 740000) :use-package-secs (0 2 760242 710000)))
+
+
+** Remote editing
+
+From Uncle Dave at https://github.com/daedreth/UncleDavesEmacs.
+
+I have no need to directly edit files over SSH, but what I do need is a way to edit files as root. Opening up nano in a terminal as root to play around with grubs default settings is a no-no, this solves that.
+
+*** Editing with sudo
+Pretty self-explanatory, useful as hell if you use exwm.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package sudo-edit
+  :bind ("s-\#" . sudo-edit))
+#+END_SRC
+
 
 * Provide
 

@@ -38,13 +38,18 @@ See https://github.com/emacs-helm/helm/issues/2085
          ("s-\("        . helm-eval-expression-with-eldoc)
          ([remap find-tag]  . helm-etags-select)
          ("s-\)"       . ap/helm-info-emacs-elisp-cl)
+         ;;("C-g"        . helm-keyboard-quit)
+         ("s-e"  . helm-run-external-command)    
+         ("s-D"  . helm-locate)                 
+         ("s-d"  . helm-find)
          :map helm-command-map
          ("<tab>" . helm-execute-persistent-action)
          ("C-i" . helm-execute-persistent-action)
          ("C-z" . helm-select-action)
-         ("C-g" . helm-keyboard-quit)
-         ("C-c h g"    . helm-google-suggest)      ; esto no está funcionando
-         ("C-c h w"    . helm-wikipedia-suggest)   ; esto no está funcionando
+         ("g"    . helm-google-suggest)   
+         ("w"    . helm-wikipedia-suggest)
+         :map helm-find-files-map
+         ("C-b" . helm-find-files-up-one-level)
          :map helm-grep-mode-map
          ("<return>" . helm-grep-mode-jump-other-window)         
          ("n" . helm-grep-mode-jump-other-window-forward)
@@ -54,7 +59,11 @@ See https://github.com/emacs-helm/helm/issues/2085
          :map minibuffer-local-map
          ("C-c C-l" . helm-minibuffer-history)
          ("M-p" . helm-minibuffer-history)
-         ("M-n" . helm-minibuffer-history))
+         ("M-n" . helm-minibuffer-history)
+         :map helm-buffer-map
+         ("C-g" . helm-keyboard-quit)
+         :map helm-map
+         ("C-g" . helm-keyboard-quit))
   :init 
   (global-unset-key (kbd "C-x c"))
   (setq helm-command-prefix-key "C-c h")
@@ -136,7 +145,7 @@ See https://github.com/emacs-helm/helm/issues/2085
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 17893 946361 967000) :init (24468 17893 945237 119000) :config (24468 17893 945219 804000) :config-secs (0 0 259231 313000) :init-secs (0 0 296616 276000) :use-package-secs (0 0 297816 184000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 37165 907065 861000) :init (24468 37165 906190 846000) :config (24468 37165 906174 665000) :config-secs (0 0 739 720000) :init-secs (0 0 988 408000) :use-package-secs (0 0 2019 576000)))
 
 
 
@@ -496,8 +505,14 @@ With this setup helm-bibtex points to the same notes file as =org-ref=. Just run
 Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs and Tuhdo  https://tuhdo.github.io/helm-intro.html
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
+;; (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
 ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
+;;(use-package helm-files
+;;  :bind
+;;  (:map helm-find-files-map
+;;   ("C-b" . helm-find-files-up-one-level)
+;;   ("C-i" . helm-execute-persistent-action))
+;;)
 #+END_SRC
 
 #+RESULTS:
@@ -507,6 +522,8 @@ Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs and Tuhdo  
 
 I kept loosing my projects in external drives upon re-start. My attempt to keep them thru magit is copied from https://emacs.stackexchange.com/questions/32634/how-can-the-list-of-projects-used-by-projectile-be-manually-updated/32635
 
+Si usara =:map projectile-command-map=, las definiciones irían adjuntas al prefijo =C-c p=
+
 #+srcname: projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; Projectile
@@ -515,7 +532,6 @@ I kept loosing my projects in external drives upon re-start. My attempt to keep 
   ("C-c p" . projectile-command-map)
   :bind (("s-m" . helm-man-woman)
          ("s-g" . helm-projectile-grep)
-         :map projectile-command-map
          ([?\s-\|] . helm-projectile-find-file-dwim) 
          ([?\s-\`] . helm-projectile-find-other-file)
          ([?\s-\*] . helm-projectile-find-dir)       
@@ -635,26 +651,30 @@ Not needed, I think as the they are included in =.git= of =~/=.
 
 
 ** Helm-Projectile
- (global-set-key (kbd "s-h") 'helm-projectile)
+  (global-set-key (kbd "s-h") 'helm-projectile)
+
+ :bind ("C-c p h" . helm-projectile)
+  :after (helm projectile) ; helm-mode
+
+  :bind  (:map helm-map
+          ("s-h" . helm-projectile))
 
 #+srcname: helm-projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package helm-projectile
   :bind ("s-h" . helm-projectile)
-  :after (helm-mode projectile)
   :init     
-  (helm-projectile-on)
   (setq projectile-completion-system 'helm)
   (setq projectile-indexing-method 'alien) ;; added by DGM on 30 nov 2019
   :commands helm-projectile
-  ;;   :bind ("C-c p h" . helm-projectile)
   :config 
   (setq projectile-switch-project-action 'helm-projectile)
-  )
+  (helm-projectile-on)
+  ) 
 #+END_SRC
 
 #+RESULTS: helm-projectile
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 18122 590377 77000) :use-package-secs (0 0 148 945000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24469 15668 732451 666000) :init (24469 15668 732319 419000) :init-secs (0 0 1117 760000) :use-package-secs (0 0 1344 602000) :config (24469 15668 732289 259000) :config-secs (0 0 1051 10000)))
 
 * =helm-ag=:  Interface with Ag ("The Silver Searcher")
 
@@ -828,11 +848,20 @@ Customization by the great malb: (https://github.com/malb/emacs.d/blob/master/ma
 
 
 * EXWM buffers with helm. Also: make =helm-mini= almighty
+   ;; next two lines work in the context of a helm menu like the one triggered with =C-x b=
+   ;; (global-set-key (kbd "C-c h w") 'helm-buffer-switch-other-window)
+   ;; (global-set-key (kbd "C-c h k") 'helm-buffer-run-kill-persistent)
+   ;; Launcher
+  (exwm-input-set-key (kbd "s-e") 'helm-run-external-command)
+(with-eval-after-load 'helm
+  (exwm-input-set-key (kbd "s-D") #'helm-locate)
+  (exwm-input-set-key (kbd "s-d") #'helm-find))
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'helm-bookmark)
 
 (use-package helm-exwm
+  :after (exwm helm)
   :config
   (add-to-list 'helm-source-names-using-follow "EXWM buffers")
   (setq helm-exwm-emacs-buffers-source (helm-exwm-build-emacs-buffers-source))
@@ -844,19 +873,11 @@ Customization by the great malb: (https://github.com/malb/emacs.d/blob/master/ma
                                     ,(when (boundp 'helm-source-ls-git) 'helm-source-ls-git)
                                     helm-source-bookmarks
                                     helm-source-bookmark-set
-                                    helm-source-buffer-not-found))
-   ;; next two lines work in the context of a helm menu like the one triggered with =C-x b=
-   ;; (global-set-key (kbd "C-c h w") 'helm-buffer-switch-other-window)
-   ;; (global-set-key (kbd "C-c h k") 'helm-buffer-run-kill-persistent)
-   ;; Launcher
-   (exwm-input-set-key (kbd "s-e") 'helm-run-external-command)
-(with-eval-after-load 'helm
-  (exwm-input-set-key (kbd "s-D") #'helm-locate)
-  (exwm-input-set-key (kbd "s-d") #'helm-find)))
+                                    helm-source-buffer-not-found)))                 
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 18154 308909 357000) :init (24468 18154 308899 569000) :config (24468 18154 308773 814000) :config-secs (0 0 1588 936000) :init-secs (0 0 4552 624000) :use-package-secs (0 0 4603 588000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24469 42299 367616 607000) :init (24469 42299 367458 22000) :init-secs (0 0 2976 789000) :use-package-secs (0 0 3277 826000) :config (24469 42299 367436 951000) :config-secs (0 0 2943 326000)))
 
 
 * Provide

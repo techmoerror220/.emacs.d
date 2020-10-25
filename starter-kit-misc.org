@@ -262,7 +262,7 @@ If launching Emacs as in windowing system, show the menu. If launching in a tty/
 
 Note by dgm on 16 sept 2018: I'm trying to use =exwm= so I am not going to use menu-bar-mode.
 #+source: starter-kit-no-menu-in-tty
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 ;;  (if window-system
 ;      (menu-bar-mode t)
 ;;      (menu-bar-mode -1)
