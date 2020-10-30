@@ -518,7 +518,7 @@ However, with =helm-ag= I'm getting errors that seem related to undo-tree, plus 
 #+RESULTS:
 : t
 
-*** COMMENT auto-file-revert
+*** auto-file-revert
 
 Explanation by Bernt Hansen: With this setting any files that change on
 disk where there are no changes in the buffer automatically revert to
@@ -530,7 +530,7 @@ See: http://pragmaticemacs.com/emacs/automatically-revert-buffers/
 
 If you want Emacs to automatically update a buffer if a file changes on disk, then add the following to your config:
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle yes
   ;; update any change made on file to the current buffer
   (global-auto-revert-mode t)
 #+END_SRC
@@ -542,13 +542,13 @@ Of course, if your buffer has unsaved changes when the file changes on disk, the
 
 This mode only applies to buffers associated with files on the disk, but I like to have my dired view updated if the contents of a directory change. This is accomplished with the following code:
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle yes
   ;; auto refresh dired when file changes
   (add-hook 'dired-mode-hook 'auto-revert-mode)
 #+END_SRC
 
 #+RESULTS:
-| auto-revert-mode | (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
+| auto-revert-mode | recentf-add-dired-directory | (lambda nil (let ((now (lookup-key dired-mode-map J))) (if (and now (not (eq now 'undefined))) nil (define-key dired-mode-map J 'bmkp-dired-jump)) (setq now (lookup-key dired-mode-map |
 
 *** COMMENT Company mode
 
@@ -2002,16 +2002,19 @@ NOTE: this requires you to install wordnet
  sudo apt install wordnet
 #+END_EXAMPLE
 
+==Pending: binding doesn't work.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package synosaurus
     :after wordnut
+    :bind (("s-T" . synosaurus-lookup))
     :config (progn
               (setq synosaurus-backend 'synosaurus-backend-wordnet)
               (setq synosaurus-choose-method 'default)))
 #+END_SRC
 
 #+RESULTS:
-: t
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24475 56542 226007 833000) :use-package-secs (0 0 231 944000)))
 
 *** Olivetti minor mode
 A minor mode for a nice writing environment.
@@ -2851,12 +2854,20 @@ From Reddit: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgm
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24469 39883 587177 46000) :init (24469 39883 587168 991000) :config (24469 39883 587153 980000) :config-secs (0 0 7 282000) :init-secs (0 0 56 309000) :use-package-secs (0 0 134 53000)))
 
 **** pdf-tools
+:PROPERTIES:
+:ID:       67c396af-c65b-4fc0-bd0d-1de0023cabb5
+:END:
+Switching from docview to pdf-tools happens 'automatically' when you install pdf-tools. Once you've done this, any time Emacs tries to open a pdf in Emacs, it will use pdf-tools. However, some packages will call out to the operating system, or use different config within Emacs, to decide if they should use Emacs or another program to open a pdf. So there is some 'tool-by-tool' configuration required to get all Emacs packages to use pdf-tools.
+
+If you want your pdfs opened in the same instance of Emacs, you need to have it running in daemon mode (i.e., start it with emacs --daemon), or call (server-start) in your init so that emacsclient will work.
 
 From https://github.com/politza/pdf-tools
 
 New set up from https://www.reddit.com/r/emacs/comments/bge7tc/how_to_solve_lisp_error_error_no_such_page_12_in/
 
 Further customization from: https://github.com/dueyfinster/dotfiles/blob/master/conf/emacs.d/emacs-init.org#start-of-content
+
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package pdf-tools
     :defer t
@@ -3597,22 +3608,6 @@ http://emacsredux.com/blog/2013/03/27/copy-filename-to-the-clipboard/ https://gi
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 16860 666812 85000) :init (24467 16860 666787 662000) :init-secs (0 0 69 69000) :use-package-secs (0 0 231 307000)))
 
-
-** Help - guide-key
-
-It's hard to remember keyboard shortcuts. The =guide-key= package pops up help after a short delay.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package guide-key
-    :diminish guide-key-mode
-    :config
-    (progn
-      (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
-      (guide-key-mode 1)))  ; Enable guide-key-mode
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 16866 86654 610000) :init (24467 16866 86647 480000) :init-secs (0 0 18565 660000) :use-package-secs (0 0 18706 192000) :config (24467 16866 86538 675000) :config-secs (0 0 208 392000)))
 
 ** Reading
 
@@ -5163,6 +5158,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "C-c h k"
                     :description "helm-buffer-run-kill-persistent: Works on a helm menu like the one by C-x b")
     (cheatsheet-add :group 'Help
+                    :key "C-x ?"
+                    :description "All keybindings, it seems")
+    (cheatsheet-add :group 'Help
                     :key "M-x describe-personal-keybindings"
                     :description "Describes personal keybindings")
     (cheatsheet-add :group 'Help
@@ -5495,10 +5493,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Org-agenda
                     :key "."
                     :description "org-agenda-goto-today.")
-    (cheatsheet-add :group 'Org-Agenda
+    (cheatsheet-add :group 'Org-agenda
                     :key ","
                     :description "org-agenda-priority. Set the priority of line at point, also in Org file")
-    (cheatsheet-add :group 'Org-Agenda
+    (cheatsheet-add :group 'Org-agenda
                     :key "d"
                     :description "org-agenda-day-view.")
     (cheatsheet-add :group 'Org-agenda
@@ -5714,6 +5712,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Org-recipes
                     :key "C-c i"
                     :description "Insert raw code under a heading")
+    (cheatsheet-add :group 'Org-ref
+                    :key "C-c ]"
+                    :description "reftex-citation. Make a citation using BibTeX database files.")
     (cheatsheet-add :group 'Org-Skeleton
                     :key "M-x article-skeleton"
                     :description "Inserts a skeleton for Org-export to LaTeX")
@@ -5897,6 +5898,9 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Projectile
                     :key "s-j"
                     :description "helm-projectile-find-file: Powerful P session for file management")
+    (cheatsheet-add :group 'Projectile
+                    :key "C-c p p"
+                    :description "helm-projectile-switch-project")
     (cheatsheet-add :group 'Python
                     :key "M-x run-python"
                     :description "Launch iPython")
@@ -6085,7 +6089,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
  #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24433 62995 983170 789000) :init (24433 62995 983106 148000) :init-secs (0 0 29 300000) :use-package-secs (0 0 179 343000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24474 39832 641362 199000) :init (24474 39832 641296 811000) :init-secs (0 0 3375 828000) :use-package-secs (0 0 3512 923000) :config (24474 39832 641284 421000) :config-secs (0 0 3357 192000)))
 
 
 * Get various new windows at the bottom of the screen

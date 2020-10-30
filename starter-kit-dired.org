@@ -271,14 +271,14 @@ In 344:
 : t
 
 ** Auto-revert dired buffer 
-.... automatically when you revisit it. See this link: [[pdfview:/media/dgm/blue/documents/programming/emacs/manuals/official/emacs26-2019.pdf::373][dired-auto-revert-buffer in manual]]
+.... automatically when you revisit it. See this link: [[pdfview:/media/dgm/blue/documents/programming/emacs/manuals/official/emacs-manual-26-2019.pdf::373][dired-auto-revert-buffer in manual]]
 
 #+begin_src emacs-lisp :tangle yes
 (setq dired-auto-revert-buffer t)
+(setq auto-revert-verbose nil)
 #+end_src
 
 #+RESULTS:
-: t
 
 ** Automatic garbage collection for latex
 

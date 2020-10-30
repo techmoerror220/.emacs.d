@@ -1,3 +1,21 @@
+* Uncle Dave
+
+Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs and Tuhdo  https://tuhdo.github.io/helm-intro.html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
+;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
+;;(use-package helm-files
+;;  :bind
+;;  (:map helm-find-files-map
+;;   ("C-b" . helm-find-files-up-one-level)
+;;   ("C-i" . helm-execute-persistent-action))
+;;)
+#+END_SRC
+
+#+RESULTS:
+: helm-find-files-up-one-level
+
 Basic commands with for interfacing with =exwm= with =helm=
 
 #+BEGIN_SRC emacs-lisp :tangle no

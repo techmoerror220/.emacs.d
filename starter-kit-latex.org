@@ -195,6 +195,7 @@ Following advice from https://github.com/alexeyr/company-auctex/issues/27
 
 *** Configure Biber
 Allow AucTeX to use biber as well as/instead of bibtex.
+
 #+source: setup-biber
 #+begin_src emacs-lisp :tangle yes
     ;; Biber under AUCTeX
@@ -245,7 +246,13 @@ Read https://tex.stackexchange.com/questions/454966/biblatex-custom-entries-with
 #+begin_src emacs-lisp :tangle yes
 (use-package bibtex
   :custom
-  (bibtex-dialect (quote biblatex)))
+  (bibtex-dialect (quote biblatex))
+  :config
+    (setq bibtex-completion-format-citation-functions
+          '((org-mode      . bibtex-completion-format-citation-org-link-to-PDF)
+            (latex-mode    . bibtex-completion-format-citation-cite)
+            (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
+            (default       . bibtex-completion-format-citation-default))))
 ; (setq bibtex-dialect "BibTeX")
 #+end_src
 
@@ -609,7 +616,7 @@ In order for this to work, you need the following code, which extends ebib with 
 #+end_src
 
 #+RESULTS:
-: ebib-capture-raw-bibtex
+: epbib-capture-raw-bibtex
 
 ** =ox-extra=
 

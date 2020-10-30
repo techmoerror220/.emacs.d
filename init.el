@@ -70,7 +70,7 @@
           `(lambda ()
              (setq file-name-handler-alist file-name-handler-alist-old
                    gc-cons-threshold 10000000)  ;; 10MB
-                   ;;gc-cons-percentage 0.1)
+             ;;gc-cons-percentage 0.1)
              (garbage-collect)) t)
 
 ;; Added by Package.el.  This must come before configurations of
@@ -124,16 +124,16 @@
 
 ;;; Avoid the "loaded old bytecode instead of newer source" pitfall.
 (setq load-prefer-newer t)
- (setq dotfiles-dir (file-name-directory (or (buffer-file-name) load-file-name)))
- (setq dotfiles-dir (file-name-directory (or load-file-name (buffer-file-name))))
- (setq autoload-file (concat dotfiles-dir "loaddefs.el"))
- ;; (setq package-user-dir (concat dotfiles-dir "elpa")) ;; if enabled
- ;; this with exwm, then it blocks emacs
- (setq custom-file (concat dotfiles-dir "custom.el"))
- (add-to-list 'load-path (expand-file-name
-                          "lisp" (expand-file-name
-                                  "org" (expand-file-name
-                                         "src" dotfiles-dir))))
+(setq dotfiles-dir (file-name-directory (or (buffer-file-name) load-file-name)))
+(setq dotfiles-dir (file-name-directory (or load-file-name (buffer-file-name))))
+(setq autoload-file (concat dotfiles-dir "loaddefs.el"))
+;; (setq package-user-dir (concat dotfiles-dir "elpa")) ;; if enabled
+;; this with exwm, then it blocks emacs
+(setq custom-file (concat dotfiles-dir "custom.el"))
+(add-to-list 'load-path (expand-file-name
+                         "lisp" (expand-file-name
+                                 "org" (expand-file-name
+                                        "src" dotfiles-dir))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; use-package ;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -172,22 +172,22 @@ ARCHIVE is the string name of the package archive.")
 
 
 (defadvice package--add-to-archive-contents
-  (around filter-packages (package archive) activate)
+    (around filter-packages (package archive) activate)
   "Add filtering of available packages using `package-filter-function', if non-nil."
   (when (or (null package-filter-function)
-(funcall package-filter-function
-     (car package)
-     (funcall (if (fboundp 'package-desc-version)
-              'package--ac-desc-version
-            'package-desc-vers)
-          (cdr package))
-     archive))
+            (funcall package-filter-function
+                     (car package)
+                     (funcall (if (fboundp 'package-desc-version)
+                                  'package--ac-desc-version
+                                'package-desc-vers)
+                              (cdr package))
+                     archive))
     ad-do-it))
 
 
 (defvar melpa-exclude-packages
-;;      '(slime magit)
-      '()
+  ;;      '(slime magit)
+  '()
   "Don't install Melpa versions of these packages.")
 
 ;; Don't take Melpa versions of certain packages
@@ -261,7 +261,7 @@ ARCHIVE is the string name of the package archive.")
 (use-package async
   :init (dired-async-mode 1)
   :config
-   (setq async-bytecomp-allowed-packages '(all))
+  (setq async-bytecomp-allowed-packages '(all))
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  exwm
@@ -282,6 +282,10 @@ ARCHIVE is the string name of the package archive.")
 (global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
 
 (use-package exwm
+  :bind
+  (("C-\{" . daedreth/launch-browser)
+   ("s-:"  . ambrevar/toggle-window-split)
+   ("s-;"  . rotate-windows))
   :init
   (load "/home/dgm/.emacs.d/src/ambrevar/functions.el")
   (require 'functions)
@@ -313,14 +317,26 @@ ARCHIVE is the string name of the package archive.")
   (defun ambrevar/exwm-start (command)
     (interactive (list (read-shell-command "$ ")))
     (start-process-shell-command command nil command))
-  :bind
-  (("s-<left>"  . windmove-left)
-   ("s-<down>"  . windmove-down)
-   ("s-<up>"    . windmove-up)
-   ("s-<right>" . windmove-right)
-   ("s-&"       . ambrevar/exwm-start)
-   ("C-\{"      . daedreth/launch-browser)
-   ("s-:"       . ambrevar/toggle-window-split))
+
+  (defun rotate-windows ()
+    "Rotate your windows" (interactive) (cond ((not (> (count-windows) 1)) (message "You can't rotate a single window!"))
+                                              (t
+                                               (setq i 1)
+                                               (setq numWindows (count-windows))
+                                               (while  (< i numWindows)
+                                                 (let* (
+                                                        (w1 (elt (window-list) i))
+                                                        (w2 (elt (window-list) (+ (% i numWindows) 1)))
+                                                        (b1 (window-buffer w1))
+                                                        (b2 (window-buffer w2))
+                                                        (s1 (window-start w1))
+                                                        (s2 (window-start w2))
+                                                        )
+                                                   (set-window-buffer w1  b2)
+                                                   (set-window-buffer w2 b1)
+                                                   (set-window-start w1 s2)
+                                                   (set-window-start w2 s1)
+                                                   (setq i (1+ i)))))))
   :config
   ;; necessary to configure exwm manually
   (require 'exwm-config)
@@ -484,11 +500,17 @@ ARCHIVE is the string name of the package archive.")
   ;; Redshift on
   (exwm-input-set-key (kbd "C-\(")
                       (lambda () (interactive) (start-process "" nil "redshift" "-O" "3500")))
+
+  (exwm-input-set-key (kbd "s-<left>") #'windmove-left)
+  (exwm-input-set-key (kbd "s-<down>") #'windmove-down)
+  (exwm-input-set-key (kbd "s-<up>") #'windmove-up)
+  (exwm-input-set-key (kbd "s-<right>") #'windmove-right)
+  (exwm-input-set-key (kbd "s-&") #'ambrevar/exwm-start)
   )
 
 ;; Misteriousl, calling on =exwm-edit= makes =exwm= work. Else, it doesn't start
 ;; up a fullscreen, etc
- (use-package exwm-edit)
+(use-package exwm-edit)
 
 ;; Check for start-up errors. See =~/.profile=
 (let ((error-logs (directory-files "~" t "errors.*log$")))
@@ -509,18 +531,18 @@ ARCHIVE is the string name of the package archive.")
 
 
 ;; ;; Common Lisp compatability
- (require 'cl-lib)
+(require 'cl-lib)
 
 ;; ;; Temporary workaround for eshell bug in 24.3.1
 ;; ;; http://zpcat.blogspot.com/2013/08/configure-eshell-mode-after-upgrade.html
- (require 'esh-mode)
+(require 'esh-mode)
 
 ;; ;; Package Locations
- (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
-     (let* ((my-lisp-dir "~/.emacs.d/")
-            (default-directory my-lisp-dir))
-       ;; (setq load-path (cons my-lisp-dir load-path))
-       (normal-top-level-add-subdirs-to-load-path)))
+(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
+    (let* ((my-lisp-dir "~/.emacs.d/")
+           (default-directory my-lisp-dir))
+      ;; (setq load-path (cons my-lisp-dir load-path))
+      (normal-top-level-add-subdirs-to-load-path)))
 
 ;; ;; Font-face setup. Check the availability of a some default fonts, in
 ;; ;; order of preference. The first of these alternatives to be found is
@@ -542,30 +564,30 @@ ARCHIVE is the string name of the package archive.")
 
 ;; on Why Pragmata Pro doesn't work, read here: https://github.com/hiavi/pragmatapro/issues/9
 ;; Set default font. First one found is selected.
- ;; (cond
- ;;  ((eq window-system nil) nil)
- ;; ((font-existsp "Pragmata Pro Mono")
- ;;  (set-face-attribute 'default nil :height 156 :font "Pragmata Pro Mono")))
+;; (cond
+;;  ((eq window-system nil) nil)
+;; ((font-existsp "Pragmata Pro Mono")
+;;  (set-face-attribute 'default nil :height 156 :font "Pragmata Pro Mono")))
 
 
- ;;  ((font-existsp "FiraCode")
- ;;   (set-face-attribute 'default nil :height 121 :font "FiraCode"))
- ;;  ((font-existsp "Monoid")
- ;;   (set-face-attribute 'default nil :height 121 :font "Monoid"))
- ;;  ((font-existsp "Inconsolata")
- ;;  (set-face-attribute 'default nil :height 121 :font "Inconsolata"))
- ;; ((font-existsp "Input Mono Compressed")
- ;;  (set-face-attribute 'default nil :height 131 :font "Input Mono Compressed"))
- ;; ((font-existsp "Menlo")
- ;;  (set-face-attribute 'default nil :height 121 :font "Menlo"))
- ;;  ((font-existsp "Consolas")
- ;;  (set-face-attribute 'default nil :height 121 :font "Consolas"))
- ;; ((font-existsp "Monaco")
- ;;  (set-face-attribute 'default nil :height 121 :font "Monaco"))
- ;; ((font-existsp "Envy Code R")
- ;;   (set-face-attribute 'default nil :height 121 :font "Envy Code R"))
- ;; ((font-existsp "Source Code Pro")
- ;;  (set-face-attribute 'default nil :height 121 :font "Source Code Pro")))
+;;  ((font-existsp "FiraCode")
+;;   (set-face-attribute 'default nil :height 121 :font "FiraCode"))
+;;  ((font-existsp "Monoid")
+;;   (set-face-attribute 'default nil :height 121 :font "Monoid"))
+;;  ((font-existsp "Inconsolata")
+;;  (set-face-attribute 'default nil :height 121 :font "Inconsolata"))
+;; ((font-existsp "Input Mono Compressed")
+;;  (set-face-attribute 'default nil :height 131 :font "Input Mono Compressed"))
+;; ((font-existsp "Menlo")
+;;  (set-face-attribute 'default nil :height 121 :font "Menlo"))
+;;  ((font-existsp "Consolas")
+;;  (set-face-attribute 'default nil :height 121 :font "Consolas"))
+;; ((font-existsp "Monaco")
+;;  (set-face-attribute 'default nil :height 121 :font "Monaco"))
+;; ((font-existsp "Envy Code R")
+;;   (set-face-attribute 'default nil :height 121 :font "Envy Code R"))
+;; ((font-existsp "Source Code Pro")
+;;  (set-face-attribute 'default nil :height 121 :font "Source Code Pro")))
 
 
 ;; Line-spacing tweak
@@ -582,21 +604,21 @@ ARCHIVE is the string name of the package archive.")
 ;; ;; Load up Org Mode and Babel
 ;; ;; load up the main file
 ;; ;; org-mode windmove compatibility
- (require 'org)
- (org-babel-load-file (expand-file-name "starter-kit.org" dotfiles-dir))
+(require 'org)
+(org-babel-load-file (expand-file-name "starter-kit.org" dotfiles-dir))
 
- ;; This tells Emacs to open all .org files in org-mode (http://sachachua.com/blog/2007/12/emacs-getting-things-done-with-org-basic/)
+;; This tells Emacs to open all .org files in org-mode (http://sachachua.com/blog/2007/12/emacs-getting-things-done-with-org-basic/)
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
  ;;; Higher garbage collection threshold
- ;; (setq gc-cons-threshold 20000000)
+;; (setq gc-cons-threshold 20000000)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;; The Power of UTF8 ;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Enable UTF-8 by default. From: lopez-ibanez.eu/dotemacs.html
- (prefer-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
 ;;; other stuff from https://github.com/izahn/emacs-starter-kit
 ;;; kjh says that setting this coding system prevents emacs from choking on melpa file listings
 ;;; see also https://masteringemacs.org/article/working-coding-systems-unicode-emacs
@@ -621,10 +643,10 @@ ARCHIVE is the string name of the package archive.")
 
 ;; UTF-8 as default encoding (permanently choose a encoding system in
 ;; emacs for opening and saving). See http://ergoemacs.org/emacs/emacs_encoding_decoding_faq.html
- (set-language-environment 'utf-8)
- (setq locale-coding-system 'utf-8)
- (unless (eq system-type 'windows-nt)
-   (set-selection-coding-system 'utf-8))
+(set-language-environment 'utf-8)
+(setq locale-coding-system 'utf-8)
+(unless (eq system-type 'windows-nt)
+  (set-selection-coding-system 'utf-8))
 
 ;; DGM on 4 October 2019 following Bern Hansen
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))

@@ -1,0 +1,66 @@
+** COMMENT Caolan's costumization <<here>>
+!!here: commented out in search of culprit.
+
+From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+
+Already set in another bit of this file.
+#+BEGIN_SRC emacs-lisp :tangle no
+  (add-hook 'mu4e-compose-mode-hook
+            (lambda ()
+              (set-fill-column 72)
+              (auto-fill-mode 1)
+              (visual-line-mode)))
+  ;;(visual-fill-column-mode)
+  ;; (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))))
+  ;;(visual-line-mode)))
+
+
+  ;; I want to see full From header, not only name
+  (setq mu4e-view-show-addresses t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+Store a link to a mu4e query or message, setting various properties for use in capture templates. Basic support is provided by =org-mu4e=, but this uses some code from Using =org-capture-templates= with =mu4e= to extend the properties available to templates.
+
+I tangle to no because I am going to introduce a modification following the bug reported here: https://github.com/djcb/mu/issues/1381
+
+DGM 27 oct 2020: I disable it because links to emais has stopped working and in https://www.djcbsoftware.nl/code/mu/mu4e/Org_002dmode-links.html DJC says that =mu4e= supports links to emails by default. Y EFECTIVAMENTE este era el bit de code que me fastidiaba los links!!!!!!
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun org-mu4e-store-link ()
+  "Store a link to a mu4e query or message."
+  (cond
+    ;; storing links to queries
+    ((eq major-mode 'mu4e-headers-mode)
+     (let* ((query (mu4e-last-query))
+             desc link)
+       (org-store-link-props :type "mu4e" :query query)
+       (setq link (concat "mu4e:query:" query))
+       (org-add-link-props :link link :description link)
+       link))
+    ;; storing links to messages
+    ((eq major-mode 'mu4e-view-mode)
+     (let* ((msg (mu4e-message-at-point))
+            (msgid (or (plist-get msg :message-id) "<none>"))
+            (from (car (car (mu4e-message-field msg :from))))
+            (to (car (car (mu4e-message-field msg :to))))
+            (subject (mu4e-message-field msg :subject))
+            link)
+       (setq link (concat "mu4e:msgid:" msgid))
+       (org-store-link-props
+          :type "mu4e" :from from :to to :subject subject
+          :message-id msgid)
+       (org-add-link-props
+          :link link
+          :description (funcall org-mu4e-link-desc-func msg))
+   link))))
+
+(org-add-link-type "mu4e" 'org-mu4e-open)
+(add-hook 'org-store-link-functions 'org-mu4e-store-link)
+#+END_SRC
+
+#+results:
+| org-mu4e-store-link |
+
