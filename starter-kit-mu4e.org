@@ -1984,6 +1984,8 @@ Use imagemagick, if available
 
 View e-mails with width restriction, but wider for HTML
 
+DGM, 4 nov 2020: (set-fill-column 72) changed to (set-fill-column 80)
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (defun malb/mu4e-view-mode-hook ()
   "View e-mails with width restriction, but wider for HTML."
@@ -1994,15 +1996,18 @@ View e-mails with width restriction, but wider for HTML
          ((and (> (* mu4e-view-html-plaintext-ratio-heuristic
                      (length txt)) (length html))
                (or (not mu4e-view-prefer-html) (not html)))
-          (set-fill-column 72))
+          (set-fill-column 80))
          (t
           (set-fill-column 120))))
-    (set-fill-column 72))
+    (set-fill-column 80))
   (visual-line-mode 1)
   (visual-fill-column-mode 1))
 
 (add-hook 'mu4e-view-mode-hook #'malb/mu4e-view-mode-hook)
 #+END_SRC
+
+#+RESULTS:
+| malb/mu4e-view-mode-hook | (closure (t) nil (set (make-local-variable 'bookmark-make-record-function) 'mu4e-view-bookmark-make-record)) |
 
 Set higher contrast.
 

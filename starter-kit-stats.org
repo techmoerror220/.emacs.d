@@ -13,6 +13,25 @@ This file provides settings for ESS and R.
  
 ** Load ESS 
 
+:map inferior-ess-mode-map
+         ("C->"   . my_pipe_operator)
+         ("C-c i" . my_in_operator)
+
+           ("C-c i" . my_assignment_operator)
+
+    :bind (
+           ("C->"   . my_pipe_operator)
+           ("C-c i" . my_in_operator)
+           :map inferior-ess-mode-map
+           ("C->"   . my_pipe_operator)
+           ("C-c i" . my_in_operator)
+           )
+
+(require 'ess-r-mode)
+(define-key ess-r-mode-map "_" 'ess-insert-assign)
+(define-key inferior-ess-r-mode-map "_" 'ess-insert-assign)
+
+
 #+src-name: ess-mode
 #+begin_src emacs-lisp :tangle yes :results silent
   ;; (use-package ess
@@ -20,13 +39,84 @@ This file provides settings for ESS and R.
   ;;  :init (require 'ess-site))
 
   (use-package ess
-    :defer t)
+    :defer t
+    :bind
+    (:map ess-r-mode-map
+          ("C->"   . my_pipe_operator)
+          ("C-c i" . my_in_operator)
+          ("_"     . ess-insert-assign))
+    (:map inferior-ess-r-mode-map
+          ("C->"   . my_pipe_operator)
+          ("C-c i" . my_in_operator)        
+          ("_"     . ess-insert-assign))
+    :init
+    (defun my_pipe_operator ()
+      "R/ESS %>% operator"
+      (interactive)
+      (just-one-space 1)
+      (insert "%>%")
+      (reindent-then-newline-and-indent))
 
-  (require 'ess-site)
+    (defun my_assignment_operator ()
+      "R/ESS <- assignment"
+      (interactive)
+      (just-one-space 1)
+      (insert "<-")
+      (just-one-space 1))
+
+    (defun my_in_operator ()
+      "R/ESS %in% operator"
+      (interactive)
+      (just-one-space 1)
+      (insert "%in%")
+      (just-one-space 1))
+    :config
+    (require 'ess-r-mode)
+    (setq ess-style 'RStudio)
+    )
+
+  ;;  (require 'ess-site)
+
+  ;; https://matthewbauer.us/bauer/
+  (use-package ess-site
+    :ensure ess
+    :commands R
+    :interpreter (("Rscript" . r-mode)
+                  ("r" . r-mode))
+    :mode (("\\.sp\\'"          . S-mode)
+           ("/R/.*\\.q\\'"      . R-mode)
+           ("\\.[qsS]\\'"       . S-mode)
+           ("\\.ssc\\'"         . S-mode)
+           ("\\.SSC\\'"         . S-mode)
+           ("\\.[rR]\\'"        . R-mode)
+           ("\\.[rR]nw\\'"      . Rnw-mode)
+           ("\\.[sS]nw\\'"      . Snw-mode)
+           ("\\.[rR]profile\\'" . R-mode)
+           ("NAMESPACE\\'"      . R-mode)
+           ("CITATION\\'"       . R-mode)
+           ("\\.omg\\'"         . omegahat-mode)
+           ("\\.hat\\'"         . omegahat-mode)
+           ("\\.lsp\\'"         . XLS-mode)
+           ("\\.do\\'"          . STA-mode)
+           ("\\.ado\\'"         . STA-mode)
+           ("\\.[Ss][Aa][Ss]\\'"        . SAS-mode)
+           ("\\.[Ss]t\\'"       . S-transcript-mode)
+           ("\\.Sout"           . S-transcript-mode)
+           ("\\.[Rr]out"        . R-transcript-mode)
+           ("\\.Rd\\'"          . Rd-mode)
+           ("\\.[Bb][Uu][Gg]\\'"         . ess-bugs-mode)
+           ("\\.[Bb][Oo][Gg]\\'"         . ess-bugs-mode)
+           ("\\.[Bb][Mm][Dd]\\'"         . ess-bugs-mode)
+           ("\\.[Jj][Aa][Gg]\\'"         . ess-jags-mode)
+           ("\\.[Jj][Oo][Gg]\\'"         . ess-jags-mode)
+           ("\\.[Jj][Mm][Dd]\\'"         . ess-jags-mode)
+           ))
 
   (use-package ess-smart-underscore
-    :defer t
-    :after ess)
+    :after ess
+    :config
+    (setq ess-S-underscore-when-last-character-is-a-space t)
+    )
 
   (use-package ess-view
     :defer t
@@ -36,7 +126,7 @@ This file provides settings for ESS and R.
     :defer t
     :after ess)
 
-;;  (require 'ob-stata)
+  ;;  (require 'ob-stata)
   (require 'ob-ledger)
 
   (org-babel-do-load-languages
@@ -48,7 +138,7 @@ This file provides settings for ESS and R.
      (python . t)
      (js . t)
      (haskell . t)
-;;     (stata . t)
+     ;;     (stata . t)
      (shell . t)
      (latex . t)
      (ledger . t)
@@ -67,12 +157,12 @@ This file provides settings for ESS and R.
 
 #+RESULTS:
 
-** Customize smart underscore
+** COMMENT Customize smart underscore
 Insert =_= if the preceding character is not a tab/space. 
 
 Toggle with =ess-S-underscore-when-last-character-is-a-space=  Not enabled by default, so when I defined a varible with an underscore as in =my_packages=, I got a =<-= as soon as I typed the =_=.
 
-#+begin_src emacs-lisp :tangle yes :results silent 
+#+begin_src emacs-lisp :tangle no :results silent 
 (setq ess-S-underscore-when-last-character-is-a-space t)
 #+end_src
 
@@ -246,6 +336,3 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit STATS file loaded.
-
-
-

@@ -34,6 +34,7 @@ See https://github.com/emacs-helm/helm/issues/2085
             ("s-<return>"     . helm-all-mark-rings)
             ("s-x"            . helm-register)
             ("s-t"            . helm-top)
+            ("s-a"            . helm-apropos)
             ("s-m"            . helm-man-woman)
             ("s-\("           . helm-eval-expression-with-eldoc)
             ([remap find-tag] . helm-etags-select)
@@ -145,7 +146,7 @@ See https://github.com/emacs-helm/helm/issues/2085
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24474 40412 608146 733000) :init (24474 40412 607481 774000) :config (24474 40412 607468 854000) :config-secs (0 0 528 336000) :init-secs (0 0 646 127000) :use-package-secs (0 0 1391 692000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24482 55999 978673 948000) :init (24482 55999 976729 709000) :config (24482 55999 976664 592000) :config-secs (0 0 985 248000) :init-secs (0 0 1552 86000) :use-package-secs (0 0 3929 491000)))
 
 
 

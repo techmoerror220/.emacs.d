@@ -172,7 +172,7 @@ Now my main use =goto-char-timer= where I am prompted to write the text that I w
     :bind
     ("s-i" . avy-goto-word-1)  ;; goes to word that starts with a given char
     ("s-+" . avy-goto-char)
-    ("s-l" . avy-goto-char-timer))
+    ("s-%" . avy-goto-char-timer))
 
    ;; (define-key global-map (kbd "s-l") 'avy-goto-char-timer) ;;
 
@@ -2415,7 +2415,7 @@ And this quickly deletes a line.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;;(global-set-key (kbd "M-s-k") 'kill-whole-line)
-  (global-set-key (kbd "s-%") 'kill-whole-line)
+  (global-set-key (kbd "s-l") 'kill-whole-line)
 #+END_SRC
 
 #+RESULTS:
@@ -4645,7 +4645,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "s-i"
                     :description "avy-goto-word-1. Type first char of word you want to go to.")
     (cheatsheet-add :group 'Editing
-                    :key "s-l"
+                    :key "s-%"
                     :description "avy-goto-char-timer. Start typing word you want to go to.")
     (cheatsheet-add :group 'Editing
                     :key "s-+"
@@ -4685,7 +4685,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :description "Prefix to insert symbols")
     (cheatsheet-add :group 'Editing
                     :key "C-M-SPC M-w"
-                    :description "Select word or sexp after point and put it in the kill-ring")
+                    :description "Select word or sexp after point and put it in the kpill-ring")
     (cheatsheet-add :group 'Editing
                     :key "M--c"
                     :description "Upper case last word: Mientras haces M-- dale a la c")
@@ -4720,7 +4720,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "M-z"
                     :description "zap-up-to-char")
     (cheatsheet-add :group 'Editing
-                    :key "s-%"
+                    :key "s-l"
                     :description "Kills whole line where your cursor is in")
     (cheatsheet-add :group 'Editing
                     :key "yank-file-name"
@@ -6089,7 +6089,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
  #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24474 39832 641362 199000) :init (24474 39832 641296 811000) :init-secs (0 0 3375 828000) :use-package-secs (0 0 3512 923000) :config (24474 39832 641284 421000) :config-secs (0 0 3357 192000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24480 8600 933992 270000) :init (24480 8600 933928 700000) :init-secs (0 0 3459 787000) :use-package-secs (0 0 3591 237000) :config (24480 8600 933915 544000) :config-secs (0 0 3443 641000)))
 
 
 * Get various new windows at the bottom of the screen

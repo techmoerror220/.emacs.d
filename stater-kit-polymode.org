@@ -34,12 +34,12 @@ Polymode is a package that supports multiple modes inside a single buffer. It is
     :mode (("\\.yml\\'" . yaml-mode)))
 #+end_src
 
-** Add a Keyboard Shortcut for the Pipe Operator
+** COMMENT Add a Keyboard Shortcut for the Pipe Operator
 
 Assignment in ESS is shift-minus; by extension we'll use M-shift-minus for inserting the `%>%` operator.
 
 #+src-name: ess-pipe-shortcut
-#+begin_src emacs-lisp :tangle yes :results silent
+#+begin_src emacs-lisp :tangle no :results silent
 
 (defun my_pipe_operator ()
   "R/ESS %>% operator"
@@ -63,7 +63,7 @@ Assignment in ESS is shift-minus; by extension we'll use M-shift-minus for inser
   (insert (concat "```{r " header "}\n\n```")) 
   (forward-line -1))
 
-(global-set-key (kbd "C-c i") 'kjh-insert-r-chunk)
+;; (global-set-key (kbd "C-c i") 'kjh-insert-r-chunk)
 #+END_SRC
 
 ** Markdown Mode Support

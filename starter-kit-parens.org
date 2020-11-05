@@ -490,6 +490,12 @@ Emacs 24 has a new minor mode electric-pair-mode. When on, typing any left brack
 
 Brackets includes ASCII and Unicode brackets or quotation marks. Deleting one bracket doesn't delete the other. Exactly which brackets are auto-closed depends on the current major mode's syntax table. If you always want certain brackets be inserted in pairs, you can customize the variable electric-pair-pairs. Its value should be a Association List. For example, the curly bracket ={}= isn't auto-closed when in emacs-lisp-mode. You can make it do so, like this:
 
+NB: 
+        (?\< . ?\>)
+        (?\' . ?\')
+
+are not included because I don't want double '' in Lisp, and neither do I want <> in R...
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; make electric-pair-mode work on more brackets
 (setq electric-pair-pairs
@@ -501,7 +507,7 @@ Brackets includes ASCII and Unicode brackets or quotation marks. Deleting one br
 #+END_SRC
 
 #+RESULTS:
-: ((34 . 34) (123 . 125) (91 . 93) (96 . 39))
+: ((34 . 34) (123 . 125) (91 . 93) (60 . 62) (39 . 39) (96 . 39))
 
 ** Electric Pair for Org-Mode
 And now on to Org mode: 
@@ -520,6 +526,7 @@ I dunno why some pairs work (//, ==)and some don't (~, *, _)...
                              (?[ . ?])
                              (?\" . ?\")
                              (?\` . ?\')
+                             (?\< . ?\>)
                              ) 
   "Electric pairs for Org-mode.")
 
@@ -530,7 +537,7 @@ I dunno why some pairs work (//, ==)and some don't (~, *, _)...
 (add-hook 'org-mode-hook 'org-add-electric-pairs)
 #+end_src
 
-These pairs 
+These pairs  
 
 #+BEGIN_EXAMPLE
                              ;; (?* . ?*) 
@@ -560,7 +567,7 @@ not included as they were obstrusive.
 #+end_src
 
 #+RESULTS:
-| (lambda nil (highlight-symbol-mode 1)) | pandoc-mode | (lambda nil (define-key markdown-mode-map  [ 'markdown-reftex-citation)) | latex-unicode-simplified | markdown-add-electric-pairs | turn-off-auto-fill |
+| visual-fill-column-mode | turn-on-visual-line-mode | (lambda nil (highlight-symbol-mode 1)) | (lambda nil (define-key markdown-mode-map  [ 'markdown-reftex-citation)) | latex-unicode-simplified | markdown-add-electric-pairs | turn-off-auto-fill |
 
 
 * Alternative: autopair

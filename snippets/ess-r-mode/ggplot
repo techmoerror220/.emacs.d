@@ -2,5 +2,5 @@
 # name: ggplot
 # key: gg
 # --
-ggplot(data = ${1:data}) +
-    geom_${2:function}(mapping = aes(x = $3, y = $0))
+ggplot(data = ${1:data}, mapping = aes(x = $2, y = $3)) +
+    geom_${0:function}()

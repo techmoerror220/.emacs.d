@@ -1365,7 +1365,7 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24473 38616 497551 554000) :init (24473 38616 428072 221000) :config (24473 38616 428018 585000) :config-secs (0 0 28280 729000) :init-secs (0 0 61985 839000) :use-package-secs (0 0 131633 503000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24483 60867 83075 741000) :init (24483 60867 81581 736000) :config (24483 60867 81568 148000) :config-secs (0 0 24557 280000) :init-secs (0 0 48803 364000) :use-package-secs (0 0 50388 492000)))
 
 
 
@@ -3667,13 +3667,13 @@ currently experimenting with.
 
 On the other hand, https://www.youtube.com/watch?v=wwW_1BQKGZ0 recommends using =use-package= for =org-drill= but if I try to download it, it doesn't exist!
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-drill
     :defer t)
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23740 30446 277086 757000) :init (23740 30446 277078 344000) :config (23740 30446 276902 462000) :config-secs (0 0 65 157000) :init-secs (0 0 497 24000) :use-package-secs (0 4 248697 983000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24483 60905 183206 789000) :init (24483 60905 183198 834000) :init-secs (0 0 92 493000) :use-package-secs (0 17 178623 784000)))
 
 **** Org-drill customization
 

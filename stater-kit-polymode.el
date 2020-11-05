@@ -18,15 +18,6 @@
   :defer t
   :mode (("\\.yml\\'" . yaml-mode)))
 
-(defun my_pipe_operator ()
-  "R/ESS %>% operator"
-  (interactive)
-  (just-one-space 1)
-  (insert "%>%")
-  (reindent-then-newline-and-indent))
-(define-key ess-mode-map (kbd "C->") 'my_pipe_operator)
-(define-key inferior-ess-mode-map (kbd "C->") 'my_pipe_operator)
-
 ;;;Insert new chunk for Rmarkdown
 (defun kjh-insert-r-chunk (header) 
   "Insert an r-chunk in markdown mode." 
@@ -34,7 +25,7 @@
   (insert (concat "```{r " header "}\n\n```")) 
   (forward-line -1))
 
-(global-set-key (kbd "C-c i") 'kjh-insert-r-chunk)
+;; (global-set-key (kbd "C-c i") 'kjh-insert-r-chunk)
 
 (autoload 'markdown-mode "markdown-mode"
       "Major mode for editing Markdown files" t)
