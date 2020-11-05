@@ -1,0 +1,7 @@
+# key: ggf
+# name: ggplot_full
+# --
+ggplot(data = ${1:data}, mapping = aes(x = $2, y = $3)) +
+  geom_${4:function}(stat = $5, position = $6)          +
+  coord_${7:function}                                   +
+  facet_${0:function}
