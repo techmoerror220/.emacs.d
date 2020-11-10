@@ -148,7 +148,7 @@ Enlarge/Shrink by ARG columns, or 5 if ARG is nil."
   (interactive "P")
   (if (= (count-windows) 2)
       (ambrevar/move-border-left-or-right arg t)))
-(global-set-key (kbd "M-(") 'ambrevar/move-border-left)
+ (global-set-key (kbd "M-(") 'ambrevar/move-border-left)
 
 (defun ambrevar/move-border-left-or-right (arg dir-left)
   "Wrapper around ‘move-border-left’ and ‘move-border-right’.
@@ -168,7 +168,7 @@ If DIR-LEFT is t, then move left, otherwise move right."
   (interactive "P")
   (if (= (count-windows) 2)
       (ambrevar/move-border-left-or-right arg nil)))
-(global-set-key (kbd "M-)") 'ambrevar/move-border-right)
+ (global-set-key (kbd "M-)") 'ambrevar/move-border-right)
 
 (defun ambrevar/reset-fill-column ()
   "Reset `fill-column' to its default value."

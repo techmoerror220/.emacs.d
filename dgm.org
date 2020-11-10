@@ -224,9 +224,11 @@ Edit multiple regions in the same way simultaneously
 
 Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-occurrence-editing-in-your-buffer
 
+DGM: On 7 nov 2020 I take this out as I need it for =paredit-forward-barf-sexp=
+    :bind (("C-}" . iedit-mode))
+
 #+begin_src emacs-lisp :tangle yes
   (use-package iedit
-    :bind (("C-}" . iedit-mode))
     :init
     (setq iedit-toggle-key-default nil))
 
@@ -4372,6 +4374,15 @@ See https://github.com/darksmile/cheatsheet/blob/master/cheatsheet.el
 
 Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
 
+The following I've taken away.
+
+#+BEGIN_EXAMPLE
+(cheatsheet-add :group 'Lisp
+:key "s-\("
+:description "helm-eval-expression-with-eldoc interactively evaluates elisp exp")
+#+END_EXAMPLE
+
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package cheatsheet
     :defer t
@@ -4449,7 +4460,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "s-b"
                     :description "helm-surfraw")
     (cheatsheet-add :group 'Browsing
-                    :key "C-\{"
+                    :key "s-!"
                     :description "daedreth/launch-browser")
     (cheatsheet-add :group 'Browsing
                     :key "R"
@@ -4749,9 +4760,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Editing
                     :key "M-/"
                     :description "hippie-expand")
-    (cheatsheet-add :group 'Editing
-                    :key "s-!"
-                    :description "toggle-theme")
     (cheatsheet-add :group 'Editing
                     :key "s-y"
                     :description "ivy-yasnippet")
@@ -5296,9 +5304,6 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "M-:"
                     :description "Evaluate EXPRESSION and pretty-print its value.")
     (cheatsheet-add :group 'Lisp
-                    :key "s-\("
-                    :description "helm-eval-expression-with-eldoc interactively evaluates elisp exp")
-    (cheatsheet-add :group 'Lisp
                     :key "s-\)"
                     :description "ap/helm-info-emacs-elisp-cl: Emacs and eLisp manual with Helm")
     (cheatsheet-add :group 'Mark
@@ -5841,9 +5846,60 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
     (cheatsheet-add :group 'Pandoc
                     :key "C-c /"
                     :description "pandoc-main-hydra/body. Call the body in the pandoc-main-hydra hydra.")
-    (cheatsheet-add :group 'Paredit
+    (cheatsheet-add :group 'Parens
+                    :key "C-("
+                    :description "paredit-backward-slurp-sexp. Add preceding sexp into current list by moving the closing delimiter")
+    (cheatsheet-add :group 'Parens
+                    :key "C-)"
+                    :description "paredit-forward-slurp-sexp. Add next sexp into current list by moving the closing delimiter")
+    (cheatsheet-add :group 'Parens
+                    :key "C-{"
+                    :description "paredit-backward-barf-sexp. Remove first sexp in current list by moving closing delimiter")
+    (cheatsheet-add :group 'Parens
+                    :key "C-}"
+                    :description "paredit-forward-barf-sexp.  Remove last sexp in current list by moving closing delimiter")
+    (cheatsheet-add :group 'Parens
+                    :key "M-("
+                    :description "paredit-wrap-round. Wrap the following sexp")
+    (cheatsheet-add :group 'Parens
+                    :key "M-["
+                    :description "paredit-wrap-square")
+    (cheatsheet-add :group 'Parens
+                    :key "M-{"
+                    :description "paredit-wrap-curly")
+    (cheatsheet-add :group 'Parens
+                    :key "M-)"
+                    :description "paredit-close-round-and-newline. Move past one closing delimiter, add a newline, and reindent")
+    (cheatsheet-add :group 'Parens
+                    :key "M-]"
+                    :description "paredit-close-square-and-newline")
+    (cheatsheet-add :group 'Parens
+                    :key "M-}"
+                    :description "paredit-close-curly-and-newline")
+    (cheatsheet-add :group 'Parens
+                    :key "M-\""
+                    :description "paredit-meta-doublequote. Move to the end of the string")
+    (cheatsheet-add :group 'Parens
+                    :key "M-S"
+                    :description "paredit-split-sexp. Split the list or string the point is on into two")
+    (cheatsheet-add :group 'Parens
+                    :key "M-J"
+                    :description "paredit-join-sexps. Join the sexps adjacent on either side of point")
+    (cheatsheet-add :group 'Parens
                     :key "M-s"
-                    :description "paredit-splice. Unwrap expression where point is inside.")
+                    :description "paredit-splice. Unwrap expression where point is inside. Splice the list that the point is on by removing its delimiters")
+    (cheatsheet-add :group 'Parens
+                    :key "M-r"
+                    :description "paredit-raise-sexp. Raise the following sexp in a tree, deleting its siblings")
+    (cheatsheet-add :group 'Parens
+                    :key "M-<backspace>"
+                    :description "paredit-backward-kill-word. Kill a word backward, skipping over intervening delimiters")
+    (cheatsheet-add :group 'Parens
+                    :key "M-<up>"
+                    :description "paredit-forward-kill-word. Splice the list the point is on by removing delimiters, and also kill all sexp before the point in the current list")
+    (cheatsheet-add :group 'Parens
+                    :key "M-<down>"
+                    :description "paredit-splice-sexp-killing-forward. Splice the list the point is on by removing its delimiters, and   also kill all sexps after the point in the current list")
     (cheatsheet-add :group 'Password
                     :key "M-x password-store"
                     :description "password-store")
@@ -5908,10 +5964,10 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
                     :key "xah-toggle-margin-right"
                     :description "For reading novel or documentation: Toggle right margin")
     (cheatsheet-add :group 'Redshift
-                    :key "C-\("
+                    :key "s-\("
                     :description "Redshift on. If repeated, intensity increases")
     (cheatsheet-add :group 'Redshift
-                    :key "C-\)"
+                    :key "s-\)"
                     :description "Redshift off")
     (cheatsheet-add :group 'Rectangle-editing
                     :key "C-x r k"
@@ -6089,7 +6145,7 @@ Run =cheatsheet-show= and enjoy looking at your own Emacs cheatsheet.
  #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24480 8600 933992 270000) :init (24480 8600 933928 700000) :init-secs (0 0 3459 787000) :use-package-secs (0 0 3591 237000) :config (24480 8600 933915 544000) :config-secs (0 0 3443 641000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24487 53019 12850 503000) :init (24487 53019 12777 425000) :init-secs (0 0 46 140000) :use-package-secs (0 0 188 876000)))
 
 
 * Get various new windows at the bottom of the screen

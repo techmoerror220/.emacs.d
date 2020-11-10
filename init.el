@@ -283,7 +283,7 @@ ARCHIVE is the string name of the package archive.")
 
 (use-package exwm
   :bind
-  (("C-\{" . daedreth/launch-browser)
+  (("s-!" . daedreth/launch-browser)
    ("s-:"  . ambrevar/toggle-window-split)
    ("s-;"  . rotate-windows))
   :init
@@ -494,11 +494,11 @@ ARCHIVE is the string name of the package archive.")
             (setq exwm-randr-workspace-output-plist (list 0 (match-string 1))))))))
 
   ;; Redshift off
-  (exwm-input-set-key (kbd "C-\)")
+  (exwm-input-set-key (kbd "s-\)")
                       (lambda () (interactive) (start-process "" nil "redshift" "-x")))
 
   ;; Redshift on
-  (exwm-input-set-key (kbd "C-\(")
+  (exwm-input-set-key (kbd "s-\(")
                       (lambda () (interactive) (start-process "" nil "redshift" "-O" "3500")))
 
   (exwm-input-set-key (kbd "s-<left>") #'windmove-left)

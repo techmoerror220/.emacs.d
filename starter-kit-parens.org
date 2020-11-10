@@ -7,476 +7,6 @@
 
 Adding this line to test magit.
 
-* COMMENT Smartparens Mode
-
-I have commented this out as I am going to test the config in [[/media/dgm/blue/documents/programming/emacs/smartparens/Emacs and Pairs2.pdf]]
-
-Smart autopairing of quotes and parentheses. The original config was this, but it was too intrusive with org-mode.
-
-#+begin_src emacs-lisp :tangle no
-(use-package smartparens
-  :defer t
-  :diminish smartparens-mode
-  :config
-  (progn
-    (require 'smartparens-config)
-    ;; (smartparens-global-mode 1) ;; disabled by dgm on 29 dic 2019 to try and get bindings in Org mode
-    (show-smartparens-global-mode +1)
-    (sp-use-paredit-bindings)
-    (setq sp-base-key-bindings 'paredit)
-    (setq sp-autoskip-closing-pair 'always)
-    (setq sp-hybrid-kill-entire-symbol nil)))
-#+end_src
-
-This is Sacha Chua's config (without her keybindings) customized with https://zzamboni.org/post/my-emacs-configuration-with-commentary/
-
-
-** COMMENT Hook to avoid clash with =smartparens= keybindings
-
-- Solution inspired here 
-https://www.reddit.com/r/emacs/comments/3dn226/help_with_smartparens_and_overriding_bindings/
-- Otherwise, =M-up= and =M-down= were owned by =smartparens= and could not move around in org tables.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-hook 'org-mode-hook (lambda () 
-                           (setq sp-override-key-bindings '(("M-<up>"   . nil)
-                                                            ("M-D"      . nil)
-                                                            ("M-<down>" . nil)))))
-#+END_SRC
-
-Note of Dic 30, 2018: This worked but the new solution in the prior chunk works too and seems more parsimonious.
-
-
-** Add / remove parenthesis / bracket / single or double quotation marks around a marked region
-
-From:  https://stackoverflow.com/questions/25097278/how-to-add-remove-parenthesis-around-a-marked-region-in-emacs
-Read also:  https://www.emacswiki.org/emacs/InsertPair
-
-Notice that now that I use =smartparens=,  for enclosing marked region in =()=, I do =M-(= (for =sp-wrap-round=) and =M-x unwrap-sexp= to unwrap (marked region not including the parenthesis).
-
-Disabled by DGM on 7 august 2019 
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun insert-quotations (&optional arg)
-  "Enclose following ARG sexps in quotation marks.
-Leave point after open-paren."
-  (interactive "*P")
-  (insert-pair arg ?\' ?\'))
-
-(defun insert-quotes (&optional arg)
-  "Enclose following ARG sexps in quotes.
-Leave point after open-quote."
-  (interactive "*P")
-  (insert-pair arg ?\" ?\"))
-
-(defun insert-backquote (&optional arg)
-  "Enclose following ARG sexps in quotations with backquote.
-Leave point after open-quotation."
-  (interactive "*P")
-  (insert-pair arg ?\` ?\'))
-
-(global-set-key "\M-'" 'insert-quotations)
-(global-set-key "\M-\"" 'insert-quotes)
-(global-set-key (kbd "C-'") 'insert-backquote)
-#+END_SRC
-
-#+RESULTS:
-: insert-backquote
-
-* COMMENT Enclose next =sexp= in parentheses
-
-From: https://zzamboni.org/post/my-emacs-configuration-with-commentary/
-Disabled by DGM as it probably interferes with smartparens
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun zz/sp-enclose-next-sexp (num) (interactive "p") (insert-parentheses (or num 1)))
-(global-set-key (kbd "M-[") 'zz/sp-enclose-next-sexp)
-#+END_SRC
-
-#+RESULTS:
-: zz/sp-enclose-next-sexp
-
-** COMMENT Mark text between parentheses (a =sexp=) for selection
- Mark text between parentheses. From [[http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-parentheses-in-emacs][this Stackoverflow answer]]. But I think it might conflict with smartparens, so I disable it. 
-
-#+source: backward-up-sexp
-#+begin_src emacs-lisp :tangle no
-(defun backward-up-sexp (arg)
-  (interactive "p")
-  (let ((ppss (syntax-ppss)))
-    (cond ((elt ppss 3)
-           (goto-char (elt ppss 8))
-           (backward-up-sexp (1- arg)))
-          ((backward-up-list arg)))))
-
-(global-set-key [remap backward-up-list] 'backward-up-sexp)  
-#+end_src
-
-* New trial taken from article
-** COMMENT Loading smartparens
-
-Issue: 
-With =(smartparens-global-mode 1)= everything works wonderfully except for Stata's do files where I get an error I don't get without this =global-mode=. However, if I get rid of of the =global-mode=, then, for some reason I don't get the double =equaly sign= in org-mode and, I imagine, other goodies. So it is not worthwhile... I keep the =global-mode= until I read the =smartparens= instructions for good.
-
-That is: if I interactively activate =smartparens=, then when I type ~=~ or =~= in org-mode, they don't pair. But when I am coding, I can activate =smartparens= interactively and use them! 
-
-Disabled by DGM on 7 august 2019:
-
-#+BEGIN_SRC emacs-lisp :tangle no
-    (use-package smartparens
-      ;;:ensure t
-      ;; :diminish smartparens-mode
-      :config
-        (require 'smartparens-config)
-        ;; http://ivanmalison.github.io/dotfiles/  
-        ;; I reintroduce these two lines so that I can have =sp-local-pair='s defined for org-mode below working
-        ;; Plus =M-up= and =M-down= continue working as they should
-        ;;;;;;;;;;;;;;; disabled by dgm on 2 may 2019. This move is what makes stata.do's work without error. However, now I don't have smartparens in org-mode.
-        ;;;;;;;;;;;;;;; disabled again by dgm on 7 sept 2019 to try and get kill-region mapped to C-w again.
-        (smartparens-global-mode 1)
-        ;;;;;;;;;;;;;;; tuhdo setup
-        (setq sp-base-key-bindings 'paredit)
-        (setq sp-autoskip-closing-pair 'always)
-        (setq sp-hybrid-kill-entire-symbol nil)
-        (sp-use-paredit-bindings)
-        ;; back to sacha... Commented out in favor of the hook: option
-        ;; (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
-        ;; (add-hook 'emacs-lisp-mode-hook 'show-smartparens-mode)
-        ;; dgm
-        ;; (add-hook 'ess-R-post-run-hook 'smartparens-mode)
-        ;; (add-hook 'ess-stata-post-run-hook 'smartparens-mode)
-        ;; (add-hook 'ess-stata-mode-hook 'smartparens-mode)
-
-  ;;;;;;;;;;;;;;;;;;
-        ;; pair management
-        (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
-        (sp-local-pair 'web-mode "<" nil :when '(my/sp-web-mode-is-code-context))
-
-    ;;; markdown-mode
-        (sp-with-modes '(markdown-mode gfm-mode rst-mode)
-          (sp-local-pair "*" "*" :bind "C-*")
-          (sp-local-tag "2" "**" "**")
-          (sp-local-tag "s" "```scheme" "```")
-          (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
-
-    ;;; trying this again. It works for org-mode but it doesn't for tex modes... uhmm Now it is not working with org-mode either. ahhhgggg!!
-        (sp-with-modes '(tex-mode plain-tex-mode latex-mode org-mode)
-          (sp-local-pair "`" "'")
-          (sp-local-pair "``" "''")
-      ;;  (sp-local-pair """ """) ;; with this I get error on startup
-      ;;  (sp-local-pair "'" "'")
-          (sp-local-pair "$" "$")              ;; these last two seem to not be working
-          (sp-local-pair "\left(" "\right)")) 
-
-    ;;; tex-mode latex-mode
-        (sp-with-modes '(tex-mode plain-tex-mode latex-mode)
-          (sp-local-tag "i" "1d5f8e69396c521f645375107197ea4dfbc7b792quot;<" "1d5f8e69396c521f645375107197ea4dfbc7b792quot;>"))
-
-    ;;; html-mode
-        (sp-with-modes '(html-mode sgml-mode web-mode)
-          (sp-local-pair "<" ">"))
-
-    ;; org-mode. This is not working though..
-    ;;    (sp-local-pair 'org-mode "~" "~")
-    ;; (sp-local-pair 'org-mode-hook "=" "=") ; select region, hit = then region -> =region= in org-mode
-    ;;    (sp-local-pair 'org-mode "*" "*") ; select region, hit * then region -> *region* in org-mode
-    ;;    (sp-local-pair 'org-mode "/" "/") ; select region, hit / then region -> /region/ in org-mode
-    ;;    (sp-local-pair 'org-mode "_" "_") ; select region, hit _ then region -> _region_ in org-mode
-    ;;    (sp-local-pair 'org-mode "+" "+") ; select region, hit + then region -> +region+ in org-mode
-    ;;    (sp-local-pair 'org-mode "$" "$") ; 
-    ;;    ;; (sp-local-pair 'org-mode "`" "'") ; not working, as it waits for second `
-    ;;   (sp-local-pair 'org-mode "``" "''") 
-    
-    ;;; lisp modes
-    ;;    (sp-with-modes sp--lisp-modes
-    ;;      (sp-local-pair "(" nil :bind "C-(")  ;; remember that C-[ does the same.]
-    ;;      (sp-local-pair "<" ">")) 
-
-    ;; elisp mode
-       (sp-local-pair 'elisp-mode "<" ">") 
-
-    ;; ess-stata-mode. This seems to not work
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; (sp-local-pair 'ess-stata-mode-hook "`" "'")
-
-    ;; este parece el bueno para hacerlo funcionar en stata! 
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; (sp-local-pair 'ess-stata-mode "`" "'")
-    ;; (sp-local-pair 'ess-mode "`" "'")
-    ;; (sp-local-pair 'ess-stata-mode-hook "'" "'") ;; if I include this, the above two lines don't work, why??s
-
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; (sp-with-modes '(ess-stata-mode ess-stata-mode-hook)
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    (sp-local-pair "`" "'"))
-
-    ;;; http://ivanmalison.github.io/dotfiles/
-      (unbind-key "M-D" smartparens-mode-map)              ;; conflicts with duplicate line.
-      (unbind-key "M-<up>" smartparens-mode-map)           ;; conflicts with org-mode commands for moving around rows 
-      (unbind-key "M-<backspace>" smartparens-mode-map)    ;; conflicts with basic command for killing last word.
-      (unbind-key "M-<down>" smartparens-mode-map))
-
-    ;; if ess-mode included here, then I get error in Stata
-    ;; also, originally, I had org-mode included but that meant that I could not delete one parenthesis.
-  ;;  :hook 
-  ;;      ((emacs-lisp-mode
-  ;;        lisp-mode
-  ;;        racket-mode
-  ;;        racket-repl-mode) . smartparens-strict-mode))       ;; and headings.
-#+END_SRC
-
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23766 29242 626765 328000) :init (23766 29242 626756 564000) :config (23766 29242 626625 205000) :config-secs (0 0 14730 852000) :init-secs (0 0 14997 576000) :use-package-secs (0 0 15055 623000)))
-
-The =sp-= bits come from http://tuhdo.github.io/emacs-tutor3.html
-
-Disabled as I got =(void-function sp-local-pair)=.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) 
-(sp-local-pair 'emacs-lisp-mode "`" nil :actions nil) 
-
-(sp-local-pair 'racket-mode "'" nil :actions nil) 
-(sp-local-pair 'racket-mode "`" nil :actions nil)
-
-(sp-local-pair 'fundamental-mode "'" nil :actions nil) 
-(sp-local-pair 'fundamental-mode "`" nil :actions nil)
-
-(sp-local-pair 'org-mode "'" nil :actions nil) 
-(sp-local-pair 'org-mode "`" nil :actions nil)
-
-;;(sp-local-pair 'latex-mode "=" nil :actions nil) 
-
-;;   (smartparens-global-mode 1)
-;;  (require 'smartparens-config) ;; To use the default configuration that smartparens provides for Lisp modes generally and for racket-mode specifically
-#+end_src
-
-** COMMENT Smartparens config
-Trying the setup here:
-[[/media/dgm/blue/documents/programming/emacs/smartparens/Emacs and Pairs2.pdf]]
-
-Take note, though, that the name is a misnomer, as it not only handles parentheses. It handles just about anything that pairs
-
-Changed =show-smartparens-global-mode t= to =nil= on 7 sept 2019 to try and make =kill-region= work. I have commented the rest as well.
-
-Daniel Guinea Martín disables this on Fri Oct 18 13:22:56 2019, as I have previously disabled smartparens.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package smartparens-config
-  :ensure smartparens)
-  ;; :config (progn (show-smartparens-global-mode nil)))
-
-;; (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
-;; (add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
-#+END_SRC
-
-** COMMENT Bindings
-
-Daniel Guinea Martín disables this on Fri Oct 18 13:25:06 2019, as I have previously disabled smartparens.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defmacro def-pairs (pairs)
-  "Define functions for pairing. PAIRS is an alist of (NAME . STRING)
-conses, where NAME is the function name that will be created and
-STRING is a single-character string that marks the opening character.
-
-  (def-pairs ((paren . \"(\")
-              (bracket . \"[\"))
-
-defines the functions WRAP-WITH-PAREN and WRAP-WITH-BRACKET,
-respectively."
-  `(progn
-     ,@(loop for (key . val) in pairs
-             collect
-             `(defun ,(read (concat
-                             "wrap-with-"
-                             (prin1-to-string key)
-                             "s"))
-                  (&optional arg)
-                (interactive "p")
-                (sp-wrap-with-pair ,val)))))
-
-(def-pairs ((paren . "(")
-            (bracket . "[")
-            (brace . "{")
-            (single-quote . "'")
-            (double-quote . "\"")
-            (back-quote . "`")))
-
-(bind-keys
- :map smartparens-mode-map
- ("C-M-a" . sp-beginning-of-sexp)
- ("C-M-e" . sp-end-of-sexp)
-
- ("C-<down>" . sp-down-sexp)
- ("C-<up>"   . sp-up-sexp)
- ("M-<down>" . sp-backward-down-sexp)
- ("M-<up>"   . sp-backward-up-sexp)
-
- ("C-M-f" . sp-forward-sexp)
- ("C-M-b" . sp-backward-sexp)
-
- ("C-M-n" . sp-next-sexp)
- ("C-M-p" . sp-previous-sexp)
-
- ("C-S-f" . sp-forward-symbol)
- ("C-S-b" . sp-backward-symbol)
-
- ("C-<right>" . sp-forward-slurp-sexp)
- ("M-<right>" . sp-forward-barf-sexp)
- ("C-<left>"  . sp-backward-slurp-sexp)
- ("M-<left>"  . sp-backward-barf-sexp)
-
- ("C-M-t" . sp-transpose-sexp)
- ("C-M-k" . sp-kill-sexp)
- ("C-k"   . sp-kill-hybrid-sexp)
- ("M-k"   . sp-backward-kill-sexp)
- ("C-M-w" . sp-copy-sexp)
- ("C-M-d" . delete-sexp)
-
- ("M-<backspace>" . backward-kill-word)
- ("C-<backspace>" . sp-backward-kill-word)
- ([remap sp-backward-kill-word] . backward-kill-word)
-
- ("M-[" . sp-backward-unwrap-sexp)p
- ("M-]" . sp-unwrap-sexp)
-
- ("C-x C-t" . sp-transpose-hybrid-sexp)
-
- ("C-c ("  . wrap-with-parens)
- ("C-c ["  . wrap-with-brackets)
- ("C-c {"  . wrap-with-braces)
- ;; ("C-c '"  . wrap-with-single-quotes)  ;; messes around with this binding needed by =org-edit-src-exit=
- ("C-c \"" . wrap-with-double-quotes)
- ("C-c _"  . wrap-with-underscores)
- ("C-c `"  . wrap-with-back-quotes))
-#+END_SRC
-
-#+RESULTS:
-: wrap-with-back-quotes
-
-** Learning Smartparens: Map 
-*** Starts and ends
-- =C-M-a=: =sp-beginning-of-sexp=.
-- =C-M-e=: =sp-end-of-sexp=.
-
-*** Traversing lists
-
-- =C-down=: =sp-down-sexp=
-
-From 
-#+BEGIN_EXAMPLE
-(defun format-date (format)
-  "Insert date with FORMAT specification using a specific locale."
-  (let ((system-time-locale "en_US.UTF-8"))^
-    (insert (format-time-string format)))) 
-#+END_EXAMPLE
-
-To
-#+BEGIN_EXAMPLE
-(defun format-date (format)
-  "Insert date with FORMAT specification using a specific locale."
-  (let ((system-time-locale "en_US.UTF-8"))
-    (^insert (format-time-string format))))
-#+END_EXAMPLE
-
-- =C-up=: =sp-up-sexp=: from =(str ^"foo" "bar baz qux")= to =(str "foo" "bar baz qux")^=
-- =M-down=: =sp-backward-down-sexp=: from =(defn foo [bar] ^(let [x 0] x))= to =(defn foo [bar^] (let [x 0] x))=
-- =M-up=: =sp-backward-up-sexp=: from =(insert (format-time-string^ format))= to =(insert ^(format-time-string format))=
-
-*** Block movements
-- =C-M-f=: =sp-forward-sexp=: from =(:require ^[clojure.string :as s])= to =(:require [clojure.string :as s]^)=
-- =C-M-b=: =sp-forward-sexp=: from =(:require [clojure.string :as s]^)= to =(:require ^[clojure.string :as s])=
-
-*** Top-level-ish traversal
-- =C-M-n=: =sp-next-sexp=
-
-From
-#+BEGIN_EXAMPLE
-(defn blah
-  "Returns blah of foo."^
-  [foo]                 
-  )
-#+END_EXAMPLE
-
-To
-#+BEGIN_EXAMPLE
-(defn blah
-  "Returns blah of foo."
-  ^[foo]                 
-  )
-#+END_EXAMPLE
-
-- =C-M-p=: =sp-previous-sexp=
-
-*** Free-form movements
-They navigate around expressions as if delimiters, like parens, brackets, and braces do not exist.
-
-- =C-S-b=: =sp-backward-symbol=: from =(defn blah [] (^let [x 0 y 1] (+ x 1)))= to =(defn ^blah [] (let [x 0 y 1] (+ x 1)))=
-- =C-S-f=: =sp-forward-symbol=: from =(defn blah [^] (let [x 0 y 1] (+ x 1)))= to =(defn blah [] (let^ [x 0 y 1] (+ x 1)))=
-
-*** Wrapping
-
-- =C-M-Space= selects region and then =[= surrounds whole region with matching [ and ]
-- It also applies to keys like (, {, ", ', *, _, etc, depending on the mode that you’re using.
-- =C-c (=
-- =C-c [=
-- =C-c {=
-
-**** In Org-mode
-- =s-~=  
-- ="s-="=
-
-*** Unwrapping
-- =M-[=: =sp-backward-unwrap-sexp=: from =(foo ^(bar x y z))= to =foo ^(bar x y z)=
-- =M-]=: =sp-unwrap-sexp=: from =(foo ^(bar x y z))= to =(foo bar x y z)=
-
-*** Slurp and barf
-- =C-right=: =sp-forward-slurp-sexp=: from =[foo bar^] baz= to =[foo bar ^baz]=. NB: critical that ^ be inside ] for this to work.
-  + Conversly, =M-right=: =sp-forward-barf-sexp=: from =[foo bar ^baz]= to =[foo bar^] baz= 
-- =C-left=: =sp-backward-slurp-sexp=: from =blah [foo bar^]= to =[blah foo bar^]=
-  + =M-left=: =sp-backward-barf-sexp= from =[blah foo bar^]= to =blah [foo bar^]= 
-
-*** Swapping
-- =C-M-t=: =sp-transpose-sexp=: from ="foo" ^"bar"= to ="bar" ^"foo"=
-
-*** Killing
-- =C-M-k=: =sp-kill-sexp=: from =(let [x "xxx" y ^"y yy yyy" z 0])= to =(let [x "xxx" y ^ z 0])=
-- =C-k=: =sp-kill-hybrid-sexp=: from =(let [x "xxx" y ^"y yy yyy" z 0])= to ==(let [x "xxx" y])= 
-- =M-k=: =sp-backward-kill-sexp=: from =(:require [clojure.string :as s]^)= to =(:require ^)=
-
-
-** COMMENT Smartparens for different minor modes
-
-Daniel Guinea Martín disables this on Fri Oct 18 13:25:06 2019, as I have previously disabled smartparens.
-
-#+BEGIN_SRC emacs-lisp :tangle no
- ;; (require 'smartparens-text)
- ;; (require 'smartparens-org)
- (require 'smartparens-ess)
- ;; (require 'smartparens-markdown)
- (require 'smartparens-racket)
- ;; (require 'smartparens-latex)
- #+END_SRC
-
-#+RESULTS:
-: smartparens-text
-
-#+BEGIN_SRC emacs-lisp :tangle no :results silent
-(sp-with-modes 'org-mode
-  (sp-local-pair "~" "~" :bind "s-~")
-  (sp-local-pair "=" "=" :bind "s-="))
-
-;;(sp-local-pair 'org-mode-hook "=" "=")
-;;(sp-local-pair 'org-mode-hook "\[" "\]")
-  ;; org-mode. This is not working though...
-  ;;    (sp-local-pair 'org-mode "~" "~")
-  ;; (sp-local-pair 'org-mode-hook "=" "=") ; =select= region, hit = then region -> =region= in org-mode
-  ;;    (sp-local-pair 'org-mode "*" "*") ; select region, hit * then region -> *region* in org-mode
-  ;;    (sp-local-pair 'org-mode "/" "/") ; select region, hit / then region -> /region/ in org-mode
-  ;;    (sp-local-pair 'org-mode "_" "_") ; select region, hit _ then region -> _region_ in org-mode
-  ;;    (sp-local-pair 'org-mode "+" "+") ; select region, hit + then region -> +region+ in org-mode
-  ;;    (sp-local-pair 'org-mode "$" "$") ; 
-  ;;    ;; (sp-local-pair 'org-mode "`" "'") ; not working, as it waits for second `
-  ;;   (sp-local-pair 'org-mode "``" "''") 
-#+END_SRC
 
 * Electric pair mode
 From http://ergoemacs.org/emacs/emacs_insert_brackets_by_pair.html
@@ -490,11 +20,6 @@ Emacs 24 has a new minor mode electric-pair-mode. When on, typing any left brack
 
 Brackets includes ASCII and Unicode brackets or quotation marks. Deleting one bracket doesn't delete the other. Exactly which brackets are auto-closed depends on the current major mode's syntax table. If you always want certain brackets be inserted in pairs, you can customize the variable electric-pair-pairs. Its value should be a Association List. For example, the curly bracket ={}= isn't auto-closed when in emacs-lisp-mode. You can make it do so, like this:
 
-NB: 
-        (?\< . ?\>)
-        (?\' . ?\')
-
-are not included because I don't want double '' in Lisp, and neither do I want <> in R...
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; make electric-pair-mode work on more brackets
@@ -508,6 +33,14 @@ are not included because I don't want double '' in Lisp, and neither do I want <
 
 #+RESULTS:
 : ((34 . 34) (123 . 125) (91 . 93) (60 . 62) (39 . 39) (96 . 39))
+
+NB: 
+#+BEGIN_EXAMPLE
+(?\< . ?\>)
+(?\' . ?\')
+#+END_EXAMPLE
+
+are not included because I don't want double =''= in Lisp, and neither do I want =<>= in R...
 
 ** Electric Pair for Org-Mode
 And now on to Org mode: 
@@ -586,18 +119,17 @@ Phil: It's not for everyone, just for the kind of person you should aspire to be
 
 Sacha: What is it like for you? How do you wrap your brain around not just the slurping and barfing, but all the other things you can do with it? 
 
-Phil: The main thing people get tripped up on, I think, is that paredit will refuse to do certain things hen it can tell that those operations will result in broken pairing. 
+Phil: The main thing people get tripped up on, I think, is that paredit will refuse to do certain things when it can tell that those operations will result in broken pairing. 
 
 Sacha: The number of times I've hit C-q )! 
 
-Phil: Right, yeah. It's trying to set you on the right path, so it does that by just making sure that all the operations it does are protected. Every time you insert a paren, you have to insert a matching one. Every time you kill, you can only kill up to the end. Otherwise that would leave your code in an invalid state. As long as you limit yourself to the commands it knows about, it provides this guarantee. C-w (kill-region) is not one of those commands, so you have to train yourself to avoid that. When you use kill-region, you're
+Phil: Right, yeah. It's trying to set you on the right path, so it does that by just making sure that all the operations it does are protected. Every time you insert a paren, you have to insert a matching one. Every time you kill, you can only kill up to the end. Otherwise that would leave your code in an invalid state. As long as you limit yourself to the commands it knows about, it provides this guarantee. =C-w= (=kill-region=) is not one of those commands, so you have to train yourself to avoid that. When you use =kill-region=, you're
 saying, "No, paredit, I know better than you," which is usually not the case. But once you've internalised that, you end up working on a higher level where you're not thinking in terms of characters any more, but in terms of expressions. You're saying, "I want to kill this whole string or this whole form", not, "I want to kill from this point up to this point".
 It's higher level commands, I would say. Especially people who are new to Lisp, they think this is so intimidating, seeing all these parentheses everywhere. If you have paredit on, it's... it does take some adaptation, but it's no additional mental overhead for you. You're changing the structure directly. 
 
-Sacha: Okay, so basically, just keep at it, and keep your fingers off of C-w, and eventually you'll get the hang of it. 
+Sacha: Okay, so basically, just keep at it, and keep your fingers off of =C-w=, and eventually you'll get the hang of it. 
 
-Phil: One thing you can do is unbind C-w temporarily, or change it to another binding. Actually, one thing I did when I started using my (inaudible) keyboard–this is my travel board that I designed. You can see it has 42 keys. I had to move tab way off into the corner. It's not very convenient. Most programs that are Unix-y, anything running in a terminal will interpret C-i as a tab, because inside a terminal, they are literally the same. Pressing TAB sends a C-i (inaudible), but Emacs does the translation, even when it's in a
-GUI. I was able to teach my web browser to do the same. That was great when I was on here. But it was so tempting… I kept wanting to push this key here that doesn't actually exist. So what I ended up doing was taking my regular keyboard that I use when I'm in the office, and plucking out that key, so there's no more key cap there any more. You learnreally quick then. 
+Phil: One thing you can do is unbind =C-w= temporarily, or change it to another binding. Actually, one thing I did when I started using my (inaudible) keyboard–this is my travel board that I designed. You can see it has 42 keys. I had to move =tab= way off into the corner. It's not very convenient. Most programs that are Unix-y, anything running in a terminal will interpret =C-i= as a =tab=, because inside a terminal, they are literally the same. Pressing =TAB= sends a =C-i= (inaudible), but Emacs does the translation, even when it's in a GUI. I was able to teach my web browser to do the same. That was great when I was on here. But it was so tempting… I kept wanting to push this key here that doesn't actually exist. So what I ended up doing was taking my regular keyboard that I use when I'm in the office, and plucking out that key, so there's no more key cap there any more. You learn really quick then. 
 
 Sacha: That's really hardcore. I remember the time I bound my left control to ring a bell, because I was trying to get used to the Caps as control thing. Negative reinforcement or just making things less functional to force yourself into new ways. I'm a little curious, because you mentioned 42 keys… You'd imagine, with Emacs, you'd want to add more keys instead of reducing the number of keys. How does it work with key chords and stuff? 
 
@@ -607,28 +139,29 @@ Settings actually copied from https://github.com/bbatsov/emacs.d
 
 - Need to read: https://stackoverflow.com/q/5242380
 - Summary:
-   + C-u and C-q will allow you to escape the next keystroke. 
+   + =C-u= and =C-q= will allow you to escape the next keystroke. 
 
 Give paredit mode a chance. I, too, was really annoyed with it automatically closing my parens, and refusing to delete just a single
 paren for me.
 
-But doing this enables it to be certain at all times that the buffer is a well-balanced sexp, so it can perform many useful sexp-oriented tasks for you instead of just text-oriented
-tasks. For example, I use the followign all the time:
+But doing this enables it to be certain at all times that the buffer is a well-balanced =sexp=, so it can perform many useful sexp-oriented tasks for you instead of just text-oriented tasks. For example, I use the following all the time:
 
- =M-(= to wrap a sexp with a new one, eg turn (map f some-list) into (doto (map f some-list) println)
+ =M-(= to wrap a =sexp= with a new one, e.g., turn (map f some-list) into (doto (map f some-list) println)
  =C-)= to "slurp" another sexp into the current one, eg turn (let [x 10]) (println x) into (let [x 10] (println x))
  =M-<UP>= and/or =M-r= to pull the sexp at point a level "higher" in the source tree, destroying the thing that was wrapping it, eg to turn (first (map f some-list)) into (map f some-list) or (first some-list)
 
 There are zillions of useful features like this, that let you start editing code instead of text. And while there are plenty of excellent Lisp hackers who don't like paredit mode, I advise you not to decide against it before you realize the awesome stuff it can do for you.
 
-- I absolutely agree. I hated paredit at first, but I soon missed it enough in every other language mode that I bound some of paredit's functions in those modes too. For example, M-( for paredit-wrap-round, which encloses the following expressing in parens. Most programming language modes have a concept of sexps for that language's expressions and
- tokens, so the paredit functions often just Do The Right Thing. 
+- I absolutely agree. I hated paredit at first, but I soon missed it enough in every other language mode that I bound some of paredit's functions in those modes too. For example, =M-(= for =paredit-wrap-round=, which encloses the following expressing in parens. Most programming language modes have a concept of sexps for that language's expressions and tokens, so the paredit functions often just Do The Right Thing. 
 
 ** Emacs Rocks's Tutorial 
 - Paredit is about treating the code not as text to be inserted and erased, but as a tree to be manipulated.
 - =M-(= for =wrap-round= or start a =(= and enclose in it the following expression.
 - =C-<right> for =forward-slurp-sexp=: include next expresion inside brackets.
+   + =C-)= for =paredit-forward-slurp-sexp=
+- =C-{= for =paredit-backward-barf-sexp=: Remove the first S-expression in the current list from that list by moving the closing delimiter.
 - =C-<left> for =forward-barf-sexp=
+   + =C-}= for =paredit-forward-barf-sexp=
 - =M-r= for =raise-sexp= or te quedas con uno de los dos predicados en una expression. Replaces the entire paren with the child.
 - =M-<up>= for =splice-sexp-killing-backward= or kill all that comes earlier in the expression.
 - =M-?= for =convolute-sexp= for when you have two nested expressions. This will make the inner expression the outer one and vice versa. This is called "convoluting" an expression, though I still need to understand it better.
@@ -646,15 +179,12 @@ His examples are:
   (do-more-things)
   (conclude-doing,things))
 
-
-
 (defun my-other-command ()
   (when (and (this-predicate)
              (that-predicate))
     (do-something)
     (do-some-more)
     (do-a-third-thing)))
-
 
 (defun another-command ()
   (when (and (some-predicate)
@@ -665,12 +195,10 @@ His examples are:
       (do-something-more)
       (do-even-more))))
 
-
 (defun some-command ()
   (do-stuff "this here ") (" is a string" 123)
   (do-stuff (more-stuff "something"
                         "and more")))
-
 
 (ns adventur-engine.execute-room
     (:use adventur-engine.utils)
@@ -710,95 +238,95 @@ Note:
     (add-hook 'ess-stata-mode-hook        #'enable-paredit-mode)
     (add-hook 'ledger-mode-hook           #'enable-paredit-mode) 
 
-
     (add-hook 'org-mode-hook              'paredit-mode)
     (add-hook 'latex-mode-hook            'paredit-mode)
     (add-hook 'TeX-mode-hook              'paredit-mode)
+    (add-hook 'ado-mode-hook              'paredit-mode)
+
+
 #+END_EXAMPLE
 
 Doesn't work.  
    
 #+begin_src emacs-lisp :tangle yes
-    (use-package paredit
-      :defer t
-      :config
-      (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-  ;;    (add-hook 'prog-mode-hook             'paredit-mode)
-      (add-hook 'emacs-lisp-mode-hook       'paredit-mode)
-      (add-hook 'eval-expression-minibuffer-setup-hook 'paredit-mode)
-      (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
-      (add-hook 'ielm-mode-hook             'paredit-mode)
-      (add-hook 'lisp-mode-hook             'paredit-mode)
-      (add-hook 'scheme-mode-hook           'paredit-mode)
-      (add-hook 'ado-mode-hook              'paredit-mode)
-      (add-hook 'ledger-mode-hook           'paredit-mode)
+  (use-package paredit
+    :init
+    (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+    ;;    (add-hook 'prog-mode-hook             'paredit-mode)
+    (add-hook 'emacs-lisp-mode-hook       'paredit-mode)
+    (add-hook 'eval-expression-minibuffer-setup-hook 'paredit-mode)
+    (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
+    (add-hook 'ielm-mode-hook             'paredit-mode)
+    (add-hook 'lisp-mode-hook             'paredit-mode)
+    (add-hook 'scheme-mode-hook           'paredit-mode)
+    (add-hook 'ledger-mode-hook           'paredit-mode)
 
-  (defun paredit-barf-all-the-way-backward ()
-    (interactive)
-    (paredit-split-sexp)
-    (paredit-backward-down)
-    (paredit-splice-sexp))
+    (defun paredit-barf-all-the-way-backward ()
+      (interactive)
+      (paredit-split-sexp)
+      (paredit-backward-down)
+      (paredit-splice-sexp))
 
-  (defun paredit-barf-all-the-way-forward ()
-    (interactive)
-    (paredit-split-sexp)
-    (paredit-forward-down)
-    (paredit-splice-sexp)
-    (if (eolp) (delete-horizontal-space)))
+    (defun paredit-barf-all-the-way-forward ()
+      (interactive)
+      (paredit-split-sexp)
+      (paredit-forward-down)
+      (paredit-splice-sexp)
+      (if (eolp) (delete-horizontal-space)))
 
-  (defun paredit-slurp-all-the-way-backward ()
-    (interactive)
-    (catch 'done
-      (while (not (bobp))
-        (save-excursion
-          (paredit-backward-up)
-          (if (eq (char-before) ?\()
-              (throw 'done t)))
-        (paredit-backward-slurp-sexp))))
+    (defun paredit-slurp-all-the-way-backward ()
+      (interactive)
+      (catch 'done
+        (while (not (bobp))
+          (save-excursion
+            (paredit-backward-up)
+            (if (eq (char-before) ?\()
+                (throw 'done t)))
+          (paredit-backward-slurp-sexp))))
 
-  (defun paredit-slurp-all-the-way-forward ()
-    (interactive)
-    (catch 'done
-      (while (not (eobp))
-        (save-excursion
-          (paredit-forward-up)
-          (if (eq (char-after) ?\))
-              (throw 'done t)))
-        (paredit-forward-slurp-sexp))))
+    (defun paredit-slurp-all-the-way-forward ()
+      (interactive)
+      (catch 'done
+        (while (not (eobp))
+          (save-excursion
+            (paredit-forward-up)
+            (if (eq (char-after) ?\))
+                (throw 'done t)))
+          (paredit-forward-slurp-sexp))))
+    :config
+      (nconc paredit-commands
+           '("Extreme Barfage & Slurpage"
+             (("C-M-)")
+              paredit-slurp-all-the-way-forward
+              ("(foo (bar |baz) quux zot)"
+               "(foo (bar |baz quux zot))")
+              ("(a b ((c| d)) e f)"
+               "(a b ((c| d)) e f)"))
+             (("C-M-}" "M-F")
+              paredit-barf-all-the-way-forward
+              ("(foo (bar |baz quux) zot)"
+               "(foo (bar|) baz quux zot)"))
+             (("C-M-(")
+              paredit-slurp-all-the-way-backward
+              ("(foo bar (baz| quux) zot)"
+               "((foo bar baz| quux) zot)")
+              ("(a b ((c| d)) e f)"
+               "(a b ((c| d)) e f)"))
+             (("C-M-{" "M-B")
+              paredit-barf-all-the-way-backward
+              ("(foo (bar baz |quux) zot)"
+               "(foo bar baz (|quux) zot)"))))
 
-  (nconc paredit-commands
-         '("Extreme Barfage & Slurpage"
-           (("C-M-)")
-            paredit-slurp-all-the-way-forward
-            ("(foo (bar |baz) quux zot)"
-             "(foo (bar |baz quux zot))")
-            ("(a b ((c| d)) e f)"
-             "(a b ((c| d)) e f)"))
-           (("C-M-}" "M-F")
-            paredit-barf-all-the-way-forward
-            ("(foo (bar |baz quux) zot)"
-             "(foo (bar|) baz quux zot)"))
-           (("C-M-(")
-            paredit-slurp-all-the-way-backward
-            ("(foo bar (baz| quux) zot)"
-             "((foo bar baz| quux) zot)")
-            ("(a b ((c| d)) e f)"
-             "(a b ((c| d)) e f)"))
-           (("C-M-{" "M-B")
-            paredit-barf-all-the-way-backward
-            ("(foo (bar baz |quux) zot)"
-             "(foo bar baz (|quux) zot)"))))
+    (paredit-define-keys)
 
-  (paredit-define-keys)
+    (paredit-annotate-mode-with-examples)
 
-  (paredit-annotate-mode-with-examples)
-
-  (paredit-annotate-functions-with-examples)    
-      )
+    (paredit-annotate-functions-with-examples)    
+    )
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 18589 418140 756000) :init (24463 18589 418116 844000) :init-secs (0 0 38 546000) :use-package-secs (0 0 143 288000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24485 50596 522689 640000) :init (24485 50596 522675 289000) :config (24485 50596 522518 238000) :config-secs (0 0 1056 169000) :init-secs (0 0 1353 672000) :use-package-secs (0 0 1428 853000)))
 
 ;;    (add-hook 'ess-mode-hook              'paredit-mode)
 ;;    (add-hook 'inferior-ess-mode-hook     'paredit-mode)
@@ -822,6 +350,49 @@ Alternative from: http://wikemacs.org/wiki/Paredit-mode
 
 - Included in the =use-package= call.
   
+** =paredit-everywhere=
+- Slurp: eat noisily, i.e., take in, incorporate.
+- Barf:  vomit, i.e., expel 
+- Splice: join together
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package paredit-everywhere
+    :init
+    (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
+    (defvar paredit-everywhere-mode-map
+      (let ((m (make-sparse-keymap)))
+        (define-key m (kbd "C-(")           'paredit-backward-slurp-sexp)
+        (define-key m (kbd "C-)")           'paredit-forward-slurp-sexp)
+        (define-key m (kbd "C-}")           'paredit-forward-barf-sexp)
+        (define-key m (kbd "C-{")           'paredit-backward-barf-sexp)
+        (define-key m (kbd "M-(")           'paredit-wrap-round)
+        (define-key m (kbd "M-[")           'paredit-wrap-square)
+        (define-key m (kbd "M-{")           'paredit-wrap-curly)
+        (define-key m (kbd "M-)")           'paredit-close-round-and-newline)
+        (define-key m (kbd "M-]")           'paredit-close-square-and-newline)
+        (define-key m (kbd "M-}")           'paredit-close-curly-and-newline)
+        (define-key m (kbd "M-\"")          'paredit-meta-doublequote)
+        (define-key m (kbd "M-S")           'paredit-split-sexp)
+        (define-key m (kbd "M-J")           'paredit-join-sexps)
+        (define-key m (kbd "M-s")           'paredit-splice-sexp)
+        (define-key m (kbd "M-r")           'paredit-raise-sexp)
+        (define-key m (kbd "M-<backspace>") 'paredit-backward-kill-word)
+        (define-key m (kbd "M-d")           'paredit-forward-kill-word)
+        (define-key m (kbd "C-d")           'paredit-forward-delete)
+        (define-key m (kbd "DEL")           'paredit-backward-delete)
+        (define-key m (kbd "C-k")           'paredit-kill)
+        (define-key m (kbd ")")             'paredit-close-round)
+        (define-key m (kbd "M-<up>")        'paredit-splice-sexp-killing-backward)
+        (define-key m (kbd "M-<down>")      'paredit-splice-sexp-killing-forward)
+        m)
+      "Keymap for `paredit-everywhere-mode'.")
+    )
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24487 50062 575117 74000) :init (24487 50062 575086 163000) :config (24487 50062 574644 930000) :config-secs (0 0 11 550000) :init-secs (0 0 749 861000) :use-package-secs (0 0 869 302000)))
+
+
 * Latex-related tweaks
 ** Electric Pair for LaTeX
 

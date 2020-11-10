@@ -720,9 +720,11 @@
 		     (:keywords "languages" "lisp")
 		     (:url . "http://elpa.gnu.org/packages/elisp-benchmarks.html"))])
  (emms .
-       [(6 0)
+       [(6 1)
 	((cl-lib
-	  (0 5)))
+	  (0 5))
+	 (seq
+	  (0)))
 	"The Emacs Multimedia System" tar
 	((:url . "https://www.gnu.org/software/emms/")
 	 (:maintainer "Yoni Rabkin" . "yrk@gnu.org")
