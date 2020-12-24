@@ -501,6 +501,8 @@ ARCHIVE is the string name of the package archive.")
           ([?\C-y] . [?\C-v])
           ;; search
           ([?\C-s] . [?\C-f])))
+
+  (exwm-enable)
   )  ;;; este parentesis cierra el call a use-package to install exwm
 
 ;; (use-package exwm-edit)
