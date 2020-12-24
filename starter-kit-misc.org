@@ -353,7 +353,6 @@ With helm-mode active, to use Emacs default completion instead of either Helm or
 ;;  (use-package flx-ido
 ;;    :ensure t) 
 (use-package ido-vertical-mode
-    :defer t
     :init (ido-vertical-mode 1)
     (setq ido-vertical-define-keys 'C-n-and-C-p-only)
     (setq ido-vertical-show-count t))

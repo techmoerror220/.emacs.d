@@ -245,6 +245,7 @@ Read https://tex.stackexchange.com/questions/454966/biblatex-custom-entries-with
 #+source: bibtex-dialect
 #+begin_src emacs-lisp :tangle yes
 (use-package bibtex
+  :bind ("s-\]" . crossref-add-bibtex-entry)
   :custom
   (bibtex-dialect (quote biblatex))
   :config
@@ -257,7 +258,7 @@ Read https://tex.stackexchange.com/questions/454966/biblatex-custom-entries-with
 #+end_src
 
 #+RESULTS: bibtex-dialect
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24044 9385 679053 832000) :init (24044 9385 679043 369000) :config (24044 9385 678881 394000) :config-secs (0 0 4 424000) :init-secs (0 0 350 650000) :use-package-secs (0 0 773 233000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24496 493 619340 893000) :init (24496 493 619177 249000) :config (24496 493 619139 812000) :config-secs (0 0 893 152000) :init-secs (0 0 965 955000) :use-package-secs (0 0 1938 606000)))
 
 *** Keep all entries in sorted order
 

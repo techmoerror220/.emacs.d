@@ -221,16 +221,6 @@ DGM on August 5th: not needed anymore with the =context= setup (I think).
 #+RESULTS:
 | my-set-from-address |
 
-** Avoid hard wrapping or email content
-
-From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
-
-Many email services/clients expect soft-wrapped emails, so I like to use visual-line-mode and the visual-fill-column package instead of auto-fill-mode. To show whether a paragraph is hard- or soft-wrapped I also turn on visual line indicators in the fringe.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package visual-fill-column
-  :defer t)
-#+END_SRC
 
 ** Sending =html= email
 
@@ -2000,8 +1990,8 @@ DGM, 4 nov 2020: (set-fill-column 72) changed to (set-fill-column 80)
          (t
           (set-fill-column 120))))
     (set-fill-column 80))
-  (visual-line-mode 1)
-  (visual-fill-column-mode 1))
+  (visual-line-mode 1))
+  ;;(visual-fill-column-mode 1))  dgm 22 dic 2020
 
 (add-hook 'mu4e-view-mode-hook #'malb/mu4e-view-mode-hook)
 #+END_SRC
@@ -2264,8 +2254,8 @@ Read https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
          (t
           (set-fill-column 120))))
     (set-fill-column 72))
-  (visual-line-mode 1)
-  (visual-fill-column-mode 1))
+  (visual-line-mode 1))
+  ;; (visual-fill-column-mode 1)) dgm 22 dic 2020
 
 (add-hook 'mu4e-view-mode-hook #'malb/mu4e-view-mode-hook)
 #+END_SRC

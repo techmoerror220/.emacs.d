@@ -17,7 +17,7 @@ This file provides settings for ESS and R.
          ("C->"   . my_pipe_operator)
          ("C-c i" . my_in_operator)
 
-           ("C-c i" . my_assignment_operator)
+           ("C-<" . my_assignment_operator)
 
     :bind (
            ("C->"   . my_pipe_operator)
@@ -43,10 +43,12 @@ This file provides settings for ESS and R.
     :bind
     (:map ess-r-mode-map
           ("C->"   . my_pipe_operator)
+          ("C-<" . my_assignment_operator)
           ("C-c i" . my_in_operator)
           ("_"     . ess-insert-assign))
     (:map inferior-ess-r-mode-map
           ("C->"   . my_pipe_operator)
+          ("C-<" . my_assignment_operator)
           ("C-c i" . my_in_operator)        
           ("_"     . ess-insert-assign))
     :init
@@ -316,6 +318,26 @@ file:
 #+end_src
 
 This will make ado-mode load when you open an ado or do file.
+
+* My R window config
+Tip from: https://stackoverflow.com/questions/47892942/start-emacs-with-r-session-and-side-by-side-windows
+
+to start thinking how to make my desired config
+
+
+#+begin_src emacs-lisp :tangle no
+(defun my-R-window-configuration ()
+  "Prepare the current emacs frame for R work."
+  (interactive)
+  ;; maximimize the current frame:
+  (set-frame-parameter nil 'fullscreen 'maximized)
+  ;; keep just the current window, presumably containing the R code
+  (delete-other-windows)
+  ;; create ESS R interaction buffer and go there
+  (ess-switch-to-end-of-ESS)
+  ;; go back to the code
+  (other-window 1))
+#+end_src
 
 * Provide
 

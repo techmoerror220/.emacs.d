@@ -1,27 +1,31 @@
-;; dgm comments this as it appears to not be working!! reverts to old (server-star)
-;;    (require 'server)
-;;      (unless (server-running-p)
-;;        (server-start))
-
-    ;; this just enables exwm, it started automatically once everything is ready
-;; commented out now that I have the Ferguson setup    (exwm-enable))
-
-;;;;; multiple screens when working on the laptop
-;; From: https://github.com/ch11ng/exwm/wiki#randr-multi-screen
-
-;; (exwm-input-set-key (kbd "s-<left>") #'windmove-left)
-;; (exwm-input-set-key (kbd "s-<down>") #'windmove-down)
-;; (exwm-input-set-key (kbd "s-<up>") #'windmove-up)
-;; (exwm-input-set-key (kbd "s-<right>") #'windmove-right)
-;; (exwm-input-set-key (kbd "s-&") #'ambrevar/exwm-start)
-;; (global-set-key (kbd "C-\{") 'daedreth/launch-browser)
-
-;; Technomancy config for Audio. Never worked
-    (dolist (k '(("<XF86AudioLowerVolume>"
-                  "amixer sset Master 5%-")
-                 ("<XF86AudioRaiseVolume>"
-                  "amixer set Master unmute; amixer sset Master 5%+")))
-      (let ((f (lambda () (interactive)
-                 (save-window-excursion
-                   (start-process-shell-command (cadr k) nil (cadr k))))))
-        (exwm-input-set-key (kbd (car k)) f)))
+     ;; (defun exwm-change-screen-hook ()
+     ;;   (let ((xrandr-output-regexp "\n\\([^ ]+\\) connected ")
+     ;;          default-output)
+     ;;     (with-temp-buffer
+     ;;       (call-process "xrandr" nil t nil)
+     ;;       (goto-char (point-min))
+     ;;       (re-search-forward xrandr-output-regexp nil 'noerror)
+     ;;       (setq default-output (match-string 1))
+     ;;       (forward-line)
+     ;;       (if (not (re-search-forward xrandr-output-regexp nil 'noerror))
+     ;;           (call-process "xrandr" nil nil nil "--output" default-output "--auto")
+     ;;         (call-process
+     ;;          "xrandr" nil nil nil
+     ;;          "--output" (match-string 1) "--primary" "--auto"
+     ;;          "--output" default-output "--off")
+     ;;         (setq exwm-randr-workspace-output-plist (list 0 (match-string
+     ;;   1)))))))
+;; 3 "HDMI-2" is my monitor in Malaga
+  ;; (when (string=(system-name) "toshiba")
+  ;;   (require 'exwm-randr)
+  ;;   ;;(setq exwm-randr-workspace-output-plist '(0 "VGA1"))
+  ;;   ;; (setq exwm-randr-workspace-output-plist '(0 "HDMI-2"))
+  ;;   (setq exwm-randr-workspace-monitor-plist
+  ;;         '(0 "HDMI-2" 1  "HDMI-2" 2 "HDMI-2" 3 "HDMI-2" 4 "HDMI-2"
+  ;;             5 "HDMI-2" 6 "HDMI-2" 7 "HDMI-2" 8 "HDMI-2" 9 "HDMI-2"))
+  ;;   (add-hook 'exwm-randr-screen-change-hook
+  ;;             (lambda ()
+  ;;               (start-process-shell-command
+  ;;                ;; "xrandr" nil "xrandr --output HDMI-2 --left-of LVDS1 --auto")))
+  ;;                "xrandr" nil "xrandr --output eDP1-1 --off --output HDMI-2 --auto")))
+  ;;   (exwm-randr-enable)

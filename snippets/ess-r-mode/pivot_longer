@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: pivot_longer
+# key: pl
+# --
+pivot_longer(
+  cols = c($1,$2),
+  names_to = "$3",
+  values_to = "$4"
+  )
+$0

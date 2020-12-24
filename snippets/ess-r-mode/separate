@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: separate
+# key: sep-
+# --
+separate(${1:originalVariable},
+         into = c($2), sep = "${3:_}",
+         convert = ${4:FALSE}
+         )$0

@@ -48,18 +48,20 @@ And now on to Org mode:
 From: https://ipfs-sec.stackexchange.cloudflare-ipfs.com/emacs/A/question/2538.html 
 and https://tgro.neocities.org/init.html
 
-I dunno why some pairs work (//, ==)and some don't (~, *, _)...
+I dunno why some pairs work (//, ==) and some don't (~, *, _, ()) ...
 
 #+begin_src emacs-lisp :tangle yes :results silent 
 (defvar org-electric-pairs '(
-                             ;; (?/ . ?/) 
+                             (?/ . ?/) 
                              (?= . ?=) 
                              (?~ . ?~)
                              (?$ . ?$)
                              (?[ . ?])
+                             (?( . ?))
                              (?\" . ?\")
                              (?\` . ?\')
                              (?\< . ?\>)
+                             (?\( . ?\))
                              ) 
   "Electric pairs for Org-mode.")
 
@@ -70,7 +72,7 @@ I dunno why some pairs work (//, ==)and some don't (~, *, _)...
 (add-hook 'org-mode-hook 'org-add-electric-pairs)
 #+end_src
 
-These pairs  
+These pairs
 
 #+BEGIN_EXAMPLE
                              ;; (?* . ?*) 
@@ -79,8 +81,17 @@ These pairs
 
 not included as they were obstrusive.
 
-** Electric Pair for Markdown
+#+begin_src emacs-lisp :tangle no
+(add-hook 'LaTeX-mode-hook
+      (lambda ()
+        (setq LaTeX-electric-left-right-brace t)
+        (local-set-key "(" 'LaTeX-insert-left-brace)))
+#+end_src
 
+#+RESULTS:
+| (lambda nil (setq LaTeX-electric-left-right-brace t) (local-set-key ( 'LaTeX-insert-left-brace)) | er/add-latex-mode-expansions | preview-mode-setup | (lambda nil (highlight-symbol-mode)) | (lambda nil (set (make-local-variable 'TeX-electric-math) (cons \left( \right)))) | (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command) (define-key LaTeX-mode-map (kbd [) 'self-insert-command)) | TeX-PDF-mode | turn-on-reftex |
+
+** Electric Pair for Markdown
 - https://stackoverflow.com/questions/27871876/custom-pairs-in-emacs-electric-pair-mode/27871987#27871987
 - No funciona
 
@@ -448,15 +459,34 @@ AUCTeX has a built in support for pairing braces:
 - https://www.gnu.org/software/auctex/manual/auctex.html#Braces
 - https://emacs.stackexchange.com/questions/27084/electric-pair-of-any-length-using-auctex
 
+#+begin_src emacs-lisp :tangle yes
+(setq LaTeX-electric-left-right-brace t)
+#+end_src
+
+#+RESULTS:
+: t
+
 #+begin_src emacs-lisp :tangle no
   (setq TeX-electric-math t) 
 
   (add-hook 'plain-TeX-mode-hook
             (lambda () (set (make-local-variable 'TeX-electric-math)
                             (cons "$" "$"))))
-  (add-hook 'LaTeX-mode-hook
+ (add-hook 'LaTeX-mode-hook
             (lambda () (set (make-local-variable 'TeX-electric-math)
                             (cons "\\(" "\\)"))))
+
+ (add-hook 'LaTeX-mode-hook
+            (lambda () (set (make-local-variable 'TeX-electric-math)
+                            (cons "\\left(" "\\right)"))))
+
+(add-hook 'LaTeX-mode-hook
+            (lambda () (set (make-local-variable 'TeX-electric-math)
+                            (cons "\\left[" "\\right]"))))
+
+(add-hook 'LaTeX-mode-hook
+            (lambda () (set (make-local-variable 'TeX-electric-math)
+                            (cons "\\left{" "\\right}"))))
 
   (setq LaTeX-electric-left-right-brace t)
 
@@ -482,6 +512,16 @@ Things I've tried:
           '(lambda ()
             (define-key LaTeX-mode-map (kbd "$") 'self-insert-command)))
 #+END_EXAMPLE
+
+
+#+begin_src emacs-lisp :tangle yes
+ (add-hook 'LaTeX-mode-hook
+            (lambda () (set (make-local-variable 'TeX-electric-math)
+                            (cons "\\left(" "\\right)"))))
+#+end_src
+
+#+RESULTS:
+| (lambda nil (set (make-local-variable 'TeX-electric-math) (cons \left( \right)))) | (lambda nil (highlight-symbol-mode)) | (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command) (define-key LaTeX-mode-map (kbd [) 'self-insert-command)) | TeX-PDF-mode | turn-on-reftex |
 
 * Provide
 

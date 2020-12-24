@@ -51,6 +51,7 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
            ("W"           . widen)
            ("S"           . org-sort)
 
+           ("s-,"         . org-wiki-helm)
 
 ** Org-mode
 #+begin_src emacs-lisp :tangle yes
@@ -76,7 +77,6 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
            ("C-c I"       . eos/org-clock-in)
            ("C-c O"       . org-clock-out)
            ("C-c q"       . my/org-quick-clock-in-task)
-           ("s-,"         . org-wiki-helm)
            ("s-."         . org-recipes)
            :map org-mode-map
            ("s-<"         . org-cut-subtree)
@@ -89,6 +89,7 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
            ("M-S-<right>" . org-metaright)
            ("M-S-<left>"  . nil)
            ("M-S-<left>"  . org-metaleft)
+           ("s-,"         . org-toggle-pretty-entities)
            :map org-agenda-mode-map
            ("x"           . org-agenda-refile)
            ("1"           . bjm/org-agenda-item-to-top)
@@ -982,9 +983,9 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
     (require 'ob-latex)
     (require 'org-protocol)
     (require 'org-id)
-    (require 'org-ref-wos)
-    (require 'org-ref-scopus)
-    (require 'org-ref-pubmed)
+;;    (require 'org-ref-wos)
+;;    (require 'org-ref-scopus)
+;;    (require 'org-ref-pubmed)
     (require 'org-agenda)
     (require 'holidays)
     (require 'imenu)
@@ -996,6 +997,10 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
     (require 'org-pdfview)
     (require 'graph)
     (require 'org-graph-view)
+    (require 'bind-key)
+
+    (unbind-key "C-," org-mode-map)
+    (unbind-key "C-'" org-mode-map)
 
     (org-clock-persistence-insinuate)
 
@@ -1365,7 +1370,7 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24483 60867 83075 741000) :init (24483 60867 81581 736000) :config (24483 60867 81568 148000) :config-secs (0 0 24557 280000) :init-secs (0 0 48803 364000) :use-package-secs (0 0 50388 492000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24502 23142 551831 117000) :init (24502 23142 550781 949000) :config (24502 23142 550764 261000) :config-secs (0 0 1749 333000) :init-secs (0 0 69662 679000) :use-package-secs (0 0 70806 53000)))
 
 
 
@@ -2130,12 +2135,12 @@ The default value is -77, which is weird for smaller width windows. I’d rather
 
 According to https://emacs.stackexchange.com/questions/36430/cant-choose-citation-types-using-org-ref, if I do =C-u C-c ]= I should be able to choose citation type (cite, citep, etc). But I can't. 
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle yes
   (setq org-ref-default-citation-link "autocite")
 #+END_SRC
 
 #+RESULTS:
-: textcite
+: autocite
 *** Org-ref shortcut
 Also, in http://kitchingroup.cheme.cmu.edu/blog/2014/05/13/Using-org-ref-for-citations-and-references/#sec-2, JKitchin says: 
 

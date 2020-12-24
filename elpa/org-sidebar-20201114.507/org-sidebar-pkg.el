@@ -1,0 +1,2 @@
+;;; -*- no-byte-compile: t -*-
+(define-package "org-sidebar" "20201114.507" "Helpful sidebar for Org buffers" '((emacs "26.1") (s "1.10.0") (dash "2.13") (dash-functional "1.2.0") (org "9.0") (org-ql "0.2") (org-super-agenda "1.0")) :commit "67fe1b5c6c879e14d34c34eec2190e9719046b6c" :keywords '("hypermedia" "outlines" "org" "agenda") :authors '(("Adam Porter" . "adam@alphapapa.net")) :maintainer '("Adam Porter" . "adam@alphapapa.net") :url "https://github.com/alphapapa/org-sidebar")

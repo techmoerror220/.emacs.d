@@ -1,0 +1,2 @@
+;;; -*- no-byte-compile: t -*-
+(define-package "whole-line-or-region" "20201214.650" "Operate on current line if region undefined" '((emacs "24.1") (cl-lib "0.6")) :commit "4a1d44ec7b1421913cb39a6e83854329be910e68" :keywords '("convenience" "wp") :authors '(("Joe Casadonte" . "emacs@northbound-train.com")) :maintainer '("Steve Purcell" . "steve@sanityinc.com") :url "https://github.com/purcell/whole-line-or-region")

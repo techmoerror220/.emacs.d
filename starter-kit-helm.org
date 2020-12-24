@@ -43,6 +43,7 @@ See https://github.com/emacs-helm/helm/issues/2085
             ("s-e"            . helm-run-external-command)
             ("s-D"            . helm-locate)
             ("s-d"            . helm-find)
+            ("s-\""           . helm-regexp)
             :map helm-command-map
             ("<tab>"          . helm-execute-persistent-action)
             ("C-i"            . helm-execute-persistent-action)
@@ -146,7 +147,7 @@ See https://github.com/emacs-helm/helm/issues/2085
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24482 55999 978673 948000) :init (24482 55999 976729 709000) :config (24482 55999 976664 592000) :config-secs (0 0 985 248000) :init-secs (0 0 1552 86000) :use-package-secs (0 0 3929 491000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24530 7864 157488 323000) :init (24530 7864 155104 833000) :config (24530 7864 155059 829000) :config-secs (0 0 1900 553000) :init-secs (0 0 2318 794000) :use-package-secs (0 0 4895 156000)))
 
 
 
@@ -517,7 +518,7 @@ With this setup helm-bibtex points to the same notes file as =org-ref=. Just run
 
 Lines from uncle dave at https://github.com/daedreth/UncleDavesEmacs and Tuhdo  https://tuhdo.github.io/helm-intro.html
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
 ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
 ;;(use-package helm-files
@@ -728,7 +729,7 @@ NB: =helm-projectile-ag= resulta en un formato ilegible. =helm-ag= resulta en un
 
 (use-package helm-ag
   :after (helm-mode ag)
-  :bind ("s-f" . helm-ag)
+  :bind ("s-p" . helm-ag)
   :init (setq helm-ag-base-command "/usr/bin/ag"
               helm-ag-insert-at-point t
               helm-ag-fuzzy-match     t
@@ -853,7 +854,7 @@ Customization by the great malb: (https://github.com/malb/emacs.d/blob/master/ma
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package helm-org
-  :bind ("s-p" . helm-org-in-buffer-headings)
+  :bind ("s-f" . helm-org-in-buffer-headings)
   :config (progn
             (setq helm-org-headings-fontify t)
 

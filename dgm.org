@@ -2005,18 +2005,17 @@ NOTE: this requires you to install wordnet
 #+END_EXAMPLE
 
 ==Pending: binding doesn't work.
-
+  
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package synosaurus
-    :after wordnut
-    :bind (("s-T" . synosaurus-lookup))
+    :bind (("s-\#" . synosaurus-lookup))
     :config (progn
               (setq synosaurus-backend 'synosaurus-backend-wordnet)
               (setq synosaurus-choose-method 'default)))
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24475 56542 226007 833000) :use-package-secs (0 0 231 944000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24496 134 247688 456000) :use-package-secs (0 0 103 52000)))
 
 *** Olivetti minor mode
 A minor mode for a nice writing environment.
@@ -3022,14 +3021,14 @@ Provides a minor mode which displays current match and total matches information
     :defer t
     :init
     ;; (global-anzu-mode)
-    (global-set-key (kbd "M-%") 'anzu-query-replace)
+    (global-set-key (kbd "C-%") 'anzu-query-replace)
     (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp))
 
 ;; (setq anzu-cons-mode-line-p nil) 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23923 33334 299974 138000) :init (23923 33334 299966 754000) :config (23923 33334 299811 570000) :config-secs (0 0 5 573000) :init-secs (0 0 18581 875000) :use-package-secs (0 1 712419 760000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24514 33399 370221 151000) :init (24514 33399 370201 506000) :init-secs (0 0 310 187000) :use-package-secs (0 0 546 514000) :config (24514 33399 370155 830000) :config-secs (0 0 12 724000)))
 
 ** Killing
 Costumization of simple functions.. check wheather I like them.
@@ -4090,74 +4089,6 @@ deleted, as they produce an error when exporting to pdf (they are obsolote packa
 #+RESULTS:
 : tufte-book
 
-* Input method
-
-I'd rather have Spanish prefix as the default. Tips from: https://emacs.stackexchange.com/questions/418/setting-and-activating-the-default-input-method
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (set-input-method 'spanish-prefix)
-  (setq default-input-method "spanish-prefix")
-
-  (defvar use-default-input-method t)
-  (make-variable-buffer-local 'use-default-input-method)
-  (defun activate-default-input-method ()
-    (interactive)
-    (if use-default-input-method
-        (activate-input-method default-input-method)
-      (inactivate-input-method)))
-  (add-hook 'after-change-major-mode-hook 'activate-default-input-method)
-  ;; (add-hook 'minibuffer-setup-hook 'activate-default-input-method)
-  (add-hook 'org-mode-hook 'activate-default-input-method)
-  (add-hook 'org-load-hook 'activate-default-input-method)
-  (add-hook 'LaTeX-mode-hook 'activate-default-input-method)
-  (add-hook 'latex-mode-hook 'activate-default-input-method)
-  (add-hook 'mu4e-compose-mode-hook 'activate-default-input-method)
-                                          ;(defun inactivate-default-input-method ()
-                                          ;  (setq use-default-input-method nil))
-                                          ;(add-hook 'c-mode-hook 'inactivate-default-input-method)
-#+END_SRC
-
-The variable =use-default-input-method= and the function =inactivate-default-input-method= provide a way to turn off the input method (it may be annoying e.g. in programming modes). If you want to turn off the default method in some modes, you register the function =inactivate-default-input-method= in that mode's startup hook, as in the example above for C mode and derived modes (C++, Java, etc.).
-
-The code above systematically turns on the default input method in the minibuffer (comment out that line to have it off by default). Smarter code might use the same input method or lack thereof as the buffer that was previously active, or might choose an input method depending on what the minibuffer is prompted for (e.g. used for search strings but not for file names), but I declare this beyond the scope of this answer.
-
-If you prefer to whitelist modes where the input method is automatically activated, add the function =activate-default-input-method= below to these modes' startup hook, as in the example below for Text mode and derived modes.
-
-#+BEGIN_EXAMPLE
-(defun activate-default-input-method ()
-  (interactive)
-  (activate-input-method default-input-method))
-(add-hook 'text-mode-hook 'activate-default-input-method)
-#+END_EXAMPLE
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (set-input-method "spanish-prefix")
-                                          ;(set-input-method 'spanish-prefix)
-  (setq default-input-method "spanish-prefix")
-                                          ;(setq-default default-input-method 'spanish-prefix)
-
-  (defun activate-default-input-method ()
-    (interactive)
-    (activate-input-method default-input-method))
-  (add-hook 'org-mode-hook 'activate-default-input-method)
-  (add-hook 'org-load-hook 'activate-default-input-method)
-  (add-hook 'LaTeX-mode-hook 'activate-default-input-method)
-  (add-hook 'latex-mode-hook 'activate-default-input-method)
-  (add-hook 'mu4e-compose-mode-hook 'activate-default-input-method)
-  (add-hook 'mu4e-compose-pre-hook 'activate-default-input-method)
-  (add-hook 'mu4e-compose-parent-message 'activate-default-input-method)
-
-                                          ; (add-hook 'mu4e-mode-hook #'activate-default-input-method)
-
-  (defun inactivate-default-input-method ()
-    (setq use-default-input-method nil))
-  (add-hook 'c-mode-hook 'inactivate-default-input-method)
-  (add-hook 'fundamental-mode 'inactivate-default-input-method)
-#+END_SRC
-
-#+RESULTS:
-| inactivate-default-input-method |
-
 * undo-propose
 
 To use undo-propose, call "M-x undo-propose" in the buffer you are editing.
@@ -4339,7 +4270,7 @@ Usage:
 * Browser switching
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (global-set-key (kbd "C-'") 'ivy-switch-buffer)
+  (global-set-key (kbd "C-;") 'ivy-switch-buffer)
   ;; (global-set-key (kbd "C-c b") 'ivy-switch-buffer) ;; buffer-flip gets this
 
   ;; (global-set-key (kbd "s-*") 'electric-buffer-list) ;; no lo uso
@@ -4361,7 +4292,7 @@ Usage:
 * =helm-resume=
 
 #+begin_src emacs-lisp :tangle yes
-  (global-set-key (kbd "s-r") #'helm-resume)
+  (global-set-key (kbd "s-<next>") #'helm-resume)
 #+end_src
 
 #+RESULTS:
@@ -4436,7 +4367,7 @@ The following I've taken away.
                     :key "C-c y"
                     :description "bury-buffer")
     (cheatsheet-add :group 'Buffer-Cycling
-                    :key "C-'"
+                    :key "C-;"
                     :description "Ivy-switch-buffer")
     (cheatsheet-add :group 'Buffer-List
                     :key "s-z"
@@ -4528,7 +4459,7 @@ The following I've taken away.
     (cheatsheet-add :group 'Dired
                     :key "O"
                     :description "dired-do-chown. Change owner. Only superuser can do it. See p.345 of manual")
-    (cheatsheet-add :group 'Dired
+    (cheatsheet-add :group 'Diredp
                     :key "Z"
                     :description "dired-do-compress. Compress and uncompress specified files with gzip and tar")
     (cheatsheet-add :group 'Dired
@@ -4785,7 +4716,7 @@ The following I've taken away.
                     :key "M-k"
                     :description "kill-sentence. Kill from point to end of sentence.")
     (cheatsheet-add :group 'Editing
-                    :key "C-;"
+                    :key "C-,"
                     :description "dont-kill-line. Copy from point to end of sentence.")
     (cheatsheet-add :group 'Editing-Killing
                     :key "M-w"
@@ -5011,16 +4942,16 @@ The following I've taken away.
                     :description "Wrap word with matching characters-parentheses, brackets, etc")
     (cheatsheet-add :group 'Expressions-Wrapping-Slurp
                     :key "C-<right>"
-                    :description "sp-forward-slurp-sexp: Slurping extends the inclusion of parentheses")
+                    :description "sp-forward-slurp-sexp: Slurping or sorber extends the inclusion of parentheses")
     (cheatsheet-add :group 'Expressions-Wrapping-Slurp
                     :key "C-<left>"
-                    :description "sp-backward-slurp-sexp: Slurping extends the inclusion of parentheses")
+                    :description "sp-backward-slurp-sexp: Slurping or sorber extends the inclusion of parentheses")
     (cheatsheet-add :group 'Expressions-Wrapping-Barf
                     :key "M-<right>"
-                    :description "sp-forward-barf-sexp: Burfing contracts the extension of parentheses")
+                    :description "sp-forward-barf-sexp: Barfing or vomit contracts the extension of parentheses")
     (cheatsheet-add :group 'Expressions-Wrapping-Barf
                     :key "M-<left>"
-                    :description "sp-backward-barf-sexp: Barfing contracts the extension of parentheses")
+                    :description "sp-backward-barf-sexp: Barfing or vomit contracts the extension of parentheses")
     (cheatsheet-add :group 'Expressions-Unwrapping
                     :key "M-\["
                     :description "sp-backward-unwrap-sex: Unwraps current exp")
@@ -5109,7 +5040,7 @@ The following I've taken away.
                     :key "M-x helm-swoop"
                     :description "Show lines matching a pattern; cursor jumps to the line we go to")
     (cheatsheet-add :group 'Find-Org
-                    :key "s-p"
+                    :key "s-f"
                     :description "helm-org-in-buffer-headings: Find Org heading")
     (cheatsheet-add :group 'Find-Org
                     :key "s-u"
@@ -5118,7 +5049,7 @@ The following I've taken away.
                     :key "search-all-buffers"
                     :description "Greps all opened buffers")
     (cheatsheet-add :group 'Grep
-                    :key "s-f"
+                    :key "s-p"
                     :description "helm-ag: grep-like program implemented in C")
     (cheatsheet-add :group 'Grep-Helm
                     :key "C-c h w"
@@ -5139,8 +5070,8 @@ The following I've taken away.
                     :key "M-SPC"
                     :description "Select multiple sources")
     (cheatsheet-add :group 'Helm
-                    :key "s-r"
-                    :description "helm-resume previous H session, inputs included. C-u lets choose Helm buffer. C-c n inside Helm session")
+                    :key "s-<next>"
+                    :Description "helm-resume previous H session, inputs included. C-u lets choose Helm buffer. C-c n inside Helm session")
     (cheatsheet-add :group 'Helm
                     :key "C-c o"
                     :description "In H session, open selected candidate in another window")
@@ -5364,9 +5295,6 @@ The following I've taken away.
                     :key "M-r"
                     :description "move-to-window-line-top-bottom. Without moving the text on the screen, move point to top, bottom, middle")
     (cheatsheet-add :group 'Movement
-                    :key "C-c C-j"
-                    :description "org-goto. Look up a different location in the current file. Go back with org-mark-ring-goto")
-    (cheatsheet-add :group 'Movement
                     :key "M-<"
                     :description "beginning-of-buffer")
     (cheatsheet-add :group 'Movement
@@ -5399,6 +5327,9 @@ The following I've taken away.
     (cheatsheet-add :group 'Narrowing
                     :key "W"
                     :description "Widen in Org subtree")
+    (cheatsheet-add :group 'Org
+                    :key "s-,"
+                    :description "org-toggle-pretty-entities. Toggle the composition display of entities as UTF8 characters")
     (cheatsheet-add :group 'Org
                     :key "#"
                     :description "Comments heading")
@@ -5693,6 +5624,15 @@ The following I've taken away.
     (cheatsheet-add :group 'Org-latex
                     :key "C-c C-x C-l"
                     :description "org-toggle-latex-fragment. C-c C-c to show the equation code")
+    (cheatsheet-add :group 'Org-Movement
+                    :key "C-c C-f"
+                    :description "org-forward-heading-same-level")
+    (cheatsheet-add :group 'Org-Movement
+                    :key "C-c C-b"
+                    :description "org-backward-heading-same-level")
+    (cheatsheet-add :group 'Movement
+                    :key "C-c C-j"
+                    :description "org-goto. Look up a different location in the current file. Go back with org-mark-ring-goto")
     (cheatsheet-add :group 'Org-movement
                     :key "M-Shift-<up/down>"
                     :description "org-shiftmetaup. Moves subtree heading BUT not its contents. Drag the line at point up.In a table, kill the current row.On a clock timestamp, update the value of the timestamp like S-<up>")
@@ -5848,16 +5788,16 @@ The following I've taken away.
                     :description "pandoc-main-hydra/body. Call the body in the pandoc-main-hydra hydra.")
     (cheatsheet-add :group 'Parens
                     :key "C-("
-                    :description "paredit-backward-slurp-sexp. Add preceding sexp into current list by moving the closing delimiter")
+                    :description "paredit-backward-slurp-sexp. Add or sorbe preceding sexp into current list by moving the closing delimiter")
     (cheatsheet-add :group 'Parens
                     :key "C-)"
-                    :description "paredit-forward-slurp-sexp. Add next sexp into current list by moving the closing delimiter")
+                    :description "paredit-forward-slurp-sexp. Add or sorbe next sexp into current list by moving the closing delimiter")
     (cheatsheet-add :group 'Parens
                     :key "C-{"
-                    :description "paredit-backward-barf-sexp. Remove first sexp in current list by moving closing delimiter")
+                    :description "paredit-backward-barf-sexp. Remove or vomit first sexp in current list by moving closing delimiter")
     (cheatsheet-add :group 'Parens
                     :key "C-}"
-                    :description "paredit-forward-barf-sexp.  Remove last sexp in current list by moving closing delimiter")
+                    :description "paredit-forward-barf-sexp.  Remove or vomit last sexp in current list by moving closing delimiter")
     (cheatsheet-add :group 'Parens
                     :key "M-("
                     :description "paredit-wrap-round. Wrap the following sexp")
@@ -5899,7 +5839,7 @@ The following I've taken away.
                     :description "paredit-forward-kill-word. Splice the list the point is on by removing delimiters, and also kill all sexp before the point in the current list")
     (cheatsheet-add :group 'Parens
                     :key "M-<down>"
-                    :description "paredit-splice-sexp-killing-forward. Splice the list the point is on by removing its delimiters, and   also kill all sexps after the point in the current list")
+                    :description "paredit-splice-sexp-killing-forward. Splice the list the point is on by removing its delimiters, and also kill all sexps after the point in the current list")
     (cheatsheet-add :group 'Password
                     :key "M-x password-store"
                     :description "password-store")
@@ -6140,12 +6080,18 @@ The following I've taken away.
     (cheatsheet-add :group 'Window-Movement
                     :key "s-<down>"
                     :description "windmove-down")
+    (cheatsheet-add :group 'Writing
+                    :key "s-$"
+                    :description "wordnut-search")
+    (cheatsheet-add :group 'Writing
+                    :key "s-#"
+                    :description "synosaurus-lookup") 
     :bind ("s-[" . cheatsheet-show)
     )
  #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24487 53019 12850 503000) :init (24487 53019 12777 425000) :init-secs (0 0 46 140000) :use-package-secs (0 0 188 876000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24547 8932 410488 589000) :init (24547 8932 410322 990000) :init-secs (0 0 93 51000) :use-package-secs (0 0 417 850000)))
 
 
 * Get various new windows at the bottom of the screen
@@ -6625,7 +6571,7 @@ sentences; your mileage may vary.
       (kill-line)
       (yank)))
 
-  (global-set-key (kbd "C-;") 'dont-kill-line)
+  (global-set-key (kbd "C-,") 'dont-kill-line)
 #+END_SRC
 
 #+RESULTS:
@@ -6782,93 +6728,6 @@ From: https://endlessparentheses.com/ispell-and-abbrev-the-perfect-auto-correct.
 
 #+RESULTS:
 : /usr/share/ditaa/ditaa.jar
-
-
-* Visual line mode
-
-** fill-column
-Read: https://emacshorrors.com/posts/longlines-mode.html 
-
-#+srcname: fill-column
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq-default fill-column 80)
-#+END_SRC
-
-#+RESULTS: fill-column
-: 80
-
-The following constrains any file to the 80 columns set above. In fact, research recommends even fewer columns... 
-
-From the Memoir manual:
-
-     #+BEGIN_QUOTE
-       Characters in a line of  single column text on a page should be in the range 60 to 70 for ease of reading... (From 45 to 75 characters) but 66 characters is often considered to be the ideal number. 
-
-  Much shorter and the eye is dashing back and forth between each line. Much longer and it is hard to pick up the start of the next line if the eye has to jump back too far.
-
-  For double column text the ideal number of characters is around 45, give or take 5 or so.
-     #+END_QUOTE
-
-To get rid of it, for example in Chromium, do =M-x visual-fill-column-mode=.    
-
-https://emacshorrors.com/posts/longlines-mode.html
-
-This enables line wrapping at the 80th column everywhere:
-
-#+begin_src emacs-lisp :tangle no
-  (add-hook 'visual-line-mode-hook 'visual-fill-column-mode)
-#+end_src
-
-Now I'm going to try and activate it only in text and programming modes (see https://emacs.stackexchange.com/questions/21624/enable-visual-fill-column-mode-only-in-text-and-programming-mode)
-
-#+begin_src emacs-lisp :tangle yes
-  (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'text-mode-hook 'visual-fill-column-mode)
-
-  (add-hook 'prog-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'prog-mode-hook 'visual-fill-column-mode)
-
-  (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'org-mode-hook 'visual-fill-column-mode)
-
-  (add-hook 'TeX-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'TeX-mode-hook 'visual-fill-column-mode)
-
-  (add-hook 'latex-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'latex-mode-hook 'visual-fill-column-mode)
-
-  (add-hook 'markdown-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'markdown-mode-hook 'visual-fill-column-mode)
-
-  (add-hook 'ado-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'ado-mode-hook 'visual-fill-column-mode)
-
-  (add-hook 'ess-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'ess-mode-hook 'visual-fill-column-mode)
-
-  (add-hook 'inferior-ess-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'inferior-ess-mode-hook 'visual-fill-column-mode)
-
-  (add-hook 'ess-stata-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'ess-stata-mode-hook 'visual-fill-column-mode)
-
-  (add-hook 'ledger-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'ledger-mode-hook 'visual-fill-column-mode)
-
-  (add-hook 'emacs-lisp-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'emacs-lisp-mode-hook 'visual-fill-column-mode)
-
-  (add-hook 'lisp-interaction-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'lisp-interaction-mode-hook 'visual-fill-column-mode)
- 
-  (add-hook 'ielm-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'ielm-mode-hook 'visual-fill-column-mode)
-
-;; don't show bent arrows
-  (setq visual-line-fringe-indicators '(nil nil))
-  #+end_src
-
-#+RESULTS:
 
 
 * Emacs flickers
@@ -7143,10 +7002,132 @@ I have no need to directly edit files over SSH, but what I do need is a way to e
 *** Editing with sudo
 Pretty self-explanatory, useful as hell if you use exwm.
 
+=:bind ("s-\#" . sudo-edit)= taken out as I very rarely use it
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package sudo-edit
-  :bind ("s-\#" . sudo-edit))
+(use-package sudo-edit)
 #+END_SRC
+
+
+* Bookmarks on Start
+Set emacs to open Bookmark+ on start. From Xah Emacs. Alternative to =Dashboard=
+
+#+srcname: bookmarks
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq inhibit-splash-screen t)
+
+  (require 'bookmark+) ;; no longer available in MELPA
+   (bookmark-bmenu-list)
+   (switch-to-buffer "*Bookmark List*")
+  '(initial-buffer-choice "*Bookmark List*")
+  (setq initial-buffer-choice "*Bookmark List*")
+#+END_SRC
+
+* How long do you see lines in emacs
+- Read: 
+** Visual-fill-column
+
+From https://caolan.org/dotfiles/emacs.html#orgd96aeb0
+
+Many email services/clients expect soft-wrapped emails, so I like to use visual-line-mode and the visual-fill-column package instead of auto-fill-mode. To show whether a paragraph is hard- or soft-wrapped I also turn on visual line indicators in the fringe.
+
+From: https://www.reddit.com/r/orgmode/comments/jp71b6/soft_wrapping_instead_of_hard_wrapping/
+
+Emacs has a packaged called "visual-fill-column" which can center all the content on the screen and also virtually wrap at 80 characters so it doesn't matter if the lines are NOT wrapped in plain text files, because they will be rendered like they are inside Emacs.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package visual-fill-column)
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24546 16386 220060 447000) :init (24546 16386 220039 524000) :init-secs (0 0 906 744000) :use-package-secs (0 0 1006 180000) :config (24546 16386 219559 492000) :config-secs (0 0 9 572000)))
+
+
+** Visual line mode
+
+*** fill-column
+Read: https://emacshorrors.com/posts/longlines-mode.html 
+
+#+srcname: fill-column
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq-default fill-column 80)
+#+END_SRC
+
+#+RESULTS: fill-column
+: 80
+
+The following constrains any file to the 80 columns set above. In fact, research recommends even fewer columns... 
+
+From the Memoir manual:
+
+     #+BEGIN_QUOTE
+       Characters in a line of  single column text on a page should be in the range 60 to 70 for ease of reading... (From 45 to 75 characters) but 66 characters is often considered to be the ideal number. 
+
+  Much shorter and the eye is dashing back and forth between each line. Much longer and it is hard to pick up the start of the next line if the eye has to jump back too far.
+
+  For double column text the ideal number of characters is around 45, give or take 5 or so.
+     #+END_QUOTE
+
+To get rid of it, for example in Chromium, do =M-x visual-fill-column-mode=.    
+
+https://emacshorrors.com/posts/longlines-mode.html
+
+This enables line wrapping at the 80th column everywhere:
+
+#+begin_src emacs-lisp :tangle no
+  (add-hook 'visual-line-mode-hook 'visual-fill-column-mode)
+#+end_src
+
+Now I'm going to try and activate it only in text and programming modes (see https://emacs.stackexchange.com/questions/21624/enable-visual-fill-column-mode-only-in-text-and-programming-mode)
+
+DGM comments out visual line mode on 22 dic 20
+#+begin_src emacs-lisp :tangle yes
+  (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'text-mode-hook 'visual-fill-column-mode)
+
+;;  (add-hook 'prog-mode-hook 'turn-on-visual-line-mode)
+;;  (add-hook 'prog-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'org-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'TeX-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'TeX-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'latex-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'latex-mode-hook 'visual-fill-column-mode)
+
+  (add-hook 'markdown-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'markdown-mode-hook 'visual-fill-column-mode)
+
+;;  (add-hook 'ado-mode-hook 'turn-on-visual-line-mode)
+;;  (add-hook 'ado-mode-hook 'visual-fill-column-mode)
+
+;;  (add-hook 'ess-mode-hook 'turn-on-visual-line-mode)
+;;  (add-hook 'ess-mode-hook 'visual-fill-column-mode)
+
+;;  (add-hook 'inferior-ess-mode-hook 'turn-on-visual-line-mode)
+;;  (add-hook 'inferior-ess-mode-hook 'visual-fill-column-mode)
+
+;;  (add-hook 'ess-stata-mode-hook 'turn-on-visual-line-mode)
+;;  (add-hook 'ess-stata-mode-hook 'visual-fill-column-mode)
+
+;;  (add-hook 'ledger-mode-hook 'turn-on-visual-line-mode)
+;;  (add-hook 'ledger-mode-hook 'visual-fill-column-mode)
+
+;;  (add-hook 'emacs-lisp-mode-hook 'turn-on-visual-line-mode)
+;;  (add-hook 'emacs-lisp-mode-hook 'visual-fill-column-mode)
+
+;;  (add-hook 'lisp-interaction-mode-hook 'turn-on-visual-line-mode)
+;;  (add-hook 'lisp-interaction-mode-hook 'visual-fill-column-mode)
+ 
+;;  (add-hook 'ielm-mode-hook 'turn-on-visual-line-mode)
+;;  (add-hook 'ielm-mode-hook 'visual-fill-column-mode)
+
+;; don't show bent arrows
+  (setq visual-line-fringe-indicators '(nil nil))
+  #+end_src
+
+#+RESULTS:
 
 
 * Provide
@@ -7168,3 +7149,4 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+

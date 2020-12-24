@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: pivot_wider
+# key: pw
+# --
+pivot_wider(names_from = $1, values_from = $2)$0
