@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ -*- coding: utf-8 -*-
 # -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Parens costumization
@@ -113,6 +113,24 @@ not included as they were obstrusive.
 #+RESULTS:
 | visual-fill-column-mode | turn-on-visual-line-mode | (lambda nil (highlight-symbol-mode 1)) | (lambda nil (define-key markdown-mode-map  [ 'markdown-reftex-citation)) | latex-unicode-simplified | markdown-add-electric-pairs | turn-off-auto-fill |
 
+** COMMENT Electric Pair for ESS mode
+
+Funciona pero es muy obstrusivo. Mejor usar a snippet.
+
+#+begin_src emacs-lisp :tangle no
+  (defvar ess-electric-pairs '(
+                               (?< . ?>)
+                               ) "Electric pairs for ess-mode.")
+
+  (defun ess-add-electric-pairs ()
+    (setq-local electric-pair-pairs (append electric-pair-pairs ess-electric-pairs))
+    (setq-local electric-pair-text-pairs electric-pair-pairs))
+
+  (add-hook 'ess-mode-hook 'ess-add-electric-pairs)
+#+end_src
+
+#+RESULTS:
+| ess-add-electric-pairs | (lambda nil (define-key ess-mode-map < 'electric-pair)) | (lambda nil (local-set-key [(shift return)] 'my-ess-eval)) | run-starter-kit-coding-hook |
 
 * Alternative: autopair
 - https://github.com/joaotavora/autopair
@@ -539,9 +557,3 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 #+begin_src emacs-lisp :tangle yes
 (message "Starter Kit Parens File loaded.")
 #+end_src
-
-
-
-
-
-

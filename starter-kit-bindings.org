@@ -323,10 +323,10 @@ I have some buffer groups that i prefer do be collapsed by default. Since i foun
 #+begin_src emacs-lisp 
 ;;  (global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
 ;;  (global-set-key (kbd "C-x C-p") 'find-file-at-point) ;; I use helm and projectile for this
-  (global-set-key (kbd "C-c y") 'bury-buffer)
-  (global-set-key (kbd "C-c r") 'revert-buffer)
+;;  (global-set-key (kbd "C-c y") 'bury-buffer)   ;; commented out because I never use this
+;;  (global-set-key (kbd "C-c r") 'revert-buffer) ;; commented out because I never use this
 ;;  (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete) ;; Key used somewhere else
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
+;;  (global-set-key (kbd "C-x C-b") 'ibuffer) ;; bound to s-z now
 ;;  (global-set-key (kbd "C-x f") 'recentf-ido-find-file) ;; commented out until helm and ido are made to work together
 #+end_src
 

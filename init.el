@@ -129,11 +129,23 @@
 (setq autoload-file (concat dotfiles-dir "loaddefs.el"))
 ;; (setq package-user-dir (concat dotfiles-dir "elpa")) ;; if enabled
 ;; this with exwm, then it blocks emacs
-(setq custom-file (concat dotfiles-dir "custom.el"))
-(add-to-list 'load-path (expand-file-name
-                         "lisp" (expand-file-name
-                                 "org" (expand-file-name
-                                        "src" dotfiles-dir))))
+
+;; original config about custom-file
+;; (setq custom-file (concat dotfiles-dir "custom.el"))
+;; (add-to-list 'load-path (expand-file-name
+;;                          "lisp" (expand-file-name
+;;                                  "org" (expand-file-name
+;;                                         "src" dotfiles-dir))))
+
+;; daviwil's alternative. Apparently, he got it from Ambrevar too!
+;; Keep customization settings in a temporary file (thanks Ambrevar!)
+(setq custom-file
+      (if (boundp 'server-socket-dir)
+          (expand-file-name "custom.el" server-socket-dir)
+        (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+(load custom-file t)
+
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; use-package ;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -281,141 +293,320 @@ ARCHIVE is the string name of the package archive.")
 ;; When stating the client from .xinitrc, =save-buffer-kill-terminal= will =force-kill= Emacs before it can run through =kill-emacs-hook=.
 (global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
 
+;; (defun efs/exwm-update-class ()
+;;   (exwm-workspace-rename-buffer exwm-class-name))
+
 
 (use-package exwm
-  :init
-  (load "/home/dgm/.emacs.d/src/ambrevar/functions.el")
-  (require 'functions)
+ :init
+ (load "/home/dgm/.emacs.d/src/ambrevar/functions.el")
+ (require 'functions)
 
-  (defun ambrevar/exwm-rename-buffer-to-title ()
-    (exwm-workspace-rename-buffer exwm-title))
-  (add-hook 'exwm-update-title-hook 'ambrevar/exwm-rename-buffer-to-title)
+ (defun ambrevar/exwm-rename-buffer-to-title ()
+   (exwm-workspace-rename-buffer exwm-title))
+ (add-hook 'exwm-update-title-hook 'ambrevar/exwm-rename-buffer-to-title)
 
-  (add-hook 'exwm-floating-setup-hook 'exwm-layout-hide-mode-line)
-  (add-hook 'exwm-floating-exit-hook 'exwm-layout-show-mode-line)
+ (add-hook 'exwm-floating-setup-hook 'exwm-layout-hide-mode-line)
+ (add-hook 'exwm-floating-exit-hook 'exwm-layout-show-mode-line)
 
-  (defun ambrevar/exwm-start-in-char-mode ()
-    (when (string-prefix-p "emacs" exwm-instance-name)
-      (exwm-input-release-keyboard (exwm--buffer->id (window-buffer)))))
-  (add-hook 'exwm-manage-finish-hook 'ambrevar/exwm-start-in-char-mode)
+ (defun ambrevar/exwm-start-in-char-mode ()
+   (when (string-prefix-p "emacs" exwm-instance-name)
+     (exwm-input-release-keyboard (exwm--buffer->id (window-buffer)))))
+ (add-hook 'exwm-manage-finish-hook 'ambrevar/exwm-start-in-char-mode)
 
-  (defun exwm-async-run (name)
-    (interactive)
-    (start-process name nil name))
+ (defun exwm-async-run (name)
+   (interactive)
+   (start-process name nil name))
 
-  (defun daedreth/launch-browser ()
-    (interactive)
-    (exwm-async-run "chromium"))
+ (defun daedreth/launch-browser ()
+   (interactive)
+   (exwm-async-run "chromium"))
 
-  (defun daedreth/lock-screen ()
-    (interactive)
-    (exwm-async-run "slock"))
+ ;; recall it doesn't prompt for anything. You just have to enter your password.
+ (defun daedreth/lock-screen ()
+   (interactive)
+   (exwm-async-run "slock"))
 
-  (defun ambrevar/exwm-start (command)
-    (interactive (list (read-shell-command "$ ")))
-    (start-process-shell-command command nil command))
+ (defun ambrevar/exwm-start (command)
+   (interactive (list (read-shell-command "$ ")))
+   (start-process-shell-command command nil command))
 
-  (defun rotate-windows ()
-    "Rotate your windows" (interactive) (cond ((not (> (count-windows) 1)) (message "You can't rotate a single window!"))
-                                              (t
-                                               (setq i 1)
-                                               (setq numWindows (count-windows))
-                                               (while  (< i numWindows)
-                                                 (let* (
-                                                        (w1 (elt (window-list) i))
-                                                        (w2 (elt (window-list) (+ (% i numWindows) 1)))
-                                                        (b1 (window-buffer w1))
-                                                        (b2 (window-buffer w2))
-                                                        (s1 (window-start w1))
-                                                        (s2 (window-start w2))
-                                                        )
-                                                   (set-window-buffer w1  b2)
-                                                   (set-window-buffer w2 b1)
-                                                   (set-window-start w1 s2)
-                                                   (set-window-start w2 s1)
-                                                   (setq i (1+ i)))))))
-  (require 'exwm-config)
-  (require 'exwm-systemtray)
-  (require 'exwm-randr)
-   :config
-  ;; necessary to configure exwm manually
+ (defun rotate-windows ()
+   "Rotate your windows" (interactive) (cond ((not (> (count-windows) 1)) (message "You can't rotate a single window!"))
+                                             (t
+                                              (setq i 1)
+                                              (setq numWindows (count-windows))
+                                              (while  (< i numWindows)
+                                                (let* (
+                                                       (w1 (elt (window-list) i))
+                                                       (w2 (elt (window-list) (+ (% i numWindows) 1)))
+                                                       (b1 (window-buffer w1))
+                                                       (b2 (window-buffer w2))
+                                                       (s1 (window-start w1))
+                                                       (s2 (window-start w2))
+                                                       )
+                                                  (set-window-buffer w1  b2)
+                                                  (set-window-buffer w2 b1)
+                                                  (set-window-start w1 s2)
+                                                  (set-window-start w2 s1)
+                                                  (setq i (1+ i)))))))
 
-  ;; fringe size, most people prefer 1 (uncle dave's setup)
-  (fringe-mode 3)
-  (exwm-config-default)
+ ;; When window "class" updates, use it to set the buffer name
+ ;; (add-hook 'exwm-update-class-hook #'efs/exwm-update-class)
 
-  (setq window-divider-default-bottom-width 2
-        window-divider-default-right-width 2)
-  (window-divider-mode)
+ ;; Wallpaper function
+ (defun efs/set-wallpaper ()
+   (interactive)
+   (start-process-shell-command
+    "feh" nil "feh --bg-scale /home/dgm/Pictures/500350.jpg"))
 
-  (exwm-systemtray-enable)
-  (setq exwm-systemtray-height 16)
+ ;; Function to run apps in background
+ (defun efs/run-in-background (command)
+   (let ((command-parts (split-string command "[ ]+")))
+     (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
 
-  (setq exwm-workspace-number 10
-        exwm-workspace-show-all-buffers nil ;; if t, allows showing buffers on other workspaces.dgm: i'm going to try and isolate buffers so that EXWM only shows X windows belonging to current workspace
-        exwm-layout-show-all-buffers t)     ;;  allow switching to buffers on
-  ;;  other workspaces.
-  (dotimes (i 10)
-    (exwm-input-set-key (kbd (format "s-%d" i))
-                        `(lambda ()
-                           (interactive)
-                           (exwm-workspace-switch-create ,i))))
-  ;; Media keys
-  (exwm-input-set-key
-   (kbd "<XF86AudioRaiseVolume>")
-   (lambda ()
-     (interactive) (start-process-shell-command
-                    "pactl" nil "pactl set-sink-volume 0 +5% && pactl set-sink-volume 1 +5%")))
-  (exwm-input-set-key
-   (kbd "<XF86AudioLowerVolume>")
-   (lambda ()
-     (interactive) (start-process-shell-command
-                    "pactl" nil "pactl set-sink-volume 0 -5% && pactl set-sink-volume 1 -5%")))
-  (exwm-input-set-key
-   (kbd "<XF86AudioMute>")
-   (lambda ()
-     (interactive) (start-process-shell-command
-                    "pactl" nil "pactl set-sink-mute 0 toggle && pactl set-sink-mute 1 toggle")))
+ ;; External apps to run before EXWM starts
+ (efs/run-in-background "nm-applet")
+ (efs/run-in-background "pasystray")
+ (efs/run-in-background "blueman-applet")
+;; (efs/run-in-background "redshift")
 
-  (defun display-backlight-brightness ()
-    (message "Backlight at %s"
-             (car (split-string
-                   (shell-command-to-string "xbacklight -get")
-                   "\\." t))))
-
-  (exwm-input-set-key
-   (kbd "<XF86MonBrightnessUp>")
-   (lambda ()
-     (interactive)
-     (start-process-shell-command
-      "xbacklight" nil "xbacklight -inc 5")
-     (display-backlight-brightness)
+ (defun efs/configure-window-by-class ()
+   (interactive)
+   (pcase exwm-class-name
+     ("Firefox-esr" (exwm-workspace-move-window 3))
+     ("Chromium" (exwm-workspace-move-window 3))
+     ("Spotify" (exwm-workspace-move-window 3))  ;; don't know it doesn't work
+     ;; for Spotify
+     ("Gnome-terminal" (exwm-workspace-move-window 0))
+     ("Amule" (exwm-workspace-move-window 0))
+     ("Arandr" (exwm-workspace-move-window 0))
+     ("Evince" (exwm-workspace-move-window 5))
+     ("okular" (exwm-workspace-move-window 5))
      ))
 
-  (exwm-input-set-key
-   (kbd "<XF86MonBrightnessDown>")
-   (lambda ()
-     (interactive)
-     (start-process-shell-command
-      "xbacklight" nil "xbacklight -dec 5")
-     (display-backlight-brightness)))
+ (defun efs/update-displays ()
+   (efs/run-in-background "autorandr --change --force")
+   (efs/set-wallpaper)
+   (message "Display config: %s"
+            (string-trim (shell-command-to-string "autorandr --current"))))
 
-  ;; eDP1-1
-  ;; eDP-1
 
-(when (string=(system-name) "toshiba")
-    (setq exwm-randr-workspace-monitor-plist
-          '(0 "HDMI-2" 1  "HDMI-2" 2 "HDMI-2" 3 "HDMI-2" 4 "HDMI-2"
-              5 "HDMI-2" 6 "HDMI-2" 7 "HDMI-2" 8 "HDMI-2" 9 "HDMI-2"))
-    (add-hook 'exwm-randr-screen-change-hook
-              (lambda ()
-                (start-process-shell-command
-                 "xrandr" nil "xrandr --output HDMI-2 --auto")))
+ (require 'exwm-config)
+ ;; (require 'exwm-systemtray)
+ (require 'exwm-randr)
+ :config
+ ;; necessary to configure exwm manually
+
+ ;; fringe size, most people prefer 1 (uncle dave's setup)
+ (fringe-mode 3)
+ (exwm-config-default)
+
+ (defun efs/exwm-init-hook ()
+   ;; Make workspace 1 be the one where we land at startup
+   (exwm-workspace-switch-create 4))
+
+ (setq window-divider-default-bottom-width 2
+       window-divider-default-right-width 2)
+ (window-divider-mode)
+
+ ;; Polybar is in charge of the tray now
+ ;; (exwm-systemtray-enable)
+ ;; (setq exwm-systemtray-height 16)
+
+ (setq exwm-workspace-number 10
+       exwm-layout-show-all-buffers nil   ;;  allow an EXWM buffer to be displayed
+       ;;  in any workspace. If I choose it, then I move that buffer to
+       ;;  workspace from which I am calling it.
+       exwm-workspace-show-all-buffers nil) ;; if t, allows showing buffers on
+ ;; other workspaces.
+ ;; But DW has it set to t.
+ ;; What DW is trying to do is to automatically move windows between workspaces.
+ ;;  On 08/01/21
+ ;;  I change it to nil as having it set to t doesn't let me call firefox
+ ;;  windows in workspaces other than 3
+
+ ;; When EXWM starts up, do some extra confifuration
+ (add-hook 'exwm-init-hook #'efs/exwm-init-hook)
+
+ ;; For global bindings that work even in X buffers, use <exwm-input-set-key>
+ ;; Also, these keybindings work while your're running EXWM (for normal EXWM
+ ;; buffers. Not for external buffers). You don't have to
+ ;; re-start it, as you would if you used exwm-input-global-keys (which updates
+ ;; only after you restart exwm).
+ ;; Commented by DGM on 25 dic 2020
+ ;;  other workspaces.
+ ;; (dotimes (i 10)
+ ;;   (exwm-input-set-key (kbd (format "s-%d" i))
+ ;;                       `(lambda ()
+ ;;                          (interactive)
+ ;;                          (exwm-workspace-switch-create ,i))))
+
+ ;; Configure windows as they're created
+ (add-hook 'exwm-manage-finish-hook #'efs/configure-window-by-class)
+
+ ;; Media keys
+ (exwm-input-set-key
+  (kbd "<XF86AudioRaiseVolume>")
+  (lambda ()
+    (interactive) (start-process-shell-command
+                   "pactl" nil "pactl set-sink-volume 0 +5% && pactl set-sink-volume 1 +5%")))
+ (exwm-input-set-key
+  (kbd "<XF86AudioLowerVolume>")
+  (lambda ()
+    (interactive) (start-process-shell-command
+                   "pactl" nil "pactl set-sink-volume 0 -5% && pactl set-sink-volume 1 -5%")))
+ (exwm-input-set-key
+  (kbd "<XF86AudioMute>")
+  (lambda ()
+    (interactive) (start-process-shell-command
+                   "pactl" nil "pactl set-sink-mute 0 toggle && pactl set-sink-mute 1 toggle")))
+
+ (defun display-backlight-brightness ()
+   (message "Backlight at %s"
+            (car (split-string
+                  (shell-command-to-string "xbacklight -get")
+                  "\\." t))))
+
+ (exwm-input-set-key
+  (kbd "<XF86MonBrightnessUp>")
+  (lambda ()
+    (interactive)
+    (start-process-shell-command
+     "xbacklight" nil "xbacklight -inc 5")
+    (display-backlight-brightness)
+    ))
+
+ (exwm-input-set-key
+  (kbd "<XF86MonBrightnessDown>")
+  (lambda ()
+    (interactive)
+    (start-process-shell-command
+     "xbacklight" nil "xbacklight -dec 5")
+    (display-backlight-brightness)))
+
+ (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+ (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+ ;; Redshift off
+ (exwm-input-set-key (kbd "s-\)")
+                     (lambda () (interactive) (start-process-shell-command "redshift" nil "redshift" "-x")))
+
+ ;; Redshift on
+ ;; -PO 3500 -m randr
+ (exwm-input-set-key (kbd "s-\(")
+                     (lambda () (interactive) (start-process-shell-command "redshift" nil "redshift" "-O 3500 -P")))
+
+
+ ;; I comment this out as I think the next caters for it.
+ ;; (push ?\s-  exwm-input-prefix-keys)
+
+ ;; These keys should always pass through to Emacs.
+ (setq exwm-input-prefix-keys
+       '(?\C-x
+         ?\C-u
+         ?\C-h
+         ?\C-\;
+         ?\M-x
+         ?\M-:
+         ?\C-\M-j  ;; Buffer list (ivy)
+         ?\C-\M-k  ;; Browser list
+         ?\s-o     ;; Buffer list (helm)
+         ?\s-e     ;; Launch external programs
+         ?\M-&
+         ?\M-`
+         ?\s-\;
+         ?\C-q))
+
+ ;; (add-to-list 'exwm-input-prefix-keys ?\C-q)
+ ;; Ctrl+Q will enable the next key to be sent directly
+ (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+
+ (setq exwm-input-simulation-keys
+       '(
+         ;; movement
+         ([?\C-b] . [left])
+         ([?\M-b] . [C-left])
+         ([?\C-f] . [right])
+         ([?\M-f] . [C-right])
+         ([?\C-p] . [up])
+         ([?\C-n] . [down])
+         ([?\C-a] . [home])
+         ([?\C-e] . [end])
+         ([?\M-v] . [prior])
+         ([?\C-v] . [next])
+         ([?\C-d] . [delete])
+         ([?\C-k] . [S-end delete])
+         ([?\M-h] . [S-end select])
+         ([?\M-d] . [C-S-right ?\C-x])
+         ([M-backspace] . [C-S-left ?\C-x])
+         ;; escape
+         ([?\C-g] . [escape])
+         ;; cut/paste.
+         ([?\C-w] . [?\C-x])
+         ([?\M-w] . [?\C-c])
+         ([?\C-y] . [?\C-v])
+         ;; search
+         ([?\C-s] . [?\C-f])))
+
+ ;; Set up global key kindings. These always work, no matter the input state!
+ ;; Keep in mind that changing this list after EXWM initializes has no effect.
+ ;; Though it is true that this other way of doing it worked as well
+ ;; (exwm-input-set-key (kbd "s-<left>") #'windmove-left)
+ ;; (exwm-input-set-key (kbd "s-<down>") #'windmove-down)
+ ;; (exwm-input-set-key (kbd "s-<up>") #'windmove-up)
+ ;; (exwm-input-set-key (kbd "s-<right>") #'windmove-right)
+ ;; (exwm-input-set-key (kbd "s-&") #'ambrevar/exwm-start)
+ ;; (exwm-input-set-key (kbd "s-:") #'ambrevar/toggle-window-split)
+ ;; (exwm-input-set-key (kbd "s-;") #'rotate-windows)
+
+ (setq exwm-input-global-keys
+       `(
+         ;; Reset to line mode (C-c C-k switches to char-mode via
+         ;; exwm-input-release-keyboard
+         ([?\s-r] . exwm-reset)
+
+         ;; Move between windows
+         ([s-left] . windmove-left)
+         ([s-right] . windmove-right)
+         ([s-up] . windmove-up)
+         ([s-down] . windmove-down)
+         ;;          ([s-prior] . rotate-windows)
+
+         ;; launch applications via shell command
+         ([?\s-&] . ambrevar/exwm-start)
+         ([?\s-w] . exwm-workspace-switch)
+         ([?\s-:] . ambrevar/toggle-window-split)
+         ([?\s-\;] . rotate-windows) ;; este no funciona bien, no se por que.
+
+         ;; 's-N': Switch to certain workspace with Super (Win) plus a number
+         ;; (0-9)
+         ,@(mapcar (lambda (i)
+                     `(,(kbd (format "s-%d" i)) .
+                       (lambda ()
+                         (interactive)
+                         (exwm-workspace-switch-create ,i))))
+                   (number-sequence 0 9))
+         )
+       )
+ (exwm-enable) ;; initializes EXWM
+
+
+  ;; xrandr commented out as now <autorandr> takes care of all this.
+  (when (string= (system-name) "toshiba")
     (exwm-randr-enable)
-    )
+    ;; (start-process-shell-command "xrandr" nil "xrandr --output eDP-1 --mode 1366x768 --pos 1920x312 --rotate normal --output DP-1 --off --output HDMI-1 --off --output DP-2 --off --output HDMI-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal")
 
-;;; for officePC
+    (setq exwm-randr-workspace-monitor-plist
+          '(0 "eDP-1"))
+
+    ;; React to display connectivity changes, do initial display update
+    (add-hook 'exwm-randr-screen-change-hook #'efs/update-displays)
+    (efs/update-displays))
+
+  ;; for officePC
   (when (string=(system-name) "officePC")
+    (exwm-randr-enable)
     ;;(setq exwm-randr-workspace-output-plist '(0 "VGA1"))
     (setq exwm-randr-workspace-monitor-plist '(0 "HDMI-1"))
     (add-hook 'exwm-randr-screen-change-hook
@@ -423,89 +614,27 @@ ARCHIVE is the string name of the package archive.")
                 (start-process-shell-command
                  ;; "xrandr" nil "xrandr --output HDMI-2 --left-of LVDS1 --auto")))
                  "xrandr" nil "xrandr --output HDMI-1 --auto")))
-    (exwm-randr-enable)
 
-    ;; (defun exwm-change-screen-hook ()
-    ;;   (let ((xrandr-output-regexp "\n\\([^ ]+\\) connected ")
-    ;;         default-output)
-    ;;     (with-temp-buffer
-    ;;       (call-process "xrandr" nil t nil)
-    ;;       (goto-char (point-min))
-    ;;       (re-search-forward xrandr-output-regexp nil 'noerror)
-    ;;       (setq default-output (match-string 1))
-    ;;       (forward-line)
-    ;;       (if (not (re-search-forward xrandr-output-regexp nil 'noerror))
-    ;;           (call-process "xrandr" nil nil nil "--output" default-output "--auto")
-    ;;         (call-process
-    ;;          "xrandr" nil nil nil
-    ;;          "--output" (match-string 1) "--primary" "--auto"
-    ;;          "--output" default-output "--off")
-    ;;         (setq exwm-randr-workspace-output-plist (list 0 (match-string 1)))))))
-    )
-
-;; Redshift off
-  (exwm-input-set-key (kbd "s-\)")
-                      (lambda () (interactive) (start-process "" nil "redshift" "-x")))
-
-  ;; Redshift on
-  (exwm-input-set-key (kbd "s-\(")
-                      (lambda () (interactive) (start-process "" nil "redshift" "-O" "3500")))
-
-  (exwm-input-set-key (kbd "s-<left>") #'windmove-left)
-  (exwm-input-set-key (kbd "s-<down>") #'windmove-down)
-  (exwm-input-set-key (kbd "s-<up>") #'windmove-up)
-  (exwm-input-set-key (kbd "s-<right>") #'windmove-right)
-  (exwm-input-set-key (kbd "s-&") #'ambrevar/exwm-start)
-  (exwm-input-set-key (kbd "s-!") #'daedreth/launch-browser)
-  (exwm-input-set-key (kbd "s-:") #'ambrevar/toggle-window-split)
-  (exwm-input-set-key (kbd "s-;") #'rotate-windows)
-
-  ;; (push ?\s-  exwm-input-prefix-keys)
-
-  ;; These keys should always pass through to Emacs.
-  (setq exwm-input-prefix-keys
-        '(?\C-x
-          ?\C-u
-          ?\C-h
-          ?\M-x
-          ?\s-
-          ?\C-q
-          ?\C-\ ))  ;; Ctrl+Space
-
-  ;; (add-to-list 'exwm-input-prefix-keys ?\C-q)
-  (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
-
-  (setq exwm-input-simulation-keys
-        '(
-          ;; movement
-          ([?\C-b] . [left])
-          ([?\M-b] . [C-left])
-          ([?\C-f] . [right])
-          ([?\M-f] . [C-right])
-          ([?\C-p] . [up])
-          ([?\C-n] . [down])
-          ([?\C-a] . [home])
-          ([?\C-e] . [end])
-          ([?\M-v] . [prior])
-          ([?\C-v] . [next])
-          ([?\C-d] . [delete])
-          ([?\C-k] . [S-end delete])
-          ([?\M-h] . [S-end select])
-          ([?\M-d] . [C-S-right ?\C-x])
-          ([M-backspace] . [C-S-left ?\C-x])
-          ;; escape
-          ([?\C-g] . [escape])
-          ;; cut/paste.
-          ([?\C-w] . [?\C-x])
-          ([?\M-w] . [?\C-c])
-          ([?\C-y] . [?\C-v])
-          ;; search
-          ([?\C-s] . [?\C-f])))
-
-  (exwm-enable)
-  )  ;;; este parentesis cierra el call a use-package to install exwm
+    (defun exwm-change-screen-hook ()
+      (let ((xrandr-output-regexp "\n\\([^ ]+\\) connected ")
+            default-output)
+        (with-temp-buffer
+          (call-process "xrandr" nil t nil)
+          (goto-char (point-min))
+          (re-search-forward xrandr-output-regexp nil 'noerror)
+          (setq default-output (match-string 1))
+          (forward-line)
+          (if (not (re-search-forward xrandr-output-regexp nil 'noerror))
+              (call-process "xrandr" nil nil nil "--output" default-output "--auto")
+            (call-process
+             "xrandr" nil nil nil
+             "--output" (match-string 1) "--primary" "--auto"
+             "--output" default-output "--off")
+            (setq exwm-randr-workspace-output-plist (list 0 (match-string 1))))))))
+ )  ;;; este parentesis cierra el call a use-package to install exwm
 
 ;; (use-package exwm-edit)
+
 
 ;; Check for start-up errors. See =~/.profile=
 (let ((error-logs (directory-files "~" t "errors.*log$")))
@@ -556,33 +685,7 @@ ARCHIVE is the string name of the package archive.")
   (if (null (x-list-fonts font))
       nil t))
 
-;; on Why Pragmata Pro doesn't work, read here: https://github.com/hiavi/pragmatapro/issues/9
-;; Set default font. First one found is selected.
-;; (cond
-;;  ((eq window-system nil) nil)
-;; ((font-existsp "Pragmata Pro Mono")
-;;  (set-face-attribute 'default nil :height 156 :font "Pragmata Pro Mono")))
-
-
-;;  ((font-existsp "FiraCode")
-;;   (set-face-attribute 'default nil :height 121 :font "FiraCode"))
-;;  ((font-existsp "Monoid")
-;;   (set-face-attribute 'default nil :height 121 :font "Monoid"))
-;;  ((font-existsp "Inconsolata")
-;;  (set-face-attribute 'default nil :height 121 :font "Inconsolata"))
-;; ((font-existsp "Input Mono Compressed")
-;;  (set-face-attribute 'default nil :height 131 :font "Input Mono Compressed"))
-;; ((font-existsp "Menlo")
-;;  (set-face-attribute 'default nil :height 121 :font "Menlo"))
-;;  ((font-existsp "Consolas")
-;;  (set-face-attribute 'default nil :height 121 :font "Consolas"))
-;; ((font-existsp "Monaco")
-;;  (set-face-attribute 'default nil :height 121 :font "Monaco"))
-;; ((font-existsp "Envy Code R")
-;;   (set-face-attribute 'default nil :height 121 :font "Envy Code R"))
-;; ((font-existsp "Source Code Pro")
-;;  (set-face-attribute 'default nil :height 121 :font "Source Code Pro")))
-
+;; (font-existsp "Pragmata Pro Mono")
 
 ;; Line-spacing tweak
 ;; Set this to a different number depending on taste and the fonr
@@ -590,7 +693,6 @@ ARCHIVE is the string name of the package archive.")
 ;; if integer: it means pixels, added below each line.
 ;; if float (e.g 0.02): a scaling factor relative to current window's default line height.
 ;; if nil: add no extra spacing.
-
 ;; tuned for Pragmata Pro
 (setq-default line-spacing 0.06)
 

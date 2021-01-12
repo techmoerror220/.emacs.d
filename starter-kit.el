@@ -128,7 +128,7 @@ just have to assume it's online."
 
 (starter-kit-load "starter-kit-python.org")
 
-(starter-kit-load "starter-kit-tufte-latex.org")
+;; (starter-kit-load "starter-kit-tufte-latex.org")
 
 (starter-kit-load "starter-kit-stats.org")
 

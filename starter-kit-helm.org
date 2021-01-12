@@ -25,27 +25,28 @@ See https://github.com/emacs-helm/helm/issues/2085
     :diminish helm-mode
     :bind-keymap (("C-c h"    . helm-command-map)
                   ("C-c h"    . helm-command-prefix))
-    :bind  (("M-x"            . helm-M-x)
+    :bind  (;; ("M-x"            . helm-M-x) ;; I use counsel now 
             ("M-y"            . helm-show-kill-ring)
-            ("C-x b"          . helm-mini)
+            ("s-o"            . helm-mini)
             ("M-i"            . helm-semantic-or-imenu)
-            ("s-o"            . helm-occur)
+            ;; ("s-o"            . helm-occur)  ;; replaced by helm-swoop
             ("C-x C-f"        . helm-find-files)
+;;            ("C-h a"          . helm-apropos)
             ("s-<return>"     . helm-all-mark-rings)
+            ("s-<prior>"      . helm-resume)
             ("s-x"            . helm-register)
             ("s-t"            . helm-top)
-            ("s-a"            . helm-apropos)
             ("s-m"            . helm-man-woman)
-            ;;("s-\("           . helm-eval-expression-with-eldoc)
+            ("s-!"            . helm-eval-expression-with-eldoc)
             ([remap find-tag] . helm-etags-select)
             ;;("s-\)"           . ap/helm-info-emacs-elisp-cl)
             ;;("C-g"          . helm-keyboard-quit)
-            ("s-e"            . helm-run-external-command)
+            ;; ("s-e"         . helm-run-external-command) ;; counsel takes over
             ("s-D"            . helm-locate)
             ("s-d"            . helm-find)
             ("s-\""           . helm-regexp)
             :map helm-command-map
-            ("<tab>"          . helm-execute-persistent-action)
+            ;; ("<tab>"          . helm-execute-persistent-action)
             ("C-i"            . helm-execute-persistent-action)
             ("C-z"            . helm-select-action)
             ("g"              . helm-google-suggest)
@@ -68,6 +69,7 @@ See https://github.com/emacs-helm/helm/issues/2085
             ("C-g"            . helm-keyboard-quit))
     :init
     (global-unset-key (kbd "C-x c"))
+    (global-unset-key (kbd "C-h a"))
     (setq helm-command-prefix-key "C-c h")
     (global-set-key (kbd "C-c h") 'helm-command-prefix)
     (require 'helm-config)
@@ -147,7 +149,7 @@ See https://github.com/emacs-helm/helm/issues/2085
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24530 7864 157488 323000) :init (24530 7864 155104 833000) :config (24530 7864 155059 829000) :config-secs (0 0 1900 553000) :init-secs (0 0 2318 794000) :use-package-secs (0 0 4895 156000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24560 17622 45922 81000) :init (24560 17622 44615 892000) :config (24560 17622 44595 545000) :config-secs (0 0 794 409000) :init-secs (0 0 1029 662000) :use-package-secs (0 0 2488 186000)))
 
 
 
@@ -162,12 +164,16 @@ helm-swoop, based on Helm, allows to show interactively lines that match a patte
 
 Conclusion: it's like a helm-occur bound to =s-;=
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Check out the =helm-multi-swoop-all= function for searching on selected files.: =("s-<prior>" . helm-multi-swoop-all)=
+
+Note 8 Jan 2021: Trying swiper for a while
+
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package helm-swoop
     :after helm-mode
-    :bind (:map helm-command-map
-           ("C-c h o" . helm-swoop)           ; esto no está funcionando
-           ("C-c s" . helm-multi-swoop-all))  ; esto no está funcionando
+    :bind (
+           ("s-a"       . helm-swoop)
+            )
     :config
     ;; When doing isearch, hand the word over to helm-swoop
     (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
@@ -181,7 +187,6 @@ Conclusion: it's like a helm-occur bound to =s-;=
     ;; If this value is t, split window inside the current window
     (setq helm-swoop-split-with-multiple-windows t)
 
-    ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
     (setq helm-swoop-split-direction 'split-window-vertically)
 
     ;; If nil, you can slightly boost invoke speed in exchange for text color
@@ -189,7 +194,7 @@ Conclusion: it's like a helm-occur bound to =s-;=
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 17905 246966 751000) :init (24468 17905 246699 37000) :init-secs (0 0 39 231000) :use-package-secs (0 0 413 902000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24558 10211 940424 588000) :init (24558 10211 940181 987000) :init-secs (0 0 1125 839000) :use-package-secs (0 0 1551 298000) :config (24558 10211 940140 155000) :config-secs (0 0 1075 558000)))
 
 
 * And more Ambrevar's stuff
@@ -432,11 +437,13 @@ From https://github.com/tmalsburg/helm-bibtex: Helm-bibtex and ivy-bibtex allow 
     (setq helm-bibtex-bibliography       "/media/dgm/blue/documents/bibs/socbib.bib" 
           helm-bibtex-library-path       "/media/dgm/blue/documents/elibrary/org/references/pdfs/"
           helm-bibtex-notes-path         "/media/dgm/blue/documents/elibrary/org/references/readings.org")
+    (setq bibtex-completion-cite-prompt-for-optional-arguments t)
+    (setq bibtex-completion-cite-default-command 'textcite)
     )
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24471 7469 673543 638000) :init (24471 7469 673516 259000) :init-secs (0 0 973 82000) :use-package-secs (0 0 1088 285000) :config (24471 7469 673467 559000) :config-secs (0 0 887 595000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24572 8307 270494 509000) :init (24572 8307 270478 397000) :config (24572 8307 270435 632000) :config-secs (0 0 1120 607000) :init-secs (0 0 1210 171000) :use-package-secs (0 0 1374 805000)))
 
 Tip from =titus= for =helm-bibtex=: I use the menu key as the prefix key for all helm commands and bind helm-bibtex to b. Helm-bibtex can then be started using <menu> b. It is also useful to bind helm-resume to <menu> in helm-command-map. With this binding, <menu> <menu> can be used to reopen the last helm search.
 
@@ -503,7 +510,7 @@ Open pdf with system pdf viewer
 
 From: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/
 
-With this setup helm-bibtex points to the same notes file as =org-ref=. Just run =M-x helm-bibtex= (=C-]=) and select the article you want. Instead of pressing =<return>=, press =<tab>=. This opens up helm's alternate action list where you can choose to =Edit notes=. This opens up the exact notes file created by org-ref.
+With this setup helm-bibtex points to the same notes file as =org-ref=. Just run =M-x helm-bibtex= (=C-]=) and select the article you want. Instead of pressing =<return>=, press =<tab>= (or =C-i=). This opens up helm's alternate action list where you can choose to =Edit notes=. This opens up the exact notes file created by org-ref.
 
 #+BEGIN_SRC emacs-lisp :tangle no
  (setq helm-bibtex-bibliography "/media/dgm/blue/documents/bibs/socbib.bib" 
@@ -747,21 +754,14 @@ NB: =helm-projectile-ag= resulta en un formato ilegible. =helm-ag= resulta en un
 
 * Allowing =ido= mode
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun ido-recentf-open ()
-  "Use `ido-completing-read' to find a recent file."
-  (interactive)
-  (if (find-file (ido-completing-read "Find recent file: " recentf-list))
-      (message "Opening file...")
-    (message "Aborting")))
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-to-list 'helm-completing-read-handlers-alist '(ido-recentf-open  . ido))
 
 (global-set-key (kbd "C-x f") 'ido-recentf-open)
-
-(add-to-list 'helm-completing-read-handlers-alist '(ido-recentf-open  . ido))
 #+END_SRC
 
 #+RESULTS:
-: ((ido-recentf-open . ido) (find-tag . helm-completing-read-default-find-tag) (xref-find-definitions . helm-completing-read-default-find-tag) (xref-find-references . helm-completing-read-default-find-tag) (ggtags-find-tag-dwim . helm-completing-read-default-find-tag) (tmm-menubar) (find-file) (execute-extended-command) (dired-do-rename . helm-read-file-name-handler-1) (dired-do-copy . helm-read-file-name-handler-1) (dired-do-symlink . helm-read-file-name-handler-1) (dired-do-relsymlink . helm-read-file-name-handler-1) (dired-do-hardlink . helm-read-file-name-handler-1) (basic-save-buffer . helm-read-file-name-handler-1) (write-file . helm-read-file-name-handler-1) (write-region . helm-read-file-name-handler-1))
+: ido-recentf-open
 
 
 * =org-rifle=

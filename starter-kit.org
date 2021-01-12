@@ -541,7 +541,7 @@ Located in [[file:starter-kit-python.org][starter-kit-python]]
 *** Starter Kit Tufte Latex
 
 #+begin_src emacs-lisp
-(starter-kit-load "starter-kit-tufte-latex.org")
+;; (starter-kit-load "starter-kit-tufte-latex.org")
 #+end_src
 
 #+RESULTS:

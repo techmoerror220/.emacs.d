@@ -1,3 +1,91 @@
+** COMMENT Edwina
+
+#+begin_src emacs-lisp :tangle no
+
+  (use-package edwina
+    :config
+    (setq display-buffer-base-action '(display-buffer-below-selected))
+    ;; (edwina-setup-dwm-keys)
+    (edwina-mode 1))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24561 62018 558019 123000) :init (24561 62018 557974 419000) :config (24561 62018 557306 773000) :config-secs (0 0 2150 397000) :init-secs (0 0 3362 929000) :use-package-secs (0 0 3601 602000)))
+
+
+** Redshift
+(start-process-shell-command "redshift" nil "redshift -x"))
+
+Not working.
+
+#+begin_src emacs-lisp :tangle no
+
+ ;; Redshift
+   (defvar efs/redshift-process nil
+    "Holds the process of the running Redshift instance, if any")
+
+  (defun efs/kill-redshift ()
+    (interactive)
+    (when efs/redshift-process
+      (ignore-errors
+        (setq efs/redshift-process (start-process-shell-command "redshift" nil "redshift -x"))))
+    (setq efs/redshift-process nil))
+
+  (defun efs/start-redshift ()
+    (interactive)
+    (efs/kill-redshift)
+    (setq efs/redshift-process (start-process-shell-command "redshift" nil "redshift -O 3500 -m randr")))
+
+  ;; Start redshift
+  (efs/start-redshift)
+
+ ;; Redshift off
+ (exwm-input-set-key (kbd "s-\)")
+                     (lambda () (interactive) (efs/kill-redshift)))
+
+ ;; Redshift on
+ (exwm-input-set-key (kbd "s-\(")
+                     (lambda () (interactive) (efs/start-redshift)))
+
+
+#+end_src
+
+#+RESULTS:
+
+* Polybar
+- From DW's config
+
+#+begin_src emacs-lisp :tangle no
+
+  (defvar efs/polybar-process nil
+    "Holds the process of the running Polybar instance, if any")
+
+  (defun efs/kill-panel ()
+    (interactive)
+    (when efs/polybar-process
+      (ignore-errors
+        (kill-process efs/polybar-process)))
+    (setq efs/polybar-process nil))
+
+  (defun efs/start-panel ()
+    (interactive)
+    (efs/kill-panel)
+    (setq efs/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
+
+ ;; start the Polybar panel
+ (efs/start-panel)
+#+end_src
+
+  (cheatsheet-add :group 'Find-Occurrences
+                  :key "s-o"
+                  :description "helm-occur: TAB to temporarily move to highlighted match")
+
+  (cheatsheet-add :group 'Help
+                  :key "s-a"
+                  :description "helm-apropos for commands, functions, variables and faces. Original in C-h d")
+
+
 * Cheatsheet
 
 See https://github.com/darksmile/cheatsheet/blob/master/cheatsheet.el

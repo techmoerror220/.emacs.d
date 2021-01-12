@@ -6,207 +6,36 @@
 
 This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
-* Starter Kit LaTeX
-  Support for editing LaTeX.
-
 * Set the engine running latex
 ** With =tex= comes =auctex=
 
-Following advice from https://emacs.stackexchange.com/questions/41321/when-to-specify-a-package-name-in-use-packages-ensure-tag
-Also see https://emacs.stackexchange.com/questions/41332/how-to-automatically-install-auctex-if-certain-package-is-unable-to-be-activated
+Following advice from:
 
-Once installed, =auctex= overrides the =tex= packagu. This means that to get =auctex= working, you need the following:
+https://emacs.stackexchange.com/questions/41321/when-to-specify-a-package-name-in-use-packages-ensure-tag
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package tex
-  :defer t
-  :ensure auctex)
-#+END_SRC
+Also see:
+ https://emacs.stackexchange.com/questions/41332/how-to-automatically-install-auctex-if-certain-package-is-unable-to-be-activated
 
-#+RESULTS:
-
-** Set a Path to Executables (optional)
-The location of the LaTeX excecutables is system dependent. AUCTeX calls everything through a shell, so you may or may not need this.  This source-code block is turned off by default as it should be added to the user's personal configuration as needed.
-
-DGM: Creo que ya no es necesario porque tengo el paquete de Purcell para que Emacs use el path definido systemwide.
-
-#+srcname: set-exec-path
-#+begin_src emacs-lisp :tangle no
-;;      (setenv "PATH" (concat "/usr/texbin:" (getenv "PATH")))
-#+end_src
-
-* Color Theme Tweaks
-The theme package is loaded in =starter-kit-misc.org=. The settings
-here adjust the height of some headings in Org and LaTeX mode, as well
-as turning off the sans-serif heading style that AucTeX defaults to.
-
-#+srcname: local-settings
-#+begin_src emacs-lisp :tangle yes
-  (add-hook 'latex-mode-hook
-            (lambda ()
-              (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground "#b58900")
-              (set-face-attribute 'font-latex-sectioning-0-face nil :height 3)
-              (set-face-attribute 'font-latex-sectioning-1-face nil :height 2)
-              (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5)
-              (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2)
-              (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)))
-#+end_src
-
-#+RESULTS: local-settings
-| (lambda nil (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground #b58900) (set-face-attribute 'font-latex-sectioning-0-face nil :height 3) (set-face-attribute 'font-latex-sectioning-1-face nil :height 2) (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5) (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2) (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)) | turn-off-auto-fill | turn-on-reftex |
-
-* Local LaTeX settings
-** In-text Smart Quotes (XeLaTeX only)
-Redefine TeX-open-quote and TeX-close-quote to be smart quotes by default. Below, in the local org-mode settings, we'll also map the relevant function to a key we can use in org-mode, too. If you don't use XeLaTeX for processing all your =.tex= files, you should disable this option.
-
-#+source: smart-quotes
-#+begin_src emacs-lisp :tangle yes
-  (setq TeX-open-quote "“")
-  (setq TeX-close-quote "”")
-#+end_src
-
-#+RESULTS: smart-quotes
-: ”
-
-*** SyncTeX, PDF mode, Evince
-Set up AUCTeX to work with the Evince PDF viewer.
-
-#+srcname: sync
-#+begin_src emacs-lisp :tangle yes
-    ;; Synctex with Evince
-    (add-hook 'TeX-mode-hook
-    (lambda ()
-    (add-to-list 'TeX-output-view-style
-    '("^pdf$" "."
-     "/usr/bin/evince  %n %o %b")))
-     )
-
-  (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
-  (setq TeX-view-program-list
-       '(("PDF Viewer" "/usr/bin/evince -b -g %n %o %b")))
-
-  ;; Make emacs aware of multi-file projects
-  ;; (setq-default TeX-master nil)
-
-    ;; Auto-raise Emacs on activation (from Skim, usually)
-;;    (defun raise-emacs-on-aqua()
-;;    (shell-command "osascript -e 'tell application \"Emacs\" to activate' &"))
-;;    (add-hook 'server-switch-hook 'raise-emacs-on-aqua)
-#+end_src
-
-#+RESULTS: sync
-| PDF Viewer | /usr/bin/evince -b -g %n %o %b |
-
-
-** Load Support Packages
-
-*** Load RefTeX
-#+srcname: reftex-support
-#+begin_src emacs-lisp :tangle yes
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
-  (add-hook 'pandoc-mode-hook 'turn-on-reftex)  ; with Pandoc mode
-  (autoload 'reftex-mode     "reftex" "RefTeX Minor Mode" t)
-  (autoload 'turn-on-reftex  "reftex" "RefTeX Minor Mode" t)
-  (autoload 'reftex-citation "reftex-cite" "Make citation" t)
-  (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase mode" t)
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
-  (add-hook 'latex-mode-hook 'turn-on-reftex)   ; with Emacs latex mode
-
-  ;; Make RefTeX faster
-  (setq reftex-enable-partial-scans t)
-  (setq reftex-save-parse-info t)
-  (setq reftex-use-multiple-selection-buffers t)
-  (setq reftex-plug-into-AUCTeX t)
-
-  ;; Make RefTeX work with Org-Mode
-  ;; use 'C-c (' instead of 'C-c [' because the latter is already
-  ;; defined in orgmode to the add-to-agenda command.
-  (defun org-mode-reftex-setup ()
-    (load-library "reftex") 
-    (and (buffer-file-name)
-    (file-exists-p (buffer-file-name))
-    (reftex-parse-all))
-    (define-key org-mode-map (kbd "C-c (") 'reftex-citation))
-
-  (add-hook 'org-mode-hook 'org-mode-reftex-setup)
-
-  ;; RefTeX formats for biblatex (not natbib), and for pandoc
-  (setq reftex-cite-format
-        '(
-          (?\C-m . "\\cite[]{%l}")
-          (?t . "\\textcite{%l}")
-          (?a . "\\autocite[]{%l}")
-          (?p . "\\parencite{%l}")
-          (?f . "\\footcite[][]{%l}")
-          (?F . "\\fullcite[]{%l}")
-          (?P . "[@%l]")
-          (?T . "@%l [p. ]")
-          (?x . "[]{%l}")
-          (?X . "{%l}")
-          ))
-
-  (setq font-latex-match-reference-keywords
-        '(("cite" "[{")
-          ("cites" "[{}]")
-          ("footcite" "[{")
-          ("footcites" "[{")
-          ("parencite" "[{")
-          ("textcite" "[{")
-          ("fullcite" "[{") 
-          ("citetitle" "[{") 
-          ("citetitles" "[{") 
-          ("headlessfullcite" "[{")))
-
-  (setq reftex-cite-prompt-optional-args nil)
-  (setq reftex-cite-cleanup-optional-args t)
-#+end_src
-
-#+RESULTS: reftex-support
-: t
-
-** Configure AucTeX 
-
-Following advice from https://github.com/alexeyr/company-auctex/issues/27
+Once installed, =auctex= overrides the =tex= package. This means that to get =auctex= working, you need the following:
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package company-auctex
-  :after (auctex company)
-  :config (company-auctex-init))
-#+END_SRC
 
-#+RESULTS:
+  (use-package tex
+    :after org
+    :ensure auctex
+    :init
+    ;; Take this out to compile to DVI instead.
+    (add-hook 'LaTeX-mode-hook 'TeX-PDF-mode)
 
-*** Automatic Parsing
-#+source: autoparse
-#+begin_src emacs-lisp :tangle yes
-  (setq TeX-parse-self t) ; Enable parse on load.
-  (setq TeX-auto-save t) ; Enable parse on save.
-#+end_src
-
-*** Use pdfLaTeX
-    - Take this out to compile to DVI, instead.
-#+srcname: pdf-mode
-#+begin_src emacs-lisp :tangle yes
-      (add-hook 'LaTeX-mode-hook 'TeX-PDF-mode)
-#+end_src
-
-#+RESULTS: pdf-mode
-| er/add-latex-mode-expansions | TeX-PDF-mode | turn-on-reftex | latex-unicode-simplified |
-
-*** Configure Biber
-Allow AucTeX to use biber as well as/instead of bibtex.
-
-#+source: setup-biber
-#+begin_src emacs-lisp :tangle yes
-    ;; Biber under AUCTeX
+    ;; Biber under AUCTeX (as well as/instead of bibtex
     (defun TeX-run-Biber (name command file)
-      "Create a process for NAME using COMMAND to format FILE with Biber." 
-     (let ((process (TeX-run-command name command file)))
+      "Create a process for NAME using COMMAND to format FILE with Biber."
+      (let ((process (TeX-run-command name command file)))
         (setq TeX-sentinel-function 'TeX-Biber-sentinel)
         (if TeX-process-asynchronous
             process
           (TeX-synchronous-sentinel name file process))))
-    
+
     (defun TeX-Biber-sentinel (process name)
       "Cleanup TeX output buffer after running Biber."
       (goto-char (point-max))
@@ -226,16 +55,178 @@ Allow AucTeX to use biber as well as/instead of bibtex.
         (message (concat "Biber finished successfully. "
                          "Run LaTeX again to get citations right."))))
       (setq TeX-command-next TeX-command-default))
-  
-  (eval-after-load "tex"
-    '(add-to-list 'TeX-command-list '("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber"))
-    )    
+
+    :config
+    (setq TeX-parse-self t)  ; Enable parse on load.
+    (setq TeX-auto-save t)   ; Enable parse on save.
+
+    (eval-after-load "tex"
+      '(add-to-list 'TeX-command-list '("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber"))))
+
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24571 14783 458355 238000) :init (24571 14783 458298 6000) :config (24571 14783 458119 680000) :config-secs (0 0 1588 391000) :init-secs (0 0 2107 64000) :use-package-secs (0 0 2243 67000)))
+
+* The Reftex Package
+
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package reftex
+    :commands turn-on-reftex
+    :init
+    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
+    (add-hook 'pandoc-mode-hook 'turn-on-reftex)  ; with Pandoc mode
+    (autoload 'reftex-mode     "reftex" "RefTeX Minor Mode" t)
+    (autoload 'turn-on-reftex  "reftex" "RefTeX Minor Mode" t)
+    (autoload 'reftex-citation "reftex-cite" "Make citation" t)
+    (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase mode" t)
+    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
+    (add-hook 'latex-mode-hook 'turn-on-reftex)   ; with Emacs latex mode
+
+    :config
+    ;;;; RefTeX formats for biblatex (not natbib), and for pandoc
+    (setq reftex-cite-format
+          '(
+            (?\C-m . "\\cite[]{%l}")
+            (?t . "\\textcite{%l}")
+            (?a . "\\autocite[]{%l}")
+            (?p . "\\parencite{%l}")
+            (?f . "\\footcite[][]{%l}")
+            (?F . "\\fullcite[]{%l}")
+            (?P . "[@%l]")
+            (?T . "@%l [p. ]")
+            (?x . "[]{%l}")
+            (?X . "{%l}")
+            ))
+
+    (setq font-latex-match-reference-keywords
+          '(("cite" "[{")
+            ("cites" "[{}]")
+            ("footcite" "[{")
+            ("footcites" "[{")
+            ("parencite" "[{")
+            ("textcite" "[{")
+            ("fullcite" "[{")
+            ("citetitle" "[{")
+            ("citetitles" "[{")
+            ("headlessfullcite" "[{")))
+
+    (setq reftex-enable-partial-scans t)
+    (setq reftex-save-parse-info t)
+    (setq reftex-use-multiple-selection-buffers t)
+    (setq reftex-plug-into-AUCTeX t)
+
+    (setq reftex-cite-prompt-optional-args t)
+    (setq reftex-cite-cleanup-optional-args t)
+
+    (setq reftex-default-bibliography
+          '("/media/dgm/blue/documents/bibs/socbib.bib"))
+
+    ;; Think here you need the path to a directory
+    (setq reftex-bibpath-environment-variables
+          '("/media/dgm/blue/documents/bibs")))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24571 15022 695623 204000) :init (24571 15022 695614 300000) :config (24571 15022 695589 516000) :config-secs (0 0 546 77000) :init-secs (0 0 617 716000) :use-package-secs (0 0 758 194000)))
+
+* Color Theme Tweaks
+The theme package is loaded in =starter-kit-misc.org=. The settings
+here adjust the height of some headings in Org and LaTeX mode, as well
+as turning off the sans-serif heading style that AucTeX defaults to.
+
+#+srcname: local-settings
+#+begin_src emacs-lisp :tangle yes
+
+  (add-hook 'latex-mode-hook
+            (lambda ()
+              (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground "#b58900")
+              (set-face-attribute 'font-latex-sectioning-0-face nil :height 3)
+              (set-face-attribute 'font-latex-sectioning-1-face nil :height 2)
+              (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5)
+              (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2)
+              (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)))
 
 #+end_src
 
+#+RESULTS: local-settings
+| (lambda nil (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground #b58900) (set-face-attribute 'font-latex-sectioning-0-face nil :height 3) (set-face-attribute 'font-latex-sectioning-1-face nil :height 2) (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5) (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2) (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)) | turn-off-auto-fill | turn-on-reftex |
+
+* Local LaTeX settings
+** In-text Smart Quotes (XeLaTeX only)
+Redefine TeX-open-quote and TeX-close-quote to be smart quotes by default. Below, in the local org-mode settings, we'll also map the relevant function to a key we can use in org-mode, too. If you don't use XeLaTeX for processing all your =.tex= files, you should disable this option.
+
+#+source: smart-quotes
+#+begin_src emacs-lisp :tangle yes
+
+  (setq TeX-open-quote "“")
+  (setq TeX-close-quote "”")
+
+#+end_src
+
+#+RESULTS: smart-quotes
+: ”
+
+*** SyncTeX, PDF mode, Evince
+Set up AUCTeX to work with the Evince PDF viewer.
+
+10 Jan 21: =TeX-output-view-style= produces error:
+
+#+BEGIN_EXAMPLE
+
+Debugger entered--Lisp error: (void-variable TeX-output-view-style)
+  (member '("^pdf$" "." "/usr/bin/evince  %n %o %b") TeX-output-view-style)
+  (if (member '("^pdf$" "." "/usr/bin/evince  %n %o %b") TeX-output-view-style) TeX-output-view-style (setq TeX-output-view-style (cons '("^pdf$" "." "/usr/bin/evince  %n %o %b") TeX-output-view-style)))
+  (lambda nil (if (member '("^pdf$" "." "/usr/bin/evince  %n %o %b") TeX-output-view-style) TeX-output-view-style (setq TeX-output-view-style (cons '("^pdf$" "." "/usr/bin/evince  %n %o %b") TeX-output-view-style))))()
+  run-hooks(change-major-mode-after-body-hook text-mode-hook TeX-mode-hook LaTeX-mode-hook)
+
+#+END_EXAMPLE
+
+So I temporarily disable this: 
+
+#+srcname: sync
+#+begin_src emacs-lisp :tangle no
+
+    ;; Synctex with Evince
+    (add-hook 'TeX-mode-hook
+    (lambda ()
+    (add-to-list 'TeX-output-view-style
+    '("^pdf$" "."
+     "/usr/bin/evince  %n %o %b")))
+     )
+
+  (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+  (setq TeX-view-program-list
+       '(("PDF Viewer" "/usr/bin/evince -b -g %n %o %b")))
+
+  ;; Make emacs aware of multi-file projects
+  ;; (setq-default TeX-master nil)
+
+    ;; Auto-raise Emacs on activation (from Skim, usually)
+;;    (defun raise-emacs-on-aqua()
+;;    (shell-command "osascript -e 'tell application \"Emacs\" to activate' &"))
+;;    (add-hook 'server-switch-hook 'raise-emacs-on-aqua)
+
+#+end_src
+
+#+RESULTS: sync
+| PDF Viewer | /usr/bin/evince -b -g %n %o %b |
+
+
+** Company-AucTeX 
+
+Following advice from https://github.com/alexeyr/company-auctex/issues/27
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package company-auctex
+  :after (auctex company)
+  :config (company-auctex-init))
+#+END_SRC
+
+#+RESULTS:
 
 ** Bibtex 
-
 From https://tex.stackexchange.com/questions/454966/biblatex-custom-entries-with-emacs-bibtex-mode
 
 Read https://tex.stackexchange.com/questions/454966/biblatex-custom-entries-with-emacs-bibtex-mode to customize bibtex
@@ -244,474 +235,76 @@ Read https://tex.stackexchange.com/questions/454966/biblatex-custom-entries-with
 
 #+source: bibtex-dialect
 #+begin_src emacs-lisp :tangle yes
-(use-package bibtex
-  :bind ("s-\]" . crossref-add-bibtex-entry)
-  :custom
-  (bibtex-dialect (quote biblatex))
-  :config
+  (use-package bibtex
+    :after (tex org)
+    :bind ("s-\]" . crossref-add-bibtex-entry) ;; download resource found
+    :custom
+    (bibtex-dialect (quote biblatex))
+    :config
     (setq bibtex-completion-format-citation-functions
           '((org-mode      . bibtex-completion-format-citation-org-link-to-PDF)
             (latex-mode    . bibtex-completion-format-citation-cite)
             (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
-            (default       . bibtex-completion-format-citation-default))))
-; (setq bibtex-dialect "BibTeX")
+            (default       . bibtex-completion-format-citation-default)))
+
+    (setq bibtex-maintain-sorted-entries t)
+
+    (setq bibtex-autokey-titleword-separator "_")
+    (setq bibtex-autokey-year-title-separator ":_")
+
+    (setq bibtex-entry-format
+          `(page-dashes required-fields
+                        numerical-fields whitespace last-comma delimiters
+                        unify-case sort-fields))
+
+    (setq bibtex-field-delimiters 'double-quotes)
+    (setq bibtex-entry-delimiters 'braces))
+                                          ; (setq bibtex-dialect "BibTeX")
+                                          ; (setq bibtex-maintain-sorted-entries t)
+                                          ;  (setq bibtex-autokey-titleword-separator "_")
+                                          ;  (setq bibtex-autokey-year-title-separator ":_")
+
+  ;; Keep all entries in sorted order
+                                          ; (setq bibtex-maintain-sorted-entries t)
+
+  ;; Customize BibTeX bibtex-clean-entry as in https://github.com/higham/dot-emacs/blob/master/.emacs
+  ;; (setq bibtex-entry-format
+  ;;      `(page-dashes required-fields
+  ;;         numerical-fields whitespace last-comma delimiters
+  ;;         unify-case sort-fields))
+
+  ;; (setq bibtex-field-delimiters 'double-quotes)
+  ;; (setq bibtex-entry-delimiters 'braces)
+
 #+end_src
 
 #+RESULTS: bibtex-dialect
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24496 493 619340 893000) :init (24496 493 619177 249000) :config (24496 493 619139 812000) :config-secs (0 0 893 152000) :init-secs (0 0 965 955000) :use-package-secs (0 0 1938 606000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24572 809 713635 406000) :init (24572 809 713507 558000) :init-secs (0 0 411 135000) :use-package-secs (0 0 1037 565000) :config (24572 809 713494 860000) :config-secs (0 0 379 253000)))
 
-*** Keep all entries in sorted order
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq bibtex-maintain-sorted-entries t)
-#+END_SRC
-
-#+RESULTS:
-: t
-
-*** Use '-' as the separator in auto-generated bibtex keys
-We use this (rather than the underscore character) for compatibilty with Pandoc.
-
-#+source: bibtex-key-separator
-#+begin_src emacs-lisp :tangle yes
-  (setq bibtex-autokey-titleword-separator "_")
-  (setq bibtex-autokey-year-title-separator ":_")
-#+end_src
-
-*** Entry cleaning with bibtex
-
-Customize BibTeX bibtex-clean-entry as in https://github.com/higham/dot-emacs/blob/master/.emacs
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq bibtex-entry-format
-      `(page-dashes required-fields
-         numerical-fields whitespace last-comma delimiters
-         unify-case sort-fields))
-
-(setq bibtex-field-delimiters 'double-quotes)
-(setq bibtex-entry-delimiters 'braces)
-#+END_SRC
-
-#+RESULTS:
-: braces
-
-Higham prefers closing brace on its own line after cleaning BibTeX entry. I don't
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq bibtex-clean-entry-hook 'mybibtex-clean-extra)
-(defun mybibtex-clean-extra ()
-  "Move final right brace to a line of its own."
-  (progn (bibtex-end-of-entry) (left-char) (newline-and-indent)
-         (insert "      ")))
-#+END_SRC
- 
-*** Bibtex
-Disappear in upgrade 2 june 2020
-#+begin_src emacs-lisp :tangle yes
-;; emacs-lisp from https://github.com/nkicg6/emacs-config
-;; org-bibtex
-;; (require 'ox-bibtex)
-#+end_src
-
-#+RESULTS:
-: ox-bibtex
-
-
-** Configure RefTeX
-*** Default Bibliography
-This is important when editing source code in Org-babel, since the LaTeX source code block being edited probably doesn't include the \bibliography{} command that RefTeX uses to find bibliographic database(s).  Make certain also that RefTeX has a path to the bibliographic databases.  This source-code block is turned off be default as it should be configured by the user in a personal file/directory.
-
-#+srcname: default-bibliography
-#+begin_src emacs-lisp :tangle yes
-  (setq reftex-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
-#+end_src
-
-#+RESULTS: default-bibliography
-| /media/dgm/blue/documents/bibs/socbib.bib |
-
-*** Local RefTeX Settings
-
-Tell RefTeX where the bibliography files are. Commented out for now cos the path specified does not exist and I dont know what this bibpath-environment-variables does.
-
-#+srcname: local-reftex
-#+begin_src emacs-lisp :tangle no
-    ;; Make RefTex able to find my local bib files
-     (setq reftex-bibpath-environment-variables
-;;     '("/media/dgm/blue/documents/bibs"))
-     '("/home/dgm/texmf/bibtex/bib"))
-#+end_src
-
-** eBib package 
-:PROPERTIES:
-:ID:       e7ec94da-a5b8-4850-ab00-164517da8dc5
-:END:
-
-=ebib= is a bibtex database manager that works inside emacs. It can
-talk to org-mode. See [[http://ebib.sourceforge.net/][the ebib project page]] for more. When Ebib is
-loaded, you can run it with =M-x ebib=.
-  
-Package required by tufte-org-mode (https://github.com/tsdye/tufte-org-mode).
-
-Ebib is a BibTeX database manager that runs in GNU Emacs.  With Ebib, you
-can create and manage .bib-files, all within Emacs.  It supports @String
-and @Preamble definitions, multi-line field values, searching, and
-integration with Emacs' (La)TeX mode, Org mode and others.
-
-See the Ebib manual for usage and installation instructions.
-
-The latest release version of Ebib, contact information and mailing list
-can be found at <http://joostkremers.github.io/ebib>.  Development
-sources can be found at <https://github.com/joostkremers/ebib>.
-
-
-Original code on =bib=
-
-#+BEGIN_EXAMPLE
-,#+source: ebib-load
-,#+begin_src emacs-lisp :tangle yes
-(autoload 'ebib "ebib" "Ebib, a BibTeX database manager." t)
-(setq ebib-preload-bib-files 
-'("/media/dgm/blue/documents/bibs/socbib.bib"))
-(add-hook 'LaTeX-mode-hook #'(lambda ()
-(local-set-key "\C-c v" 'ebib-insert-bibtex-key)))
-,#+end_src
-
-,#+RESULTS: ebib-load
-| er/add-latex-mode-expansions | TeX-PDF-mode | (lambda nil (local-set-key  v 'ebib-insert-bibtex-key)) | turn-on-reftex |
-#+END_EXAMPLE
+** Ox files
 
 #+begin_src emacs-lisp :tangle yes
-  (use-package ebib
-    :defer t
-    :preface
-    (use-package parsebib)
-    :custom
-     (ebib-preload-bib-files '("/media/dgm/blue/documents/bibs/socbib.bib"))
-     (ebib-bib-search-dirs '("/media/dgm/blue/documents/bibs")))
 
- (setq ebib-bibtex-dialect 'biblatex)
+  ;; export citations (load after org-ref)
+  ;; (require 'ox-bibtex)
 
- (setq ebib-use-timestamp t)
- (setq ebib-timestamp-format "%d.%m.%Y.")
+  ;; Required by tufted org mode (https://github.com/tsdye/tufte-org-mode) 
+  (require 'ox-extra)
+  (ox-extras-activate '(latex-header-blocks ignore-headlines))
+  (require 'ox-tufte-latex)
 
-  ;;(add-hook 'LaTeX-mode-hook #'(lambda ()
-  ;;        (local-set-key "\C-c v" 'ebib-insert-bibtex-key)))
-#+end_src
-
-#+RESULTS:
-: biblatex
-
-
-*** ebib and citation settings in =org-mode=
-
-=ebib= is a bibtex database manager that works inside emacs. It can
-talk to org-mode. See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-17_2][this Worg tutorial]] for details.
-
-#+source: ebib-setup
-#+begin_src emacs-lisp :tangle yes
-  (org-add-link-type "ebib" 'ebib)
-
-  (org-add-link-type
-   "cite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "cite:" desc)))
-           (format "\\cite{%s}" path)
-         (format "\\cite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "parencite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "parencite:" desc)))
-           (format "\\parencite{%s}" path)
-         (format "\\parencite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "textcite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "textcite:" desc)))
-           (format "\\textcite{%s}" path)
-         (format "\\textcite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "autocite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "autocite:" desc)))
-           (format "\\autocite{%s}" path)
-         (format "\\autocite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "footcite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "footcite:" desc)))
-           (format "\\footcite{%s}" path)
-         (format "\\footcite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "fullcite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "fullcite:" desc)))
-           (format "\\fullcite{%s}" path)
-         (format "\\fullcite[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "citetitle" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "citetitle:" desc)))
-           (format "\\citetitle{%s}" path)
-         (format "\\citetitle[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "citetitles" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "citetitles:" desc)))
-           (format "\\citetitles{%s}" path)
-         (format "\\citetitles[%s]{%s}" desc path)
-         )))))
-
-  (org-add-link-type
-   "headlessfullcite" 'ebib
-   (lambda (path desc format)
-     (cond
-      ((eq format 'latex)
-       (if (or (not desc) (equal 0 (search "headlessfullcite:" desc)))
-           (format "\\headlessfullcite{%s}" path)
-         (format "\\headlessfullcite[%s]{%s}" desc path)
-         )))))
-#+end_src
-
-#+RESULTS: ebib-setup
-: Created headlessfullcite link.
-
-** Biblio
-
-From: http://juanjose.garciaripoll.com/blog/managing-bibliographies-from-emacs/
-
-A nice complement to ebib is =biblio=, a library to query various databases, such as Crossref, the arXiv, etc. This library allows you to grab bibtex records for the articles you search for. The following code links this library with ebib, so that you can press Ctrl-i and the current record is added to your ebib database.
-
-#+begin_src emacs-lisp :tangle yes
-(use-package biblio
-  :defer t
-  :custom
-  (biblio-arxiv-bibtex-header "misc")
-  :init
-  ;; This links biblio to ebib
-  (defun biblio-to-ebib-and-quit ()
-    (interactive)
-    (biblio--selection-forward-bibtex
-     (lambda (entry metadata)
-       (print entry)
-       (ebib-capture-raw-bibtex entry)
-       (ebib--update-buffers))
-     t))
-  )
-
-;; (define-key biblio-selection-mode-map (kbd "C-i") 'biblio-to-ebib-and-quit)
-;;  :bind
-;;  (map biblio-selection-mode-map
-;;        ("C-i" . biblio-to-ebib-and-quit))
-#+end_src
-
-#+RESULTS:
-: biblio-to-ebib-and-quit
-
-In order for this to work, you need the following code, which extends ebib with a function to edit raw Bibtex entries from arbitrary sources.
-
-#+begin_src emacs-lisp :tangle yes
-(defvar ebib-capture-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "\C-c\C-c" #'ebib-capture-finalize)
-    (define-key map "\C-c\C-k" #'ebib-capture-kill)
-    map)
-  "Keymap for `ebib-capture-mode', a minor mode.
-  Use this map to set additional keybindings for when Org mode is used
-  for a capture buffer.")
-
-(defvar ebib-capture-mode-hook nil
-  "Hook for the `ebib-capture-mode' minor mode.")
-
-(define-minor-mode ebib-capture-mode
-  "Minor mode for special key bindings in a capture buffer.
-
-  Turning on this mode runs the normal hook `ebib-capture-mode-hook'."
-  nil " Cap" ebib-capture-mode-map
-  (setq-local
-   header-line-format
-   (substitute-command-keys
-    "\\<ebib-capture-mode-map>Capture buffer.  Finish \
-  `\\[ebib-capture-finalize]', abort `\\[ebib-capture-kill]'.")))
-
-(defun ebib-capture-kill ()
-  "Abort the current capture process."
-  (interactive)
-  ;; FIXME: This does not do the right thing, we need to remove the
-  ;; new stuff by hand it is easy: undo, then kill the buffer
-  (kill-buffer (current-buffer))
-  (quit-window))
-
-(defun ebib-capture-finalize ()
-  "Save entries and finalize."
-  (interactive)
-  (ebib--execute-when
-    ((or slave-db filtered-db)
-     (error "[Ebib] Cannot merge into a filtered or a slave database"))
-    (real-db
-     (unless (ebib-capture-check-duplicates)
-       (let ((result (ebib--bib-find-bibtex-entries ebib--cur-db nil)))
-         (ebib--log 'message "%d entries, %d @Strings and %s @Preamble found in file."
-                    (car result)
-                    (cadr result)
-                    (if (nth 2 result) "a" "no")))
-       (ebib--update-buffers)
-       (ebib--set-modified t ebib--cur-db)
-       (ebib-capture-kill)))
-    (default (beep))))
-
-(defun ebib-capture-check-duplicates ()
-  (interactive)
-  (let ((db (ebib-db-new-database))
-        (duplicates '()))
-    (let ((result (ebib--bib-find-bibtex-entries db nil)))
-      (if (zerop (car result))
-          (message "No entries found")
-        (maphash
-         (lambda (key value)
-           (if (ebib-db-get-entry key ebib--cur-db t)
-               (push key duplicates)))
-         (ebib-db-val 'entries db))))
-    (when duplicates
-      (message "Found duplicate keys: %S" duplicates)
-      (goto-char 0)
-      (search-forward (car duplicates)))))
-
-(defun ebib-capture-raw-bibtex (entry)
-  (with-current-buffer (get-buffer-create "*Biblio entry*")
-    (erase-buffer)
-    (insert entry)
-    (bibtex-mode)
-    (ebib-capture-mode)
-    (pop-to-buffer (current-buffer))
-    (current-buffer)))
-#+end_src
-
-#+RESULTS:
-: epbib-capture-raw-bibtex
-
-** =ox-extra=
-
-Required by tufted org mode (https://github.com/tsdye/tufte-org-mode)
-
-#+begin_src emacs-lisp :tangle yes
- (require 'ox-extra)
- (ox-extras-activate '(latex-header-blocks ignore-headlines))
-#+end_src
-
-#+RESULTS:
-
-** ox-tufte-latex
-
-#+begin_src emacs-lisp :tangle yes
-(require 'ox-tufte-latex)
-#+end_src
-
-#+RESULTS:
-: ox-tufte-latex
-
-** Local vc commands
-
-    Run the =vc= shellscript before running xelatex with =C-c c= (instead
-    of =C-c C-c= for regular compile). This assumes you're using the VC
-    LaTeX package, have vc in your path, and have =vc-awk= in the
-    directory you're working in.
-
-    DGM: I comment it out as =C-c c= is used elsewhere for capture in org.
-
-#+srcname: vc-command
-#+begin_src emacs-lisp :tangle yes
-;;    (fset 'run-vc-then-xelatex
-;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
-;;    (global-set-key (kbd "C-c c") 'run-vc-then-xelatex);; Run the VC command before running xelatex
-;;    (fset 'run-vc-then-xelatex
-;;    [?\M-! ?v ?c return ?\C-c ?\C-c return])
-;;    (global-set-key (kbd "\C-c c") 'run-vc-then-xelatex)
-#+end_src
-
-    Or just run =vc= alone --- this is useful when writing LaTeX files
-    using org-mode. (See the org-mode customizations below).
-
-    dgm: I comment this out. I don't know how to make =vc= work as a command... I think you need to first make a =makefile=.  Plus I think =vc= is run automatically when =latexmk= is run thanks to the =\immediate\write18{sh ./vc}= line
-
-#+source: vc-alone
-#+begin_src emacs-lisp :tangle yes
-;;  (global-set-key (kbd "\C-c v")
-;;                      (lambda ()
-;;                        (interactive)
-;;                        (shell-command "vc")))
-#+end_src
-
-* Prettify symbols
-
-https://www.gnu.org/software/auctex/manual/auctex/Prettifying.html
-
-... not sure this is how it works. Plus I think it was already on.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-hook 'TeX-mode-hook
-    (lambda ()
-      (add-to-list 'prettify-symbols-mode)))
-#+END_SRC
-
-Trying the next bit from https://yoo2080.wordpress.com/2016/11/15/how-to-make-prettify-symbols-mode-work-with-auctex/
-
-DGM 27 august 2020: turned off cos I don't like prettifying symbols any more.
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-hook 'TeX-mode-hook 'prettify-symbols-mode)
-#+END_SRC
-
-#+RESULTS:
-| prettify-symbols-mode | (lambda nil (add-to-list 'prettify-symbols-mode)) | (lambda nil (setq TeX-command-default latexmk)) | (lambda nil (add-to-list 'TeX-output-view-style '(^pdf$ . /usr/bin/evince  %n %o %b))) | pandoc-mode |
-
-** Package =latex-pretty-symbols=
-DGM 27 august 2020: turned off cos I don't like prettifying symbols any more.
-
-#+source: latex-pretty-symbols 
-#+begin_src emacs-lisp :tangle no
-(use-package latex-pretty-symbols
-  :defer t)
-(add-hook 'LaTeX-mode-hook 'latex-unicode-simplified) 
-#+END_SRC
-
-#+RESULTS: latex-pretty-symbols
-| er/add-latex-mode-expansions | TeX-PDF-mode | turn-on-reftex | latex-unicode-simplified |
+  (require 'ox-latex)
+  (require 'ox-beamer)
 
 #+end_src
+
 
 * Provide
 
-#+BEGIN_SRC emacs-lisp  :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
+
 (provide 'starter-kit-latex)
+
 #+END_SRC
 
 #+RESULTS:
@@ -720,5 +313,7 @@ DGM 27 august 2020: turned off cos I don't like prettifying symbols any more.
 * Final message
 #+source: message-line
 #+begin_src emacs-lisp :tangle yes
+
   (message "Starter Kit LaTeX loaded.")
+
 #+end_src

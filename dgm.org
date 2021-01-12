@@ -225,7 +225,7 @@ Edit multiple regions in the same way simultaneously
 Check this post: https://www.masteringemacs.org/article/iedit-interactive-multi-occurrence-editing-in-your-buffer
 
 DGM: On 7 nov 2020 I take this out as I need it for =paredit-forward-barf-sexp=
-    :bind (("C-}" . iedit-mode))
+:bind (("C-}" . iedit-mode))
 
 #+begin_src emacs-lisp :tangle yes
   (use-package iedit
@@ -624,9 +624,9 @@ Included in =starter-kit-completion.org=
                       (goto-char (posn-point (event-start event)))
                       (highlight-symbol-at-point))))
 
-    ;; keybinds conflict so...
-    ;;(global-set-key (kbd "M-n") 'highlight-symbol-next)
-    ;;(global-set-key (kbd "M-p") 'highlight-symbol-prev)
+  ;; keybinds conflict so...
+  ;;(global-set-key (kbd "M-n") 'highlight-symbol-next)
+  ;;(global-set-key (kbd "M-p") 'highlight-symbol-prev)
 #+END_SRC
 
 #+RESULTS: highlight-numbers-and-symbols
@@ -763,18 +763,27 @@ Only turn on if a window system is available. This prevents error under terminal
 #+end_src
 
 *** Which-key
-This mode shows a keymap when an incomplete command is entered. It is especially useful for families of commands with a prefix, e.g., =C-c C-o= for outline-mode commands, or ==C-c C-v= for org-babel commands. Just start ktyping your command and pause if you want a hint.
+This mode shows a keymap when an incomplete command is entered. It is especially useful for families of commands with a prefix, e.g., =C-c C-o= for outline-mode commands, or ==C-c C-v= for org-babel commands. Just start ktyping your command and pause if you want a hint. (tip from: https://github.com/izahn/dotemacs.)
 
-tip from: https://github.com/izahn/dotemacs
+[[https://github.com/justbur/emacs-which-key][which-key]] is a useful UI panel that appears when you start pressing any key binding in Emacs to offer you all possible completions for the prefix.  For example, if you press =C-c= (hold control and press the letter =c=), a panel will appear at the bottom of the frame displaying all of the bindings under that prefix and which command they run.  This is very useful for learning the possible key bindings in the mode of your current buffer. (DW)
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+  ;; my original config
+    ;; (use-package which-key
+    ;;   :config
+    ;;   (which-key-mode))
+
+  ;; DW's config
   (use-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode
     :config
-    (which-key-mode))
+    (setq which-key-idle-delay 1))
+
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23710 39126 376820 348000) :init (23710 39126 376764 98000) :config (23710 39126 376103 227000) :config-secs (0 0 1005 744000) :init-secs (0 0 2188 552000) :use-package-secs (0 0 2389 726000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24561 65147 974020 140000) :init (24561 65147 974000 675000) :config (24561 65147 973554 642000) :config-secs (0 0 905 392000) :init-secs (0 0 1910 686000) :use-package-secs (0 0 2032 478000)))
 
 *** General REPL (comint) config
 Tip from: https://github.com/izahn/dotemacs
@@ -794,9 +803,15 @@ Load eval-in-repl for bash, elisp, and python interaction.
     :config
     (setq comint-process-echoes t)
     ;; Scroll down for input and output
+
+    ;; Innovation by Felipe Csaszar
+    (setq ansi-color-for-comint-mode 'filter)
+    (setq comint-prompt-read-only t)
+
     (setq comint-scroll-to-bottom-on-input t)
     (setq comint-scroll-to-bottom-on-output t)
     (setq comint-move-point-for-output t))
+
 #+END_SRC
 
 #+RESULTS:
@@ -955,19 +970,34 @@ Info from  https://www.emacswiki.org/emacs/RecentFiles
 
 Recentf is a minor mode that builds a list of recently opened files. This list is is automatically saved across sessions on exiting Emacs - you can then access this list through a command or the menu.
 
+;; ("C-&"        . recentf-open-files)
+
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package recentf
-    :bind (("\C-x\ \C-r" . recentf-open-files)
-           ("C-&"        . recentf-open-files))
+    :ensure t
+    :bind (
+           ("\C-x\ \C-r" . recentf-open-files)
+           ("\C-x\ f"    . counsel-recentf)  ; ido-recentf-open
+           )
+    :init
+    (defun ido-recentf-open ()
+      "Use `ido-completing-read' to find a recent file."
+      (interactive)
+      (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+          (message "Opening file...")
+        (message "Aborting")))
+    (add-to-list 'helm-completing-read-handlers-alist '(ido-recentf-open  . ido))
     :config
     (recentf-mode 1)
     (setq recentf-max-menu-items 25)
     (setq recentf-max-saved-items 25)
     (setq recentf-auto-cleanup 'never))
+
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 18585 148462 193000) :init (24468 18585 148112 259000) :config (24468 18585 148076 824000) :config-secs (0 0 803 107000) :init-secs (0 0 860 20000) :use-package-secs (0 0 1368 201000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24566 55521 697205 903000) :init (24566 55521 696803 598000) :init-secs (0 0 1483 647000) :use-package-secs (0 0 2243 918000) :config (24566 55521 696749 908000) :config-secs (0 0 1354 652000)))
 
 By default, Recentf saves the list of recent files on exiting Emacs (specifically, `recentf-save-list` is called on `kill-emacs-hook`). If Emacs exits abruptly for some reason the recent file list will be lost - therefore you may wish to call `recentf-save-list` periodically, e.g. every 5 minutes:
 (DGM disables it because I find it too invasive)
@@ -1012,26 +1042,6 @@ Ojo: solo funciona si se llama M-x rebox-mode. Luego desactívalo porque interfi
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 14570 490939 591000) :init (24467 14570 490920 202000) :init-secs (0 0 53 696000) :use-package-secs (0 0 142 76000)))
-
-*** helpful
-
-https://github.com/Wilfred/helpful
-
-Note that the built-in `describe-function' includes both functions and macros. `helpful-function' is functions only, so we provide `helpful-callable' as a drop-in replacement.
-
-     (global-set-key (kbd "\C-h f") #'helpful-callable)
-     (global-set-key (kbd "\C-h v") #'helpful-variable)
-     (global-set-key (kbd "\C-h k") #'helpful-key))
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package helpful 
-    :bind (("\C-h f" . helpful-callable)
-           ("\C-h v" . helpful-variable)
-           ("\C-h k" . helpful-key)))
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 18425 758151 735000) :init (24468 18425 757853 379000) :config (24468 18425 757826 961000) :config-secs (0 0 13 351000) :init-secs (0 0 101 364000) :use-package-secs (0 0 546 447000)))
 
 *** Lookup
 
@@ -1543,12 +1553,28 @@ After updating packages, this returns error.
 ** Customize =emacsclient=
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (setq default-frame-alist '((font . "Pragmata Pro Mono-16")))
   (add-to-list 'default-frame-alist '(line-spacing . 0.06))
+
 #+END_SRC
 
 #+RESULTS:
 : ((line-spacing . 0.06) (font . Pragmata Pro Mono-16))
+
+** Customize minibuffer's height
+
+My change relates to height: changed from 2 to 10 in an attempt to raise the minibuffer and be able to see more... but it doesn't work!! 
+
+#+begin_src emacs-lisp :tangle no
+
+ (setq minibuffer-frame-alist
+       '((width . 80) (height . 10)))
+
+#+end_src
+
+#+RESULTS:
+: ((width . 80) (height . 10))
 
 ** COMMENT =qutebrowser=
 Originally from https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org with qutebrowser, but too unstable. Changed to chromium
@@ -2296,11 +2322,18 @@ Problema: if I am in an external app within =exwm=, then =ace-window= does not w
 ***** =swiper=
 I like me some searching, the default search is very meh. In emacs, you mostly use search to get around your buffer, much like with avy, but sometimes it doesn’t hurt to search for entire words or mode, swiper makes sure this is more efficient.
 
+DGM: I prefer helm's =swoop= or =helm-occur=
+
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package swiper)
+  (use-package swiper
+    :bind ("s-a" . swiper))
 #+END_SRC
 
-DGM: I have removed =:bind ("s-i" . 'swiper)= because I don't use it much really.
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24568 8205 229260 978000) :init (24568 8205 229048 956000) :config (24568 8205 229008 403000) :config-secs (0 0 9 151000) :init-secs (0 0 83 937000) :use-package-secs (0 0 392 446000)))
+
+DGM: I have removed == because I don't use it much really.
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23919 51355 179006 615000) :init (23919 51355 178791 891000) :config (23919 51355 178416 764000) :config-secs (0 0 17 871000) :init-secs (0 0 713 525000) :use-package-secs (0 0 1105 560000)))
@@ -3969,7 +4002,6 @@ deleted, as they produce an error when exporting to pdf (they are obsolote packa
     "# eval: (org-sbe \"user-entities\")\n"
     "# eval: (org-sbe \"tufte-book\")\n"
     "# eval: (org-sbe \"tufte-handout\")\n"
-    "# eval: (org-sbe \"tufte-ebib-setup\")\n"
     "# eval: (org-sbe \"biblatex-footcite-link\")\n"
     "# eval: (org-sbe \"biblatex-multicite-link\")\n"
     "# eval: (org-sbe \"biblatex-sidecite-link\")\n"
@@ -4064,11 +4096,7 @@ deleted, as they produce an error when exporting to pdf (they are obsolote packa
     "#+LATEX_HEADER: \\makeatother\n"
     "#+LATEX_HEADER: \n"
     "#+LATEX_HEADER: \\DeclareCiteCommand{\\sidecitehelper}\n"
-    "#+LATEX_HEADER:   {\\usebibmacro{prenote}}\n"
-    "#+LATEX_HEADER:   {\\usebibmacro{citeindex}%\n"
-    "#+LATEX_HEADER:    \\usebibmacro{cite}}\n"
     "#+LATEX_HEADER:   {\\multicitedelim}\n"
-    "#+LATEX_HEADER:   {\\usebibmacro{cite:postnote}}\n"
     "#+LATEX_HEADER: \n"
     "#+LATEX_HEADER: \\ExplSyntaxOn\n"
     "#+LATEX_HEADER: \\NewDocumentCommand\\sidecite{D<>{}O{}om}{%\n"
@@ -4270,7 +4298,7 @@ Usage:
 * Browser switching
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (global-set-key (kbd "C-;") 'ivy-switch-buffer)
+  ;; (global-set-key (kbd "C-x b") 'ivy-switch-buffer) ;; set to C-M-j with Counsel now
   ;; (global-set-key (kbd "C-c b") 'ivy-switch-buffer) ;; buffer-flip gets this
 
   ;; (global-set-key (kbd "s-*") 'electric-buffer-list) ;; no lo uso
@@ -4287,17 +4315,12 @@ Usage:
 #+END_SRC
 
 #+RESULTS:
-: ido-switch-buffer
 
 * =helm-resume=
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (global-set-key (kbd "s-<next>") #'helm-resume)
 #+end_src
-
-#+RESULTS:
-: helm-resume
-
 
 * Cheatsheet
 
@@ -4343,6 +4366,9 @@ The following I've taken away.
                     :key "s-_"
                     :description "bookmark-bmenu-list")
     (cheatsheet-add :group 'Buffer-Cycling
+                    :key "exwm-workspace-switch-to-buffer"
+                    :description "See list of all buffers including EXWM buffers with external apps")
+    (cheatsheet-add :group 'Buffer-Cycling
                     :key "C-c b"
                     :description "buffer-flip")
     (cheatsheet-add :group 'Buffer-Cycling
@@ -4355,11 +4381,8 @@ The following I've taken away.
                     :key "C-g"
                     :description "buffer-flip-abort")
     (cheatsheet-add :group 'Buffer-Cycling
-                    :key "C-x b"
+                    :key "s-o"
                     :description "helm-mini. Cycles EXWM buffers")
-    (cheatsheet-add :group 'Buffer-Cycling
-                    :key "s-l"
-                    :description "ido-switch-buffer: C-c b when in an external app")
     (cheatsheet-add :group 'Buffer-Cycling
                     :key "s-n"
                     :description "helm-projectile-switch-to-buffer. Includes current P's and EXWM buffers")
@@ -4367,8 +4390,8 @@ The following I've taken away.
                     :key "C-c y"
                     :description "bury-buffer")
     (cheatsheet-add :group 'Buffer-Cycling
-                    :key "C-;"
-                    :description "Ivy-switch-buffer")
+                    :key "C-x b"
+                    :description "counsel-switch-buffer. Formerly set to Ivy-switch-buffer")
     (cheatsheet-add :group 'Buffer-List
                     :key "s-z"
                     :description "iBuffer. List of buffers for editing")
@@ -4390,9 +4413,6 @@ The following I've taken away.
     (cheatsheet-add :group 'Browsing
                     :key "s-b"
                     :description "helm-surfraw")
-    (cheatsheet-add :group 'Browsing
-                    :key "s-!"
-                    :description "daedreth/launch-browser")
     (cheatsheet-add :group 'Browsing
                     :key "R"
                     :description "eww-readable. Find text, leaving out navigation menus and the like.")
@@ -4421,17 +4441,11 @@ The following I've taken away.
                     :key "C-x z"
                     :description "Repeat most recently executed command")
     (cheatsheet-add :group 'Command
-                    :key "C-h l"
-                    :description "view-lossage. Display last few input keystrokes-keybindings and the commands run")
-    (cheatsheet-add :group 'Command
                     :key "C-x M-: OR C-x ESC ESC OR C-x M-ESC"
                     :description "repeat-complex-command. Edit and re-evaluate last complex command-one which used the minibuffer")
     (cheatsheet-add :group 'Command
                     :key "M-x M-p"
                     :description "Open helm-M-x and M-p cycles thru history")
-    (cheatsheet-add :group 'Command
-                    :key "C-h w"
-                    :description "where-is. Print message listing key sequences that invoke the command DEFINITION")
     (cheatsheet-add :group 'Common
                     :key "C-x C-c"
                     :description "save-buffers-kill-emacs")
@@ -4562,6 +4576,9 @@ The following I've taken away.
                     :key "B"
                     :description "ediff-toggle-read-only. If buffer is under version control and locked, check it out first.")
     (cheatsheet-add :group 'Editing
+                    :key "s-l"
+                    :description "kill-whole-line")
+    (cheatsheet-add :group 'Editing
                     :key "M-q"
                     :description "rebox-dwin-fill. Call M-x rebox-mode first. Then turn off")
     (cheatsheet-add :group 'Editing
@@ -4580,6 +4597,15 @@ The following I've taken away.
     (cheatsheet-add :group 'Editing
                     :key "C-o"
                     :description "open-line. Insert a newline and leave point before it.")
+    (cheatsheet-add :group 'Editing
+                    :key "C-o"
+                    :description "org-open-line. Insert a new row in tables, call open-line elsewhere.")
+    (cheatsheet-add :group 'Editing
+                    :key "C-x C-o"
+                    :description "delete-blank-lines. The opposite of org-open-line.")
+    (cheatsheet-add :group 'Editing
+                    :key "C-M o"
+                    :description "split-line. Split current line, moving portion beyond point vertically down")
     (cheatsheet-add :group 'Editing
                     :key "C-x C-u"
                     :description "upcase-region")
@@ -4601,12 +4627,6 @@ The following I've taken away.
     (cheatsheet-add :group 'Editing
                     :key "C-$"
                     :description "palimpsest-move-region-to-trash")
-    (cheatsheet-add :group 'Editing
-                    :key "C-o"
-                    :description "org-open-line. Insert a new row in tables, call open-line elsewhere.")
-    (cheatsheet-add :group 'Editing
-                    :key "C-x C-o"
-                    :description "delete-blank-lines. The opposite of org-open-line.")
     (cheatsheet-add :group 'Editing
                     :key "M-;"
                     :description "comment-dwim and org-comment-dwim.")
@@ -4831,7 +4851,19 @@ The following I've taken away.
                     :description "ess-eval-region-or-line-visibly-and-step. Evaluate region if active, otherwise the current line and step.")
     (cheatsheet-add :group 'ESS
                     :key "C-c C-l"
-                    :description "ess-load-file. Load FILENAME into an inferior ESS process.")
+                    :description "ess-load-file. Load FILENAME into an inferior ESS process. The whole file is sent to R for processing.")
+    (cheatsheet-add :group 'ESS
+                    :key "C-M x"
+                    :description "ess-eval-region-or-function-or-paragraph")
+    (cheatsheet-add :group 'ESS
+                    :key "C-c C-c"
+                    :description "ess-eval-region-or-function-or-paragraph-and-step")
+    (cheatsheet-add :group 'ESS
+                    :key "C-c C-e e"
+                    :description "Enter expression and evaluate it interactively")
+    (cheatsheet-add :group 'ESS
+                    :key "Shift-<return>"
+                    :description "my/ess-eval-pipe-through-line. Evaluate part of a piped sequence in R")
     (cheatsheet-add :group 'Expressions-Eval
                     :key "C-x C-e"
                     :description "sanityinc/eval-last-sexp-or-region")
@@ -4961,6 +4993,18 @@ The following I've taken away.
     (cheatsheet-add :group 'Expressions-Swapping
                     :key "C-M t"
                     :description "sp-transpose-sexp")
+    (cheatsheet-add :group 'External-Apps
+                    :key "M-&"
+                    :description "async-shell-command. Execute string COMMAND asynchronously in background")
+    (cheatsheet-add :group 'External-Apps
+                    :key "s-&"
+                    :description "ambrevar/exwm-start. read-shell-command")
+    (cheatsheet-add :group 'External-Apps
+                    :key "s-e"
+                    :description "helm-run-external-command")
+    (cheatsheet-add :group 'EXWM
+                    :key "C-c RET"
+                    :description "Move window to numbered workspace")
     (cheatsheet-add :group 'EXWM
                     :key "s-e"
                     :description "helm-run-external-command")
@@ -5030,15 +5074,15 @@ The following I've taken away.
     (cheatsheet-add :group 'Find-Ocurrences
                     :key "C-o"
                     :description "Occur inside a regular search with C-s or C-r")
-    (cheatsheet-add :group 'Find-Occurrences
-                    :key "s-o"
-                    :description "helm-occur: TAB to temporarily move to highlighted match")
     (cheatsheet-add :group 'Find-Occurences
                     :key "s-\""
                     :description "helm-regexp to test regexp interactively and save it. Actions on C-z")
     (cheatsheet-add :group 'Find-Ocurrences
-                    :key "M-x helm-swoop"
-                    :description "Show lines matching a pattern; cursor jumps to the line we go to")
+                    :key "s-a"
+                    :description "Helm-swoop. Show lines matching a pattern; cursor jumps to the line we go to")
+    (cheatsheet-add :group 'Find-Ocurrences
+                    :key "s-<prior>"
+                    :description "Swiper. isearch-forward with an overview")
     (cheatsheet-add :group 'Find-Org
                     :key "s-f"
                     :description "helm-org-in-buffer-headings: Find Org heading")
@@ -5064,13 +5108,16 @@ The following I've taken away.
                     :key "C-i"
                     :description "See file in separate window")
     (cheatsheet-add :group 'Helm
+                    :key "s-!"
+                    :description "helm-eval-expression-with-eldoc")
+    (cheatsheet-add :group 'Helm
                     :key "C-c TAB"
                     :description "Yank selected candidate in Helm session at point")
     (cheatsheet-add :group 'Helm
                     :key "M-SPC"
                     :description "Select multiple sources")
     (cheatsheet-add :group 'Helm
-                    :key "s-<next>"
+                    :key "s-<prior>"
                     :Description "helm-resume previous H session, inputs included. C-u lets choose Helm buffer. C-c n inside Helm session")
     (cheatsheet-add :group 'Helm
                     :key "C-c o"
@@ -5096,6 +5143,18 @@ The following I've taken away.
     (cheatsheet-add :group 'Helm-Menu
                     :key "C-c h k"
                     :description "helm-buffer-run-kill-persistent: Works on a helm menu like the one by C-x b")
+    (cheatsheet-add :group 'Helm-Projectile
+                    :key "s-`"
+                    :description "helm-projectile-find-other-file. Switch between files with the same name but different extensions using Helm")
+    (cheatsheet-add :group 'Help
+                    :key "C-c o"
+                    :description "clm/toggle-command-log-buffer. Toggle the command log showing or not.")
+    (cheatsheet-add :group 'Help
+                    :key "C-h l"
+                    :description "view-lossage. Display last few input keystrokes-keybindings and the commands run")
+    (cheatsheet-add :group 'Help
+                    :key "C-h w"
+                    :description "where-is. Print message listing key sequences that invoke the command DEFINITION")
     (cheatsheet-add :group 'Help
                     :key "C-x ?"
                     :description "All keybindings, it seems")
@@ -5104,19 +5163,28 @@ The following I've taken away.
                     :description "Describes personal keybindings")
     (cheatsheet-add :group 'Help
                     :key "C-h C-h"
-                    :description "which-key-C-h-dispatch. Helps navigate help keys")
+                    :description "which-key-C-h-dispatch. Input command name and it gives the keybinding")
     (cheatsheet-add :group 'Help
                     :key "C-h C-p"
                     :description "view-emacs-problems")
+    (cheatsheet-add :group 'Help
+                    :key "C-h r"
+                    :description "info-emacs-manual. Display the Emacs manual in Info mode.")
     (cheatsheet-add :group 'Help
                     :key "C-h p"
                     :description "Search the standard Emacs Lisp libraries by topic keywords")
     (cheatsheet-add :group 'Help
                     :key "C-h i m"
-                    :description "Search the info system and open the menu. Then type something, like 'org' and RET")
+                    :description "Search the Info system and open the menu. Then type something, like 'org' and RET")
     (cheatsheet-add :group 'Help
                     :key "C-h C-a"
                     :description "about-emacs: For information about GNU Emacs and the GNU system")
+    (cheatsheet-add :group 'Help
+                    :key "C-h a"
+                    :description "counsel-apropos. Show all matching symbols")
+    (cheatsheet-add :group 'Help
+                    :key "C-h o"
+                    :description "helpful-symbol. Show help for SYMBOL, a variable, function or macro")
     (cheatsheet-add :group 'Help
                     :key "C-h m"
                     :description "describe-mode")
@@ -5129,9 +5197,6 @@ The following I've taken away.
     (cheatsheet-add :group 'Help
                     :key "s-m"
                     :description "helm-man-woman: Manual entries for *nix commands")
-    (cheatsheet-add :group 'Help
-                    :key "s-a"
-                    :description "helm-apropos for commands, functions, variables and faces. Original in C-h d")
     (cheatsheet-add :group 'Help
                     :key "s-\)"
                     :description "Search emacs, elisp and CL info pages")
@@ -5171,6 +5236,9 @@ The following I've taken away.
     (cheatsheet-add :group 'Input
                     :key "C-\\"
                     :description "toggle-input-method. Use one back slash")
+    (cheatsheet-add :group 'Ivy
+                    :key "M-o"
+                    :description "Binding to extra commands in Ivy. Similar do C-x o in Helm")
     (cheatsheet-add :group 'Kill
                     :key "M-y"
                     :description "helm-show-kill-ring")
@@ -5239,7 +5307,7 @@ The following I've taken away.
                     :description "ap/helm-info-emacs-elisp-cl: Emacs and eLisp manual with Helm")
     (cheatsheet-add :group 'Mark
                     :key "C-x C-x"
-                    :description "cua-exchange-point-and-mark")
+                    :description "cua-exchange-point-and-mark. Exchange point and mark without activating region")
     (cheatsheet-add :group 'Mark
                     :key "C-x h"
                     :description "mark-whole-buffer")
@@ -5262,11 +5330,14 @@ The following I've taken away.
                     :key "s-BKSPC"
                     :description "er/contract-region")
     (cheatsheet-add :group 'Mark
-                    :key "C-x C-x"
-                    :description "Exchange point and mark without activating region")
-    (cheatsheet-add :group 'Mark
                     :key "M-h"
-                    :description "org-mark-element. Put point at beginning of this element, mark at end")
+                    :description "mark-paragrapn and org-mark-element. Put point at beginning of this element, mark at end")
+    (cheatsheet-add :group 'Mark
+                    :key "M-@"
+                    :description "mark-word")
+    (cheatsheet-add :group 'Mark
+                    :key "C-M-SPC"
+                    :description "mark-sexp")
     (cheatsheet-add :group 'Mark
                     :key "C-c @"
                     :description "org-mark-subtree. Mark the subtree at point. Repeat to mark subsequent subtrees of the same level")
@@ -5291,6 +5362,9 @@ The following I've taken away.
     (cheatsheet-add :group 'Minibuffer
                     :key "C-c C-c"
                     :description "Miniedit: exit minibuffer edit")
+    (cheatsheet-add :group 'Minibuffer
+                    :key "C-r"
+                    :description "counsel-minibuffer-history")
     (cheatsheet-add :group 'Movement
                     :key "M-r"
                     :description "move-to-window-line-top-bottom. Without moving the text on the screen, move point to top, bottom, middle")
@@ -5327,6 +5401,12 @@ The following I've taken away.
     (cheatsheet-add :group 'Narrowing
                     :key "W"
                     :description "Widen in Org subtree")
+    (cheatsheet-add :group 'Org
+                    :key "+"
+                    :description "org-agenda-priority-up. Also can us Shift-Up")
+    (cheatsheet-add :group 'Org
+                    :key "C-c C-,"
+                    :description "org-insert-structure-template. Insert structure in region")
     (cheatsheet-add :group 'Org
                     :key "s-,"
                     :description "org-toggle-pretty-entities. Toggle the composition display of entities as UTF8 characters")
@@ -6091,14 +6171,15 @@ The following I've taken away.
  #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24547 8932 410488 589000) :init (24547 8932 410322 990000) :init-secs (0 0 93 51000) :use-package-secs (0 0 417 850000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24572 31539 568462 172000) :init (24572 31539 568376 41000) :init-secs (0 0 36 125000) :use-package-secs (0 0 234 789000)))
 
 
 * Get various new windows at the bottom of the screen
 
-This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try and get the shell and IPython at the bottom of the screen
+This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try and get the shell and IPython at the bottom of the screen... Having said this, obviously, what I am getting at with this code is to getting the processes called to occupy the whole window from which I call them. 
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
+
   (push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
   (push (cons "\\*IPython3\\*" display-buffer--same-window-action) display-buffer-alist)
   (push (cons "\\*IPython\\*" display-buffer--same-window-action) display-buffer-alist)
@@ -6107,26 +6188,8 @@ This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try a
   (push (cons "\\*cheatsheet\\*" display-buffer--same-window-action) display-buffer-alist)
   (push (cons "\\*password-store\\*" display-buffer--same-window-action) display-buffer-alist)
   (push (cons "\\*Bookmark List\\*" display-buffer--same-window-action) display-buffer-alist)
-#+END_SRC
 
-#+RESULTS:
-| \*Bookmark List\*  | display-buffer-same-window      | (inhibit-same-window) |
-| \*password-store\* | display-buffer-same-window      | (inhibit-same-window) |
-| \*cheatsheet\*     | display-buffer-same-window      | (inhibit-same-window) |
-| \*stata\*          | display-buffer-same-window      | (inhibit-same-window) |
-| \*Python\*         | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython3\*       | display-buffer-same-window      | (inhibit-same-window) |
-| \*shell\*          | display-buffer-same-window      | (inhibit-same-window) |
-| \*password-store\* | display-buffer-same-window      | (inhibit-same-window) |
-| \*cheatsheet\*     | display-buffer-same-window      | (inhibit-same-window) |
-| \*stata\*          | display-buffer-same-window      | (inhibit-same-window) |
-| \*Python\*         | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython\*        | display-buffer-same-window      | (inhibit-same-window) |
-| \*IPython3\*       | display-buffer-same-window      | (inhibit-same-window) |
-| \*shell\*          | display-buffer-same-window      | (inhibit-same-window) |
-| \`\*Calendar\*\'   | (display-buffer-below-selected) |                       |
-| \*Calendar\*       | my-position-calendar-buffer     |                       |
+#+END_SRC
 
 
 * Security: bad-signature issue
@@ -6435,7 +6498,7 @@ Some major modes offer three different levels of fontification. You can define m
 
 Here are the conventions for how to define the levels of fontification:
 
-- Level 1: highlight function fdeclarations, file directives (such as include or import directives), strings and comments. The idea is speed, so only the most important and top-level
+- Level 1: highlight function fdeclarations, file directives (such as include or nnimport directives), strings and comments. The idea is speed, so only the most important and top-level
   components are fontified.
 - Level 2: in addition to level 1, highlight all language keywords, including type names that act like keywords, as well as named constant values. The idea is that all keywords
   (either syntactic or semantic) should be fontified appropriately.
@@ -7034,13 +7097,24 @@ From: https://www.reddit.com/r/orgmode/comments/jp71b6/soft_wrapping_instead_of_
 
 Emacs has a packaged called "visual-fill-column" which can center all the content on the screen and also virtually wrap at 80 characters so it doesn't matter if the lines are NOT wrapped in plain text files, because they will be rendered like they are inside Emacs.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package visual-fill-column)
-#+END_SRC
+*** More on this by DW: Center Org Buffers
+
+We use [[https://github.com/joostkremers/visual-fill-column][visual-fill-column]] to center =org-mode= buffers for a more pleasing writing experience as it centers the contents of the buffer horizontally to seem more like you are editing a document.  This is really a matter of personal preference so you can remove the block below if you don't like the behavior.
+
+#+begin_src emacs-lisp :tangle yes
+
+  (defun efs/org-mode-visual-fill ()
+    (setq visual-fill-column-width 80
+          visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
+
+  (use-package visual-fill-column
+    :hook (org-mode . efs/org-mode-visual-fill))
+
+#+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24546 16386 220060 447000) :init (24546 16386 220039 524000) :init-secs (0 0 906 744000) :use-package-secs (0 0 1006 180000) :config (24546 16386 219559 492000) :config-secs (0 0 9 572000)))
-
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24558 1199 993385 441000) :init (24558 1199 993363 822000) :config (24558 1199 993320 519000) :config-secs (0 0 15 515000) :init-secs (0 0 82 437000) :use-package-secs (0 0 242 79000)))
 
 ** Visual line mode
 
@@ -7129,6 +7203,174 @@ DGM comments out visual line mode on 22 dic 20
 
 #+RESULTS:
 
+* Transparency
+
+#+begin_src emacs-lisp :tangle yes
+(set-frame-parameter (selected-frame) 'alpha   '(97 . 85))
+(add-to-list  'default-frame-alist    '(alpha . (97 . 85)))
+#+end_src
+
+#+RESULTS:
+: ((alpha 93 . 85) (alpha 92 . 85) (line-spacing . 0.06) (font . Pragmata Pro Mono-16) (vertical-scroll-bars) (buffer-predicate . exwm-layout--other-buffer-predicate))
+
+* David Wilson customisations
+
+** Ivy Rich
+
+Shows summary information and key-bindings when calling helpful functions and =M-x=. In general, whatever I called with =counsel=, it gets enriched with this =ivy-rich=
+
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package ivy-rich
+    :init
+    (ivy-rich-mode 1)
+    :config
+    (setq ivy-format-function #'ivy-format-function-line)
+    (setq ivy-rich-display-transformers-list
+          (plist-put ivy-rich-display-transformers-list
+                     'ivy-switch-buffer
+                     '(:columns
+                       ((ivy-rich-candidate (:width 40))
+                        (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right)); return the buffer indicators
+                        (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))          ; return the major mode info
+                        (ivy-rich-switch-buffer-project (:width 15 :face success))             ; return project name using `projectile'
+                        (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))  ; return file path relative to project root or `default-directory' if project is nil
+                       :predicate
+                       (lambda (cand)
+                         (if-let ((buffer (get-buffer cand)))
+                             ;; Don't mess with EXWM buffers
+                             (with-current-buffer buffer
+                               (not (derived-mode-p 'exwm-mode)))))))))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24561 40211 609416 153000) :init (24561 40211 609408 84000) :config (24561 40211 609289 277000) :config-secs (0 0 311 991000) :init-secs (0 0 606 293000) :use-package-secs (0 0 667 251000)))
+
+
+** Counsel 
+
+Counsel is a customized set of commands to replace `find-file` with `counsel-find-file`, etc which provide useful commands for each of the default completion commands.
+
+[[https://github.com/Yevgnen/ivy-rich][ivy-rich]] adds extra columns to a few of the Counsel commands to provide more information about each item.
+
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package counsel
+    :bind (
+           ("M-x"   . 'counsel-M-x)
+           ("C-x b" . 'counsel-switch-buffer)
+           ("C-h a" . 'counsel-apropos)
+           ("s-e"   . 'counsel-linux-app) 
+           :map minibuffer-local-map
+           ("C-r" . 'counsel-minibuffer-history))
+    :custom
+    (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
+    :config
+    (setq ivy-initial-inputs-alist nil) ;; don't start searches with ^
+    (counsel-mode 1))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24566 55614 496668 630000) :init (24566 55614 496078 854000) :config (24566 55614 495581 248000) :config-secs (0 0 952 764000) :init-secs (0 0 1909 497000) :use-package-secs (0 0 2694 457000)))
+
+
+** Helpful Help Commands
+
+[[https://github.com/Wilfred/helpful][Helpful]] adds a lot of very helpful (get it?) information to Emacs' =describe-= command buffers.  For example, if you use =describe-function=, you will not only get the documentation about the function, you will also see the source code of the function and where it gets used in other places in the Emacs configuration.  It is very useful for figuring out how things work in Emacs.
+
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package helpful
+    :custom
+    (counsel-describe-function-function #'helpful-callable)
+    (counsel-describe-variable-function #'helpful-variable)
+    :bind
+    ([remap describe-function] . counsel-describe-function)
+    ([remap describe-command]  .  helpful-command)
+    ([remap describe-variable] . counsel-describe-variable)
+    ([remap describe-key]      . helpful-key))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24561 42121 978333 318000) :init (24561 42121 978102 874000) :init-secs (0 0 50 552000) :use-package-secs (0 0 427 526000) :config (24561 42121 978076 437000) :config-secs (0 0 7 858000)))
+
+*** Original Configuration of =helpful=
+
+https://github.com/Wilfred/helpful
+
+Note that the built-in `describe-function' includes both functions and macros. `helpful-function' is functions only, so we provide `helpful-callable' as a drop-in replacement.
+
+     (global-set-key (kbd "\C-h f") #'helpful-callable)
+     (global-set-key (kbd "\C-h v") #'helpful-variable)
+     (global-set-key (kbd "\C-h k") #'helpful-key))
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package helpful 
+    :bind (("\C-h f" . helpful-callable)
+           ("\C-h v" . helpful-variable)
+           ("\C-h k" . helpful-key)))
+#+END_SRC
+
+** Polybar
+
+#+begin_src emacs-lisp :tangle yes
+
+  ;; Polybar
+  (defvar efs/polybar-process nil
+    "Holds the process of the running Polybar instance, if any")
+
+  (defun efs/kill-panel ()
+    (interactive)
+    (when efs/polybar-process
+      (ignore-errors
+        (kill-process efs/polybar-process)))
+    (setq efs/polybar-process nil))
+
+  (defun efs/start-panel ()
+    (interactive)
+    (efs/kill-panel)
+    (setq efs/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
+
+  ;; Start the polybar panel
+  (efs/start-panel)
+
+  (defun efs/send-polybar-hook (module-name hook-index)
+    (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
+
+  (defun efs/send-polybar-exwm-workspace () 
+    (efs/send-polybar-hook "exwm-workspace" 1))
+
+  ;; Update panel indicator when workspace changes
+  (add-hook 'exwm-workspace-switch-hook #'efs/send-polybar-exwm-workspace)
+
+
+#+end_src
+
+#+RESULTS:
+: #<process redshift<1>>
+
+** Command log mode
+
+#+begin_src emacs-lisp :tangle yes
+(use-package command-log-mode)
+#+end_src
+
+* Automatically update packages
+
+From [[https://github.com/jwiegley/use-package][GitHub - jwiegley/use-package: A use-package declaration for simplifying your .emacs]], but it returns error.
+
+#+begin_src emacs-lisp :tangle no
+
+(use-package auto-package-update
+  :config
+  (setq auto-package-update-delete-old-versions t)
+  (setq auto-package-update-hide-results t)
+  (auto-package-update-maybe))
+
+#+end_src
 
 * Provide
 

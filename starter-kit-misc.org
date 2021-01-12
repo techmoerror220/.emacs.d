@@ -22,7 +22,8 @@ Things that don't fit anywhere else.
   (display-time-mode 1)
 #+END_EXAMPLE
 
-#+begin_src emacs-lisp :tangle yes
+*** My original, working config
+#+begin_src emacs-lisp :tangle no
   (use-package minions
 ;;    :after (circadian)
     :config
@@ -35,13 +36,29 @@ Things that don't fit anywhere else.
 #+RESULTS:
 : minions-minor-modes-menu
 
+*** DW's config 
+
+#+begin_src emacs-lisp :tangle yes
+(use-package minions
+  :hook (doom-modeline-mode . minions-mode)
+  :custom
+  (minions-mode-line-lighter ""))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24561 44979 945505 280000) :init (24561 44979 945496 735000) :config (24561 44979 945483 2000) :config-secs (0 0 3 757000) :init-secs (0 0 44 834000) :use-package-secs (0 0 110 412000)))
+
 ** My mode line 
 https://emacs.stackexchange.com/questions/10033/change-mode-line-buffer-id-face-for-inactive-windows/22682#22682
 
-#+begin_src emacs-lisp :tangle yes
-(setq display-time-day-and-date t)
-(setq display-time-24hr-format t)
-(display-time-mode 1)
+It's working. But turned off to try DW's 
+
+#+begin_src emacs-lisp :tangle no
+
+;;;; Commented out as Polybar takes care of this now.
+;; (setq display-time-day-and-date t)
+;; (setq display-time-24hr-format t)
+;; (display-time-mode 1)
 
 (defvar ml-selected-window nil)
 
@@ -80,11 +97,48 @@ mouse-1: Previous buffer\nmouse-3: Next buffer")
 
 (setq-default mode-line-buffer-identification
   '(:eval (ml-propertized-buffer-identification "%12b")))
+
 #+end_src
 
 #+RESULTS:
 | :eval | (ml-propertized-buffer-identification %12b) |
 
+** DW's modeline config with doom-modeline
+
+
+[[https://github.com/seagle0128/doom-modeline][doom-modeline]] is a very attractive and rich (yet still minimal) mode line configuration for Emacs.  The default configuration is quite good but you can check out the [[https://github.com/seagle0128/doom-modeline#customize][configuration options]] for more things you can enable or disable.
+
+*NOTE:* The first time you load your configuration on a new machine, you'll need to run `M-x all-the-icons-install-fonts` so that mode line icons display correctly.
+
+#+begin_src emacs-lisp :tangle yes
+
+(use-package all-the-icons)
+
+(use-package doom-modeline
+  :after eshell     ;; Make sure it gets hooked after eshell
+  :hook (after-init . doom-modeline-init)
+  :custom-face
+  (mode-line ((t (:height 0.85))))
+  (mode-line-inactive ((t (:height 0.85))))
+  :custom
+  (doom-modeline-height 15)
+  (doom-modeline-bar-width 6)
+  (doom-modeline-lsp t)
+  (doom-modeline-github nil)
+  (doom-modeline-mu4e nil)
+  (doom-modeline-irc nil)
+  (doom-modeline-minor-modes t)
+  (doom-modeline-persp-name nil)
+  (doom-modeline-buffer-file-name-style 'truncate-except-project)
+  (doom-modeline-major-mode-icon t)
+  :config
+  (setq doom-modeline-icon t)
+  (column-number-mode t))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24562 2642 7719 715000) :init (24562 2642 7639 604000) :init-secs (0 0 13519 594000) :use-package-secs (0 0 28552 445000) :config (24562 2642 7589 584000) :config-secs (0 0 13411 319000)))
 
 ** Color Themes
 Emacs 24 introduces a streamlined theming system that replaces an
@@ -193,6 +247,20 @@ to the function =get-spaceline-working=
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 18433 844807 213000) :init (24468 18433 844794 541000) :config (24468 18433 844568 856000) :config-secs (0 0 5760 829000) :init-secs (0 0 6236 767000) :use-package-secs (0 0 6316 687000)))
+
+** More Color Themes with Doom
+
+[[https://github.com/hlissner/emacs-doom-themes][doom-themes]] is a great set of themes with a lot of variety and support for many different Emacs modes.  Taking a look at the [[https://github.com/hlissner/emacs-doom-themes/tree/screenshots][screenshots]] might help you decide which one you like best.  You can also run =M-x counsel-load-theme= to choose between them easily.
+
+#+begin_src emacs-lisp :tangle yes
+
+(use-package doom-themes)
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24561 64632 22950 489000) :init (24561 64632 22942 368000) :config (24561 64632 22718 55000) :config-secs (0 0 5 902000) :init-secs (0 0 15316 165000) :use-package-secs (0 7 216401 949000)))
+
 
 ** Window system 
 

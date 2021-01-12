@@ -13,71 +13,151 @@ This file provides settings for ESS and R.
  
 ** Load ESS 
 
-:map inferior-ess-mode-map
-         ("C->"   . my_pipe_operator)
-         ("C-c i" . my_in_operator)
+Nota que si no incluyo =(require 'ess-site)=, tengo un mensaje:
 
-           ("C-<" . my_assignment_operator)
+#+BEGIN_EXAMPLE
+Warning (defvaralias): Overwriting value of ‘R-mode-hook’ by aliasing to ‘ess-r-mode-hook’
+#+END_EXAMPLE
 
-    :bind (
-           ("C->"   . my_pipe_operator)
-           ("C-c i" . my_in_operator)
-           :map inferior-ess-mode-map
-           ("C->"   . my_pipe_operator)
-           ("C-c i" . my_in_operator)
-           )
+("M-p"   . my/ess-eval-pipe-through-line) -> can't use =M-p=, that's for cycling the history at the command prompt!! 
 
-(require 'ess-r-mode)
-(define-key ess-r-mode-map "_" 'ess-insert-assign)
-(define-key inferior-ess-r-mode-map "_" 'ess-insert-assign)
+Also 
 
+#+BEGIN_EXAMPLE
+
+    (defun my/ess-eval-pipe-through-line (vis)
+      "Like `ess-eval-paragraph' but only evaluates up to the pipe on this line.
+  If no pipe, evaluate paragraph through the end of current line.
+  Prefix arg VIS toggles visibility of ess-code as for `ess-eval-region'."
+      (interactive "P")
+      (save-excursion
+        (let ((end (progn
+                     (my/ess-beginning-of-pipe-or-end-of-line)
+                     (point)))
+              (beg (progn (backward-paragraph)
+                          (ess-skip-blanks-forward 'multiline)
+                          (point))))
+          (ess-eval-region beg end vis))))
+
+#+END_EXAMPLE
+
+doesn't work.
 
 #+src-name: ess-mode
 #+begin_src emacs-lisp :tangle yes :results silent
-  ;; (use-package ess
-  ;;  :ensure t
-  ;;  :init (require 'ess-site))
-
   (use-package ess
     :defer t
     :bind
+    (:map inferior-ess-mode-map
+          ;; Usually I bind C-z to `undo', but I don't really use `undo' in
+          ;; inferior buffers. Use it to switch to the R script (like C-c
+          ;; C-z):
+          ("C-z" . ess-switch-to-inferior-or-script-buffer))
     (:map ess-r-mode-map
-          ("C->"   . my_pipe_operator)
-          ("C-<" . my_assignment_operator)
-          ("C-c i" . my_in_operator)
-          ("_"     . ess-insert-assign))
+          ("C->"   . my/pipe_operator)
+          ("C-<"   . my/assignment_operator)
+          ("C-c i" . my/in_operator)
+          ("_"     . ess-insert-assign)
+          ("S-<return>"  . my/ess-eval-pipe-through-line))
     (:map inferior-ess-r-mode-map
-          ("C->"   . my_pipe_operator)
-          ("C-<" . my_assignment_operator)
-          ("C-c i" . my_in_operator)        
+          ("C->"   . my/pipe_operator)
+          ("C-<"   . my/assignment_operator)
+          ("C-c i" . my/in_operator)
           ("_"     . ess-insert-assign))
     :init
-    (defun my_pipe_operator ()
-      "R/ESS %>% operator"
+    (require 'ess-site)
+    (require 'ess-r-mode)
+
+    (defun my/pipe_operator ()
+      "Add a pipe operator %>% at the end of the current line.
+    Don't add one if the end of line already has one.  Ensure one
+    space to the left and start a newline with indentation."
       (interactive)
-      (just-one-space 1)
-      (insert "%>%")
+      (end-of-line)
+      (unless (looking-back "%>%" nil)
+        (just-one-space 1)
+        (insert "%>%"))
       (reindent-then-newline-and-indent))
 
-    (defun my_assignment_operator ()
+    (defun my/assignment_operator ()
       "R/ESS <- assignment"
       (interactive)
       (just-one-space 1)
       (insert "<-")
       (just-one-space 1))
 
-    (defun my_in_operator ()
+    (defun my/in_operator ()
       "R/ESS %in% operator"
       (interactive)
       (just-one-space 1)
       (insert "%in%")
       (just-one-space 1))
-    :config
-    (require 'ess-r-mode)
-    (setq ess-style 'RStudio)
-    )
 
-  ;;  (require 'ess-site)
+    ;; https://gitlab.com/jabranham/emacs/-/blob/master/init.el
+    ;; I sometimes want to evaluate just part of a piped sequence. The
+    ;; following lets me do so without needing to insert blank lines or
+    ;; something:
+  
+    (defun my/ess-beginning-of-pipe-or-end-of-line ()
+      "Find point position of end of line or beginning of pipe %>%."
+      (if (search-forward "%>%" (line-end-position) t)
+          (goto-char (match-beginning 0))
+        (end-of-line)))
+  
+    (defun my/ess-eval-pipe-through-line (vis)
+      "Like `ess-eval-paragraph' but only evaluates up to the pipe on this line. If no pipe, evaluate paragraph through the end of current line. Prefix arg VIS toggles visibility of ess-code as for `ess-eval-region'."
+      (interactive "P")
+      (save-excursion
+        (let ((end (progn
+                     (my/ess-beginning-of-pipe-or-end-of-line)
+                     (point)))
+              (beg (progn (backward-paragraph)
+                          (ess-skip-blanks-forward 'multiline)
+                          (point))))
+          (ess-eval-region beg end vis))))
+    :custom
+    (ess-ask-for-ess-directory nil "Don't ask for dir when starting a process")
+    (ess-style 'RStudio)
+    (ess-eval-visibly t "See the Commands you send")
+    ;; (ess-plain-first-buffername nil "Name first R process R:1")
+    (ess-tab-complete-in-script t "TAB should complete.")
+    (ess-write-to-dribble nil)
+    (ess-execute-in-process-buffer t)
+    (inferior-ess-fix-misaligned-output t)
+    :config
+    ;; Disable IDO so helm is used instead
+    (setq ess-use-ido nil)
+    (setq inferior-R-args "--no-save")
+    ;; ESS syntax highlight
+    (setq ess-R-font-lock-keywords
+          '((ess-R-fl-keyword:modifiers . t)
+            (ess-R-fl-keyword:fun-defs . t)
+            (ess-R-fl-keyword:keywords . t)
+            (ess-R-fl-keyword:assign-ops . t)
+            (ess-R-fl-keyword:constants . t)
+            (ess-fl-keyword:fun-calls . nil)
+            (ess-fl-keyword:numbers . t)
+            (ess-fl-keyword:operators . t)
+            (ess-fl-keyword:delimiters . t) ;; originally set to nil
+            (ess-fl-keyword:= . t)
+            (ess-R-fl-keyword:F&T . t)
+            (ess-R-fl-keyword:%op% . t)))
+    (setq inferior-ess-r-font-lock-keywords
+          '((ess-S-fl-keyword:prompt . t)
+            (ess-R-fl-keyword:messages . t)
+            (ess-R-fl-keyword:modifiers . t)
+            (ess-R-fl-keyword:fun-defs . t)
+            (ess-R-fl-keyword:keywords . t)   ;; try with nil
+            (ess-R-fl-keyword:assign-ops . t)
+            (ess-R-fl-keyword:constants . t)
+            (ess-fl-keyword:matrix-labels . t)
+            (ess-fl-keyword:fun-calls . nil)
+            (ess-fl-keyword:numbers . nil)
+            (ess-fl-keyword:operators . nil)
+            (ess-fl-keyword:delimiters . nil)
+            (ess-fl-keyword:= . nil)          ;; try with t
+            (ess-R-fl-keyword:F&T . nil))))
+
 
   ;; https://matthewbauer.us/bauer/
   (use-package ess-site
@@ -111,8 +191,7 @@ This file provides settings for ESS and R.
            ("\\.[Bb][Mm][Dd]\\'"         . ess-bugs-mode)
            ("\\.[Jj][Aa][Gg]\\'"         . ess-jags-mode)
            ("\\.[Jj][Oo][Gg]\\'"         . ess-jags-mode)
-           ("\\.[Jj][Mm][Dd]\\'"         . ess-jags-mode)
-           ))
+           ("\\.[Jj][Mm][Dd]\\'"         . ess-jags-mode)))
 
   (use-package ess-smart-underscore
     :after ess
@@ -151,25 +230,13 @@ This file provides settings for ESS and R.
   ;; (scheme . t)
 
 
-  ;; I am following Ista Zahn here: don't include (stata . t) but do (require 'ob-stata) afterwards. Stil, when I do so, I get the Debugger entered--Lisp error: (void-variable inferior-STA-program-name)
+  ;; I am following Ista Zahn here: don't include (stata . t) but do (require 'ob-stata) afterwards. Still, when I do so, I get the Debugger entered--Lisp error: (void-variable inferior-STA-program-name)
   ;; eval(inferior-STA-program-name) so the problem comes from =ob-stata=.
   ;;(require 'ess)
   ;;(require 'ess-site)
 #+end_src
 
 #+RESULTS:
-
-** COMMENT Customize smart underscore
-Insert =_= if the preceding character is not a tab/space. 
-
-Toggle with =ess-S-underscore-when-last-character-is-a-space=  Not enabled by default, so when I defined a varible with an underscore as in =my_packages=, I got a =<-= as soon as I typed the =_=.
-
-#+begin_src emacs-lisp :tangle no :results silent 
-(setq ess-S-underscore-when-last-character-is-a-space t)
-#+end_src
-
-#+RESULTS:
-: t
 
 ** Coding Hooks
 #+source: ide-ess
@@ -179,61 +246,15 @@ Toggle with =ess-S-underscore-when-last-character-is-a-space=  Not enabled by de
 #+end_src
 
 ** Use Knitr to process Sweave documents
+
+Creo que está deprecada porque no se encuentra en =C-h v=.
+
 #+source: knitr-swv
-#+begin_src emacs-lisp :tangle yes :results silent
+#+begin_src emacs-lisp :tangle no :results silent
   (setq ess-swv-processor "'knitr")
 #+end_src
  
-** Make shift-enter to a lot in ESS.
-
- Use shift-enter to split window & launch R (if not running), execute
- highlighted region (if R running & area highlighted), or execute
- current line (and move to next line, skipping comments). Nice. See
- http://www.emacswiki.org/emacs/EmacsSpeaksStatistics,
- FelipeCsaszar. Adapted to split vertically instead of horizontally. 
-
-#+src-name: ess-shift-enter
-#+begin_src emacs-lisp :tangle yes :results silent
-  (setq ess-ask-for-ess-directory nil)
-  (setq ess-local-process-name "R")
-  (setq ansi-color-for-comint-mode 'filter)
-  (setq comint-scroll-to-bottom-on-input t)
-  (setq comint-scroll-to-bottom-on-output t)
-  (setq comint-move-point-for-output t)
-  (defun my-ess-start-R ()
-    (interactive)
-    (if (not (member "*R*" (mapcar (function buffer-name) (buffer-list))))
-      (progn
-	(delete-other-windows)
-	(setq w1 (selected-window))
-	(setq w1name (buffer-name))
-	(setq w2 (split-window w1 nil t))
-	(R)
-	(set-window-buffer w2 "*R*")
-	(set-window-buffer w1 w1name))))
-  (defun my-ess-eval ()
-    (interactive)
-    (my-ess-start-R)
-    (if (and transient-mark-mode mark-active)
-	(call-interactively 'ess-eval-region)
-      (call-interactively 'ess-eval-line-and-step)))
-  (add-hook 'ess-mode-hook
-	    '(lambda()
-	       (local-set-key [(shift return)] 'my-ess-eval)))
-  (add-hook 'inferior-ess-mode-hook
-	    '(lambda()
-	       (local-set-key [C-up] 'comint-previous-input)
-	       (local-set-key [C-down] 'comint-next-input)))
- (add-hook 'Rnw-mode-hook 
-          '(lambda() 
-             (local-set-key [(shift return)] 'my-ess-eval))) 
-  (require 'ess-site)
-#+end_src
-
-#+RESULTS:
-: ess-site
-
-
+* Other stuff
 ** COMMENT lintr and flycheck
 [[https://github.com/jimhester/lintr][lintr]] checks your R code for style and syntax errors. It's an R library that integrates with [[http://www.flycheck.org][flycheck]]. You must install lintr from R. Flycheck can also check code in many other languages. You will need to install linters for them separately as well. See the flycheck documentation for details.
 
@@ -249,20 +270,23 @@ dgm disables flycheck as it slows emacs down
 
 #+RESULTS: lintr
 
-* R very slow
+** R very slow
 
 - See here:  https://stat.ethz.ch/pipermail/ess-help/2011-March/006734.html
 and here: https://stackoverflow.com/questions/13779399/emacs-ess-evaluating-slower-than-normal-r
 
 #+begin_src emacs-lisp :tangle yes :results silent
-(setq ess-eval-visibly-p nil)
+
+;; I prefer to see the echo of the message sent out
+; (setq ess-eval-visibly-p t) 
 (setq ess-use-eldoc nil)
 ;;(setq ess-use-eldoc 'script-only)
+
 #+end_src
 
 #+RESULTS:
 
-* COMMENT Indentation error
+** COMMENT Indentation error
 When working in Stata I get an indentation error to do with the function: =ess-indent-new-comment-line()=
 
 I found one possible solution by Vitalie Spinu, the author of polymode (https://stat.ethz.ch/pipermail/ess-help/2014-May/009941.html):
@@ -319,11 +343,66 @@ file:
 
 This will make ado-mode load when you open an ado or do file.
 
-* My R window config
+
+* Window config
+
+** Window config in ESS manual
+
+Tinkered from original in the manual: [[pdfview:/media/dgm/blue/documents/programming/emacs/ESS/ess-manual-18.10.3.pdf::22][/media/dgm/blue/documents/programming/emacs/ESS/ess-manual-18.10.3.pdf]]
+
+Works wonderfully but the windows created by the =display-buffer-in-side-window= (i.e., the window with the EXWM-managed process =R_x11= and the window with help )can not be enlarged with =C-x 1=. You get the following error: 
+
+#+BEGIN_EXAMPLE
+
+Debugger entered--Lisp error: (error "Cannot make side window the only window")
+  signal(error ("Cannot make side window the only window"))
+  error("Cannot make side window the only window")
+  delete-other-windows()
+  zygospore-delete-other-window()
+  zygospore-toggle-delete-other-windows()
+  funcall-interactively(zygospore-toggle-delete-other-windows)
+  call-interactively(zygospore-toggle-delete-other-windows nil nil)
+  command-execute(zygospore-toggle-delete-other-windows)
+
+#+END_EXAMPLE
+
+Note on regular expression: =\\[R\\]= works but =\[R\]= doesn't, so you have to double scape to send a literal =[= symbol. 
+
+Also, I've added "R Dired" in case I use it in future, but it returns an error... don't'know why
+
+#+begin_src emacs-lisp :tangle yes :results silent
+
+  (setq display-buffer-alist
+        `(("R_x11"
+           (display-buffer-reuse-window display-buffer-in-side-window)
+           (side . right)
+           (slot . -1)
+           (window-width . 0.5)
+           (reusable-frames . nil))
+          ("*R Dired"
+           (display-buffer-reuse-window display-buffer-in-side-window)
+           (side . right)
+           (slot . -1)
+           (window-width . 0.5)
+           (reusable-frames . nil))
+          ("*R"
+           (display-buffer-reuse-window display-buffer-at-bottom)
+           (window-width . 0.5)
+           (reusable-frames . nil))
+          ("*Help\\[R\\]"
+           (display-buffer-reuse-window display-buffer-in-side-window)
+           (side . right)
+           (slot . 1)
+           (window-width . 0.5)
+           (reusable-frames . nil))))
+
+#+end_src
+
+
+** My R window config
 Tip from: https://stackoverflow.com/questions/47892942/start-emacs-with-r-session-and-side-by-side-windows
 
 to start thinking how to make my desired config
-
 
 #+begin_src emacs-lisp :tangle no
 (defun my-R-window-configuration ()
