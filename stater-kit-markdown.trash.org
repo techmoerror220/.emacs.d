@@ -1,0 +1,39 @@
+** COMMENT Add a Keyboard Shortcut for the Pipe Operator
+
+Assignment in ESS is shift-minus; by extension we'll use M-shift-minus for inserting the `%>%` operator.
+
+#+src-name: ess-pipe-shortcut
+#+begin_src emacs-lisp :tangle no :results silent
+
+(defun my_pipe_operator ()
+  "R/ESS %>% operator"
+  (interactive)
+  (just-one-space 1)
+  (insert "%>%")
+  (reindent-then-newline-and-indent))
+(define-key ess-mode-map (kbd "C->") 'my_pipe_operator)
+(define-key inferior-ess-mode-map (kbd "C->") 'my_pipe_operator) 
+#+end_src
+
+** Electric Pair for Markdown
+- https://stackoverflow.com/questions/27871876/custom-pairs-in-emacs-electric-pair-mode/27871987#27871987
+- No funciona
+
+#+begin_src emacs-lisp :tangle no
+  (defvar markdown-electric-pairs '(
+                                    (?* . ?*)
+                                    (?` . ?`)
+                                    (?$ . ?$)
+                                    (?' . ?')
+                                    ) "Electric pairs for markdown-mode.")
+
+  (defun markdown-add-electric-pairs ()
+    (setq-local electric-pair-pairs (append electric-pair-pairs markdown-electric-pairs))
+    (setq-local electric-pair-text-pairs electric-pair-pairs))
+
+  (add-hook 'markdown-mode-hook 'markdown-add-electric-pairs)
+#+end_src
+
+#+RESULTS:
+| visual-fill-column-mode | turn-on-visual-line-mode | (lambda nil (highlight-symbol-mode 1)) | (lambda nil (define-key markdown-mode-map  [ 'markdown-reftex-citation)) | latex-unicode-simplified | markdown-add-electric-pairs | turn-off-auto-fill |
+

@@ -424,26 +424,29 @@ From https://github.com/tmalsburg/helm-bibtex: Helm-bibtex and ivy-bibtex allow 
 =(global-set-key (kbd "<s-backspace>") 'helm-bibtex)= ;; not needed. Already in =C-c ]=. <s-backspace> relocated to helm-swoop. Aunque ojo que en Olivetti mode =C-c ]= esta' bound to another thing.
 
 #+begin_src emacs-lisp :tangle yes
+
   ;; (setq ivy-bibtex-default-action 'bibtex-completion-insert-citation)
   (use-package helm-bibtex
+    :bind  (("C-c \)" . helm-bibtex))
     :defer t
-    :config 
+    :config
     (setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
     (setq bibtex-completion-library-path '("/media/dgm/blue/documents/elibrary/org/references/pdfs"))
     (setq bibtex-completion-notes-path   "/media/dgm/blue/documents/elibrary/org/references")
     (setq bibtex-completion-pdf-symbol   "⌘")
     (setq bibtex-completion-notes-symbol "✎")
     (setq bibtex-completion-pdf-open-function 'org-open-file)
-    (setq helm-bibtex-bibliography       "/media/dgm/blue/documents/bibs/socbib.bib" 
+    (setq helm-bibtex-bibliography       "/media/dgm/blue/documents/bibs/socbib.bib"
           helm-bibtex-library-path       "/media/dgm/blue/documents/elibrary/org/references/pdfs/"
           helm-bibtex-notes-path         "/media/dgm/blue/documents/elibrary/org/references/readings.org")
     (setq bibtex-completion-cite-prompt-for-optional-arguments t)
     (setq bibtex-completion-cite-default-command 'textcite)
     )
+
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24572 8307 270494 509000) :init (24572 8307 270478 397000) :config (24572 8307 270435 632000) :config-secs (0 0 1120 607000) :init-secs (0 0 1210 171000) :use-package-secs (0 0 1374 805000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24587 1884 12897 686000) :init (24587 1884 12754 19000) :init-secs (0 0 97 124000) :use-package-secs (0 7 687287 537000)))
 
 Tip from =titus= for =helm-bibtex=: I use the menu key as the prefix key for all helm commands and bind helm-bibtex to b. Helm-bibtex can then be started using <menu> b. It is also useful to bind helm-resume to <menu> in helm-command-map. With this binding, <menu> <menu> can be used to reopen the last helm search.
 

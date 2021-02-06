@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: ifelse
+# key: ifel
+# --
+if (${1:condition}) {
+$0
+} else if () {
+
+} else {
+
+}

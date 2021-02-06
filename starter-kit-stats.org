@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+Q# -*- coding: utf-8 -*-
 # -*- find-file-hook: org-babel-execute-buffer -*-
 
 #+TITLE: Starter Kit Statistics
@@ -343,80 +343,6 @@ file:
 
 This will make ado-mode load when you open an ado or do file.
 
-
-* Window config
-
-** Window config in ESS manual
-
-Tinkered from original in the manual: [[pdfview:/media/dgm/blue/documents/programming/emacs/ESS/ess-manual-18.10.3.pdf::22][/media/dgm/blue/documents/programming/emacs/ESS/ess-manual-18.10.3.pdf]]
-
-Works wonderfully but the windows created by the =display-buffer-in-side-window= (i.e., the window with the EXWM-managed process =R_x11= and the window with help )can not be enlarged with =C-x 1=. You get the following error: 
-
-#+BEGIN_EXAMPLE
-
-Debugger entered--Lisp error: (error "Cannot make side window the only window")
-  signal(error ("Cannot make side window the only window"))
-  error("Cannot make side window the only window")
-  delete-other-windows()
-  zygospore-delete-other-window()
-  zygospore-toggle-delete-other-windows()
-  funcall-interactively(zygospore-toggle-delete-other-windows)
-  call-interactively(zygospore-toggle-delete-other-windows nil nil)
-  command-execute(zygospore-toggle-delete-other-windows)
-
-#+END_EXAMPLE
-
-Note on regular expression: =\\[R\\]= works but =\[R\]= doesn't, so you have to double scape to send a literal =[= symbol. 
-
-Also, I've added "R Dired" in case I use it in future, but it returns an error... don't'know why
-
-#+begin_src emacs-lisp :tangle yes :results silent
-
-  (setq display-buffer-alist
-        `(("R_x11"
-           (display-buffer-reuse-window display-buffer-in-side-window)
-           (side . right)
-           (slot . -1)
-           (window-width . 0.5)
-           (reusable-frames . nil))
-          ("*R Dired"
-           (display-buffer-reuse-window display-buffer-in-side-window)
-           (side . right)
-           (slot . -1)
-           (window-width . 0.5)
-           (reusable-frames . nil))
-          ("*R"
-           (display-buffer-reuse-window display-buffer-at-bottom)
-           (window-width . 0.5)
-           (reusable-frames . nil))
-          ("*Help\\[R\\]"
-           (display-buffer-reuse-window display-buffer-in-side-window)
-           (side . right)
-           (slot . 1)
-           (window-width . 0.5)
-           (reusable-frames . nil))))
-
-#+end_src
-
-
-** My R window config
-Tip from: https://stackoverflow.com/questions/47892942/start-emacs-with-r-session-and-side-by-side-windows
-
-to start thinking how to make my desired config
-
-#+begin_src emacs-lisp :tangle no
-(defun my-R-window-configuration ()
-  "Prepare the current emacs frame for R work."
-  (interactive)
-  ;; maximimize the current frame:
-  (set-frame-parameter nil 'fullscreen 'maximized)
-  ;; keep just the current window, presumably containing the R code
-  (delete-other-windows)
-  ;; create ESS R interaction buffer and go there
-  (ess-switch-to-end-of-ESS)
-  ;; go back to the code
-  (other-window 1))
-#+end_src
 
 * Provide
 

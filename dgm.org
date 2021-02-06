@@ -39,7 +39,9 @@ OS X ships with BSD's ls command which doesn't have all the features of GNU ls (
 
 #+source: gnu-ls
 #+begin_src emacs-lisp :tangle yes
+
   (setq insert-directory-program (executable-find "ls"))
+
 #+end_src
 
 #+RESULTS: gnu-ls
@@ -77,7 +79,7 @@ DGM: not needed with EXWM
 #+end_src
 
 #+RESULTS: fullscreen-4
-| fullscreen | x-dnd-init-frame |
+| fullscreen | exwm-workspace--on-after-make-frame | exwm-manage--add-frame | doom-modeline-refresh-font-width-cache | doom-modeline-set-selected-window | x-dnd-init-frame | aw--after-make-frame |
 
 
 ** diff-hl
@@ -168,6 +170,7 @@ Now my main use =goto-char-timer= where I am prompted to write the text that I w
 
 #+name: avy-mode
 #+begin_src emacs-lisp :tangle yes
+
   (use-package avy
     :bind
     ("s-i" . avy-goto-word-1)  ;; goes to word that starts with a given char
@@ -261,10 +264,12 @@ DGM: On 7 nov 2020 I take this out as I need it for =paredit-forward-barf-sexp=
 
 #+srcname: ggtags-customization
 #+begin_src emacs-lisp :tangle yes
+
   (add-hook 'c-mode-common-hook
             (lambda ()
               (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
                 (ggtags-mode 1))))
+
 #+end_src
 
 #+RESULTS: ggtags-customization
@@ -574,29 +579,6 @@ Included in =starter-kit-completion.org=
 #+RESULTS: duplicate
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 9727 439760 900000) :init (24467 9727 439612 346000) :init-secs (0 0 52 689000) :use-package-secs (0 0 356 518000) :config (24467 9727 439588 915000) :config-secs (0 0 7 213000)))
 
-#+srcname: ibuffer-vc
-#+BEGIN_SRC emacs-lisp :tangle no
-  (add-hook 'ibuffer-hook
-            (lambda ()
-              (ibuffer-vc-set-filter-groups-by-vc-root)
-              (unless (eq ibuffer-sorting-mode 'alphabetic)
-                (ibuffer-do-sort-by-alphabetic))))
-
-  (setq ibuffer-formats
-        '((mark modified read-only vc-status-mini " "
-                (name 18 18 :left :elide)
-                " "
-                (size 9 -1 :right)
-                " "
-                (mode 16 16 :left :elide)
-                " "
-                (vc-status 16 16 :left)
-                " "
-                filename-and-process)))
-#+END_SRC
-
-#+RESULTS: ibuffer-vc
-| mark | modified | read-only | vc-status-mini |   | (name 18 18 :left :elide) |   | (size 9 -1 :right) |   | (mode 16 16 :left :elide) |   | (vc-status 16 16 :left) |   | filename-and-process |
 
 *** highlight-numbers-and-symbols
 
@@ -1239,6 +1221,7 @@ Whether to show word-granularity differences within diff hunks.
 - =all= show fine differences for all displayed diff hunks.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package magit
     :after (ghub ghub+)
     :bind (("C-x g"   . magit-status)
@@ -1258,6 +1241,7 @@ Whether to show word-granularity differences within diff hunks.
       (interactive)
       (kill-buffer)
       (jump-to-register :magit-fullscreen))
+
 #+END_SRC
 
 #+RESULTS:
@@ -1286,7 +1270,15 @@ Source: Magnar Sveen
 #+RESULTS:
 : magit-quit-session
 
-**** Edit With Emacs
+*** Prot's VC tweaks
+
+#+begin_src emacs-lisp :tangle yes
+
+(require 'prot-vc)
+
+#+end_src
+
+** Edit With Emacs
 Editing input boxes from Chrome with Emacs. Pretty useful to keep all significant text-writing on the web within emacs. I typically use this with posts on Discourse, which has a post editor that overrides normal Emacs key bindings with other functions. As such, markdown-mode is used (dgm comments this out to have the default text mode operative.)
 
 Para usarlo creo que es necesario instalar la extension "edit with emacs" en la chrome web store. This extension has the following information:
@@ -1337,7 +1329,7 @@ Other options here:
 https://emacsnotes.wordpress.com/2018/05/14/editing-html-textareas-with-emacs-bye-bye-its-all-text-hello-textern/
 (emacs_chrome, GhostText, It's All Text!, Textern, withExEditor.)
 
-*** Make sure time stamps are in English
+** Make sure time stamps are in English
  
 Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-of-time-stamps
 
@@ -1351,7 +1343,7 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 #+RESULTS:
 : C
 
-** Key bindings
+** Keybindings
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;;    (define-key global-map [?\s-u] 'undo)
@@ -1363,6 +1355,7 @@ Tip from: https://stackoverflow.com/questions/28913294/emacs-org-mode-language-o
 
 #+RESULTS:
 : kill-buffer
+
 ** Harry R. Schwartz  stuff
 - Taken from https://github.com/hrs/dotfiles/blob/master/emacs/.emacs.d/configuration.org
 *** Rename file
@@ -3722,17 +3715,21 @@ Handy way of getting back to previous places. Nice but I already have =C-h SPC= 
 
 Borrowed from Steve Purcell's config. This pretty-prints the results.
 
+DGM: on 23 Jan 21 I comment out the bit on =eval-last-sexp-or-region= as the original works on =?\N{LATIN SMALL LETTER A WITH GRAVE}= and this version doesn't. 
+
 #+begin_src emacs-lisp :tangle yes
+
   (bind-key "M-:" 'pp-eval-expression)
 
-  (defun sanityinc/eval-last-sexp-or-region (prefix)
-    "Eval region from BEG to END if active, otherwise the last sexp."
-    (interactive "P")
-    (if (and (mark) (use-region-p))
-        (eval-region (min (point) (mark)) (max (point) (mark)))
-      (pp-eval-last-sexp prefix)))
+  ;; (defun sanityinc/eval-last-sexp-or-region (prefix)
+  ;;   "Eval region from BEG to END if active, otherwise the last sexp."
+  ;;   (interactive "P")
+  ;;   (if (and (mark) (use-region-p))
+  ;;       (eval-region (min (point) (mark)) (max (point) (mark)))
+  ;;     (pp-eval-last-sexp prefix)))
 
-  (bind-key "C-x C-e" 'sanityinc/eval-last-sexp-or-region emacs-lisp-mode-map)
+  ;; (bind-key "C-x C-e" 'sanityinc/eval-last-sexp-or-region emacs-lisp-mode-map)
+
 #+end_src
 
 *** Enable minibuffer completion
@@ -3794,19 +3791,20 @@ It can be difficult to remember the full names of Emacs commands, so I use =icom
 #+RESULTS:
 : lt-art
 
-** Beamer
+** Beamer 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (define-skeleton beam-sanchez
     "Inserts a Latex beamer skeleton into current buffer.
-  This only makes sense for empty buffers."
+    This only makes sense for empty buffers."
     "\n"
     "# -*- coding: utf-8 -*-\n"
     "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
     "#+TITLE:Fake title\n"
     "#+BEAMER_HEADER: \\title[Short Title]{Long Title}\n"
-    "#+BEAMER_HEADER: \\author[\\textcolor{lightgray}{DGM \\& Mora}]{Daniel Guinea-Martin\\inst{1} and Ricardo Mora\\inst{2}\n"
-    "#+BEAMER_HEADER: \\institute[]{\\inst{1} Dept.Sociology I, UNED  \\and \\inst{2} Dept. Economics, UC3M}\n"
+    "#+BEAMER_HEADER: \\author[\\textcolor{lightgray}{DGM \\& Mora}]{Daniel Guinea-Martin\\inst{1} and Ricardo Mora\\inst{2}}\n"
+    "#+BEAMER_HEADER: \\institute[]{\\inst{1} Dept. Sociology I, UNED (Madrid, Spain) \\and \\inst{2} Dept. Economics, Universidad Carlos III (Madrid, Spain)}\n"
     "#+DATE:\n"
     "#+LaTeX_CLASS: beamer\n"
     "#+LaTeX_CLASS_OPTIONS: [xcolor={svgnames,x11names},compress]\n"
@@ -3817,6 +3815,7 @@ It can be difficult to remember the full names of Emacs commands, so I use =icom
     "#+LATEX_CMD: pdflatex\n"
     "\n\n"
     "" _ "")
+
 #+END_SRC
 
 #+RESULTS:
@@ -3946,9 +3945,10 @@ is a good idea, together with commenting out =babel= in [[file:~/texmf/tex/gener
 NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (define-skeleton xlt-pec
     "Inserts a XeLaTeX skeleton into current buffer.
-  For evaluating PECs."
+    For evaluating PECs."
     "\n"
     "# -*- coding: utf-8 -*-\n"
     "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
@@ -3967,8 +3967,18 @@ NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
     "\n\n"
     "** Cuestiones de estilo\n"
     "\n\n"
+    "** Adecuación con los contenidos especificados en la guía\n"
+    "Según la guía del TFG en sociología, la PEC1 debe contener:
+  1. un planteamiento de la(s) pregunta(s) de investigación;
+  2. una justificación de la importancia de la cuestión a estudiar dentro del marco de la línea de trabajo en la que se inscriba el TFG;
+  3. una propuesta de fuentes primarias o secundarias que se van a utilizar o la metodología a seguir en el caso de que se pretenda generar datos propios; y,
+  4. una estructura provisional del TFG.\n"
+    "\n\n"
+    "* Consejos\n"
+    "\n\n"
     "* Veredicto\n\n\n"
     "\\printbibliography")
+
 #+END_SRC
 
 #+RESULTS:
@@ -4391,7 +4401,7 @@ The following I've taken away.
                     :description "bury-buffer")
     (cheatsheet-add :group 'Buffer-Cycling
                     :key "C-x b"
-                    :description "counsel-switch-buffer. Formerly set to Ivy-switch-buffer")
+                    :description "counsel-switch-buffer. Formerly set to Ivy-switch-buffer. M-o for available actions")
     (cheatsheet-add :group 'Buffer-List
                     :key "s-z"
                     :description "iBuffer. List of buffers for editing")
@@ -4438,6 +4448,9 @@ The following I've taken away.
                     :key "C-i"
                     :description "TAB")
     (cheatsheet-add :group 'Command
+                    :key "C-j"
+                    :description "New line, for example in paredit and generally in Emacs")
+    (cheatsheet-add :group 'Command
                     :key "C-x z"
                     :description "Repeat most recently executed command")
     (cheatsheet-add :group 'Command
@@ -4449,6 +4462,9 @@ The following I've taken away.
     (cheatsheet-add :group 'Common
                     :key "C-x C-c"
                     :description "save-buffers-kill-emacs")
+    (cheatsheet-add :group 'Counsel 
+                    :key "M-o"
+                    :description "Available actions")
     (cheatsheet-add :group 'Debugging
                     :key "M-x gdb"
                     :description "IDE-like interface, with specialized buffers for controlling breakpoints, stack frames, and other aspects of the debugger state.")
@@ -4576,9 +4592,6 @@ The following I've taken away.
                     :key "B"
                     :description "ediff-toggle-read-only. If buffer is under version control and locked, check it out first.")
     (cheatsheet-add :group 'Editing
-                    :key "s-l"
-                    :description "kill-whole-line")
-    (cheatsheet-add :group 'Editing
                     :key "M-q"
                     :description "rebox-dwin-fill. Call M-x rebox-mode first. Then turn off")
     (cheatsheet-add :group 'Editing
@@ -4683,7 +4696,7 @@ The following I've taken away.
                     :description "zap-up-to-char")
     (cheatsheet-add :group 'Editing
                     :key "s-l"
-                    :description "Kills whole line where your cursor is in")
+                    :description "kill-whole-line")
     (cheatsheet-add :group 'Editing
                     :key "yank-file-name"
                     :description "Yanks current buffer file name and its path to the kill ring")
@@ -5181,7 +5194,7 @@ The following I've taken away.
                     :description "about-emacs: For information about GNU Emacs and the GNU system")
     (cheatsheet-add :group 'Help
                     :key "C-h a"
-                    :description "counsel-apropos. Show all matching symbols")
+                    :description "counsel-apropos. Show all matching symbols. M-o for available actions")
     (cheatsheet-add :group 'Help
                     :key "C-h o"
                     :description "helpful-symbol. Show help for SYMBOL, a variable, function or macro")
@@ -5307,7 +5320,7 @@ The following I've taken away.
                     :description "ap/helm-info-emacs-elisp-cl: Emacs and eLisp manual with Helm")
     (cheatsheet-add :group 'Mark
                     :key "C-x C-x"
-                    :description "cua-exchange-point-and-mark. Exchange point and mark without activating region")
+                    :description "cua-exchange-point-and-mark. Exchange point and mark without activating region. You can move from beginning to end of region")
     (cheatsheet-add :group 'Mark
                     :key "C-x h"
                     :description "mark-whole-buffer")
@@ -5341,6 +5354,9 @@ The following I've taken away.
     (cheatsheet-add :group 'Mark
                     :key "C-c @"
                     :description "org-mark-subtree. Mark the subtree at point. Repeat to mark subsequent subtrees of the same level")
+    (cheatsheet-add :group 'Mark
+                    :key "C-u C-SPC"
+                    :description "Jump to previous mark")
     (cheatsheet-add :group 'Markdown
                     :key "C-c C-s C"
                     :description "markdown-insert-gfm-code-block. Insert GFM code block for language LANG. Can also use the rb snippet")
@@ -5364,7 +5380,19 @@ The following I've taken away.
                     :description "Miniedit: exit minibuffer edit")
     (cheatsheet-add :group 'Minibuffer
                     :key "C-r"
-                    :description "counsel-minibuffer-history")
+                    :description "counsel-minibuffer-history. M-o for available actions")
+    (cheatsheet-add :group 'Movement
+                    :key "C-;"
+                    :description "goto-last-changes")
+    (cheatsheet-add :group 'Movement
+                    :key "M-r"
+                    :description "move-to-window-line-top-bottom")
+    (cheatsheet-add :group 'Movement
+                    :key "M-}"
+                    :description "forward-paragraph. Move forward to end of paragraph.")
+    (cheatsheet-add :group 'Movement
+                    :key "M-{"
+                    :description "backward-paragraph. Move backward to start of paragraph.")
     (cheatsheet-add :group 'Movement
                     :key "M-r"
                     :description "move-to-window-line-top-bottom. Without moving the text on the screen, move point to top, bottom, middle")
@@ -5472,7 +5500,7 @@ The following I've taken away.
                     :description "Place cursor at start of heading. See hierachical path to this heading")
     (cheatsheet-add :group 'Org
                     :key "C-c C-w"
-                    :description "org-refile")
+                    :description "org-refile. Move the entry or entries at point to another heading.")
     (cheatsheet-add :group 'Org
                     :key "C-u C-u C-c C-o"
                     :description "org-open-at-point. Open link outside Emacs with external app-such as Libreoffice")
@@ -5990,6 +6018,12 @@ The following I've taken away.
                     :key "s-\)"
                     :description "Redshift off")
     (cheatsheet-add :group 'Rectangle-editing
+                    :key "C-x SPC"
+                    :description "rectangle-mark-mode. Toggle the region as rectangular.")
+  (cheatsheet-add :group 'Rectangle-editing
+                  :key "C-t"
+                  :description "Insert string rectangle. Can insert whatever from the register")
+    (cheatsheet-add :group 'Rectangle-editing
                     :key "C-x r k"
                     :description "kill-rectangle")
     (cheatsheet-add :group 'RefTeX
@@ -6028,6 +6062,9 @@ The following I've taken away.
     (cheatsheet-add :group 'Revert
                     :key "C-c r"
                     :description "Replace buffer text visited file on disk. C-u offers to revert from latest auto-save file")
+    (cheatsheet-add :group 'R-stats
+                    :key "Shift-RET"
+                    :description "my/ess-eval-pipe-through-line.")
     (cheatsheet-add :group 'Scratch
                     :key "s-^"
                     :description "M-x scratch. With C-u s-^ you choose mode, otherwise current mode is used")
@@ -6171,25 +6208,7 @@ The following I've taken away.
  #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24572 31539 568462 172000) :init (24572 31539 568376 41000) :init-secs (0 0 36 125000) :use-package-secs (0 0 234 789000)))
-
-
-* Get various new windows at the bottom of the screen
-
-This next bit is from https://github.com/syl20bnr/spacemacs/issues/6820 to try and get the shell and IPython at the bottom of the screen... Having said this, obviously, what I am getting at with this code is to getting the processes called to occupy the whole window from which I call them. 
-
-#+BEGIN_SRC emacs-lisp :tangle yes :results silent
-
-  (push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
-  (push (cons "\\*IPython3\\*" display-buffer--same-window-action) display-buffer-alist)
-  (push (cons "\\*IPython\\*" display-buffer--same-window-action) display-buffer-alist)
-  (push (cons "\\*Python\\*" display-buffer--same-window-action) display-buffer-alist)
-  (push (cons "\\*stata\\*" display-buffer--same-window-action) display-buffer-alist)
-  (push (cons "\\*cheatsheet\\*" display-buffer--same-window-action) display-buffer-alist)
-  (push (cons "\\*password-store\\*" display-buffer--same-window-action) display-buffer-alist)
-  (push (cons "\\*Bookmark List\\*" display-buffer--same-window-action) display-buffer-alist)
-
-#+END_SRC
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24604 20050 662285 983000) :init (24604 20050 662207 780000) :init-secs (0 0 35 627000) :use-package-secs (0 0 246 649000)))
 
 
 * Security: bad-signature issue
@@ -7205,13 +7224,30 @@ DGM comments out visual line mode on 22 dic 20
 
 * Transparency
 
-#+begin_src emacs-lisp :tangle yes
+Settings for Mordecai and Rigby
+
+#+begin_src emacs-lisp :tangle no
+
 (set-frame-parameter (selected-frame) 'alpha   '(97 . 85))
 (add-to-list  'default-frame-alist    '(alpha . (97 . 85)))
+
 #+end_src
 
 #+RESULTS:
 : ((alpha 93 . 85) (alpha 92 . 85) (line-spacing . 0.06) (font . Pragmata Pro Mono-16) (vertical-scroll-bars) (buffer-predicate . exwm-layout--other-buffer-predicate))
+
+Settings for Jules Verne:
+
+#+begin_src emacs-lisp :tangle yes
+
+(set-frame-parameter (selected-frame) 'alpha   '(100 . 50))
+(add-to-list  'default-frame-alist    '(alpha . (100 . 50)))
+
+#+end_src
+
+#+RESULTS:
+: ((alpha 100 . 50) (alpha 65 . 50) (line-spacing . 0.06) (font . Pragmata Pro Mono-16) (vertical-scroll-bars) (buffer-predicate . exwm-layout--other-buffer-predicate))
+
 
 * David Wilson customisations
 
@@ -7253,6 +7289,8 @@ Shows summary information and key-bindings when calling helpful functions and =M
 Counsel is a customized set of commands to replace `find-file` with `counsel-find-file`, etc which provide useful commands for each of the default completion commands.
 
 [[https://github.com/Yevgnen/ivy-rich][ivy-rich]] adds extra columns to a few of the Counsel commands to provide more information about each item.
+
+Recall: =M-o= for available actions. 
 
 #+begin_src emacs-lisp :tangle yes
 
@@ -7352,11 +7390,6 @@ Note that the built-in `describe-function' includes both functions and macros. `
 #+RESULTS:
 : #<process redshift<1>>
 
-** Command log mode
-
-#+begin_src emacs-lisp :tangle yes
-(use-package command-log-mode)
-#+end_src
 
 * Automatically update packages
 
@@ -7372,12 +7405,474 @@ From [[https://github.com/jwiegley/use-package][GitHub - jwiegley/use-package: A
 
 #+end_src
 
+
+* Window config
+
+** Window config in ESS manual
+
+Tinkered from original in the manual: [[pdfview:/media/dgm/blue/documents/programming/emacs/ESS/ess-manual-18.10.3.pdf::22][/media/dgm/blue/documents/programming/emacs/ESS/ess-manual-18.10.3.pdf]]
+
+Works wonderfully but the windows created by the =display-buffer-in-side-window= (i.e., the window with the EXWM-managed process =R_x11= and the window with Help )can not be enlarged with =C-x 1=. You get the following error: 
+
+#+BEGIN_EXAMPLE
+
+Debugger entered--Lisp error: (error "Cannot make side window the only window")
+  signal(error ("Cannot make side window the only window"))
+  error("Cannot make side window the only window")
+  delete-other-windows()
+  zygospore-delete-other-window()
+  zygospore-toggle-delete-other-windows()
+  funcall-interactively(zygospore-toggle-delete-other-windows)
+  call-interactively(zygospore-toggle-delete-other-windows nil nil)
+  command-execute(zygospore-toggle-delete-other-windows)
+
+#+END_EXAMPLE
+
+Note that on regular expression: =\\[R\\]= works but =\[R\]= doesn't, so you have to double scape to send a literal =[= symbol. 
+ 
+Also, I've added "R Dired" in case I use it in future, but it returns an error... don't'know why
+
+16 Jan 21: this is the original, working example. I disabled it now to test Prot's settings.
+
+#+begin_src emacs-lisp :tangle no :results silent
+
+  (setq display-buffer-alist
+        `(("R_x11"
+           (display-buffer-reuse-window display-buffer-in-side-window)
+           (side . right)
+           (slot . -1)
+           (window-width . 0.5)
+           (reusable-frames . nil))
+          ("*R Dired"
+           (display-buffer-reuse-window display-buffer-in-side-window)
+           (side . right)
+           (slot . 1)
+           (window-width . 0.5)
+           (reusable-frames . nil))
+          ("*R"
+           (display-buffer-reuse-window display-buffer-at-bottom)
+           (window-width . 0.5)
+           (reusable-frames . nil))
+          ("*Help\\[R\\]"
+           (display-buffer-reuse-window display-buffer-in-side-window)
+           (side . right)
+           (slot . 1)
+           (window-width . 0.5)
+           (reusable-frames . nil))))
+
+#+end_src
+
+ 
+#+begin_src emacs-lisp :tangle yes :results silent
+
+  (setq display-buffer-alist
+        `(("R_x11"
+           (display-buffer-reuse-window display-buffer-in-side-window)
+           (side . right)
+           (slot . -1)
+           (window-width . 0.5)
+           (reusable-frames . nil))
+          ("*R"
+           (display-buffer-reuse-window display-buffer-at-bottom)
+           (window-width . 0.5)
+           (reusable-frames . nil))
+          ("*Help\\[R\\]"
+           (display-buffer-reuse-window display-buffer-in-side-window)
+           (side . right)
+           (slot . 1)
+           (window-width . 0.5)
+           (reusable-frames . nil))
+          ("*R Dired"
+           (display-buffer-reuse-window display-buffer-in-side-window)
+           (side . right)
+           (slot . 1)
+           (window-width . 0.5)
+           (reusable-frames . nil))))
+
+#+end_src
+
+** Prot's settings
+
+#+begin_src emacs-lisp :tangle no :results silent
+
+  (defvar parameters
+    '(window-parameters . ((no-other-window . nil)
+                           (no-delete-other-windows . t))))
+
+  (setq fit-window-to-buffer-horizontally t)
+  (setq window-resize-pixelwise t)
+
+  (setq
+   display-buffer-alist
+   `(("R_x11"
+      (display-buffer-reuse-window display-buffer-in-side-window)
+      (side . right)
+      (slot . -1)
+      (window-width . 0.5)
+      (reusable-frames . nil) ,parameters)
+     ("*R"
+      (display-buffer-reuse-window display-buffer-in-side-window)
+      (side . bottom)
+      (window-height . 0.5)
+      (window-width . 0.5)
+      (slot . -1)
+      (reusable-frames . nil) ,parameters)
+     ("*Help\\[R\\]"
+      (display-buffer-reuse-window display-buffer-in-side-window)
+      (side . bottom)
+      (slot . 1)
+      (window-width . 0.5)
+      (reusable-frames . nil) ,parameters)
+     ("*R Dired"
+      (display-buffer-reuse-window display-buffer-in-side-window)
+      (side . bottom)
+      (slot . 1)
+      (window-width . 0.5)
+      (reusable-frames . nil) ,parameters)))
+
+  (defun prot/display-buffer-at-bottom ()
+    (interactive)
+    (let ((buffer (current-buffer)))
+      (with-current-buffer buffer
+        (delete-window)
+        (display-buffer-reuse-window
+         buffer `(window-parameters . ((mode-line-format . (" "
+                                                            "No"))
+                                       (delete-other-windows . t)))))))
+
+#+end_src
+
+
+
+** Get various new windows occupy the whole, current window
+
+The processes called occupy the whole window from which you call them. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
+
+  (push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
+  (push (cons "\\*IPython3\\*" display-buffer--same-window-action) display-buffer-alist)
+  (push (cons "\\*IPython\\*" display-buffer--same-window-action) display-buffer-alist)
+  (push (cons "\\*Python\\*" display-buffer--same-window-action) display-buffer-alist)
+  (push (cons "\\*stata\\*" display-buffer--same-window-action) display-buffer-alist)
+  (push (cons "\\*cheatsheet\\*" display-buffer--same-window-action) display-buffer-alist)
+  (push (cons "\\*password-store\\*" display-buffer--same-window-action) display-buffer-alist)
+  (push (cons "\\*Bookmark List\\*" display-buffer--same-window-action) display-buffer-alist)
+
+#+END_SRC
+
+* Keybindings
+
+** Command log mode 
+
+Show keybindings in a side window
+
+#+begin_src emacs-lisp :tangle yes
+
+(use-package command-log-mode)
+
+#+end_src
+
+** Keycast
+
+By the great Jonas Bernoulli.
+
+This package provides two modes that display the current command and its key or mouse binding, and update the displayed information once another command is invoked.
+
+=keycast-mode= displays the command and event in the mode-line and =keycast-log-mode= displays them in a dedicated frame.
+
+NB: It's great but it's not really supported in =doom-modeline=, inspite of the =defun= code included below.
+
+#+begin_src emacs-lisp :tangle no
+
+  (use-package keycast
+    :config
+    (defun turn-on-keycast ()
+      (add-to-list 'global-mode-string '("" mode-line-keycast " "))
+      )
+
+    (defun turn-off-keycast ()
+      (setq global-mode-string (delete '("" mode-line-keycast " ") global-mode-string))
+      ))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24587 906 967389 800000) :init (24587 906 967381 290000) :config (24587 906 967186 814000) :config-secs (0 0 348 845000) :init-secs (0 0 729 274000) :use-package-secs (0 0 794 297000)))
+
+** Keychord
+
+#+begin_src emacs-lisp :tangle yes
+
+(use-package key-chord)
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24587 2354 602359 472000) :init (24587 2354 602253 494000) :config (24587 2354 601166 821000) :config-secs (0 0 33 528000) :init-secs (0 0 2083 378000) :use-package-secs (0 0 2599 180000)))
+
+* goto-last-change
+
+
+How many times have you found yourself mosying [<-not in spell
+checker!?] thru a file when you wonder, where the heck was I just
+editing?  Well, the best you can do is hit undo, ^F, and undo again,
+to get back.  Hence the "burning need" for the additional function,
+which you might name the-jacobson-memorial-function, due to its brilliance.
+
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package goto-last-change
+    :bind (("C-\;" . goto-last-change)))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24589 22874 454664 70000) :init (24589 22874 454449 693000) :config (24589 22874 454414 599000) :config-secs (0 0 13 38000) :init-secs (0 0 100 983000) :use-package-secs (0 0 412 208000)))
+
+
+* iBuffer
+
+#+srcname: ibuffer-vc
+#+BEGIN_SRC emacs-lisp :tangle no
+  (add-hook 'ibuffer-hook
+            (lambda ()
+              (ibuffer-vc-set-filter-groups-by-vc-root)
+              (unless (eq ibuffer-sorting-mode 'alphabetic)
+                (ibuffer-do-sort-by-alphabetic))))
+
+  (setq ibuffer-formats
+        '((mark modified read-only vc-status-mini " "
+                (name 18 18 :left :elide)
+                " "
+                (size 9 -1 :right)
+                " "
+                (mode 16 16 :left :elide)
+                " "
+                (vc-status 16 16 :left)
+                " "
+                filename-and-process)))
+#+END_SRC
+
+#+RESULTS: ibuffer-vc
+| mark | modified | read-only | vc-status-mini |   | (name 18 18 :left :elide) |   | (size 9 -1 :right) |   | (mode 16 16 :left :elide) |   | (vc-status 16 16 :left) |   | filename-and-process |
+
+
+** Local iBuffer Settings
+
+Manage a lot of buffers easily with C-x C-b. Already set up elsewhere in the starter kit. Add local configuration here, e.g., display categories.
+
+#+srcname: iBuffer-custom
+#+begin_src emacs-lisp 
+(setq ibuffer-saved-filter-groups
+      '(("home"
+	     ("emacs-config" (or (filename . ".emacs.d")
+			                 (filename . "emacs-config")))
+	     ("Org" (or (mode . org-mode)
+		            (filename . "OrgMode")))
+	     ("Web Dev" (or (mode . html-mode)
+			            (mode . css-mode)))
+	     ("Magit" (name . "\*magit"))
+	     ("ESS" (mode . ess-mode))
+         ("LaTeX" (mode . latex-mode))
+	     ("Help" (or (name . "\*Help\*")
+		             (name . "\*Apropos\*")
+		             (name . "\*info\*"))))))
+
+(add-hook 'ibuffer-mode-hook
+	      '(lambda ()
+	         (ibuffer-switch-to-saved-filter-groups "home")))
+(setq ibuffer-show-empty-filter-groups nil)
+(setq ibuffer-expert t)
+(add-hook 'ibuffer-mode-hook
+          '(lambda ()
+             (ibuffer-auto-mode 1)
+             (ibuffer-switch-to-saved-filter-groups "home")))
+
+#+end_src
+
+#+RESULTS: iBuffer-custom
+| lambda | nil | (ibuffer-auto-mode 1)                        | (ibuffer-switch-to-saved-filter-groups home) |
+| lambda | nil | (ibuffer-switch-to-saved-filter-groups home) |                                              |
+
+*** iBuffer binding
+#+begin_src emacs-lisp 
+(global-set-key (kbd "s-z") 'ibuffer)
+#+end_src
+
+*** iBuffer in same, whole window.
+
+Si lo pongo en =nil= I get iBuffer on a whole window, replacing whatever I have at present, which is what I want.
+
+#+srcname: ibuffer
+#+BEGIN_SRC emacs-lisp 
+;; always display ibuffer in another window
+(setq ibuffer-use-other-window nil)
+#+END_SRC
+
+*** COMMENT Use Human readable Size column
+From: https://www.emacswiki.org/emacs/IbufferMode
+
+I don’t like default “Size” column, so I write a human readable column instead of original one. – coldnew
+
+#+begin_src emacs-lisp 
+;; Use human readable Size column instead of original one
+(define-ibuffer-column size-h
+  (:name "Size" :inline t)
+  (cond
+   ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+   ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+   ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+   (t (format "%8d" (buffer-size)))))
+
+;; Modify the default ibuffer-formats
+  (setq ibuffer-formats
+	'((mark modified read-only " "
+		(name 18 18 :left :elide)
+		" "
+		(size-h 9 -1 :right)
+		" "
+		(mode 16 16 :left :elide)
+		" "
+		filename-and-process)))
+#+end_src
+
+#+RESULTS:
+| mark | modified | read-only |   | (name 18 18 :left :elide) |   | (size-h 9 -1 :right) |   | (mode 16 16 :left :elide) |   | filename-and-process |
+
+I added a little more code to the above code so that the bottom summary line also showed total size in human readable form.
+
+#+begin_src emacs-lisp 
+(defun ajv/human-readable-file-sizes-to-bytes (string)
+  "Convert a human-readable file size into bytes."
+  (interactive)
+  (cond
+   ((string-suffix-p "G" string t)
+    (* 1000000000 (string-to-number (substring string 0 (- (length string) 1)))))
+   ((string-suffix-p "M" string t)
+    (* 1000000 (string-to-number (substring string 0 (- (length string) 1)))))
+   ((string-suffix-p "K" string t)
+    (* 1000 (string-to-number (substring string 0 (- (length string) 1)))))
+   (t
+    (string-to-number (substring string 0 (- (length string) 1))))
+   )
+  )
+
+(defun ajv/bytes-to-human-readable-file-sizes (bytes)
+  "Convert number of bytes to human-readable file size."
+  (interactive)
+  (cond
+   ((> bytes 1000000000) (format "%10.1fG" (/ bytes 1000000000.0)))
+   ((> bytes 100000000) (format "%10.0fM" (/ bytes 1000000.0)))
+   ((> bytes 1000000) (format "%10.1fM" (/ bytes 1000000.0)))
+   ((> bytes 100000) (format "%10.0fk" (/ bytes 1000.0)))
+   ((> bytes 1000) (format "%10.1fk" (/ bytes 1000.0)))
+   (t (format "%10d" bytes)))
+  )
+
+;; Use human readable Size column instead of original one
+(define-ibuffer-column size-h
+  (:name "Size"
+	 :inline t
+	 :summarizer
+	 (lambda (column-strings)
+	   (let ((total 0))
+	     (dolist (string column-strings)
+	       (setq total
+		     ;; like, ewww ...
+		     (+ (float (ajv/human-readable-file-sizes-to-bytes string))
+			total)))
+	     (ajv/bytes-to-human-readable-file-sizes total)))	 ;; :summarizer nil
+	 )
+  (ajv/bytes-to-human-readable-file-sizes (buffer-size)))
+
+;; Modify the default ibuffer-formats
+(setq ibuffer-formats
+      '((mark modified read-only locked " "
+	      (name 20 20 :left :elide)
+	      " "
+	      (size-h 11 -1 :right)
+	      " "
+	      (mode 16 16 :left :elide)
+	      " "
+	      filename-and-process)
+	(mark " "
+	      (name 16 -1)
+	      " " filename)))
+
+#+end_src
+
+#+RESULTS:
+| mark | modified | read-only    | locked |          | (name 20 20 :left :elide) |   | (size-h 11 -1 :right) |   | (mode 16 16 :left :elide) |   | filename-and-process |
+| mark |          | (name 16 -1) |        | filename |                           |   |                       |   |                           |   |                      |
+
+*** Have some buffer groups collapsed by default
+
+I have some buffer groups that i prefer do be collapsed by default. Since i found no way to have this working i adviced ibuffer like this:
+
+#+begin_src emacs-lisp 
+(setq mp/ibuffer-collapsed-groups (list "Helm" "*Internal*"))
+
+(defadvice ibuffer (after collapse-helm)
+  (dolist (group mp/ibuffer-collapsed-groups)
+	  (progn
+	    (goto-char 1)
+	    (when (search-forward (concat "[ " group " ]") (point-max) t)
+	      (progn
+		(move-beginning-of-line nil)
+		(ibuffer-toggle-filter-group)
+		)
+	      )
+	    )
+	  )
+    (goto-char 1)
+    (search-forward "[ " (point-max) t)
+  )
+
+(ad-activate 'ibuffer)
+#+end_src
+
+#+RESULTS:
+: ibuffer
+
+*** iBuffer-projectile
+
+#+begin_src emacs-lisp :tangle yes
+
+(use-package ibuffer-projectile)
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24603 2881 607698 994000) :init (24603 2881 607671 806000) :config (24603 2881 607370 261000) :config-secs (0 0 9 76000) :init-secs (0 0 
+683 370000) :use-package-secs (0 0 804 496000)))
+
+* Registers
+
+Following Info node "13.6 Keeping File Names in Registers", I push very commonly visited files to registers.
+
+To visit the file whose name is in register R, type =C-x r j R=.
+
+#+begin_src emacs-lisp :tangle yes
+
+(set-register ?d '(file . "/home/dgm/.emacs.d/dgm.org"))
+(set-register ?i '(file . "/home/dgm/.emacs.d/init.el"))
+
+#+end_src
+
+#+RESULTS:
+: ((100 file . /home/dgm/.emacs.d/dgm.org) (105 file . /home/dgm/.emacs.d/init.el) (48 . /gd/gnu/emacs/19.0/src/ChangeLog) (zygospore-windows-time-machine #<window-configuration> #<marker in no buffer>))
+
+
+
 * Provide
 
 Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (provide 'dgm)
+
 #+END_SRC
 
 #+RESULTS:

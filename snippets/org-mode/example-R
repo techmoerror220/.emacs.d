@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: example-R
+# key: xr
+# --
+#+begin_example R
+
+$0
+
+#+end_example

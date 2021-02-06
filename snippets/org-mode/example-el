@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: example-el
+# key: xl
+# --
+#+begin_example emacs-lisp
+
+$0
+
+#+end_example

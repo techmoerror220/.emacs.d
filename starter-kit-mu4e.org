@@ -1793,7 +1793,7 @@ A shortcut:
 
 Use Helm to re-arrange recipients of an e-mail. I often get e-mail from Bob with Charley in CC which prompts me to send an e-mail to Charley with Bob in CC.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun malb/helm-reorder-recipients ()
   "Re-distribute addresses to To: and CC: fields."
   (interactive)
@@ -1834,8 +1834,10 @@ Use Helm to re-arrange recipients of an e-mail. I often get e-mail from Bob with
                     (insert (mapconcat #'identity cc ", ")))))))
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
+
 (bind-key "C-c ]" #'malb/helm-reorder-recipients mu4e-compose-mode-map)
+
 #+END_SRC
 
 *** COMMENT Contact Look up

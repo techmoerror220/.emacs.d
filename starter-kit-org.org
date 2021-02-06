@@ -77,12 +77,12 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
              ("\M-\C-y"     . org-table-paste-rectangle)
              ("\M-\C-l"     . org-table-sort-lines)
              ("\M-I"        . org-toggle-inline-images)
-             ("C-c C-w"     . org-refile)
              ("C-c I"       . eos/org-clock-in)
              ("C-c O"       . org-clock-out)
              ("C-c q"       . my/org-quick-clock-in-task)
              ("s-."         . org-recipes)
              :map org-mode-map
+             ("C-c C-w"     . org-refile)
              ("s-<"         . org-cut-subtree)
              ("C->"         . org-time-stamp)
              ("M-<right>"   . nil)
@@ -1390,7 +1390,7 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24572 8077 148639 477000) :init (24572 8077 147705 130000) :config (24572 8077 147682 571000) :config-secs (0 0 1537 196000) :init-secs (0 0 29027 608000) :use-package-secs (0 0 30113 345000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24574 47154 741220 173000) :init (24574 47154 740009 280000) :config (24574 47154 739992 946000) :config-secs (0 0 1803 962000) :init-secs (0 0 31991 207000) :use-package-secs (0 0 33360 944000)))
 
 
 ** Export Settings and Helpful Packages

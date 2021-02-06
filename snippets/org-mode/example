@@ -3,6 +3,8 @@
 # expand-env: ((yas-wrap-around-region t))
 # key: ex
 # --
-#+BEGIN_EXAMPLE
+#+begin_example ${1:language}
+
 $0
-#+END_EXAMPLE
+
+#+end_example

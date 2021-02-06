@@ -142,7 +142,7 @@ just have to assume it's online."
 
 (starter-kit-load "starter-kit-programming.org")
 
-(starter-kit-load "stater-kit-polymode.org")
+(starter-kit-load "stater-kit-markdown.org")
 
 (starter-kit-load "starter-kit-dired.org")
 

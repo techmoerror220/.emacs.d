@@ -1,2 +1,0 @@
-;;; -*- no-byte-compile: t -*-
-(define-package "pdfgrep" "20200306.209" "run `pdfgrep' and display the results." '((emacs "24.4")) :commit "1576fc98754d3bdaa40573a037a80f1973110756" :keywords '("extensions" "mail" "pdf" "grep") :authors '(("Jérémy Compostella" . "jeremy.compostella@gmail.com")) :maintainer '("Jérémy Compostella" . "jeremy.compostella@gmail.com") :url "https://github.com/jeremy-compostella/pdfgrep")

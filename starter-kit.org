@@ -610,7 +610,7 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 *** Starter kit =markdown= and =polymode=
 
 #+BEGIN_SRC emacs-lisp
-  (starter-kit-load "stater-kit-polymode.org")
+  (starter-kit-load "stater-kit-markdown.org")
 #+END_SRC
 
 #+RESULTS:
