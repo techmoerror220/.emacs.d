@@ -407,8 +407,10 @@ project is not in ELPA.
 
 #+srcname: starter-kit-load-elisp-dir
 #+begin_src emacs-lisp
+
 (setq elisp-source-dir (concat dotfiles-dir "src"))
 (add-to-list 'load-path elisp-source-dir)
+
 #+end_src
 
 ** Load the rest of the starter kit core
@@ -441,7 +443,7 @@ Located in [[file:starter-kit-latex.org][starter-kit-latex]]
 Located in [[file:starter-kit-latex-org.org][starter-kit-latex-org]]
 
 #+begin_src emacs-lisp
-(starter-kit-load "starter-kit-latex-org.org")
+;; (starter-kit-load "starter-kit-latex-org.org")
 #+end_src
 
 #+RESULTS:
@@ -541,7 +543,9 @@ Located in [[file:starter-kit-python.org][starter-kit-python]]
 *** Starter Kit Tufte Latex
 
 #+begin_src emacs-lisp
+
 ;; (starter-kit-load "starter-kit-tufte-latex.org")
+
 #+end_src
 
 #+RESULTS:

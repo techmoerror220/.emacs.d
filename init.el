@@ -58,7 +58,7 @@
 (setq package-enable-at-startup nil
       file-name-handler-alist nil
       message-log-max 16384
-      gc-cons-threshold 402653184
+      gc-cons-threshold 402653184  ;; 402.653.184
       gc-cons-percentage 0.6
       auto-window-vscroll nil)
 
@@ -69,9 +69,13 @@
 (add-hook 'after-init-hook
           `(lambda ()
              (setq file-name-handler-alist file-name-handler-alist-old
-                   gc-cons-threshold 10000000)  ;; 10MB
+                   gc-cons-threshold (* 2 1000 1000))  ;; originally 10MB or 10000000 or 10.000.000
+             ;; originally. This setting is by DW
              ;;gc-cons-percentage 0.1)
              (garbage-collect)) t)
+
+;; DW: Now set the garbage collection threshold lower. 2MB
+;; (setq gc-cons-threshold (* 5 1000 1000))
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -610,11 +614,12 @@ ARCHIVE is the string name of the package archive.")
       )
 (exwm-enable) ;; initializes EXWM
 
+;;   (start-process-shell-command "xrandr" nil "xrandr --output eDP-1 --mode 1366x768 --pos 1920x312 --rotate normal --output DP-1 --off --output HDMI-1 --off --output DP-2 --off --output HDMI-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal")
 
 ;; xrandr commented out as now <autorandr> takes care of all this.
 (when (string= (system-name) "toshiba")
   (exwm-randr-enable)
-  ;; (start-process-shell-command "xrandr" nil "xrandr --output eDP-1 --mode 1366x768 --pos 1920x312 --rotate normal --output DP-1 --off --output HDMI-1 --off --output DP-2 --off --output HDMI-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal")
+  (start-process-shell-command "xrandr" nil "xrandr --output eDP-1 --mode 1366x768 --pos 1920x312 --rotate normal --output DP-1 --off --output HDMI-1 --off --output DP-2 --off --output HDMI-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal")
 
   (setq exwm-randr-workspace-monitor-plist
         '(0 "eDP-1"))

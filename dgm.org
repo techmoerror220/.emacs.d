@@ -757,9 +757,10 @@ This mode shows a keymap when an incomplete command is entered. It is especially
 
   ;; DW's config
   (use-package which-key
-    :init (which-key-mode)
+    :defer 0
     :diminish which-key-mode
     :config
+    (which-key-mode)
     (setq which-key-idle-delay 1))
 
 #+END_SRC
@@ -870,22 +871,6 @@ If you want to get the most out of Emacs, you’ll eventually need to learn a li
 
 #+RESULTS:
 | (lambda nil (require 'company-elisp) (setq-local company-backends (delete-dups (cons 'company-elisp (cons 'company-files company-backends))))) | esk-remove-elc-on-save | run-starter-kit-coding-hook | turn-on-eldoc-mode |
-
-*** Demonstration tools (command-log-mode)
-
-Tip from: https://github.com/izahn/dotemacs
-
-=command-log-mode= is useful for giving emacs demonstrations/tutorials. It shows the keys you’ve pressed and the commands they called.
-
-#+begin_src emacs-lisp :tangle yes
-  ;;(setq command-log-mode-auto-show t)
-  ;;(global-set-key (kbd "\C-x c l") 'global-command-log-mode)
-#+end_src
-
-#+RESULTS:
-: global-command-log-mode
-
-Good idea but it seems that I don't have the =command-log-mode=... ah, it's a package. i will install in future.
 
 *** auto-complete
 Following Drew advice on setting up emacs as a Python IDE (https://www.youtube.com/watch?v=6BlTGPsjGJk).
@@ -1223,6 +1208,7 @@ Whether to show word-granularity differences within diff hunks.
 #+BEGIN_SRC emacs-lisp :tangle yes
 
   (use-package magit
+    :commands magit-status
     :after (ghub ghub+)
     :bind (("C-x g"   . magit-status)
            ("C-x M-l" . magit-log-buffer-file)
@@ -2157,13 +2143,16 @@ I think this will is too powerful a shortcut for this. I'd rather use it for =sw
 *** Ivy
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package ivy
     :config
-     (setq ivy-display-style 'fancy))
+    (message "Ivy got loaded!")
+    (setq ivy-display-style 'fancy))
+
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 16086 450809 944000) :init (24467 16086 450795 185000) :init-secs (0 0 943 571000) :use-package-secs (0 0 1032 715000) :config (24467 16086 450554 136000) :config-secs (0 0 461 990000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24608 6016 416596 915000) :init (24608 6016 416576 588000) :config (24608 6016 416191 840000) :config-secs (0 0 975 200000) :init-secs (0 0 1768 537000) :use-package-secs (0 0 1910 28000)))
 
 *** Smoothscrolling
 I don't know to be honest, but this little bit of code makes scrolling with emacs a lot nicer.
@@ -3480,7 +3469,7 @@ PS: recall that the =diminish= package is installed in =starter-kit.org=.
   (diminish 'editorconfig-mode)
   ;;  (diminish 'smartparens-mode) ;; added in -text.org
   (diminish 'minimal-mode)
-  (diminish 'org-mode)
+  ;; (diminish 'org-mode)
   ;; (diminish 'org-indent-mode)
   (diminish 'volatile-highlights-mode)
   (diminish 'highlight-symbol-mode)
@@ -5265,6 +5254,9 @@ The following I've taken away.
                     :key "C-c C-f p"
                     :description "Insert template for font change command.")
     (cheatsheet-add :group 'Latex
+                    :key "Prefix C-c C-f"
+                    :description "Insert font slant with C-whatever after the prefix. i for italics, b for bold, etc")
+    (cheatsheet-add :group 'Latex
                     :key "Reindent"
                     :description "TAB for lines, M-q for paragraph, M-x LaTeX-fill-buffer RET for whole buffer")
     (cheatsheet-add :group 'Latex
@@ -6208,7 +6200,7 @@ The following I've taken away.
  #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24604 20050 662285 983000) :init (24604 20050 662207 780000) :init-secs (0 0 35 627000) :use-package-secs (0 0 246 649000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24609 7404 943088 267000) :init (24609 7404 943002 562000) :init-secs (0 0 4608 313000) :use-package-secs (0 0 4780 706000) :config (24609 7404 942987 722000) :config-secs (0 0 4588 704000)))
 
 
 * Security: bad-signature issue
@@ -6768,6 +6760,21 @@ From: https://endlessparentheses.com/ispell-and-abbrev-the-perfect-auto-correct.
                        gcs-done)))
 #+end_src
 
+DW creates a named function instead and then adds it to an emacs's hook
+
+#+begin_src emacs-lisp :tangle no
+
+  (defun efs/display-startup-time ()
+    (message "Emacs loaded in %s with %d garbage collections."
+             (format "%.2f seconds"
+                     (float-time
+                      (time-subtract after-init-time before-init-time)))
+             gcs-done))
+
+  (add-hook 'emacs-startup-hook #'efs/display-startup-time)
+
+#+end_src
+
 
 ** At garbage collection
 - Alphapapa's bit of code
@@ -6792,6 +6799,7 @@ From: https://endlessparentheses.com/ispell-and-abbrev-the-perfect-auto-correct.
 * Ditaa
 
 #+begin_src elisp :tangle no
+
   (expand-file-name
    "ditaa.jar"
    (file-name-as-directory
@@ -6801,11 +6809,14 @@ From: https://endlessparentheses.com/ispell-and-abbrev-the-perfect-auto-correct.
       (expand-file-name
        "../contrib"
        (file-name-directory (org-find-library-dir "org")))))))
+
 #+end_src
 
 
 #+begin_src emacs-lisp :tangle yes
+
   (setq org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar")
+
 #+end_src
 
 #+RESULTS:
@@ -7253,11 +7264,14 @@ Settings for Jules Verne:
 
 ** Ivy Rich
 
+[[https://github.com/Yevgnen/ivy-rich][ivy-rich]] adds extra columns to a few of the Counsel commands to provide more information about each item.
+
 Shows summary information and key-bindings when calling helpful functions and =M-x=. In general, whatever I called with =counsel=, it gets enriched with this =ivy-rich=
 
 #+begin_src emacs-lisp :tangle yes
 
   (use-package ivy-rich
+    :after ivy
     :init
     (ivy-rich-mode 1)
     :config
@@ -7288,7 +7302,7 @@ Shows summary information and key-bindings when calling helpful functions and =M
 
 Counsel is a customized set of commands to replace `find-file` with `counsel-find-file`, etc which provide useful commands for each of the default completion commands.
 
-[[https://github.com/Yevgnen/ivy-rich][ivy-rich]] adds extra columns to a few of the Counsel commands to provide more information about each item.
+Counsel is a package full of commands that are useful with ivy
 
 Recall: =M-o= for available actions. 
 
@@ -7305,6 +7319,7 @@ Recall: =M-o= for available actions.
     :custom
     (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
     :config
+    (message "Counsel loaded!")
     (setq ivy-initial-inputs-alist nil) ;; don't start searches with ^
     (counsel-mode 1))
 
@@ -7321,6 +7336,7 @@ Recall: =M-o= for available actions.
 #+begin_src emacs-lisp :tangle yes
 
   (use-package helpful
+    :commands (helpful-callable helpful-variable helpful-command helpful-key)
     :custom
     (counsel-describe-function-function #'helpful-callable)
     (counsel-describe-variable-function #'helpful-variable)
@@ -7333,7 +7349,7 @@ Recall: =M-o= for available actions.
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24561 42121 978333 318000) :init (24561 42121 978102 874000) :init-secs (0 0 50 552000) :use-package-secs (0 0 427 526000) :config (24561 42121 978076 437000) :config-secs (0 0 7 858000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24608 9153 219128 371000) :init (24608 9153 218849 981000) :init-secs (0 0 64 976000) :use-package-secs (0 0 585 481000) :config (24608 9153 218813 777000) :config-secs (0 0 10 244000)))
 
 *** Original Configuration of =helpful=
 
@@ -7563,15 +7579,31 @@ The processes called occupy the whole window from which you call them.
 
 * Keybindings
 
-** Command log mode 
+** Command log mode: A demonstration tool
 
-Show keybindings in a side window
+Shows keybindings in a side window.
+
+=command-log-mode= is useful for giving emacs demonstrations/tutorials. It shows the keys you’ve pressed and the commands they called.
 
 #+begin_src emacs-lisp :tangle yes
 
-(use-package command-log-mode)
+  (use-package command-log-mode
+    :commands command-log-mode)
 
 #+end_src
+
+Costumization by https://github.com/izahn/dotemacs
+
+#+begin_src emacs-lisp :tangle yes
+  ;;(setq command-log-mode-auto-show t)
+  ;;(global-set-key (kbd "\C-x c l") 'global-command-log-mode)
+#+end_src
+
+#+RESULTS:
+: global-command-log-mode
+
+Good idea but it seems that I don't have the =command-log-mode=... 
+
 
 ** Keycast
 
@@ -7857,13 +7889,24 @@ To visit the file whose name is in register R, type =C-x r j R=.
 
 (set-register ?d '(file . "/home/dgm/.emacs.d/dgm.org"))
 (set-register ?i '(file . "/home/dgm/.emacs.d/init.el"))
+(set-register ?l '(file . "/home/dgm/Downloads/"))
 
 #+end_src
 
 #+RESULTS:
-: ((100 file . /home/dgm/.emacs.d/dgm.org) (105 file . /home/dgm/.emacs.d/init.el) (48 . /gd/gnu/emacs/19.0/src/ChangeLog) (zygospore-windows-time-machine #<window-configuration> #<marker in no buffer>))
+: (file . /home/dgm/Downloads/)
 
+* Dired 
 
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package all-the-icons-dired
+    :hook (dired-mode . all-the-icons-dired-mode))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24613 41835 199789 585000) :init (24613 41835 199774 865000) :init-secs (0 0 89 551000) :use-package-secs (0 13 17829 476000)))
 
 * Provide
 

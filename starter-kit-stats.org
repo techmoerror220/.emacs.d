@@ -97,13 +97,13 @@ doesn't work.
     ;; I sometimes want to evaluate just part of a piped sequence. The
     ;; following lets me do so without needing to insert blank lines or
     ;; something:
-  
+
     (defun my/ess-beginning-of-pipe-or-end-of-line ()
       "Find point position of end of line or beginning of pipe %>%."
       (if (search-forward "%>%" (line-end-position) t)
           (goto-char (match-beginning 0))
         (end-of-line)))
-  
+
     (defun my/ess-eval-pipe-through-line (vis)
       "Like `ess-eval-paragraph' but only evaluates up to the pipe on this line. If no pipe, evaluate paragraph through the end of current line. Prefix arg VIS toggles visibility of ess-code as for `ess-eval-region'."
       (interactive "P")
@@ -210,22 +210,24 @@ doesn't work.
   ;;  (require 'ob-stata)
   (require 'ob-ledger)
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (R . t)
-     (perl . t)
-     (ruby . t)
-     (python . t)
-     (js . t)
-     (haskell . t)
-     ;;     (stata . t)
-     (shell . t)
-     (latex . t)
-     (ledger . t)
-     (ditaa . t)
-     ))
+  (with-eval-after-load 'org
+    (org-babel-do-load-languages
+    'org-babel-load-languages
+    '((emacs-lisp . t)
+      (R . t)
+      (perl . t)
+      (ruby . t)
+      (python . t)
+      (js . t)
+      (haskell . t)
+      ;;     (stata . t)
+      (shell . t)
+      (latex . t)
+      (ledger . t)
+      (ditaa . t)
+      )))
 
+  (push '("conf-unix" . conf-unix) org-src-lang-modes)
   ;; (sh . t)
   ;; (scheme . t)
 

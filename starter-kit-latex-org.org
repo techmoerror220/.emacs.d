@@ -14,11 +14,15 @@ NB (11 Jan 21): Quito =-bibtex= de <xelatex> porque en compilation me dice <xela
 Sin <-bibtex> obtengo:
 
 #+BEGIN_EXAMPLE
+
 Running 'xelatex -bibtex -file-line-error --shell-escape -synctex=1  -recorder  "metodos-mills.tex"'
+
 #+END_EXAMPLE
 
+Moved to <starter-kit-latex.org>
+
 #+srcname: latemkdefault
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 
     (eval-after-load "tex"
       '(add-to-list 'TeX-command-list '("latexmk" "latexmk -bibtex -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk")))
@@ -41,7 +45,7 @@ I have added =-bibtex -f=, which I had in my original =(setq org-latex-pdf-proce
 
 Summary: with this setup I can now easily export to LaTeX, XeLaTeX and also Beamer.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 
 (defun my-auto-tex-cmd (backend)
   "When exporting from .org with latex,
@@ -68,7 +72,9 @@ Summary: with this setup I can now easily export to LaTeX, XeLaTeX and also Beam
 ** TOC 
 Turn off the default toc behavior; deal with it properly in headers to files.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Moved to <starter-kit-org.org>
+
+#+BEGIN_SRC emacs-lisp :tangle no
 
 (defun org-latex-no-toc (depth)  
   (when depth
@@ -85,7 +91,9 @@ Turn off the default toc behavior; deal with it properly in headers to files.
 
 ** Default packages
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Moved to <starter-kit-org.org>
+
+#+BEGIN_SRC emacs-lisp :tangle no
 
 (setq org-latex-default-packages-alist nil)     
 ;; (setq org-latex-packages-alist
@@ -109,7 +117,9 @@ DGM 19 april 2020: Originally, I thought these were settings for XeLaTeX only bu
 Originally it had: ="\\documentclass[11pt,oneside,a4paper,article]{memoir}\n"= but I include the options in the skeleton, so I guess I don't need them.
 
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Moved to <starter-kit-org.org>
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (add-to-list 'org-latex-classes
                '("memarticle"
                  "\\documentclass{memoir}\n"
@@ -138,13 +148,17 @@ Things I've learnt today that are key: =org export=  inputs a whole bunch of pac
 
 Then, if I uncomment the rest I'll have the call to =org-preamble-xelatex= in every latex file but it happens that this call is great for articles but not for beamer presentations. So I have disabled it here and I have added to the skeleton template. By the way, I also need a beamer skeleton!
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Moved to <starter-kit-org.org>
+
+#+BEGIN_SRC emacs-lisp :tangle no
+
  (setq org-latex-default-packages-alist nil)     
 ;; (setq org-latex-packages-alist
 ;;        '(("minted" "org-preamble-xelatex" t)
 ;;          ("" "graphicx" t)
 ;;          ("" "longtable" nil)
 ;;          ("" "float" ))) 
+
    #+END_SRC
 
    #+RESULTS:
@@ -167,7 +181,9 @@ This is what solved the issue in the end!!!
 
 or look for =change foreground in "org-format-latex-options"= in google.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Moved to <starter-kit-org.org>
+
+#+BEGIN_SRC emacs-lisp :tangle no
 
 ;; fix color handling in org-preview-latex-fragment
 (let ((dvipng--plist (alist-get 'dvipng org-preview-latex-process-alist)))
@@ -193,7 +209,9 @@ From https://emacs.stackexchange.com/questions/12878/how-to-change-style-of-hype
 
 By default, Org mode adds a rather unhelpful hypersetup section. You can prevent this addition by adding the following line to your .emacs file:
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Moved to <starter-kit-org.org>
+
+#+BEGIN_SRC emacs-lisp :tangle 
 
 (customize-set-value 'org-latex-with-hyperref nil)
 
@@ -203,7 +221,9 @@ By default, Org mode adds a rather unhelpful hypersetup section. You can prevent
 
 * Org-tufte class
 
-#+begin_src emacs-lisp :tangle yes
+Moved to <starter-kit-org.org>
+
+#+begin_src emacs-lisp :tangle no
 
 (require 'ox-tufte-latex)
 

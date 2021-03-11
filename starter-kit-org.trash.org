@@ -4218,12 +4218,17 @@ Line wrapping from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs.
 Suggested here: https://www.reddit.com/r/emacs/comments/ek37ri/i_cant_get_indentation_to_work_orgmode/
 
 #+begin_src emacs-lisp :tangle yes
-(use-package org-indent
-  :ensure nil
-  :init
-  (add-hook 'org-mode-hook 'org-indent-mode))
+
+  (use-package org-indent
+    :after org
+    :ensure nil
+    :init
+    (add-hook 'org-mode-hook 'org-indent-mode))
 
 #+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24608 9060 637537 56000) :init (24608 9060 637491 391000) :config (24608 9060 636936 230000) :config-secs (0 0 12 834000) :init-secs (0 0 27330 325000) :use-package-secs (0 0 27490 465000)))
 
 ** Org-Mode Hooks
 Make yasnippet work properly with org-mode.

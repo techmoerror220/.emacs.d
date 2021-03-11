@@ -227,11 +227,14 @@ DGM on August 5th: not needed anymore with the =context= setup (I think).
 =org-mime= can be used to send HTML email using Org-mode HTML export.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package org-mime
-   :defer t)
 
-;; convert org mode to HTML automatically
-(setq org-mu4e-convert-to-html t)
+  (use-package org-mime
+    :after org
+    :defer t)
+
+  ;; convert org mode to HTML automatically
+  (setq org-mu4e-convert-to-html t)
+
 #+END_SRC
 
 #+RESULTS:

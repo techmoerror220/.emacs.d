@@ -112,7 +112,20 @@ mouse-1: Previous buffer\nmouse-3: Next buffer")
 
 #+begin_src emacs-lisp :tangle yes
 
-(use-package all-the-icons)
+  (use-package all-the-icons)
+
+  (use-package doom-modeline
+    :init (doom-modeline-mode 1)
+    :custom ((doom-modeline-height 15)))
+ 
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24608 5261 405483 867000) :init (24608 5261 405464 789000) :init-secs (0 0 1559 472000) :use-package-secs (0 0 2081 60000) :config (24608 5261 405047 785000) :config-secs (0 0 13 576000)))
+
+More sophisticated config:
+
+#+begin_src emacs-lisp :tangle no
 
 (use-package doom-modeline
   :after eshell     ;; Make sure it gets hooked after eshell
@@ -134,11 +147,9 @@ mouse-1: Previous buffer\nmouse-3: Next buffer")
   :config
   (setq doom-modeline-icon t)
   (column-number-mode t))
-
+ 
 #+end_src
 
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24562 2642 7719 715000) :init (24562 2642 7639 604000) :init-secs (0 0 13519 594000) :use-package-secs (0 0 28552 445000) :config (24562 2642 7589 584000) :config-secs (0 0 13411 319000)))
 
 ** Color Themes
 Emacs 24 introduces a streamlined theming system that replaces an
@@ -254,12 +265,26 @@ to the function =get-spaceline-working=
 
 #+begin_src emacs-lisp :tangle yes
 
-(use-package doom-themes)
+  (use-package doom-themes
+    :commands counsel-load-theme)
 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24561 64632 22950 489000) :init (24561 64632 22942 368000) :config (24561 64632 22718 55000) :config-secs (0 0 5 902000) :init-secs (0 0 15316 165000) :use-package-secs (0 7 216401 949000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24608 5010 859926 262000) :init (24608 5010 859901 980000) :config (24608 5010 859859 116000) :config-secs (0 0 17 290000) :init-secs (0 0 132 216000) :use-package-secs (0 0 300 622000)))
+
+** Protesilaos Stavrou's themes
+
+#+begin_src emacs-lisp :tangle yes
+
+(use-package modus-operandi-theme)
+(use-package modus-vivendi-theme)
+(use-package modus-themes)
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24622 55011 221887 522000) :init (24622 55011 221872 32000) :config (24622 55011 221579 155000) :config-secs (0 0 8 784000) :init-secs (0 0 624 511000) :use-package-secs (0 2 583979 547000)))
 
 
 ** Window system 

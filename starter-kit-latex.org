@@ -283,7 +283,9 @@ Read https://tex.stackexchange.com/questions/454966/biblatex-custom-entries-with
 
 ** Ox files
 
-#+begin_src emacs-lisp :tangle yes
+Moved to <starter-kit-org.org>
+
+#+begin_src emacs-lisp :tangle no
 
   ;; export citations (load after org-ref)
   ;; (require 'ox-bibtex)
@@ -298,6 +300,37 @@ Read https://tex.stackexchange.com/questions/454966/biblatex-custom-entries-with
 
 #+end_src
 
+** Stuff originally in <starter-kit-latex-org.org>
+
+
+#+begin_src emacs-lisp :tangle yes
+
+    (eval-after-load "tex"
+      '(add-to-list 'TeX-command-list '("latexmk" "latexmk -bibtex -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk")))
+
+    (eval-after-load "tex"
+      '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk")))
+
+  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))  
+
+(defun my-auto-tex-cmd (backend)
+  "When exporting from .org with latex,
+  automatically run latex, pdflatex, or xelatex as appropriate,
+  using latexmk."
+  (let ((texcmd))
+    (setq texcmd "latexmk -bibtex -f -pdf %f")
+    (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
+        (progn
+          (setq texcmd "latexmk -pdf -pdflatex='pdflatex -file-line-error --shell-escape -synctex=1 -bibtex -f' %f")))
+    (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+        (progn
+          (setq texcmd "latexmk -pdflatex='xelatex -file-line-error --shell-escape -synctex=1' -pdf %f")))  ;;  -bibtex -f between -synctex=1 and ' taken out as they were not recognised according to the log file. DGM 11 Jan 21 added <bibtex> and got <xelatex: unrecognized option '-bibtex'> in the log file
+
+    (setq org-latex-pdf-process (list texcmd))))
+(add-hook 'org-export-before-parsing-hook 'my-auto-tex-cmd)
+
+
+#+end_src
 
 * Provide
 

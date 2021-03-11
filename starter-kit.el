@@ -104,7 +104,7 @@ just have to assume it's online."
 
 (starter-kit-load "starter-kit-latex.org")
 
-(starter-kit-load "starter-kit-latex-org.org")
+;; (starter-kit-load "starter-kit-latex-org.org")
 
 (starter-kit-load "starter-kit-org.org")
 

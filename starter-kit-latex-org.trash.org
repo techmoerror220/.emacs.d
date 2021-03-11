@@ -130,6 +130,7 @@ Reading https://orgmode.org/worg/exporters/beamer/ox-beamer.html I think as of O
 Deleted:               "\\documentclass\[presentation\]\{beamer\}"
 
 #+BEGIN_SRC emacs-lisp :tangle no
+
 (with-eval-after-load 'org
   (require 'ox-latex)
   (add-to-list 'org-latex-classes
@@ -142,6 +143,7 @@ Deleted:               "\\documentclass\[presentation\]\{beamer\}"
                ("\\section\{%s\}" . "\\section*\{%s\}")
                ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
                ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}"))))
+
 #+END_SRC
 
 #+RESULTS:
