@@ -3,6 +3,8 @@
 # key: quote
 # expand-env: ((yas-wrap-around-region t))
 # --
-     #+BEGIN_QUOTE
-       $0
-     #+END_QUOTE
+#+BEGIN_QUOTE
+
+$0
+
+#+END_QUOTE

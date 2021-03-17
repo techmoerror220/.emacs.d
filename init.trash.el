@@ -1,3 +1,16 @@
+;; Taken out:
+;; ("melpa-stable" . "https://stable.melpa.org/packages/")
+;; ("elpa" . "https://elpa.gnu.org/packages/")
+
+
+;;(use-package diminish
+;;  :ensure t)
+
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)  ;; NB: maybe this doesn't work with https and needs to be set at 'http' instead
+(add-to-list 'package-archives
+             '("gnu" . "https://elpa.gnu.org/packages/") t)
  ;; (exwm-input-set-key (kbd "s-!") #'daedreth/launch-browser)
 
  ;; ;; Redshift off

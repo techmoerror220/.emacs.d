@@ -5,23 +5,13 @@
 #+OPTIONS: toc:nil num:nil ^:nil
 #+PROPERTY: header-args :tangle yes
 
+
 * Starter Kit kjhealy
-This file contains local customizations---ones that in some cases
-you will not be able to just drop in and use because, e.g., they
-involve references to particular files on my own machine. It's
-included here for completeness, and as and example of the kind of
-things you might put in your own user-specific file.
+This file contains local customizations---ones that in some cases you will not be able to just drop in and use because, e.g., they involve references to particular files on my own machine. It's included here for completeness, and as and example of the kind of things you might put in your own user-specific file.
 
-Some of the settings here depend on additional software that you may
-not have installed by default. E.g., the "Use GNU ls" section below
-depends on you having GNU coreutils installed. To ignore these
-sections, add `:tangle no` to any code block you don't want to use.
+Some of the settings here depend on additional software that you may not have installed by default. E.g., the "Use GNU ls" section below depends on you having GNU coreutils installed. To ignore these sections, add `:tangle no` to any code block you don't want to use.
 
-To use the customizations here yourself, /you must change the name of
-this file to match your own user name or system name/. Those are the
-values of the acs variables =user-login-name= or =system-name=, so
-that it will be picked up by =init.el= when Emacs starts up, and get
-loaded properly. To find the current value of these variables on your
+To use the customizations here yourself, /you must change the name of this file to match your own user name or system name/. Those are the values of the acs variables =user-login-name= or =system-name=, so that it will be picked up by =init.el= when Emacs starts up, and get loaded properly. To find the current value of these variables on your
 system, launch emacs and do =C-h-v system-name [RET]= or =C-h-v
 user-login-name [RET]=. For example, on my system =user-login-name=
 is 'kjhealy', so this file is named =kjhealy.org=, and when Emacs
@@ -115,11 +105,11 @@ Check out the Commentary section in each respective file for the usage instructi
 ** highlight line
 
 Voy a probar a vivir sin esto 
-#+BEGIN_SRC emacs-lisp  :tangle no
+#+begin_src emacs-lisp  :tangle no
   (use-package hl-line)
   ;; (global-hl-line-mode t)
   ;;(set-face-background 'hl-line "#bebebe")
-#+END_SRC
+#+end_src
 
 #+RESULTS:
 
@@ -177,7 +167,7 @@ Now my main use =goto-char-timer= where I am prompted to write the text that I w
     ("s-+" . avy-goto-char)
     ("s-%" . avy-goto-char-timer))
 
-   ;; (define-key global-map (kbd "s-l") 'avy-goto-char-timer) ;;
+  ;; (define-key global-map (kbd "s-l") 'avy-goto-char-timer) ;;
 
 #+end_src
 
@@ -190,22 +180,34 @@ Now my main use =goto-char-timer= where I am prompted to write the text that I w
 ** GROUP: Convenience -> Linum
 
 Next tip from http://tuhdo.github.io/emacs-tutor3.html
-It enables linum only in programming modes
+It enables linum only in programming modes. 
+
+DW informs that =linum= was a external package and that as of Emacs 26 (?) there is a built-in packages that solves some performance issues. Moreove, the =display-line-numbers-mode= highlights the line number of the current line.
 
 #+srcname: line-numbering
 #+begin_src emacs-lisp :tangle yes
-  (add-hook 'prog-mode-hook 'linum-mode)
+
+;;  (add-hook 'prog-mode-hook 'linum-mode)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+
 #+end_src
 
 #+RESULTS: line-numbering
-| linum-mode | (lambda nil (highlight-symbol-mode)) | highlight-numbers-mode | clean-aindent-mode |
+| display-line-numbers-mode | inactivate-default-input-method | rainbow-delimiters-mode | rainbow-mode | (lambda nil (highlight-symbol-mode)) | highlight-numbers-mode | ws-butler-mode | clean-aindent-mode | (lambda nil (interactive) (setq show-trailing-whitespace -1)) | linum-mode | paredit-everywhere-mode | yas-minor-mode |
 
-Tip from https://www.emacswiki.org/emacs/SmoothScrolling
+Note that DW approches this differently (note =mode= is a name DW gave for the =dolist= to iterate thru the list of items in the list):
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; Delay updates to give Emacs a chance for other changes
-  (setq linum-delay t)
-#+END_SRC
+#+begin_src emacs-lisp :tangle no
+
+  (dolist (mode '(org-mode-hook
+                  term-mode-hook
+                  shell-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+#+end_src
+
+#+RESULTS:
 
 ** GROUP: Convenience -> Whitespace
 
@@ -652,14 +654,39 @@ Included in =starter-kit-completion.org=
     (add-hook 'latex-mode-hook        #'rainbow-mode)
     (add-hook 'R-mode-hook            #'rainbow-mode)
     (add-hook 'inferior-ess-mode-hook #'rainbow-mode)
-    (add-hook 'python-mode-hook       #'rainbow-mode)
-    )
+    (add-hook 'python-mode-hook       #'rainbow-mode))
 
-  ;;R-mode-hook runs when you open a new source buffer, so anything you put in that will only affect your source buffers.inferior-ess-mode-hook runs when you start an R console, so anything in there should only apply to the console buffer and not the source.
+;;R-mode-hook runs when you open a new source buffer, so anything you put in that will only affect your source buffers.inferior-ess-mode-hook runs when you start an R console, so anything in there should only apply to the console buffer and not the source.
 #+END_SRC
 
 #+RESULTS: rainbow-mode
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 10335 475765 838000) :init (24467 10335 475756 419000) :init-secs (0 0 24066 216000) :use-package-secs (0 0 24192 89000) :config (24467 10335 475645 294000) :config-secs (0 0 3 233000)))
+
+*** Rainbow delimiters
+Colors parentheses and other delimiters depending on their depth, useful for any language using them, especially lisp.
+
+Note, however, that Sacha Chua doesn't automatically turn this on because she thinks it slows things down a little. So she has =(use-package rainbow-delimiters :disabled t)=. So keep an eye on it.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24654 22987 467372 341000) :init (24654 22987 467355 588000) :config (24654 22987 467327 859000) :config-secs (0 0 7 222000) :init-secs (0 0 66 248000) :use-package-secs (0 0 174 251000)))
+
+Note that the =:hook= bit is taken from DW. Previously I had:
+
+#+begin_example elisp
+
+;; :init
+;; (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+
+#+end_example
+
+
 
 *** Kurecolor
 
@@ -750,13 +777,10 @@ This mode shows a keymap when an incomplete command is entered. It is especially
 [[https://github.com/justbur/emacs-which-key][which-key]] is a useful UI panel that appears when you start pressing any key binding in Emacs to offer you all possible completions for the prefix.  For example, if you press =C-c= (hold control and press the letter =c=), a panel will appear at the bottom of the frame displaying all of the bindings under that prefix and which command they run.  This is very useful for learning the possible key bindings in the mode of your current buffer. (DW)
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; my original config
-    ;; (use-package which-key
-    ;;   :config
-    ;;   (which-key-mode))
 
   ;; DW's config
   (use-package which-key
+    :init (which-key-mode) ;; any time which-key is loaded with use-package, immediately start it
     :defer 0
     :diminish which-key-mode
     :config
@@ -766,7 +790,7 @@ This mode shows a keymap when an incomplete command is entered. It is especially
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24561 65147 974020 140000) :init (24561 65147 974000 675000) :config (24561 65147 973554 642000) :config-secs (0 0 905 392000) :init-secs (0 0 1910 686000) :use-package-secs (0 0 2032 478000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24654 23726 224275 498000) :init (24654 23726 224245 799000) :init-secs (0 0 1731 946000) :use-package-secs (0 0 1887 692000) :config (24654 23726 224195 557000) :config-secs (0 0 1452 453000)))
 
 *** General REPL (comint) config
 Tip from: https://github.com/izahn/dotemacs
@@ -1003,8 +1027,8 @@ Ojo: solo funciona si se llama M-x rebox-mode. Luego desactívalo porque interfi
   (use-package rebox2 
     :defer t
     :config 
-     (global-set-key [(meta q)] 'rebox-dwin-fill)
-     (global-set-key [(shift meta q)] 'rebox-dwin-no-fill))
+    (global-set-key [(meta q)] 'rebox-dwin-fill)
+    (global-set-key [(shift meta q)] 'rebox-dwin-no-fill))
 #+END_SRC
 
 #+RESULTS:
@@ -1214,19 +1238,19 @@ Whether to show word-granularity differences within diff hunks.
            ("C-x M-l" . magit-log-buffer-file)
            ("C-x M-b" . magit-blame))  
     :config 
-     (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
-     (setq magit-diff-refine-hunk 'all)
-     (setq magit-save-repository-buffers 'dontask))
-   ;; Magnar Sveen
-    (defadvice magit-status (around magit-fullscreen activate)
-      (window-configuration-to-register :magit-fullscreen)
-      ad-do-it
-      (delete-other-windows))
-    (defun magit-quit-session ()
-      "Restores the previous window configuration and kills the magit buffer"
-      (interactive)
-      (kill-buffer)
-      (jump-to-register :magit-fullscreen))
+    (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+    (setq magit-diff-refine-hunk 'all)
+    (setq magit-save-repository-buffers 'dontask))
+  ;; Magnar Sveen
+  (defadvice magit-status (around magit-fullscreen activate)
+    (window-configuration-to-register :magit-fullscreen)
+    ad-do-it
+    (delete-other-windows))
+  (defun magit-quit-session ()
+    "Restores the previous window configuration and kills the magit buffer"
+    (interactive)
+    (kill-buffer)
+    (jump-to-register :magit-fullscreen))
 
 #+END_SRC
 
@@ -1260,7 +1284,7 @@ Source: Magnar Sveen
 
 #+begin_src emacs-lisp :tangle yes
 
-(require 'prot-vc)
+  (require 'prot-vc)
 
 #+end_src
 
@@ -1388,8 +1412,8 @@ Se usa con =M-x scratch= y te crea un scratch buffer of the currently used mode.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package scratch
-     :commands scratch
-     :bind (("s-^" . scratch)))
+    :commands scratch
+    :bind (("s-^" . scratch)))
 #+END_SRC
 
 #+RESULTS:
@@ -1529,17 +1553,42 @@ After updating packages, this returns error.
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23880 21520 898702 207000) :init (23880 21520 898685 670000) :config (23880 21520 898328 707000) :config-secs (0 0 743 952000) :init-secs (0 0 1485 396000) :use-package-secs (0 0 1735 521000)))
 
-** Customize =emacsclient=
+** Font-face setup
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
-  (setq default-frame-alist '((font . "Pragmata Pro Mono-16")))
-  (add-to-list 'default-frame-alist '(line-spacing . 0.06))
+    (defun font-existsp (font)
+      "Check to see if the named FONT is available."
+      (if (null (x-list-fonts font))
+          nil t))
+
+    ;; (font-existsp "Pragmata Pro Mono")
+    ;; (font-existsp "Inconsolata")
+
+    ;; Line-spacing tweak
+    ;; Set this to a different number depending on taste and the font
+    ;; selected. The value can be a integer or decimal number.
+    ;; if integer: it means pixels, added below each line.
+    ;; if float (e.g 0.02): a scaling factor relative to current window's default line height.
+    ;; if nil: add no extra spacing.
+    ;; tuned for Pragmata Pro
+    ;; 0.06 originally
+    (setq-default line-spacing 0.09)
+    (add-to-list 'default-frame-alist '(line-spacing . 0.06))
+
+  ;; Originally height was <156> for Pragmata and 121 for the rest.
+    (set-face-attribute 'default nil :height 180 :font "Pragmata Pro Mono")
+  ;; Originally <Pragmata Pro Mono-16>... don't know why. It also works with ""Pragmata Pro Mono" only
+    (setq default-frame-alist '((font . "Pragmata Pro Mono-18")))
+  
+  ;; https://blog.sumtypeofway.com/posts/emacs-config.html
+  ;; !!! seems to contradict the previous def with height 175... but coincides at 180 and 18 here... investigate further.
+    (set-frame-font "Pragmata Pro Mono-18")
 
 #+END_SRC
 
 #+RESULTS:
-: ((line-spacing . 0.06) (font . Pragmata Pro Mono-16))
+: ((font . Pragmata Pro Mono))
 
 ** Customize minibuffer's height
 
@@ -2141,6 +2190,7 @@ In loving memory of bspwm, =super+Enter= opens a new terminal, old habits die ha
 I think this will is too powerful a shortcut for this. I'd rather use it for =swipe=.
 
 *** Ivy
+Ivy and Helm are NOT incompatible.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 
@@ -2446,20 +2496,6 @@ Emacs treats camelCase strings as a single word by default, this changes said be
 #+BEGIN_SRC emacs-lisp :tangle yes
   (global-subword-mode 1)
 #+END_SRC
-
-****** Rainbow delimiters
-Colors parentheses and other delimiters depending on their depth, useful for any language using them, especially lisp.
-
-Note, however, that Sacha Chua doesn't automatically turn this on because she thinks it slows things down a little. So she has =(use-package rainbow-delimiters :disabled t)=. So keep an eye on it.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package rainbow-delimiters
-    :init
-    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
-#+END_SRC
-
-#+RESULTS:
-
 
 **** Daniel Mai
 
@@ -3004,15 +3040,18 @@ Automatically indent when press RET
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23923 31552 263267 99000) :init (23923 31552 263072 607000) :init-secs (0 0 106 846000) :use-package-secs (0 7 24665 828000)))
 
 ** Debugging with GDB
-#+begin_src emacs-lisp :tangle yes
+Commented out on March, 15th 2021
+
+#+begin_src emacs-lisp :tangle no
+
   ;; setup GDB
   (setq
    ;; use gdb-many-windows by default
    gdb-many-windows t
 
    ;; Non-nil means display source file containing the main routine at startup
-   gdb-show-main t
-   )
+   gdb-show-main t)
+
 #+end_src
 
 #+RESULTS:
@@ -3356,23 +3395,24 @@ Originally:
 Next, copied from: https://www.reddit.com/r/emacs/comments/8x4xtt/tip_how_i_use_ledger_to_track_my_money/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package ledger-mode
-    :mode ("\\.dat\\'"
-           "\\.ledger\\'")
-    :init
-    (add-hook 'ledger-mode-hook
-              (lambda ()
-                (setq-local tab-always-indent 'complete)
-                (setq-local completion-cycle-threshold t)
-                (setq-local ledger-complete-in-steps t)))
-    (add-hook 'ledger-mode-hook #'ledger-flymake-enable)
-    :config
-    (setq ledger-clear-whole-transactions 1)
-    )
+
+    (use-package ledger-mode
+      :mode ("\\.dat\\'"
+             "\\.ledger\\'")
+         :init
+      (add-hook 'ledger-mode-hook
+                (lambda ()
+                  (setq-local tab-always-indent 'complete)
+                  (setq-local completion-cycle-threshold t)
+                  (setq-local ledger-complete-in-steps t)))
+      (add-hook 'ledger-mode-hook #'ledger-flymake-enable)
+      :config
+      (setq ledger-clear-whole-transactions 1))
+
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 16751 949890 380000) :init (24467 16751 949746 632000) :init-secs (0 0 325 560000) :use-package-secs (0 0 1037 816000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24654 30333 113246 990000) :init (24654 30333 113215 965000) :init-secs (0 0 395 369000) :use-package-secs (0 0 506 738000) :config (24654 30333 113195 666000) :config-secs (0 0 351 277000)))
 
 DGM takes this bit out:
 
@@ -3454,7 +3494,6 @@ PS: recall that the =diminish= package is installed in =starter-kit.org=.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (diminish 'which-key-mode)
-  (diminish 'linum-relative-mode)
   (diminish 'hungry-delete-mode)
   (diminish 'visual-line-mode)
   (diminish 'subword-mode)
@@ -3830,6 +3869,7 @@ Also, I cut this:
 as I think the =memarticle= class contains it.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (define-skeleton xlt-memart
     "Inserts a XeLaTeX  skeleton into current buffer.
   This only makes sense for empty buffers."
@@ -3850,6 +3890,7 @@ as I think the =memarticle= class contains it.
     "#+LATEX_CMD: xelatex\n"
     "" _ "\n\n"
     "\\printbibliography")
+
 #+END_SRC
 
 #+RESULTS:
@@ -3861,6 +3902,7 @@ as I think the =memarticle= class contains it.
 Note the minimalistic =vc= information included with ="\thispagestyle{kjhgit}=. Where does it come from? [[file:~/texmf/tex/generic/latex-custom-kjh/needs-memoir/memoir-article-styles.sty::\makepagestyle{kjhgit}][Here]], i.e., the =memoir-article-styles.sty= file.
 
 #+begin_src emacs-lisp :tangle yes
+
   (define-skeleton xlt-syllabus
     "Inserts a XeLaTeX skeleton for syllabus writing.
   Recall deleting inputVC and kjhgit if VC not used."
@@ -3914,6 +3956,7 @@ Note the minimalistic =vc= information included with ="\thispagestyle{kjhgit}=. 
     "#+end_src\n"
     "\n" _ "\n\n"
     "\\printbibliography")
+
 #+end_src
 
 #+RESULTS:
@@ -3933,9 +3976,11 @@ is a good idea, together with commenting out =babel= in [[file:~/texmf/tex/gener
 
 NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
 
+*** PEC1
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 
-  (define-skeleton xlt-pec
+  (define-skeleton xlt-pec1
     "Inserts a XeLaTeX skeleton into current buffer.
     For evaluating PECs."
     "\n"
@@ -3972,6 +4017,43 @@ NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
 
 #+RESULTS:
 : xlt-pec
+
+
+*** PEC2
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (define-skeleton xlt-pec2
+    "Inserts a XeLaTeX skeleton into current buffer.
+    For evaluating PECs."
+    "\n"
+    "# -*- coding: utf-8 -*-\n"
+    "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
+    "#+TITLE: Evaluación de la \\textsc{pec}NÚMERO dentro de la línea /Cambio en las Sociedades Contemporáneas/\n"
+    "#+SUBTITLE: Alumno/a:\n"
+    "#+AUTHOR: Daniel Guinea, Dept. Sociología I, \\textsc{uned}\n"
+    "#+DATE:\\today\n"
+    "#+LaTeX_CLASS: memarticle\n"
+    "#+LaTeX_CLASS_OPTIONS: [11pt,oneside,a4paper,article]\n"
+    "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
+    "#+LATEX_CMD: xelatex\n"
+    "\n\n"
+    "* ¿Ha seguido las indicaciones sobre la \textsc{pec1}?\n\n"
+    "" _ "\n\n"
+    "* Potenciales problemas\n"
+    "\n\n"
+    "** Definiciones\n"
+    "** Cuestiones de estilo\n"
+    "\n\n"
+    "* Consejos\n"
+    "\n\n"
+    "* Veredicto\n\n\n"
+    "\\printbibliography")
+
+#+END_SRC
+
+#+RESULTS:
+: xlt-pec2
 
 ** Tufte book and handout
 - For a handout, you simply change ="#+LATEX_CLASS: tufte-book\n"= from =book= to =handout=
@@ -4528,7 +4610,7 @@ The following I've taken away.
                     :description "helm-mode-dired. TAB to select; RET to jump to selection")
     (cheatsheet-add :group 'Dired
                     :key "j"
-                    :description "dired-goto-file. Go to line describing file FILE in this Dired buffer")
+                    :description "dired-goto-file. Jump to a file in the directory. Go to line describing file FILE in this Dired buffer")
     (cheatsheet-add :group 'Dired
                     :key "J"
                     :description "bmkp-dired-jump. Jump to a Dired bookmark")
@@ -4870,6 +4952,9 @@ The following I've taken away.
                     :key "C-x C-e"
                     :description "sanityinc/eval-last-sexp-or-region")
     (cheatsheet-add :group 'Expressions-Eval
+                    :key "C-M-x"
+                    :description "eval-defun. Eval top-level form.")
+    (cheatsheet-add :group 'Expressions-Eval
                     :key "C-j"
                     :description "eval-print-last-sexp. Evaluate sexp before point; print value into current buffer.")
     (cheatsheet-add :group 'Expressions-Copying
@@ -5151,6 +5236,9 @@ The following I've taken away.
     (cheatsheet-add :group 'Help
                     :key "C-c o"
                     :description "clm/toggle-command-log-buffer. Toggle the command log showing or not.")
+    (cheatsheet-add :group 'Help
+                    :key "C-h e"
+                    :description "view-echo-area-messages")
     (cheatsheet-add :group 'Help
                     :key "C-h l"
                     :description "view-lossage. Display last few input keystrokes-keybindings and the commands run")
@@ -6200,7 +6288,7 @@ The following I've taken away.
  #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24609 7404 943088 267000) :init (24609 7404 943002 562000) :init-secs (0 0 4608 313000) :use-package-secs (0 0 4780 706000) :config (24609 7404 942987 722000) :config-secs (0 0 4588 704000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24652 59270 840838 552000) :init (24652 59270 840742 444000) :init-secs (0 0 38 409000) :use-package-secs (0 0 250 363000)))
 
 
 * Security: bad-signature issue
@@ -6480,7 +6568,9 @@ By the way, =M-SPC= is bound to =just-one-space=: Delete all spaces and tabs aro
 
 ** Disable syntax highlighting
 #+begin_src emacs-lisp :tangle no
+
   (global-font-lock-mode -1)
+
 #+end_src
 
 #+RESULTS:
@@ -6913,12 +7003,6 @@ Originally:
 Read: https://emacsnotes.wordpress.com/2018/06/01/a-finger-typer-makes-a-horrible-emacs-user-learn-to-touch-type-with-typespeed/
 
 
-* Disable the scroll bar  
-
-#+begin_src emacs-lisp :tangle yes
-(scroll-bar-mode -1)
-#+end_src
-
 * Weather forecast
 ** Weather forecast
 
@@ -7299,12 +7383,15 @@ Shows summary information and key-bindings when calling helpful functions and =M
 
 
 ** Counsel 
+(DW thinks =counsel= is already install by =ivy=, but still, you can customize it by using =use-package=)
 
 Counsel is a customized set of commands to replace `find-file` with `counsel-find-file`, etc which provide useful commands for each of the default completion commands.
 
 Counsel is a package full of commands that are useful with ivy
 
-Recall: =M-o= for available actions. 
+Recall: 
+- =M-o= for available actions. 
+- =C-r= for browsing the minibuffer history.
 
 #+begin_src emacs-lisp :tangle yes
 
@@ -7326,7 +7413,7 @@ Recall: =M-o= for available actions.
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24566 55614 496668 630000) :init (24566 55614 496078 854000) :config (24566 55614 495581 248000) :config-secs (0 0 952 764000) :init-secs (0 0 1909 497000) :use-package-secs (0 0 2694 457000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24655 34854 676526 85000) :init (24655 34854 676017 17000) :config (24655 34854 675651 115000) :config-secs (0 0 986 658000) :init-secs (0 0 1740 854000) :use-package-secs (0 0 2457 898000)))
 
 
 ** Helpful Help Commands
@@ -7342,7 +7429,7 @@ Recall: =M-o= for available actions.
     (counsel-describe-variable-function #'helpful-variable)
     :bind
     ([remap describe-function] . counsel-describe-function)
-    ([remap describe-command]  .  helpful-command)
+    ([remap describe-command]  . helpful-command)
     ([remap describe-variable] . counsel-describe-variable)
     ([remap describe-key]      . helpful-key))
 
@@ -7585,6 +7672,10 @@ Shows keybindings in a side window.
 
 =command-log-mode= is useful for giving emacs demonstrations/tutorials. It shows the keys you’ve pressed and the commands they called.
 
+- Use =M-x global-command-log-mode= if you want it in every buffer.
+- Enables it doing =M-x command-log-mode=
+- =M-x clm/toggle-command-log-buffer= (bound to =C-c o= by default, it seems...)
+
 #+begin_src emacs-lisp :tangle yes
 
   (use-package command-log-mode
@@ -7602,7 +7693,6 @@ Costumization by https://github.com/izahn/dotemacs
 #+RESULTS:
 : global-command-log-mode
 
-Good idea but it seems that I don't have the =command-log-mode=... 
 
 
 ** Keycast
@@ -7695,7 +7785,8 @@ which you might name the-jacobson-memorial-function, due to its brilliance.
 Manage a lot of buffers easily with C-x C-b. Already set up elsewhere in the starter kit. Add local configuration here, e.g., display categories.
 
 #+srcname: iBuffer-custom
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp  :tangle yes
+ 
 (setq ibuffer-saved-filter-groups
       '(("home"
 	     ("emacs-config" (or (filename . ".emacs.d")
@@ -7728,8 +7819,10 @@ Manage a lot of buffers easily with C-x C-b. Already set up elsewhere in the sta
 | lambda | nil | (ibuffer-switch-to-saved-filter-groups home) |                                              |
 
 *** iBuffer binding
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp  :tangle yes
+
 (global-set-key (kbd "s-z") 'ibuffer)
+
 #+end_src
 
 *** iBuffer in same, whole window.
@@ -7737,9 +7830,11 @@ Manage a lot of buffers easily with C-x C-b. Already set up elsewhere in the sta
 Si lo pongo en =nil= I get iBuffer on a whole window, replacing whatever I have at present, which is what I want.
 
 #+srcname: ibuffer
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp  :tangle yes
+
 ;; always display ibuffer in another window
 (setq ibuffer-use-other-window nil)
+
 #+END_SRC
 
 *** COMMENT Use Human readable Size column
@@ -7747,7 +7842,8 @@ From: https://www.emacswiki.org/emacs/IbufferMode
 
 I don’t like default “Size” column, so I write a human readable column instead of original one. – coldnew
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp  :tangle yes
+
 ;; Use human readable Size column instead of original one
 (define-ibuffer-column size-h
   (:name "Size" :inline t)
@@ -7767,6 +7863,7 @@ I don’t like default “Size” column, so I write a human readable column ins
 		(mode 16 16 :left :elide)
 		" "
 		filename-and-process)))
+
 #+end_src
 
 #+RESULTS:
@@ -7774,7 +7871,7 @@ I don’t like default “Size” column, so I write a human readable column ins
 
 I added a little more code to the above code so that the bottom summary line also showed total size in human readable form.
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp  :tangle yes
 (defun ajv/human-readable-file-sizes-to-bytes (string)
   "Convert a human-readable file size into bytes."
   (interactive)
@@ -7842,7 +7939,8 @@ I added a little more code to the above code so that the bottom summary line als
 
 I have some buffer groups that i prefer do be collapsed by default. Since i found no way to have this working i adviced ibuffer like this:
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp  :tangle yes
+
 (setq mp/ibuffer-collapsed-groups (list "Helm" "*Internal*"))
 
 (defadvice ibuffer (after collapse-helm)
@@ -7862,6 +7960,7 @@ I have some buffer groups that i prefer do be collapsed by default. Since i foun
   )
 
 (ad-activate 'ibuffer)
+
 #+end_src
 
 #+RESULTS:
@@ -7896,17 +7995,76 @@ To visit the file whose name is in register R, type =C-x r j R=.
 #+RESULTS:
 : (file . /home/dgm/Downloads/)
 
-* Dired 
+* Icons
+
+Recall to do =M-x all-the-icons-install-fonts= for all the fonts to show up correctly.
+
+
 
 #+begin_src emacs-lisp :tangle yes
 
+  (use-package all-the-icons
+    :commands all-the-icons-install-fonts
+    :init
+    (unless (find-font (font-spec :name "all-the-icons"))
+      (all-the-icons-install-fons t)))
+
   (use-package all-the-icons-dired
+    :after all-the-icons
     :hook (dired-mode . all-the-icons-dired-mode))
 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24613 41835 199789 585000) :init (24613 41835 199774 865000) :init-secs (0 0 89 551000) :use-package-secs (0 13 17829 476000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24655 37889 282588 3000) :init (24655 37889 282570 302000) :init-secs (0 0 40 629000) :use-package-secs (0 0 193 16000) :config (24655 37889 282550 221000) :config-secs (0 0 7 808000)))
+
+
+* Window system 
+** My costumization 
+Previously used <src/mininal.el>, but I'm not sure what it was doing so it's in <.trash> now.
+
+#+srcname: starter-kit-window-view-stuff
+#+begin_src emacs-lisp :tangle yes 
+
+  (when window-system
+    ;;      (setq frame-title-format '(buffer-file-name "%f" ("%b")))
+    (setq frame-title-format (concat "%b" (unless (daemonp) " [serverless]"))) ;; from ambrevar's main.el
+    (tooltip-mode -1)
+    (tool-bar-mode -1)
+    (blink-cursor-mode -1)
+    (scroll-bar-mode -1)
+    (set-fringe-mode 10))
+
+  (mouse-wheel-mode t)
+
+  ;; Disabled as column number mode is on somehow, but I leave it here so that I
+  ;; don't forget
+  ;; (column-number-mode)
+
+  (setq visible-bell t     ;; Instead of an audio
+        echo-keystrokes 0.1
+        ;;          font-lock-maximum-decoration t  ;; dgm turned this off as emacs was way too slow with it but now, with my new EXWM setting I want to give it a chance
+        ;;          font-lock-maximum-decoration 1 ;; originally it was true, then nil and then 1, the minimum level, to see if this speeds up things. And I think it does. 
+        font-lock-verbose nil
+        inhibit-startup-message t
+        transient-mark-mode t
+        ;;  color-theme-is-global t
+        shift-select-mode nil
+        truncate-partial-width-windows nil
+        whitespace-style '(trailing lines space-before-tab
+                                    indentation space-after-tab)
+        whitespace-line-column 100
+        ediff-window-setup-function 'ediff-setup-windows-plain
+        ediff-split-window-function 'split-window-horizontally
+        oddmuse-directory (concat dotfiles-dir "oddmuse")
+        xterm-mouse-mode t
+        save-place-file (concat dotfiles-dir "places"))
+
+#+end_src
+
+#+RESULTS: starter-kit-window-view-stuff
+: /home/dgm/.emacs.d/places
+
 
 * Provide
 
@@ -7929,4 +8087,7 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
+
+
+
 

@@ -12,7 +12,7 @@ Things that don't fit anywhere else.
 ** Minions
 - Bundle all minor modes under a =[+]= symbol
 - Not compatible with =spaceline= out of the box
-- Customizations I do without now that I use =spaceline=:
+- Customizations I don't use now that I use =doom='s mode line
 - How to make it compatible with =spaceline=.
 
 #+BEGIN_EXAMPLE
@@ -104,24 +104,20 @@ mouse-1: Previous buffer\nmouse-3: Next buffer")
 | :eval | (ml-propertized-buffer-identification %12b) |
 
 ** DW's modeline config with doom-modeline
-
-
 [[https://github.com/seagle0128/doom-modeline][doom-modeline]] is a very attractive and rich (yet still minimal) mode line configuration for Emacs.  The default configuration is quite good but you can check out the [[https://github.com/seagle0128/doom-modeline#customize][configuration options]] for more things you can enable or disable.
 
 *NOTE:* The first time you load your configuration on a new machine, you'll need to run `M-x all-the-icons-install-fonts` so that mode line icons display correctly.
 
 #+begin_src emacs-lisp :tangle yes
 
-  (use-package all-the-icons)
-
   (use-package doom-modeline
     :init (doom-modeline-mode 1)
     :custom ((doom-modeline-height 15)))
- 
+
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24608 5261 405483 867000) :init (24608 5261 405464 789000) :init-secs (0 0 1559 472000) :use-package-secs (0 0 2081 60000) :config (24608 5261 405047 785000) :config-secs (0 0 13 576000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24654 13256 567196 767000) :init (24654 13256 567165 660000) :config (24654 13256 566642 186000) :config-secs (0 0 11 411000) :init-secs (0 0 1826 802000) :use-package-secs (0 0 2656 87000)))
 
 More sophisticated config:
 
@@ -222,7 +218,7 @@ Note that I've moved this
 
 to the function =get-spaceline-working=
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
   (defun set-light-theme ()
     "Set the light theme with some customization if needed."
     (interactive)
@@ -235,7 +231,7 @@ to the function =get-spaceline-working=
 
   ;;(let ((current-hour (string-to-number (format-time-string "%H"))))
   ;;    (if (or (< current-hour 10) (> current-hour 19)) (set-dark-theme) (set-light-theme)))
-#+END_SRC
+#+end_src
 
 #+RESULTS:
 : set-dark-theme
@@ -285,60 +281,6 @@ to the function =get-spaceline-working=
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24622 55011 221887 522000) :init (24622 55011 221872 32000) :config (24622 55011 221579 155000) :config-secs (0 0 8 784000) :init-secs (0 0 624 511000) :use-package-secs (0 2 583979 547000)))
-
-
-** Window system 
-
-#+srcname: starter-kit-window-view-stuff
-#+begin_src emacs-lisp :tangle yes 
-    (when window-system
-;;      (setq frame-title-format '(buffer-file-name "%f" ("%b")))
-      (setq frame-title-format (concat "%b" (unless (daemonp) " [serverless]"))) ;; from ambrevar's main.el
-      (tooltip-mode -1)
-      (blink-cursor-mode -1)) ;; I include this blink-cursor-mode again because sometimes it disappears and maybe turning this fixes it.
-;;      (tool-bar-mode -1)) ;; already in minimal.el
-
-;; alternative de malb dot files to display buffer name in frame titles
-;; (setq frame-title-format
-;;      '("" (:eval (replace-regexp-in-string "^ +" "" (buffer-name)))
-;;        " - " invocation-name))
-
-
-    (mouse-wheel-mode t)
-
-    (setq visible-bell t
-          echo-keystrokes 0.1
-;;          font-lock-maximum-decoration t  ;; dgm turned this off as emacs was way too slow with it but now, with my new EXWM setting I want to give it a chance
-;;          font-lock-maximum-decoration 1 ;; originally it was true, then nil and then 1, the minimum level, to see if this speeds up things. And I think it does. 
-          font-lock-verbose nil
-          inhibit-startup-message t
-          transient-mark-mode t
-        ;;  color-theme-is-global t
-          shift-select-mode nil
-          truncate-partial-width-windows nil
-          whitespace-style '(trailing lines space-before-tab
-                                      indentation space-after-tab)
-          whitespace-line-column 100
-          ediff-window-setup-function 'ediff-setup-windows-plain
-          ediff-split-window-function 'split-window-horizontally
-          oddmuse-directory (concat dotfiles-dir "oddmuse")
-          xterm-mouse-mode t
-          save-place-file (concat dotfiles-dir "places"))
-#+end_src
-
-#+RESULTS: starter-kit-window-view-stuff
-: /home/dgm/.emacs.d/places
-
-** Turn on Minimal mode
-Thin window dividers and no scroll bars. Toggle with `C-c C-s`.
-
-#+source: minimal-mode-on
-#+begin_src emacs-lisp :tangle yes
-(minimal-mode)
-#+end_src
-
-#+RESULTS: minimal-mode-on
-: t
 
 ** Transparently open compressed files
 #+begin_src emacs-lisp :tangle yes

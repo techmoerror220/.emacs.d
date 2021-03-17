@@ -4704,7 +4704,6 @@ talk to org-mode. See [[http://orgmode.org/worg/org-tutorials/org-latex-export.h
 : Created headlessfullcite link.
 
 
-
     (org-add-link-type
      "cite" 'ebib
      (lambda (path desc format)
@@ -4794,6 +4793,7 @@ talk to org-mode. See [[http://orgmode.org/worg/org-tutorials/org-latex-export.h
              (format "\\headlessfullcite{%s}" path)
            (format "\\headlessfullcite[%s]{%s}" desc path)
            )))))
+
 ** Better Font Faces
 (From DW.)
 

@@ -1,3 +1,46 @@
+  ;; my original config
+  ;; (use-package which-key
+  ;;   :config
+  ;;   (which-key-mode))
+
+Tip from https://www.emacswiki.org/emacs/SmoothScrolling
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  ;; Delay updates to give Emacs a chance for other changes
+  (setq linum-delay t)
+
+#+END_SRC
+
+;; (diminish 'linum-relative-mode)
+  ;; DW: give some breathing room. New setting as of 14
+    ;; march 21 overriding previous one in init.el
+     ;; I include this blink-cursor-mode again because sometimes it disappears and maybe turning this fixes it.
+    ;;      (tool-bar-mode -1)) ;; already in minimal.el
+
+    ;; alternative de malb dot files to display buffer name in frame titles
+    ;; (setq frame-title-format
+    ;;      '("" (:eval (replace-regexp-in-string "^ +" "" (buffer-name)))
+    ;;        " - " invocation-name))
+
+
+;; ;; by dgm, when trying to solve weird rendering by Pragmata Pro.
+;; ;; (load "pragmatapro-font-lock-symbols.el")
+;; ;; (load "pretty-pragmata.el")
+
+*** Minimal mode 
+Thin window dividers and no scroll bars. Toggle with `C-c C-s`.
+
+#+source: minimal-mode-on
+#+begin_src emacs-lisp :tangle no
+
+(minimal-mode)
+
+#+end_src
+
+#+RESULTS: minimal-mode-on
+: t
+
 ** My R window config
 
 Tip from: https://stackoverflow.com/questions/47892942/start-emacs-with-r-session-and-side-by-side-windows

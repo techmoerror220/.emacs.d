@@ -166,18 +166,29 @@
 ;;; I had a signature fail message. I have to solve this
 ;;; (setq package-check-signature nil)
 
+;; We require the <package.el> package to bring in the environment all the package management functions
 (require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)  ;; NB: maybe this doesn't work with https and needs to be set at 'http' instead
-(add-to-list 'package-archives
-             '("gnu" . "https://elpa.gnu.org/packages/") t)
+
+(setq package-archives '(
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("gnu" . "https://elpa.gnu.org/packages/")))
+
+;; From DW. In the very first load, check if there is a package archive cloned
+;; in your computer. Unless the archive exists, refresh the package list so that
+;; future calls to packages functions know which packages you're referring to.
+(unless package-archive-contents
+  (package-refresh-contents))
 
 ;; Initialise the packages, avoiding a re-initialisation?
 (when (boundp 'package-pinned-packages)
   (setq package-pinned-packages
         '((org-plus-contrib . "org"))))
-;; (package-initialize) ;; Emacs 27: Warning (package): Unnecessary call to ‘package-initialize’ in init file
+
+;; Emacs 27: Warning (package): Unnecessary call to ‘package-initialize’ in init
+;; file. Typically this initializes the package system and preprares it to be
+;; used.
+;; (package-initialize)
 
 
 ;;; Add support to package.el for pre-filtering available packages
@@ -232,6 +243,16 @@ ARCHIVE is the string name of the package archive.")
 (setq use-package-verbose t)
 (setq use-package-compute-statistics t)
 
+;; From use-package README
+(eval-when-compile
+  (require 'use-package))
+(setq-default use-package-minimum-reported-time 0)
+(setq use-package-minimum-reported-time 0)
+(eval-and-compile (setq-default use-package-verbose t))
+(eval-and-compile (setq use-package-verbose t))
+(setq use-package-always-ensure t) ;; The :ensure keyword causes the package(s) to be installed automatically if not already present on your system
+
+
 ;; Other options from Prot(eval-and-compile
 ;; (setq use-package-always-ensure nil)
 ;; (setq use-package-always-defer nil)
@@ -245,19 +266,6 @@ ARCHIVE is the string name of the package archive.")
 ;; This is to empower help commands with their contextual awareness,
 ;; such as `describe-symbol'.
 ;; (setq use-package-hook-name-suffix nil)
-
-;; From use-package README
-(eval-when-compile
-  (require 'use-package))
-(setq-default use-package-minimum-reported-time 0)
-(setq use-package-minimum-reported-time 0)
-(eval-and-compile (setq-default use-package-verbose t))
-(eval-and-compile (setq use-package-verbose t))
-(setq use-package-always-ensure t) ;; The :ensure keyword causes the package(s) to be installed automatically if not already present on your system
-
-;;(use-package diminish
-;;  :ensure t)
-
 
 ;;; Garbage collection the automated way
 ;;; my system collapsed when I used it!!
@@ -420,7 +428,8 @@ ARCHIVE is the string name of the package archive.")
 ;; necessary to configure exwm manually
 
 ;; fringe size, most people prefer 1 (uncle dave's setup)
-(fringe-mode 3)
+;; (fringe-mode 3)  ;; commented out on 14 march 21 to use a different setting
+;; in <starter-kit-misc.org>
 (exwm-config-default)
 
 (defun efs/exwm-init-hook ()
@@ -672,10 +681,11 @@ ARCHIVE is the string name of the package archive.")
 
 (use-package delight)
 
+;;; changed to <nil> on March, 15th, 2021
 ;;; debug options from https://github.com/ch11ng/exwm/wiki
-(setq debug-on-error t)
+(setq debug-on-error nil)
 ;; (setq debug-on-quit t)
-(setq edebug-all-forms t)
+(setq edebug-all-forms nil)
 
 ;; ;; Common Lisp compatability
 (require 'cl-lib)
@@ -690,36 +700,6 @@ ARCHIVE is the string name of the package archive.")
            (default-directory my-lisp-dir))
       ;; (setq load-path (cons my-lisp-dir load-path))
       (normal-top-level-add-subdirs-to-load-path)))
-
-;; ;; Font-face setup. Check the availability of a some default fonts, in
-;; ;; order of preference. The first of these alternatives to be found is
-;; ;; set as the default font, together with base size and fg/bg
-;; ;; colors. If none of the preferred fonts is found, nothing happens
-;; ;; and Emacs carries on with the default setup. We do this here to
-;; ;; prevent some of the irritating flickering and resizing that
-;; ;; otherwise goes on during startup. You can reorder or replace the
-;; ;; options here with the names of your preferred choices.
-
-;; ;; by dgm, when trying to solve weird rendering by Pragmata Pro.
-;; ;; (load "pragmatapro-font-lock-symbols.el")
-;; ;; (load "pretty-pragmata.el")
-
-(defun font-existsp (font)
-  "Check to see if the named FONT is available."
-  (if (null (x-list-fonts font))
-      nil t))
-
-;; (font-existsp "Pragmata Pro Mono")
-
-;; Line-spacing tweak
-;; Set this to a different number depending on taste and the fonr
-;; selected. The value can be a integer or decimal number.
-;; if integer: it means pixels, added below each line.
-;; if float (e.g 0.02): a scaling factor relative to current window's default line height.
-;; if nil: add no extra spacing.
-;; tuned for Pragmata Pro
-(setq-default line-spacing 0.06)
-
 
 ;; ;; Load up Org Mode and Babel
 ;; ;; load up the main file

@@ -15,7 +15,8 @@ Helpers for the [[http://www.perl.org/][Perl]] programming language.
      (define-key cperl-mode-map (kbd "RET") 'reindent-then-newline-and-indent)
      (define-key cperl-mode-map (kbd "C-M-h") 'backward-kill-word)))
 
-(global-set-key (kbd "C-h P") 'perldoc)
+;; Disabled as it overuns =describe-package=!
+;; (global-set-key (kbd "C-h P") 'perldoc) 
 
 (add-to-list 'auto-mode-alist '("\\.p[lm]$" . cperl-mode))
 (add-to-list 'auto-mode-alist '("\\.pod$" . pod-mode))

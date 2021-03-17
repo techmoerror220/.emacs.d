@@ -312,8 +312,12 @@ Use a little bit of Mac keys, but not all of them.
     #+end_src
 
 ** Fetch the contents at a URL, display it raw.
+DGM comments it out as =C-M-x= is already taken for evaluating a function.
+
 #+begin_src emacs-lisp 
-(global-set-key (kbd "C-M-x") 'view-url)
+
+;; (global-set-key (kbd "C-M-x") 'view-url)
+
 #+end_src
 
 #+RESULTS:
