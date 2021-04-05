@@ -303,6 +303,28 @@ p. 352
 #+RESULTS:
 : t
 
+* Duplicate files 
+
+From: https://emacs.stackexchange.com/questions/60661/how-to-duplicate-a-file-in-dired
+
+#+begin_src emacs-lisp :tangle yes
+
+(defun dired-duplicate-this-file ()
+  "Duplicate file on this line."
+  (interactive)
+  (let* ((this  (dired-get-filename t))
+         (ctr   1)
+         (new   (format "%s[%d]" this ctr)))
+    (while (file-exists-p new)
+      (setq ctr  (1+ ctr)
+            new  (format "%s[%d]" this ctr)))
+     (dired-copy-file this new nil))
+  (revert-buffer))
+
+#+end_src
+
+#+RESULTS:
+: dired-duplicate-this-file
 
 * Provide
 

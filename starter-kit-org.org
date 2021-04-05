@@ -1268,6 +1268,7 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
                               "/home/dgm/Dropbox/gtd/calendar.org"
                               "/home/dgm/Dropbox/gtd/divorcio_gtd.org"
                               "/media/dgm/blue/documents/proyectos/mutual-stata/gtd/mutual_gtd.org"
+                              "/media/dgm/blue/documents/proyectos/tiec/gtd/tiec-gtd.org"
                               "/media/dgm/blue/documents/proyectos/caixa2019-bartik/gtd/bartik-gtd.org"
                               "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org"
                               "/media/dgm/blue/documents/proyectos/curso-ayuntamiento-madrid/gtd/curso-disenoInvestigacionI.org"
@@ -1279,6 +1280,7 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
     (custom-set-variables
      '(org-refile-targets '(("/home/dgm/Dropbox/gtd/gtd.org" :maxlevel . 2)
                             ("/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" :level . 2)
+                            ("/media/dgm/blue/documents/proyectos/tiec/gtd/tiec-gtd.org" :level . 2)
                             ("/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org" :level . 2)
                             ("/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" :level . 2)
                             ("/media/dgm/blue/documents/proyectos/mutual-stata/gtd/mutual_gtd.org" :maxlevel . 2)
@@ -1448,7 +1450,7 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24613 40761 743458 839000) :init (24613 40761 742528 950000) :config (24613 40761 742499 518000) :config-secs (0 0 3383 654000) :init-secs (0 0 29298 241000) :use-package-secs (0 0 30333 774000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24682 57851 567603 236000) :init (24682 57851 566814 204000) :config (24682 57851 566779 447000) :config-secs (0 0 3637 345000) :init-secs (0 0 55304 298000) :use-package-secs (0 0 56228 682000)))
 
 
 ** Export Settings and Helpful Packages
@@ -2084,22 +2086,45 @@ It works! Note the original had =compose-mail= and it worked too!
 * org-noter
 - https://write.as/dani/notes-on-org-noter
 
+** How it works
+- On any Org file, under a heading, running =M-x org-noter= will prompt for a path to the document one wishes to annotate, or open the document associated to a pdf with an existing annotation.
+- On any PDF document, running =M-x org-noter= will search for possible Org files that are already tracking the document and then either jump to existing notes, or prompt for a file.
+- Once we call =M-x org-noter=, we start a “annotation session”  in a new frame. What this means is that document and org file are opened side-by-side, both in indirect buffers.
+   + In the org-file, you will be narrowed to the heading from which you've called org-noter.
+      * Org-noter narrows down to its heading with notes but doesn't delete anything.
+   + Downside: =SPC= and =BKSPC= on the pdf will move you to the section with the notes (precisely to the point were you were last in the notes), so you loose the location where you were writing any other stuff that were not notes. 
+      * Solución 1: Hacer =C-.= (=push-mark-no-activate=) para poder volver luego a donde estaba con =<s-return>=  (=helm-all-mark-rings=).
+      * Solución 2: Tomar notas con org-noter en un documento exclusivo para esta tarea. Es mejor trabajar con un docuento aparte para cualquier otra cosa.
+- Killing any of the indirect buffers will cause the org-noter “session” to terminate, i.e., the new frame is deleted. (NB: =q= in =pdf-tools= only buries the pdf but doesn't kill it.)
+   + The org-noter session is terminated, and the workspace finished, but the pdf itself is still opened. (NB: =q= in =pdf-tools= only buries the pdf but doesn't kill it.)
+- To navigate between document pages, org-noter binds =M-p= and =M-n=, also in
+both document and file buffers.
+   + It's recommended to use these keybindings instead of the default ones so that org-noter can keep locations in the document and file synced.
+   
+** More on Org-noter
 Org-noter keeps notes and documents in sync. 
+
 We can call org-noter from either notes and documents, and the package will initiate the “sync”. 
+
 Once we call =M-x org-noter=, we start a “annotation session”. 
 What this means is that document and org file are opened side-by-side, both in indirect buffers, and the indirect org file buffer is narrowed down to a heading specific to the document. 
+    - NB: If you open the =.org= document and do =C-u M-x org-noter=, the pdf will start in your =n+1= workspace (I have 9 by default, so it will start in a new, 10th workspace) 
+       + If I do =M-x org-noter=, it will open the pdf to the left of the =.org= file *in a new frame* that is the nth+1 frame (so the tenth in my case). You also see the =.org= file in the workspace you opened it from but now you work in the nth+1 frame.
 
-Note: the original document/pdf from which you call =org-noter= either with =M-x org-noter= or =C-u M-x org-noter=, stays in the original workspace where you open it. But the =org-noter= session with two indirect buffers goes to workspace 9, because the process creates a new frame, and when a new frame is created, it goes to workspace 9. It occurs likewise with =pass=.
- 
 The heading is tagged with a property =NOTER_DOCUMENT=, specifying the path to the document.
+
 Killing any of these indirect buffers will cause the org-noter “session” to terminate. (=q= in the document buffer, aka the indirect buffer that corresponds to the pdf.)
 
 Within a session, we may at any given time press =i= within the document buffer (the pdf) to create a new subheading in the note file and jump to it. This note applies to the whole pdf page under view now. To do a more precise note, do =M-i=.
 
-When done, we jump back to the document and continue reading, or quit the session with =q=. Still, killing the session, you still have to be careful to save your .org file with the notes and kill it.
+When done, we jump back to the document and continue reading, or quit the session with =q=. 
+
+Still, killing the session, you still have to be careful to save your =.org= file with the notes and kill it.
 
 To navigate between notes within the same document, org-noter binds =C-M-p= and =C-M-n= in both buffers of a session.
-To navigate between document pages,  org-noter binds =M-p= and =M-n=, also in both document and file buffers. 
+
+To navigate between document pages, org-noter binds =M-p= and =M-n=, also in both document and file buffers. 
+
 Es decir, ambos conjuntos de keybindings funcionan igual en el document/pdf y en el org file con las notas. La diferencia es que los =M-= van de page en page, y los =C-M-= van de nota en nota.
 
 To move forth and backwards in the document, use =SPC= y =Shift-SPC=
@@ -2115,6 +2140,28 @@ I prefer to keep notes separately in different documents, so I call =C-u M-x org
 As a warning about managing multiple documents, it is important to keep in mind is that the org-noter sync is based on filenames, and although changing names of the org files is OK as long as they are situated within the search directory, changing the name of the pdf document will break the sync.
 
 In Mendeley, I organise pdf filenames as =FirstAuthorLastName_Year.pdf=, so I've committed to sticking to this personal convention.
+
+NB: If you use an .org mode template, be aware that =org-noter= deletes by default all that lies below its notes, which are under a heading two (two stars). So you can only use it with notes at the end and with your template contents under level one headings (one star).
+
+Old Note (this doesn't happen anymore to me): the original document/pdf from which you call =org-noter= either with =M-x org-noter= or =C-u M-x org-noter=, stays in the original workspace where you open it. But the =org-noter= session with two indirect buffers goes to workspace 9, because the process creates a new frame, and when a new frame is created, it goes to workspace 9. It occurs likewise with =pass=.
+
+From: https://www.reddit.com/r/emacs/comments/7tvz89/orgnoter_a_synchronized_orgmode_document_annotator/
+ 
+Comparison with =interleave=:
+It fixes some of my major complaints with interleave.
+-  Seems to look for the property in the enclosing subtree --- don't have to have mark on the heading!
+-  The indirect buffer solution is magnificent. The narrowing was getting on my nerves.
+-  Opening in a new frame is actually delightful, now I just have my notes and reading frame!
+-  Having multiple pages of notes visible at once is great!
+
+Other nice features:
+- auto-saving the last page you visited so it can resume there
+- different behaviors for the notes window (like, not showing up when you go to a page with notes),
+- and now you can also group notes however you want, even inside other notes.
+- you should be able to have multiple PDFs in the same file, and even edit them all simultaneously!
+- I even put headings with PDFs inside others with PDFs too; I use that when, eg. the parent heading is associated with the PDF of a book or an exam and the heading inside it is associated with the solutions
+
+
 
 #+begin_src emacs-lisp :tangle yes
   (use-package org-noter
@@ -2134,12 +2181,13 @@ In Mendeley, I organise pdf filenames as =FirstAuthorLastName_Year.pdf=, so I've
 
     (setq org-noter-separate-notes-from-heading nil
           org-noter-auto-save-last-location t)
-    )
+    (setq org-noter-default-notes-file-names '("notes.org"))
+    (setq org-noter-separate-notes-from-heading t))
 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24473 17357 783749 865000) :init (24473 17357 783726 719000) :config (24473 17357 783553 122000) :config-secs (0 0 419 677000) :init-secs (0 0 798 540000) :use-package-secs (0 0 901 234000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24660 60242 625088 383000) :init (24660 60242 625023 23000) :config (24660 60242 624624 164000) :config-secs (0 0 593 641000) :init-secs (0 0 1310 333000) :use-package-secs (0 0 1470 92000)))
 
 
 * Export Org-ref citations to Latex

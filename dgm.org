@@ -2919,6 +2919,7 @@ New set up from https://www.reddit.com/r/emacs/comments/bge7tc/how_to_solve_lisp
 
 Further customization from: https://github.com/dueyfinster/dotfiles/blob/master/conf/emacs.d/emacs-init.org#start-of-content
 
+Key: If you expand the size with =W= then selecting text with the mouse doesn't work. So I have to undo it with =H= or =P=.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package pdf-tools
@@ -3011,6 +3012,21 @@ Tweaking from Ambrevar's dot file. However, his original combination of colors w
 
 #+RESULTS:
 
+**** saveplace-pdf-view
+
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package saveplace-pdf-view
+    :after pdf-tools
+    :config
+    (save-place-mode 1))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24660 35201 625395 266000) :init (24660 35201 625364 784000) :config (24660 35201 624872 132000) :config-secs (0 0 928 240000) :init-secs (0 0 1890 930000) :use-package-secs (0 0 2046 964000)))
+
+NB: For more bookmarking options with PDF-Tools, read "Bookmarking PDFs in Emacs with pdf-tools and registers" in https://sachachua.com/blog/2021/02/guest-post-bookmarking-pdfs-in-emacs-with-pdf-tools-and-registers/
 
 * Tuhdo's customization
 ** Compilation
@@ -3023,7 +3039,6 @@ Tweaking from Ambrevar's dot file. However, his original combination of colors w
 #+end_src
 
 ** Windows' management
-
 *** with zygospore
 
 Read: https://github.com/LouisKottmann/zygospore.el
@@ -6045,22 +6060,37 @@ The following I've taken away.
                     :description "Copy password in kill ring")
     (cheatsheet-add :group 'Pdf-Tools
                     :key "SPC"
-                    :description "pdf-view-scroll-up-or-next-page. Move down in a page.")
+                    :description "pdf-view-scroll-up-or-next-page. Move down in a page")
     (cheatsheet-add :group 'Pdf-Tools
                     :key "DEL"
-                    :description "pdf-view-scroll-down-or-previous-page. Move up in a page.")
+                    :description "pdf-view-scroll-down-or-previous-page. Move up in a page")
     (cheatsheet-add :group 'Pdf-Tools
                     :key "n"
-                    :description "pdf-view-next-page-command. View the previous page in the PDF.")
+                    :description "pdf-view-next-page-command. View the previous page in the PDF")
     (cheatsheet-add :group 'Pdf-Tools
                     :key "o"
                     :description "pdf-outline")
     (cheatsheet-add :group 'Pdf-Tools
                     :key "p"
-                    :description "pdf-view-previous-page-command. View the previous page in the PDF.")
+                    :description "pdf-view-previous-page-command. View the previous page in the PDF")
     (cheatsheet-add :group 'Pdf-Tools
                     :key "M-g g"
-                    :description "pdf-view-goto-page.")
+                    :description "pdf-view-goto-page")
+    (cheatsheet-add :group 'Pdf-Tools
+                    :key "C-c C-a h"
+                    :description "Highlight selection in yellow and type notes")
+    (cheatsheet-add :group 'Pdf-Tools
+                    :key "C-c C-a t"
+                    :description "Add a text note somewhere")
+    (cheatsheet-add :group 'Pdf-Tools
+                    :key "C-c C-a D"
+                    :description "Delete an annotation")
+    (cheatsheet-add :group 'Pdf-Tools
+                    :key "C-c C-a o"
+                    :description "Strike thru selected text")
+    (cheatsheet-add :group 'Pdf-Tools
+                    :key "C-c C-a l and SPACE"
+                    :description "List and jump thru annotations")
     (cheatsheet-add :group 'Polymode
                     :key "M-n"
                     :description "Polymode prefix")
@@ -6127,6 +6157,9 @@ The following I've taken away.
     (cheatsheet-add :group 'Register
                     :key "s-x"
                     :description "helm-register. Then TAB or RET to insert. Equivalent to C-x r i")
+    (cheatsheet-add :group 'Register
+                    :key "C-x r SPC"
+                    :description "point-to-register. Store current location of point in register REGISTER")
     (cheatsheet-add :group 'Replace
                     :key "C-c s"
                     :description "vr/replace. Global replacement by dynamically building regular expressions")
@@ -8065,6 +8098,73 @@ Previously used <src/mininal.el>, but I'm not sure what it was doing so it's in 
 #+RESULTS: starter-kit-window-view-stuff
 : /home/dgm/.emacs.d/places
 
+
+* General 
+=general.el= sets global keybindings for modes.
+
+It allows to define keys in a concise way.  
+
+To set global bindings you do (you could add many bindings here):
+
+#+begin_example
+
+(general-define-key 
+   "C-M-j" 'counsel-switch-buffer)
+
+#+end_example
+
+DW uses =general.el= in this way very rarely. He uses it to maintain his own global key prefixes for his own bindings to actions he carries out often and that are normally in the =C-x= and =C-c= prefixes.
+
+First you create a function for future key definitions. 
+
+Spacemacs uses the =SPC= key as what they call the "leader key" to get to its keybindings. 
+
+Note there are not namespaces in Emacs to put some config specific stuff in, and you can of create it with the prefix =efs= in this example
+
+You do it with a namespace. The idea is as follows:
+
+Taken out: (but can be a cool way of going to files I use often, instead of the register)
+
+="fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))=
+
+NB: No me funciona... no sé por qué. 
+
+#+begin_src emacs-lisp :tangle no
+
+  (use-package general
+    :config
+    (general-create-definer efs/leader-keys
+      :keymaps '(emacs)
+      :global-prefix "M-ESC")
+
+    (efs/leader-keys
+      "t"  '(:ignore t :which-key "toggles")
+      "tt" '(counsel-load-theme :which-key "choose theme")))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24663 31727 56567 742000) :use-package-secs (0 0 2280 701000) :init (24663 31727 56545 105000) :config (24663 31727 56173 444000) :config-secs (0 0 1362 304000) :init-secs (0 0 2141 980000)))
+
+* Hydra 
+=hydra= allows setting transient keybindings for certain things, so you don't have to continue hitting keys multiple times. It opens ("pulls up") a panel that gives you a temporary set of keybindings that you can use with individual letters to quickly do some action that is repetitive.
+
+#+begin_src emacs-lisp :tangle no
+
+  (use-package hydra)
+
+  (defhydra hydra-buffer-flip (:timeout 4)
+    "Cycle thru buffers"
+    ("n" buffer-flip-forward)
+    ("p" buffer-flip-backward)
+    ("g" nil "finished" :exit t))
+
+  (efs/leader-keys
+    "ts" '(hydra-buffer-flip/body :which-key "cycle buffers"))
+
+#+end_src
+
+#+RESULTS:
 
 * Provide
 

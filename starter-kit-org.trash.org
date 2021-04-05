@@ -1,3 +1,7 @@
+   + NB: Using =SPC= is in sync with =org-noter= though the author claims it is not. So when you are writing notes in parallel to org-noter (that is, not org-noter notes), whenever you type =SPC= or =BKSP= on the pdf to move forward and backward, then you are redirected to the org-noter notes in the =.org= document and you loose the place where you were taking your notes independently of org-noter. 
+
+   + DGM: In an existing org-file where you want to keep your notes (because, for example, it contains an already existing template), be careful: =org-noter= deletes by default all that lies below its notes, which are located under a heading two (two stars) if I call =org-noter= from a one-star heading. So you can only use it with notes at the end and with your template contents under one level one heading (one star). If you use two level one headings, I think org-note will create its notes as level two headings under the first level one heading, thereby deleting everything that lies below.
+   + Update: if I have a level one heading but i call org-noter from a 4-star heading, =org-noter= deletes everything but this heading and will put the notes under it... So it is *critical* (for not deleting anything) that you start org-noter under the one-star heading.
 * Tips from John Wiegley
 
 JW says: Setting `org-fast-tag-selection-single-key` to `expert` makes it very quick and easy to assign common tags to entries.  I'll show how to use this feature later on, in the section titled "Tagging and metadata".

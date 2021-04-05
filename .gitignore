@@ -1,3 +1,5 @@
+elpa/
+quelpa/
 *#
 *.el~
 starter-kit-*.el
