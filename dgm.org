@@ -5,7 +5,6 @@
 #+OPTIONS: toc:nil num:nil ^:nil
 #+PROPERTY: header-args :tangle yes
 
-
 * Starter Kit kjhealy
 This file contains local customizations---ones that in some cases you will not be able to just drop in and use because, e.g., they involve references to particular files on my own machine. It's included here for completeness, and as and example of the kind of things you might put in your own user-specific file.
 
