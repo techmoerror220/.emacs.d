@@ -3409,19 +3409,18 @@ Originally:
 Next, copied from: https://www.reddit.com/r/emacs/comments/8x4xtt/tip_how_i_use_ledger_to_track_my_money/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-
-    (use-package ledger-mode
-      :mode ("\\.dat\\'"
-             "\\.ledger\\'")
-         :init
-      (add-hook 'ledger-mode-hook
-                (lambda ()
-                  (setq-local tab-always-indent 'complete)
-                  (setq-local completion-cycle-threshold t)
-                  (setq-local ledger-complete-in-steps t)))
-      (add-hook 'ledger-mode-hook #'ledger-flymake-enable)
-      :config
-      (setq ledger-clear-whole-transactions 1))
+ 
+  (use-package ledger-mode
+    :mode ("\\.ledger\\'")
+       :init
+    (add-hook 'ledger-mode-hook
+              (lambda ()
+                (setq-local tab-always-indent 'complete)
+                (setq-local completion-cycle-threshold t)
+                (setq-local ledger-complete-in-steps t)))
+    (add-hook 'ledger-mode-hook #'ledger-flymake-enable)
+    :config
+    (setq ledger-clear-whole-transactions 1))
 
 #+END_SRC
 
