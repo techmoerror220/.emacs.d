@@ -51,6 +51,9 @@
 ;;; John Wiegley's setup tweaked
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(when (string= (system-name) "lenovo")
+  (setq package-native-compile t))
+
 (defconst emacs-start-time (current-time))
 
 (defvar file-name-handler-alist-old file-name-handler-alist)
