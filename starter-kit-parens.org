@@ -51,25 +51,26 @@ and https://tgro.neocities.org/init.html
 I dunno why some pairs work (//, ==) and some don't (~, *, _, ()) ...
 
 #+begin_src emacs-lisp :tangle yes :results silent 
-(defvar org-electric-pairs '(
-                             (?/ . ?/) 
-                             (?= . ?=) 
-                             (?~ . ?~)
-                             (?$ . ?$)
-                             (?[ . ?])
-                             (?( . ?))
-                             (?\" . ?\")
-                             (?\` . ?\')
-                             (?\< . ?\>)
-                             (?\( . ?\))
-                             ) 
-  "Electric pairs for Org-mode.")
 
-(defun org-add-electric-pairs ()
-  (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
-  (setq-local electric-pair-text-pairs electric-pair-pairs))
+  (defvar org-electric-pairs '(
+                               (?\/ . ?\/) 
+                               (?\= . ?\=) 
+                               (?\~ . ?\~)
+                               (?\$ . ?\$)
+                               (?\[ . ?\])
+                               (?\" . ?\")
+                               (?\` . ?\')
+                               (?\< . ?\>)
+                               (?\( . ?\))
+                               ) 
+    "Electric pairs for Org-mode.")
 
-(add-hook 'org-mode-hook 'org-add-electric-pairs)
+  (defun org-add-electric-pairs ()
+    (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
+    (setq-local electric-pair-text-pairs electric-pair-pairs))
+
+  (add-hook 'org-mode-hook 'org-add-electric-pairs)
+
 #+end_src
 
 These pairs
@@ -410,13 +411,13 @@ DGM, 22 jan 20. Trying to get the =[]= pair in latex
 #+begin_src emacs-lisp :tangle yes
 (electric-pair-mode)
 (add-hook 'LaTeX-mode-hook
-          '(lambda ()
+          #'(lambda ()
             (define-key LaTeX-mode-map (kbd "$") 'self-insert-command)
             (define-key LaTeX-mode-map (kbd "[") 'self-insert-command)))
 #+end_src
 
 #+RESULTS:
-| (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command) (define-key LaTeX-mode-map (kbd [) 'self-insert-command)) | preview-mode-setup | (lambda nil (highlight-symbol-mode)) | TeX-PDF-mode | turn-on-reftex |
+| (lambda nil (set (make-local-variable 'TeX-electric-math) (cons \left( \right)))) | (lambda nil (define-key LaTeX-mode-map (kbd $) 'self-insert-command) (define-key LaTeX-mode-map (kbd [) 'self-insert-command)) | turn-on-reftex | TeX-PDF-mode |
 
 But it is not working. I try this:
 

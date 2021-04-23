@@ -88,7 +88,8 @@
 ;; saying this is not needed any more.
 ;; (package-initialize)
 
-(require 'cl)
+;; (require 'cl) ;; deprecated
+(require 'cl-lib)
 (require 'ffap)
 (require 'ansi-color)
 
@@ -328,10 +329,10 @@ ARCHIVE is the string name of the package archive.")
 ;; (defun efs/exwm-update-class ()
 ;;   (exwm-workspace-rename-buffer exwm-class-name))
 
-
 (use-package exwm
-:init
-(load "/home/dgm/.emacs.d/src/ambrevar/functions.el")
+  :init
+  (load "/home/dgm/.emacs.d/src/ambrevar/functions.el")
+
 (require 'functions)
 
 (defun ambrevar/exwm-rename-buffer-to-title ()
@@ -390,8 +391,9 @@ ARCHIVE is the string name of the package archive.")
 (defun efs/set-wallpaper ()
   (interactive)
   (start-process-shell-command
-   "feh" nil "feh --bg-scale /home/dgm/Pictures/fedora-jules-verne-nautilus-submarine-1920x1080.jpg"))
+   "feh" nil "feh --bg-scale /home/dgm/Pictures/500350.jpg"))
 ;;  "feh" nil "feh --bg-scale /home/dgm/Pictures/500350.jpg"
+;; "feh" nil "feh --bg-scale /home/dgm/Pictures/fedora-jules-verne-nautilus-submarine-1920x1080.jpg"
 ;; Mordickay and Rigby
 
 ;; Function to run apps in background
@@ -420,14 +422,14 @@ ARCHIVE is the string name of the package archive.")
 
 (defun efs/update-displays ()
   (efs/run-in-background "autorandr --change --force")
-  (efs/set-wallpaper)
+  ;; (efs/set-wallpaper)
   (message "Display config: %s"
            (string-trim (shell-command-to-string "autorandr --current"))))
 
 (require 'exwm-config)
 ;; (require 'exwm-systemtray)
 (require 'exwm-randr)
-:config
+
 ;; necessary to configure exwm manually
 
 ;; fringe size, most people prefer 1 (uncle dave's setup)
@@ -448,11 +450,11 @@ ARCHIVE is the string name of the package archive.")
 ;; (setq exwm-systemtray-height 16)
 
 (setq exwm-workspace-number 10
-      exwm-layout-show-all-buffers nil   ;;  allow an EXWM buffer to be displayed
-      ;;  in any workspace. If I choose it, then I move that buffer to
-      ;;  workspace from which I am calling it.
-      exwm-workspace-show-all-buffers nil) ;; if t, allows showing buffers on
-;; other workspaces.
+      exwm-layout-show-all-buffers t   ;;  allow an EXWM buffer to be displayed
+      ;;  in any workspace. If I choose it, then I move that buffer to the
+      ;;  workspace from which I am calling it (changed to t on 11 april 2021).
+      exwm-workspace-show-all-buffers t) ;; if t, allows showing buffers on
+;; other workspaces. (changed to t on 11 april 2021).
 ;; But DW has it set to t.
 ;; What DW is trying to do is to automatically move windows between workspaces.
 ;;  On 08/01/21
@@ -633,12 +635,21 @@ ARCHIVE is the string name of the package archive.")
   (exwm-randr-enable)
   (start-process-shell-command "xrandr" nil "xrandr --output eDP-1 --mode 1366x768 --pos 1920x312 --rotate normal --output DP-1 --off --output HDMI-1 --off --output DP-2 --off --output HDMI-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal")
 
-  (setq exwm-randr-workspace-monitor-plist
-        '(0 "eDP-1"))
+  ;; (setq exwm-randr-workspace-monitor-plist
+  ;;       '(0 "eDP-1"))
 
   ;; React to display connectivity changes, do initial display update
   (add-hook 'exwm-randr-screen-change-hook #'efs/update-displays)
   (efs/update-displays))
+
+(when (string= (system-name) "lenovo")
+  (exwm-randr-enable)
+  (start-process-shell-command "xrandr" nil "xrandr --dpi 250 --output eDP-1 --primary --mode 3840x2160 --pos 0x0 --rotate normal")
+
+  ;; React to display connectivity changes, do initial display update
+  (add-hook 'exwm-randr-screen-change-hook #'efs/update-displays)
+  (efs/update-displays))
+
 
 ;; for officePC
 (when (string=(system-name) "officePC")

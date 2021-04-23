@@ -64,7 +64,11 @@ compton &
 # /home/dgm/.config/latlon.sh tries to automate the location process, but it doesn't work. See https://wiki.archlinux.org/index.php/redshift
 redshift -c /home/dgm/.config/redshift.conf &
 
+## Set screen DPI
+xrdb ~/.emacs.d/exwm/Xresources
+
 # launch emacs upon startup
 # commented out by DGM on 22/12/2020 to see if i can simply start with <exec emacs> as told in https://github.com/ch11ng/exwm/issues/299
 exec dbus-launch --exit-with-session emacs -mm --debug-init --use-exwm
 # exec emacs
+

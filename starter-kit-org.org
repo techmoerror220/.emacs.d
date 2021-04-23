@@ -58,6 +58,23 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
 
 ;;     :ensure org-plus-contrib
 
+NB: On lenovo, I take 
+
+#+begin_example elisp
+
+:map org-capture-mode-map
+           ("C-c C-r"     . my/org-refile-and-jump)
+
+#+end_example
+
+out as I get the warning:
+
+#+begin_example elisp
+
+Error (use-package): org/:catch: Symbol’s value as variable is void: org-capture-mode-map Disable showing Disable logging
+
+#+end_example
+
 ** Org-mode
 #+begin_src emacs-lisp :tangle yes
 
@@ -98,9 +115,7 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
            ("s-,"         . org-toggle-pretty-entities)
            :map org-agenda-mode-map
            ("x"           . org-agenda-refile)
-           ("1"           . bjm/org-agenda-item-to-top)
-           :map org-capture-mode-map
-           ("C-c C-r"     . my/org-refile-and-jump))
+           ("1"           . bjm/org-agenda-item-to-top))
     :init
     (defun yas-org-very-safe-expand ()
       (let ((yas-fallback-behavior 'return-nil))
@@ -412,8 +427,8 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
             nil
           next-headline)))
 
-  ;;  (autoload 'ambrevar/org-switch-agenda-file "org")
-  ;;  (autoload 'ambrevar/org-switch-agenda-file-other-window "org")
+    ;;  (autoload 'ambrevar/org-switch-agenda-file "org")
+    ;;  (autoload 'ambrevar/org-switch-agenda-file-other-window "org")
 
     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
     (add-hook 'org-mode-hook 'org-display-inline-images)
@@ -1016,8 +1031,8 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
     (require 'holidays)
     (require 'imenu)
     (require 'org-clock)
-    (require 'org-wiki)
-    (require 'org-recipes)
+    (require 'org-wiki) ;; not reconized in Ubuntu
+    (require 'org-recipes) ;; not recognized in Ubuntu
     (require 'org-query)
     (require 'org-query-gtd)
     (require 'org-pdfview)
@@ -1055,7 +1070,7 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
     (setq org-publish-project-alist
           '(("org"
              :base-directory "~/.emacs.d/"
-             :publishing-directory "/media/dgm/blue/documents/websites/esk/"
+             :publishing-directory "~/documents/websites/esk/"
              :publishing-function org-html-publish-to-html
              :auto-sitemap t
              :sitemap-filename "index.org"
@@ -1100,8 +1115,8 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
           org-src-tab-acts-natively t
           org-adapt-indentation nil
           org-archive-location "/home/dgm/Dropbox/gtd/archive.org::From %s"
-          org-mobile-inbox-for-pull "/media/dgm/blue/documents/dropbox/org/fromMobile.org"
-          org-wiki-location "/media/dgm/blue/documents/dropbox/notes/org-wiki"
+          org-mobile-inbox-for-pull "~/documents/dropbox/org/fromMobile.org"
+          org-wiki-location "~/documents/dropbox/notes/org-wiki"
           org-latex-prefer-user-labels t
           org-agenda-window-setup 'current-window
           org-agenda-skip-scheduled-if-done t
@@ -1139,7 +1154,7 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
           org-fast-tag-selection-single-key 'expert)
 
     (setq org-catch-invisible-edits 'show-and-error)
-    (setq org-recipes-file-list '("/media/dgm/blue/documents/dropbox/notes/org-recipes/recipes.org" "/media/dgm/blue/documents/dropbox/notes/cheatSheets/emacsCheatSheet.org"))
+    (setq org-recipes-file-list '("~/documents/dropbox/notes/org-recipes/recipes.org" "~/documents/dropbox/notes/cheatSheets/emacsCheatSheet.org"))
 
     (setq org-agenda-log-mode-items (quote (closed state)))
     (setq org-agenda-sticky t)
@@ -1252,7 +1267,7 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
     (setq org-directory "/home/dgm/Dropbox/gtd")
     ;; Set to <your Dropbox root directory>/MobileOrg.
 
-    (setq org-mobile-directory "/media/dgm/blue/documents/dropbox/mobileorg")
+    (setq org-mobile-directory "~/documents/dropbox/mobileorg")
     ;; Set to the files (or directory of files) you want sync'd
     ;;   (setq org-agenda-files (quote ("/home/dgm/Dropbox/gtd")))  ;; this is the original line by kieran healy.
 
@@ -1267,26 +1282,26 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
                               "/home/dgm/Dropbox/gtd/tickler.org"
                               "/home/dgm/Dropbox/gtd/calendar.org"
                               "/home/dgm/Dropbox/gtd/divorcio_gtd.org"
-                              "/media/dgm/blue/documents/proyectos/mutual-stata/gtd/mutual_gtd.org"
-                              "/media/dgm/blue/documents/proyectos/tiec/gtd/tiec-gtd.org"
-                              "/media/dgm/blue/documents/proyectos/caixa2019-bartik/gtd/bartik-gtd.org"
-                              "/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org"
-                              "/media/dgm/blue/documents/proyectos/curso-ayuntamiento-madrid/gtd/curso-disenoInvestigacionI.org"
-                              "/media/dgm/blue/documents/My-Academic-Stuff/acreditacion-titular/gtd/titularidad-gtd.org"
-                              "/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org")))
+                              "/home/dgm/documents/proyectos/mutual-stata/gtd/mutual_gtd.org"
+                              "/home/dgm/documents/proyectos/tiec/gtd/tiec-gtd.org"
+                              "/home/dgm/documents/proyectos/caixa2019-bartik/gtd/bartik-gtd.org"
+                              "/home/dgm/documents/proyectos/iat_methods/iat_methods.org"
+                       "/home/dgm/documents/proyectos/curso-ayuntamiento-madrid/gtd/curso-disenoInvestigacionI.org"
+                              "/home/dgm/documents/My-Academic-Stuff/acreditacion-titular/gtd/titularidad-gtd.org"
+                              "/home/dgm/documents/proyectos/laBussola/laBussola_gtd.org")))
 
     (setcdr (assoc "\\.pdf\\'" org-file-apps) 'emacs)
 
     (custom-set-variables
      '(org-refile-targets '(("/home/dgm/Dropbox/gtd/gtd.org" :maxlevel . 2)
-                            ("/media/dgm/blue/documents/proyectos/mtj/mtj_gtd.org" :level . 2)
-                            ("/media/dgm/blue/documents/proyectos/tiec/gtd/tiec-gtd.org" :level . 2)
-                            ("/media/dgm/blue/documents/proyectos/laBussola/laBussola_gtd.org" :level . 2)
-                            ("/media/dgm/blue/documents/proyectos/iat_methods/iat_methods.org" :level . 2)
-                            ("/media/dgm/blue/documents/proyectos/mutual-stata/gtd/mutual_gtd.org" :maxlevel . 2)
-                            ("/media/dgm/blue/documents/proyectos/caixa2019-bartik/gtd/bartik-gtd.org" :maxlevel . 2)
-                            ("/media/dgm/blue/documents/proyectos/curso-ayuntamiento-madrid/gtd/curso-disenoInvestigacionI.org" :maxlevel . 2)
-                            ("/media/dgm/blue/documents/My-Academic-Stuff/acreditacion-titular/gtd/titularidad-gtd.org" :maxlevel . 2)
+                            ("/home/dgm/documents/proyectos/mtj/mtj_gtd.org" :level . 2)
+                            ("/home/dgm/documents/proyectos/tiec/gtd/tiec-gtd.org" :level . 2)
+                            ("/home/dgm/documents/proyectos/laBussola/laBussola_gtd.org" :level . 2)
+                            ("/home/dgm/documents/proyectos/iat_methods/iat_methods.org" :level . 2)
+                            ("/home/dgm/documents/proyectos/mutual-stata/gtd/mutual_gtd.org" :maxlevel . 2)
+                            ("/home/dgm/documents/proyectos/caixa2019-bartik/gtd/bartik-gtd.org" :maxlevel . 2)
+      ("/home/dgm/documents/proyectos/curso-ayuntamiento-madrid/gtd/curso-disenoInvestigacionI.org" :maxlevel . 2)
+      ("/home/dgm/documents/My-Academic-Stuff/acreditacion-titular/gtd/titularidad-gtd.org" :maxlevel . 2)
                             ("/home/dgm/Dropbox/gtd/divorcio_gtd.org" :level . 2)
                             ("/home/dgm/Dropbox/gtd/someday.org" :maxlevel . 2)
                             ("/home/dgm/Dropbox/gtd/inbox.org" :maxlevel . 1)
@@ -1450,7 +1465,7 @@ Here are the Org files I use. I should probably organize them better.  Inspired 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24682 57851 567603 236000) :init (24682 57851 566814 204000) :config (24682 57851 566779 447000) :config-secs (0 0 3637 345000) :init-secs (0 0 55304 298000) :use-package-secs (0 0 56228 682000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24690 52729 567075 571000) :init (24690 52729 566626 674000) :config (24690 52729 566609 259000) :config-secs (0 0 60989 602000) :init-secs (0 0 95120 619000) :use-package-secs (0 0 95764 786000)))
 
 
 ** Export Settings and Helpful Packages
@@ -1553,17 +1568,17 @@ We'll need the =htmlize= package for syntax highlighting of code blocks (in Caol
   (require 'org-ref-wos)
   (require 'org-ref-scopus)
   (require 'org-ref-pubmed)
-;; (reftex-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
+;; (reftex-default-bibliography '("~/documents/bibs/socbib.bib"))
 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-ref
     :after org
     :custom
-    (org-ref-bibliography-notes "/media/dgm/blue/documents/elibrary/org/references/notes.org")
-    (org-ref-default-bibliography '("/media/dgm/blue/documents/bibs/socbib.bib"))
-    (org-ref-pdf-directory "/media/dgm/blue/documents/elibrary/org/references/pdfs") ;; keep the final slash off
-    (org-ref-notes-directory "/media/dgm/blue/documents/elibrary/org/references")
+    (org-ref-bibliography-notes "~/documents/elibrary/org/references/notes.org")
+    (org-ref-default-bibliography '("~/documents/bibs/socbib.bib"))
+    (org-ref-pdf-directory "~/documents/elibrary/org/references/pdfs") ;; keep the final slash off
+    (org-ref-notes-directory "~/documents/elibrary/org/references")
     :init
     (defun my/org-ref-open-pdf-at-point ()
       "Open the pdf for bibtex key under point if it exists."
@@ -1585,13 +1600,14 @@ We'll need the =htmlize= package for syntax highlighting of code blocks (in Caol
 
   (with-eval-after-load 'org
     (require 'org-ref)
-    (require 'ox-bibtex))
+    ;; (require 'ox-bibtex)
+    )
 
   ;; (add-to-list 'org-ref-bibtex-completion-actions '("Edit notes" . helm-bibtex-edit-notes))
 #+END_SRC
 
 #+RESULTS:
-: ox-bibtex
+: org-ref
 
 *** DEFERRED Pending issues
 CLOSED: [2021-01-11 Mon 12:04]
@@ -1639,189 +1655,190 @@ This I don't really use but could be useful in future:
 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (setq org-agenda-block-separator "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    (setq org-agenda-block-separator "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
-  (setq org-agenda-custom-commands
-        '(("x" "Export Day Agenda" agenda ""
-           ((ps-number-of-columns 2)
-            (ps-landscape-mode t)
-            (org-agenda-prefix-format " [ ] ")
-            (org-agenda-with-colors nil)
-            (org-agenda-remove-tags t))
-           nil
-           ("~/Dropbox/gtd/theDayAgenda.pdf"))   ;; no se' por qu'e no se graba automaticamente este file. Da igual poner NIl antes que no (ver abajo)
-          ("X" "Export Week Agenda" agenda ""
-           ((ps-number-of-columns 2)
-            (ps-landscape-mode t)
-            (org-agenda-prefix-format " [ ] ")
-            (org-agenda-with-colors nil)
-            (org-agenda-remove-tags t)
-            (org-agenda-start-on-weekday nil)
-            (org-agenda-span 7))
-           ("~/Dropbox/gtd/theWeekAgenda.pdf")) ;; no se' por qu'e no se graba automaticamente este file
-          ("d" "Daily Review"
-           ((agenda "" ((org-agenda-span 1))) ;; review upcoming deadlines and appointments
-            ;; type "l" in the agenda to review logged items
-            ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
-            ;;(todo "STARTED") ;; review  actions that have started
-            (todo "WAITING" ((org-agenda-sorting-strategy '(category-up)))) ;;This way tasks of the same category are together and sorted alphabetically
-            (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
-            (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
-            )) ;;
-          ("w" "Weekly Review"
-           ((agenda "" ((org-agenda-span 7)))  ;; review upcoming deadlines and appointments
-            ;; old code ((org-agenda-fortnight-view)))
-            ;; type "l" in the agenda to review logged items
-            ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
-            ;;(todo "STARTED") ;; review  actions that have started
-            (todo "WAITING" ((org-agenda-sorting-strategy '(category-up)))) ;; review waiting items
-            (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
-            (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
-            ))
-          ("f" "Fortnight Review"
-           ((agenda "" ((org-agenda-span 14))) ;; review upcoming deadlines and appointments
-            ;; type "l" in the agenda to review logged items
-            ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
-            ;;(todo "STARTED") ;; review  actions that have started
-            (todo "WAITING" ((org-agenda-sorting-strategy '(category-up))))    ;; review waiting items
-            (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
-            (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
-            ))
-          ("r" "Monthly Review"
-           ((agenda "" ((org-agenda-span 31))) ;; review upcoming deadlines and appointments
-            ;; type "l" in the agenda to review logged items
-            ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
-            ;;(todo "STARTED") ;; review  actions that have started
-            (todo "WAITING" ((org-agenda-sorting-strategy '(category-up))))      ;; review waiting items
-            (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
-            (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
-            ))
-          ("y" "Yearly Review"
-           ((agenda "" ((org-agenda-span (quote year))))))
-          ("p" "Tasks Grouped by Project"
-           ((agenda "" (
-                        (org-agenda-span 7)
-                        (org-agenda-start-on-weekday nil)
-                        ))
-;;            (tags "project"
-;;                  ((org-tags-match-list-sublevels nil)
-;;                   (org-agenda-overriding-header "                                          LIST OF PROJECTS                                          "))
-;;                  ) ;; TODO include condition: when TODO state changed from PROJECT to DONE, do not list here
-            (tags-todo "+project+CATEGORY=\"uned\""
-                       ((org-agenda-overriding-header "                                                UNED                                                ")
-                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
-            (tags-todo "+project+CATEGORY=\"research\""
-                       ((org-agenda-overriding-header "                                               RESEARCH                                             ")
-                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
-            (tags-todo "+project+CATEGORY=\"academico\""
-                       ((org-agenda-overriding-header "                                               ACADEMICO                                            ")
-                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
-            (tags-todo "+project+CATEGORY=\"work-hunt\""
-                       ((org-agenda-overriding-header "                                               WORK-HUNT                                            ")
-                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
-            (tags-todo "+project+CATEGORY=\"computing\""
-                       ((org-agenda-overriding-header "                                               COMPUTING                                            ")
-                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
-            (tags-todo "+project+CATEGORY=\"personal\""
-                       ((org-agenda-overriding-header "                                               PERSONAL                                             ")
-                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
-            (tags-todo "+project+CATEGORY=\"git\"|+project+CATEGORY=\"linux\"|+project+CATEGORY=\"learning\""
-                       ((org-agenda-overriding-header "                                               LEARNING                                             ")
-                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
-            (tags-todo "-project+TODO=\"TODO\""
-                       ((org-agenda-overriding-header "                                               ORPHAN TODOs                                         ")
-                        ))
-            (tags-todo "+project+CATEGORY=\"emacs\""
-                       ((org-agenda-overriding-header "                                               EMACS                                                ")
-                        (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
-            ))
-           ("o" "Office and home agenda"
-           ((agenda "" ((org-agenda-span 1))) 
-            (tags-todo "@home|@uned")
-            ;;            (tags "project+CATEGORY=\"elephants\"")
-            ;;            (tags "review" ((org-agenda-files '("~/org/circuspeanuts.org"))))
-            ;; limits the tag search to the file circuspeanuts.org
-            ;;            (todo "WAITING")
-            )
-           ((org-agenda-compact-blocks t))) ;; options set here apply to the entire block
-          ;; ...other commands here
-          ("l" "Timeline"
-           ((agenda
-             ""
-             (;; (org-agenda-overriding-header "========================================== Scheduled Tasks ==========================================")
-              (org-agenda-span 90)
-              (org-agenda-prefix-format '((agenda . " %1c %?-12t% s")))
-              ;;(org-agenda-skip-function '(lambda()
-              ;;                  ((bh/skip-habits))))
+    (setq org-agenda-custom-commands
+          '(("x" "Export Day Agenda" agenda ""
+             ((ps-number-of-columns 2)
+              (ps-landscape-mode t)
+              (org-agenda-prefix-format " [ ] ")
+              (org-agenda-with-colors nil)
+              (org-agenda-remove-tags t))
+             nil
+             ("~/Dropbox/gtd/theDayAgenda.pdf"))   ;; no se' por qu'e no se graba automaticamente este file. Da igual poner NIl antes que no (ver abajo)
+            ("X" "Export Week Agenda" agenda ""
+             ((ps-number-of-columns 2)
+              (ps-landscape-mode t)
+              (org-agenda-prefix-format " [ ] ")
+              (org-agenda-with-colors nil)
+              (org-agenda-remove-tags t)
+              (org-agenda-start-on-weekday nil)
+              (org-agenda-span 7))
+             ("~/Dropbox/gtd/theWeekAgenda.pdf")) ;; no se' por qu'e no se graba automaticamente este file
+            ("d" "Daily Review"
+             ((agenda "" ((org-agenda-span 1))) ;; review upcoming deadlines and appointments
+              ;; type "l" in the agenda to review logged items
+              ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+              ;;(todo "STARTED") ;; review  actions that have started
+              (todo "WAITING" ((org-agenda-sorting-strategy '(category-up)))) ;;This way tasks of the same category are together and sorted alphabetically
+              (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
+              (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
+              )) ;;
+            ("w" "Weekly Review"
+             ((agenda "" ((org-agenda-span 7)))  ;; review upcoming deadlines and appointments
+              ;; old code ((org-agenda-fortnight-view)))
+              ;; type "l" in the agenda to review logged items
+              ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+              ;;(todo "STARTED") ;; review  actions that have started
+              (todo "WAITING" ((org-agenda-sorting-strategy '(category-up)))) ;; review waiting items
+              (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
+              (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
               ))
-            (todo
-             "TODO"
-             ((org-agenda-overriding-header "                                         UNSCHEDULED TODOs                                          ")
-              (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
-              (org-agenda-prefix-format '((todo . " %1c ")))
-              (org-agenda-sorting-strategy '(category-up))
+            ("f" "Fortnight Review"
+             ((agenda "" ((org-agenda-span 14))) ;; review upcoming deadlines and appointments
+              ;; type "l" in the agenda to review logged items
+              ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+              ;;(todo "STARTED") ;; review  actions that have started
+              (todo "WAITING" ((org-agenda-sorting-strategy '(category-up))))    ;; review waiting items
+              (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
+              (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
+              ))
+            ("r" "Monthly Review"
+             ((agenda "" ((org-agenda-span 31))) ;; review upcoming deadlines and appointments
+              ;; type "l" in the agenda to review logged items
+              ;;            (stuck "") ;; review stuck projects as designated by org-stuck-projects
+              ;;(todo "STARTED") ;; review  actions that have started
+              (todo "WAITING" ((org-agenda-sorting-strategy '(category-up))))      ;; review waiting items
+              (todo "NEXT" ((org-agenda-sorting-strategy '(category-up)))) ;; review next actions
+              (todo "TODO" ((org-agenda-sorting-strategy '(category-up)))) ;; review pending actions waiting for "next actiosn" to be fulfilled
+              ))
+            ("y" "Yearly Review"
+             ((agenda "" ((org-agenda-span (quote year))))))
+            ("p" "Tasks Grouped by Project"
+             ((agenda "" (
+                          (org-agenda-span 7)
+                          (org-agenda-start-on-weekday nil)
+                          ))
+  ;;            (tags "project"
+  ;;                  ((org-tags-match-list-sublevels nil)
+  ;;                   (org-agenda-overriding-header "                                          LIST OF PROJECTS                                          "))
+  ;;                  ) ;; TODO include condition: when TODO state changed from PROJECT to DONE, do not list here
+              (tags-todo "+project+CATEGORY=\"uned\""
+                         ((org-agenda-overriding-header "                                                UNED                                                ")
+                          (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              (tags-todo "+project+CATEGORY=\"research\""
+                         ((org-agenda-overriding-header "                                               RESEARCH                                             ")
+                          (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              (tags-todo "+project+CATEGORY=\"academico\""
+                         ((org-agenda-overriding-header "                                               ACADEMICO                                            ")
+                          (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              (tags-todo "+project+CATEGORY=\"work-hunt\""
+                         ((org-agenda-overriding-header "                                               WORK-HUNT                                            ")
+                          (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              (tags-todo "+project+CATEGORY=\"computing\""
+                         ((org-agenda-overriding-header "                                               COMPUTING                                            ")
+                          (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              (tags-todo "+project+CATEGORY=\"personal\""
+                         ((org-agenda-overriding-header "                                               PERSONAL                                             ")
+                          (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              (tags-todo "+project+CATEGORY=\"git\"|+project+CATEGORY=\"linux\"|+project+CATEGORY=\"learning\""
+                         ((org-agenda-overriding-header "                                               LEARNING                                             ")
+                          (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              (tags-todo "-project+TODO=\"TODO\""
+                         ((org-agenda-overriding-header "                                               ORPHAN TODOs                                         ")
+                          ))
+              (tags-todo "+project+CATEGORY=\"emacs\""
+                         ((org-agenda-overriding-header "                                               EMACS                                                ")
+                          (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
+              ))
+             ("o" "Office and home agenda"
+             ((agenda "" ((org-agenda-span 1))) 
+              (tags-todo "@home|@uned")
+              ;;            (tags "project+CATEGORY=\"elephants\"")
+              ;;            (tags "review" ((org-agenda-files '("~/org/circuspeanuts.org"))))
+              ;; limits the tag search to the file circuspeanuts.org
+              ;;            (todo "WAITING")
               )
-             ))
-           )
-           ("z" "Done or Canceled Tasks to Be Archived"
-           ((todo "DONE|CANCELED"))
-           ((org-agenda-compact-blocks t)))))
+             ((org-agenda-compact-blocks t))) ;; options set here apply to the entire block
+            ;; ...other commands here
+            ("l" "Timeline"
+             ((agenda
+               ""
+               (;; (org-agenda-overriding-header "========================================== Scheduled Tasks ==========================================")
+                (org-agenda-span 90)
+                (org-agenda-prefix-format '((agenda . " %1c %?-12t% s")))
+                ;;(org-agenda-skip-function '(lambda()
+                ;;                  ((bh/skip-habits))))
+                ))
+              (todo
+               "TODO"
+               ((org-agenda-overriding-header "                                         UNSCHEDULED TODOs                                          ")
+                (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
+                (org-agenda-prefix-format '((todo . " %1c ")))
+                (org-agenda-sorting-strategy '(category-up))
+                )
+               ))
+             )
+             ("z" "Done or Canceled Tasks to Be Archived"
+             ((todo "DONE|CANCELED"))
+             ((org-agenda-compact-blocks t)))))
 
-  (defun my-org-agenda-skip-all-siblings-but-first ()
-    "Skip all but the first non-done entry."
-    (let (should-skip-entry)
-      (unless (org-current-is-todo)
-        (setq should-skip-entry t))
-      (save-excursion
-        (while (and (not should-skip-entry) (org-goto-sibling t))
-          (when (org-current-is-todo)
-            (setq should-skip-entry t))))
-      (when should-skip-entry
-        (or (outline-next-heading)
-            (goto-char (point-max))))))
+    (defun my-org-agenda-skip-all-siblings-but-first ()
+      "Skip all but the first non-done entry."
+      (let (should-skip-entry)
+        (unless (org-current-is-todo)
+          (setq should-skip-entry t))
+        (save-excursion
+          (while (and (not should-skip-entry) (org-goto-sibling t))
+            (when (org-current-is-todo)
+              (setq should-skip-entry t))))
+        (when should-skip-entry
+          (or (outline-next-heading)
+              (goto-char (point-max))))))
 
-  (defun org-current-is-todo ()
-    (string= "TODO" (org-get-todo-state)))
+    (defun org-current-is-todo ()
+      (string= "TODO" (org-get-todo-state)))
 
-  ;; from https://emacs.stackexchange.com/questions/9585/org-how-to-sort-headings-by-todo-and-then-by-priority
-  ;;  (setq org-todo-sort-order '("PROJECT" "WAITING" "NEXT" "TODO" "CANCELED" "DONE"))
-  ;; commented as it doesn't work for me
-  ;; (require 'cl)
-  ;; (require 'dash)
+    ;; from https://emacs.stackexchange.com/questions/9585/org-how-to-sort-headings-by-todo-and-then-by-priority
+    ;;  (setq org-todo-sort-order '("PROJECT" "WAITING" "NEXT" "TODO" "CANCELED" "DONE"))
+    ;; commented as it doesn't work for me
+    ;; (require 'cl)
+    ;; (require 'dash)
 
-  ;; (defun todo-to-int (todo)
-  ;;    (first (-non-nil
-  ;;            (mapcar (lambda (keywords)
-  ;;                      (let ((todo-seq
-  ;;                             (-map (lambda (x) (first (split-string  x "(")))
-  ;;                                   (rest keywords)))) 
-  ;;                        (cl-position-if (lambda (x) (string= x todo)) todo-seq)))
-  ;;                    org-todo-keywords))))
+    ;; (defun todo-to-int (todo)
+    ;;    (first (-non-nil
+    ;;            (mapcar (lambda (keywords)
+    ;;                      (let ((todo-seq
+    ;;                             (-map (lambda (x) (first (split-string  x "(")))
+    ;;                                   (rest keywords)))) 
+    ;;                        (cl-position-if (lambda (x) (string= x todo)) todo-seq)))
+    ;;                    org-todo-keywords))))
 
-  ;;(defun my/org-sort-key ()
-  ;;  (let* ((todo-max (apply #'max (mapcar #'length org-todo-keywords)))
-  ;;         (todo (org-entry-get (point) "TODO"))
-  ;;         (todo-int (if todo (todo-to-int todo) todo-max))
-  ;;         )
-  ;;    (format "%03d %03d" todo-int priority-int)
-  ;;    ))
+    ;;(defun my/org-sort-key ()
+    ;;  (let* ((todo-max (apply #'max (mapcar #'length org-todo-keywords)))
+    ;;         (todo (org-entry-get (point) "TODO"))
+    ;;         (todo-int (if todo (todo-to-int todo) todo-max))
+    ;;         )
+    ;;    (format "%03d %03d" todo-int priority-int)
+    ;;    ))
 
-  ;;(defun my/org-sort-entries ()
-  ;;  (interactive)
-  ;;  (org-sort-entries nil ?f #'my/org-sort-key))
+    ;;(defun my/org-sort-entries ()
+    ;;  (interactive)
+    ;;  (org-sort-entries nil ?f #'my/org-sort-key))
 
-  ;; from https://github.com/arcthur/.emacs.d/blob/master/modes/init-org-mode.el
+    ;; from https://github.com/arcthur/.emacs.d/blob/master/modes/init-org-mode.el
 
-  (defun org-sort-agenda-items-todo (a b)
-    (or
-     ;;(org-cmp-todo-state a b)
-     ;; (org-cmp-todo-state "PROJECT") ;; first list project heading
-     (org-cmp-todo-state a b)
-     ;;(org-cmp-time a b)
-     ;;(org-date-cmp a b)
-     ;;(org-cmp-priority a b)
-     ;;(org-cmp-effort a b)
-     ))
+    (defun org-sort-agenda-items-todo (a b)
+      (or
+       ;;(org-cmp-todo-state a b)
+       ;; (org-cmp-todo-state "PROJECT") ;; first list project heading
+       (org-cmp-todo-state a b)
+       ;;(org-cmp-time a b)
+       ;;(org-date-cmp a b)
+       ;;(org-cmp-priority a b)
+       ;;(org-cmp-effort a b)
+       ))
+
 #+END_SRC
 
 #+RESULTS:

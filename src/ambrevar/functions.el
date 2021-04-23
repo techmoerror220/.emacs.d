@@ -148,6 +148,7 @@ Enlarge/Shrink by ARG columns, or 5 if ARG is nil."
   (interactive "P")
   (if (= (count-windows) 2)
       (ambrevar/move-border-left-or-right arg t)))
+
  (global-set-key (kbd "M-(") 'ambrevar/move-border-left)
 
 (defun ambrevar/move-border-left-or-right (arg dir-left)
@@ -181,6 +182,7 @@ If DIR-LEFT is t, then move left, otherwise move right."
     (if last
         (shell-command last)
       (error "Shell command history is empty"))))
+
 (global-set-key (kbd "C-M-!") 'shell-last-command)
 
 (defun ambrevar/skeleton-make-markers ()
@@ -256,20 +258,24 @@ If W2 is a window too, swap both."
     (set-window-start w1 s2)
     (set-window-start w2 s1))
   (select-window w1))
+
 (global-set-key (kbd "C-x \\") 'swap-windows)
 
 (defun ambrevar/swap-windows-left ()
   "Swap current window with the window to the left."
   (interactive)
   (ambrevar/swap-windows (window-in-direction 'left)))
+
 (defun ambrevar/swap-windows-below ()
   "Swap current window with the window below."
   (interactive)
   (ambrevar/swap-windows (window-in-direction 'below)))
+
 (defun ambrevar/swap-windows-above ()
   "Swap current window with the window above."
   (interactive)
   (ambrevar/swap-windows (window-in-direction 'above)))
+
 (defun ambrevar/swap-windows-right ()
   "Swap current window with the window to the right."
   (interactive)
@@ -350,6 +356,7 @@ It only works for frames with exactly two windows."
           (set-window-buffer (next-window) next-win-buffer)
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
+
 (global-set-key (kbd "C-x C-\\") 'toggle-window-split)
 
 (defun ambrevar/toggle-word-delim ()

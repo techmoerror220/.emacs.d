@@ -429,16 +429,16 @@ From https://github.com/tmalsburg/helm-bibtex: Helm-bibtex and ivy-bibtex allow 
   (use-package helm-bibtex
     :bind  (("C-c \)" . helm-bibtex))
     :defer t
-    :config
-    (setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
-    (setq bibtex-completion-library-path '("/media/dgm/blue/documents/elibrary/org/references/pdfs"))
-    (setq bibtex-completion-notes-path   "/media/dgm/blue/documents/elibrary/org/references")
+    :config  
+    (setq bibtex-completion-bibliography "~/documents/bibs/socbib.bib")
+    (setq bibtex-completion-library-path '("~/documents/elibrary/org/references/pdfs"))
+    (setq bibtex-completion-notes-path   "~/documents/elibrary/org/references")
     (setq bibtex-completion-pdf-symbol   "⌘")
     (setq bibtex-completion-notes-symbol "✎")
     (setq bibtex-completion-pdf-open-function 'org-open-file)
-    (setq helm-bibtex-bibliography       "/media/dgm/blue/documents/bibs/socbib.bib"
-          helm-bibtex-library-path       "/media/dgm/blue/documents/elibrary/org/references/pdfs/"
-          helm-bibtex-notes-path         "/media/dgm/blue/documents/elibrary/org/references/readings.org")
+    (setq helm-bibtex-bibliography       "~/documents/bibs/socbib.bib"
+          helm-bibtex-library-path       "~/documents/elibrary/org/references/pdfs/"
+          helm-bibtex-notes-path         "~/documents/elibrary/org/references/readings.org")
     (setq bibtex-completion-cite-prompt-for-optional-arguments t)
     (setq bibtex-completion-cite-default-command 'textcite)
     )
@@ -446,7 +446,7 @@ From https://github.com/tmalsburg/helm-bibtex: Helm-bibtex and ivy-bibtex allow 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24587 1884 12897 686000) :init (24587 1884 12754 19000) :init-secs (0 0 97 124000) :use-package-secs (0 7 687287 537000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24690 48993 138778 741000) :init (24690 48993 138697 882000) :config (24690 48993 138690 706000) :config-secs (0 0 246 746000) :init-secs (0 0 272 527000) :use-package-secs (0 0 394 783000)))
 
 Tip from =titus= for =helm-bibtex=: I use the menu key as the prefix key for all helm commands and bind helm-bibtex to b. Helm-bibtex can then be started using <menu> b. It is also useful to bind helm-resume to <menu> in helm-command-map. With this binding, <menu> <menu> can be used to reopen the last helm search.
 
@@ -456,37 +456,37 @@ Bibtex-completion depends on helm-bibtex. That's why I paste it here. A minimal 
 
 #+BEGIN_EXAMPLE
 (setq bibtex-completion-bibliography 
-      '("/media/dgm/blue/documents/bibs/socbib.bib"))  
+      '("~/documents/bibs/socbib.bib"))  
 #+END_EXAMPLE
 
 #+BEGIN_SRC emacs-lisp :tangle no
-(setq bibtex-completion-bibliography "/media/dgm/blue/documents/bibs/socbib.bib")
+(setq bibtex-completion-bibliography "~/documents/bibs/socbib.bib")
 #+END_SRC
 
 #+RESULTS:
-: /media/dgm/blue/documents/bibs/socbib.bib
+: ~/documents/bibs/socbib.bib
 
 Specify where PDFs can be found: =Bibtex-completion= assumes that the name of a PDF consists of the BibTeX key followed plus a user-defined suffix (.pdf by default). For example, if a BibTeX entry has the key Darwin1859, bibtex-completion searches for Darwin1859.pdf.
 
 I am commenting out as I have the variable =helm-bibtex-library-path= in =starter-kit-helm.org=
 
 #+BEGIN_SRC emacs-lisp :tangle no
-(setq bibtex-completion-library-path '("/media/dgm/blue/documents/elibrary/org/references/pdfs"))
+(setq bibtex-completion-library-path '("~/documents/elibrary/org/references/pdfs"))
 #+END_SRC
 
 #+RESULTS:
-| /media/dgm/blue/documents/elibrary/org/references/pdfs/ |
+| ~/documents/elibrary/org/references/pdfs/ |
 
 
 Bibtex-completion supports two methods for storing notes. It can either store all notes in one file or store notes in multiple files, one file per publication. In the first case, the customization variable bibtex-completion-notes-path has to be set to the full path of the notes file:
 I am commenting it out as I have the variable =helm-bibtex-notes-path= in =starter-kit-helm.org=
 
 #+BEGIN_SRC emacs-lisp :tangle no
-(setq bibtex-completion-notes-path "/media/dgm/blue/documents/elibrary/org/references")
+(setq bibtex-completion-notes-path "~/documents/elibrary/org/references")
 #+END_SRC
 
 #+RESULTS:
-: /media/dgm/blue/documents/elibrary/org/references
+: ~/documents/elibrary/org/references
 
 (See also Kitchin on setting these paths here https://github.com/jkitchin/org-ref.)
 
@@ -516,13 +516,13 @@ From: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_wor
 With this setup helm-bibtex points to the same notes file as =org-ref=. Just run =M-x helm-bibtex= (=C-]=) and select the article you want. Instead of pressing =<return>=, press =<tab>= (or =C-i=). This opens up helm's alternate action list where you can choose to =Edit notes=. This opens up the exact notes file created by org-ref.
 
 #+BEGIN_SRC emacs-lisp :tangle no
- (setq helm-bibtex-bibliography "/media/dgm/blue/documents/bibs/socbib.bib" 
-       helm-bibtex-library-path "/media/dgm/blue/documents/elibrary/org/references/pdfs/"
-       helm-bibtex-notes-path "/media/dgm/blue/documents/elibrary/org/references/readings.org")
+ (setq helm-bibtex-bibliography "~/documents/bibs/socbib.bib" 
+       helm-bibtex-library-path "~/documents/elibrary/org/references/pdfs/"
+       helm-bibtex-notes-path "~/documents/elibrary/org/references/readings.org")
 #+END_SRC
 
 #+RESULTS:
-: /media/dgm/blue/documents/elibrary/org/references/readings.org
+: ~/documents/elibrary/org/references/readings.org
 
 * Uncle Dave
 
@@ -552,107 +552,109 @@ Si usara =:map projectile-command-map=, las definiciones irían adjuntas al pref
 
 #+srcname: projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
-;; Projectile
-(use-package projectile
-  :bind-keymap
-  ("C-c p" . projectile-command-map)
-  :delight '(:eval (concat " " (projectile-project-name))) ;; Remove the mode name for projectile-mode, but show the project name.
-  :config 
-  (projectile-mode +1)
-  (setq projectile-project-search-path '("~/"
-                                         "/media/dgm/blue/documents/dropbox/"
-                                         "/media/dgm/blue/documents/UNED/"
-                                         "/media/dgm/blue/documents/data/eurostat" 
-                                         "/media/dgm/blue/documents/programming"
-                                         "/media/dgm/blue/documents/My-Academic-Stuff"
-                                         "/media/dgm/blue/documents/personal"
-                                         "/home/dgm/Dropbox/gtd"
-                                         "/media/dgm/blue/documents/bibs"
-                                         "/media/dgm/blue/documents/templates"
-                                         "/media/dgm/blue/documents/cv"
-                                         "/media/dgm/blue/documents/backups"
-                                         "/media/dgm/blue/documents/reviews"
-                                         "/media/dgm/blue/documents/elibrary"
-                                         "/media/dgm/blue/documents/proyectos"
-                                         "/media/dgm/blue/documents/UNED/teaching/mis-cursos"
-                                         ))
-  (projectile-add-known-project "~/")
-  (projectile-add-known-project "~/.emacs.d/")
-  (projectile-add-known-project "/media/dgm/blue/documents/dropbox/")
-  (projectile-add-known-project "/media/dgm/blue/documents/UNED/")
-  (projectile-add-known-project "/media/dgm/blue/documents/data/eurostat/")
-  (projectile-add-known-project "/media/dgm/blue/documents/programming/")
-  (projectile-add-known-project "/media/dgm/blue/documents/My-Academic-Stuff/")
-  (projectile-add-known-project "/media/dgm/blue/documents/personal/")  
-  (projectile-add-known-project "/home/dgm/Dropbox/gtd/")  
-  (projectile-add-known-project "/media/dgm/blue/documents/bibs/")  
-  (projectile-add-known-project "/media/dgm/blue/documents/templates/")
-  (projectile-add-known-project "/media/dgm/blue/documents/cv/")
-  (projectile-add-known-project "/media/dgm/blue/documents/backups/")
-  (projectile-add-known-project "/media/dgm/blue/documents/reviews/")
-  (projectile-add-known-project "/media/dgm/blue/documents/elibrary/")
-  (projectile-add-known-project "/media/dgm/blue/documents/proyectos/")
-  (projectile-add-known-project "/media/dgm/blue/documents/UNED/teaching/mis-cursos/")
+  ;; Projectile
 
-  (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
+  (use-package projectile
+    :bind-keymap
+    ("C-c p" . projectile-command-map)
+    :delight '(:eval (concat " " (projectile-project-name))) ;; Remove the mode name for projectile-mode, but show the project name.
+    :config 
+    (projectile-mode +1)
+    (setq projectile-project-search-path '("~/"
+                                           "~/documents/dropbox/"
+                                           "~/documents/UNED/"
+                                           "~/documents/data/eurostat" 
+                                           "~/documents/programming"
+                                           "~/documents/My-Academic-Stuff"
+                                           "~/documents/personal"
+                                           "/home/dgm/Dropbox/gtd"
+                                           "~/documents/bibs"
+                                           "~/documents/templates"
+                                           "~/documents/cv"
+                                           "~/documents/backups"
+                                           "~/documents/reviews"
+                                           "~/documents/elibrary"
+                                           "~/documents/proyectos"
+                                           "~/documents/UNED/teaching/mis-cursos"
+                                           ))
+    (projectile-add-known-project "~/")
+    (projectile-add-known-project "~/.emacs.d/")
+    (projectile-add-known-project "~/documents/dropbox/")
+    (projectile-add-known-project "~/documents/UNED/")
+    (projectile-add-known-project "~/documents/data/eurostat/")
+    (projectile-add-known-project "~/documents/programming/")
+    (projectile-add-known-project "~/documents/My-Academic-Stuff/")
+    (projectile-add-known-project "~/documents/personal/")  
+    (projectile-add-known-project "/home/dgm/Dropbox/gtd/")  
+    (projectile-add-known-project "~/documents/bibs/")  
+    (projectile-add-known-project "~/documents/templates/")
+    (projectile-add-known-project "~/documents/cv/")
+    (projectile-add-known-project "~/documents/backups/")
+    (projectile-add-known-project "~/documents/reviews/")
+    (projectile-add-known-project "~/documents/elibrary/")
+    (projectile-add-known-project "~/documents/proyectos/")
+    (projectile-add-known-project "~/documents/UNED/teaching/mis-cursos/")
+
+    (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
     
-  (when (require 'magit nil t)
-    (mapc #'projectile-add-known-project
-          (mapcar #'file-name-as-directory (magit-list-repos)))
-    ;; Optionally write to persistent `projectile-known-projects-file'
-    (projectile-save-known-projects))
+    (when (require 'magit nil t)
+      (mapc #'projectile-add-known-project
+            (mapcar #'file-name-as-directory (magit-list-repos)))
+      ;; Optionally write to persistent `projectile-known-projects-file'
+      (projectile-save-known-projects))
 
-    (setq projectile-enable-caching nil) ;; update 22 nov 2018. In C-h v projectile-indexing-method they recommend to have it set to alien to have this other variable set to true. If it does not work, revert to instructions in emacs's cheatsheet.
-    ;; (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
-    ;; https://github.com/bbatsov/projectile/issues/1183
-    ;; trying to fix slow behaviour of emacs
-    (setq projectile-mode-line
-          '(:eval (format " Projectile[%s]"
-                          (projectile-project-name))))
+      (setq projectile-enable-caching nil) ;; update 22 nov 2018. In C-h v projectile-indexing-method they recommend to have it set to alien to have this other variable set to true. If it does not work, revert to instructions in emacs's cheatsheet.
+      ;; (setq projectile-enable-caching nil) ; see https://emacs.stackexchange.com/questions/2164/projectile-does-not-show-all-files-in-project
+      ;; https://github.com/bbatsov/projectile/issues/1183
+      ;; trying to fix slow behaviour of emacs
+      (setq projectile-mode-line
+            '(:eval (format " Projectile[%s]"
+                            (projectile-project-name))))
 
-    (setq projectile-other-file-alist '(("cpp" "h" "hpp" "ipp")
-                                        ("ipp" "h" "hpp" "cpp")
-                                        ("hpp" "h" "ipp" "cpp")
-                                        ("cxx" "hxx" "ixx")
-                                        ("ixx" "cxx" "hxx")
-                                        ("hxx" "ixx" "cxx")
-                                        ("c" "h")
-                                        ("m" "h")
-                                        ("mm" "h")
-                                        ("h" "c" "cpp" "ipp" "hpp" "m" "mm")
-                                        ("cc" "hh")
-                                        ("hh" "cc")
-                                        ("vert" "frag")
-                                        ("frag" "vert")
-                                        (nil "lock" "gpg")
-                                        ("lock" "")
-                                        ("gpg" "")))
+      (setq projectile-other-file-alist '(("cpp" "h" "hpp" "ipp")
+                                          ("ipp" "h" "hpp" "cpp")
+                                          ("hpp" "h" "ipp" "cpp")
+                                          ("cxx" "hxx" "ixx")
+                                          ("ixx" "cxx" "hxx")
+                                          ("hxx" "ixx" "cxx")
+                                          ("c" "h")
+                                          ("m" "h")
+                                          ("mm" "h")
+                                          ("h" "c" "cpp" "ipp" "hpp" "m" "mm")
+                                          ("cc" "hh")
+                                          ("hh" "cc")
+                                          ("vert" "frag")
+                                          ("frag" "vert")
+                                          (nil "lock" "gpg")
+                                          ("lock" "")
+                                          ("gpg" "")))
 
-    (add-to-list 'projectile-other-file-alist '("org" "el")) ;; switch from org -> el 
-    (add-to-list 'projectile-other-file-alist '("el" "org")) ;; switch from el -> org 
-    (add-to-list 'projectile-other-file-alist '("Rnw" "R"))
-    (add-to-list 'projectile-other-file-alist '("R" "Rnw"))
-    (add-to-list 'projectile-other-file-alist '("Rnw" "tex"))
-    (add-to-list 'projectile-other-file-alist '("tex" "Rnw"))
-    (add-to-list 'projectile-other-file-alist '("org" "tex"))
-    (add-to-list 'projectile-other-file-alist '("tex" "org"))
-    (add-to-list 'projectile-other-file-alist '("tex" "log"))
-    (add-to-list 'projectile-other-file-alist '("log" "tex"))
-    (add-to-list 'projectile-other-file-alist '("org" "html"))
-    (add-to-list 'projectile-other-file-alist '("html" "org"))
+      (add-to-list 'projectile-other-file-alist '("org" "el")) ;; switch from org -> el 
+      (add-to-list 'projectile-other-file-alist '("el" "org")) ;; switch from el -> org 
+      (add-to-list 'projectile-other-file-alist '("Rnw" "R"))
+      (add-to-list 'projectile-other-file-alist '("R" "Rnw"))
+      (add-to-list 'projectile-other-file-alist '("Rnw" "tex"))
+      (add-to-list 'projectile-other-file-alist '("tex" "Rnw"))
+      (add-to-list 'projectile-other-file-alist '("org" "tex"))
+      (add-to-list 'projectile-other-file-alist '("tex" "org"))
+      (add-to-list 'projectile-other-file-alist '("tex" "log"))
+      (add-to-list 'projectile-other-file-alist '("log" "tex"))
+      (add-to-list 'projectile-other-file-alist '("org" "html"))
+      (add-to-list 'projectile-other-file-alist '("html" "org"))
 
-    (add-to-list 'projectile-globally-ignored-files "*.png")
-    (setq projectile-globally-ignored-file-suffixes '(".cache"))
+      (add-to-list 'projectile-globally-ignored-files "*.png")
+      (setq projectile-globally-ignored-file-suffixes '(".cache"))
 
-     (setq helm-grep-default-command
-          "grep --color=always -d skip %e -n%cH -e %p %f"
-          helm-grep-default-recurse-command
-          "grep --color=always -d recurse %e -n%cH -e %p %f")
-)
+       (setq helm-grep-default-command
+            "grep --color=always -d skip %e -n%cH -e %p %f"
+            helm-grep-default-recurse-command
+            "grep --color=always -d recurse %e -n%cH -e %p %f")
+  )
+
 #+END_SRC
 
 #+RESULTS: projectile
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 18067 277154 589000) :init (24468 18067 276932 442000) :init-secs (0 0 34 734000) :use-package-secs (0 0 340 429000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24690 49167 418314 103000) :init (24690 49167 418117 894000) :init-secs (0 0 175135 330000) :use-package-secs (0 0 175382 362000) :config (24690 49167 418085 562000) :config-secs (0 0 175085 495000)))
 
 Note:
 

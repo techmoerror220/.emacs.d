@@ -107,9 +107,7 @@ Alternatively, if you are using git (the preferred method), then clone the start
 
 *2.* Inside the file =kjhealy.org=, change the paths to any BibTeX databases as described at the top of that file.
 
-
 *3.* Rename the starter kit's =kjhealy.org= file to that of =%your-username%.org= or =%your-systemname%.org=, based on the information you noted in 0.4 above. This is where you can add in any of your own further customizations to Emacs.
-
 
 *4.* Launch Emacs.
 
@@ -391,13 +389,17 @@ in this document).
 
 #+srcname: starter-kit-user/system-setup
 #+begin_src emacs-lisp
+
   (setq system-specific-config (concat dotfiles-dir system-name ".el")
         system-specific-literate-config (concat dotfiles-dir system-name ".org")
         user-specific-config (concat dotfiles-dir user-login-name ".el")
         user-specific-literate-config (concat dotfiles-dir user-login-name ".org")
         user-specific-dir (concat dotfiles-dir user-login-name))
+
   (add-to-list 'load-path user-specific-dir)
+
 #+end_src
+
 
 *** Load =.el= files in =src/= directory
 You can keep elisp source in the =src= directory.  OJO! *Packages loaded
@@ -408,10 +410,12 @@ project is not in ELPA.
 #+srcname: starter-kit-load-elisp-dir
 #+begin_src emacs-lisp
 
-(setq elisp-source-dir (concat dotfiles-dir "src"))
-(add-to-list 'load-path elisp-source-dir)
+  (setq elisp-source-dir (concat dotfiles-dir "src"))
+  (add-to-list 'load-path elisp-source-dir)
 
 #+end_src
+
+#+RESULTS: starter-kit-load-elisp-dir
 
 ** Load the rest of the starter kit core
 The following files contain the remainder of the core of the Emacs
@@ -433,12 +437,19 @@ Starter kit function definitions in [[file:starter-kit-defuns.org][starter-kit-d
 (starter-kit-load "starter-kit-defuns.org")
 #+end_src
 
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-defuns.el
+
 *** Starter Kit Latex
 Located in [[file:starter-kit-latex.org][starter-kit-latex]]
 
 #+begin_src emacs-lisp
 (starter-kit-load "starter-kit-latex.org")
 #+end_src
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-latex.el
+
 *** Starter Kit Latex-Org
 Located in [[file:starter-kit-latex-org.org][starter-kit-latex-org]]
 
@@ -475,6 +486,9 @@ Key Bindings in [[file:starter-kit-bindings.org][starter-kit-bindings]]
 (starter-kit-load "starter-kit-bindings.org")
 #+end_src
 
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-bindings.el
+
 *** Starter kit misc
 Miscellaneous settings in [[file:starter-kit-misc.org][starter-kit-misc]]
 
@@ -482,12 +496,18 @@ Miscellaneous settings in [[file:starter-kit-misc.org][starter-kit-misc]]
 (starter-kit-load "starter-kit-misc.org")
 #+end_src
 
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-misc.el
+
 *** Starter kit completion and snippets
 Located in [[file:starter-kit-completion.org][starter-kit-completion]].
 
 #+begin_src emacs-lisp
   (starter-kit-load "starter-kit-completion.org")
 #+end_src
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-completion.el
 
 *** Starter kit =search-engine=
 
@@ -512,12 +532,18 @@ Located in [[file:starter-kit-eshell.org][starter-kit-eshell]]
 (starter-kit-load "starter-kit-eshell.org")
 #+end_src
 
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-eshell.el
+
 *** Starter kit lisp
 Located in [[file:starter-kit-lisp.org][starter-kit-lisp]]
 
 #+begin_src emacs-lisp
 (starter-kit-load "starter-kit-lisp.org")
 #+end_src
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-lisp.el
 
 *** Starter kit JS
 Located in [[file:starter-kit-js.org][starter-kit-js]]
@@ -526,6 +552,9 @@ Located in [[file:starter-kit-js.org][starter-kit-js]]
 (starter-kit-load "starter-kit-js.org")
 #+end_src
 
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-js.el
+
 *** Starter Kit Perl
 Located in [[file:starter-kit-perl.org][starter-kit-perl]]
 
@@ -533,12 +562,18 @@ Located in [[file:starter-kit-perl.org][starter-kit-perl]]
 (starter-kit-load "starter-kit-perl.org")
 #+end_src
 
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-perl.el
+
 *** Starter Kit Python
 Located in [[file:starter-kit-python.org][starter-kit-python]]
 
 #+begin_src emacs-lisp
 (starter-kit-load "starter-kit-python.org")
 #+end_src
+
+#+RESULTS:
+: Loaded /home/dgm/.emacs.d/starter-kit-python.el
 
 *** Starter Kit Tufte Latex
 
@@ -574,7 +609,7 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 : Loaded /home/dgm/.emacs.d/starter-kit-text.el
 
 *** Starter Kit Parens
-Located in [[file:starter-kit-text.org][starter-kit-text]]
+Located in [[file:starter-kit-text.org][starter-kit-parens]]
 
 #+begin_src emacs-lisp
   (starter-kit-load "starter-kit-parens.org")
@@ -585,8 +620,33 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 
 *** Starter kit =mu4e=
 
+Disabled in Ubuntu as I get this error: 
+
+#+begin_example sh
+
+Error (use-package): mu4e/:catch: Wrong number of arguments: (3 . 4), 2 Disable showing Disable logging
+
+#+end_example
+
+It seems the problem is general (January 2021):
+
+#+BEGIN_QUOTE
+
+A recent update on Emacs HEAD changed the define-obsolete-function-alias macro, which broke the plugins that use it.
+
+Until packages have caught up, I recommend you avoid updating Emacs or revert to Emacs 27.1. This only applies to users on Emacs 28.x -- this includes the native-comp branch (gccemacs).
+
+For gccemacs users, the last known good commit is emacs-mirror/emacs@213b5d7
+
+#+END_QUOTE
+
+
+Disabled until I get mu4e right
+
 #+BEGIN_SRC emacs-lisp
+
   (starter-kit-load "starter-kit-mu4e.org")
+
 #+END_SRC
 
 #+RESULTS:
@@ -609,7 +669,7 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 #+END_SRC
 
 #+RESULTS:
-: Loaded /home/dgm/.emacs.d/starter-kit-pass.el
+: Loaded /home/dgm/.emacs.d/starter-kit-programming.el
 
 *** Starter kit =markdown= and =polymode=
 
@@ -618,7 +678,7 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 #+END_SRC
 
 #+RESULTS:
-: Loaded /home/dgm/.emacs.d/stater-kit-polymode.el
+: Loaded /home/dgm/.emacs.d/stater-kit-markdown.el
 
 
 *** Starter kit dired
@@ -649,25 +709,30 @@ Located in [[file:starter-kit-dgm.org][starter-kit-dgm]]. I loaded like any othe
   (load custom-file 'noerror)
 #+end_src
 
+#+RESULTS: m-x-customize-customizations
+: t
+
 *** COMMENT E-lisp customization
 
 After we've loaded all the Starter Kit defaults, lets load the User's stuff. However, when I did this loading with the following code that is now commented out, I loaded =dgm.org= twice for some reason. Hence, I've simplified by loading =dgm.org= as any other file.
 
 #+srcname: starter-kit-load-files
 #+begin_src emacs-lisp
-(if (file-exists-p elisp-source-dir)
-    (let ((default-directory elisp-source-dir))
-      (normal-top-level-add-subdirs-to-load-path)))
-(if (file-exists-p system-specific-config) (load system-specific-config))
-(if (file-exists-p system-specific-literate-config)
-    (org-babel-load-file system-specific-literate-config))
-(if (file-exists-p user-specific-config) (load user-specific-config))
-(if (file-exists-p user-specific-literate-config)
-    (org-babel-load-file user-specific-literate-config))
-(when (file-exists-p user-specific-dir)
-  (let ((default-directory user-specific-dir))
-    (mapc #'load (directory-files user-specific-dir nil ".*el$"))
-    (mapc #'org-babel-load-file (directory-files user-specific-dir nil ".*org$"))))
+
+  (if (file-exists-p elisp-source-dir)
+      (let ((default-directory elisp-source-dir))
+        (normal-top-level-add-subdirs-to-load-path)))
+  (if (file-exists-p system-specific-config) (load system-specific-config))
+  (if (file-exists-p system-specific-literate-config)
+      (org-babel-load-file system-specific-literate-config))
+  (if (file-exists-p user-specific-config) (load user-specific-config))
+  (if (file-exists-p user-specific-literate-config)
+      (org-babel-load-file user-specific-literate-config))
+  (when (file-exists-p user-specific-dir)
+    (let ((default-directory user-specific-dir))
+      (mapc #'load (directory-files user-specific-dir nil ".*el$"))
+      (mapc #'org-babel-load-file (directory-files user-specific-dir nil ".*org$"))))
+
 #+end_src
 
 

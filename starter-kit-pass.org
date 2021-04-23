@@ -17,6 +17,7 @@ From https://github.com/jwiegley/dot-emacs/blob/master/init.el
 I don't really need this function
 
 #+begin_src emacs-lisp :tangle no
+
   (defun lookup-password (host user port)
     (require 'auth-source)
     (require 'auth-source-pass)
@@ -28,6 +29,7 @@ I don't really need this function
               (error "Auth entry for %s@%s:%s has no secret!"
                      user host port)))
         (error "No auth entry found for %s@%s:%s" user host port))))
+
 #+end_src
 
 #+RESULTS:
@@ -35,17 +37,25 @@ I don't really need this function
 
 ** =auth-source-pass=
 
+Settings from: https://jherrlin.github.io/posts/emacs-mu4e/
+
 #+begin_src emacs-lisp :tangle yes
-(use-package auth-source-pass
-  :defer t
-  :config
-  (auth-source-pass-enable))
+
+  (use-package auth-source-pass
+    :after (mu4e pass)
+    :config
+    (auth-source-pass-enable)
+    (setq auth-source-debug t)
+    (setq auth-source-do-cache nil)
+    (setq auth-sources '(password-store)))
+
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23934 46038 172662 386000) :init (23934 46038 172654 725000) :config (23934 46038 172544 20000) :config-secs (0 0 287 617000) :init-secs (0 0 25912 681000) :use-package-secs (0 0 26166 6000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24692 27229 648336 399000) :init (24692 27229 648328 403000) :init-secs (0 0 670 854000) :use-package-secs (0 0 851 81000) :config (24692 27229 648165 471000) :config-secs (0 0 316 848000)))
 
 #+begin_src emacs-lisp :tangle no
+
   (defvar auth-source-pass--cache (make-hash-table :test #'equal))
 
   (defun auth-source-pass--reset-cache ()
@@ -71,6 +81,7 @@ I don't really need this function
       (mapcar
        (lambda (file) (file-name-sans-extension (file-relative-name file store-dir)))
        (directory-files-recursively store-dir "\.gpg$")))))
+
 #+end_src
 
 #+RESULTS:
@@ -80,39 +91,41 @@ I don't really need this function
 ** =pass= and =password-store=
 
 #+begin_src emacs-lisp :tangle yes
-(use-package pass
-  :defer t
-  :commands (pass pass-view-mode)
-  :mode ("\\.passwords/.*\\.gpg\\'" . pass-view-mode)
-  :preface
-  (defun insert-password ()
-    (interactive)
-    (shell-command "apg -m24 -x24 -a1 -n1" t)))
 
-(use-package password-store
-  :defer 5
-  :commands (password-store-insert
-             password-store-copy
-             password-store-get)
-  :config
-  (defun password-store--run-edit (entry)
-    (require 'pass)
-    (find-file (concat (expand-file-name entry (password-store-dir)) ".gpg")))
+  (use-package pass
+    :defer t
+    :commands (pass pass-view-mode)
+    :mode ("\\.passwords/.*\\.gpg\\'" . pass-view-mode)
+    :preface
+    (defun insert-password ()
+      (interactive)
+      (shell-command "apg -m24 -x24 -a1 -n1" t)))
 
-  (defun password-store-insert (entry login password)
-    "Insert a new ENTRY containing PASSWORD."
-    (interactive (list (read-string "Password entry: ")
-                       (read-string "Login: ")
-                       (read-passwd "Password: " t)))
-    (message "%s" (shell-command-to-string
-                   (if (string= "" login)
-                       (format "echo %s | %s insert -m -f %s"
-                               (shell-quote-argument password)
-                               password-store-executable
-                               (shell-quote-argument entry))
-                     (format "echo -e '%s\nlogin: %s' | %s insert -m -f %s"
-                             password login password-store-executable
-                             (shell-quote-argument entry)))))))
+  (use-package password-store
+    :defer 2
+    :commands (password-store-insert
+               password-store-copy
+               password-store-get)
+    :config
+    (defun password-store--run-edit (entry)
+      (require 'pass)
+      (find-file (concat (expand-file-name entry (password-store-dir)) ".gpg")))
+
+    (defun password-store-insert (entry login password)
+      "Insert a new ENTRY containing PASSWORD."
+      (interactive (list (read-string "Password entry: ")
+                         (read-string "Login: ")
+                         (read-passwd "Password: " t)))
+      (message "%s" (shell-command-to-string
+                     (if (string= "" login)
+                         (format "echo %s | %s insert -m -f %s"
+                                 (shell-quote-argument password)
+                                 password-store-executable
+                                 (shell-quote-argument entry))
+                       (format "echo -e '%s\nlogin: %s' | %s insert -m -f %s"
+                               password login password-store-executable
+                               (shell-quote-argument entry)))))))
+
 #+end_src
 
 #+RESULTS:
@@ -121,16 +134,74 @@ I don't really need this function
 ** Helm and Ivy interfaces
 
 #+begin_src emacs-lisp :tangle yes
-(use-package helm-pass
-  :defer t)
-(use-package ivy-pass
-  :defer t
-  :commands ivy-pass)
+
+  (use-package helm-pass
+    :defer t) 
+
+  (use-package ivy-pass
+    :defer t
+    :commands ivy-pass)
+
 #+end_src
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23934 32022 884678 697000) :init (23934 32022 884650 298000) :config (23934 32022 884318 656000) :config-secs (0 0 16 188000) :init-secs (0 0 684 229000) :use-package-secs (0 0 910 716000)))
 
+* Pinentry
+
+This package allows GnuPG passphrase to be prompted through the
+minibuffer instead of graphical dialog.
+
+To use, add "allow-emacs-pinentry" to "~/.gnupg/gpg-agent.conf",
+reload the configuration with "gpgconf --reload gpg-agent", and
+start the server with M-x pinentry-start.
+
+The actual communication path between the relevant components is
+as follows:
+
+  gpg --> gpg-agent --> pinentry --> Emacs
+
+where pinentry and Emacs communicate through a Unix domain socket
+created at:
+
+  ${TMPDIR-/tmp}/emacs$(id -u)/pinentry
+
+under the same directory which server.el uses.  The protocol is a
+subset of the Pinentry Assuan protocol described in (info
+"(pinentry) Protocol").
+
+NOTE: As of August 2015, this feature requires newer versions of
+GnuPG (2.1.5+) and Pinentry (0.9.5+).
+
+- Also, read https://emacs.stackexchange.com/questions/32881/enabling-minibuffer-pinentry-with-emacs-25-and-gnupg-2-1-on-ubuntu-xenial
+
+#+begin_src emacs-lisp :tangle no
+
+  (use-package pinentry
+    :config
+    (setq epa-pinentry-mode 'loopback)
+    (pinentry-start))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24693 27309 163563 437000) :init (24693 27309 163551 767000) :config (24693 27309 163295 853000) :config-secs (0 0 729 409000) :init-secs (0 0 1226 558000) :use-package-secs (0 0 1291 314000)))
+
+
+* pinentry-emacs
+
+https://github.com/ecraven/pinentry-emacs
+
+#+begin_src emacs-lisp :tangle no
+
+(defun pinentry-emacs (desc prompt ok error)
+  (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
+    str))
+
+#+end_src
+
+#+RESULTS:
+: pinentry-emacs
 
 * Provide
 
@@ -149,6 +220,3 @@ I don't really need this function
 
 #+RESULTS:
 : Starter Kit Pass loaded.
-
-
-

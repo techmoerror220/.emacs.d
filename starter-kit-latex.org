@@ -121,11 +121,11 @@ Once installed, =auctex= overrides the =tex= package. This means that to get =au
     (setq reftex-cite-cleanup-optional-args t)
 
     (setq reftex-default-bibliography
-          '("/media/dgm/blue/documents/bibs/socbib.bib"))
+          '("~/documents/bibs/socbib.bib"))
 
     ;; Think here you need the path to a directory
     (setq reftex-bibpath-environment-variables
-          '("/media/dgm/blue/documents/bibs")))
+          '("~/documents/bibs")))
 #+end_src
 
 #+RESULTS:

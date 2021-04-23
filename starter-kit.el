@@ -93,6 +93,7 @@ just have to assume it's online."
       user-specific-config (concat dotfiles-dir user-login-name ".el")
       user-specific-literate-config (concat dotfiles-dir user-login-name ".org")
       user-specific-dir (concat dotfiles-dir user-login-name))
+
 (add-to-list 'load-path user-specific-dir)
 
 (setq elisp-source-dir (concat dotfiles-dir "src"))

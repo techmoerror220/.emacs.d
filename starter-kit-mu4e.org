@@ -11,28 +11,154 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 
 This is the path where =mu4e= got installed when I did the installation of =mu= and =mu4e= thru the Debian repository with =maildir-utils=.
 
+NB: I disabled now that we are using =use-package=... but I had to re-enable it or else it won't work.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
-(setq mu4e-mu-binary (executable-find "/usr/bin/mu"))
+
+;; in Debian
+;;  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+
+;; In Ubuntu
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+  (setq mu4e-mu-binary (executable-find "/usr/bin/mu"))
+
 #+END_SRC
 
 #+RESULTS:
-: /usr/bin/mu
 
 Note that if I installed =mu= manually, these are the paths in the =officePC=.
 
 #+BEGIN_SRC emacs-lisp :tangle no
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
-(setq mu4e-mu-binary (executable-find "/usr/local/bin/mu"))
+
+  (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
+  (setq mu4e-mu-binary (executable-find "/usr/local/bin/mu"))
+
 #+END_SRC
 
 * The critical files for using =mu4e=
 The following files live in the directory =/usr/share/emacs/site-lisp/mu4e= 
 
+In the DW's setup, he uses =use-package=. Because we haven't ued elpa to install =mu4e=, we use =:ensure nil=. 
+
+It is key that =mu4e= and =mu= stay in sync-ed so we work with the two that we install with our package manager.
+
+Below, bear in mind that 
+
+#+begin_example elisps
+
+    :load-path  /usr/share/emacs/site-lisp/mu4e/
+
+#+end_example
+
+might be needed. Apparently not in Ubuntu, might be needed in other distros.
+
+Bits taken out: 
+
+ ;; mu4e-mu-binary (executable-find "/usr/bin/mu")
+
+Read 
+https://jherrlin.github.io/posts/emacs-mu4e/ for much of this customization.
+
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package mu4e
+    :bind ("C-*" . mu4e)
+    :ensure nil
+    :init
+
+    (defun work/mu4e-bookmark-num-days-old-query (days-old)
+      (interactive (list (read-number "Show days old messages: " 7)))
+      (let ((start-date (subtract-time (current-time) (days-to-time days-old))))
+        (concat "maildir:/work/INBOX AND date:"
+                (format-time-string "%Y%m%d" start-date))))
+
+    (defun personal/mu4e-bookmark-num-days-old-query (days-old)
+      (interactive (list (read-number "Show days old messages: " 7)))
+      (let ((start-date (subtract-time (current-time) (days-to-time days-old))))
+        (concat "maildir:/personal/INBOX AND date:"
+                (format-time-string "%Y%m%d" start-date))))
+
+    (add-hook 'mu4e-headers-mode-hook
+              (defun my/mu4e-change-headers ()
+                (interactive)
+                (setq mu4e-headers-fields
+                      `((:date . 25) ;; alternatively, use :date
+                        (:flags . 6)
+                        (:from . 22)
+                        (:thread-subject . ,(- (window-body-width) 70)) ;; alternatively, use  :subject
+                        (:size . 7)
+                        ))))
+
+    (defun sign-or-encrypt-message ()
+      (let ((answer (read-from-minibuffer "Sign or encrypt?\nEmpty to do nothing.\n[s/e]: ")))
+        (cond
+         ((string-equal answer "s") (progn
+                                      (message "Signing message.")
+                                      (mml-secure-message-sign-pgpmime)))
+         ((string-equal answer "e") (progn
+                                      (message "Encrypt and signing message.")
+                                      (mml-secure-message-encrypt-pgpmime)))
+         (t (progn
+              (message "Dont signing or encrypting message.")
+              nil)))))
+
+    ;; (add-hook 'message-send-hook 'sign-or-encrypt-message)
+
+    (add-hook 'message-mode-hook 'turn-on-orgtbl)
+    :config
+    (setq mail-user-agent 'mu4e-user-agent)
+    (setq mu4e-maildir (expand-file-name "~/Maildir")
+          mu4e-sent-folder nil ;; must be configured later by context
+          mu4e-drafts-folder nil ;; must be configured later by context
+          mu4e-trash-folder nil ;; must be configured later by context
+          mu4e-refile-folder nil ;; must be configured later by context
+          mu4e-change-filenames-when-moving t
+          message-kill-buffer-on-exit t
+          mu4e-attachment-dir  "~/Downloads"
+          mu4e-save-multiple-attachments-without-asking t
+          mu4e-completing-read-function 'completing-read
+          mu4e-compose-complete-addresses t
+          mu4e-compose-context-policy nil
+          mu4e-compose-dont-reply-to-self t
+          mu4e-compose-keep-self-cc nil
+          mu4e-context-policy 'pick-first
+          mu4e-get-mail-command "offlineimap"
+          mu4e-headers-date-format "%d/%m/%Y %H:%M"
+          mu4e-headers-fields
+          `((:human-date . 20) ;; alternatively, use :date
+            (:flags . 6)
+            (:mailing-list . 10)
+            (:from . 22)
+            (:subject))
+          mu4e-headers-include-related 'nil
+          mu4e-sent-messages-behavior 'delete
+          mu4e-view-show-addresses t
+          mm-sign-option 'guided
+          mu4e-view-scroll-to-next 'nil
+          mu4e-headers-time-format "%R"
+          mu4e-mu-binary "/usr/local/bin/mu"
+          mu4e-decryption-policy t
+          mml-secure-openpgp-encrypt-to-self nil
+          mu4e-split-view nil
+          mu4e-confirm-quit nil
+          mu4e-hide-index-messages nil
+          mu4e-index-cleanup t   ;; don't do a full cleanup check (see mu-index manpage)
+          mu4e-index-lazy-check nil  ;; don't consider up-to-date dirs
+          mu4e-view-fields '(:from :to :cc :bcc :subject :flags :date :maildir :mailing-list :tags :attachments :signature :decryption)
+          ))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24706 56857 862653 894000) :init (24706 56857 862579 15000) :init-secs (0 0 531 903000) :use-package-secs (0 0 617 544000) :config (24706 56857 862564 471000) :config-secs (0 0 481 30000)))
+
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-(require 'mu4e)
-(require 'org-mu4e)        ;;store org-mode links to messages
-(require 'mu4e-contrib)
+
+  ;; (require 'mu4e)         ;; disabled in Ubuntu until I fix it... Now with the aid of DW I'm going to use <use-package> instead
+  (require 'org-mu4e)        ;;store org-mode links to messages
+  (require 'mu4e-contrib)   
+
 #+END_SRC
 
 #+RESULTS:
@@ -40,186 +166,26 @@ The following files live in the directory =/usr/share/emacs/site-lisp/mu4e=
 
 * Receiving emails: Setting up the MU mail server
 
-Mostly copied from http://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html#Gmail-configuration
-
-** COMMENT Get emails with =offlineimap=
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq mu4e-get-mail-command "offlineimap")   
-(setq mu4e-update-mail-and-index 'run-in-background)
-#+END_SRC
-
-#+RESULTS:
-: offlineimap
-
-Updating email takes ages because I have many Maildir folders, so I follow the advice here: https://www.djcbsoftware.nl/code/mu/mu4e/General.html
-
-DGM disactivates this on 4 august 2019 because I am trying the new method that seems to be quicker, based on =mbsync=.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq mu4e-cache-maildir-list t)
-#+END_SRC
-
-#+RESULTS:
-: t
-
-** New method of getting emails: =mbsync=
-
 Introduced by DGM on 4 august 2019 following https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/
 
-Note that ~Set format=flowed~: 
-- mu4e sets up =visual-line-mode= and also fill (=M-q=) to do the right thing. Each paragraph is a single long line; at sending, emacs will add the special line continuation characters.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a"
-  ;; mu4e-html2text-command "w3m -T text/html" ;;using the default mu4e-shr2text
-  ;; mu4e-update-interval 300  ; 300/60 = 5 minutes.
-  ;; mu4e-headers-auto-update t
-  ;; mu4e-compose-signature-auto-include nil
-  mu4e-compose-format-flowed t)
-#+END_SRC
-
-#+RESULTS:
-: t
-
-* Sending emails 
-** COMMENT =smtpmail=
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(require 'smtpmail)
-
-;;rename files when moving
-;;NEEDED FOR MBSYNC
-(setq mu4e-change-filenames-when-moving t)
-
-;;set up queue for offline email
-;;use mu mkdir  ~/Maildir/personal/queue and ~/Maildir/work/queue to set up first.. but then, how does it choose one? 
-(setq smtpmail-queue-mail nil)   ;; start in normal mode
-;; (setq smtpmail-queue-mail nil ;; start in normal mode
-;;       smtpmail-queue-dir  "~/Maildir/queue/cur") 
-#+END_SRC
-
-#+RESULTS:
-
-** Sending email with =msmtp=
+* Sending emails with =msmtp=
 
 - Sending mail with =msmtp= rather than =smtp=, copied from http://zmalltalker.com/linux/mu.html#
 - See description of =msmtp= and how to use it with encrypted passwords here: https://wiki.debian.org/msmtp
 - More info here: https://marlam.de/msmtp/
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (setq message-send-mail-function 'message-send-mail-with-sendmail
         sendmail-program "/usr/bin/msmtp")
-;; Commented out by DGM on 4 august because I am trying to be able to choose where to send from.
-;;        user-full-name "Daniel Guinea"
-;;        user-mail-address "daniel.guinea.uned@gmail.com")
+
+  ;; Commented out by DGM on 4 august because I am trying to be able to choose where to send from.
+  ;;        user-full-name "Daniel Guinea"
+  ;;        user-mail-address "daniel.guinea.uned@gmail.com")
 #+END_SRC
 
 #+RESULTS:
 : /usr/bin/msmtp
-
-*** Don't save message to Sent Messages, Gmail/IMAP takes care of this.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-sent-messages-behavior 'delete)
-#+END_SRC
-
-#+RESULTS:
-: delete
-
-See the documentation for `mu4e-sent-messages-behavior' if you have additional non-Gmail addresses and want assign them different behavior.
-
-*** Don't move to next message when you reach the end of a message.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-view-scroll-to-next 'nil)
-#+END_SRC
-
-*** Don't keep sent e-mail buffer.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq message-kill-buffer-on-exit t)
-#+END_SRC
-
-#+RESULTS:
-: t
-
-*** Save attachments in the Downloads folder.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-attachment-dir  "~/Downloads")
-#+END_SRC
-
-#+RESULTS:
-: ~/Downloads
-
-*** Confirmation on every mark execution is too slow to Ambrevar's taste.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun ambrevar/mu4e-mark-execute-all-no-confirm ()
-  (interactive)
-  (mu4e-mark-execute-all t))
-(define-key mu4e-headers-mode-map "x" 'ambrevar/mu4e-mark-execute-all-no-confirm)
-#+END_SRC
-
-#+RESULTS:
-: ambrevar/mu4e-mark-execute-all-no-confirm
-
-*** COMMENT Choose account to send email from
-
-Next is borrowed from http://ionrock.org/emacs-email-and-mu.html (and included in http://zmalltalker.com/linux/mu.html#).  Choose account label to feed =msmtp -a= option based on =From= header in Message buffer; This function must be added to =message-send-mail-hook= for on-the-fly change of =From= address before sending message since =message-send-mail-hook= is processed right  before sending message.
-
-Commented out by DGM on 4 august because I am going to try and use the tips from Linux Magazine.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (defun choose-msmtp-account ()
-    (if (message-mail-p)
-        (save-excursion
-          (let*
-              ((from (save-restriction
-                       (message-narrow-to-headers)
-                       (message-fetch-field "from")))
-               (account
-                (cond
-                 ((string-match "daniel.guinea.uned@gmail.com" from) "work")
-                 ((string-match "daniel.guinea.martin@gmail.com" from) "personal"))))
-            (setq message-sendmail-extra-arguments (list '"-a" account))))))
-  (setq message-sendmail-envelope-from 'header)
-  (add-hook 'message-send-mail-hook 'choose-msmtp-account)
-  (add-to-list 'mu4e-bookmarks
-               '("maildir:/INBOX OR maildir:/personal/INBOX flag:unread" "Today's news" ?z))
-#+END_SRC
-
-
-*** COMMENT Smartly choose the email address from where to reply
-
-DGM on August 5th: not needed anymore with the =context= setup (I think).
-
-1) messages to =me@foo.example.com= should be replied with =From:me@foo.example.com=
-2) messages to =me@bar.example.com= should be replied with =From:me@bar.example.com=
-3) all other mail should use =From:me@cuux.example.com=
-
-(I am not sure it is working)
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-hook 'mu4e-compose-pre-hook
-  (defun my-set-from-address ()
-    "Set the From address based on the To address of the original."
-    (let ((msg mu4e-compose-parent-message)) ;; msg is shorter...
-      (when msg
-        (setq user-mail-address
-          (cond
-            ((mu4e-message-contact-field-matches msg :to "daniel.guinea.uned@gmail.com")
-              "daniel.guinea.uned@gmail.com")
-            ((mu4e-message-contact-field-matches msg :to "daniel.guinea@poli.uned.es")
-              "daniel.guinea.uned@gmail.com")
-            ((mu4e-message-contact-field-matches msg :to "daniel.guinea.martin@gmail.com")
-              "daniel.guinea.martin@gmail.com")
-            (t "daniel.guinea.uned@gmail.com")))))))
-#+END_SRC
-
-#+RESULTS:
-| my-set-from-address |
 
 
 ** Sending =html= email
@@ -263,163 +229,163 @@ Tip from http://www.macs.hw.ac.uk/~rs46/posts/2014-11-16-mu4e-signatures.html fo
             (lambda () (local-set-key (kbd "C-c C-w") #'my/mu4e-choose-signature)))
 #+END_SRC
 
-
-Set default signature to nil ("") orginally, now to Daniel
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq mu4e-compose-signature-auto-include nil
-        mu4e-compose-signature  "Daniel\n")
-#+END_SRC
-
 #+RESULTS:
+| lambda | nil | (local-set-key (kbd C-c C-w) #'my/mu4e-choose-signature) |
 
 
-Set default signature to university's
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (setq mu4e-compose-signature-auto-include nil
-        mu4e-compose-signature (concat
-                                "Daniel Guinea\n"
-                                "Dept. Sociología I\nFacultad de CC.PP. y Sociología\nUniversidad Nacional de Educación a Distancia (UNED)\nCalle Obispo Trejo 2, Madrid 28040\nemail: daniel.guinea@poli.uned.es\nTel. +34 91 398 9441"))
-#+END_SRC
-
-#+RESULTS:
-: Daniel Guinea
-: Dept. Sociología I
-: Facultad de CC.PP. y Sociología
-: Universidad Nacional de Educación a Distancia (UNED)
-: Calle Obispo Trejo 2, Madrid 28040
-: email: daniel.guinea@poli.uned.es
-: Tel. +34 91 398 9441
 
 * Context feature of =mu4e=
-** Configure directories with context 
 
-- Etienne's tip
+Note that ~Set format=flowed~: 
+- mu4e sets up =visual-line-mode= and also fill (=M-q=) to do the right thing. Each paragraph is a single long line; at sending, emacs will add the special line continuation characters.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-trash-folder nil ;; must be configured later by context
-      mu4e-drafts-folder nil ;; must be configured later by context
-      mu4e-sent-folder nil ;; must be configured later by context
-      mu4e-compose-reply-to-address nil ;; must be configured later by context
-      mu4e-compose-signature nil) ;; must be configured later by context
+Also, note that it is preferably to use context names starting with different letters, because the first letter is automatically used as a short-cut, so you will be able to switch between the two contexts simply using =;w= and =;p=.
+
+Note, =mu4e-maildir= takes an actual =filesystem-path=, the other folder names are all relative to =mu4e-maildir=. Also note that this must not be a symbolic link.
+
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
+
+  (setq mu4e-contexts
+        `( ,(make-mu4e-context
+             :name "work"
+             :enter-func (lambda () (mu4e-message "Entering work context")
+                           (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                             (revert-buffer)))
+             :leave-func (lambda () (mu4e-message "Leaving work context")
+                           (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                             (revert-buffer)))
+             ;; we match based on the contact-fields of the message
+             :match-func (lambda (msg)
+                           (when msg
+                             (or (mu4e-message-contact-field-matches msg
+                                                                     :to "daniel.guinea.uned@gmail.com")
+                                 (mu4e-message-contact-field-matches msg
+                                                                     :from "daniel.guinea.uned@gmail.com")
+                                 (mu4e-message-contact-field-matches msg
+                                                                     :to "daniel.guinea@poli.uned.es")
+                                 (mu4e-message-contact-field-matches msg
+                                                                     :from "daniel.guinea@poli.uned.es")
+                                 )))
+             :vars '(( user-mail-address . "daniel.guinea.uned@gmail.com")
+                     ( user-full-name . "Daniel Guinea")
+                     (mu4e-compose-format-flowed . t)
+                     (mu4e-sent-folder . "/[Gmail].Sent Mail")
+                     (mu4e-drafts-folder . "/[Gmail].Drafts")
+                     (mu4e-trash-folder . "/[Gmail].Trash")
+                     (mu4e-refile-folder . "/[Gmail].All Mail")
+                     (mu4e-maildir-shortcuts . ( ("/INBOX"            . ?i)
+                                                 ("/[Gmail].Sent Mail" . ?s)
+                                                 ("/[Gmail].Drafts"    . ?d)
+                                                 ("/[Gmail].Trash"     . ?t)
+                                                 ("/[Gmail].All Mail"  . ?a)
+                                                 ("/[Gmail].Spam"      . ?b)))
+                     (mu4e-bookmarks . (
+                                        ( :name "Messages with attachment"
+                                          :query "(maildir:/INBOX OR maildir:/[Gmail].Spam) AND flag:attach"
+                                          :key ?a)
+                                        ( :name "Big messages"
+                                          :query "(maildir:/INBOX OR maildir:/[Gmail].Spam) AND size:5M..500M"
+                                          :key ?b)
+                                        ( :name "Eurostat"
+                                          :key  ?e
+                                          :query "(maildir:/INBOX OR maildir:/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/[Gmail].Trash) AND (from:nicoletta.schweikle-hilgner@ec.europa.eu OR from:ESTAT-Microdata-access@ec.europa.eu OR from:estat-microdata-access@ec.europa.eu OR from:Fabienne.MONTAIGNE@ec.europa.eu OR from:Patrick.PILLARD@ec.europa.eu OR from:Karien.Reinig@ec.europa.eu OR from:S-CIRCABC@nomail.ec.europa.eu)")
+                                        ( :name "Máster FOL"
+                                          :key  ?f
+                                          :query "(maildir:/INBOX OR maildir:/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/[Gmail].Trash) AND (subject:tfm OR subject:TFM OR body:tfm OR body:TFM OR subject:\"trabajo fin de master\" OR body:\"trabajo fin de master\" OR from:\"Ana María González\" OR from:gabriela.topa1@gmail.com OR from:\"Gabriela Topa\" OR from:gtopa@psi.uned.es OR from:\"Máster Formación Profesorado\" OR from:master-formacionprofesorado@adm.uned.es OR from:\"M. Angeles Serrano Garcia\" OR from:maserrano@pas.uned.es OR from:\"M. del Puerto Hojas Rosales\" OR from:mhojas@pas.uned.es OR from:\"Ana María González\" OR from:amgonzalez@edu.uned.es OR subjetc:\"TFM\")")
+                                        (:name "Inbox messages in the last ?x days"
+                                               :query ,(lambda () (call-interactively 'work/mu4e-bookmark-num-days-old-query))
+                                               :key ?h)
+                                        ( :name "Messages with images"
+                                          :query "maildir:/INBOX AND mime:image/*"
+                                          :key ?i)
+                                        ( :name "Unread (pending) messages"
+                                          :query "(maildir:/INBOX OR maildir:/[Gmail].Spam) AND flag:unread AND NOT flag:trashed"
+                                          :key ?p)
+                                        (:name "Ricardo"
+                                               :key  ?r
+                                               :query "(maildir:/INBOX OR maildir:/personal/INBOX OR maildir:/[Gmail].Spam OR maildir:/personal/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/personal/[Gmail].Drafts OR maildir:/[Gmail].Trash OR maildir:/personal/[Gmail].Trash) AND (from:ricardo.mora.villarrubia@gmail.com OR from:ricardo.mora@uc3m.es OR from:ricardo.mora.villarrubia@outlook.com OR from:\"Ricardo Mora\" OR from:ricmora@eco.uc3m.es OR from:\"Adelheid Holl\" OR from:a.holl@csic.es)")
+                                        ( :name "Sent in last 7 days"
+                                          :key  ?s
+                                          :query "maildir:\"/[Gmail].Sent Mail\" AND date:7d..now")
+                                        ( :name "Today's messages"
+                                          :query "(maildir:/INBOX OR maildir:/[Gmail].Spam) AND date:today..now"
+                                          :key ?t)
+                                        (  :name "UNED"
+                                           :key  ?u
+                                           :query "(maildir:/INBOX OR maildir:/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/[Gmail].Trash) AND (from:\"Maria Angel\" OR from:departamentos.polisoci@adm.uned.es OR from:secretaria.poli.soci@adm.uned.es OR from:decanato.polisoci@adm.uned.es OR from:negociado-pruebas-presenciales@adm.uned.es OR from:vicepruebas@adm.uned.es OR from:vrector-pruebas-presen@adm.uned.es OR from:coord.pruebas@adm.uned.es OR from:pruebaspresenciales@adm.uned.es OR from:gastosextraordinariospruebas@adm.uned.es OR from:\"Secretaria Docente\" OR from:\"Secretaría Docente\" OR from:secdoc.cee@adm.uned.es OR from:\"MARIA ANGELES RODRIGUEZ SANTOS\" OR from:secretaria-ecoemp@adm.uned.es OR from:\"Secretaría Facultad CC. Economicas\" OR from:secadi.polisoci@adm.uned.es OR from:\"Secadi\" OR from:\"GUADALUPE DAMAS JURADO\" OR from:gdamas@pas.uned.es OR from:llosada@edu.uned.es OR from:egiralde@pas.uned.es OR from:\"MARIA GOMEZ ESCARDA\" OR from:mgomez@poli.uned.es OR from:sociologiauno@adm.uned.es OR from:vrector-profesorado@adm.uned.es OR from:\"Vicerrectorado de Profesorado\" OR from:vrector-gradoyposgrado@adm.uned.es OR from:vadj.grado@adm.uned.es OR from:alba.vrector@adm.uned.es) OR (subject:tfg OR subject:TFG OR body:tfg OR body:TFG OR subject:\"trabajo fin de grado\" OR body:\"trabajo fin de grado\" OR subject:\"/ex.men.*/\" OR body:\"/ex.men.*/\" OR subject:\"sociologia aplicada\" OR body:\"sociologia aplicada\" OR subject:/modelo.*/)")
+                                        ( :name "Work-hunt"
+                                          :key  ?w
+                                          :query "(maidlir:/INBOX OR maildir:/personal/INBOX OR maildir:/[Gmail].Spam OR maildir:/personal/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/personal/[Gmail].Drafts OR maildir:/[Gmail].Trash OR maildir:/personal/[Gmail].Trash) AND (from:\"Belén Barreiro\" OR from:bbarreiro@40db.es OR from:40db.es OR from:\"Mónica Méndez\" OR from:monica.mendez@cis.es OR from:\"Luis Manuel Ayus oSanchez\" Or from:luis.ayuso@uma.es OR from:\"Juan Ignacio Martinez Pastor\" OR from:jimartinez@poli.uned.es OR from:ecb@uma.es)")
+                                        ( :name "Unread messages"
+                                          :key  ?x
+                                          :query "flag:unread AND maildir:/INBOX AND NOT flag:trashed")))))
+           ,(make-mu4e-context
+             :name "personal"
+             :enter-func (lambda () (mu4e-message "Switch to personal context")
+                           (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                             (revert-buffer)))
+             :leave-func (lambda () (mu4e-message "Leaving personal context")
+                           (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                             (revert-buffer)))
+             ;; we match based on the maildir of the message
+             ;; this matches maildir /personal and its sub-directories
+             :match-func (lambda (msg)
+                           (when msg
+                             (or (string-match-p "^/personal" (mu4e-message-field msg :maildir))
+                                 (mu4e-message-contact-field-matches msg :to "daniel.guinea.martin@gmail.com")
+                                 (mu4e-message-contact-field-matches msg :from "daniel.guinea.martin@gmail.com")
+                                 (mu4e-message-contact-field-matches msg :cc "daniel.guinea.martin@gmail.com")
+                                 (mu4e-message-contact-field-matches msg :bcc "daniel.guinea.martin@gmail.com"))))
+             :vars '( (user-mail-address . "daniel.guinea.martin@gmail.com")
+                      (user-full-name . "Daniel")
+                      (mu4e-sent-folder . "/personal/[Gmail].Sent Mail")
+                      (mu4e-drafts-folder . "/personal/[Gmail].Drafts")
+                      (mu4e-trash-folder . "/personal/[Gmail].Trash")
+                      (mu4e-refile-folder . "/personal/[Gmail].All Mail")
+                      (mu4e-compose-format-flowed . t)
+                      (mu4e-maildir-shortcuts . ( ("/personal/INBOX"             . ?i)
+                                                  ("/personal/[Gmail].Sent Mail" . ?s)
+                                                  ("/personal/[Gmail].Drafts"    . ?d)
+                                                  ("/personal/[Gmail].Trash"     . ?t)
+                                                  ("/personal/[Gmail].All Mail"  . ?a)
+                                                  ("/personal/[Gmail].Spam"      . ?b)))
+                      (mu4e-bookmarks  .
+                                       ((:name "Ave María"
+                                               :key  ?m
+                                               :query "(maildir:/INBOX OR maildir:/personal/INBOX OR maildir:/[Gmail].Spam OR maildir:/personal/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/personal/[Gmail].Drafts OR maildir:/[Gmail].Trash OR maildir:/personal/[Gmail].Trash) AND (from:\"Kenedy Alva\" OR from:kenedy@gmail.com OR from:\"Paz Torrente\" OR from:paztorrente@gmail.com OR from:\"Javier Martín\" OR from:javiermartinr@gmail.com OR from:\"Canal de Isabel II\" OR from:comunicaciones.comerciales@canaldeisabelsegunda.es OR from:\"Jazztel\" OR from:att.cliente.jazztel@jazztel.com)")
+                                        ( :name "Messages with attachment"
+                                          :query "(maildir:/personal/INBOX OR /personal/[Gmail].Spam) AND flag:attach"
+                                          :key ?a)
+                                        ( :name "Big messages"
+                                          :query "(maildir:/personal/INBOX OR /personal/[Gmail].Spam) AND size:5M..500M"
+                                          :key ?b)
+                                        ( :name "Operation D"
+                                          :key  ?d
+                                          :query "(maildir:/INBOX OR maildir:/personal/INBOX OR maildir:/[Gmail].Spam OR maildir:/personal/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/personal/[Gmail].Drafts OR maildir:/[Gmail].Trash OR maildir:/personal/[Gmail].Trash) AND (from:\"Paula Zingoni\" OR from:paulazingoni@gmail.com OR from:\"Croydon County\" OR from:\"Family\" OR from:family.croydon.countycourt@justice.gov.uk OR from:\"Jose Antonio Arcila\" OR from:joseantonio@arcila-abogados.es OR from:\"Elena Benítez Imedio\" OR from:ebi@ayuelajimenez.es OR from:ebi@ebiroy.com OR from:\"Juan Antonio Montoro\" OR from:jmontoro@euroconsejo.org OR from:\"Pablo Velasco Espinosa\" OR from:pvelasco@euroconsejo.org OR from:mensajeria@phidias.es OR from:\"Montessori School\" OR from:\"Mataespesa Montessori School\" OR from:mataespesa@montessorischool.es OR from:\"Laura Romay\" OR from:\"Anna Dick\" OR from:anna.dick@montessorischool.es OR form:\"Gema Baeza Gómez\" OR from:gbg@ayuelajimenez.es)")
+                                        (:name "Inbox messages in the last ?x days"
+                                               :query ,(lambda () (call-interactively 'personal/mu4e-bookmark-num-days-old-query))
+                                               :key ?h)
+                                        ( :name "Messages with images"
+                                          :query "(maildir:/personal/INBOX OR /personal/[Gmail].Spam) AND mime:image/*"
+                                          :key ?i)
+                                        ( :name "Unread (pending) messages"
+                                          :query "(maildir:/personal/INBOX OR /personal/[Gmail].Spam) AND flag:unread AND NOT flag:trashed"
+                                          :key ?p)
+                                        ( :name "Sent in last 7 days"
+                                          :key  ?s
+                                          :query "maildir:\"/personal/[Gmail].Sent Mail\" AND date:7d..now")
+                                        ( :name "Today's messages"
+                                          :query "maildir:/personal/INBOX AND date:today..now"
+                                          :key ?t)
+                                        ( :name "Twyford"
+                                          :key  ?y
+                                          :query "maildir:/personal/INBOX AND (from:SC3074602a@schoolcomms.com OR from:\"TWY\" OR from:DataTeam@twyford.ealing.sch.uk OR from:\"TWYFORD CE HIGH SCHOOL\" OR from:a.holl@csic.es OR from:6thform@twyford.ealing.sch.uk OR from:\"6th Form - TWY\" OR from:Admissions@twyford.ealing.sch.uk OR from:\"Admissions - TWY\" OR from:marthur@twyford.ealing.sch.uk OR from:\"Michael Arthur\" OR from:\"Lucille De Costa\")")
+                                        ( :name "Unread messages (Personal inbox)"
+                                          :key  ?x
+                                          :query "flag:unread AND maildir:/personal/INBOX AND NOT flag:trashed")))))))
+
+
 #+END_SRC
-
-#+RESULTS:
-
-** Archiving
-
-With this code, messages from both personal and work accounts that I want to be archived are savely archived. BUT they disapear from the server, so I better don't use it. I should have an =archive= directory in my gmail account but I have not. 
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-refile-folder "/archive")       ;; saved messages. Its location is relative to `mu4e-maildir'
-#+END_SRC
-
-#+RESULTS:
-: /archive
-
-** Setting =mu4e-maildir= 
-
-Notes by https://github.com/djcb/mu/blob/master/mu4e/mu4e-utils.el. The variable  =mu4e-cache-maildir-list= "Whether to cache the list of maildirs; set it to =t= if you find that generating the list on the fly is too slow. If you do, you can set =mu4e-maildir-list= to =nil= to force regenerating the cache the next time =mu4e-get-maildirs= gets called.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq mu4e-maildir-list nil)   
-#+END_SRC
-
-#+RESULTS:
-
-DGM on 4 august 2019 comments out this code in favour of the next one, following https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-maildir (expand-file-name "~/Maildir"))
-#+END_SRC
-** Contexts  
-- DGM on 4 august has commented all the lines above because we are trying the following from https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/
-
-- NB: on 5 August I comment out all =smtp= references, as I am using =msmtp= to send emails.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-contexts
-  `( ,(make-mu4e-context 
-    :name "work" 
-    :enter-func (lambda () (mu4e-message "Entering work context"))
-        :leave-func (lambda () (mu4e-message "Leaving work context"))
-    ;; we match based on the contact-fields of the message
-    :match-func (lambda (msg)
-          (when msg
-            (mu4e-message-contact-field-matches msg
-              :from "daniel.guinea.uned@gmail.com")))
-    :vars '( ( user-mail-address . "daniel.guinea.uned@gmail.com")
-         ( user-full-name . "Daniel Guinea")
-         ( mu4e-compose-signature . 
-           (concat 
-             "Daniel Guinea\n Dept. Sociología I\nFacultad de CC.PP. y Sociología\nUniversidad Nacional de Educación a Distancia (UNED)\nCalle Obispo Trejo 2, Madrid\nemail: daniel.guinea@poli.uned.es\nTel. +34 91 398 9441\n"))
-        (mu4e-compose-format-flowed . t)
-        (mu4e-sent-folder . "/work/[work].Sent Mail")
-        (mu4e-drafts-folder . "/work/[work].Drafts")
-        (mu4e-trash-folder . "/work/[work].Trash")
-        (mu4e-maildir-shortcuts . ( ("/work/INBOX"            . ?i)
-                                    ("/work/[work].Sent Mail" . ?s)
-                                    ("/work/[work].Drafts"    . ?d)
-                                    ("/work/[work].Trash"     . ?t)
-                                    ("/work/[work].Spam"      . ?b)))))
-     ,(make-mu4e-context
-    :name "personal"
-    :enter-func (lambda () (mu4e-message "Switch to personal context"))
-    ;; no :leave-func 
-    ;; we match based on the maildir of the message
-    ;; this matches maildir /personal and its sub-directories
-    :match-func (lambda (msg)
-          (when msg
-			(string-match-p "^/personal" (mu4e-message-field msg :maildir))))
-    :vars '( ( user-mail-address . "daniel.guinea.martin@gmail.com")
-        (user-full-name . "Daniel")
-        (mu4e-compose-signature .  "Daniel\n")
-        (mu4e-sent-folder . "/personal/[personal].Sent Mail")
-        (mu4e-drafts-folder . "/personal/[personal].Drafts")
-        (mu4e-trash-folder . "/personal/[personal].Trash")
-        (mu4e-compose-format-flowed . t)
-        (mu4e-maildir-shortcuts . ( ("/personal/INBOX"                . ?i)
-                                    ("/personal/[personal].Sent Mail" . ?s)
-                                    ("/personal/[personal].Drafts"    . ?d)
-                                    ("/personal/[personal].Trash"     . ?t)
-                                    ("/personal/[personal].Spam"      . ?b)))))
-     ))
-#+END_SRC
-
-#+RESULTS:
-| #s(mu4e-context work (lambda nil (mu4e-message Entering work context)) (lambda nil (mu4e-message Leaving work context)) (lambda (msg) (when msg (mu4e-message-contact-field-matches msg :from daniel.guinea.uned@gmail.com))) ((user-mail-address . daniel.guinea.uned@gmail.com) (user-full-name . Daniel Guinea) (mu4e-compose-signature concat Daniel Guinea |
-
-Leaving out this: 
-#+BEGIN_EXAMPLE
-Context 1:
-        ;; "/work/[work].All Mail"  . ?a)
-        ;; (smtpmail-queue-dir . "~/Maildir/work/queue/cur")
-        ;; (message-send-mail-function . smtpmail-send-it)
-        ;; (smtpmail-smtp-user . "work")
-        ;; (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
-        ;; (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
-        ;; (smtpmail-default-smtp-server . "smtp.gmail.com")
-        ;; (smtpmail-smtp-server . "smtp.gmail.com")
-        ;; (smtpmail-smtp-service . 587)
-        ;; (smtpmail-debug-info . t)
-        ;; (smtpmail-debug-verbose . t)
-
-Context 2:
-        ;; ("/personal/[personal].All Mail"  . ?a)
-        ;; (smtpmail-queue-dir . "~/Maildir/personal/queue/cur")
-        ;; (message-send-mail-function . smtpmail-send-it)
-        ;; (smtpmail-smtp-user . "personal")
-        ;; (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
-        ;; (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
-        ;; (smtpmail-default-smtp-server . "smtp.gmail.com")
-        ;; (smtpmail-smtp-server . "smtp.gmail.com")
-        ;; (smtpmail-smtp-service . 587)
-        ;; (smtpmail-debug-info . t)
-        ;; (smtpmail-debug-verbose . t)
-#+END_EXAMPLE
-
-Preferably use context names starting with different letters, because the first letter is automatically used as a short-cut, so you will be able to switch between the two contexts simply using =;w= and =;p=.
 
 *** Context tricks
 
@@ -440,44 +406,13 @@ This sets `mu4e-user-mail-address-list' to the concatenation of all `user-mail-a
 #+RESULTS:
 | daniel.guinea.uned@gmail.com | daniel.guinea.martin@gmail.com |
 
-*** Context costumization
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; Don't bother me with context on startup.
-;; (setq mu4e-context-policy nil)
-
-;; alternative from DGM on 4 august 2019, https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/
-;; start with the first (default) context;
-(setq mu4e-context-policy 'pick-first) 
-;; (setq mu4e-context-policy nil) 
-;; (setq mu4e-context-policy 'ask-if-none) 
-;; whether to compose with the current context if no context matched (nil option. In this case I say "ask always")
-;; (setq mu4e-compose-context-policy 'always-ask)
-;; (setq mu4e-compose-context-policy 'ask)
-(setq mu4e-compose-context-policy nil)
-
-;; (setq mu4e-user-mail-address-list (list "daniel.guinea.uned@gmail.com" "daniel.guinea.martin@gmail.com"))
-
-;; (setq mail-user-agent 'mu4e-user-agent)
-
-;; these are actually the defaults
-;;    (setq
-;;      ;; mu4e-maildir       "~/Maildir/work"      ;; top-level Maildir
-;;      mu4e-sent-folder   "[work].Sent Mail"   ;; folder for sent messages
-;;      mu4e-drafts-folder "[work].Drafts"      ;; unfinished messages
-;;      mu4e-trash-folder  "[work].Trash")      ;; trashed messages
-#+END_SRC
-
-#+RESULTS:
-: [work].Trash
-
-Note, =mu4e-maildir= takes an actual =filesystem-path=, the other folder names are all relative to =mu4e-maildir=. Also note that this must not be a symbolic link.
 
 * Attachments
 ** Gnus for attaching
 I don't know the use of this but I had it, so...
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (require 'gnus-dired)
   ;; make the `gnus-dired-mail-buffers' function also work on
   ;; message-mode derived modes, such as mu4e-compose-mode
@@ -494,159 +429,69 @@ I don't know the use of this but I had it, so...
 
    (setq gnus-dired-mail-mode 'mu4e-user-agent)
    (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+
 #+END_SRC
 
 ** Saving attachments
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-attachment-dir "~/Downloads"
-      mu4e-save-multiple-attachments-without-asking t)
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq mu4e-save-multiple-attachments-without-asking t)
 #+END_SRC
 
 #+RESULTS:
 : t
 
 * Customizing the main view
-** Adding bookmark to menu or =Main view=
-- Read https://www.djcbsoftware.nl/code/mu/mu4e/Bookmarks.html
 
-#+BEGIN_SRC emacs-lisp :tangle no
-  (add-to-list 'mu4e-bookmarks
-               (make-mu4e-bookmark
-                :name  "Messages with attachments"
-                :query "flag:attach"
-                :key ?a) t)
+** version 1.4.12 way of doing it
+
+#+begin_src emacs-lisp :tangle no :results silent
 
   (add-to-list 'mu4e-bookmarks
-               (make-mu4e-bookmark
-                :name  "Archived messages"
-                :query "maildir:/archive" 
-                :key ?z) t)
-#+END_SRC
+               ;; add bookmark for recent messages on the Mu mailing list.
+               '(( :name "Unread messages (Work inbox)"
+                   :key  ?x
+                   :query "flag:unread AND maildir:\"/work/INBOX\" AND NOT flag:trashed")
+                 ( :name "Ave María"
+                   :key  ?a
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Kenedy Alva\" OR from:kenedy@gmail.com OR from:\"Paz Torrente\" OR from:paztorrente@gmail.com OR from:\"Javier Martín\" OR from:javiermartinr@gmail.com OR from:\"Canal de Isabel II\" OR from:comunicaciones.comerciales@canaldeisabelsegunda.es OR from:\"Jazztel\" OR from:att.cliente.jazztel@jazztel.com")
+                 ( :name "BICI"
+                   :key  ?b
+                   :query "from:\"BICI\" OR from:bici@adm.uned.es")
+                 ( :name "Convalidaciones"
+                   :key  ?c
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:convalid.empresariales@adm.uned.es OR from:\"Negociado de atención al estudiante\" OR from:estudiantes.polisoci@adm.uned.es OR from:\"CARMEN DIAZ BRAGADO\" OR from:cadiaz@pas.uned.es OR subject:convalidación OR subject:convalidacion OR subject:convalidaciones OR body:convalidación OR body:convalidacion  OR body:convalidaciones OR subject:reconocimiento OR subject:Reconocimiento OR subject:reconocimientos OR subject:Reconocimientos OR body:reconocimiento OR body:Reconocimiento OR body:reconocimientos OR body:Reconocimientos")
+                 ( :name "Operation D"
+                   :key  ?d
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Paula Zingoni\" OR from:paulazingoni@gmail.com OR from:\"Croydon County\" OR from:\"Family\" OR from:family.croydon.countycourt@justice.gov.uk OR from:\"Jose Antonio Arcila\" OR from:joseantonio@arcila-abogados.es OR from:\"Elena Benítez Imedio\" OR from:ebi@ayuelajimenez.es OR from:ebi@ebiroy.com OR from:\"Juan Antonio Montoro\" OR from:jmontoro@euroconsejo.org OR from:\"Pablo Velasco Espinosa\" OR from:pvelasco@euroconsejo.org OR from:mensajeria@phidias.es OR from:\"Montessori School\" OR from:\"Mataespesa Montessori School\" OR from:mataespesa@montessorischool.es OR from:\"Laura Romay\" OR from:\"Anna Dick\" OR from:anna.dick@montessorischool.es OR form:\"Gema Baeza Gómez\" OR from:gbg@ayuelajimenez.es")
+                 ( :name "Eurostat"
+                   :key  ?e
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:\"SCHWEIKLE-HILGNER Nicoletta\" OR from:nicoletta.schweikle-hilgner@ec.europa.eu) OR from:ESTAT-Microdata-access@ec.europa.eu OR from:estat-microdata-access@ec.europa.eu OR from:Fabienne.MONTAIGNE@ec.europa.eu OR from:Patrick.PILLARD@ec.europa.eu OR from:Karien.Reinig@ec.europa.eu OR from:S-CIRCABC@nomail.ec.europa.eu OR from:\"Dominique REUTER-WAGNER\"")
+                 ( :name "Work-hunt"
+                   :key  ?h
+                   :query "maidlir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Belén Barreiro\" OR from:bbarreiro@40db.es OR from:40db.es OR from:\"Mónica Méndez\" OR from:monica.mendez@cis.es) OR from:\"Luis Manuel Ayuso Sanchez\" Or from:luis.ayuso@uma.es OR from:\"Juan Ignacio Martinez Pastor\" OR from:jimartinez@poli.uned.es OR from:ecb@uma.es")
+                 ( :name "Fac., Dept., Vicerrec., TFG, Exámenes, Económicas"
+                   :key  ?f
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\"  OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND ((from:\"Maria Angel\" OR from:departamentos.polisoci@adm.uned.es OR from:secretaria.poli.soci@adm.uned.es OR from:decanato.polisoci@adm.uned.es OR from:negociado-pruebas-presenciales@adm.uned.es OR from:vicepruebas@adm.uned.es OR from:vrector-pruebas-presen@adm.uned.es OR from:coord.pruebas@adm.uned.es OR from:pruebaspresenciales@adm.uned.es OR from:gastosextraordinariospruebas@adm.uned.es OR from:\"Secretaria Docente\" OR from:\"Secretaría Docente\" OR from:secdoc.cee@adm.uned.es OR from:\"MARIA ANGELES RODRIGUEZ SANTOS\" OR from:secretaria-ecoemp@adm.uned.es OR from:\"Secretaría Facultad CC. Economicas\" OR from:secadi.polisoci@adm.uned.es OR from:\"Secadi\" OR from:\"GUADALUPE DAMAS JURADO\" OR from:gdamas@pas.uned.es OR from:llosada@edu.uned.es OR from:egiralde@pas.uned.es OR from:\"MARIA GOMEZ ESCARDA\" OR from:mgomez@poli.uned.es OR from:sociologiauno@adm.uned.es OR from:vrector-profesorado@adm.uned.es OR from:\"Vicerrectorado de Profesorado\" OR from:vrector-gradoyposgrado@adm.uned.es OR from:vadj.grado@adm.uned.es OR from:alba.vrector@adm.uned.es) OR (subject:tfg OR subject:TFG OR body:tfg OR body:TFG OR subject:\"trabajo fin de grado\" OR body:\"trabajo fin de grado\" OR subject:\"/ex.men.*/\" OR body:\"/ex.men.*/\" OR subject:\"sociologia aplicada\"  OR body:\"sociologia aplicada\" OR subject:/modelo.*/")
+                 ( :name "Master FOL"
+                   :key  ?t
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (subject:tfm OR subject:TFM OR body:tfm OR body:TFM OR subject:\"trabajo fin de master\" OR body:\"trabajo fin de master\" OR from:\"Ana María González\" OR from:gabriela.topa1@gmail.com OR from:\"Gabriela Topa\" OR from:gtopa@psi.uned.es OR from:\"Máster Formación Profesorado\" OR from:master-formacionprofesorado@adm.uned.es OR from:\"M. Angeles Serrano Garcia\" OR from:maserrano@pas.uned.es OR from:\"M. del Puerto Hojas Rosales\" OR from:mhojas@pas.uned.es OR from:\"Ana María González\" OR from:amgonzalez@edu.uned.es OR subjetc:\"TFM\"")
+                 ( :name "Ricardo"
+                   :key  ?r
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:ricardo.mora.villarrubia@gmail.com OR from:ricardo.mora@uc3m.es OR from:ricardo.mora.villarrubia@outlook.com OR from:\"Ricardo Mora\" OR from:ricmora@eco.uc3m.es OR from:\"Adelheid Holl\" OR from:a.holl@csic.es")
+                 ( :name "Sent in last 7 days"
+                   :key  ?s
+                   :query "maildir:\"/personal/[personal].Sent Mail\" OR maildir:\"/work/[work].Sent Mail\") AND date:7d..now")
+                 ( :name "Twyford"
+                   :key  ?y
+                   :query "maildir:\"/personal/INBOX\") AND (from:SC3074602a@schoolcomms.com OR from:\"TWY\" OR from:DataTeam@twyford.ealing.sch.uk OR from:\"TWYFORD CE HIGH SCHOOL\" OR from:a.holl@csic.es OR from:6thform@twyford.ealing.sch.uk OR from:\"6th Form - TWY\" OR from:Admissions@twyford.ealing.sch.uk OR from:\"Admissions - TWY\" OR from:marthur@twyford.ealing.sch.uk OR from:\"Michael Arthur\" OR from:\"Lucille De Costa\"")))
 
-
-
-** New bookmarks inspired by the great Royal Holloway Albertch
-- https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
-
-#+begin_src emacs-lisp :tangle yes
-    ;; empty current defs
-    (defvar mu4e-bookmarks
-      `( ,(())))
-
-    (add-to-list 'mu4e-bookmarks
-                 (make-mu4e-bookmark
-                  :name  "Unread messages (Work inbox)"
-                  :query "flag:unread AND maildir:\"/work/INBOX\" AND NOT flag:trashed"
-                  :key ?x) t)
-
-    (add-to-list
-     'mu4e-bookmarks
-     '("(maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Kenedy Alva\" OR from:kenedy@gmail.com OR from:\"Paz Torrente\" OR from:paztorrente@gmail.com OR from:\"Javier Martín\" OR from:javiermartinr@gmail.com OR from:\"Canal de Isabel II\" OR from:comunicaciones.comerciales@canaldeisabelsegunda.es OR from:\"Jazztel\" OR from:att.cliente.jazztel@jazztel.com)"
-       "Ave María" ?a) t)
-
-    (add-to-list
-     'mu4e-bookmarks
-     '("from:\"BICI\" OR from:bici@adm.uned.es)"
-       "BICI" ?b) t)
-
-    (add-to-list
-     'mu4e-bookmarks
-     '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:convalid.empresariales@adm.uned.es OR from:\"Negociado de atención al estudiante\" OR from:estudiantes.polisoci@adm.uned.es OR from:\"CARMEN DIAZ BRAGADO\" OR from:cadiaz@pas.uned.es OR subject:convalidación OR subject:convalidacion OR subject:convalidaciones OR body:convalidación OR body:convalidacion  OR body:convalidaciones OR subject:reconocimiento OR subject:Reconocimiento OR subject:reconocimientos OR subject:Reconocimientos OR body:reconocimiento OR body:Reconocimiento OR body:reconocimientos OR body:Reconocimientos)"
-       "Convalidaciones" ?c) t)
-
-    (add-to-list
-     'mu4e-bookmarks
-     '("(maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Paula Zingoni\" OR from:paulazingoni@gmail.com OR from:\"Croydon County\" OR from:\"Family\" OR from:family.croydon.countycourt@justice.gov.uk OR from:\"Jose Antonio Arcila\" OR from:joseantonio@arcila-abogados.es OR from:\"Elena Benítez Imedio\" OR from:ebi@ayuelajimenez.es OR from:ebi@ebiroy.com OR from:\"Juan Antonio Montoro\" OR from:jmontoro@euroconsejo.org OR from:\"Pablo Velasco Espinosa\" OR from:pvelasco@euroconsejo.org OR from:mensajeria@phidias.es OR from:\"Montessori School\" OR from:\"Mataespesa Montessori School\" OR from:mataespesa@montessorischool.es OR from:\"Laura Romay\" OR from:\"Anna Dick\" OR from:anna.dick@montessorischool.es OR form:\"Gema Baeza Gómez\" OR from:gbg@ayuelajimenez.es)"
-       "Operation D" ?d) t)
-
-    (add-to-list
-     'mu4e-bookmarks
-     '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:\"SCHWEIKLE-HILGNER Nicoletta\" OR from:nicoletta.schweikle-hilgner@ec.europa.eu) OR from:ESTAT-Microdata-access@ec.europa.eu OR from:estat-microdata-access@ec.europa.eu OR from:Fabienne.MONTAIGNE@ec.europa.eu OR from:Patrick.PILLARD@ec.europa.eu OR from:Karien.Reinig@ec.europa.eu OR from:S-CIRCABC@nomail.ec.europa.eu OR from:\"Dominique REUTER-WAGNER\")"
-       "Eurostat" ?e) t)
-
-    (add-to-list
-     'mu4e-bookmarks
-     '("(maidlir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Belén Barreiro\" OR from:bbarreiro@40db.es OR from:40db.es OR from:\"Mónica Méndez\" OR from:monica.mendez@cis.es) OR from:\"Luis Manuel Ayuso Sanchez\" Or from:luis.ayuso@uma.es OR from:\"Juan Ignacio Martinez Pastor\" OR from:jimartinez@poli.uned.es OR from:ecb@uma.es)"
-       "Work-hunt" ?h) t)
-
-    (add-to-list
-     'mu4e-bookmarks
-     '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\"  OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND ((from:\"Maria Angel\" OR from:departamentos.polisoci@adm.uned.es OR from:secretaria.poli.soci@adm.uned.es OR from:decanato.polisoci@adm.uned.es OR from:negociado-pruebas-presenciales@adm.uned.es OR from:vicepruebas@adm.uned.es OR from:vrector-pruebas-presen@adm.uned.es OR from:coord.pruebas@adm.uned.es OR from:pruebaspresenciales@adm.uned.es OR from:gastosextraordinariospruebas@adm.uned.es OR from:\"Secretaria Docente\" OR from:\"Secretaría Docente\" OR from:secdoc.cee@adm.uned.es OR from:\"MARIA ANGELES RODRIGUEZ SANTOS\" OR from:secretaria-ecoemp@adm.uned.es OR from:\"Secretaría Facultad CC. Economicas\" OR from:secadi.polisoci@adm.uned.es OR from:\"Secadi\" OR from:\"GUADALUPE DAMAS JURADO\" OR from:gdamas@pas.uned.es OR from:llosada@edu.uned.es OR from:egiralde@pas.uned.es OR from:\"MARIA GOMEZ ESCARDA\" OR from:mgomez@poli.uned.es OR from:sociologiauno@adm.uned.es OR from:vrector-profesorado@adm.uned.es OR from:\"Vicerrectorado de Profesorado\" OR from:vrector-gradoyposgrado@adm.uned.es OR from:vadj.grado@adm.uned.es OR from:alba.vrector@adm.uned.es) OR (subject:tfg OR subject:TFG OR body:tfg OR body:TFG OR subject:\"trabajo fin de grado\" OR body:\"trabajo fin de grado\" OR subject:\"/ex.men.*/\" OR body:\"/ex.men.*/\" OR subject:\"sociologia aplicada\"  OR body:\"sociologia aplicada\" OR subject:/modelo.*/))"
-       "Fac., Dept., Vicerrec., TFG, Exámenes, Económicas" ?f) t)
-
-    (add-to-list
-     'mu4e-bookmarks
-     '("(maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (subject:tfm OR subject:TFM OR body:tfm OR body:TFM OR subject:\"trabajo fin de master\" OR body:\"trabajo fin de master\" OR from:\"Ana María González\" OR from:gabriela.topa1@gmail.com OR from:\"Gabriela Topa\" OR from:gtopa@psi.uned.es OR from:\"Máster Formación Profesorado\" OR from:master-formacionprofesorado@adm.uned.es OR from:\"M. Angeles Serrano Garcia\" OR from:maserrano@pas.uned.es OR from:\"M. del Puerto Hojas Rosales\" OR from:mhojas@pas.uned.es OR from:\"Ana María González\" OR from:amgonzalez@edu.uned.es OR subjetc:\"TFM\")"
-       "Master FOL" ?m) t)
-
-    (add-to-list
-     'mu4e-bookmarks
-     '("(maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:ricardo.mora.villarrubia@gmail.com OR from:ricardo.mora@uc3m.es OR from:ricardo.mora.villarrubia@outlook.com OR from:\"Ricardo Mora\" OR from:ricmora@eco.uc3m.es OR from:\"Adelheid Holl\" OR from:a.holl@csic.es)"
-       "Ricardo" ?r) t)
-
-    (add-to-list
-     'mu4e-bookmarks
-     '("(maildir:\"/personal/[personal].Sent Mail\" OR maildir:\"/work/[work].Sent Mail\") AND date:7d..now"
-       "Sent in last 7 days" ?s) t)
-
-  (add-to-list
-   'mu4e-bookmarks
-   '("(maildir:\"/personal/INBOX\") AND (from:SC3074602a@schoolcomms.com OR from:\"TWY\" OR from:DataTeam@twyford.ealing.sch.uk OR from:\"TWYFORD CE HIGH SCHOOL\" OR from:a.holl@csic.es OR from:6thform@twyford.ealing.sch.uk OR from:\"6th Form - TWY\" OR from:Admissions@twyford.ealing.sch.uk OR from:\"Admissions - TWY\" OR from:marthur@twyford.ealing.sch.uk OR from:\"Michael Arthur\" OR from:\"Lucille De Costa\")"
-     "Twyford" ?y) t)
-
-    ;;(add-to-list
-    ;; 'mu4e-bookmarks
-    ;; '("mime:application/* AND NOT mime:application/pgp* AND (maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\")"
-    ;;   "Messages with attachments for me." ?i) t)
 #+end_src
+                                                                                
 
-#+RESULTS:
-| :name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Unread messages                                   | :query | flag:unread AND NOT flag:trashed                           | :key         | 117 |      |     |
-| :name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Today's messages                                  | :query | date:today..now                                            | :key         | 116 |      |     |
-| :name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Last 7 days                                       | :query | date:7d..now                                               | :hide-unread |   t | :key | 119 |
-| :name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Messages with images                              | :query | mime:image/*                                               | :key         | 112 |      |     |
-| :name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Unread messages (Work inbox)                      | :query | flag:unread AND maildir:"/work/INBOX" AND NOT flag:trashed | :key         | 120 |      |     |
-| (maildir:"/work/INBOX" OR maildir:"/personal/INBOX" OR maildir:"/work/[work].Spam" OR maildir:"/personal/[personal].Spam" OR maildir:"/work/[work].Drafts" OR maildir:"/personal/[personal].Drafts" OR maildir:"/work/[work].Trash" OR maildir:"/personal/[personal].Trash") AND (from:"Kenedy Alva" OR from:kenedy@gmail.com OR from:"Paz Torrente" OR from:paztorrente@gmail.com OR from:"Javier Martín" OR from:javiermartinr@gmail.com OR from:"Canal de Isabel II" OR from:comunicaciones.comerciales@canaldeisabelsegunda.es OR from:"Jazztel" OR from:att.cliente.jazztel@jazztel.com)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Ave María                                         |     97 |                                                            |              |     |      |     |
-| from:"BICI" OR from:bici@adm.uned.es)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | BICI                                              |     98 |                                                            |              |     |      |     |
-| (maildir:"/work/INBOX" OR maildir:"/work/[work].Spam" OR maildir:"/work/[work].Drafts" OR maildir:"/work/[work].Trash") AND (from:convalid.empresariales@adm.uned.es OR from:"Negociado de atención al estudiante" OR from:estudiantes.polisoci@adm.uned.es OR from:"CARMEN DIAZ BRAGADO" OR from:cadiaz@pas.uned.es OR subject:convalidación OR subject:convalidacion OR subject:convalidaciones OR body:convalidación OR body:convalidacion  OR body:convalidaciones OR subject:reconocimiento OR subject:Reconocimiento OR subject:reconocimientos OR subject:Reconocimientos OR body:reconocimiento OR body:Reconocimiento OR body:reconocimientos OR body:Reconocimientos)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Convalidaciones                                   |     99 |                                                            |              |     |      |     |
-| (maildir:"/work/INBOX" OR maildir:"/personal/INBOX" OR maildir:"/work/[work].Spam" OR maildir:"/personal/[personal].Spam" OR maildir:"/work/[work].Drafts" OR maildir:"/personal/[personal].Drafts" OR maildir:"/work/[work].Trash" OR maildir:"/personal/[personal].Trash") AND (from:"Paula Zingoni" OR from:paulazingoni@gmail.com OR from:"Croydon County" OR from:"Family" OR from:family.croydon.countycourt@justice.gov.uk OR from:"Jose Antonio Arcila" OR from:joseantonio@arcila-abogados.es OR from:"Elena Benítez Imedio" OR from:ebi@ayuelajimenez.es OR from:ebi@ebiroy.com OR from:"Juan Antonio Montoro" OR from:jmontoro@euroconsejo.org OR from:"Pablo Velasco Espinosa" OR from:pvelasco@euroconsejo.org OR from:mensajeria@phidias.es OR from:"Montessori School" OR from:"Mataespesa Montessori School" OR from:mataespesa@montessorischool.es OR from:"Laura Romay" OR from:"Anna Dick" OR from:anna.dick@montessorischool.es OR form:"Gema Baeza Gómez" OR from:gbg@ayuelajimenez.es)                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Operation D                                       |    100 |                                                            |              |     |      |     |
-| (maildir:"/work/INBOX" OR maildir:"/work/[work].Spam" OR maildir:"/work/[work].Drafts" OR maildir:"/work/[work].Trash") AND (from:"SCHWEIKLE-HILGNER Nicoletta" OR from:nicoletta.schweikle-hilgner@ec.europa.eu) OR from:ESTAT-Microdata-access@ec.europa.eu OR from:estat-microdata-access@ec.europa.eu OR from:Fabienne.MONTAIGNE@ec.europa.eu OR from:Patrick.PILLARD@ec.europa.eu OR from:Karien.Reinig@ec.europa.eu OR from:S-CIRCABC@nomail.ec.europa.eu OR from:"Dominique REUTER-WAGNER")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Eurostat                                          |    101 |                                                            |              |     |      |     |
-| (maidlir:"/work/INBOX" OR maildir:"/personal/INBOX" OR maildir:"/work/[work].Spam" OR maildir:"/personal/[personal].Spam" OR maildir:"/work/[work].Drafts" OR maildir:"/personal/[personal].Drafts" OR maildir:"/work/[work].Trash" OR maildir:"/personal/[personal].Trash") AND (from:"Belén Barreiro" OR from:bbarreiro@40db.es OR from:40db.es OR from:"Mónica Méndez" OR from:monica.mendez@cis.es) OR from:"Luis Manuel Ayuso Sanchez" Or from:luis.ayuso@uma.es OR from:"Juan Ignacio Martinez Pastor" OR from:jimartinez@poli.uned.es OR from:ecb@uma.es)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Work-hunt                                         |    104 |                                                            |              |     |      |     |
-| (maildir:"/work/INBOX" OR maildir:"/work/[work].Spam"  OR maildir:"/work/[work].Drafts" OR maildir:"/work/[work].Trash") AND ((from:"Maria Angel" OR from:departamentos.polisoci@adm.uned.es OR from:secretaria.poli.soci@adm.uned.es OR from:decanato.polisoci@adm.uned.es OR from:negociado-pruebas-presenciales@adm.uned.es OR from:vicepruebas@adm.uned.es OR from:vrector-pruebas-presen@adm.uned.es OR from:coord.pruebas@adm.uned.es OR from:pruebaspresenciales@adm.uned.es OR from:gastosextraordinariospruebas@adm.uned.es OR from:"Secretaria Docente" OR from:"Secretaría Docente" OR from:secdoc.cee@adm.uned.es OR from:"MARIA ANGELES RODRIGUEZ SANTOS" OR from:secretaria-ecoemp@adm.uned.es OR from:"Secretaría Facultad CC. Economicas" OR from:secadi.polisoci@adm.uned.es OR from:"Secadi" OR from:"GUADALUPE DAMAS JURADO" OR from:gdamas@pas.uned.es OR from:llosada@edu.uned.es OR from:egiralde@pas.uned.es OR from:"MARIA GOMEZ ESCARDA" OR from:mgomez@poli.uned.es OR from:sociologiauno@adm.uned.es OR from:vrector-profesorado@adm.uned.es OR from:"Vicerrectorado de Profesorado" OR from:vrector-gradoyposgrado@adm.uned.es OR from:vadj.grado@adm.uned.es OR from:alba.vrector@adm.uned.es) OR (subject:tfg OR subject:TFG OR body:tfg OR body:TFG OR subject:"trabajo fin de grado" OR body:"trabajo fin de grado" OR subject:"/ex.men.*/" OR body:"/ex.men.*/" OR subject:"sociologia aplicada"  OR body:"sociologia aplicada" OR subject:/modelo.*/)) | Fac., Dept., Vicerrec., TFG, Exámenes, Económicas |    102 |                                                            |              |     |      |     |
-| (maildir:"/work/INBOX" OR maildir:"/work/[work].Spam" OR maildir:"/work/[work].Drafts" OR maildir:"/work/[work].Trash") AND (subject:tfm OR subject:TFM OR body:tfm OR body:TFM OR subject:"trabajo fin de master" OR body:"trabajo fin de master" OR from:"Ana María González" OR from:gabriela.topa1@gmail.com OR from:"Gabriela Topa" OR from:gtopa@psi.uned.es OR from:"Máster Formación Profesorado" OR from:master-formacionprofesorado@adm.uned.es OR from:"M. Angeles Serrano Garcia" OR from:maserrano@pas.uned.es OR from:"M. del Puerto Hojas Rosales" OR from:mhojas@pas.uned.es OR from:"Ana María González" OR from:amgonzalez@edu.uned.es OR subjetc:"TFM")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Master FOL                                        |    109 |                                                            |              |     |      |     |
-| (maildir:"/work/INBOX" OR maildir:"/personal/INBOX" OR maildir:"/work/[work].Spam" OR maildir:"/personal/[personal].Spam" OR maildir:"/work/[work].Drafts" OR maildir:"/personal/[personal].Drafts" OR maildir:"/work/[work].Trash" OR maildir:"/personal/[personal].Trash") AND (from:ricardo.mora.villarrubia@gmail.com OR from:ricardo.mora@uc3m.es OR from:ricardo.mora.villarrubia@outlook.com OR from:"Ricardo Mora" OR from:ricmora@eco.uc3m.es OR from:"Adelheid Holl" OR from:a.holl@csic.es)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Ricardo                                           |    114 |                                                            |              |     |      |     |
-| (maildir:"/personal/[personal].Sent Mail" OR maildir:"/work/[work].Sent Mail") AND date:7d..now                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Sent in last 7 days                               |    115 |                                                            |              |     |      |     |
-| (maildir:"/personal/INBOX") AND (from:SC3074602a@schoolcomms.com OR from:"TWYFORD CE HIGH SCHOOL" OR from:a.holl@csic.es OR from:6thform@twyford.ealing.sch.uk OR from:"6th Form - TWY" OR from:Admissions@twyford.ealing.sch.uk OR from:"Admissions - TWY" OR from:marthur@twyford.ealing.sch.uk OR from:"Michael Arthur" OR from:"Lucille De Costa")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Twyford                                           |    121 |                                                            |              |     |      |     |
-| (maildir:"/personal/INBOX") AND (from:SC3074602a@schoolcomms.com OR from:"Data Team - TWY" OR from:DataTeam@twyford.ealing.sch.uk OR from:"TWYFORD CE HIGH SCHOOL" OR from:a.holl@csic.es OR from:6thform@twyford.ealing.sch.uk OR from:"6th Form - TWY" OR from:Admissions@twyford.ealing.sch.uk OR from:"Admissions - TWY" OR from:marthur@twyford.ealing.sch.uk OR from:"Michael Arthur" OR from:"Lucille De Costa")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Twyford                                           |    121 |                                                            |              |     |      |     |
-| (maildir:"/personal/INBOX") AND (from:SC3074602a@schoolcomms.com OR from:"TWY" OR from:DataTeam@twyford.ealing.sch.uk OR from:"TWYFORD CE HIGH SCHOOL" OR from:a.holl@csic.es OR from:6thform@twyford.ealing.sch.uk OR from:"6th Form - TWY" OR from:Admissions@twyford.ealing.sch.uk OR from:"Admissions - TWY" OR from:marthur@twyford.ealing.sch.uk OR from:"Michael Arthur" OR from:"Lucille De Costa")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Twyford                                           |    121 |                                                            |              |     |      |     |
+* Org capture templates, including some for emails
 
-
-** COMMENT New item in Basics (Main View): =helm-mu=
-
-Not working. 
-
-Tip from https://www.djcbsoftware.nl/code/mu/mu4e/Defining-actions.html
-and 
-http://djcbsoftware.nl/code/mu/mu4e/Adding-an-action-in-the-message-view.html
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun my-call-to-helm-mu ()
-  "Calls helm-mu."
-  (helm-mu)
-  )
-
-;; Define 'x' as the shortcut
-(add-to-list 'mu4e-view-actions
-             '("Mmu search" . my-call-to-helm-mu) t)
-#+END_SRC
-
-#+RESULTS:
-: ((capture message . mu4e-action-capture-message) (view as pdf . mu4e-action-view-as-pdf) (show this thread . mu4e-action-show-thread) (ViewInBrowser . mu4e-action-view-in-browser) (Mmu search . my-call-to-helm-mu))
-
-* Org capture templates, including for emails
-
-Placed here so that they work with emails.
+Placed here so that they work with emails. Restore to this location when I manage to make =mu4e= work.
 
 Article from The Reddit Workflow, accessible at https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/
 
@@ -663,6 +508,7 @@ First, template for contacts from: https://www.reddit.com/r/emacs/comments/8toiv
 Add field =:BIRTHDAY: %^{yyyy-mm-dd= only add when i want to. Otherwise, if date not valid (YYYY-MM-DD), agenda fails
 
 #+begin_src emacs-lisp :tangle yes
+
   (defvar my/org-contacts-template "* %(org-contacts-template-name)
   :PROPERTIES:
   :ADDRESS: %^{Calle, Ciudad, CP, País}
@@ -671,12 +517,14 @@ Add field =:BIRTHDAY: %^{yyyy-mm-dd= only add when i want to. Otherwise, if date
   :CELL: %^{Mobile}
   :NOTE: %^{NOTE}
   :END:" "Template for org-contacts.")
+
 #+end_src
 
 #+RESULTS:
 : my/org-contacts-template
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (setq org-capture-templates `(
                                 ("a"  "Article"  entry
                                  (file+headline "/home/dgm/Dropbox/gtd/bibliography.org" "Bibliography")
@@ -696,18 +544,18 @@ Add field =:BIRTHDAY: %^{yyyy-mm-dd= only add when i want to. Otherwise, if date
                                  :empty-lines 1)
                                 ("f" "Financial entries (Ledger)")
                                 ("fc" "Checking" plain
-                                 (file "/media/dgm/blue/documents/personal/finanzas/ledger/journal.dat")
+                                 (file "~/documents/personal/finanzas/ledger/journal.dat")
                                  "%(org-read-date) %^{Payee}
                                  Expenses:%^{Account}  $%^{Amount}"
                                  :immediate-finish t)
                                 ("fv" "Visa (Credit card)" plain
-                                 (file "/media/dgm/blue/documents/personal/finanzas/ledger/journal.dat")
+                                 (file "~/documents/personal/finanzas/ledger/journal.dat")
                                  "%(org-read-date) %^{Payee}
                                   Expenses:%^{Account}  $%^{Amount}
                                   Liabilities:Visa"
                                  :immediate-finish t)
                                 ("fm" "Metalico" plain
-                                 (file "/media/dgm/blue/documents/personal/finanzas/ledger/journal.dat")
+                                 (file "~/documents/personal/finanzas/ledger/journal.dat")
                                  "%(org-read-date) * %^{Payee}
                                   Expenses:Cash
                                   Expenses:%^{Account}  %^{Amount}")
@@ -761,16 +609,11 @@ Add field =:BIRTHDAY: %^{yyyy-mm-dd= only add when i want to. Otherwise, if date
                                 ;; :empty-lines 1
                                 ;; :immediate-finish t)
                                 ))
+
 #+END_SRC
 
 #+RESULTS:
 | a | Article | entry | (file+headline /home/dgm/Dropbox/gtd/bibliography.org Bibliography) | * %a %^g |
-
-
-
-
-
-
 
 Original template: 
 
@@ -854,89 +697,6 @@ DGM turns it to "off" on 2 august 2019 to try configuration from Linux Magazine
 
 #+RESULTS:
 
-* Display 
-
-** Header behaviour
-
-*** Reddit take
-
-From https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/elgoumx via https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(add-hook 'mu4e-headers-mode-hook
-      (defun my/mu4e-change-headers ()
-	(interactive)
-	(setq mu4e-headers-fields
-	      `((:date . 25) ;; alternatively, use :date
-		(:flags . 6)
-		(:from . 22)
-        (:thread-subject . ,(- (window-body-width) 70)) ;; alternatively, use :subject
-		(:size . 7)
-        ))))
-
-;; if you use date instead of human-date in the above, use this setting
-;; give me ISO(ish) format date-time stamps in the header list
-;; Originally, above, after '(setq mu4e-headers-fields'  was: 
-;;	      `((:human-date . 25) ;; alternatively, use :date
-(setq mu4e-headers-date-format "%d/%m/%Y %H:%M")
-;(setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
-#+END_SRC
-
-#+RESULTS:
-: %d/%m/%Y %H:%M
-
-*** Irreal: Toggle per name/full address with =M-RET=. 
-
-https://irreal.org/blog/?p=6122 says:
-
- These are the headers to show in the headers list -- a pair of a field and its width, with `nil' meaning 'unlimited'.  (Better only use that for the last field.)
-
-These are the defaults:
-
-#+BEGIN_EXAMPLE
-(setq mu4e-headers-fields
-     '( (:date          .  25)    ;; alternatively, use :human-date
-        (:flags         .   6)
-        (:from          .  22)
-        (:subject       .  nil))) ;; alternatively, use :thread-subject
-#+END_EXAMPLE
-
-And from below I have deleted the following because this is all set in the previous heading.
-
-#+BEGIN_EXAMPLE
- mu4e-headers-fields '((:human-date   . 16)
-                       (:flags        .  6)
-                       (:size         .  6)
-                       (:mailing-list . 10)
-                       (:from         . 22)
-                       (:subject))
-#+END_EXAMPLE
-
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq 
- ;; mu4e-headers-date-format "%F %R" ;; already set
- mu4e-headers-time-format "%R"
- mu4e-hide-index-messages t)
-#+END_SRC
-
-#+RESULTS:
-: t
-
-*** Threading 
-
-Gmail-style threading. 
-
-https://groups.google.com/forum/#!topic/mu-discuss/ZG0trF0reZk say setting it up to "true" causes the "problem" of mu4e not finding emails that =mu= finds.
-
-Also, by turning it off, I don't see the same message multiple times. If I wouldn't set this option here, in headers view I should toggle it with =W=.
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-headers-include-related 'nil)
-;;(setq mu4e-headers-include-related t)
-#+END_SRC
-
-#+RESULTS:
-
 ** Make some e-mails stand out a bit.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -970,7 +730,7 @@ On 4 august I comment out the line =(setq mu4e-html2text-command "w3m -dump -s -
 : mu4e-shr2text
 
 As I said, now I have the following as suggested by 
-[[/media/dgm/blue/documents/elibrary/computing/Linux/linuxFormat/tips/emacs2-email-video-246February2019.pdf]]
+[[~/documents/elibrary/computing/Linux/linuxFormat/tips/emacs2-email-video-246February2019.pdf]]
 
 And it is fine; it's either that or =mu4e-shr2text= but with the latter I get just the same as I get in EWW if I follow the action of viewing the message in my browser. Then I can open Chromium with =&= and see it as intended. With pandoc I get a wonderfully formatted plain-text message.
 
@@ -1007,1165 +767,47 @@ I still can't see HTML messages okay. Trying this tip from https://irreal.org/bl
 #+RESULTS:
 : ((capture message . mu4e-action-capture-message) (view as pdf . mu4e-action-view-as-pdf) (show this thread . mu4e-action-show-thread) (ViewInBrowser . mu4e-action-view-in-browser) (View in browser . my/mu4e-in-browser) (Eww view . jcs-view-in-eww))
 
-** COMMENT Alternative approach by Etienne for displaying current mail in browser
-The following  function is called as a mu4e Action, to display the current email body in your external browser. This is useful when event W3M fails at rendering an HTML soup.
-From https://etienne.depar.is/emacs.d/mu4e.html
-
-To use it, when in a message body, press =a= to see this included in list of actions.
-
-Not needed anymore as I have the above code already
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun my/mu4e-in-browser (msg)
-  "View the body of the message in a web browser."
-  (interactive)
-  (let ((html (mu4e-msg-field (mu4e-message-at-point t) :body-html))
-        (tmpfile (format "%s/%d.html" temporary-file-directory (random))))
-    (unless html (error "No html part for this message"))
-    (with-temp-file tmpfile
-      (insert
-       "<html>"
-       "<head><meta http-equiv=\"content-type\""
-       "content=\"text/html;charset=UTF-8\">"
-       html))
-    (browse-url (concat "file://" tmpfile))))
-
-(add-to-list 'mu4e-view-actions
-             '("Etienne-View in browser" . my/mu4e-in-browser) t)
-#+END_SRC
-
-#+RESULTS:
-: ((capture message . mu4e-action-capture-message) (view as pdf . mu4e-action-view-as-pdf) (show this thread . mu4e-action-show-thread) (ViewInBrowser . mu4e-action-view-in-browser) (View in browser . my/mu4e-in-browser) (Eww view . jcs-view-in-eww) (Etienne-View in browser . my/mu4e-in-browser))
 
 * Miscellanea
-** Rename files when moving
 
-https://irreal.org/blog/?p=6122 says it is needed for MBSYNC
-
- #+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-change-filenames-when-moving t)
- #+END_SRC
-
- #+RESULTS:
- : t
-
-** Completion
-
-Because default completion can be extended (e.g. Helm, Ivy).
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-completing-read-function 'completing-read)
-#+END_SRC
-
-#+RESULTS:
-: completing-read
-
-** GPG encryption
-
-Try to automatically decrypt emails.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-decryption-policy t)
-#+END_SRC
-
-#+RESULTS:
-: t
-
-Crypt to self so that we can read sent e-mails.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq  mml-secure-openpgp-encrypt-to-self t)
-#+END_SRC
-
-#+RESULTS:
-: t
-
-** Playing with =split-view=. 
-
-From https://www.djcbsoftware.nl/code/mu/mu4e/Split-view.html
-
-Don't do any splitting of the frame when opening a message. It will simply occupy the whole window where =mu4= sits.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-split-view 'nil)
-#+END_SRC
-
-#+RESULTS:
-
-** Direct access to =mu4e=
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-
-(global-set-key (kbd "C-*") #'mu4e)
-
-#+END_SRC
-
-#+RESULTS:
-: mu4e
-
-** COMMENT Spell check: Culprit of not being able to attach to current draft
-
-Also, killing a draft doesn't work properly with this option active.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-hook 'mu4e-compose-mode-hook
-    (defun my-do-compose-stuff ()
-       "My settings for message composition."
-       (visual-line-mode)
-       (org-mu4e-compose-org-mode)
-           (use-hard-newlines -1)
-       (flyspell-mode)))
-#+END_SRC
-
-** Don't ask when quitting
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-confirm-quit nil)
-#+END_SRC
-
-#+RESULTS:
-
-** Don't reply to self
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-compose-dont-reply-to-self t)
-#+END_SRC
-
-#+RESULTS:
-: t
-
-** Org functionality in compose buffer
-:PROPERTIES:
-:ID:       48af1742-2872-4dbc-8f3d-ff8940e64c39
-:END:
-
-From https://irreal.org/blog/?p=6122
-
-Turned off as I am getting org-related problems.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(add-hook 'message-mode-hook 'turn-on-orgtbl)
-;; (add-hook 'message-mode-hook 'turn-on-orgstruct++) ;; gives error when composing
-#+END_SRC
-
-#+RESULTS:
-| turn-on-orgtbl | org-contacts-setup-completion-at-point |
 
 ** Preview mail file in a new buffer
 This function may be called externally to display an email content when we know its file path.
 From: https://etienne.depar.is/emacs.d/mu4e.html
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(defun ed/preview-some-mail-at (path)
-  (interactive "fPath: ")
-  (call-process
-   "mu" nil
-   (switch-to-buffer (generate-new-buffer "*mail preview*") t)
-   t "view" (expand-file-name path))
-  (with-current-buffer "*mail preview*"
-    (goto-char (point-min))
-    (mu4e~fontify-cited)
-    (mu4e~fontify-signature)
-    (while (re-search-forward "^\\(\\w+:\\) \\(.*\\)$" nil t)
-      (let ((key (match-string 1))
-            (value (match-string 2)))
-        (beginning-of-line)
-        (delete-region (point) (line-end-position))
-        (insert (concat (propertize key 'face 'mu4e-header-key-face) " "))
-        (if (or (string= key "From:")
-                (string= key "To:"))
-            (insert (propertize value 'face 'mu4e-special-header-value-face))
-          (insert (propertize value 'face 'mu4e-header-value-face)))))
-    (forward-line)
-    (beginning-of-line)
-    (insert "\n")
-    (read-only-mode)
-    (local-set-key (kbd "q") #'kill-this-buffer)))
+
+  (defun ed/preview-some-mail-at (path)
+    (interactive "fPath: ")
+    (call-process
+     "mu" nil
+     (switch-to-buffer (generate-new-buffer "*mail preview*") t)
+     t "view" (expand-file-name path))
+    (with-current-buffer "*mail preview*"
+      (goto-char (point-min))
+      (mu4e~fontify-cited)
+      (mu4e~fontify-signature)
+      (while (re-search-forward "^\\(\\w+:\\) \\(.*\\)$" nil t)
+        (let ((key (match-string 1))
+              (value (match-string 2)))
+          (beginning-of-line)
+          (delete-region (point) (line-end-position))
+          (insert (concat (propertize key 'face 'mu4e-header-key-face) " "))
+          (if (or (string= key "From:")
+                  (string= key "To:"))
+              (insert (propertize value 'face 'mu4e-special-header-value-face))
+            (insert (propertize value 'face 'mu4e-header-value-face)))))
+      (forward-line)
+      (beginning-of-line)
+      (insert "\n")
+      (read-only-mode)
+      (local-set-key (kbd "q") #'kill-this-buffer)))
+
 #+END_SRC
 
 #+RESULTS:
 : ed/preview-some-mail-at
 
-* COMMENT Miscellanea commented out
-** COMMENT Every new email composition gets its own frame and screws everything up!
-
-This is what made Composition go bunkers! Adding the scroll bar and loosing connection with external apps!!!
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq mu4e-compose-in-new-frame t)
-#+END_SRC
-
-#+RESULTS:
-: t
-
-** COMMENT Configure your system for several accounts
-Check it out here [[/media/dgm/blue/documents/elibrary/computing/Linux/linuxFormat/tips/emacs2-email-video-246February2019.pdf]]
-
-- First, list your accounts.
-- Similar instructions here: https://www.djcbsoftware.nl/code/mu/mu4e/Multiple-accounts.html
-- Lo comento porque creo que la seccion Context hace esto. 
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defvar my-mu4e-account-alist
-       '(("personal"
-            (mu4e-sent-folder "/personal/Sent")
-            ;;(mu4e-drafts-folder "/personal/Drafts")
-            (user-mail-address "daniel.guinea.martin@gmail.com")
-            (smtpmail-default-smtp-server "smtp.gmail.com")
-            (smtpmail-local-domain "mail.gmail.com")
-            (smtpmail-smtp-user "daniel.guinea.martin")
-            (smtpmail-smtp-server "smtp.gmail.com")
-            (smtpmail-stream-type starttls)
-            (smtpmail-smtp-service 25))
-        ("work"
-            (mu4e-sent-folder "/work/Sent")
-            ;; (mu4e-drafts-folder "/work/Drafts")
-            (user-mail-address "daniel.guinea.uned@gmail.com")
-            (smtpmail-default-smtp-server "smtp.gmail.com")
-            (smtpmail-local-domain "gmail.com")
-            (smtpmail-smtp-user "daniel.guinea.uned")
-            (smtpmail-smtp-server "smtp.gmail.com")
-            (smtpmail-stream-type starttls)
-            (smtpmail-smtp-service 587))))
-#+END_SRC
-
-- Call the above function by asking which account you want to send email from.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun my-mu4e-set-account ()
-"Set the account for composing a message."
-(let* ((account
-     (if mu4e-compose-parent-message
-      (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
-        (string-match "/\\(.*?\\)/" maildir)
-        (match-string 1 maildir))
-       (completing-read (format "Compose with account: (%s) "
-                  (mapconcat #’(lambda (var) (car var))
-                      my-mu4e-account-alist "/"))
-              (mapcar #’(lambda (var) (car var)) my-mu4e-account-alist)
-               nil t nil nil (caar my-mu4e-account-alist))))
-       (account-vars (cdr (assoc account my-mu4e-account-alist))))
-   (if account-vars
-      (mapc #’(lambda (var)
-         (set (car var) (cadr var))) account-vars)
-   (error "No email account found"))))
-#+END_SRC
-
-For this code to run you add a hook for when you want to send an email. This results in Emacs asking you which account to use before you send:
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-hook ‘mu4e-compose-pre-hook ‘my-mu4e-set-account)
-#+END_SRC
-
-** COMMENT Indexing 
-
-From https://github.com/djcb/mu/blob/master/NEWS.org, indexing
-(1) Allow for indexing in the background; see =mu4e-index-update-in-background=.
-(2) Better handle mbsync output in the update buffer
-(3) Add variables =mu4e-index-cleanup= and =mu4e-index-lazy= to enable lazy checking from mu4e; you can sit from mu4e using something like:
-
-DGM sets this to no on 2 march 2019 in an attempt to make things more thorough and read emails in mu4e that I could not originally and that, nonetheless, appeared in =mu=.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq
-  mu4e-index-cleanup nil      ;; don't do a full cleanup check
-  mu4e-index-lazy-check t)    ;; don't consider up-to-date dirs
-#+END_SRC
-
-#+RESULTS:
-: t
-
-** COMMENT Shortcuts 
-Setup some handy shortcuts. You can quickly switch to your Inbox -- press =ji=.  Then, when you want to archive some messages, move them to the 'All Mail' folder by pressing =ma=.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (setq mu4e-maildir-shortcuts
-      '( ("/work/INBOX"                    . ?a)
-         ("/work/[work].Sent Mail"         . ?b)
-         ("/work/[work].Drafts"            . ?c)
-         ("/work/[work].Trash"             . ?d)
-         ("/work/[work].Spam"              . ?e)
-         ("/personal/INBOX"                . ?f)
-         ("/personal/[personal].Sent Mail" . ?g)
-         ("/personal/[personal].Drafts"    . ?h)
-         ("/personal/[personal].Trash"     . ?i)
-         ("/personal/[personal].Spam"      . ?j)
-        ))
-#+END_SRC
-
-#+RESULTS:
-: ((/work/INBOX . 97) (/work/[work].Sent Mail . 98) (/work/[work].Drafts . 99) (/work/[work].Trash . 100) (/work/[work].Spam . 101) (/personal/INBOX . 102) (/personal/[personal].Sent Mail . 103) (/personal/[personal].Drafts . 104) (/personal/[personal].Trash . 105) (/personal/[personal].Spam . 106))
-
-** COMMENT Link behavior
-
-From: https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/
-
-=<tab>= to navigate to links, =<RET>= to open them in browser. =backtab= is not working.
-
-Because I have a plain text file now thanks to Pandoc, this is of no use.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-hook 'mu4e-view-mode-hook
-  (lambda()
-    ;; try to emulate some of the eww key-bindings
-    (local-set-key (kbd "<RET>") 'mu4e~view-browse-url-from-binding)
-    (local-set-key (kbd "<tab>") 'shr-next-link)
-    (local-set-key (kbd "<backtab>") 'shr-previous-link)))
-#+END_SRC
-
-#+RESULTS:
-| (lambda nil (local-set-key (kbd <RET>) 'mu4e~view-browse-url-from-binding) (local-set-key (kbd <tab>) 'shr-next-link) (local-set-key (kbd <backtab>) 'shr-previous-link)) | auto-fill-mode | (lambda nil (set (make-local-variable 'bookmark-make-record-function) 'mu4e-view-bookmark-make-record)) |
-
-** COMMENT Configuring =mu4e= to work with =org=
-- I'm getting org-related errors, so I disable this.
-- At any rate, with this disabled I still can use org-capture with =C-c c=
-- Following [[/media/dgm/blue/documents/elibrary/computing/Linux/linuxFormat/tips/emacs2-email-video-246February2019.pdf]]
-
-The following sets up the connections in our config: 
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(define-key mu4e-headers-mode-map (kbd "C-c c") 'org-mu4e-store-and-capture)
-(define-key mu4e-view-mode-map (kbd "C-c c") 'org-mu4e-store-and-capture)
-;; store org-mode links to messages
-;; store links to message if in header view, not  to header query
-(setq org-mu4e-link-query-in-headers-mode nil) 
-#+END_SRC
-
-#+RESULTS:
-
-With this, the keys are available in headers-mode and view-mode so you can plan. 
-
-** COMMENT Ambrevar's customization
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun ambrevar/message-fetch-addresses ()
-  "Return a list of (NAME EMAIL) from the message header.
-The \"From\", \"To\", \"Cc\" and \"Bcc\" fields are looked up.
-Addresses in `mu4e-user-mail-address-list' are filtered out.
-Duplicates are removed."
-;;  (require 'cl) ;; already in starter-kit.org
-  (cl-delete-duplicates
-   (seq-remove
-    (lambda (contact) (member (cadr contact) mu4e-user-mail-address-list))
-    (apply 'append
-           (if (eq major-mode 'mu4e-compose-mode)
-               (save-restriction
-                 (message-narrow-to-headers)
-                 (mapcar
-                  (lambda (addr) (mail-extract-address-components (message-fetch-field addr) t))
-                  (seq-filter 'message-fetch-field
-                              '("From" "To" "Cc" "Bcc"))))
-             (unless (buffer-live-p (mu4e-get-headers-buffer))
-               (mu4e-error "no headers buffer connected"))
-             (let ((msg (or (mu4e-message-at-point 'noerror)
-                            (with-current-buffer (mu4e-get-headers-buffer)
-                              ;; When loading messages, point might
-                              ;; not be over a message yet.
-                              (mu4e-message-at-point 'noerror)))))
-               (when msg
-                 (delq nil
-                       (mapcar (lambda (field)
-                                 ;; `mu4e-message-field' returns a list of (NAME . EMAIL).
-                                 (mapcar (lambda (addr) (list (car addr) (cdr addr)))
-                                         (mu4e-message-field msg field)))
-                               '(:from :to :cc :bcc))))))))))
-#+END_SRC
-
-#+RESULTS:
-: ambrevar/message-fetch-addresses
-
-*** COMMENT Trash by Ambrevar
-
-Gmail trash fix.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defvar ambrevar/mu4e-move-to-trash-patterns nil
-  "List of regexps to match for moving to trash instead of deleting them.
-Matches are done against the :maildir field of the e-mail at
-point.  See `ambrevar/mu4e-headers-move-to-trash' and
-`ambrevar/mu4e-view-move-to-trash'.")
-
-(defun ambrevar/mu4e-headers-move-to-trash ()
-  (interactive)
-  (let ((msg-dir (mu4e-message-field (mu4e-message-at-point) :maildir)))
-    (if (not (seq-filter (lambda (re)
-                           (string-match re msg-dir))
-                         ambrevar/mu4e-move-to-trash-patterns))
-        (mu4e-headers-mark-for-delete)
-      (mu4e-mark-set 'move (funcall mu4e-trash-folder (mu4e-message-at-point)))
-      (mu4e-headers-next))))
-
-(defun ambrevar/mu4e-view-move-to-trash ()
-  (interactive)
-  (mu4e~view-in-headers-context
-   (ambrevar/mu4e-headers-move-to-trash)
-   (mu4e~headers-move (or n 1))))
-
-;;; Don't display trashed messages in bookmarks.  This is useful for Gmail where
-;;; the "delete" flag is not used.
-(defvar ambrevar/mu4e-trash-folders nil
-  "List of trash folders to filter out from bookmarks.")
-
-;; Do this after setting `ambrevar/mu4e-trash-folders'.
-(dolist (bookmark mu4e-bookmarks)
-  ;; TODO: Why mu4e-bookmark-query does not work here?
-  (setf (car bookmark) (concat  (mapconcat (lambda (s) (format "NOT maildir:\"%s\" and " s))
-                                           ambrevar/mu4e-trash-folders "")
-                                (car bookmark))))
-#+END_SRC
-
-*** COMMENT Github
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun ambrevar/message-github ()
-  "When replying to a github message, clean up all bogus recipients.
-This function could be useful in `mu4e-compose-mode-hook'."
-  (interactive)
-  (let ((to (message-fetch-field "To")))
-    (when (and to
-               (string-match (rx "@reply.github.com" string-end) (cadr (mail-extract-address-components to))))
-      (dolist (hdr '("To" "Cc" "Bcc"))
-        (let ((addr (message-fetch-field hdr))
-              recipients
-              bogus-recipients
-              clean-recipients)
-          (when (stringp addr)
-            (setq recipients (mail-extract-address-components addr t)
-                  bogus-recipients (message-bogus-recipient-p addr))
-            (when bogus-recipients
-              (setq clean-recipients (seq-difference recipients bogus-recipients
-                                                     (lambda (addrcomp addr)
-                                                       (string= (cadr addrcomp) addr))))
-              ;; See `message-simplify-recipients'.
-              (message-replace-header
-               hdr
-               (mapconcat
-                (lambda (addrcomp)
-                  (if (and message-recipients-without-full-name
-                           (string-match
-                            (regexp-opt message-recipients-without-full-name)
-                            (cadr addrcomp)))
-                      (cadr addrcomp)
-                    (if (car addrcomp)
-                        (message-make-from (car addrcomp) (cadr addrcomp))
-                      (cadr addrcomp))))
-                clean-recipients
-                ", "))))))
-      (message-sort-headers)
-      ;; Delete signature if any.
-      (delete-region (save-excursion
-                       (message-goto-signature)
-                       (unless (eobp)
-                         (forward-line -1))
-                       (point))
-                     (point-max))
-      ;; Deleting trailing blank lines.
-      (save-excursion
-        (goto-char (point-max))
-        (delete-blank-lines)
-        (delete-blank-lines)))))
-(add-hook 'mu4e-compose-mode-hook 'ambrevar/message-github)
-#+END_SRC
-
-#+RESULTS:
-| ambrevar/message-github | (lambda nil (local-set-key (kbd C-c C-w) #'my-mu4e-choose-signature)) |
-
-*** Contacts
-
-**** TODO COMMENT Don't duplicate contacts.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (defun ambrevar/mu4e-contact-dwim ()
-    "Return a list of (NAME . ADDRESS).
-If point has an `email' property, move it to the front of the list.
-Addresses in `mu4e-user-mail-address-list' are skipped."
-    (let ((result (ambrevar/message-fetch-addresses))
-          (message org-store-link-plist))
-      ;; Move contact at point to front.
-      (let ((email-at-point (get-text-property (point) 'email))
-            (contacts result))
-        (when email-at-point
-          (while contacts
-            (if (not (string= (cadr (car contacts)) email-at-point))
-                (setq contacts (cdr contacts))
-              (setq result (delete (car contacts) result))
-              (push (car contacts) result)
-              (setq contacts nil)))))
-      result))
-
-  (defun ambrevar/org-contacts-template-name (&optional return-value)
-    "Like `org-contacts-template-name' for mu4e."
-    (or (car (car (ambrevar/mu4e-contact-dwim)))
-        return-value
-        "%^{Name}"))
-  ;; commented by dgm until i learn how to use contacts with org
-  ;; (defun ambrevar/org-contacts-template-email (&optional return-value)
-  ;;   "Like `org-contacts-template-name' for mu4e."
-  ;;   (or (cadr (car (ambrevar/mu4e-contact-dwim)))
-  ;;       return-value
-  ;;       (concat "%^{" org-contacts-email-property "}p")))
-  ;; (add-to-list 'org-capture-templates
-  ;;              `("c" "Add e-mail address to contacts" entry (file+headline ,(car org-contacts-files) "Contacts")
-  ;;                "* %(ambrevar/org-contacts-template-name)
-  ;; :PROPERTIES:
-  ;; :EMAIL: %(ambrevar/org-contacts-template-email)
-  ;; :END:")))
-#+END_SRC
-
-*** COMMENT Kill-ring
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun ambrevar/mu4e-kill-ring-save-message-id (&optional msg)
-  "Save MSG's \"message-id\" field to the kill-ring.
-If MSG is nil, use message at point."
-  (interactive)
-  (kill-new (mu4e-message-field (or msg (mu4e-message-at-point)) :message-id)))
-#+END_SRC
-
-#+RESULTS:
-: ambrevar/mu4e-kill-ring-save-message-id
-
-*** COMMENT mu4e-conversation
-
-De-activated on 4 august by DGM as =mu4e-conversation= was already giving me problems. Plus my new setup with  =mbsync= might be incompatible with this.
- 
-Check this as well: http://cestlaz.github.io/posts/using-emacs-49-mu4e-conversation/#.W4xUEK0yreQ
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun ambrevar/mu4e-headers ()
-  "Like `mu4e' but show the header view.
-Default to unread messages if the header buffer does not already exist."
-  (interactive)
-  (mu4e~start)
-  (if (get-buffer "*mu4e-headers*" )
-      (switch-to-buffer "*mu4e-headers*")
-    (mu4e-headers-search "flag:unread AND NOT flag:trashed")))
-
-(with-eval-after-load 'mu4e
-  ;; mu4e-conversation must be enabled here.
-  ;; REVIEW: https://github.com/djcb/mu/issues/1258
-  (when (require 'mu4e-conversation nil t)
-    (global-mu4e-conversation-mode)
-    (add-hook
-     'mu4e-conversation-after-send-hook
-     (lambda ()
-       (let ((mu4e-get-mail-command "offlineimap"))
-         (mu4e-update-mail-and-index 'run-in-background))))
-    (add-hook 'mu4e-view-mode-hook 'auto-fill-mode)))
-(autoload 'ambrevar/mu4e-headers "mu4e")
-#+END_SRC
-#+RESULTS:
-
-**** make tree view the default
-Tip in "mu4e-conversation: Single buffer full-thread display to make e-mails great again" on Reddit.
-
-However, I've realized that if I enable this, my =%a= in the capture template stops working on emails... This happened until ambrevar fixed it after I reported the bug. See [[here]]
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-conversation-print-function 'mu4e-conversation-print-tree)
-#+END_SRC
-
-#+RESULTS:
-: mu4e-conversation-print-tree
-
-**** Headers
-
-Don't refresh so that we don't lose the current filter upon, e.g. reading e-mails.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq  mu4e-headers-auto-update nil)
-;; (add-hook 'mu4e-index-updated-hook 'mu4e-headers-do-auto-update) ;; updated it says...
-#+END_SRC
-
-#+RESULTS:
-
-**** Default reply addresses
-
-Currently, by default =mu4e-conversation= replies to all. I want to be more conservative. Ideally, I would like to be able to choose whether to reply to all or not and never to reply to self but I don't know how to accomplish it.
-
-I've tried the following but it is not working.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq mu4e-conversation--draft-reply-all nil)
-#+END_SRC
-
-#+RESULTS:
-
-**** A bug in mu4e/mu4e-conversation
-
-Reported here:
-
-https://www.reddit.com/r/emacs/comments/aqhtvf/clash_between_tree_view_of_mu4econversation_and_a/
-
-Indeed, `org-mu4e-store-link` won't do anything if current mode is not either `mu4e-headers-mode` or `mu4e-view-mode` (see code above). Because this function will always be called from a "mu4e" point of view, I suggest changing the second condition to `t` so that it always runs:
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun org-mu4e-store-link ()
-  "Store a link to a mu4e query or message."
-  (cond
-    ;; storing links to queries
-    ((eq major-mode 'mu4e-headers-mode)
-      (let* ((query (mu4e-last-query))
-	      desc link)
-	(org-store-link-props :type "mu4e" :query query)
-	(setq
-	  desc (concat "mu4e:query:" query)
-	  link desc)
-	(org-add-link-props :link link :description desc)
-	link))
-      ;; storing links to messages
-    (t
-      (let* ((msg  (mu4e-message-at-point))
-	     (msgid   (or (plist-get msg :message-id) "<none>"))
-	     link)
-       (org-store-link-props :type "mu4e" :link link
-			     :message-id msgid)
-       (setq link (concat "mu4e:msgid:" msgid))
-       (org-add-link-props :link link
-			   :description (funcall org-mu4e-link-desc-func msg))
-       link))))
-
-(org-add-link-type "mu4e" 'org-mu4e-open)
-(add-hook 'org-store-link-functions 'org-mu4e-store-link)
-#+END_SRC
-
-* COMMENT Settings by the great Martin Albrecth
-
-https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
-
-** COMMENT Contacts
-
-Handling contacts semi-automagically is one of mu4e’s big selling points to me. The functions below make it more automagic.
-
-My shitty regexp for detecting e-mail addresses
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defconst malb/email-regexp "<?\\([^ ]+@[^ ]+\.[^ >]+\\)>?")
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun malb/extract-email (str)
-  ;; return last sub-string looking like an email address
-  (let ((tokens (reverse (split-string-and-unquote str)))
-        (match))
-    (dolist (token tokens)
-      (string-match malb/email-regexp token)
-      (setq match (or match (match-string 1 token))))
-    match))
-#+END_SRC
-
-*** COMMENT Canonicalisation
-
-A table of canonical names for people who cannot seem to fix their headers …
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defcustom malb/mu4e-name-replacements nil
-  "replacement names from e-mail addresses"
-  :type '(list :type string)
-  :group 'malb)
-#+END_SRC
-
-- My uni likes “Lastname, Firstname (Year)” which is weird, so we fix it.
-- Some people like to YELL their LASTNAME and then write the first name, we also canonicalise that
-- Some people like to send incomplete data, so we maintain a local replacement list
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun malb/canonicalise-contact-name (email  &optional name nick)
-  ""
-  (let* ((name (or name ""))
-         (case-fold-search nil)
-         ;; look up email address and use entry if found
-         (candidate (if nick (caddr (assoc (downcase email) malb/mu4e-name-replacements))
-                      (cadr (assoc (downcase email) malb/mu4e-name-replacements)))))
-    (if candidate
-        candidate
-      (progn
-        ;; deal with YELL’d last names
-        (setq name (replace-regexp-in-string "^\\(\\<[[:upper:]]+\\>\\) \\(.*\\)" "\\2 \\1" name))
-        ;; Foo, Bar becomes Bar Foo
-        (setq name (replace-regexp-in-string "^\\(.*\\), \\([^ ]+\\).*" "\\2 \\1" name))
-        ;; foo bar becomes Foo Bar
-        (setq name (capitalize name))))))
-#+END_SRC
-
-A function to add new replacements.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun malb/add-mu4e-name-replacement ()
-  (interactive)
-  (let* ((email (helm-read-string "E-mail: " (downcase (get-text-property (point) 'email))))
-         (name  (helm-read-string "Name: "
-                                  (malb/canonicalise-contact-name email
-                                                                  (get-text-property (point) 'long))))
-         (nick  (helm-read-string "Nick: " (replace-regexp-in-string "(.*) " "\\1" name))))
-    (add-to-list 'malb/mu4e-name-replacements (list email name nick) t)
-    (customize-save-variable 'malb/mu4e-name-replacements malb/mu4e-name-replacements)))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(bind-key "N" #'malb/add-mu4e-name-replacement mu4e-view-mode-map)
-#+END_SRC
-
-Canonicalise contacts as they appear from mu4e.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun malb/mu4e-contact-rewrite-function (contact)
-  (let* ((email (downcase (plist-get contact :mail)))
-         (name (if (equal (plist-get contact :name) email)
-                   nil
-                 (plist-get contact :name)))
-         (case-fold-search t))
-    (plist-put contact :name (malb/canonicalise-contact-name email name))
-    contact))
-
-(setq mu4e-contact-rewrite-function #'malb/mu4e-contact-rewrite-function)
-#+END_SRC
-
-Ignore some e-mail addresses when auto completing:
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq mu4e-compose-complete-ignore-address-regexp (rx  (or (seq "no" (zero-or-one "-") "reply")
-                                                           (seq "replyto-" (one-or-more char) "@plus.google.com")
-                                                           (seq "@" (one-or-more char) ".twitter.com")
-                                                           (seq "do-not-reply" (zero-or-more char) "@")
-                                                           (seq "bounce-" (one-or-more char) "@"))))
-#+END_SRC
-
-Extract a pretty-ish list of contacts from an e-mail.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun malb/extract-contacts (fields)
-  "Return a list of 'name <email>' entries."
-  (let (addresses
-        point-end-of-line
-        (case-fold-search t)
-        (search-regexp (mapconcat (lambda (arg) (concat "^" arg ": *"))
-                                  fields "\\|")))
-
-    ;; extract addresses
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward search-regexp nil t)
-        (save-excursion
-          (setq point-end-of-line (re-search-forward "$")))
-        (setq addresses (append addresses
-                                (mail-header-parse-addresses
-                                 (buffer-substring-no-properties (point) point-end-of-line))))))
-    (setq addresses (mapcar (lambda (address)
-                              (format "\"%s\" <%s>"
-                                      (malb/canonicalise-contact-name (car address) (cdr address))
-                                      (car address)))
-                            addresses))))
-#+END_SRC
-
-The following is useful in e-mail templates
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun malb/get-names-from-fields (fields)
-  (let (contacts
-        ret
-        point-end-of-line
-        (search-regexp (mapconcat (lambda (arg)
-                                    (concat "^" arg ": "))
-                                  fields "\\|"))
-        (case-fold-search t))
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward search-regexp nil t)
-        (save-excursion
-          (setq point-end-of-line (re-search-forward "$")))
-        (setq contacts (append contacts
-                               (mail-header-parse-addresses
-                                (buffer-substring-no-properties (point)
-                                                                point-end-of-line)))))
-      (dolist (contact contacts)
-        (let ((name (malb/canonicalise-contact-name (car contact) (cdr contact) t)))
-          ;; extract first name
-          (when (string-match "\\([^ ,]+\\)" name)
-            (push (match-string 1 name) ret))))
-      (if ret (string-join (nreverse ret) ", ") ret "¿qué tal?"))))
-#+END_SRC
-
-A shortcut:
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun malb/get-names-from-to-field ()
-  (interactive)
-  (malb/get-names-from-fields '("To")))
-#+END_SRC
-
-*** COMMENT Rearrange To and CC
-
-Use Helm to re-arrange recipients of an e-mail. I often get e-mail from Bob with Charley in CC which prompts me to send an e-mail to Charley with Bob in CC.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun malb/helm-reorder-recipients ()
-  "Re-distribute addresses to To: and CC: fields."
-  (interactive)
-  (let* ((search-regexp "^to: *\\|^cc: *")
-         (addresses (malb/extract-contacts '("to" "cc")))
-         (case-fold-search t)
-         to cc)
-
-    ;; ask user to split into To and CC
-    (setq to (helm :sources (helm-build-sync-source "To:"
-                              :candidates addresses
-                              :action  '(("Select" . (lambda (x) (helm-marked-candidates)))
-                                         ("Ignore" . (lambda (x)))))))
-
-    (dolist (address to)
-      (setq addresses (delete address addresses)))
-
-    (if addresses
-        (setq cc (helm :sources (helm-build-sync-source "CC:"
-                                  :candidates addresses
-                                  :action  '(("Select" . (lambda (x) (helm-marked-candidates)))
-                                             ("Ignore" . (lambda (x))))))))
-
-    ;; Replace To: and CC: fields
-    (save-excursion
-      (goto-char (point-min))
-
-      (while (re-search-forward search-regexp nil t)
-        (kill-whole-line))
-
-      (message-goto-from)
-
-      (progn (newline)
-             (insert "To: ")
-             (insert (mapconcat #'identity to ", ")))
-      (if cc (progn (newline)
-                    (insert "Cc: ")
-                    (insert (mapconcat #'identity cc ", ")))))))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp :tangle no
-
-(bind-key "C-c ]" #'malb/helm-reorder-recipients mu4e-compose-mode-map)
-
-#+END_SRC
-
-*** COMMENT Contact Look up
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun malb/fullcontact ()
-  (interactive)
-  (let* ((email (replace-regexp-in-string "<\\(.*?\\)>" "\\1" (thing-at-point 'email)))
-         (path (expand-file-name "fullcontact.py" user-emacs-directory)))
-    (if email
-        (let ((msg (shell-command-to-string (format "PYTHONIOENCODING=utf8 python %s -e %s" path email))))
-          (message "%s" msg)))))
-
-(bind-key "@" #'malb/fullcontact mu4e-view-mode-map)
-#+END_SRC
-
-** COMMENT Searching
-A helm menu for contacts, based on ([[http://kitchingroup.cheme.cmu.edu/blog/2015/03/14/A-helm-mu4e-contact-selector/][source]])
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun malb/helm-mu-contacts (arg)
-  "Helm interface to e-mail addresses.
-
-When ARG equals then the persistent action is search, otherwise
-it is to insert the contact.
-"
-  (interactive "p")
-
-  (if (not mu4e~contacts)
-      (progn
-        ;; request contacts
-        (mu4e~request-contacts)
-        (let ((i 0))
-          ;; sleep for at most 2 seconds to wait for contacts to be filed
-          (while (and (not mu4e~contacts) (> 2 i))
-            (sleep-for 1)
-            (+ i 1)))))
-
-  (let ((malb/helm-mu-actions
-         '(("Insert" . (lambda (x)
-                         (insert (mapconcat 'identity
-                                            (helm-marked-candidates) ","))))
-           ("Find messages (combine multiple with OR)" .
-            (lambda (x)
-              (mu4e-headers-search
-               (format "contact:%s"
-                       (mapconcat 'malb/extract-email (helm-marked-candidates) " OR ")))))
-           ("Copy to clipboard" . (lambda (x)
-                                    (kill-new (mapconcat 'identity
-                                                         (helm-marked-candidates) ","))))
-           ("Google search" . (lambda (x) (helm-google (replace-regexp-in-string
-                                                        (format "^\\(.*\\) %s" malb/email-regexp) "\\1" x))))
-
-           ("Find messages (combine multiple with AND)" .
-            (lambda (x)
-              (mu4e-headers-search
-               (format "contact:%s"
-                       (mapconcat 'malb/extract-email (helm-marked-candidates) " AND ")))))
-           )))
-
-    (helm :sources (helm-build-sync-source "E-mail address candidates"
-                     :candidates  (append
-                                   ;; mu contacts
-                                   (loop for contact being the hash-key of mu4e~contacts
-                                         collect (cons contact contact)))
-                     :action  (cond ((equal arg 4) (cons (cadr malb/helm-mu-actions)
-                                                         (cons (car malb/helm-mu-actions)
-                                                               (cddr  malb/helm-mu-actions))))
-                                    (t malb/helm-mu-actions))))))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(key-chord-define mu4e-compose-mode-map ",," #'malb/helm-mu-contacts)
-(bind-key "C-c [" #'malb/helm-mu-contacts mu4e-compose-mode-map)
-#+END_SRC
-
-** COMMENT Viewing
-
-Use =<TAB>= to preview messages and =q= to close previews.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(require 'mu4e-view)
-(require 'mu4e-headers)
-
-(defun malb/preview-message ()
-  (interactive)
-  (mu4e-headers-view-message)
-  (sleep-for 0.1) ;; this is a HACK
-  (select-window (previous-window)))
-
-;; based on (mu4e-select-other-view)
-(defun malb/close-message-view ()
-  (interactive)
-  (let* ((other-buf
-	   (cond
-	     ((eq major-mode 'mu4e-headers-mode)
-	       (mu4e-get-view-buffer))
-	     ((eq major-mode 'mu4e-view-mode)
-	       (mu4e-get-headers-buffer))))
-	  (other-win (and other-buf (get-buffer-window other-buf))))
-    (if (window-live-p other-win)
-      (progn
-          (select-window other-win)
-          (sleep-for 0.1)
-          (mu4e~view-quit-buffer))
-      (mu4e~headers-quit-buffer))))
-
-(bind-key "<tab>" #'malb/preview-message mu4e-headers-mode-map)
-(bind-key "q" #'malb/close-message-view mu4e-headers-mode-map)
-(bind-key "z" #'malb/close-message-view mu4e-headers-mode-map)
-#+END_SRC
-
-Visual-line mode all the way.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(bind-key "<home>" #'beginning-of-visual-line mu4e-view-mode-map)
-(bind-key "<end>" #'end-of-visual-line mu4e-view-mode-map)
-#+END_SRC
-
-Headers to show in header view.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq mu4e-headers-fields '((:human-date . 10)
-                            (:flags . 4)
-                            (:mailing-list . 16)
-                            (:from . 22)
-                            (:to . 22)
-                            (:subject)))
-#+END_SRC
-
-Use imagemagick, if available
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(when (fboundp 'imagemagick-register-types)
-  (imagemagick-register-types))
-#+END_SRC
-
-View e-mails with width restriction, but wider for HTML
-
-DGM, 4 nov 2020: (set-fill-column 72) changed to (set-fill-column 80)
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun malb/mu4e-view-mode-hook ()
-  "View e-mails with width restriction, but wider for HTML."
-  (if (boundp 'msg)
-      (let* ((txt (mu4e-message-field msg :body-txt))
-             (html (mu4e-message-field msg :body-html)))
-        (cond
-         ((and (> (* mu4e-view-html-plaintext-ratio-heuristic
-                     (length txt)) (length html))
-               (or (not mu4e-view-prefer-html) (not html)))
-          (set-fill-column 80))
-         (t
-          (set-fill-column 120))))
-    (set-fill-column 80))
-  (visual-line-mode 1))
-  ;;(visual-fill-column-mode 1))  dgm 22 dic 2020
-
-(add-hook 'mu4e-view-mode-hook #'malb/mu4e-view-mode-hook)
-#+END_SRC
-
-#+RESULTS:
-| malb/mu4e-view-mode-hook | (closure (t) nil (set (make-local-variable 'bookmark-make-record-function) 'mu4e-view-bookmark-make-record)) |
-
-Set higher contrast.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq shr-color-visible-luminance-min 80)
-;; (setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
-#+END_SRC
-
-** COMMENT Actions
-
-Action to search messages by/to sender.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun malb/search-for-sender (msg)
-  "Search for messages sent by the sender of the message at point."
-  (mu4e-headers-search
-   (concat "from:" (cdar (mu4e-message-field msg :from)))))
-
-(defun malb/search-for-sender-extended (msg)
-  "Search for messages sent by the sender of the message at point."
-  (mu4e-headers-search
-   (concat "from:"  (mu4e-headers-search (cdar (mu4e-message-field msg :from)))
-           "OR to:" (mu4e-headers-search (cdar (mu4e-message-field msg :from)))
-           "OR cc:" (mu4e-headers-search (cdar (mu4e-message-field msg :from))))))
-
-(add-to-list 'mu4e-view-actions
-             '("from 🔍" . malb/search-for-sender) t)
-(add-to-list 'mu4e-headers-actions
-             '("from 🔍" . malb/search-for-sender) t)
-
-;; (add-to-list 'mu4e-view-actions
-;;              '("sender search" . malb/search-for-sender-extended) t)
-#+END_SRC
-
-Action to search messages involving all correspondents.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun malb/find-correspondence (msg)
-  "Find messages involving all correspondents."
-  (let ((addresses (append (mapcar (lambda (x) (cdr x))
-                                   (mu4e-message-field msg :to))
-                           (mapcar (lambda (x) (cdr x))
-                                   (mu4e-message-field msg :cc))
-                           (mapcar (lambda (x) (cdr x))
-                                   (mu4e-message-field msg :from)))))
-    (helm :sources (helm-build-sync-source "Filter candidates:"
-                     :candidates addresses
-                     :after-init-hook (lambda () (with-helm-buffer
-                                                   (run-at-time 0.25 nil #'helm-mark-all)))
-                     :action '(("Filter" . (lambda (x) (setq addresses (helm-marked-candidates))))
-                              ("Use all" . (lambda (x))))))
-    (mu4e-headers-search
-     (format "contact:%s"
-             (mapconcat 'identity addresses " AND ")))))
-
-(add-to-list 'mu4e-view-actions
-             '("Contact 🔍" . malb/find-correspondence) t)
-
-(add-to-list 'mu4e-headers-actions
-             '("Contact 🔍" . malb/find-correspondence) t)
-#+END_SRC
-
-DWIM action. ~malb/mu4e-dwim-actions~ is a list of triples ~("from regexp" "subject regexp" (lambda (msg) …))~ where the lambda is executed whenever both regexps match. Processing does not stop after the first match.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq malb/mu4e-dwim-actions nil)
-
-(defun malb/mu4e-dwim-action (msg)
-  (let  ((from (cdr (car (mu4e-message-field msg :from))))
-         (subject (mu4e-message-field msg :subject)))
-    (dolist (action malb/mu4e-dwim-actions)
-      (let ((from-regexp (car action))
-            (subject-regexp (cadr action))
-            (f (caddr action)))
-        (when (and
-               (string-match from-regexp from)
-               (string-match subject-regexp subject))
-          (funcall f msg))))))
-
-(add-to-list 'mu4e-view-actions
-             '("dwim" . malb/mu4e-dwim-action) t)
-(add-to-list 'mu4e-headers-actions
-             '("dwim" . malb/mu4e-dwim-action) t)
-#+END_SRC
-
-* COMMENT Yasnippet for email composition
-Now that our addresses are canonicalised, I can use those to fill in a few more bits. Given an email starting with “To: John Doe <john@example.com>” there is no point in typing the name “John” again when I do the customary “Hi …,”. Here, YASnippet comes in. YASnippet is a templating system for Emacs inspired by TextMate, which allows to map short sequences of characters to other sequences of characters, potentially by asking for more user input and/or calling some arbitrary Emacs Lisp function. For example, here’s my “hi” template
-
-#+BEGIN_EXAMPLE
-# -*- mode: snippet -*-
-# name: Say "hi"
-# key: Hi
-# --
-Hi ${1:`(malb/yas-get-names-from-to-fields)`},
-
-$0
-
-Cheers,
-Martin
-#+END_EXAMPLE
-
-Using this snippet, typing Hi<Tab> triggers email boilerplate to be inserted, with the cursor eventually placed in the position of $0. The name used in the greeting is computed using the following function:
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun malb/canonicalise-contact-name (email  &optional name nick)
-  ""
-  (let* ((name (or name ""))
-         (case-fold-search nil)
-         ;; look up email address and use entry if found
-         (candidate (if nick (caddr (assoc (downcase email) malb/mu4e-name-replacements))
-                      (cadr (assoc (downcase email) malb/mu4e-name-replacements)))))
-    (if candidate
-        candidate
-      (progn
-        ;; deal with YELL’d last names
-        (setq name (replace-regexp-in-string "^\\(\\<[[:upper:]]+\\>\\) \\(.*\\)" "\\2 \\1" name))
-        ;; Foo, Bar becomes Bar Foo
-        (setq name (replace-regexp-in-string "^\\(.*\\), \\([^ ]+\\).*" "\\2 \\1" name))
-        ;; foo bar becomes Foo Bar
-        (setq name (capitalize name))))))
-#+END_SRC
-
-#+begin_src emacs-lisp :tangle yes
-(defun malb/yas-get-names-from-fields (fields)
-  (let (names
-        ret
-        name
-        point-end-of-line
-        (search-regexp (mapconcat (lambda (arg)
-                                    (concat "^" arg ": "))
-                                  fields "\\|"))
-        (case-fold-search nil))
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward search-regexp nil t)
-        (save-excursion
-          (setq point-end-of-line (re-search-forward "$")))
-        (setq name (buffer-substring-no-properties (point) point-end-of-line))
-        (setq name (split-string name "[^ ]+@[^ ]+," t " ")) ;; split on email@address,
-        (setq names (append names name)))
-      (dolist (name names)
-        (setq name (malb/canonicalise-contact-name name))
-        (if (string-match "\\([^ ,]+\\)" name)
-            (progn
-              (setq name (match-string 1 name))
-              (setq name (capitalize name))
-              (if ret
-                  (setq ret (concat ret ", " name))
-                (setq ret name)))))
-      (if ret ret "¿qué tal?"))))
-
-(defun malb/yas-get-names-from-to-fields ()
-  (interactive)
-  (malb/yas-get-names-from-fields '("To")))
-#+end_src
-
-#+RESULTS:
-: malb/yas-get-names-from-to-fields
-
-Of course, you can create much more elaborate snippets calling all kinds of functions to respond to all kinds of email. Once you created so many snippets that you’re at risk of loosing track, I recommend helm-yasnippet as a nice interactive interface for selecting the right snippet.
 
 * Get the first name of the person you are replying to 
 
@@ -2233,14 +875,14 @@ And not off to customise the reply quote string in mu4e:
 Read https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/#more-1336
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package helm-mu
-  :defer t
-  :config (progn
-            (bind-key "S" #'helm-mu mu4e-main-mode-map)))
+  (use-package helm-mu
+    :defer t
+    :config (progn
+              (bind-key "S" #'helm-mu mu4e-main-mode-map)))
 
-;;(when (reéquire 'helm-mu nil t)
-;;  (dolist (map (list mu4e-headers-mode-map mu4e-main-mode-map mu4e-view-mode-map))
-;;    (define-key map "m" 'helm-mu)))
+  ;;(when (reéquire 'helm-mu nil t)
+  ;;  (dolist (map (list mu4e-headers-mode-map mu4e-main-mode-map mu4e-view-mode-map))
+  ;;    (define-key map "m" 'helm-mu)))
 #+END_SRC
 
 #+RESULTS:
@@ -2271,44 +913,16 @@ Read https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
 #+RESULTS:
 | malb/mu4e-view-mode-hook | (lambda nil (set (make-local-variable 'bookmark-make-record-function) 'mu4e-view-bookmark-make-record)) |
 
-* Fields when composing email
+
+* Fixing header update
 
 #+begin_src emacs-lisp :tangle yes
-(setq mu4e-view-fields '(:from :to :cc :bcc :subject :flags :date :maildir :mailing-list :tags :attachments :signature :decryption))
+
+    
+
 #+end_src
 
 #+RESULTS:
-| :from | :to | :cc | :bcc | :subject | :flags | :date | :maildir | :mailing-list | :tags | :attachments | :signature | :decryption |
-
-* Sort by date
-
-#+begin_src emacs-lisp :tangle yes
-;; (setq mu4e-headers-sort-field :date)
-#+end_src
-
-* See full header
-
-I want to see full From header, not only name
-
-#+begin_src emacs-lisp :tangle yes
-  (setq mu4e-view-show-addresses t)
-#+end_src
-
-#+RESULTS:
-: t
-
-
-* Gnus-based viewer
-
-Creo que no me acaba de gustar cómo se ve (tipo =html=), y como =html= lo puedo recuperar haciendo =a V= o =a E=.
-
-#+begin_src emacs-lisp :tangle no
-(setq mu4e-view-use-gnus t)
-#+end_src
-
-#+RESULTS:
-: t
-
 
 * Provide 
 
@@ -2327,4 +941,3 @@ Creo que no me acaba de gustar cómo se ve (tipo =html=), y como =html= lo puedo
 
 #+RESULTS: message-line
 : Starter Kit User Mu4e File loaded.
-

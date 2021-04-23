@@ -220,7 +220,7 @@ doesn't work.
       (python . t)
       (js . t)
       (haskell . t)
-      ;;     (stata . t)
+     ;; (stata . t)
       (shell . t)
       (latex . t)
       (ledger . t)
@@ -319,10 +319,11 @@ DGM: I've commented it out because I move my work in Stata from ESS to =ado-mode
 
 
 * Bill Rising's =ado-mode= for Stata
-
+Need to check what's going on with stata in Lenovo.
+  
 https://www.louabill.org/Stata/ado-mode_install.html
 
-#+begin_src emacs-lisp :tangle yes :results silent 
+#+begin_src emacs-lisp :tangle no :results silent 
 (add-to-list 'load-path "/home/dgm/.emacs.d/src/ado-mode/lisp")
 (require 'ado-mode)
 #+end_src

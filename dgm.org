@@ -1552,65 +1552,17 @@ After updating packages, this returns error.
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23880 21520 898702 207000) :init (23880 21520 898685 670000) :config (23880 21520 898328 707000) :config-secs (0 0 743 952000) :init-secs (0 0 1485 396000) :use-package-secs (0 0 1735 521000)))
 
-** Font-face setup
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-
-    (defun font-existsp (font)
-      "Check to see if the named FONT is available."
-      (if (null (x-list-fonts font))
-          nil t))
-
-    ;; (font-existsp "Pragmata Pro Mono")
-    ;; (font-existsp "Inconsolata")
-
-    ;; Line-spacing tweak
-    ;; Set this to a different number depending on taste and the font
-    ;; selected. The value can be a integer or decimal number.
-    ;; if integer: it means pixels, added below each line.
-    ;; if float (e.g 0.02): a scaling factor relative to current window's default line height.
-    ;; if nil: add no extra spacing.
-    ;; tuned for Pragmata Pro
-    ;; 0.06 originally
-    (setq-default line-spacing 0.09)
-    (add-to-list 'default-frame-alist '(line-spacing . 0.06))
-
-  ;; Originally height was <156> for Pragmata and 121 for the rest.
-    (set-face-attribute 'default nil :height 180 :font "Pragmata Pro Mono")
-  ;; Originally <Pragmata Pro Mono-16>... don't know why. It also works with ""Pragmata Pro Mono" only
-    (setq default-frame-alist '((font . "Pragmata Pro Mono-18")))
-  
-  ;; https://blog.sumtypeofway.com/posts/emacs-config.html
-  ;; !!! seems to contradict the previous def with height 175... but coincides at 180 and 18 here... investigate further.
-    (set-frame-font "Pragmata Pro Mono-18")
-
-#+END_SRC
-
-#+RESULTS:
-: ((font . Pragmata Pro Mono))
-
-** Customize minibuffer's height
-
-My change relates to height: changed from 2 to 10 in an attempt to raise the minibuffer and be able to see more... but it doesn't work!! 
-
-#+begin_src emacs-lisp :tangle no
-
- (setq minibuffer-frame-alist
-       '((width . 80) (height . 10)))
-
-#+end_src
-
-#+RESULTS:
-: ((width . 80) (height . 10))
-
 ** COMMENT =qutebrowser=
 Originally from https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org with qutebrowser, but too unstable. Changed to chromium
 
 DGM on 29 dic 2018: this is set in =starter-kit-misc.org=
 #+BEGIN_SRC emacs-lisp :tangle no
+
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chromium")
-                                          ;      browse-url-generic-program "qutebrowser")
+                                          ;      browse-url-generic-program
+                            ;      "qutebrowser")
+
 #+END_SRC
 
 #+RESULTS:
@@ -3384,7 +3336,9 @@ If I place this in the =starter-kit-helm.org= file, for some reason, probably be
 
 https://www.emacswiki.org/emacs/BookmarkPlus
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Not working in Ubuntu
+
+#+BEGIN_SRC emacs-lisp :tangle no
   (require 'bookmark+)
 #+END_SRC
 
@@ -3478,9 +3432,11 @@ Originally here:
 But then the guy turned it into a minor mode! See
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package vi-tilde-fringe
     :config
-     (global-vi-tilde-fringe-mode 1))
+    (global-vi-tilde-fringe-mode 1))
+
 #+END_SRC
 
 #+RESULTS:
@@ -3494,6 +3450,8 @@ To turn it on automatically only for programming modes:
 Open the customization group buffer:
 
 =M-x customize-group RET vi-tilde-fringe RET=
+
+Alternative proposed by DGM: =git-gutter=. He also says that "hidpi" displa makes these icons really small: these programs are probably usineg icons to display the markers in the fringe.
 
 * Diminishing modes
 
@@ -4150,7 +4108,7 @@ deleted, as they produce an error when exporting to pdf (they are obsolote packa
     "#+LATEX_HEADER: \\usepackage[T1]{fontenc}\n"
     "#+LATEX_HEADER: \\usepackage[maxfloats=48]{morefloats}\n"
     "#+LATEX_HEADER: \\usepackage[authordate, backend=biber, babel=hyphen, bibencoding=inputenc, strict, isbn=false, uniquename=false]{biblatex-chicago}\n"
-    "#+LATEX_HEADER: \\addbibresource{/media/dgm/blue/documents/bibs/socbib.bib}\n"
+    "#+LATEX_HEADER: \\addbibresource{~/documents/bibs/socbib.bib}\n"
     "#+LATEX_HEADER: \\usepackage{booktabs,graphicx,microtype,hyphenat,marginfix,amsmath,amssymb}\n"
     "#+LATEX_HEADER: \\geometry{paperheight=10.5in,paperwidth=8.5in,textwidth=4.375in}\n"
     "#+LATEX_HEADER: \\titleformat{\\part}[display]{\\relax\\itshape\\huge}{}{0pt}{\\huge\\rmfamily\\itshape}[]\n"
@@ -4435,6 +4393,9 @@ The following I've taken away.
   (use-package cheatsheet
     :defer t
     :config
+    (cheatsheet-add :group 'Bindings
+                    :key "C-:"
+                    :description "hidden-mode-line-mode")
     (cheatsheet-add :group 'Bindings
                     :key "describe-personal-keybinding"
                     :description "Personal bindings")
@@ -6319,7 +6280,7 @@ The following I've taken away.
  #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24652 59270 840838 552000) :init (24652 59270 840742 444000) :init-secs (0 0 38 409000) :use-package-secs (0 0 250 363000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24693 39033 506793 743000) :init (24693 39033 506733 749000) :init-secs (0 0 30 960000) :use-package-secs (0 0 211 488000)))
 
 
 * Security: bad-signature issue
@@ -7246,7 +7207,9 @@ Emacs has a packaged called "visual-fill-column" which can center all the conten
 
 We use [[https://github.com/joostkremers/visual-fill-column][visual-fill-column]] to center =org-mode= buffers for a more pleasing writing experience as it centers the contents of the buffer horizontally to seem more like you are editing a document.  This is really a matter of personal preference so you can remove the block below if you don't like the behavior.
 
-#+begin_src emacs-lisp :tangle yes
+Disabled 12 April 2021 as the laptop's screen is too small. 
+
+#+begin_src emacs-lisp :tangle no
 
   (defun efs/org-mode-visual-fill ()
     (setq visual-fill-column-width 80
@@ -7299,54 +7262,59 @@ This enables line wrapping at the 80th column everywhere:
 Now I'm going to try and activate it only in text and programming modes (see https://emacs.stackexchange.com/questions/21624/enable-visual-fill-column-mode-only-in-text-and-programming-mode)
 
 DGM comments out visual line mode on 22 dic 20
-#+begin_src emacs-lisp :tangle yes
-  (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'text-mode-hook 'visual-fill-column-mode)
 
-;;  (add-hook 'prog-mode-hook 'turn-on-visual-line-mode)
-;;  (add-hook 'prog-mode-hook 'visual-fill-column-mode)
+#+begin_src emacs-lisp :tangle yes
+
+  (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+  ;; (add-hook 'text-mode-hook 'visual-fill-column-mode)
+
+  ;;  (add-hook 'prog-mode-hook 'turn-on-visual-line-mode)
+  ;;  (add-hook 'prog-mode-hook 'visual-fill-column-mode)
 
   (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'org-mode-hook 'visual-fill-column-mode)
+  ;; (add-hook 'org-mode-hook 'visual-fill-column-mode)
 
   (add-hook 'TeX-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'TeX-mode-hook 'visual-fill-column-mode)
+  ;; (add-hook 'TeX-mode-hook 'visual-fill-column-mode)
 
   (add-hook 'latex-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'latex-mode-hook 'visual-fill-column-mode)
+  ;; (add-hook 'latex-mode-hook 'visual-fill-column-mode)
 
   (add-hook 'markdown-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'markdown-mode-hook 'visual-fill-column-mode)
+  ;; (add-hook 'markdown-mode-hook 'visual-fill-column-mode)
 
-;;  (add-hook 'ado-mode-hook 'turn-on-visual-line-mode)
-;;  (add-hook 'ado-mode-hook 'visual-fill-column-mode)
+  ;;  (add-hook 'ado-mode-hook 'turn-on-visual-line-mode)
+  ;;  (add-hook 'ado-mode-hook 'visual-fill-column-mode)
 
-;;  (add-hook 'ess-mode-hook 'turn-on-visual-line-mode)
-;;  (add-hook 'ess-mode-hook 'visual-fill-column-mode)
+  ;;  (add-hook 'ess-mode-hook 'turn-on-visual-line-mode)
+  ;;  (add-hook 'ess-mode-hook 'visual-fill-column-mode)
 
-;;  (add-hook 'inferior-ess-mode-hook 'turn-on-visual-line-mode)
-;;  (add-hook 'inferior-ess-mode-hook 'visual-fill-column-mode)
+  ;;  (add-hook 'inferior-ess-mode-hook 'turn-on-visual-line-mode)
+  ;;  (add-hook 'inferior-ess-mode-hook 'visual-fill-column-mode)
 
-;;  (add-hook 'ess-stata-mode-hook 'turn-on-visual-line-mode)
-;;  (add-hook 'ess-stata-mode-hook 'visual-fill-column-mode)
+  ;;  (add-hook 'ess-stata-mode-hook 'turn-on-visual-line-mode)
+  ;;  (add-hook 'ess-stata-mode-hook 'visual-fill-column-mode)
 
-;;  (add-hook 'ledger-mode-hook 'turn-on-visual-line-mode)
-;;  (add-hook 'ledger-mode-hook 'visual-fill-column-mode)
+  ;;  (add-hook 'ledger-mode-hook 'turn-on-visual-line-mode)
+  ;;  (add-hook 'ledger-mode-hook 'visual-fill-column-mode)
 
-;;  (add-hook 'emacs-lisp-mode-hook 'turn-on-visual-line-mode)
-;;  (add-hook 'emacs-lisp-mode-hook 'visual-fill-column-mode)
+  ;;  (add-hook 'emacs-lisp-mode-hook 'turn-on-visual-line-mode)
+  ;;  (add-hook 'emacs-lisp-mode-hook 'visual-fill-column-mode)
 
-;;  (add-hook 'lisp-interaction-mode-hook 'turn-on-visual-line-mode)
-;;  (add-hook 'lisp-interaction-mode-hook 'visual-fill-column-mode)
- 
-;;  (add-hook 'ielm-mode-hook 'turn-on-visual-line-mode)
-;;  (add-hook 'ielm-mode-hook 'visual-fill-column-mode)
+  ;;  (add-hook 'lisp-interaction-mode-hook 'turn-on-visual-line-mode)
+  ;;  (add-hook 'lisp-interaction-mode-hook 'visual-fill-column-mode)
 
-;; don't show bent arrows
+  ;;  (add-hook 'ielm-mode-hook 'turn-on-visual-line-mode)
+  ;;  (add-hook 'ielm-mode-hook 'visual-fill-column-mode)
+
+  ;; don't show bent arrows
   (setq visual-line-fringe-indicators '(nil nil))
+
   #+end_src
 
 #+RESULTS:
+
+
 
 * Transparency
 
@@ -7518,11 +7486,10 @@ Note that the built-in `describe-function' includes both functions and macros. `
   ;; Update panel indicator when workspace changes
   (add-hook 'exwm-workspace-switch-hook #'efs/send-polybar-exwm-workspace)
 
-
 #+end_src
 
 #+RESULTS:
-: #<process redshift<1>>
+| doom-modeline-set-selected-window | efs/send-polybar-exwm-workspace |
 
 
 * Automatically update packages
@@ -7544,7 +7511,7 @@ From [[https://github.com/jwiegley/use-package][GitHub - jwiegley/use-package: A
 
 ** Window config in ESS manual
 
-Tinkered from original in the manual: [[pdfview:/media/dgm/blue/documents/programming/emacs/ESS/ess-manual-18.10.3.pdf::22][/media/dgm/blue/documents/programming/emacs/ESS/ess-manual-18.10.3.pdf]]
+Tinkered from original in the manual: [[pdfview:/home/dgm/documents/programming/emacs/ESS/ess-manual-18.10.3.pdf::22][/home/dgm/documents/programming/emacs/ESS/ess-manual-18.10.3.pdf]]
 
 Works wonderfully but the windows created by the =display-buffer-in-side-window= (i.e., the window with the EXWM-managed process =R_x11= and the window with Help )can not be enlarged with =C-x 1=. You get the following error: 
 
@@ -7776,12 +7743,12 @@ which you might name the-jacobson-memorial-function, due to its brilliance.
 #+begin_src emacs-lisp :tangle yes
 
   (use-package goto-last-change
-    :bind (("C-\;" . goto-last-change)))
+    :bind (("C-\:" . goto-last-change)))
 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24589 22874 454664 70000) :init (24589 22874 454449 693000) :config (24589 22874 454414 599000) :config-secs (0 0 13 38000) :init-secs (0 0 100 983000) :use-package-secs (0 0 412 208000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24694 5 658763 830000) :init (24694 5 658673 840000) :init-secs (0 0 27 35000) :use-package-secs (0 0 206 919000) :config (24694 5 658659 318000) :config-secs (0 0 5 87000)))
 
 
 * iBuffer
@@ -8038,7 +8005,7 @@ Recall to do =M-x all-the-icons-install-fonts= for all the fonts to show up corr
     :commands all-the-icons-install-fonts
     :init
     (unless (find-font (font-spec :name "all-the-icons"))
-      (all-the-icons-install-fons t)))
+      (all-the-icons-install-fonts t)))
 
   (use-package all-the-icons-dired
     :after all-the-icons
@@ -8047,7 +8014,7 @@ Recall to do =M-x all-the-icons-install-fonts= for all the fonts to show up corr
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24655 37889 282588 3000) :init (24655 37889 282570 302000) :init-secs (0 0 40 629000) :use-package-secs (0 0 193 16000) :config (24655 37889 282550 221000) :config-secs (0 0 7 808000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24688 39430 728213 421000) :init (24688 39430 728202 671000) :init-secs (0 0 22 240000) :use-package-secs (0 0 190 506000) :config (24688 39430 728189 513000) :config-secs (0 0 4 318000)))
 
 
 * Window system 
@@ -8164,6 +8131,64 @@ NB: No me funciona... no sé por qué.
 
 #+RESULTS:
 
+* TODO Automatically mount devices: =udiskie=
+
+See how to make this work. It's a system tray program used by DW. 
+
+
+* Hide mode line
+
+From the great Bastien Guerry: https://bzg.fr/en/emacs-hide-mode-line/
+
+#+begin_src emacs-lisp :tangle yes
+
+  (defvar-local hidden-mode-line-mode nil)
+
+  (define-minor-mode hidden-mode-line-mode
+    "Minor mode to hide the mode-line in the current buffer."
+    :init-value nil
+    :global t
+    :variable hidden-mode-line-mode
+    :group 'editing-basics
+    (if hidden-mode-line-mode
+        (setq hide-mode-line mode-line-format
+              mode-line-format nil)
+      (setq mode-line-format hide-mode-line
+            hide-mode-line nil))
+    (force-mode-line-update)
+    ;; Apparently force-mode-line-update is not always enough to
+    ;; redisplay the mode-line
+    (redraw-display)
+    (when (and (called-interactively-p 'interactive)
+               hidden-mode-line-mode)
+      (run-with-idle-timer
+       0 nil 'message
+       (concat "Hidden Mode Line Mode enabled.  "
+               "Use M-x hidden-mode-line-mode to make the mode-line appear."))))
+
+  ;; If you want to hide the mode-line in every buffer by default
+  ;; (add-hook 'after-change-major-mode-hook 'hidden-mode-line-mode)
+
+(global-set-key (kbd "C-\;") 'hidden-mode-line-mode)
+
+#+end_src
+
+#+RESULTS:
+: hidden-mode-line-mode
+
+#+begin_src emacs-lisp :tangle no
+
+  (use-package hide-mode-line
+    :bind ("C-\;"  . hide-mode-line-mode)
+    :init
+    (add-hook 'completion-list-mode-hook #'hide-mode-line-mode))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24695 456 557560 173000) :init (24695 456 557464 819000) :config (24695 456 557451 319000) :config-secs (0 0 4 937000) :init-secs (0 0 49 732000) :use-package-secs (0 0 207 300000)))
+
+
 * Provide
 
 Trying this on 28 dic 2018. I don't really know why it is needed or not.
@@ -8185,7 +8210,3 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 
 #+RESULTS: message-line
 : Starter Kit User File loaded.
-
-
-
-

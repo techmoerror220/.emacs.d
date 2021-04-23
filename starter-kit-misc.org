@@ -39,14 +39,16 @@ Things that don't fit anywhere else.
 *** DW's config 
 
 #+begin_src emacs-lisp :tangle yes
-(use-package minions
-  :hook (doom-modeline-mode . minions-mode)
-  :custom
-  (minions-mode-line-lighter ""))
+
+  (use-package minions
+    :hook (doom-modeline-mode . minions-mode)
+    :custom
+    (minions-mode-line-lighter "[+]"))
+
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24561 44979 945505 280000) :init (24561 44979 945496 735000) :config (24561 44979 945483 2000) :config-secs (0 0 3 757000) :init-secs (0 0 44 834000) :use-package-secs (0 0 110 412000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24699 17168 341320 576000) :init (24699 17168 341315 678000) :init-secs (0 0 36 241000) :use-package-secs (0 0 107 976000) :config (24699 17168 341303 852000) :config-secs (0 0 3 797000)))
 
 ** My mode line 
 https://emacs.stackexchange.com/questions/10033/change-mode-line-buffer-id-face-for-inactive-windows/22682#22682
@@ -55,60 +57,66 @@ It's working. But turned off to try DW's
 
 #+begin_src emacs-lisp :tangle no
 
-;;;; Commented out as Polybar takes care of this now.
-;; (setq display-time-day-and-date t)
-;; (setq display-time-24hr-format t)
-;; (display-time-mode 1)
+  ;;;; Commented out as Polybar takes care of this now.
+  ;; (setq display-time-day-and-date t)
+  ;; (setq display-time-24hr-format t)
+  ;; (display-time-mode 1)
 
-(defvar ml-selected-window nil)
+  (defvar ml-selected-window nil)
 
-(defun ml-record-selected-window ()
-  (setq ml-selected-window (selected-window)))
+  (defun ml-record-selected-window ()
+    (setq ml-selected-window (selected-window)))
 
-(defun ml-update-all ()
-  (force-mode-line-update t))
+  (defun ml-update-all ()
+    (force-mode-line-update t))
 
-(add-hook 'post-command-hook 'ml-record-selected-window)
+  (add-hook 'post-command-hook 'ml-record-selected-window)
 
-(add-hook 'buffer-list-update-hook 'ml-update-all)
+  (add-hook 'buffer-list-update-hook 'ml-update-all)
 
-(defface ml-active-window-face
-   '((t (:foreground "#b58900")))
-   "Face for active buffer identification.")
+  (defface ml-active-window-face
+    '((t (:foreground "#b58900")))
+    "Face for active buffer identification.")
 
-(defface ml-inactive-window-face
-   '((t (:foreground "#696969")))
-   "Face for inactive buffer identification.")
+  (defface ml-inactive-window-face
+    '((t (:foreground "#696969")))
+    "Face for inactive buffer identification.")
 
-(defun ml-propertized-buffer-identification (fmt)
-  "Return a list suitable for `mode-line-buffer-identification'.
-FMT is a format specifier such as \"%12b\".  This function adds
-text properties for face, help-echo, and local-map to it."
-  (list (propertize fmt
-        'face
-          (if (eq ml-selected-window (selected-window))
-            'ml-active-window-face
-            'ml-inactive-window-face)
-        'help-echo
-        (purecopy "Buffer name
-mouse-1: Previous buffer\nmouse-3: Next buffer")
-        'mouse-face 'mode-line-highlight
-        'local-map mode-line-buffer-identification-keymap)))
+  (defun ml-propertized-buffer-identification (fmt)
+    "Return a list suitable for `mode-line-buffer-identification'.
+  FMT is a format specifier such as \"%12b\".  This function adds
+  text properties for face, help-echo, and local-map to it."
+    (list (propertize fmt
+                      'face
+                      (if (eq ml-selected-window (selected-window))
+                          'ml-active-window-face
+                        'ml-inactive-window-face)
+                      'help-echo
+                      (purecopy "Buffer name
+  mouse-1: Previous buffer\nmouse-3: Next buffer")
+                      'mouse-face 'mode-line-highlight
+                      'local-map mode-line-buffer-identification-keymap)))
 
-(setq-default mode-line-buffer-identification
-  '(:eval (ml-propertized-buffer-identification "%12b")))
+  (setq-default mode-line-buffer-identification
+                '(:eval (ml-propertized-buffer-identification "%12b")))
+
+  (defun dgm/send-polybar-hook (module-name hook-index)
+    (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
+
+  (defun dgm/send-polybar-exwm-workspace () 
+    (dgm/send-polybar-hook "exwm-workspace" 1))
 
 #+end_src
 
 #+RESULTS:
-| :eval | (ml-propertized-buffer-identification %12b) |
+: dgm/send-polybar-exwm-workspace
 
 ** DW's modeline config with doom-modeline
 [[https://github.com/seagle0128/doom-modeline][doom-modeline]] is a very attractive and rich (yet still minimal) mode line configuration for Emacs.  The default configuration is quite good but you can check out the [[https://github.com/seagle0128/doom-modeline#customize][configuration options]] for more things you can enable or disable.
 
 *NOTE:* The first time you load your configuration on a new machine, you'll need to run `M-x all-the-icons-install-fonts` so that mode line icons display correctly.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 
   (use-package doom-modeline
     :init (doom-modeline-mode 1)
@@ -117,34 +125,55 @@ mouse-1: Previous buffer\nmouse-3: Next buffer")
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24654 13256 567196 767000) :init (24654 13256 567165 660000) :config (24654 13256 566642 186000) :config-secs (0 0 11 411000) :init-secs (0 0 1826 802000) :use-package-secs (0 0 2656 87000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24689 35712 304431 34000) :init (24689 35712 304424 302000) :config (24689 35712 304283 121000) :config-secs (0 0 3 727000) :init-secs (0 0 590 463000) :use-package-secs (0 0 904 235000)))
 
 More sophisticated config:
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
 
-(use-package doom-modeline
-  :after eshell     ;; Make sure it gets hooked after eshell
-  :hook (after-init . doom-modeline-init)
-  :custom-face
-  (mode-line ((t (:height 0.85))))
-  (mode-line-inactive ((t (:height 0.85))))
-  :custom
-  (doom-modeline-height 15)
-  (doom-modeline-bar-width 6)
-  (doom-modeline-lsp t)
-  (doom-modeline-github nil)
-  (doom-modeline-mu4e nil)
-  (doom-modeline-irc nil)
-  (doom-modeline-minor-modes t)
-  (doom-modeline-persp-name nil)
-  (doom-modeline-buffer-file-name-style 'truncate-except-project)
-  (doom-modeline-major-mode-icon t)
-  :config
-  (setq doom-modeline-icon t)
-  (column-number-mode t))
+  (use-package doom-modeline
+    :after eshell     ;; Make sure it gets hooked after eshell
+    :hook (after-init . doom-modeline-init)
+    :custom-face
+    (mode-line ((t (:height 1.0)))) ;; 0.95
+    (mode-line-inactive ((t (:height 0.75))))
+    (mode-line-buffer-modified ((t :foreground "orange")))
+    :custom
+    (doom-modeline-height 10)     ;; 15
+    (doom-modeline-bar-width 6)   ;; 6
+    (doom-modeline-lsp t)
+    (doom-modeline-github nil)
+    (doom-modeline-mu4e nil)
+    (doom-modeline-irc nil)
+    (doom-modeline-minor-modes t)
+    (doom-modeline-persp-name nil)
+    (doom-modeline-buffer-file-name-style 'truncate-except-project)
+    (doom-modeline-major-mode-icon t)
+    :config
+    (setq doom-modeline-icon t)
+    (column-number-mode t))
  
 #+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24699 6088 115789 610000) :use-package-secs (0 0 7375 996000) :init (24699 6088 115764 922000) :init-secs (0 0 1873 309000) :config (24699 6088 115747 941000) :config-secs (0 0 1839 697000)))
+
+#+begin_src emacs-lisp :tangle yes
+
+  (defun doom-modeline-conditional-buffer-encoding ()
+    "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
+    (setq-local doom-modeline-buffer-encoding
+                (unless (and (memq (plist-get (coding-system-plist buffer-file-coding-system) :category)
+                                   '(coding-category-undecided coding-category-utf-8))
+                             (not (memq (coding-system-eol-type buffer-file-coding-system) '(1 2))))
+                  t)))
+
+  (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
+
+#+end_src
+
+#+RESULTS:
+| doom-modeline-conditional-buffer-encoding | magit-auto-revert-mode-enable-in-buffers | global-company-mode-enable-in-buffers | doom-modeline-update-buffer-file-icon | activate-default-input-method | git-commit-setup-font-lock-in-buffer | global-vi-tilde-fringe-mode-enable-in-buffers | global-subword-mode-enable-in-buffers | global-undo-tree-mode-enable-in-buffers | global-visual-line-mode-enable-in-buffers | ess-r-package-auto-activate | yas-global-mode-enable-in-buffers | delight-major-mode | global-eldoc-mode-enable-in-buffers | global-font-lock-mode-enable-in-buffers | which-func-ff-hook |
 
 
 ** Color Themes
@@ -179,6 +208,7 @@ If you don't set this up, then =load-theme= does not work.
 New, simplified customization. I leave =(load-theme 'solarized-light t)= as I guess the theme is chosen according to the time.
 
 #+begin_src emacs-lisp :tangle yes
+
   (use-package solarized-theme
     :config 
     (setq solarized-distinct-fringe-background t) ;; make the fringe stand out from the background 
@@ -195,10 +225,11 @@ New, simplified customization. I leave =(load-theme 'solarized-light t)= as I gu
     (setq solarized-height-plus-3 1.0)
     (setq solarized-height-plus-4 1.0)
     (setq x-underline-at-descent-line t))
+
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24463 13727 622135 792000) :init (24463 13727 622118 656000) :config (24463 13727 621806 582000) :config-secs (0 0 9 912000) :init-secs (0 0 628 310000) :use-package-secs (0 0 740 55000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24690 55162 8350 391000) :init (24690 55162 8343 393000) :config (24690 55162 8196 140000) :config-secs (0 0 287 272000) :init-secs (0 0 597 939000) :use-package-secs (0 0 676 471000)))
 
 *** Change theme depending on hour of day
 - From 9 am to 8 pm, light theme. Otherwise, dark theme.
@@ -271,16 +302,27 @@ to the function =get-spaceline-working=
 
 ** Protesilaos Stavrou's themes
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 
-(use-package modus-operandi-theme)
-(use-package modus-vivendi-theme)
-(use-package modus-themes)
+(use-package modus-themes
+  :ensure                         ; omit this to use the built-in themes
+  :init
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-slanted-constructs t
+        modus-themes-bold-constructs nil
+        modus-themes-region 'no-extend)
+
+  ;; Load the theme files before enabling a theme (else you get an error).
+  (modus-themes-load-themes)
+  :config
+  ;; Load the theme of your choice:
+  (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
+  :bind ("<f5>" . modus-themes-toggle))
 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24622 55011 221887 522000) :init (24622 55011 221872 32000) :config (24622 55011 221579 155000) :config-secs (0 0 8 784000) :init-secs (0 0 624 511000) :use-package-secs (0 2 583979 547000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24699 17929 964290 808000) :init (24699 17929 964228 374000) :config (24699 17929 964220 572000) :config-secs (0 2 928481 212000) :init-secs (0 2 928541 941000) :use-package-secs (0 2 928706 561000)))
 
 ** Transparently open compressed files
 #+begin_src emacs-lisp :tangle yes
@@ -472,13 +514,82 @@ From documentation: A string or list of strings specifying switches to be passed
 =-u, -U NUM, --unified[=NUM]= is an option for: "output NUM (default 3) lines of unified context" (man pages for =diff=).
 
 #+begin_src emacs-lisp :tangle yes
+
 (setq diff-switches "-u")
+
 #+end_src
+
+
+* Font-face setup (PragmataPro)
+
+Read:
+
+https://emacs.stackexchange.com/questions/1030/how-can-i-set-different-font-sizes-for-buffers-and-for-the-mode-line
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  ;; (font-family-list) for having all installed fonts
+
+      (defun font-existsp (font)
+        "Check to see if the named FONT is available."
+        (if (null (x-list-fonts font))
+            nil t))
+
+    ;; To change the default font for the current and future frames
+    ;; Affects the height of the mode-line (originally at 156)
+    (set-face-attribute 'default nil :family "Pragmata Pro Mono" :height 180)
+    (set-face-attribute 'fixed-pitch nil :family "Pragmata Pro Mono" :height 180)
+    (set-face-attribute 'variable-pitch nil :family "Pragmata Pro" :height 180)
+
+    ;; Mode-line
+    (set-face-attribute 'mode-line nil :font "Pragmata Pro Mono-14")
+
+    ;; I believe it is not needed.
+    ;; (setq default-frame-alist '((font . "Pragmata Pro Mono-18")))
+
+#+END_SRC
+
+#+RESULTS:
+
+** Line-spacing tweak
+Set this to a different number depending on taste and the font selected. The value can be a integer or decimal number. 
+- If integer :: it means pixels, added below each line.
+- If float :: (e.g 0.02): a scaling factor relative to current window's default line height.
+if nil: add no extra spacing.
+
+Tuned for Pragmata Pro at =0.09=. =0.06= originally
+
+#+begin_src emacs-lisp :tangle yes
+
+    (setq-default line-spacing 0.09)
+    ;; no sé por qué me da error ahora
+    ;; (add-to-list 'default-frame-alist '(line-spacing . 0.06))
+
+#+end_src
+
+#+RESULTS:
+: 0.09
+
+** Customize minibuffer's height
+
+My change relates to height: changed from 2 to 10 in an attempt to raise the minibuffer and be able to see more... but it doesn't work!! 
+
+#+begin_src emacs-lisp :tangle no
+
+ (setq minibuffer-frame-alist
+       '((width . 80) (height . 10)))
+
+#+end_src
+
+#+RESULTS:
+: ((width . 80) (height . 10))
 
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
 (provide 'starter-kit-misc)
+
 #+END_SRC
 
 #+RESULTS:
@@ -488,5 +599,12 @@ From documentation: A string or list of strings specifying switches to be passed
 
 #+source: message-line
 #+begin_src emacs-lisp :tangle yes
+
   (message "Starter Kit Misc loaded.")
+
 #+end_src
+
+
+
+
+
