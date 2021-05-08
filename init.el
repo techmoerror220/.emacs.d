@@ -628,7 +628,7 @@ ARCHIVE is the string name of the package archive.")
       )
 (exwm-enable) ;; initializes EXWM
 
-;;   (start-process-shell-command "xrandr" nil "xrandr --output eDP-1 --mode 1366x768 --pos 1920x312 --rotate normal --output DP-1 --off --output HDMI-1 --off --output DP-2 --off --output HDMI-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal")
+;;   (start-process-shell-command "xrandr" nil "xrandr --output eDP-1 --mode 1366x768 --pos 1920x312 --rotate normal --output DP-1 --off --output HDMI-1 --off --output DP-2 --off --output HDMI-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal");
 
 ;; xrandr commented out as now <autorandr> takes care of all this.
 (when (string= (system-name) "toshiba")
@@ -644,7 +644,7 @@ ARCHIVE is the string name of the package archive.")
 
 (when (string= (system-name) "lenovo")
   (exwm-randr-enable)
-  (start-process-shell-command "xrandr" nil "xrandr --dpi 250 --output eDP-1 --primary --mode 3840x2160 --pos 0x0 --rotate normal")
+  (start-process-shell-command "xrandr" nil "xrandr --dpi 270 --output eDP-1 --primary --mode 3840x2160 --pos 0x0 --rotate normal")
 
   ;; React to display connectivity changes, do initial display update
   (add-hook 'exwm-randr-screen-change-hook #'efs/update-displays)

@@ -2,19 +2,24 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("org-capture-last-stored-marker"
+(("mis-cursos"
+ (filename . "~/documents/proyectos/tiec/code/")
+ (front-context-string . "tiec00_data.do\n ")
+ (rear-context-string . "5-2021 18:36:48 ")
+ (position . 478))
+("org-capture-last-stored-marker"
  (filename . "~/Dropbox/gtd/someday.org")
- (front-context-string . "*** Causal infer")
- (rear-context-string . "ths-programming\n")
- (position . 17184))
+ (front-context-string . "** pedrezuela / ")
+ (rear-context-string . " Places to live\n")
+ (position . 80083))
 ("org-refile-last-stored"
- (filename . "~/Dropbox/gtd/someday.org")
- (front-context-string . "*** Causal infer")
- (rear-context-string . "ths-programming\n")
- (position . 17184))
+ (filename . "~/Dropbox/gtd/gtd.org")
+ (front-context-string . "*** TODO poner n")
+ (rear-context-string . "Econometrics]]\n\n")
+ (position . 46707))
 ("org-capture-last-stored"
- (filename . "~/Dropbox/gtd/notes.org")
- (front-context-string . "** Seminario Fer")
- (rear-context-string . "rg -*-\n\n* Notes\n")
- (position . 33))
+ (filename . "~/Dropbox/gtd/tickler.org")
+ (front-context-string . "** Ricardo ??  \n")
+ (rear-context-string . " -*-\n\n* Tickler\n")
+ (position . 32))
 )

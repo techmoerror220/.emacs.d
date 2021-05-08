@@ -1,3 +1,80 @@
+*** COMMENT Shell pop-up terminal
+
+Its window behavour is crazy, plus I can define an easy shortcut for popping a shell, so I don't see the point.
+
+From http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/. Opens a quick ANSI terminal in the directory of the currently open file.
+
+Code originally by Caolan that made shell-pop a read-only buffer in https://caolan.org/dotfiles/emacs.html. But it had an erratic window behaviour. In the end, I kind of fixed it by using the code in https://www.emacswiki.org/emacs/ShellPop.
+The only issue remaining is that the first time round I call shell-pop it splits the window wrongly. Afterwards, it does it alright.
+
+NOTE: font-lock of the shell-prompt did not work until I bumped onto   https://emacs.stackexchange.com/questions/14876/how-can-i-make-ansi-color-codes-inside-the-prompt-show-up-in-shell-mode
+and I added the bit of code here and
+
+
+~PS1="\[\e[00;32m\]\u\[\e[00m\]@\[\e[00;36m\]\h\[\e[00m\]:\[\e[00;34m\]\w\[\e[00m\]\n\$(printf \"[\[\e[01;31m\]%.*s\[\e[00m\]]\" \$? \$?) \$ "~
+
+in =.bashrc=.
+
+However, to actually get the colors, I followed  http://amitp.blogspot.com/2007/04/emacs-color-in-shell-buffers.html and his choice of colors
+
+DGM 24 April 2021: I disables it as I use =vterm= and =vterm-toggle= now. 
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package shell-pop
+    :defer t
+    :bind ("<s-escape>" . shell-pop)
+    :config
+    ;;  (setq shell-pop-default-directory "/home/dgm")
+    ;; (setq shell-pop-set-internal-mode "shell")
+    ;; (setq shell-pop-set-internal-mode-shell "/bin/bash")
+    (setq shell-pop-set-internal-mode "vterm")
+    (setq shell-pop-set-internal-mode-shell "/bin/bash")
+    (setq shell-pop-set-window-height 30) ;the number for the percentage of the selected window. if 100, shell-pop use the whole of selected window, not spliting.
+    (setq shell-pop-set-window-position "bottom") ;shell-pop-up position. You can choose "top" or "bottom".
+    ;; https://emacs.stackexchange.com/questions/14876/how-can-i-make-ansi-color-codes-inside-the-prompt-show-up-in-shell-mode
+    (set-face-attribute 'comint-highlight-prompt nil
+                        :inherit nil)
+    (setq ansi-color-names-vector ; better contrast colors
+          ["black" "red4" "green4" "yellow4"
+           "blue3" "magenta4" "cyan4" "white"]))
+
+    ;;;;;;;;;;;;;;;;;;;;;; http://amitp.blogspot.com/2007/04/emacs-color-in-shell-buffers.html
+
+  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+  ;; (setq shell-pop-window-size 30)
+  ;;(setq shell-pop-full-span t)
+  ;;(setq shell-pop-window-position "bottom")
+  ;;:config
+  ;;(setq shell-pop-shell-type (quote ("shell" "*shell*" (lambda nil (shell shell-pop-term-shell)))))
+  ;;(setq shell-pop-term-shell "/bin/bash")
+  ;; need to do this manually or not picked up by `shell-pop'
+  ;;(shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
+#+END_SRC
+
+#+RESULTS:
+| ansi-color-for-comint-mode-on | company-mode | flycheck-mode | yas-minor-mode | ess-r-package-activate-directory-tracker |
+
+
+*** COMMENT Start a regular shell at the bottom.
+#+begin_src emacs-lisp  :tangle no
+  ;;(global-set-key (kbd "s--") 'shell)
+#+end_src
+
+#+RESULTS:
+: shell
+
+And open it at the bottom of current window
+
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; (add-to-list 'display-buffer-alist
+  ;;              `(,(rx string-start "*shell*" string-end)
+  ;;               (display-buffer-below-selected)))
+#+END_SRC
+
+#+RESULTS:
+
   ;; Afecta al buffer pero no a la modeline
   ;; (set-frame-font "Pragmata Pro 14")
 
@@ -26,4 +103,3 @@
 
   ;; (font-existsp "Pragmata Pro")
   ;;   (set-frame-font "Pragmata Pro-20" t t))
-

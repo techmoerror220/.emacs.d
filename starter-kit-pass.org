@@ -175,17 +175,24 @@ GnuPG (2.1.5+) and Pinentry (0.9.5+).
 
 - Also, read https://emacs.stackexchange.com/questions/32881/enabling-minibuffer-pinentry-with-emacs-25-and-gnupg-2-1-on-ubuntu-xenial
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
 
-  (use-package pinentry
-    :config
-    (setq epa-pinentry-mode 'loopback)
-    (pinentry-start))
+  ;; (use-package pinentry
+  ;;   :config
+  ;;   (setq epa-pinentry-mode 'loopback)
+  ;;   (pinentry-start))
+
+  ;; DAVIWIL has it like this:
+  ;; Edit: epa-pinentry-mode has been marked obsolete from Emacs 27. Use epg-pinentry-mode instead.
+  ;; (setq epa-pinentry-mode 'loopback)
+  (setq epg-pinentry-mode 'loopback)
+  (pinentry-start)
+
 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24693 27309 163563 437000) :init (24693 27309 163551 767000) :config (24693 27309 163295 853000) :config-secs (0 0 729 409000) :init-secs (0 0 1226 558000) :use-package-secs (0 0 1291 314000)))
+: Pinentry service is already running
 
 
 * pinentry-emacs

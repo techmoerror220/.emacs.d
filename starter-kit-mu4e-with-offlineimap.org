@@ -122,7 +122,7 @@ https://jherrlin.github.io/posts/emacs-mu4e/ for much of this customization.
           mu4e-compose-dont-reply-to-self t
           mu4e-compose-keep-self-cc nil
           mu4e-context-policy 'pick-first
-          mu4e-get-mail-command "mbsync -a"
+          mu4e-get-mail-command "offlineimap"
           mu4e-headers-date-format "%d/%m/%Y %H:%M"
           mu4e-headers-fields
           `((:human-date . 20) ;; alternatively, use :date
@@ -182,7 +182,6 @@ Introduced by DGM on 4 august 2019 following https://www.reddit.com/r/emacs/comm
   ;; Commented out by DGM on 4 august because I am trying to be able to choose where to send from.
   ;;        user-full-name "Daniel Guinea"
   ;;        user-mail-address "daniel.guinea.uned@gmail.com")
-
 #+END_SRC
 
 #+RESULTS:
@@ -197,43 +196,42 @@ Introduced by DGM on 4 august 2019 following https://www.reddit.com/r/emacs/comm
 
   (use-package org-mime
     :after org
-    :defer t
-    :config
-    ;; convert org mode to HTML automatically
-    (setq org-mu4e-convert-to-html t))
+    :defer t)
+
+  ;; convert org mode to HTML automatically
+  (setq org-mu4e-convert-to-html t)
 
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24707 55913 7640 230000) :init (24707 55913 7618 890000) :init-secs (0 0 16 544000) :use-package-secs (0 0 119 609000)))
+: t
 
 ** Signature 
 
 Tip from http://www.macs.hw.ac.uk/~rs46/posts/2014-11-16-mu4e-signatures.html for inserting different signatures
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-
   (defun my/mu4e-choose-signature ()
-      "Insert one of a number of signatures"
-      (interactive)
-      (let ((message-signature
-              (mu4e-read-option "Signature:"
-                '(("formal" .
-                  (concat
-               "Daniel Guinea\n"
-               "Facultad de CC.PP. y Sociología\nUniversidad Nacional de Educación a Distancia (UNED)\nCalle Obispo Trejo 2, Madrid 28040\nemail: daniel.guinea@poli.uned.es\nTel. +34 91 398 9441"))
-                   ("informal" .
-                  "Daniel\n")))))
-        (message-insert-signature)))
+    "Insert one of a number of signatures"
+    (interactive)
+    (let ((message-signature
+            (mu4e-read-option "Signature:"
+              '(("formal" .
+                (concat
+             "Daniel Guinea\n"
+             "Dept. Sociología I\nFacultad de CC.PP. y Sociología\nUniversidad Nacional de Educación a Distancia (UNED)\nCalle Obispo Trejo 2, Madrid 28040\nemail: daniel.guinea@poli.uned.es\nTel. +34 91 398 9441"))
+                 ("informal" .
+                "Daniel\n")))))
+      (message-insert-signature)))
 
-  ;; Now that I am using org mode somehow when composing emails, this keybind is already in use
-  (add-hook 'mu4e-compose-mode-hook
-              (lambda () (local-set-key (kbd "C-c C-w") #'my/mu4e-choose-signature)))
-
+;; Now that I am using org mode somehow when composing emails, this keybind is already in use
+(add-hook 'mu4e-compose-mode-hook
+            (lambda () (local-set-key (kbd "C-c C-w") #'my/mu4e-choose-signature)))
 #+END_SRC
 
 #+RESULTS:
 | lambda | nil | (local-set-key (kbd C-c C-w) #'my/mu4e-choose-signature) |
+
 
 
 * Context feature of =mu4e=
@@ -264,66 +262,63 @@ Note, =mu4e-maildir= takes an actual =filesystem-path=, the other folder names a
                                  (mu4e-message-contact-field-matches msg
                                                                      :from "daniel.guinea.uned@gmail.com")
                                  (mu4e-message-contact-field-matches msg
-                                                                     :cc "daniel.guinea@poli.uned.es")
+                                                                     :to "daniel.guinea@poli.uned.es")
                                  (mu4e-message-contact-field-matches msg
-                                                                     :bcc "daniel.guinea@poli.uned.es")
+                                                                     :from "daniel.guinea@poli.uned.es")
                                  )))
              :vars '(( user-mail-address . "daniel.guinea.uned@gmail.com")
                      ( user-full-name . "Daniel Guinea")
-                     ( mu4e-compose-signature .
-                       (concat
-                        "Daniel Guinea\nFacultad de CC.PP. y Sociología\nUniversidad Nacional de Educación a Distancia (UNED)\nCalle Obispo Trejo 2, Madrid 28040\nemail: daniel.guinea@poli.uned.es\nTel. +34 91 398 9441\n"))
                      (mu4e-compose-format-flowed . t)
-                     (mu4e-sent-folder . "/work/[work].Sent Mail")
-                     (mu4e-drafts-folder . "/work/[work].Drafts")
-                     (mu4e-trash-folder . "/work/[work].Trash")
-                     (mu4e-refile-folder . "/work/[work].All Mail")
-                     (mu4e-maildir-shortcuts . ( ("/work/INBOX"            . ?i)
-                                                 ("/work/[work].Sent Mail" . ?s)
-                                                 ("/work/[work].Drafts"    . ?d)
-                                                 ("/work/[work].Trash"     . ?t)
-                                                 ("/work/[work].All Mail"  . ?a)
-                                                 ("/work/[work].Spam"      . ?b)))
+                     (mu4e-sent-folder . "/[Gmail].Sent Mail")
+                     (mu4e-drafts-folder . "/[Gmail].Drafts")
+                     (mu4e-trash-folder . "/[Gmail].Trash")
+                     (mu4e-refile-folder . "/[Gmail].All Mail")
+                     (mu4e-maildir-shortcuts . ( ("/INBOX"            . ?i)
+                                                 ("/[Gmail].Sent Mail" . ?s)
+                                                 ("/[Gmail].Drafts"    . ?d)
+                                                 ("/[Gmail].Trash"     . ?t)
+                                                 ("/[Gmail].All Mail"  . ?a)
+                                                 ("/[Gmail].Spam"      . ?b)))
                      (mu4e-bookmarks . (
                                         ( :name "Messages with attachment"
-                                          :query "(maildir:/work/INBOX OR maildir:/work/[work].Spam) AND flag:attach"
+                                          :query "(maildir:/INBOX OR maildir:/[Gmail].Spam) AND flag:attach"
                                           :key ?a)
                                         ( :name "Big messages"
-                                          :query "(maildir:/work/INBOX OR maildir:/work/[work].Spam) AND size:5M..500M"
+                                          :query "(maildir:/INBOX OR maildir:/[Gmail].Spam) AND size:5M..500M"
                                           :key ?b)
                                         ( :name "Eurostat"
                                           :key  ?e
-                                          :query "(maildir:/work/INBOX OR maildir:/personal/INBOX OR maildir:/work/[work].Spam OR maildir:/work/[work].Drafts OR maildir:/work/[work].Trash) AND (from:nicoletta.schweikle-hilgner@ec.europa.eu OR from:ESTAT-Microdata-access@ec.europa.eu OR from:estat-microdata-access@ec.europa.eu OR from:Fabienne.MONTAIGNE@ec.europa.eu OR from:Patrick.PILLARD@ec.europa.eu OR from:Karien.Reinig@ec.europa.eu OR from:S-CIRCABC@nomail.ec.europa.eu)")
+                                          :query "(maildir:/INBOX OR maildir:/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/[Gmail].Trash) AND (from:nicoletta.schweikle-hilgner@ec.europa.eu OR from:ESTAT-Microdata-access@ec.europa.eu OR from:estat-microdata-access@ec.europa.eu OR from:Fabienne.MONTAIGNE@ec.europa.eu OR from:Patrick.PILLARD@ec.europa.eu OR from:Karien.Reinig@ec.europa.eu OR from:S-CIRCABC@nomail.ec.europa.eu)")
                                         ( :name "Máster FOL"
                                           :key  ?f
-                                          :query "(maildir:/work/INBOX OR maildir:/work/[work].Spam OR maildir:/work/[work].Drafts OR maildir:/work/[work].Trash) AND (subject:tfm OR subject:TFM OR body:tfm OR body:TFM OR subject:\"trabajo fin de master\" OR body:\"trabajo fin de master\" OR from:\"Ana María González\" OR from:gabriela.topa1@gmail.com OR from:\"Gabriela Topa\" OR from:gtopa@psi.uned.es OR from:\"Máster Formación Profesorado\" OR from:master-formacionprofesorado@adm.uned.es OR from:\"M. Angeles Serrano Garcia\" OR from:maserrano@pas.uned.es OR from:\"M. del Puerto Hojas Rosales\" OR from:mhojas@pas.uned.es OR from:\"Ana María González\" OR from:amgonzalez@edu.uned.es OR subjetc:\"TFM\")")
+                                          :query "(maildir:/INBOX OR maildir:/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/[Gmail].Trash) AND (subject:tfm OR subject:TFM OR body:tfm OR body:TFM OR subject:\"trabajo fin de master\" OR body:\"trabajo fin de master\" OR from:\"Ana María González\" OR from:gabriela.topa1@gmail.com OR from:\"Gabriela Topa\" OR from:gtopa@psi.uned.es OR from:\"Máster Formación Profesorado\" OR from:master-formacionprofesorado@adm.uned.es OR from:\"M. Angeles Serrano Garcia\" OR from:maserrano@pas.uned.es OR from:\"M. del Puerto Hojas Rosales\" OR from:mhojas@pas.uned.es OR from:\"Ana María González\" OR from:amgonzalez@edu.uned.es OR subjetc:\"TFM\")")
                                         (:name "Inbox messages in the last ?x days"
                                                :query ,(lambda () (call-interactively 'work/mu4e-bookmark-num-days-old-query))
                                                :key ?h)
                                         ( :name "Messages with images"
-                                          :query "maildir:/work/INBOX AND mime:image/*"
+                                          :query "maildir:/INBOX AND mime:image/*"
                                           :key ?i)
                                         ( :name "Unread (pending) messages"
-                                          :query "(maildir:/work/INBOX OR maildir:/work/[work].Spam) AND flag:unread AND NOT flag:trashed"
+                                          :query "(maildir:/INBOX OR maildir:/[Gmail].Spam) AND flag:unread AND NOT flag:trashed"
                                           :key ?p)
                                         (:name "Ricardo"
                                                :key  ?r
-                                               :query "(maildir:/work/INBOX OR maildir:/personal/INBOX OR maildir:/work/[work].Spam OR maildir:/personal/[personal].Spam OR maildir:/work/[work].Drafts OR maildir:/personal/[personal].Drafts OR maildir:/work/[work].Trash OR maildir:/personal/[personal].Trash) AND (from:ricardo.mora.villarrubia@gmail.com OR from:ricardo.mora@uc3m.es OR from:ricardo.mora.villarrubia@outlook.com OR from:\"Ricardo Mora\" OR from:ricmora@eco.uc3m.es OR from:\"Adelheid Holl\" OR from:a.holl@csic.es)")
+                                               :query "(maildir:/INBOX OR maildir:/personal/INBOX OR maildir:/[Gmail].Spam OR maildir:/personal/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/personal/[Gmail].Drafts OR maildir:/[Gmail].Trash OR maildir:/personal/[Gmail].Trash) AND (from:ricardo.mora.villarrubia@gmail.com OR from:ricardo.mora@uc3m.es OR from:ricardo.mora.villarrubia@outlook.com OR from:\"Ricardo Mora\" OR from:ricmora@eco.uc3m.es OR from:\"Adelheid Holl\" OR from:a.holl@csic.es)")
                                         ( :name "Sent in last 7 days"
                                           :key  ?s
-                                          :query "maildir:\"/work/[work].Sent Mail\" AND date:7d..now")
+                                          :query "maildir:\"/[Gmail].Sent Mail\" AND date:7d..now")
                                         ( :name "Today's messages"
-                                          :query "(maildir:/work/INBOX OR maildir:/work/[work].Spam) AND date:today..now"
+                                          :query "(maildir:/INBOX OR maildir:/[Gmail].Spam) AND date:today..now"
                                           :key ?t)
                                         (  :name "UNED"
                                            :key  ?u
-                                           :query "(maildir:/work/INBOX OR maildir:/work/[work].Spam OR maildir:/work/[work].Drafts OR maildir:/work/[work].Trash) AND (from:\"Maria Angel\" OR from:departamentos.polisoci@adm.uned.es OR from:secretaria.poli.soci@adm.uned.es OR from:decanato.polisoci@adm.uned.es OR from:negociado-pruebas-presenciales@adm.uned.es OR from:vicepruebas@adm.uned.es OR from:vrector-pruebas-presen@adm.uned.es OR from:coord.pruebas@adm.uned.es OR from:pruebaspresenciales@adm.uned.es OR from:gastosextraordinariospruebas@adm.uned.es OR from:\"Secretaria Docente\" OR from:\"Secretaría Docente\" OR from:secdoc.cee@adm.uned.es OR from:\"MARIA ANGELES RODRIGUEZ SANTOS\" OR from:secretaria-ecoemp@adm.uned.es OR from:\"Secretaría Facultad CC. Economicas\" OR from:secadi.polisoci@adm.uned.es OR from:\"Secadi\" OR from:\"GUADALUPE DAMAS JURADO\" OR from:gdamas@pas.uned.es OR from:llosada@edu.uned.es OR from:egiralde@pas.uned.es OR from:\"MARIA GOMEZ ESCARDA\" OR from:mgomez@poli.uned.es OR from:sociologiauno@adm.uned.es OR from:vrector-profesorado@adm.uned.es OR from:\"Vicerrectorado de Profesorado\" OR from:vrector-gradoyposgrado@adm.uned.es OR from:vadj.grado@adm.uned.es OR from:alba.vrector@adm.uned.es) OR (subject:tfg OR subject:TFG OR body:tfg OR body:TFG OR subject:\"trabajo fin de grado\" OR body:\"trabajo fin de grado\" OR subject:\"/ex.men.*/\" OR body:\"/ex.men.*/\" OR subject:\"sociologia aplicada\" OR body:\"sociologia aplicada\" OR subject:/modelo.*/)")
+                                           :query "(maildir:/INBOX OR maildir:/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/[Gmail].Trash) AND (from:\"Maria Angel\" OR from:departamentos.polisoci@adm.uned.es OR from:secretaria.poli.soci@adm.uned.es OR from:decanato.polisoci@adm.uned.es OR from:negociado-pruebas-presenciales@adm.uned.es OR from:vicepruebas@adm.uned.es OR from:vrector-pruebas-presen@adm.uned.es OR from:coord.pruebas@adm.uned.es OR from:pruebaspresenciales@adm.uned.es OR from:gastosextraordinariospruebas@adm.uned.es OR from:\"Secretaria Docente\" OR from:\"Secretaría Docente\" OR from:secdoc.cee@adm.uned.es OR from:\"MARIA ANGELES RODRIGUEZ SANTOS\" OR from:secretaria-ecoemp@adm.uned.es OR from:\"Secretaría Facultad CC. Economicas\" OR from:secadi.polisoci@adm.uned.es OR from:\"Secadi\" OR from:\"GUADALUPE DAMAS JURADO\" OR from:gdamas@pas.uned.es OR from:llosada@edu.uned.es OR from:egiralde@pas.uned.es OR from:\"MARIA GOMEZ ESCARDA\" OR from:mgomez@poli.uned.es OR from:sociologiauno@adm.uned.es OR from:vrector-profesorado@adm.uned.es OR from:\"Vicerrectorado de Profesorado\" OR from:vrector-gradoyposgrado@adm.uned.es OR from:vadj.grado@adm.uned.es OR from:alba.vrector@adm.uned.es) OR (subject:tfg OR subject:TFG OR body:tfg OR body:TFG OR subject:\"trabajo fin de grado\" OR body:\"trabajo fin de grado\" OR subject:\"/ex.men.*/\" OR body:\"/ex.men.*/\" OR subject:\"sociologia aplicada\" OR body:\"sociologia aplicada\" OR subject:/modelo.*/)")
                                         ( :name "Work-hunt"
                                           :key  ?w
-                                          :query "(maidlir:/work/INBOX OR maildir:/personal/INBOX OR maildir:/work/[work].Spam OR maildir:/personal/[personal].Spam OR maildir:/work/[work].Drafts OR maildir:/personal/[personal].Drafts OR maildir:/work/[work].Trash OR maildir:/personal/[personal].Trash) AND (from:\"Belén Barreiro\" OR from:bbarreiro@40db.es OR from:40db.es OR from:\"Mónica Méndez\" OR from:monica.mendez@cis.es OR from:\"Luis Manuel Ayuso Sanchez\" Or from:luis.ayuso@uma.es OR from:\"Juan Ignacio Martinez Pastor\" OR from:jimartinez@poli.uned.es OR from:ecb@uma.es)")
+                                          :query "(maidlir:/INBOX OR maildir:/personal/INBOX OR maildir:/[Gmail].Spam OR maildir:/personal/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/personal/[Gmail].Drafts OR maildir:/[Gmail].Trash OR maildir:/personal/[Gmail].Trash) AND (from:\"Belén Barreiro\" OR from:bbarreiro@40db.es OR from:40db.es OR from:\"Mónica Méndez\" OR from:monica.mendez@cis.es OR from:\"Luis Manuel Ayus oSanchez\" Or from:luis.ayuso@uma.es OR from:\"Juan Ignacio Martinez Pastor\" OR from:jimartinez@poli.uned.es OR from:ecb@uma.es)")
                                         ( :name "Unread messages"
                                           :key  ?x
-                                          :query "flag:unread AND maildir:/work/INBOX AND NOT flag:trashed")))))
+                                          :query "flag:unread AND maildir:/INBOX AND NOT flag:trashed")))))
            ,(make-mu4e-context
              :name "personal"
              :enter-func (lambda () (mu4e-message "Switch to personal context")
@@ -343,22 +338,21 @@ Note, =mu4e-maildir= takes an actual =filesystem-path=, the other folder names a
                                  (mu4e-message-contact-field-matches msg :bcc "daniel.guinea.martin@gmail.com"))))
              :vars '( (user-mail-address . "daniel.guinea.martin@gmail.com")
                       (user-full-name . "Daniel")
-                      (mu4e-compose-signature .  "Daniel\n")
-                      (mu4e-sent-folder . "/personal/[personal].Sent Mail")
-                      (mu4e-drafts-folder . "/personal/[personal].Drafts")
-                      (mu4e-trash-folder . "/personal/[personal].Trash")
-                      (mu4e-refile-folder . "/personal/[personal].All Mail")
+                      (mu4e-sent-folder . "/personal/[Gmail].Sent Mail")
+                      (mu4e-drafts-folder . "/personal/[Gmail].Drafts")
+                      (mu4e-trash-folder . "/personal/[Gmail].Trash")
+                      (mu4e-refile-folder . "/personal/[Gmail].All Mail")
                       (mu4e-compose-format-flowed . t)
                       (mu4e-maildir-shortcuts . ( ("/personal/INBOX"             . ?i)
-                                                  ("/personal/[personal].Sent Mail" . ?s)
-                                                  ("/personal/[personal].Drafts"    . ?d)
-                                                  ("/personal/[personal].Trash"     . ?t)
-                                                  ("/personal/[personal].All Mail"  . ?a)
-                                                  ("/personal/[personal].Spam"      . ?b)))
+                                                  ("/personal/[Gmail].Sent Mail" . ?s)
+                                                  ("/personal/[Gmail].Drafts"    . ?d)
+                                                  ("/personal/[Gmail].Trash"     . ?t)
+                                                  ("/personal/[Gmail].All Mail"  . ?a)
+                                                  ("/personal/[Gmail].Spam"      . ?b)))
                       (mu4e-bookmarks  .
                                        ((:name "Ave María"
                                                :key  ?m
-                                               :query "(maildir:/work/INBOX OR maildir:/personal/INBOX OR maildir:/work/[work].Spam OR maildir:/personal/[personal].Spam OR maildir:/work/[work].Drafts OR maildir:/personal/[personal].Drafts OR maildir:/work/[work].Trash OR maildir:/personal/[personal].Trash) AND (from:\"Kenedy Alva\" OR from:kenedy@gmail.com OR from:\"Paz Torrente\" OR from:paztorrente@gmail.com OR from:\"Javier Martín\" OR from:javiermartinr@gmail.com OR from:\"Canal de Isabel II\" OR from:comunicaciones.comerciales@canaldeisabelsegunda.es OR from:\"Jazztel\" OR from:att.cliente.jazztel@jazztel.com)")
+                                               :query "(maildir:/INBOX OR maildir:/personal/INBOX OR maildir:/[Gmail].Spam OR maildir:/personal/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/personal/[Gmail].Drafts OR maildir:/[Gmail].Trash OR maildir:/personal/[Gmail].Trash) AND (from:\"Kenedy Alva\" OR from:kenedy@gmail.com OR from:\"Paz Torrente\" OR from:paztorrente@gmail.com OR from:\"Javier Martín\" OR from:javiermartinr@gmail.com OR from:\"Canal de Isabel II\" OR from:comunicaciones.comerciales@canaldeisabelsegunda.es OR from:\"Jazztel\" OR from:att.cliente.jazztel@jazztel.com)")
                                         ( :name "Messages with attachment"
                                           :query "(maildir:/personal/INBOX OR /personal/[Gmail].Spam) AND flag:attach"
                                           :key ?a)
@@ -367,19 +361,19 @@ Note, =mu4e-maildir= takes an actual =filesystem-path=, the other folder names a
                                           :key ?b)
                                         ( :name "Operation D"
                                           :key  ?d
-                                          :query "(maildir:/work/INBOX OR maildir:/personal/INBOX OR maildir:/work/[work].Spam OR maildir:/personal/[personal].Spam OR maildir:/work/[work].Drafts OR maildir:/personal/[personal].Drafts OR maildir:/work/[work].Trash OR maildir:/personal/[personal].Trash) AND (from:\"Paula Zingoni\" OR from:paulazingoni@gmail.com OR from:\"Croydon County\" OR from:\"Family\" OR from:family.croydon.countycourt@justice.gov.uk OR from:\"Jose Antonio Arcila\" OR from:joseantonio@arcila-abogados.es OR from:\"Elena Benítez Imedio\" OR from:ebi@ayuelajimenez.es OR from:ebi@ebiroy.com OR from:\"Juan Antonio Montoro\" OR from:jmontoro@euroconsejo.org OR from:\"Pablo Velasco Espinosa\" OR from:pvelasco@euroconsejo.org OR from:mensajeria@phidias.es OR from:\"Montessori School\" OR from:\"Mataespesa Montessori School\" OR from:mataespesa@montessorischool.es OR from:\"Laura Romay\" OR from:\"Anna Dick\" OR from:anna.dick@montessorischool.es OR form:\"Gema Baeza Gómez\" OR from:gbg@ayuelajimenez.es)")
+                                          :query "(maildir:/INBOX OR maildir:/personal/INBOX OR maildir:/[Gmail].Spam OR maildir:/personal/[Gmail].Spam OR maildir:/[Gmail].Drafts OR maildir:/personal/[Gmail].Drafts OR maildir:/[Gmail].Trash OR maildir:/personal/[Gmail].Trash) AND (from:\"Paula Zingoni\" OR from:paulazingoni@gmail.com OR from:\"Croydon County\" OR from:\"Family\" OR from:family.croydon.countycourt@justice.gov.uk OR from:\"Jose Antonio Arcila\" OR from:joseantonio@arcila-abogados.es OR from:\"Elena Benítez Imedio\" OR from:ebi@ayuelajimenez.es OR from:ebi@ebiroy.com OR from:\"Juan Antonio Montoro\" OR from:jmontoro@euroconsejo.org OR from:\"Pablo Velasco Espinosa\" OR from:pvelasco@euroconsejo.org OR from:mensajeria@phidias.es OR from:\"Montessori School\" OR from:\"Mataespesa Montessori School\" OR from:mataespesa@montessorischool.es OR from:\"Laura Romay\" OR from:\"Anna Dick\" OR from:anna.dick@montessorischool.es OR form:\"Gema Baeza Gómez\" OR from:gbg@ayuelajimenez.es)")
                                         (:name "Inbox messages in the last ?x days"
                                                :query ,(lambda () (call-interactively 'personal/mu4e-bookmark-num-days-old-query))
                                                :key ?h)
                                         ( :name "Messages with images"
-                                          :query "(maildir:/personal/INBOX OR /personal/[personal].Spam) AND mime:image/*"
+                                          :query "(maildir:/personal/INBOX OR /personal/[Gmail].Spam) AND mime:image/*"
                                           :key ?i)
                                         ( :name "Unread (pending) messages"
-                                          :query "(maildir:/personal/INBOX OR /personal/[personal].Spam) AND flag:unread AND NOT flag:trashed"
+                                          :query "(maildir:/personal/INBOX OR /personal/[Gmail].Spam) AND flag:unread AND NOT flag:trashed"
                                           :key ?p)
                                         ( :name "Sent in last 7 days"
                                           :key  ?s
-                                          :query "maildir:\"/personal/[personal].Sent Mail\" AND date:7d..now")
+                                          :query "maildir:\"/personal/[Gmail].Sent Mail\" AND date:7d..now")
                                         ( :name "Today's messages"
                                           :query "maildir:/personal/INBOX AND date:today..now"
                                           :key ?t)
@@ -388,80 +382,8 @@ Note, =mu4e-maildir= takes an actual =filesystem-path=, the other folder names a
                                           :query "maildir:/personal/INBOX AND (from:SC3074602a@schoolcomms.com OR from:\"TWY\" OR from:DataTeam@twyford.ealing.sch.uk OR from:\"TWYFORD CE HIGH SCHOOL\" OR from:a.holl@csic.es OR from:6thform@twyford.ealing.sch.uk OR from:\"6th Form - TWY\" OR from:Admissions@twyford.ealing.sch.uk OR from:\"Admissions - TWY\" OR from:marthur@twyford.ealing.sch.uk OR from:\"Michael Arthur\" OR from:\"Lucille De Costa\")")
                                         ( :name "Unread messages (Personal inbox)"
                                           :key  ?x
-                                          :query "maildir:/personal/INBOX AND flag:unread AND NOT flag:trashed")))))
-           ,(make-mu4e-context
-             :name "outlook"
-             :enter-func (lambda () (mu4e-message "Entering outlook context")
-                           (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
-                             (revert-buffer)))
-             :leave-func (lambda () (mu4e-message "Leaving outlook context")
-                           (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
-                             (revert-buffer)))
-             ;; we match based on the contact-fields of the message
-             :match-func (lambda (msg)
-                           (when msg
-                             (or (mu4e-message-contact-field-matches msg
-                                                                     :to "daniel.guinea@poli.uned.es")
-                                 (mu4e-message-contact-field-matches msg
-                                                                     :from "daniel.guinea@poli.uned.es")
-                                 (mu4e-message-contact-field-matches msg
-                                                                     :cc "daniel.guinea@poli.uned.es")
-                                 (mu4e-message-contact-field-matches msg
-                                                                     :bcc "daniel.guinea@poli.uned.es")
-                                 )))
-             :vars '(( user-mail-address . "daniel.guinea@poli.uned.es")
-                     ( user-full-name . "Daniel Guinea")
-                     (mu4e-compose-format-flowed . t)
-                     ( mu4e-compose-signature .
-                       (concat
-                        "Daniel Guinea\nFacultad de CC.PP. y Sociología\nUniversidad Nacional de Educación a Distancia (UNED)\nCalle Obispo Trejo 2, Madrid 28040\nemail: daniel.guinea@poli.uned.es\nTel. +34 91 398 9441\n"))
-                     (mu4e-sent-folder . "/outlook/Elementos enviados")
-                     (mu4e-drafts-folder . "/outlook/Borradores")
-                     (mu4e-trash-folder . "/outlook/Elementos eliminados")
-                     (mu4e-refile-folder . "/outlook/Archivo")
-                     (mu4e-maildir-shortcuts . ( ("/outlook/INBOX"                 . ?i)
-                                                 ("/outlook/Elementos enviados"    . ?s)
-                                                 ("/outlook/Borradores"            . ?d)
-                                                 ("/outlook/Elementos eliminados"  . ?t)
-                                                 ("/outlook/Archivo"               . ?a)
-                                                 ("/outlook/Correo no deseado"     . ?b)))
-                     (mu4e-bookmarks . (
-                                        ( :name "Messages with attachment"
-                                          :query "(maildir:/outlook/INBOX OR maildir:\"/outlook/Correo no deseado\") AND flag:attach"
-                                          :key ?a)
-                                        ( :name "Big messages"
-                                          :query "(maildir:/outlook/INBOX OR maildir:\"/outlook/Correo no deseado\") AND size:5M..500M"
-                                          :key ?b)
-                                        ( :name "Eurostat"
-                                          :key  ?e
-                                          :query "(maildir:/outlook/INBOX OR maildir:/work/INBOX OR maildir:/personal/INBOX) AND (from:nicoletta.schweikle-hilgner@ec.europa.eu OR from:ESTAT-Microdata-access@ec.europa.eu OR from:estat-microdata-access@ec.europa.eu OR from:Fabienne.MONTAIGNE@ec.europa.eu OR from:Patrick.PILLARD@ec.europa.eu OR from:Karien.Reinig@ec.europa.eu OR from:S-CIRCABC@nomail.ec.europa.eu)")
-                                        ( :name "Máster FOL"
-                                          :key  ?f
-                                          :query "(maildir:/outlook/INBOX OR maildir:\"/outlook/Correo no deseado\") AND (subject:tfm OR subject:TFM OR body:tfm OR body:TFM OR subject:\"trabajo fin de master\" OR body:\"trabajo fin de master\" OR from:\"Ana María González\" OR from:gabriela.topa1@gmail.com OR from:\"Gabriela Topa\" OR from:gtopa@psi.uned.es OR from:\"Máster Formación Profesorado\" OR from:master-formacionprofesorado@adm.uned.es OR from:\"M. Angeles Serrano Garcia\" OR from:maserrano@pas.uned.es OR from:\"M. del Puerto Hojas Rosales\" OR from:mhojas@pas.uned.es OR from:\"Ana María González\" OR from:amgonzalez@edu.uned.es OR subjetc:\"TFM\")")
-                                        (:name "Inbox messages in the last ?x days"
-                                               :query ,(lambda () (call-interactively 'work/mu4e-bookmark-num-days-old-query))
-                                               :key ?h)
-                                        ( :name "Messages with images"
-                                          :query "maildir:/outlook/INBOX AND mime:image/*"
-                                          :key ?i)
-                                        ( :name "Unread (pending) messages"
-                                          :query "(maildir:/outlook/INBOX OR maildir:\"/outlook/Correo no deseado\") AND flag:unread AND NOT flag:trashed"
-                                          :key ?p)
-                                        ( :name "Sent in last 7 days"
-                                          :key  ?s
-                                          :query "maildir:\"/outlook/Elementos enviados\" AND date:7d..now")
-                                        ( :name "Today's messages"
-                                          :query "(maildir:/outlook/INBOX OR maildir:\"/outlook/Correo no deseado\") AND date:today..now"
-                                          :key ?t)
-                                        (  :name "UNED"
-                                           :key  ?u
-                                           :query "(maildir:/outlook/INBOX OR maildir:\"/outlook/Correo no deseado\" OR maildir:/outlook/Borradores OR maildir:\"/outlook/Elementos eliminados\") AND (from:\"Maria Angel\" OR from:departamentos.polisoci@adm.uned.es OR from:secretaria.poli.soci@adm.uned.es OR from:decanato.polisoci@adm.uned.es OR from:negociado-pruebas-presenciales@adm.uned.es OR from:vicepruebas@adm.uned.es OR from:vrector-pruebas-presen@adm.uned.es OR from:coord.pruebas@adm.uned.es OR from:pruebaspresenciales@adm.uned.es OR from:gastosextraordinariospruebas@adm.uned.es OR from:\"Secretaria Docente\" OR from:\"Secretaría Docente\" OR from:secdoc.cee@adm.uned.es OR from:\"MARIA ANGELES RODRIGUEZ SANTOS\" OR from:secretaria-ecoemp@adm.uned.es OR from:\"Secretaría Facultad CC. Economicas\" OR from:secadi.polisoci@adm.uned.es OR from:\"Secadi\" OR from:\"GUADALUPE DAMAS JURADO\" OR from:gdamas@pas.uned.es OR from:llosada@edu.uned.es OR from:egiralde@pas.uned.es OR from:\"MARIA GOMEZ ESCARDA\" OR from:mgomez@poli.uned.es OR from:sociologiauno@adm.uned.es OR from:vrector-profesorado@adm.uned.es OR from:\"Vicerrectorado de Profesorado\" OR from:vrector-gradoyposgrado@adm.uned.es OR from:vadj.grado@adm.uned.es OR from:alba.vrector@adm.uned.es) OR (subject:tfg OR subject:TFG OR body:tfg OR body:TFG OR subject:\"trabajo fin de grado\" OR body:\"trabajo fin de grado\" OR subject:\"/ex.men.*/\" OR body:\"/ex.men.*/\" OR subject:\"sociologia aplicada\" OR body:\"sociologia aplicada\" OR subject:/modelo.*/)")
-                                        ( :name "Work-hunt"
-                                          :key  ?w
-                                          :query "(maildir:/outlook/INBOX OR maildir:/work/INBOX OR maildir:/personal/INBOX OR maildir:\"/outlook/Correo no deseado\" OR maildir:/work/[work].Spam OR maildir:/personal/[personal].Spam OR maildir:/outlook/Borradores OR maildir:/work/[work].Drafts OR maildir:/personal/[personal].Drafts OR maildir:\"/outlook/Elementos eliminados\" OR maildir:/work/[work].Trash OR maildir:/personal/[personal].Trash) AND (from:\"Belén Barreiro\" OR from:bbarreiro@40db.es OR from:40db.es OR from:\"Mónica Méndez\" OR from:monica.mendez@cis.es OR from:\"Luis Manuel Ayuso Sanchez\" Or from:luis.ayuso@uma.es OR from:\"Juan Ignacio Martinez Pastor\" OR from:jimartinez@poli.uned.es OR from:ecb@uma.es)")
-                                        ( :name "Unread messages"
-                                          :key  ?x
-                                          :query "flag:unread AND maildir:/outlook/INBOX AND NOT flag:trashed")))))))
+                                          :query "flag:unread AND maildir:/personal/INBOX AND NOT flag:trashed")))))))
+
 
 #+END_SRC
 
@@ -473,14 +395,12 @@ This sets `mu4e-user-mail-address-list' to the concatenation of all `user-mail-a
 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-
   (setq mu4e-user-mail-address-list
     (delq nil
       (mapcar (lambda (context)
-        (when (mu4e-context-vars context)
-          (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
-    mu4e-contexts)))
-
+		(when (mu4e-context-vars context)
+		  (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
+	mu4e-contexts)))
 #+END_SRC
 
 #+RESULTS:
@@ -512,9 +432,62 @@ I don't know the use of this but I had it, so...
 
 #+END_SRC
 
+** Saving attachments
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq mu4e-save-multiple-attachments-without-asking t)
+#+END_SRC
+
 #+RESULTS:
 : t
 
+* Customizing the main view
+
+** version 1.4.12 way of doing it
+
+#+begin_src emacs-lisp :tangle no :results silent
+
+  (add-to-list 'mu4e-bookmarks
+               ;; add bookmark for recent messages on the Mu mailing list.
+               '(( :name "Unread messages (Work inbox)"
+                   :key  ?x
+                   :query "flag:unread AND maildir:\"/work/INBOX\" AND NOT flag:trashed")
+                 ( :name "Ave María"
+                   :key  ?a
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Kenedy Alva\" OR from:kenedy@gmail.com OR from:\"Paz Torrente\" OR from:paztorrente@gmail.com OR from:\"Javier Martín\" OR from:javiermartinr@gmail.com OR from:\"Canal de Isabel II\" OR from:comunicaciones.comerciales@canaldeisabelsegunda.es OR from:\"Jazztel\" OR from:att.cliente.jazztel@jazztel.com")
+                 ( :name "BICI"
+                   :key  ?b
+                   :query "from:\"BICI\" OR from:bici@adm.uned.es")
+                 ( :name "Convalidaciones"
+                   :key  ?c
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:convalid.empresariales@adm.uned.es OR from:\"Negociado de atención al estudiante\" OR from:estudiantes.polisoci@adm.uned.es OR from:\"CARMEN DIAZ BRAGADO\" OR from:cadiaz@pas.uned.es OR subject:convalidación OR subject:convalidacion OR subject:convalidaciones OR body:convalidación OR body:convalidacion  OR body:convalidaciones OR subject:reconocimiento OR subject:Reconocimiento OR subject:reconocimientos OR subject:Reconocimientos OR body:reconocimiento OR body:Reconocimiento OR body:reconocimientos OR body:Reconocimientos")
+                 ( :name "Operation D"
+                   :key  ?d
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Paula Zingoni\" OR from:paulazingoni@gmail.com OR from:\"Croydon County\" OR from:\"Family\" OR from:family.croydon.countycourt@justice.gov.uk OR from:\"Jose Antonio Arcila\" OR from:joseantonio@arcila-abogados.es OR from:\"Elena Benítez Imedio\" OR from:ebi@ayuelajimenez.es OR from:ebi@ebiroy.com OR from:\"Juan Antonio Montoro\" OR from:jmontoro@euroconsejo.org OR from:\"Pablo Velasco Espinosa\" OR from:pvelasco@euroconsejo.org OR from:mensajeria@phidias.es OR from:\"Montessori School\" OR from:\"Mataespesa Montessori School\" OR from:mataespesa@montessorischool.es OR from:\"Laura Romay\" OR from:\"Anna Dick\" OR from:anna.dick@montessorischool.es OR form:\"Gema Baeza Gómez\" OR from:gbg@ayuelajimenez.es")
+                 ( :name "Eurostat"
+                   :key  ?e
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:\"SCHWEIKLE-HILGNER Nicoletta\" OR from:nicoletta.schweikle-hilgner@ec.europa.eu) OR from:ESTAT-Microdata-access@ec.europa.eu OR from:estat-microdata-access@ec.europa.eu OR from:Fabienne.MONTAIGNE@ec.europa.eu OR from:Patrick.PILLARD@ec.europa.eu OR from:Karien.Reinig@ec.europa.eu OR from:S-CIRCABC@nomail.ec.europa.eu OR from:\"Dominique REUTER-WAGNER\"")
+                 ( :name "Work-hunt"
+                   :key  ?h
+                   :query "maidlir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Belén Barreiro\" OR from:bbarreiro@40db.es OR from:40db.es OR from:\"Mónica Méndez\" OR from:monica.mendez@cis.es) OR from:\"Luis Manuel Ayuso Sanchez\" Or from:luis.ayuso@uma.es OR from:\"Juan Ignacio Martinez Pastor\" OR from:jimartinez@poli.uned.es OR from:ecb@uma.es")
+                 ( :name "Fac., Dept., Vicerrec., TFG, Exámenes, Económicas"
+                   :key  ?f
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\"  OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND ((from:\"Maria Angel\" OR from:departamentos.polisoci@adm.uned.es OR from:secretaria.poli.soci@adm.uned.es OR from:decanato.polisoci@adm.uned.es OR from:negociado-pruebas-presenciales@adm.uned.es OR from:vicepruebas@adm.uned.es OR from:vrector-pruebas-presen@adm.uned.es OR from:coord.pruebas@adm.uned.es OR from:pruebaspresenciales@adm.uned.es OR from:gastosextraordinariospruebas@adm.uned.es OR from:\"Secretaria Docente\" OR from:\"Secretaría Docente\" OR from:secdoc.cee@adm.uned.es OR from:\"MARIA ANGELES RODRIGUEZ SANTOS\" OR from:secretaria-ecoemp@adm.uned.es OR from:\"Secretaría Facultad CC. Economicas\" OR from:secadi.polisoci@adm.uned.es OR from:\"Secadi\" OR from:\"GUADALUPE DAMAS JURADO\" OR from:gdamas@pas.uned.es OR from:llosada@edu.uned.es OR from:egiralde@pas.uned.es OR from:\"MARIA GOMEZ ESCARDA\" OR from:mgomez@poli.uned.es OR from:sociologiauno@adm.uned.es OR from:vrector-profesorado@adm.uned.es OR from:\"Vicerrectorado de Profesorado\" OR from:vrector-gradoyposgrado@adm.uned.es OR from:vadj.grado@adm.uned.es OR from:alba.vrector@adm.uned.es) OR (subject:tfg OR subject:TFG OR body:tfg OR body:TFG OR subject:\"trabajo fin de grado\" OR body:\"trabajo fin de grado\" OR subject:\"/ex.men.*/\" OR body:\"/ex.men.*/\" OR subject:\"sociologia aplicada\"  OR body:\"sociologia aplicada\" OR subject:/modelo.*/")
+                 ( :name "Master FOL"
+                   :key  ?t
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (subject:tfm OR subject:TFM OR body:tfm OR body:TFM OR subject:\"trabajo fin de master\" OR body:\"trabajo fin de master\" OR from:\"Ana María González\" OR from:gabriela.topa1@gmail.com OR from:\"Gabriela Topa\" OR from:gtopa@psi.uned.es OR from:\"Máster Formación Profesorado\" OR from:master-formacionprofesorado@adm.uned.es OR from:\"M. Angeles Serrano Garcia\" OR from:maserrano@pas.uned.es OR from:\"M. del Puerto Hojas Rosales\" OR from:mhojas@pas.uned.es OR from:\"Ana María González\" OR from:amgonzalez@edu.uned.es OR subjetc:\"TFM\"")
+                 ( :name "Ricardo"
+                   :key  ?r
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:ricardo.mora.villarrubia@gmail.com OR from:ricardo.mora@uc3m.es OR from:ricardo.mora.villarrubia@outlook.com OR from:\"Ricardo Mora\" OR from:ricmora@eco.uc3m.es OR from:\"Adelheid Holl\" OR from:a.holl@csic.es")
+                 ( :name "Sent in last 7 days"
+                   :key  ?s
+                   :query "maildir:\"/personal/[personal].Sent Mail\" OR maildir:\"/work/[work].Sent Mail\") AND date:7d..now")
+                 ( :name "Twyford"
+                   :key  ?y
+                   :query "maildir:\"/personal/INBOX\") AND (from:SC3074602a@schoolcomms.com OR from:\"TWY\" OR from:DataTeam@twyford.ealing.sch.uk OR from:\"TWYFORD CE HIGH SCHOOL\" OR from:a.holl@csic.es OR from:6thform@twyford.ealing.sch.uk OR from:\"6th Form - TWY\" OR from:Admissions@twyford.ealing.sch.uk OR from:\"Admissions - TWY\" OR from:marthur@twyford.ealing.sch.uk OR from:\"Michael Arthur\" OR from:\"Lucille De Costa\"")))
+
+#+end_src
+                                                                                
 
 * Org capture templates, including some for emails
 
@@ -717,11 +690,9 @@ Originally, before =(setq org-mu4e-link-query-in-headers-mode nil)= I got the fo
 DGM turns it to "off" on 2 august 2019 to try configuration from Linux Magazine
 
 #+BEGIN_SRC emacs-lisp :tangle no
-
  (when (require 'org-mu4e nil t)
   (dolist (map (list mu4e-view-mode-map mu4e-headers-mode-map)))
   (setq org-mu4e-link-query-in-headers-mode nil))        ;; store link to message if in header view, not to header query
-
 #+END_SRC
 
 #+RESULTS:
@@ -729,10 +700,8 @@ DGM turns it to "off" on 2 august 2019 to try configuration from Linux Magazine
 ** Make some e-mails stand out a bit.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-
 (set-face-foreground 'mu4e-unread-face "#8b8b00")
 (set-face-attribute 'mu4e-flagged-face nil :inherit 'font-lock-warning-face)
-
 #+END_SRC
 
 ** Viewing images 
@@ -745,7 +714,6 @@ On 4 august I comment out the line =(setq mu4e-html2text-command "w3m -dump -s -
 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-
 (setq mu4e-view-show-images t
       mu4e-show-images t
       mu4e-view-image-max-width 800)
@@ -756,7 +724,6 @@ On 4 august I comment out the line =(setq mu4e-html2text-command "w3m -dump -s -
 ;; (setq mu4e-view-prefer-html t)  ;; trying this off as https://www.djcbsoftware.nl/code/mu/mu4e/Displaying-rich_002dtext-messages.html recommends
 
 ;; (setq mu4e-html2text-command "w3m -dump -s -T text/html -o display_link_number=true")
-
 #+END_SRC
 
 #+RESULTS:
@@ -768,21 +735,37 @@ As I said, now I have the following as suggested by
 And it is fine; it's either that or =mu4e-shr2text= but with the latter I get just the same as I get in EWW if I follow the action of viewing the message in my browser. Then I can open Chromium with =&= and see it as intended. With pandoc I get a wonderfully formatted plain-text message.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-
 ;;(setq mu4e-html2text-command 'mu4e-shr2text)
-;;; with mu4e 1.5 I change html2text command
-;; (setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
-(setq mu4e-html2text-command "html2text -utf8 -width 72")
+(setq mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
 
 ;; If I use shr, it is convinient to make =shr/eww= readable with dark themes, i.e., if you're using a dark theme, and the messages are hard to read, it can help to change the luminosity, e.g.:
 (setq shr-color-visible-luminance-min 80)
-
 #+END_SRC
 
 #+RESULTS:
-: 80
+: iconv -c -t utf-8 | pandoc -f html -t plain
 
+Alternative from https://etienne.depar.is/emacs.d/mu4e.html that works worse: 
 
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq mu4e-html2text-command "w3m -dump -T text/html -cols 72 -o display_link_number=true -o auto_image=false -o display_image=false -o ignore_null_img_alt=true")
+#+END_SRC
+
+** Call EWW to display HTML messages by pressing =aV= to view in browser
+- NB: the point is to open the message, and then press =a= and then =V=
+I still can't see HTML messages okay. Trying this tip from https://irreal.org/blog/?p=6122
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun jcs-view-in-eww (msg)
+    (eww-browse-url (concat "file://" (mu4e~write-body-to-html msg))))
+
+;; Arrange to view messages in either the default browser or EWW
+(add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+(add-to-list 'mu4e-view-actions '("Eww view" . jcs-view-in-eww) t)
+#+END_SRC
+
+#+RESULTS:
+: ((capture message . mu4e-action-capture-message) (view as pdf . mu4e-action-view-as-pdf) (show this thread . mu4e-action-show-thread) (ViewInBrowser . mu4e-action-view-in-browser) (View in browser . my/mu4e-in-browser) (Eww view . jcs-view-in-eww))
 
 
 * Miscellanea
@@ -831,7 +814,6 @@ From: https://etienne.depar.is/emacs.d/mu4e.html
 Finally, I got it working from here: http://pragmaticemacs.com/emacs/customise-the-reply-quote-string-in-mu4e/
 
 #+begin_src emacs-lisp :tangle yes
-
 ;; function to return first name of email recipients
 ;; used by yasnippet
 ;; inspired by
@@ -873,7 +855,6 @@ Finally, I got it working from here: http://pragmaticemacs.com/emacs/customise-t
               (setq email-name email-name2))
             )))
     email-name))
-
 #+end_src
 
 #+RESULTS:
@@ -894,7 +875,6 @@ And not off to customise the reply quote string in mu4e:
 Read https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/#more-1336
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-
   (use-package helm-mu
     :defer t
     :config (progn
@@ -903,7 +883,6 @@ Read https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
   ;;(when (reéquire 'helm-mu nil t)
   ;;  (dolist (map (list mu4e-headers-mode-map mu4e-main-mode-map mu4e-view-mode-map))
   ;;    (define-key map "m" 'helm-mu)))
-
 #+END_SRC
 
 #+RESULTS:
@@ -912,7 +891,6 @@ Read https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
 * View e-mails with width restriction, but wider for HTML
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-
 (defun malb/mu4e-view-mode-hook ()
   "View e-mails with width restriction, but wider for HTML."
   (if (boundp 'msg)
@@ -929,21 +907,27 @@ Read https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
   (visual-line-mode 1))
   ;; (visual-fill-column-mode 1)) dgm 22 dic 2020
 
-
 (add-hook 'mu4e-view-mode-hook #'malb/mu4e-view-mode-hook)
-
 #+END_SRC
 
 #+RESULTS:
 | malb/mu4e-view-mode-hook | (lambda nil (set (make-local-variable 'bookmark-make-record-function) 'mu4e-view-bookmark-make-record)) |
 
 
+* Fixing header update
+
+#+begin_src emacs-lisp :tangle yes
+
+    
+
+#+end_src
+
+#+RESULTS:
+
 * Provide 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-
 (provide 'starter-kit-mu4e)
-
 #+END_SRC
 
 #+RESULTS:
@@ -952,9 +936,7 @@ Read https://martinralbrecht.wordpress.com/2016/05/30/handling-email-with-emacs/
 * Final message
 #+source: message-line
 #+begin_src emacs-lisp :tangle yes
-
 (message "Starter Kit User Mu4e File loaded.")
-
 #+end_src
 
 #+RESULTS: message-line

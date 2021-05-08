@@ -9,6 +9,79 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 * Starter Kit Misc
 Things that don't fit anywhere else.
 
+
+* Font-face setup (PragmataPro)
+
+Read:
+
+https://emacs.stackexchange.com/questions/1030/how-can-i-set-different-font-sizes-for-buffers-and-for-the-mode-line
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  ;; (font-family-list) for having all installed fonts
+
+  (defun font-existsp (font)
+    "Check to see if the named FONT is available."
+    (if (null (x-list-fonts font))
+        nil t))
+
+  ;; To change the default font for the current and future frames
+  ;; Affects the height of the mode-line (originally at 156)
+  (set-face-attribute 'default nil :family "Pragmata Pro Mono" :height 180)
+  (set-face-attribute 'fixed-pitch nil :family "Pragmata Pro Mono" :height 180)
+  (set-face-attribute 'variable-pitch nil :family "Pragmata Pro" :height 180)
+
+  ;; Mode-line (This is what shrinks the mode line)
+  (set-face-attribute 'mode-line nil :font "Pragmata Pro Mono-14")
+
+  ;; my function to reduce the mode-line on the flycheck
+
+  (defun dgm/shrink-modeline ()
+    "Shrinks font size in the modeline"
+    (interactive)
+    (set-face-attribute 'mode-line nil :font "Pragmata Pro Mono-14"))
+
+  ;; I believe it is not needed.
+  ;; (setq default-frame-alist '((font . "Pragmata Pro Mono-18")))
+
+#+END_SRC
+
+#+RESULTS:
+: dgm/shrink-modeline
+
+** Line-spacing tweak
+Set this to a different number depending on taste and the font selected. The value can be a integer or decimal number. 
+- If integer :: it means pixels, added below each line.
+- If float :: (e.g 0.02): a scaling factor relative to current window's default line height.
+if nil: add no extra spacing.
+
+Tuned for Pragmata Pro at =0.09=. =0.06= originally
+
+#+begin_src emacs-lisp :tangle yes
+
+    (setq-default line-spacing 0.10)
+    ;; no sé por qué me da error ahora
+    ;; (add-to-list 'default-frame-alist '(line-spacing . 0.06))
+
+#+end_src
+
+#+RESULTS:
+: 0.1
+
+** Customize minibuffer's height
+
+My change relates to height: changed from 2 to 10 in an attempt to raise the minibuffer and be able to see more... but it doesn't work!! 
+
+#+begin_src emacs-lisp :tangle no
+
+ (setq minibuffer-frame-alist
+       '((width . 80) (height . 10)))
+
+#+end_src
+
+#+RESULTS:
+: ((width . 80) (height . 10))
+
 ** Minions
 - Bundle all minor modes under a =[+]= symbol
 - Not compatible with =spaceline= out of the box
@@ -202,7 +275,6 @@ If you don't set this up, then =load-theme= does not work.
 #+RESULTS: colors
 : t
 
-
 *** Solarized Theme
 
 New, simplified customization. I leave =(load-theme 'solarized-light t)= as I guess the theme is chosen according to the time.
@@ -210,10 +282,11 @@ New, simplified customization. I leave =(load-theme 'solarized-light t)= as I gu
 #+begin_src emacs-lisp :tangle yes
 
   (use-package solarized-theme
-    :config 
+    :init
+    ;; these settings need to be set before load-theme is invoked for Solarized.
     (setq solarized-distinct-fringe-background t) ;; make the fringe stand out from the background 
     (setq solarized-use-variable-pitch nil)       ;; Don't change the font for some headings and titles
-    (setq solarized-high-contrast-mode-line nil)  ;; make the modeline high contrast (change to t if you want it)
+    (setq solarized-high-contrast-mode-line t)  ;; make the modeline high contrast (change to t if you want it)
     ;;  (setq solarized-use-less-bold t)          ;; Use less bolding
     ;;  (setq solarized-use-more-italic t)        ;; Use more italics
     (setq solarized-emphasize-indicators nil)     ;; Use less colors for indicators such as git: gutter, flycheck and similar
@@ -224,12 +297,148 @@ New, simplified customization. I leave =(load-theme 'solarized-light t)= as I gu
     (setq solarized-height-plus-2 1.0)
     (setq solarized-height-plus-3 1.0)
     (setq solarized-height-plus-4 1.0)
+    (setq x-underline-at-descent-line t)
+    ;; Use less bolding
+    (setq solarized-use-less-bold t)
+    ;; Put the underline below the font bottomline instead of the baseline.
     (setq x-underline-at-descent-line t))
 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24690 55162 8350 391000) :init (24690 55162 8343 393000) :config (24690 55162 8196 140000) :config-secs (0 0 287 272000) :init-secs (0 0 597 939000) :use-package-secs (0 0 676 471000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24709 8344 109024 507000) :init (24709 8344 109007 948000) :config (24709 8344 108664 943000) :config-secs (0 0 9 73000) :init-secs (0 0 701 895000) :use-package-secs (0 0 786 984000)))
+
+**** Tweaking solarized theme
+Examples taken from https://github.com/bbatsov/solarized-emacs
+
+$base03:    #002b36;
+$base02:    #073642;
+$base01:    #586e75;
+$base00:    #657b83;
+$base0:     #839496;
+$base1:     #93a1a1;
+$base2:     #eee8d5;
+$base3:     #fdf6e3;
+$yellow:    #b58900;
+$orange:    #cb4b16;
+$red:       #dc322f;
+$magenta:   #d33682;
+$violet:    #6c71c4;
+$blue:      #268bd2;
+$cyan:      #2aa198;
+$green:     #859900;
+
+   + #e9e2cb is the creamy-white color from solarized,
+   + and #2075c7 is the blue colour. 
+
+  ;; Solarized accented colors
+  (yellow    "#b58900")
+  (orange    "#cb4b16")
+  (red       "#dc322f")
+  (magenta   "#d33682")
+  (violet    "#6c71c4")
+  (blue      "#268bd2")
+  (cyan      "#2aa198")
+  (green     "#859900")
+
+The Solarized Face settings consist of a palette of colors with eight accents in addition to the darkest and brightest colors. Recent changes allow you to freely create theme files using different palettes instead of the Solarized color palette. It consists of two steps: creating a theme file and loading a theme.
+Creating/Loading Theme Files
+
+Select the darkest and lightest colors and the eight accents to pass to the function. This creates a theme file in .emacs.d/themes/. If you need to make minor modifications, you can override Face individually by specifying a free Sexp as the fourth argument.
+
+Once you have a theme file, you can load it with load-theme, like solarized.
+
+
+#+begin_src emacs-lisp :tangle yes
+
+  ;; dgm's solarized color-theme: A less vibrant palette
+  (solarized-create-theme-file-with-palette 'dark 'solarized-dgm
+    '("#002b36" "#fdf6e3"  
+      "#b58900" "#cb4b16" "#8b4500" "#eee8d5" "#6c71c4" "#268bd2" "#2aa198" "#859900"))            
+                                  ;; #8b3a3a
+  ;;      "#8b8b00" "#8b5a00" "#8b36s26" "#93115C" "#6c71c4" "#268bd2" "#2aa198" "#546E00"))            
+  ;; "#8b795e" "#8b8378" "#4f94cd"  "#2075c7" "#4682b4" "#268bd2" "#2aa198" "#546E00")) 
+  ;; "#839496"
+  ;; #93a1a1
+  ;;    "#8b8b00" "#8b5a00" "#8b3626" "#93115C" "#6c71c4" "#268bd2" "#2aa198" "#546E00"))          
+  ;;
+  ;;   #b58900   #cb4b16   #dc322f   #8b008b             #2075c7             #859900       
+  ;;                         #8B2C02                                         #B4C342
+  ;;                         #8b3626
+  ;;                         #990A1B
+  ;;                         #8b3626
+  ;; "#8b795e"
+  ;; "#Cdb38b" "#839496" SteelBlue
+
+  ;; (load-theme 'solarized-dgm)
+
+  ;; inspired vim's jellybeans color-theme
+  (solarized-create-theme-file-with-palette 'light 'solarized-jellybeans-light
+    '("#202020" "#ffffff"
+      "#ffb964" "#8fbfdc" "#a04040" "#b05080" "#805090" "#fad08a" "#99ad6a" "#8fbfdc"))
+
+  ;; (load-theme 'solarized-jellybeans-light t)
+
+
+  ;; inspired emacs's mesa color-theme
+  (solarized-create-theme-file-with-palette 'light 'solarized-mesa-light
+    '("#000000" "#faf5ee"
+      "#3388dd" "#ac3d1a" "#dd2222" "#8b008b" "#00b7f0" "#1388a2" "#104e8b" "#00688b"))
+
+  ;; (load-theme 'solarized-mesa-light t)
+
+
+  ;; inspired emacs's solarized color-theme
+  (solarized-create-theme-file-with-palette 'light 'solarized-solarized-light
+    '("#002b36" "#fdf6e3"
+      "#b58900" "#cb4b16" "#dc322f" "#d33682" "#6c71c4" "#268bd2" "#2aa198" "#859900"))
+
+  ;; (load-theme 'solarized-solarized-light t)
+
+
+  ;; wombat color-theme with misc face definition
+  (solarized-create-theme-file-with-palette 'dark 'solarized-wombat-dark
+    '("#2a2a29" "#f6f3e8"
+      "#e5c06d" "#ddaa6f" "#ffb4ac" "#e5786d" "#834c98" "#a4b5e6" "#7ec98f" "#8ac6f2")
+    '((custom-theme-set-faces
+       theme-name
+       `(default ((,class (:foreground ,(solarized-color-blend base03 base3 0.15 2) :background ,base03))))
+       `(highlight ((,class (:background ,violet))))
+       `(font-lock-builtin-face ((,class (:foreground ,magenta))))
+       `(font-lock-constant-face ((,class (:foreground ,blue))))
+       `(font-lock-comment-face ((,class (:foreground ,base00))))
+       `(mode-line
+         ((,class (:foreground ,base2 :background ,(solarized-color-blend base03 base3 0.85 2)))))
+       `(mode-line-inactive
+         ((,class (:foreground ,base00 :background ,(solarized-color-blend base03 "black" 0.85 2)))))
+       `(mode-line-buffer-id ((,class (:foreground ,base3 :weight bold))))
+       `(minibuffer-prompt ((,class (:foreground ,base1))))
+       `(vertical-border ((,class (:foreground ,base03)))))))
+
+  ;; (load-theme 'solarized-wombat-dark t)
+
+#+end_src
+
+#+RESULTS:
+: /home/dgm/.emacs.d/themes/solarized-wombat-dark.el
+
+
+
+
+*** Other themes
+
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package poet-theme)
+  (use-package tao-theme)
+  (use-package nord-theme)
+  (use-package modus-themes)
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24712 10576 773826 588000) :init (24712 10576 773814 908000) :config (24712 10576 773474 285000) :config-secs (0 0 12 112000) :init-secs (0 0 655 506000) :use-package-secs (0 0 757 268000)))
+
 
 *** Change theme depending on hour of day
 - From 9 am to 8 pm, light theme. Otherwise, dark theme.
@@ -247,18 +456,21 @@ Note that I've moved this
                         :foreground "#dcdcdc")
 #+END_EXAMPLE
 
-to the function =get-spaceline-working=
+to the function =get-s;paceline-working=
 
 #+begin_src emacs-lisp :tangle yes
   (defun set-light-theme ()
     "Set the light theme with some customization if needed."
     (interactive)
-    (load-theme 'solarized-light t))
+    (load-theme 'solarized-light t)
+    (dgm/shrink-modeline))
 
   (defun set-dark-theme ()
     "Set the dark theme with some customization if needed."
     (interactive)
-    (load-theme 'solarized-dark t))
+    (load-theme 'solarized-dgm t)
+    (dgm/shrink-modeline))
+  ;; solarized-dark originally
 
   ;;(let ((current-hour (string-to-number (format-time-string "%H"))))
   ;;    (if (or (< current-hour 10) (> current-hour 19)) (set-dark-theme) (set-light-theme)))
@@ -270,21 +482,29 @@ to the function =get-spaceline-working=
 
 *** Same as my switching of themes based on time, but using the Circadian package
 
+Other dark themes I like:
+- solarized-zenburn
+- doom-nord
+- doom-solarized-dark
+
 #+begin_src emacs-lisp :tangle yes
+
   (use-package circadian
     :init (minions-mode 1)  
     :config
     (setq calendar-latitude 40.4)
     (setq calendar-longitude -3.7)
     (setq circadian-themes '((:sunrise . solarized-light)
-                             (:sunset  . solarized-dark)))
-    (circadian-setup))
+                             (:sunset  . solarized-dgm)))
+    (circadian-setup)
+    (dgm/shrink-modeline))
   ;;    (setq circadian-themes '((:sunrise . tao-yang)
   ;;                             (:sunset  . tao-yin)))
+
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24468 18433 844807 213000) :init (24468 18433 844794 541000) :config (24468 18433 844568 856000) :config-secs (0 0 5760 829000) :init-secs (0 0 6236 767000) :use-package-secs (0 0 6316 687000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24720 22891 718293 282000) :init (24720 22891 718279 600000) :config (24720 22891 717872 115000) :config-secs (0 0 6354 565000) :init-secs (0 0 7263 994000) :use-package-secs (0 0 7402 574000)))
 
 ** More Color Themes with Doom
 
@@ -500,12 +720,14 @@ With helm-mode active, to use Emacs default completion instead of either Helm or
 
 ** Associate modes with file extensions
 #+begin_src emacs-lisp :tangle yes
+
 (add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
 (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
 ;; (require 'yaml-mode) ;; dgm comments out as I don't know what it is for
 ;; (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
+
 #+end_src
 
 
@@ -519,70 +741,6 @@ From documentation: A string or list of strings specifying switches to be passed
 
 #+end_src
 
-
-* Font-face setup (PragmataPro)
-
-Read:
-
-https://emacs.stackexchange.com/questions/1030/how-can-i-set-different-font-sizes-for-buffers-and-for-the-mode-line
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-
-  ;; (font-family-list) for having all installed fonts
-
-      (defun font-existsp (font)
-        "Check to see if the named FONT is available."
-        (if (null (x-list-fonts font))
-            nil t))
-
-    ;; To change the default font for the current and future frames
-    ;; Affects the height of the mode-line (originally at 156)
-    (set-face-attribute 'default nil :family "Pragmata Pro Mono" :height 180)
-    (set-face-attribute 'fixed-pitch nil :family "Pragmata Pro Mono" :height 180)
-    (set-face-attribute 'variable-pitch nil :family "Pragmata Pro" :height 180)
-
-    ;; Mode-line
-    (set-face-attribute 'mode-line nil :font "Pragmata Pro Mono-14")
-
-    ;; I believe it is not needed.
-    ;; (setq default-frame-alist '((font . "Pragmata Pro Mono-18")))
-
-#+END_SRC
-
-#+RESULTS:
-
-** Line-spacing tweak
-Set this to a different number depending on taste and the font selected. The value can be a integer or decimal number. 
-- If integer :: it means pixels, added below each line.
-- If float :: (e.g 0.02): a scaling factor relative to current window's default line height.
-if nil: add no extra spacing.
-
-Tuned for Pragmata Pro at =0.09=. =0.06= originally
-
-#+begin_src emacs-lisp :tangle yes
-
-    (setq-default line-spacing 0.09)
-    ;; no sé por qué me da error ahora
-    ;; (add-to-list 'default-frame-alist '(line-spacing . 0.06))
-
-#+end_src
-
-#+RESULTS:
-: 0.09
-
-** Customize minibuffer's height
-
-My change relates to height: changed from 2 to 10 in an attempt to raise the minibuffer and be able to see more... but it doesn't work!! 
-
-#+begin_src emacs-lisp :tangle no
-
- (setq minibuffer-frame-alist
-       '((width . 80) (height . 10)))
-
-#+end_src
-
-#+RESULTS:
-: ((width . 80) (height . 10))
 
 * Provide
 
@@ -603,8 +761,3 @@ My change relates to height: changed from 2 to 10 in an attempt to raise the min
   (message "Starter Kit Misc loaded.")
 
 #+end_src
-
-
-
-
-

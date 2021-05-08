@@ -1886,79 +1886,6 @@ Now, I follow https://github.com/flycheck/flycheck/blob/master/doc/user/installa
 #+RESULTS:
 : t
 
-*** Shell pop-up terminal
-
-Its window behavour is crazy, plus I can define an easy shortcut for popping a shell, so I don't see the point.
-
-From http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/. Opens a quick ANSI terminal in the directory of the currently open file.
-
-Code originally by Caolan that made shell-pop a read-only buffer in https://caolan.org/dotfiles/emacs.html. But it had an erratic window behaviour. In the end, I kind of fixed it by using the code in https://www.emacswiki.org/emacs/ShellPop.
-The only issue remaining is that the first time round I call shell-pop it splits the window wrongly. Afterwards, it does it alright.
-
-NOTE: font-lock of the shell-prompt did not work until I bumped onto   https://emacs.stackexchange.com/questions/14876/how-can-i-make-ansi-color-codes-inside-the-prompt-show-up-in-shell-mode
-and I added the bit of code here and
-
-
-~PS1="\[\e[00;32m\]\u\[\e[00m\]@\[\e[00;36m\]\h\[\e[00m\]:\[\e[00;34m\]\w\[\e[00m\]\n\$(printf \"[\[\e[01;31m\]%.*s\[\e[00m\]]\" \$? \$?) \$ "~
-
-in =.bashrc=.
-
-However, to actually get the colors, I followed  http://amitp.blogspot.com/2007/04/emacs-color-in-shell-buffers.html and his choice of colors
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package shell-pop
-    :defer t
-    :bind ("<s-escape>" . shell-pop)
-    :config
-    ;;  (setq shell-pop-default-directory "/home/dgm")
-    (setq shell-pop-set-internal-mode "shell")
-    (setq shell-pop-set-internal-mode-shell "/bin/bash")
-    (setq shell-pop-set-window-height 30) ;the number for the percentage of the selected window. if 100, shell-pop use the whole of selected window, not spliting.
-    (setq shell-pop-set-window-position "bottom") ;shell-pop-up position. You can choose "top" or "bottom".
-    ;; https://emacs.stackexchange.com/questions/14876/how-can-i-make-ansi-color-codes-inside-the-prompt-show-up-in-shell-mode
-    (set-face-attribute 'comint-highlight-prompt nil
-                        :inherit nil)
-    (setq ansi-color-names-vector ; better contrast colors
-          ["black" "red4" "green4" "yellow4"
-           "blue3" "magenta4" "cyan4" "white"]))
-
-    ;;;;;;;;;;;;;;;;;;;;;; http://amitp.blogspot.com/2007/04/emacs-color-in-shell-buffers.html
-
-  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-
-  ;; (setq shell-pop-window-size 30)
-  ;;(setq shell-pop-full-span t)
-  ;;(setq shell-pop-window-position "bottom")
-  ;;:config
-  ;;(setq shell-pop-shell-type (quote ("shell" "*shell*" (lambda nil (shell shell-pop-term-shell)))))
-  ;;(setq shell-pop-term-shell "/bin/bash")
-  ;; need to do this manually or not picked up by `shell-pop'
-  ;;(shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
-#+END_SRC
-
-#+RESULTS:
-| ansi-color-for-comint-mode-on | company-mode | flycheck-mode | yas-minor-mode | ess-r-package-activate-directory-tracker |
-
-
-*** COMMENT Start a regular shell at the bottom.
-#+begin_src emacs-lisp  :tangle no
-  ;;(global-set-key (kbd "s--") 'shell)
-#+end_src
-
-#+RESULTS:
-: shell
-
-And open it at the bottom of current window
-
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  ;; (add-to-list 'display-buffer-alist
-  ;;              `(,(rx string-start "*shell*" string-end)
-  ;;               (display-buffer-below-selected)))
-#+END_SRC
-
-#+RESULTS:
-
 *** Using dumb-jump to jump to definitions
 The dumb-jump package provides 'jump to definition' support for multiple languages by simply searching for possible definitions using The Silver Searcher ag, ripgrep rg, or grep. It does not require building stored indexes (TAGS) or background processes etc.
 
@@ -3989,7 +3916,6 @@ NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
 #+RESULTS:
 : xlt-pec
 
-
 *** PEC2
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -4014,6 +3940,7 @@ NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
     "* Potenciales problemas\n"
     "\n\n"
     "** Definiciones\n"
+    "\n\n"
     "** Cuestiones de estilo\n"
     "\n\n"
     "* Consejos\n"
@@ -4025,6 +3952,41 @@ NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
 
 #+RESULTS:
 : xlt-pec2
+
+*** PEC3
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (define-skeleton xlt-pec3
+    "Inserts a XeLaTeX skeleton into current buffer.
+    For evaluating PECs."
+    "\n"
+    "# -*- coding: utf-8 -*-\n"
+    "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
+    "#+TITLE: Evaluación de la \\textsc{pec}NÚMERO dentro de la línea /Cambio en las Sociedades Contemporáneas/\n"
+    "#+SUBTITLE: Alumno/a:\n"
+    "#+AUTHOR: Daniel Guinea, Dept. Sociología I, \\textsc{uned}\n"
+    "#+DATE:\\today\n"
+    "#+LaTeX_CLASS: memarticle\n"
+    "#+LaTeX_CLASS_OPTIONS: [11pt,oneside,a4paper,article]\n"
+    "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
+    "#+LATEX_CMD: xelatex\n"
+    "\n\n"
+    "* ¿Ha seguido las indicaciones sobre las \\textsc{pecs} 1 y 2?\n\n"
+    "" _ "\n\n"
+    "* ¿Ha ordenado la información teórica y empírica?\n"
+     "\n\n"
+    "\n\n"
+    "* Cómo mejorar la calidad del texto escrito\n"
+    "\n\n"
+    "* Veredicto\n\n\n"
+    "\\printbibliography")
+
+#+END_SRC
+
+#+RESULTS:
+: xlt-pec3
+
 
 ** Tufte book and handout
 - For a handout, you simply change ="#+LATEX_CLASS: tufte-book\n"= from =book= to =handout=
@@ -8187,6 +8149,106 @@ From the great Bastien Guerry: https://bzg.fr/en/emacs-hide-mode-line/
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24695 456 557560 173000) :init (24695 456 557464 819000) :config (24695 456 557451 319000) :config-secs (0 0 4 937000) :init-secs (0 0 49 732000) :use-package-secs (0 0 207 300000)))
+
+* COMMENT vterm shell for Emacs
+- https://github.com/akermu/emacs-libvterm
+- Check also the complement, =vterm-toggle=, https://github.com/jixiuf/vterm-toggle
+- Vterm vs eshell: Those aren't alternatives. One is a terminal emulator and the other is a shell / They are alternatives if you are just looking for ways to execute unix commands in emacs.
+- Desactivado hasta que entienda cómo funciona.
+
+#+begin_src emacs-lisp :tangle no
+
+  (use-package vterm
+    :ensure t
+    :config
+    ;; have files opened below the current window
+    ;; Example: open_file_below ~/Documents 
+    (push (list "find-file-below"
+                (lambda (path)
+                  (if-let* ((buf (find-file-noselect path))
+                            (window (display-buffer-below-selected buf nil)))
+                      (select-window window)
+                    (message "Failed to open file: %s" path))))
+          vterm-eval-cmds)
+    (setq vterm-copy-mode nil))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24708 19462 76528 662000) :init (24708 19462 76522 666000) :config (24708 19462 76466 477000) :config-secs (0 0 125 751000) :init-secs (0 0 251 353000) :use-package-secs (0 0 310 475000)))
+
+** vterm-toggle
+
+         ("H-F" . vterm-toggle-forward)
+         ("H-B" . vterm-toggle-backward)
+
+#+begin_src emacs-lisp :tangle no
+
+  (use-package vterm-toggle
+    :after vterm
+    :bind (("<s-escape>" . vterm-toggle-cd)))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24708 18591 727964 531000) :init (24708 18591 727907 878000) :init-secs (0 0 64 481000) :use-package-secs (0 2 343354 579000)))
+
+* Shell pop-up terminal
+
+Its window behavour is crazy, plus I can define an easy shortcut for popping a shell, so I don't see the point.
+
+From http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/. Opens a quick ANSI terminal in the directory of the currently open file.
+
+Code originally by Caolan that made shell-pop a read-only buffer in https://caolan.org/dotfiles/emacs.html. But it had an erratic window behaviour. In the end, I kind of fixed it by using the code in https://www.emacswiki.org/emacs/ShellPop.
+The only issue remaining is that the first time round I call shell-pop it splits the window wrongly. Afterwards, it does it alright.
+
+NOTE: font-lock of the shell-prompt did not work until I bumped onto   https://emacs.stackexchange.com/questions/14876/how-can-i-make-ansi-color-codes-inside-the-prompt-show-up-in-shell-mode
+and I added the bit of code here and
+
+
+~PS1="\[\e[00;32m\]\u\[\e[00m\]@\[\e[00;36m\]\h\[\e[00m\]:\[\e[00;34m\]\w\[\e[00m\]\n\$(printf \"[\[\e[01;31m\]%.*s\[\e[00m\]]\" \$? \$?) \$ "~
+
+in =.bashrc=.
+
+However, to actually get the colors, I followed  http://amitp.blogspot.com/2007/04/emacs-color-in-shell-buffers.html and his choice of colors
+
+DGM 24 April 2021: I disables it as I use =vterm= and =vterm-toggle= now. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package shell-pop
+    :defer t
+    :bind ("<s-escape>" . shell-pop)
+    :config
+    ;;  (setq shell-pop-default-directory "/home/dgm")
+    ;; (setq shell-pop-set-internal-mode "shell")
+    ;; (setq shell-pop-set-internal-mode-shell "/bin/bash")
+    (setq shell-pop-set-internal-mode "vterm")
+    (setq shell-pop-set-internal-mode-shell "/bin/bash")
+    (setq shell-pop-set-window-height 30) ;the number for the percentage of the selected window. if 100, shell-pop use the whole of selected window, not spliting.
+    (setq shell-pop-set-window-position "bottom") ;shell-pop-up position. You can choose "top" or "bottom".
+    ;; https://emacs.stackexchange.com/questions/14876/how-can-i-make-ansi-color-codes-inside-the-prompt-show-up-in-shell-mode
+    (set-face-attribute 'comint-highlight-prompt nil
+                        :inherit nil)
+    (setq ansi-color-names-vector ; better contrast colors
+          ["black" "red4" "green4" "yellow4"
+           "blue3" "magenta4" "cyan4" "white"]))
+
+    ;;;;;;;;;;;;;;;;;;;;;; http://amitp.blogspot.com/2007/04/emacs-color-in-shell-buffers.html
+
+  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+  ;; (setq shell-pop-window-size 30)
+  ;;(setq shell-pop-full-span t)
+  ;;(setq shell-pop-window-position "bottom")
+  ;;:config
+  ;;(setq shell-pop-shell-type (quote ("shell" "*shell*" (lambda nil (shell shell-pop-term-shell)))))
+  ;;(setq shell-pop-term-shell "/bin/bash")
+  ;; need to do this manually or not picked up by `shell-pop'
+  ;;(shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
+#+END_SRC
+
+#+RESULTS:
+| ansi-color-for-comint-mode-on | company-mode | flycheck-mode | yas-minor-mode | ess-r-package-activate-directory-tracker |
 
 
 * Provide

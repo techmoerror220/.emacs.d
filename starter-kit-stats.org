@@ -206,7 +206,8 @@ doesn't work.
   (use-package ess-R-data-view
     :defer t
     :after ess)
-
+  
+  ;; The maintainer of =ob-stata= says: According to #10, ob-stata.el is broken with an updated version of Emacs-Speaks-Statistics.  I am not going to fix this. I am now using stata_kernel to execute stata code and organize output in emacs as described here. (https://gitlab.com/robhicks/ob-stata.el).
   ;;  (require 'ob-stata)
   (require 'ob-ledger)
 
@@ -319,13 +320,14 @@ DGM: I've commented it out because I move my work in Stata from ESS to =ado-mode
 
 
 * Bill Rising's =ado-mode= for Stata
-Need to check what's going on with stata in Lenovo.
   
 https://www.louabill.org/Stata/ado-mode_install.html
 
-#+begin_src emacs-lisp :tangle no :results silent 
+#+begin_src emacs-lisp :tangle yes :results silent 
+
 (add-to-list 'load-path "/home/dgm/.emacs.d/src/ado-mode/lisp")
 (require 'ado-mode)
+
 #+end_src
 
 #+RESULTS:

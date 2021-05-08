@@ -1,3 +1,82 @@
+Alternative from https://etienne.depar.is/emacs.d/mu4e.html that works worse: 
+
+#+BEGIN_SRC emacs-lisp :tangle no
+
+(setq mu4e-html2text-command "w3m -dump -T text/html -cols 72 -o display_link_number=true -o auto_image=false -o display_image=false -o ignore_null_img_alt=true")
+#+END_SRC
+
+** Call EWW to display HTML messages by pressing =aV= to view in browser
+- NB: the point is to open the message, and then press =a= and then =V=
+I still can't see HTML messages okay. Trying this tip from https://irreal.org/blog/?p=6122
+- With =mu4e= v 1.5 this doesn't work anymore
+
+#+BEGIN_SRC emacs-lisp :tangle no
+
+(defun jcs-view-in-eww (msg)
+    (eww-browse-url (concat "file://" (mu4e~write-body-to-html msg))))
+
+;; Arrange to view messages in either the default browser or EWW
+(add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+(add-to-list 'mu4e-view-actions '("Eww view" . jcs-view-in-eww) t)
+
+#+END_SRC
+
+#+RESULTS:
+: ((capture message . mu4e-action-capture-message) (view as pdf . mu4e-action-view-as-pdf) (show this thread . mu4e-action-show-thread) (ViewInBrowser . mu4e-action-view-in-browser) (Eww view . jcs-view-in-eww))
+
+** Saving attachments
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq mu4e-save-multiple-attachments-without-asking t)
+#+END_SRC
+
+
+** version 1.4.12 way of doing it
+
+#+begin_src emacs-lisp :tangle no :results silent
+
+  (add-to-list 'mu4e-bookmarks
+               ;; add bookmark for recent messages on the Mu mailing list.
+               '(( :name "Unread messages (Work inbox)"
+                   :key  ?x
+                   :query "flag:unread AND maildir:\"/work/INBOX\" AND NOT flag:trashed")
+                 ( :name "Ave María"
+                   :key  ?a
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Kenedy Alva\" OR from:kenedy@gmail.com OR from:\"Paz Torrente\" OR from:paztorrente@gmail.com OR from:\"Javier Martín\" OR from:javiermartinr@gmail.com OR from:\"Canal de Isabel II\" OR from:comunicaciones.comerciales@canaldeisabelsegunda.es OR from:\"Jazztel\" OR from:att.cliente.jazztel@jazztel.com")
+                 ( :name "BICI"
+                   :key  ?b
+                   :query "from:\"BICI\" OR from:bici@adm.uned.es")
+                 ( :name "Convalidaciones"
+                   :key  ?c
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:convalid.empresariales@adm.uned.es OR from:\"Negociado de atención al estudiante\" OR from:estudiantes.polisoci@adm.uned.es OR from:\"CARMEN DIAZ BRAGADO\" OR from:cadiaz@pas.uned.es OR subject:convalidación OR subject:convalidacion OR subject:convalidaciones OR body:convalidación OR body:convalidacion  OR body:convalidaciones OR subject:reconocimiento OR subject:Reconocimiento OR subject:reconocimientos OR subject:Reconocimientos OR body:reconocimiento OR body:Reconocimiento OR body:reconocimientos OR body:Reconocimientos")
+                 ( :name "Operation D"
+                   :key  ?d
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Paula Zingoni\" OR from:paulazingoni@gmail.com OR from:\"Croydon County\" OR from:\"Family\" OR from:family.croydon.countycourt@justice.gov.uk OR from:\"Jose Antonio Arcila\" OR from:joseantonio@arcila-abogados.es OR from:\"Elena Benítez Imedio\" OR from:ebi@ayuelajimenez.es OR from:ebi@ebiroy.com OR from:\"Juan Antonio Montoro\" OR from:jmontoro@euroconsejo.org OR from:\"Pablo Velasco Espinosa\" OR from:pvelasco@euroconsejo.org OR from:mensajeria@phidias.es OR from:\"Montessori School\" OR from:\"Mataespesa Montessori School\" OR from:mataespesa@montessorischool.es OR from:\"Laura Romay\" OR from:\"Anna Dick\" OR from:anna.dick@montessorischool.es OR form:\"Gema Baeza Gómez\" OR from:gbg@ayuelajimenez.es")
+                 ( :name "Eurostat"
+                   :key  ?e
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (from:\"SCHWEIKLE-HILGNER Nicoletta\" OR from:nicoletta.schweikle-hilgner@ec.europa.eu) OR from:ESTAT-Microdata-access@ec.europa.eu OR from:estat-microdata-access@ec.europa.eu OR from:Fabienne.MONTAIGNE@ec.europa.eu OR from:Patrick.PILLARD@ec.europa.eu OR from:Karien.Reinig@ec.europa.eu OR from:S-CIRCABC@nomail.ec.europa.eu OR from:\"Dominique REUTER-WAGNER\"")
+                 ( :name "Work-hunt"
+                   :key  ?h
+                   :query "maidlir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:\"Belén Barreiro\" OR from:bbarreiro@40db.es OR from:40db.es OR from:\"Mónica Méndez\" OR from:monica.mendez@cis.es) OR from:\"Luis Manuel Ayuso Sanchez\" Or from:luis.ayuso@uma.es OR from:\"Juan Ignacio Martinez Pastor\" OR from:jimartinez@poli.uned.es OR from:ecb@uma.es")
+                 ( :name "Fac., Dept., Vicerrec., TFG, Exámenes, Económicas"
+                   :key  ?f
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\"  OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND ((from:\"Maria Angel\" OR from:departamentos.polisoci@adm.uned.es OR from:secretaria.poli.soci@adm.uned.es OR from:decanato.polisoci@adm.uned.es OR from:negociado-pruebas-presenciales@adm.uned.es OR from:vicepruebas@adm.uned.es OR from:vrector-pruebas-presen@adm.uned.es OR from:coord.pruebas@adm.uned.es OR from:pruebaspresenciales@adm.uned.es OR from:gastosextraordinariospruebas@adm.uned.es OR from:\"Secretaria Docente\" OR from:\"Secretaría Docente\" OR from:secdoc.cee@adm.uned.es OR from:\"MARIA ANGELES RODRIGUEZ SANTOS\" OR from:secretaria-ecoemp@adm.uned.es OR from:\"Secretaría Facultad CC. Economicas\" OR from:secadi.polisoci@adm.uned.es OR from:\"Secadi\" OR from:\"GUADALUPE DAMAS JURADO\" OR from:gdamas@pas.uned.es OR from:llosada@edu.uned.es OR from:egiralde@pas.uned.es OR from:\"MARIA GOMEZ ESCARDA\" OR from:mgomez@poli.uned.es OR from:sociologiauno@adm.uned.es OR from:vrector-profesorado@adm.uned.es OR from:\"Vicerrectorado de Profesorado\" OR from:vrector-gradoyposgrado@adm.uned.es OR from:vadj.grado@adm.uned.es OR from:alba.vrector@adm.uned.es) OR (subject:tfg OR subject:TFG OR body:tfg OR body:TFG OR subject:\"trabajo fin de grado\" OR body:\"trabajo fin de grado\" OR subject:\"/ex.men.*/\" OR body:\"/ex.men.*/\" OR subject:\"sociologia aplicada\"  OR body:\"sociologia aplicada\" OR subject:/modelo.*/")
+                 ( :name "Master FOL"
+                   :key  ?t
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/work/[work].Trash\") AND (subject:tfm OR subject:TFM OR body:tfm OR body:TFM OR subject:\"trabajo fin de master\" OR body:\"trabajo fin de master\" OR from:\"Ana María González\" OR from:gabriela.topa1@gmail.com OR from:\"Gabriela Topa\" OR from:gtopa@psi.uned.es OR from:\"Máster Formación Profesorado\" OR from:master-formacionprofesorado@adm.uned.es OR from:\"M. Angeles Serrano Garcia\" OR from:maserrano@pas.uned.es OR from:\"M. del Puerto Hojas Rosales\" OR from:mhojas@pas.uned.es OR from:\"Ana María González\" OR from:amgonzalez@edu.uned.es OR subjetc:\"TFM\"")
+                 ( :name "Ricardo"
+                   :key  ?r
+                   :query "maildir:\"/work/INBOX\" OR maildir:\"/personal/INBOX\" OR maildir:\"/work/[work].Spam\" OR maildir:\"/personal/[personal].Spam\" OR maildir:\"/work/[work].Drafts\" OR maildir:\"/personal/[personal].Drafts\" OR maildir:\"/work/[work].Trash\" OR maildir:\"/personal/[personal].Trash\") AND (from:ricardo.mora.villarrubia@gmail.com OR from:ricardo.mora@uc3m.es OR from:ricardo.mora.villarrubia@outlook.com OR from:\"Ricardo Mora\" OR from:ricmora@eco.uc3m.es OR from:\"Adelheid Holl\" OR from:a.holl@csic.es")
+                 ( :name "Sent in last 7 days"
+                   :key  ?s
+                   :query "maildir:\"/personal/[personal].Sent Mail\" OR maildir:\"/work/[work].Sent Mail\") AND date:7d..now")
+                 ( :name "Twyford"
+                   :key  ?y
+                   :query "maildir:\"/personal/INBOX\") AND (from:SC3074602a@schoolcomms.com OR from:\"TWY\" OR from:DataTeam@twyford.ealing.sch.uk OR from:\"TWYFORD CE HIGH SCHOOL\" OR from:a.holl@csic.es OR from:6thform@twyford.ealing.sch.uk OR from:\"6th Form - TWY\" OR from:Admissions@twyford.ealing.sch.uk OR from:\"Admissions - TWY\" OR from:marthur@twyford.ealing.sch.uk OR from:\"Michael Arthur\" OR from:\"Lucille De Costa\"")))
+
+#+end_src
+                                                                                
+
                       (mu4e-compose-signature .  "Daniel\n")
                      ( mu4e-compose-signature .
                        (concat
