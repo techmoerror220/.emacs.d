@@ -82,7 +82,7 @@ My change relates to height: changed from 2 to 10 in an attempt to raise the min
 #+RESULTS:
 : ((width . 80) (height . 10))
 
-** Minions
+** Minions 
 - Bundle all minor modes under a =[+]= symbol
 - Not compatible with =spaceline= out of the box
 - Customizations I don't use now that I use =doom='s mode line
@@ -208,11 +208,11 @@ More sophisticated config:
     :after eshell     ;; Make sure it gets hooked after eshell
     :hook (after-init . doom-modeline-init)
     :custom-face
-    (mode-line ((t (:height 1.0)))) ;; 0.95
+    (mode-line ((t (:height 0.95)))) ;; 1
     (mode-line-inactive ((t (:height 0.75))))
     (mode-line-buffer-modified ((t :foreground "orange")))
     :custom
-    (doom-modeline-height 10)     ;; 15
+    (doom-modeline-height 8)     ;; 15, luego 10
     (doom-modeline-bar-width 6)   ;; 6
     (doom-modeline-lsp t)
     (doom-modeline-github nil)
@@ -348,15 +348,16 @@ Select the darkest and lightest colors and the eight accents to pass to the func
 
 Once you have a theme file, you can load it with load-theme, like solarized.
 
+* Hola 
 
 #+begin_src emacs-lisp :tangle yes
 
   ;; dgm's solarized color-theme: A less vibrant palette
   (solarized-create-theme-file-with-palette 'dark 'solarized-dgm
     '("#002b36" "#fdf6e3"  
-      "#b58900" "#cb4b16" "#8b4500" "#eee8d5" "#6c71c4" "#268bd2" "#2aa198" "#859900"))            
-                                  ;; #8b3a3a
-  ;;      "#8b8b00" "#8b5a00" "#8b36s26" "#93115C" "#6c71c4" "#268bd2" "#2aa198" "#546E00"))            
+       "#6c71c4" "SteelBlue"  "#8b4500" "#eee8d5" "#6c71c4" "#268bd2" "#2aa198" "#859900"))            
+                "#cb4b16" ; #8b3a3a
+  ;;  "#b58900"     "#8b5a00" "#8b36s26" "#93115C" "#6c71c4" "#268bd2" "#2aa198" "#546E00"))            
   ;; "#8b795e" "#8b8378" "#4f94cd"  "#2075c7" "#4682b4" "#268bd2" "#2aa198" "#546E00")) 
   ;; "#839496"
   ;; #93a1a1

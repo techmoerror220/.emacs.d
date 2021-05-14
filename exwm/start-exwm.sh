@@ -40,13 +40,13 @@ setxkbmap -layout us -option ctrl:nocaps
 # xfce4-power-manager &
 syncthing -no-browser &         # Syncthing
 ## nm-applet &                     # Network Manager systemtray app that gives you information about your connections (disabled to try and activate it from the init.el)
-udiskie --tray &                # Disk mount utility
+udiskie --tray &                # Disk mount utility (option for showing a system tray)
 
 # Others from exwm-tutorial.pdf (DGM on 30 Dic 2019 comments out the next two lines in an attempt to use alsa instead of pulseaudio)
 # Jan 1, 2021. Disabled, as I'm trying DW's config
 pulseaudio --kill               # Kill pulseaudio
 pulseaudio --start              # Start pulseaudio
-volti &                         # Volume managers. Not working though.
+## volti &                         # Volume managers. Not working though.
 ## pasystray &                  # Pulseaudio volume control from tray (disabled to try and activate it from the init.el)
 
 # DGM. command to use nice icons
@@ -70,5 +70,4 @@ xrdb ~/.emacs.d/exwm/Xresources
 # launch emacs upon startup
 # commented out by DGM on 22/12/2020 to see if i can simply start with <exec emacs> as told in https://github.com/ch11ng/exwm/issues/299
 exec dbus-launch --exit-with-session emacs -mm --debug-init --use-exwm
-# exec emacs
-
+#exec emacs

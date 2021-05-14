@@ -177,22 +177,22 @@ GnuPG (2.1.5+) and Pinentry (0.9.5+).
 
 #+begin_src emacs-lisp :tangle yes
 
-  ;; (use-package pinentry
-  ;;   :config
-  ;;   (setq epa-pinentry-mode 'loopback)
-  ;;   (pinentry-start))
+  (use-package pinentry
+     :config
+     (setq epa-pinentry-mode 'loopback)
+     (pinentry-start))
 
   ;; DAVIWIL has it like this:
   ;; Edit: epa-pinentry-mode has been marked obsolete from Emacs 27. Use epg-pinentry-mode instead.
   ;; (setq epa-pinentry-mode 'loopback)
-  (setq epg-pinentry-mode 'loopback)
-  (pinentry-start)
+  ;; (setq epg-pinentry-mode 'loopback)
+  ;; (pinentry-start)
 
 
 #+end_src
 
 #+RESULTS:
-: Pinentry service is already running
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24727 52043 319353 949000) :init (24727 52043 319333 421000) :config (24727 52043 318883 922000) :config-secs (0 0 1437 584000) :init-secs (0 0 2371 488000) :use-package-secs (0 0 2614 76000)))
 
 
 * pinentry-emacs

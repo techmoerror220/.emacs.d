@@ -128,18 +128,20 @@ Ideally this segment belongs at lisp/progmodes/python.el:3292
 
 
 
-** dgm's customizations of python
+** COMMENT dgm's customizations of python/
+
+Problem with elpy's signature (10 may 2021)
 
 #+srcname: python-customization
 #+begin_src emacs-lisp
-(use-package elpy
-  :defer t)
-(elpy-enable)
-(use-package live-py-mode
-  :defer t)
-(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-;; (elpy-use-ipython)
-;; (elpy-use-ipython "ipython3") ;; error "elpy-use-ipython is deprecated; see https://elpy.readthedocs.io/en/latest/ide.html#interpreter-setup")
+;;(use-package elpy
+;;  :defer t)
+;; (elpy-enable)
+;;use-package live-py-mode
+;;  :defer t)
+;;(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+;;;; (elpy-use-ipython)
+;;;; (elpy-use-ipython "ipython3") ;; error "elpy-use-ipython is deprecated; see https://elpy.readthedocs.io/en/latest/ide.html#interpreter-setup")
 
 
 ;; tip from https://github.com/jorgenschaefer/elpy/issues/992

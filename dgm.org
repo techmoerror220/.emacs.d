@@ -162,16 +162,16 @@ Now my main use =goto-char-timer= where I am prompted to write the text that I w
 
   (use-package avy
     :bind
-    ("s-i" . avy-goto-word-1)  ;; goes to word that starts with a given char
-    ("s-+" . avy-goto-char)
-    ("s-%" . avy-goto-char-timer))
+    ("s-\i" . avy-goto-word-1)  ;; goes to word that starts with a given char
+    ("s-\+" . avy-goto-char)
+    ("s-\%" . avy-goto-char-timer))
 
   ;; (define-key global-map (kbd "s-l") 'avy-goto-char-timer) ;;
 
 #+end_src
 
 #+RESULTS: avy-mode
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24117 58068 70446 790000) :init (24117 58068 70250 881000) :init-secs (0 0 40 129000) :use-package-secs (0 0 351 172000) :config (24117 58068 70225 446000) :config-secs (0 0 3 685000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24729 15197 550774 777000) :init (24729 15197 550658 503000) :init-secs (0 0 42 558000) :use-package-secs (0 0 234 100000) :config (24729 15197 550639 558000) :config-secs (0 0 4 700000)))
 
 =avy-goto-char= goes literally to any char. But I find it too obstrusive as there are many matches.
 
@@ -2775,7 +2775,9 @@ The exchange-point-and-mark, bound to C-x C-x, will by default activate the regi
 
 From Reddit: https://www.reddit.com/r/emacs/comments/4gudyw/help_me_with_my_orgmode_workflow_for_notetaking/
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+- As of 9 May 2021 this package is not available
+
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package interleave
     :defer t)
 #+END_SRC

@@ -1,9 +1,0 @@
-(puthash "http://orgmode.org/elpa/archive-contents" '(23516 29587 727559 744000) url-history-hash-table)
-(puthash "http://orgmode.org/elpa/archive-contents.sig" '(23516 29587 859784 251000) url-history-hash-table)
-(puthash "http://elpa.gnu.org/packages/archive-contents" '(23516 29588 469888 480000) url-history-hash-table)
-(puthash "http://elpa.gnu.org/packages/archive-contents.sig" '(23516 29588 660889 492000) url-history-hash-table)
-(puthash "https://melpa.org/packages/archive-contents" '(23516 29591 373011 544000) url-history-hash-table)
-(puthash "https://melpa.org/packages/archive-contents.sig" '(23516 29592 880991 723000) url-history-hash-table)
-(puthash "https://melpa.org/packages/sudo-edit-20180731.1908.el" '(23516 29593 565398 906000) url-history-hash-table)
-(puthash "https://melpa.org/packages/sudo-edit-20180731.1908.el.sig" '(23516 29593 890509 301000) url-history-hash-table)
-

@@ -62,10 +62,10 @@ https://jherrlin.github.io/posts/emacs-mu4e/ for much of this customization.
 #+begin_src emacs-lisp :tangle yes
 
   (use-package mu4e
+    :after company
     :bind ("C-*" . mu4e)
     :ensure nil
     :init
-
     (defun work/mu4e-bookmark-num-days-old-query (days-old)
       (interactive (list (read-number "Show days old messages: " 7)))
       (let ((start-date (subtract-time (current-time) (days-to-time days-old))))
@@ -105,6 +105,7 @@ https://jherrlin.github.io/posts/emacs-mu4e/ for much of this customization.
     ;; (add-hook 'message-send-hook 'sign-or-encrypt-message)
 
     (add-hook 'message-mode-hook 'turn-on-orgtbl)
+
     :config
     (setq mail-user-agent 'mu4e-user-agent)
     (setq mu4e-maildir (expand-file-name "~/Maildir")
@@ -117,7 +118,7 @@ https://jherrlin.github.io/posts/emacs-mu4e/ for much of this customization.
           mu4e-attachment-dir  "~/Downloads"
           mu4e-save-multiple-attachments-without-asking t
           mu4e-completing-read-function 'completing-read
-          mu4e-compose-complete-addresses t
+          mu4e-compose-complete-addresses t  ;; complete addresses
           mu4e-compose-context-policy nil
           mu4e-compose-dont-reply-to-self t
           mu4e-compose-keep-self-cc nil
@@ -150,7 +151,7 @@ https://jherrlin.github.io/posts/emacs-mu4e/ for much of this customization.
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24706 56857 862653 894000) :init (24706 56857 862579 15000) :init-secs (0 0 531 903000) :use-package-secs (0 0 617 544000) :config (24706 56857 862564 471000) :config-secs (0 0 481 30000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24730 18436 960564 798000) :init (24730 18436 960403 104000) :init-secs (0 0 1514 681000) :use-package-secs (0 0 1701 692000) :config (24730 18436 960374 720000) :config-secs (0 0 1397 447000)))
 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -444,6 +445,9 @@ Note, =mu4e-maildir= takes an actual =filesystem-path=, the other folder names a
                                         ( :name "Messages with images"
                                           :query "maildir:/outlook/INBOX AND mime:image/*"
                                           :key ?i)
+                                        (:name "Ricardo"
+                                               :key  ?r
+                                               :query "(maildir:/work/INBOX OR maildir:/personal/INBOX OR maildir:/outlook/INBOX OR maildir:/work/[work].Spam OR maildir:/personal/[personal].Spam OR maildir:/work/[work].Drafts OR maildir:/personal/[personal].Drafts OR maildir:/work/[work].Trash OR maildir:/personal/[personal].Trash OR maildir:\"/outlook/Correo no deseado\" OR maildir:/outlook/Borradores OR maildir:\"/outlook/Elementos eliminados\") AND (from:ricardo.mora.villarrubia@gmail.com OR from:ricardo.mora@uc3m.es OR from:ricardo.mora.villarrubia@outlook.com OR from:\"Ricardo Mora\" OR from:ricmora@eco.uc3m.es OR from:\"Adelheid Holl\" OR from:a.holl@csic.es)")
                                         ( :name "Unread (pending) messages"
                                           :query "(maildir:/outlook/INBOX OR maildir:\"/outlook/Correo no deseado\") AND flag:unread AND NOT flag:trashed"
                                           :key ?p)

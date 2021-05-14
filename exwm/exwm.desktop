@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Emacs-EXWM-experiment
-Comments=Emacs Window Manager
+Comment=Emacs Window Manager
 Exec=sh /home/dgm/.emacs.d/exwm/start-exwm.sh
 TryExec=sh
 Type=Application

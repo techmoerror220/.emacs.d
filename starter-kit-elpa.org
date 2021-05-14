@@ -18,7 +18,7 @@ The following packages will be downloaded and installed.
                                     'adaptive-wrap  
                                     ;; 'ag
                                     ;; 'avy
-                                    'auto-complete
+                                    ;;'auto-complete
                                     ;;'ac-emmet
                                     ;;'ac-etags
                                     ;;'ac-ispell

@@ -198,61 +198,70 @@ We use the `:with` keyword to include dabbrev in every backend, which gives us c
 
 Daniel Guinea Martín: I disable it for text modes and now that I don't have it I realize how much it slowed typing!! So much better with it off!! Now my typing flows like with any other editor. 
 
+NB: The "capf" backend is the integration with emacs' default completion-at-point facility, and is the main mechanism by which lap-mode interacts with company, so it's good to keep that at the top.
+
 #+source: company-mode
 #+begin_src emacs-lisp :tangle yes
-;;Use C-TAB to complete. We put this in eval-after-load 
-;; because otherwise some modes will try to override our settings.
-;;;;;;; (require 'company) ;; commented out by dgm in favor of uncle dave's use-package from https://github.com/daedreth/UncleDavesEmacs
+  ;;Use C-TAB to complete. We put this in eval-after-load
+  ;; because otherwise some modes will try to override our settings.
+    ;;;;;;; (require 'company) ;; commented out by dgm in favor of uncle dave's use-package from https://github.com/daedreth/UncleDavesEmacs
 
-(use-package company
-  ;; :defer t
-  :config
-  (setq company-tooltip-limit 20)
-;;  (setq company-idle-delay 0.01)
-  (setq company-ech-delay 0)
-  (setq company-minimum-prefix-length 3))
+  (use-package company
+    :init
+    (add-hook 'after-init-hook 'global-company-mode)
+    (add-hook 'text-mode-hook 'company-mode)
+    :config
+    (setq company-tooltip-limit 20)
 
-;; set to 0 to prevent completion starting automatically 
-(setq company-idle-delay 0)
-;; cancel if input doesn't match
-(setq company-require-match nil)
-;; complete using C-TAB
-(global-set-key (kbd "<C-tab>") 'company-complete)
-;; use C-n and C-p to cycle through completions
-;; (define-key company-mode-map (kbd "<tab>") 'company-complete)
-(define-key company-active-map (kbd "C-n") 'company-select-next)
-(define-key company-active-map (kbd "<tab>") 'company-complete-common)
-(define-key company-active-map (kbd "C-p") 'company-select-previous)
-(define-key company-active-map (kbd "<backtab>") 'company-select-previous)
-;; enable math completions
-;;(require 'company-math)
-;; company-mode completions for ess
-;; (require 'company-ess)
-;;  (add-to-list 'company-backends 'company-math-symbols-unicode)
-;;(add-to-list 'company-backends 'company-math-symbols-latex)
-;; put company-capf at the beginning of the list
-(require 'company-capf)
-(setq company-backends
-      (delete-dups (cons 'company-capf company-backends)))
+    (setq company-minimum-prefix-length 3)
 
-;; ;; disable dabbrev
-;; (delete 'company-dabbrev company-backends)
-;; (delete 'company-dabbrev-code company-backends)
+    ;; set to 0 to prevent completion starting automatically
+    (setq company-idle-delay 0)
+    (setq company-echo-delay 0)
+  
+    ;; cancel if input doesn't match
+    (setq company-require-match nil)
+
+    ;; complete using C-TAB
+    (global-set-key (kbd "<C-tab>") 'company-complete)
+    ;; use C-n and C-p to cycle through completions
+    ;; (define-key company-mode-map (kbd "<tab>") 'company-complete)
+    (define-key company-active-map (kbd "C-n") 'company-select-next)
+    (define-key company-active-map (kbd "<tab>") 'company-complete-common)
+    (define-key company-active-map (kbd "C-p") 'company-select-previous)
+    (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
+
+    ;; (setq company-backends
+    ;;      (delete-dups (cons 'company-capf company-backends)))
+    ;;          (delete-dups (cons 'company-capf company-backends)))
+    ;;    (setq company-backends '((company-capf company-backends company-yasnippet)))
+
+    ;; https://tychoish.com/post/better-company/
+    (require 'company-capf)
+
+    (setq company-backends '(company-capf
+                             company-keywords
+                             company-semantic
+                             company-files
+                             company-etags
+                             company-cmake
+                             company-ispell
+                             company-yasnippet))
+
+    ;; From https://stackoverflow.com/questions/34652692/how-to-turn-off-company-mode-in-org-mode
+    ;; mu4e-compose-mode taken out of the list or else I don't get to complete email addresses.
+    (setq company-global-modes '(not latex-mode LaTeX-mode TeX-mode markdown-mode org-mode python-mode text-mode)))
+
+  ;; completion for kill ring history
+  (use-package browse-kill-ring
+    :config
+    (browse-kill-ring-default-keybindings))
 
 
-(add-hook 'after-init-hook 'global-company-mode)
-
-;; completion for kill ring history
-(use-package browse-kill-ring)
-(browse-kill-ring-default-keybindings)
-
-;; From https://stackoverflow.com/questions/34652692/how-to-turn-off-company-mode-in-org-mode
-;; mu4e-compose-mode taken out of the list or else I don't get to complete email addresses.
-(setq company-global-modes '(not python-mode org-mode text-mode latex-mode tex-mode LaTeX-mode TeX-mode markdown-mode))
 #+end_src
 
 #+RESULTS: company-mode
-| not | python-mode | org-mode | text-mode | latex-mode | tex-mode | LaTeX-mode | TeX-mode |
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24734 39021 570071 919000) :init (24734 39021 570066 654000) :config (24734 39021 569857 423000) :config-secs (0 0 3419 76000) :init-secs (0 0 4325 500000) :use-package-secs (0 0 4582 443000)))
 
 Now that I have =company-capf= above, I turn on =semantic-mode=. See https://github.com/syl20bnr/spacemacs/issues/1907
 Tuhdo says that =company-capf= is the expected backend to be used: ``I had no slowness [due to semantic-mode] with it [turned off] (...) And even without semantic-mode enabled, in Emacs Lisp company should use company-capf. Do you set =company-idle-delay= to very small value?''
@@ -262,7 +271,7 @@ On Semantic read also this: https://www.reddit.com/r/emacs/comments/5yxxrl/what_
 
 Commented out as it is activated in =src/setup-cedet.el=
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 ;; (semantic-mode 1)
 ;;(setq helm-semantic-fuzzy-match t
 ;;      helm-imenu-fuzzy-match t)
@@ -301,6 +310,9 @@ We use company mode, as initiated above, but here's a working auto-complete setu
   (add-hook 'html-mode-hook 'ac-html-enable)
 #+end_src 
 
+#+RESULTS: autocomplete
+| rainbow-mode | ac-html-enable |
+
 ** Specific languages 
 This comes from Uncle Dave at https://github.com/daedreth/UncleDavesEmacs
 
@@ -323,7 +335,8 @@ Each category also has additional settings.
     (require 'flycheck-clang-analyzer)
      (flycheck-clang-analyzer-setup)))
 #+END_SRC
-**** company
+
+**** Company
 Requires libclang to be installed.
 DGM 7 Nov 2019: when activated, I lost company mode in email and ledger, even though it was supposed to be active
 #+BEGIN_SRC emacs-lisp :tangle no

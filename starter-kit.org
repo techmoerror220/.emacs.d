@@ -620,29 +620,6 @@ Located in [[file:starter-kit-text.org][starter-kit-parens]]
 
 *** Starter kit =mu4e=
 
-Disabled in Ubuntu as I get this error: 
-
-#+begin_example sh
-
-Error (use-package): mu4e/:catch: Wrong number of arguments: (3 . 4), 2 Disable showing Disable logging
-
-#+end_example
-
-It seems the problem is general (January 2021):
-
-#+BEGIN_QUOTE
-
-A recent update on Emacs HEAD changed the define-obsolete-function-alias macro, which broke the plugins that use it.
-
-Until packages have caught up, I recommend you avoid updating Emacs or revert to Emacs 27.1. This only applies to users on Emacs 28.x -- this includes the native-comp branch (gccemacs).
-
-For gccemacs users, the last known good commit is emacs-mirror/emacs@213b5d7
-
-#+END_QUOTE
-
-
-Disabled until I get mu4e right
-
 #+BEGIN_SRC emacs-lisp
 
   (starter-kit-load "starter-kit-mu4e.org")
