@@ -635,73 +635,6 @@ Included in =starter-kit-completion.org=
 #+RESULTS: discover-my-major
 : discover-my-major
 
-*** Rainbow mode
-#+srcname: rainbow-mode
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; PACKAGE: rainbow-mode              ;;
-  ;;                                    ;;
-  ;; GROUP: Help -> Rainbow             ;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  (use-package rainbow-mode
-    :init
-    (add-hook 'prog-mode-hook         #'rainbow-mode)
-    (add-hook 'html-mode-hook         #'rainbow-mode)
-    (add-hook 'css-mode-hook          #'rainbow-mode)
-    (add-hook 'org-mode-hook          #'rainbow-mode)
-    (add-hook 'latex-mode-hook        #'rainbow-mode)
-    (add-hook 'R-mode-hook            #'rainbow-mode)
-    (add-hook 'inferior-ess-mode-hook #'rainbow-mode)
-    (add-hook 'python-mode-hook       #'rainbow-mode))
-
-;;R-mode-hook runs when you open a new source buffer, so anything you put in that will only affect your source buffers.inferior-ess-mode-hook runs when you start an R console, so anything in there should only apply to the console buffer and not the source.
-#+END_SRC
-
-#+RESULTS: rainbow-mode
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24467 10335 475765 838000) :init (24467 10335 475756 419000) :init-secs (0 0 24066 216000) :use-package-secs (0 0 24192 89000) :config (24467 10335 475645 294000) :config-secs (0 0 3 233000)))
-
-*** Rainbow delimiters
-Colors parentheses and other delimiters depending on their depth, useful for any language using them, especially lisp.
-
-Note, however, that Sacha Chua doesn't automatically turn this on because she thinks it slows things down a little. So she has =(use-package rainbow-delimiters :disabled t)=. So keep an eye on it.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-
-  (use-package rainbow-delimiters
-    :hook (prog-mode . rainbow-delimiters-mode))
-
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24654 22987 467372 341000) :init (24654 22987 467355 588000) :config (24654 22987 467327 859000) :config-secs (0 0 7 222000) :init-secs (0 0 66 248000) :use-package-secs (0 0 174 251000)))
-
-Note that the =:hook= bit is taken from DW. Previously I had:
-
-#+begin_example elisp
-
-;; :init
-;; (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-
-#+end_example
-
-
-
-*** Kurecolor
-
-- See this video to watch it live: https://www.youtube.com/watch?v=OMIxZhLU71U
-
-- Documentation here: https://github.com/emacsfodder/kurecolor
-
-- Currently not working. Need to revisit in future.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package kurecolor
-    :defer t)
-#+END_SRC
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23692 57023 62709 930000) :init (23692 57023 62697 750000) :config (23692 57023 62080 799000) :config-secs (0 0 26 151000) :init-secs (0 0 1129 806000) :use-package-secs (0 0 1239 736000)))
 
 *** Nyam-mode
 
@@ -3886,7 +3819,7 @@ NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
     "\n"
     "# -*- coding: utf-8 -*-\n"
     "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
-    "#+TITLE: Evaluación de la \\textsc{pec}NÚMERO dentro de la línea /Cambio en las Sociedades Contemporáneas/\n"
+    "#+TITLE: Evaluación de la \\textsc{pec}1 dentro de la línea /Cambio en las Sociedades Contemporáneas/\n"
     "#+SUBTITLE: Alumno/a:\n"
     "#+AUTHOR: Daniel Guinea, Dept. Sociología I, \\textsc{uned}\n"
     "#+DATE:\\today\n"
@@ -3928,7 +3861,7 @@ NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
     "\n"
     "# -*- coding: utf-8 -*-\n"
     "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
-    "#+TITLE: Evaluación de la \\textsc{pec}NÚMERO dentro de la línea /Cambio en las Sociedades Contemporáneas/\n"
+    "#+TITLE: Evaluación de la \\textsc{pec}2 dentro de la línea /Cambio en las Sociedades Contemporáneas/\n"
     "#+SUBTITLE: Alumno/a:\n"
     "#+AUTHOR: Daniel Guinea, Dept. Sociología I, \\textsc{uned}\n"
     "#+DATE:\\today\n"
@@ -3937,7 +3870,7 @@ NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
     "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
     "#+LATEX_CMD: xelatex\n"
     "\n\n"
-    "* ¿Ha seguido las indicaciones sobre la \textsc{pec1}?\n\n"
+    "* ¿Ha seguido las indicaciones hechas sobre la \textsc{pec1}?\n\n"
     "" _ "\n\n"
     "* Potenciales problemas\n"
     "\n\n"
@@ -3965,7 +3898,7 @@ NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
     "\n"
     "# -*- coding: utf-8 -*-\n"
     "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
-    "#+TITLE: Evaluación de la \\textsc{pec}NÚMERO dentro de la línea /Cambio en las Sociedades Contemporáneas/\n"
+    "#+TITLE: Evaluación de la \\textsc{pec}3 dentro de la línea /Cambio en las Sociedades Contemporáneas/\n"
     "#+SUBTITLE: Alumno/a:\n"
     "#+AUTHOR: Daniel Guinea, Dept. Sociología I, \\textsc{uned}\n"
     "#+DATE:\\today\n"
@@ -3989,6 +3922,39 @@ NB: I think the bit ="#+LANGUAGE: "str | "american""\n"= is not needed
 #+RESULTS:
 : xlt-pec3
 
+*** PEC4
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (define-skeleton xlt-pec4
+    "Inserts a XeLaTeX skeleton into current buffer.
+    For evaluating PECs."
+    "\n"
+    "# -*- coding: utf-8 -*-\n"
+    "# -*- find-file-hook: org-babel-execute-buffer -*-\n"
+    "#+TITLE: Evaluación de la \\textsc{pec}4 dentro de la línea /Cambio en las Sociedades Contemporáneas/\n"
+    "#+SUBTITLE: Alumno/a:\n"
+    "#+AUTHOR: Daniel Guinea, Dept. Sociología I, \\textsc{uned}\n"
+    "#+DATE:\\today\n"
+    "#+LaTeX_CLASS: memarticle\n"
+    "#+LaTeX_CLASS_OPTIONS: [11pt,oneside,a4paper,article]\n"
+    "#+LATEX_HEADER: \\usepackage[minted]{org-preamble-xelatex}\n"
+    "#+LATEX_CMD: xelatex\n"
+    "\n\n"
+    "* ¿Ha seguido las indicaciones hechas con motivo de la \\textsc{pec}3?\n\n"
+    "" _ "\n\n"
+    "* ¿Ha ordenado la información teórica y empírica?\n"
+     "\n\n"
+    "\n\n"
+    "* ¿Es correcto estilísticamente el trabajo?\n"
+     "\n\n"
+    "* Veredicto\n\n\n"
+    "\\printbibliography")
+
+#+END_SRC
+
+#+RESULTS:
+: xlt-pec4
 
 ** Tufte book and handout
 - For a handout, you simply change ="#+LATEX_CLASS: tufte-book\n"= from =book= to =handout=
@@ -4227,7 +4193,9 @@ Result:
 Recommended by the great Mike Zamansky at https://www.youtube.com/watch?v=49kBWM3RQQ8&list=PL1J8_tSSqnK4yrmlxd1ArVpP5ZgnPIeKZ&index=13&t=0s
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package try)
+
 #+END_SRC
 
 #+RESULTS:
@@ -6965,20 +6933,26 @@ Read: https://emacsnotes.wordpress.com/2018/06/01/a-finger-typer-makes-a-horribl
 Sacha has this but it doesn't work because it doesn't interpret my latitude and longitude as numbers.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package forecast
     :defer t
     :config
-    (setq forecast-latitude  40.4
-          forecast-longitude -3.7
-          forecast-city "Madrid"
+    (setq forecast-latitude  36.6
+          forecast-longitude -4.6
+          forecast-city "Fuengirola"
           forecast-country "Spain"
+          ; forecast-latitude  40.4
+          ; forecast-longitude -3.7
+          ; forecast-city "Madrid"
+          ; forecast-country "Spain"
           forecast-api-key "b580b82a056cdb3f6089f08ece4b2eb6"
           )
     )
+
 #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23735 33070 905741 448000) :init (23735 33070 905733 834000) :config (23735 33070 905590 741000) :config-secs (0 0 254 799000) :init-secs (0 0 543 959000) :use-package-secs (0 0 599 374000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24737 16658 230555 355000) :init (24737 16658 230544 47000) :init-secs (0 0 970 347000) :use-package-secs (0 0 1191 279000) :config (24737 16658 230520 264000) :config-secs (0 0 933 867000)))
 
 ** Sunrise/sunset
 
@@ -7025,14 +6999,32 @@ abbreviations used in your time zone. Emacs displays the times of sunrise and su
 
 As a user, you might find it convenient to set the calendar location variables for your usual physical location in your .emacs file. If you are a system administrator, you may want to set these variables for all users in a default.el file. See Init File.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+Get coordinates here: https://gps-coordinates.org/
+
+Madrid Settings
+#+BEGIN_SRC emacs-lisp :tangle no
+
   (setq calendar-latitude 40.4)
   (setq calendar-longitude -3.7)
   (setq calendar-location-name "Madrid, Spain")
+
 #+END_SRC
 
 #+RESULTS:
 : Madrid, Spain
+
+Fuengirola Settings
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (setq calendar-latitude 36.6)
+  (setq calendar-longitude -4.6)
+  (setq calendar-location-name "Fuengirola, Spain")
+
+#+END_SRC
+
+#+RESULTS:
+: Fuengirola, Spain
+
 
 ** Wttrin
 
@@ -7059,11 +7051,11 @@ change to:
  (let ((url-user-agent "curl"))
 #+END_EXAMPLE
 
-
-- If you're using use-package for your config, just relaunch emacs. There are probably other ways, but was the easiest for me. It will recreate the .elc file that you moved/deleted using the newly modified .el file.
+- If you're using =use-package= for your config, just relaunch emacs. There are probably other ways, but was the easiest for me. It will recreate the .elc file that you moved/deleted using the newly modified .el file.
 Thank you for the fix emacle!
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package wttrin
     :defer t
     :commands (wttrin)
@@ -7072,6 +7064,7 @@ Thank you for the fix emacle!
                                   "Fuengirola"
                                   "Malaga"))
     (setq wttrin-default-accept-language '("Accept-Language" . "en-US")))
+
 #+END_SRC
 
 #+RESULTS:
@@ -7438,8 +7431,8 @@ Note that the built-in `describe-function' includes both functions and macros. `
     (efs/kill-panel)
     (setq efs/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
 
-  ;; Start the polybar panel
-  (efs/start-panel)
+  ;; Start the polybar panel (disabled as I don't want to start Polybar by default)
+  ;; (efs/start-panel)
 
   (defun efs/send-polybar-hook (module-name hook-index)
     (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
@@ -7453,7 +7446,7 @@ Note that the built-in `describe-function' includes both functions and macros. `
 #+end_src
 
 #+RESULTS:
-| doom-modeline-set-selected-window | efs/send-polybar-exwm-workspace |
+| efs/send-polybar-exwm-workspace |
 
 
 * Automatically update packages
@@ -7656,7 +7649,6 @@ Costumization by https://github.com/izahn/dotemacs
 : global-command-log-mode
 
 
-
 ** Keycast
 
 By the great Jonas Bernoulli.
@@ -7667,7 +7659,7 @@ This package provides two modes that display the current command and its key or 
 
 NB: It's great but it's not really supported in =doom-modeline=, inspite of the =defun= code included below.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes 
 
   (use-package keycast
     :config
@@ -7682,7 +7674,7 @@ NB: It's great but it's not really supported in =doom-modeline=, inspite of the 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24587 906 967389 800000) :init (24587 906 967381 290000) :config (24587 906 967186 814000) :config-secs (0 0 348 845000) :init-secs (0 0 729 274000) :use-package-secs (0 0 794 297000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24736 13473 329761 42000) :init (24736 13473 329754 618000) :config (24736 13473 329608 544000) :config-secs (0 0 292 503000) :init-secs (0 0 592 626000) :use-package-secs (0 0 662 152000)))
 
 ** Keychord
 
@@ -8106,39 +8098,42 @@ From the great Bastien Guerry: https://bzg.fr/en/emacs-hide-mode-line/
 
 #+begin_src emacs-lisp :tangle yes
 
-  (defvar-local hidden-mode-line-mode nil)
+    (defvar-local hidden-mode-line-mode nil)
 
-  (define-minor-mode hidden-mode-line-mode
-    "Minor mode to hide the mode-line in the current buffer."
-    :init-value nil
-    :global t
-    :variable hidden-mode-line-mode
-    :group 'editing-basics
-    (if hidden-mode-line-mode
-        (setq hide-mode-line mode-line-format
-              mode-line-format nil)
-      (setq mode-line-format hide-mode-line
-            hide-mode-line nil))
-    (force-mode-line-update)
-    ;; Apparently force-mode-line-update is not always enough to
-    ;; redisplay the mode-line
-    (redraw-display)
-    (when (and (called-interactively-p 'interactive)
-               hidden-mode-line-mode)
-      (run-with-idle-timer
-       0 nil 'message
-       (concat "Hidden Mode Line Mode enabled.  "
-               "Use M-x hidden-mode-line-mode to make the mode-line appear."))))
+    (define-minor-mode hidden-mode-line-mode
+      "Minor mode to hide the mode-line in the current buffer."
+      :init-value nil
+      :global t
+      :variable hidden-mode-line-mode
+      :group 'editing-basics
+      (if hidden-mode-line-mode
+          (setq hide-mode-line mode-line-format
+                mode-line-format nil)
+        (setq mode-line-format hide-mode-line
+              hide-mode-line nil))
+      (force-mode-line-update)
+      ;; Apparently force-mode-line-update is not always enough to
+      ;; redisplay the mode-line
+      (redraw-display)
+      (when (and (called-interactively-p 'interactive)
+                 hidden-mode-line-mode)
+        (run-with-idle-timer
+         0 nil 'message
+         (concat "Hidden Mode Line Mode enabled.  "
+                 "Use M-x hidden-mode-line-mode to make the mode-line appear."))))
 
-  ;; If you want to hide the mode-line in every buffer by default
-  ;; (add-hook 'after-change-major-mode-hook 'hidden-mode-line-mode)
+    ;; If you want to hide the mode-line in every buffer by default
+    ;; (add-hook 'after-change-major-mode-hook 'hidden-mode-line-mode)
 
-(global-set-key (kbd "C-\;") 'hidden-mode-line-mode)
+  (global-set-key (kbd "C-\;") 'hidden-mode-line-mode)
+  
+  ;; don't know why the following doesn't work
+  ;; (eval-expression 'hidden-mode-line-mode)  
 
 #+end_src
 
 #+RESULTS:
-: hidden-mode-line-mode
+: t
 
 #+begin_src emacs-lisp :tangle no
 
@@ -8252,6 +8247,36 @@ DGM 24 April 2021: I disables it as I use =vterm= and =vterm-toggle= now.
 #+RESULTS:
 | ansi-color-for-comint-mode-on | company-mode | flycheck-mode | yas-minor-mode | ess-r-package-activate-directory-tracker |
 
+* Org-roam 
+
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package org-roam
+    :custom
+    (org-roam-directory "/home/dgm/documents/dropbox/notes/org-roam")
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find))
+    :config
+    (org-roam-setup))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24735 64423 820445 719000) :init (24735 64423 820284 755000) :init-secs (0 0 19673 285000) :use-package-secs (0 3 406035 76000) :config (24735 64423 820258 315000) :config-secs (0 0 19640 329000)))
+
+
+* Edit-indirect 
+Objetive: To edit blocks of code in, pro example, markdown
+
+#+begin_src emacs-lisp :tangle yes
+
+(use-package edit-indirect)
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24742 11369 910690 860000) :init (24742 11369 910686 722000) :config (24742 11369 910621 401000) :config-secs (0 0 2 711000) :init-secs (0 0 4764 632000) :use-package-secs (0 1 984921 112000)))
+
 
 * Provide
 
@@ -8264,7 +8289,8 @@ Trying this on 28 dic 2018. I don't really know why it is needed or not.
 #+END_SRC
 
 #+RESULTS:
-: dgm
+: t
+
 
 * Final message
 #+source: message-line

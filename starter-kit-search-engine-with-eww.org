@@ -452,13 +452,17 @@ g
 From Julian Assange: 
 
 #+begin_src emacs-lisp :tangle yes
+
 (global-set-key (kbd "s-b") 'helm-surfraw)
+
 #+end_src
 
 * Provide
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
 (provide 'starter-kit-search-engine-with-eww)
+
 #+END_SRC
 
 #+RESULTS:
@@ -468,7 +472,9 @@ From Julian Assange:
 
 #+source: message-line
 #+begin_src emacs-lisp :tangle yes
+
   (message "Starter Kit Search Engine with EWW loaded.")
+
 #+end_src
 
 

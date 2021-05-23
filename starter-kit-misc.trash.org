@@ -1,0 +1,18 @@
+** Change theme depending on hour of day
+- From 9 am to 8 pm, light theme. Otherwise, dark theme.
+- https://blog.jft.rocks/emacs/time-based-theme.html
+- Disabled so that I simplify it
+
+Note that I've moved this
+
+#+BEGIN_EXAMPLE
+    (set-face-attribute 'helm-selection nil 
+                        :background nil
+                        :foreground "Orange3")
+    (set-face-attribute 'helm-source-header
+                        nil
+                        :foreground "#dcdcdc")
+#+END_EXAMPLE
+
+to the function =get-spaceline-working=
+

@@ -183,10 +183,19 @@ I substitute =scheme-mode= for =racket-mode=
 #+RESULTS: starter-kit-recentf-ido-find-file
 : recentf-ido-find-file
 
-** Other
+** Lore Ipsum
+From: https://www.emacswiki.org/emacs/LoremIpsum
+
+This text has been used since the 16th Century as a dummy text when you are preparing the layout of some presentation but don’t have the final text yet, or want to demonstrate the layout without distracting the reader with actual content.
+
+The lorem ipsum text originated from “de Finibus Bonorum et Malorum” (The Extremes of Good and Evil) by Marcus Tullius Cicero, written in 45 BC but it has been so transformed along the years that now, it is relatively meaningless.
+
+*** COMMENT Originally I had only one paragraph
+
 Useful when a large block of text is required (e.g. for testing)
-#+srcname: starter-kit-lorem
+#+srcname: starter-kit-lorem-simple
 #+begin_src emacs-lisp 
+
 (defun lorem ()
   "Insert a lorem ipsum."
   (interactive)
@@ -197,7 +206,21 @@ Useful when a large block of text is required (e.g. for testing)
           "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla "
           "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in "
           "culpa qui officia deserunt mollit anim id est laborum."))
+
 #+end_src
+
+*** Now I have many 
+
+#+srcname: starter-kit-lorem
+#+begin_src emacs-lisp 
+
+(require 'lorem-ipsum)
+
+#+end_src
+
+#+RESULTS: starter-kit-lorem
+: lorem-ipsum
+
 
 * Provide 
 

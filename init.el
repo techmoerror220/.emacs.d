@@ -671,6 +671,12 @@ ARCHIVE is the string name of the package archive.")
     (exwm-randr-enable)
     (start-process-shell-command "xrandr" nil "xrandr --dpi 270 --output eDP-1 --primary --mode 3840x2160 --pos 0x0 --rotate normal")
 
+  ;; (when (string= (system-name) "lenovo")
+  ;;   (exwm-randr-enable)
+  ;;   (start-process-shell-command "xrandr" nil "--dpi 270 --fb 7680x4320 \
+  ;;      --output eDP-1 --mode 3840x2160 --pos 0x0 --rotate normal \
+  ;;      --output HDMI-1-0 --primary --mode 1920x1080 --scale 2x2 --pos 3840x0 --rotate normal")
+
     ;; React to display connectivity changes, do initial display update
     (add-hook 'exwm-randr-screen-change-hook #'efs/update-displays)
     (efs/update-displays))

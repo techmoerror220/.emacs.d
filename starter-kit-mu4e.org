@@ -573,6 +573,10 @@ Add field =:BIRTHDAY: %^{yyyy-mm-dd= only add when i want to. Otherwise, if date
                                 ("c" "Contact" entry (file+headline "/home/dgm/Dropbox/gtd/contacts.org" "Contacts"),
                                  my/org-contacts-template
                                  :empty-lines 1)
+                                ("C" "Citas" entry
+                                 (file+headline "~/Dropbox/gtd/citas.org" "Citas")
+                                 "* %?\nCaptured on %U from %a\n"
+                                 :prepend t)
                                 ("f" "Financial entries (Ledger)")
                                 ("fc" "Checking" plain
                                  (file "~/documents/personal/finanzas/ledger/journal.dat")
@@ -645,6 +649,8 @@ Add field =:BIRTHDAY: %^{yyyy-mm-dd= only add when i want to. Otherwise, if date
 
 #+RESULTS:
 | a | Article | entry | (file+headline /home/dgm/Dropbox/gtd/bibliography.org Bibliography) | * %a %^g |
+
+
 
 Original template: 
 

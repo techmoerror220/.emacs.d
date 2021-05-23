@@ -1745,7 +1745,7 @@ This I don't really use but could be useful in future:
                          ((org-agenda-overriding-header "                                               LEARNING                                             ")
                           (org-agenda-cmp-user-defined 'org-sort-agenda-items-todo)))
               (tags-todo "-project+TODO=\"TODO\""
-                         ((org-agenda-overriding-header "                                               ORPHAN TODOs                                         ")
+                         ((org-agenda-overriding-header "                                                                                 ORPHAN TODOs                                         ")
                           ))
               (tags-todo "+project+CATEGORY=\"emacs\""
                          ((org-agenda-overriding-header "                                               EMACS                                                ")
@@ -2327,3 +2327,5 @@ Formatting bibliography entries that I enter with org-ref in Org files. For some
 #+begin_src emacs-lisp :tangle yes
   (message "Starter Kit Org loaded.")
 #+end_src
+
+

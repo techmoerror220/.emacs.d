@@ -9,8 +9,76 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 * Starter Kit Misc
 Things that don't fit anywhere else.
 
+** Rainbow-mode 
 
-* Font-face setup (PragmataPro)
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package rainbow-mode
+    :ensure
+    :commands rainbow-mode
+    :init
+    (add-hook 'prog-mode-hook         #'rainbow-mode)
+    (add-hook 'html-mode-hook         #'rainbow-mode)
+    (add-hook 'css-mode-hook          #'rainbow-mode)
+    (add-hook 'org-mode-hook          #'rainbow-mode)
+    (add-hook 'latex-mode-hook        #'rainbow-mode)
+    (add-hook 'R-mode-hook            #'rainbow-mode)
+    (add-hook 'inferior-ess-mode-hook #'rainbow-mode)
+    (add-hook 'python-mode-hook       #'rainbow-mode)
+    :config
+    (setq rainbow-ansi-colors nil)
+    (setq rainbow-x-colors nil))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24735 54767 954520 36000) :init (24735 54767 954517 403000) :config (24735 54767 954511 70000) :config-secs (0 0 226 559000) :init-secs (0 0 256 912000) :use-package-secs (0 0 297 327000)))
+
+
+*** Rainbow delimiters
+Colors parentheses and other delimiters depending on their depth, useful for any language using them, especially lisp.
+
+Note, however, that Sacha Chua doesn't automatically turn this on because she thinks it slows things down a little. So she has =(use-package rainbow-delimiters :disabled t)=. So keep an eye on it.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24654 22987 467372 341000) :init (24654 22987 467355 588000) :config (24654 22987 467327 859000) :config-secs (0 0 7 222000) :init-secs (0 0 66 248000) :use-package-secs (0 0 174 251000)))
+
+Note that the =:hook= bit is taken from DW. Previously I had:
+
+#+begin_example elisp
+
+;; :init
+;; (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+
+#+end_example
+
+** Kurecolor
+
+- See this video to watch it live: https://www.youtube.com/watch?v=OMIxZhLU71U
+
+- Documentation here: https://github.com/emacsfodder/kurecolor
+
+- Currently not working. Need to revisit in future.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package kurecolor
+    :defer t)
+
+#+END_SRC
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (23692 57023 62709 930000) :init (23692 57023 62697 750000) :config (23692 57023 62080 799000) :config-secs (0 0 26 151000) :init-secs (0 0 1129 806000) :use-package-secs (0 0 1239 736000)))
+
+
+** Font-face setup (PragmataPro)
 
 Read:
 
@@ -32,14 +100,14 @@ https://emacs.stackexchange.com/questions/1030/how-can-i-set-different-font-size
   (set-face-attribute 'variable-pitch nil :family "Pragmata Pro" :height 180)
 
   ;; Mode-line (This is what shrinks the mode line)
-  (set-face-attribute 'mode-line nil :font "Pragmata Pro Mono-14")
+  (set-face-attribute 'mode-line nil :font "Pragmata Pro Mono-16")
 
   ;; my function to reduce the mode-line on the flycheck
 
   (defun dgm/shrink-modeline ()
     "Shrinks font size in the modeline"
     (interactive)
-    (set-face-attribute 'mode-line nil :font "Pragmata Pro Mono-14"))
+    (set-face-attribute 'mode-line nil :font "Pragmata Pro Mono-16"))
 
   ;; I believe it is not needed.
   ;; (setq default-frame-alist '((font . "Pragmata Pro Mono-18")))
@@ -70,7 +138,7 @@ Tuned for Pragmata Pro at =0.09=. =0.06= originally
 
 ** Customize minibuffer's height
 
-My change relates to height: changed from 2 to 10 in an attempt to raise the minibuffer and be able to see more... but it doesn't work!! 
+My change relates to height: changed from 2 to 10 in an attempt to raise the minibuffer and be able to see more... but it doesn't work!! It'd be useful for `pass', for example.
 
 #+begin_src emacs-lisp :tangle no
 
@@ -96,7 +164,8 @@ My change relates to height: changed from 2 to 10 in an attempt to raise the min
 #+END_EXAMPLE
 
 *** My original, working config
-#+begin_src emacs-lisp :tangle no
+
+#+begin_src emacs-lisp :tangle yes
   (use-package minions
 ;;    :after (circadian)
     :config
@@ -109,9 +178,9 @@ My change relates to height: changed from 2 to 10 in an attempt to raise the min
 #+RESULTS:
 : minions-minor-modes-menu
 
-*** DW's config 
+*** DW's config for the doom-modeline
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 
   (use-package minions
     :hook (doom-modeline-mode . minions-mode)
@@ -126,14 +195,14 @@ My change relates to height: changed from 2 to 10 in an attempt to raise the min
 ** My mode line 
 https://emacs.stackexchange.com/questions/10033/change-mode-line-buffer-id-face-for-inactive-windows/22682#22682
 
-It's working. But turned off to try DW's 
+It's working. Turn off when using DW's Doom setup
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
 
-  ;;;; Commented out as Polybar takes care of this now.
-  ;; (setq display-time-day-and-date t)
-  ;; (setq display-time-24hr-format t)
-  ;; (display-time-mode 1)
+  ;;;; Comment out when Polybar takes care of this.
+  (setq display-time-day-and-date t)
+  (setq display-time-24hr-format t)
+  (display-time-mode 1)
 
   (defvar ml-selected-window nil)
 
@@ -173,11 +242,11 @@ It's working. But turned off to try DW's
   (setq-default mode-line-buffer-identification
                 '(:eval (ml-propertized-buffer-identification "%12b")))
 
-  (defun dgm/send-polybar-hook (module-name hook-index)
-    (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
+  ;; (defun dgm/send-polybar-hook (module-name hook-index)
+  ;;   (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
 
-  (defun dgm/send-polybar-exwm-workspace () 
-    (dgm/send-polybar-hook "exwm-workspace" 1))
+  ;; (defun dgm/send-polybar-exwm-workspace () 
+  ;;   (dgm/send-polybar-hook "exwm-workspace" 1))
 
 #+end_src
 
@@ -201,8 +270,9 @@ It's working. But turned off to try DW's
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24689 35712 304431 34000) :init (24689 35712 304424 302000) :config (24689 35712 304283 121000) :config-secs (0 0 3 727000) :init-secs (0 0 590 463000) :use-package-secs (0 0 904 235000)))
 
 More sophisticated config:
+(disabled in 15 May 2021)
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 
   (use-package doom-modeline
     :after eshell     ;; Make sure it gets hooked after eshell
@@ -229,9 +299,9 @@ More sophisticated config:
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24699 6088 115789 610000) :use-package-secs (0 0 7375 996000) :init (24699 6088 115764 922000) :init-secs (0 0 1873 309000) :config (24699 6088 115747 941000) :config-secs (0 0 1839 697000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24738 54609 547783 946000) :init (24738 54609 547755 830000) :init-secs (0 0 123 111000) :use-package-secs (0 0 8285 136000)))
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 
   (defun doom-modeline-conditional-buffer-encoding ()
     "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
@@ -262,14 +332,16 @@ loading the =zenburn= and =anti-zenburn= themes.
 Add =(setq custom-safe-themes t)= to your init file before you load your theme.
 This will treat all themes as safe, which could be a risk in theory, but if 
 you are only installing themes from trusted sources, I don't see any issue 
- https://emacs.stackexchange.com/questions/18932/stop-emacs-asking-if-a-theme-is-safe
+https://emacs.stackexchange.com/questions/18932/stop-emacs-asking-if-a-theme-is-safe
 
 If you don't set this up, then =load-theme= does not work.
 
 #+source: colors
 #+begin_src emacs-lisp :tangle yes
+
 (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
 (setq custom-safe-themes t)
+
 #+end_src
 
 #+RESULTS: colors
@@ -348,7 +420,7 @@ Select the darkest and lightest colors and the eight accents to pass to the func
 
 Once you have a theme file, you can load it with load-theme, like solarized.
 
-* Hola 
+**** DGM customization of solarized dark
 
 #+begin_src emacs-lisp :tangle yes
 
@@ -423,89 +495,35 @@ Once you have a theme file, you can load it with load-theme, like solarized.
 #+RESULTS:
 : /home/dgm/.emacs.d/themes/solarized-wombat-dark.el
 
-
-
-
 *** Other themes
 
+Notes on Labburn:
+Labburn is a port of the Zenburn for Emacs theme, which in turn is is a direct port of the popular Zenburn theme for vim, developed by Jani Nurminen.
+
+The main change is the movement of color defintions to the Lab Color Space, which allows better manipulation and comparative equality in perception of the lightness of different colors. Colors were converted from the zenburn theme and slightly adjusted in lightness.
+
+All/most bold attributes were removed as well, as these change the lightness perception.
+
 #+begin_src emacs-lisp :tangle yes
 
-  (use-package poet-theme)
+  ;;  (use-package poet-theme)
   (use-package tao-theme)
   (use-package nord-theme)
-  (use-package modus-themes)
+  (use-package dream-theme) ;; se descarga pero no se puede cargar, no sé por qué. Dark alternative
+  ;; to zenburn by dbjc!
+
+  (use-package labburn-theme)     ;; the best low-contrast, zenburn-alike theme for the
+  ;; HDPI screen
+  (use-package doneburn-theme)     ;; light alternative by Manuel Uberti
+  (use-package anti-zenburn-theme) ;; light, greyish alternative to zenburn that might
+  ;; even work at night
+  (use-package twilight-anti-bright-theme) ;; check this light-on-dark theme
+  (use-package twilight-theme)             ;; check it
 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24712 10576 773826 588000) :init (24712 10576 773814 908000) :config (24712 10576 773474 285000) :config-secs (0 0 12 112000) :init-secs (0 0 655 506000) :use-package-secs (0 0 757 268000)))
-
-
-*** Change theme depending on hour of day
-- From 9 am to 8 pm, light theme. Otherwise, dark theme.
-- https://blog.jft.rocks/emacs/time-based-theme.html
-- Disabled so that I simplify it
-
-Note that I've moved this
-
-#+BEGIN_EXAMPLE
-    (set-face-attribute 'helm-selection nil 
-                        :background nil
-                        :foreground "Orange3")
-    (set-face-attribute 'helm-source-header
-                        nil
-                        :foreground "#dcdcdc")
-#+END_EXAMPLE
-
-to the function =get-s;paceline-working=
-
-#+begin_src emacs-lisp :tangle yes
-  (defun set-light-theme ()
-    "Set the light theme with some customization if needed."
-    (interactive)
-    (load-theme 'solarized-light t)
-    (dgm/shrink-modeline))
-
-  (defun set-dark-theme ()
-    "Set the dark theme with some customization if needed."
-    (interactive)
-    (load-theme 'solarized-dgm t)
-    (dgm/shrink-modeline))
-  ;; solarized-dark originally
-
-  ;;(let ((current-hour (string-to-number (format-time-string "%H"))))
-  ;;    (if (or (< current-hour 10) (> current-hour 19)) (set-dark-theme) (set-light-theme)))
-#+end_src
-
-#+RESULTS:
-: set-dark-theme
-
-
-*** Same as my switching of themes based on time, but using the Circadian package
-
-Other dark themes I like:
-- solarized-zenburn
-- doom-nord
-- doom-solarized-dark
-
-#+begin_src emacs-lisp :tangle yes
-
-  (use-package circadian
-    :init (minions-mode 1)  
-    :config
-    (setq calendar-latitude 40.4)
-    (setq calendar-longitude -3.7)
-    (setq circadian-themes '((:sunrise . solarized-light)
-                             (:sunset  . solarized-dgm)))
-    (circadian-setup)
-    (dgm/shrink-modeline))
-  ;;    (setq circadian-themes '((:sunrise . tao-yang)
-  ;;                             (:sunset  . tao-yin)))
-
-#+end_src
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24720 22891 718293 282000) :init (24720 22891 718279 600000) :config (24720 22891 717872 115000) :config-secs (0 0 6354 565000) :init-secs (0 0 7263 994000) :use-package-secs (0 0 7402 574000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24738 55559 743054 509000) :init (24738 55559 743046 828000) :config (24738 55559 742768 5000) :config-secs (0 0 5 663000) :init-secs (0 0 4043 845000) :use-package-secs (0 1 89699 45000)))
 
 ** More Color Themes with Doom
 
@@ -521,36 +539,216 @@ Other dark themes I like:
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24608 5010 859926 262000) :init (24608 5010 859901 980000) :config (24608 5010 859859 116000) :config-secs (0 0 17 290000) :init-secs (0 0 132 216000) :use-package-secs (0 0 300 622000)))
 
-** Protesilaos Stavrou's themes
+** Protesilaos Stavrou's Modus Themes
+
+Message from Prot in Youtube: 
+
+You are welcome! There is no need to use the defconst inside your config
+(it is discouraged to change something that is declared as a constant).
+Instead, you can check the value of that defconst to get a sense of all
+the key-value pairs that you can override.  The overrides are handled by
+the variables 'modus-themes-operandi-color-overrides' and
+'modus-themes-vivendi-color-overrides'.  Here is a sample that changes
+quite a few basic colours in modus-vivendi (the main foreground you want
+to change is called 'fg-main', others you might also want to affect as
+'fg-alt', 'fg-active'...).
 
 #+begin_src emacs-lisp :tangle no
 
-(use-package modus-themes
-  :ensure                         ; omit this to use the built-in themes
-  :init
-  ;; Add all your customizations prior to loading the themes
-  (setq modus-themes-slanted-constructs t
-        modus-themes-bold-constructs nil
-        modus-themes-region 'no-extend)
+  (setq modus-themes-vivendi-color-overrides
+        '((bg-main . "#100b17")
+          (bg-dim . "#161129")
+          (bg-alt . "#181732")
+          (bg-hl-line . "#191628")
+          (bg-active . "#282e46")
+          (bg-inactive . "#1a1e39")
+          (bg-region . "#393a53")
+          (bg-header . "#202037")
+          (bg-tab-bar . "#262b41")
+          (bg-tab-active . "#120f18")
+          (bg-tab-inactive . "#3a3a5a")
+          (fg-unfocused . "#9a9aab")
+          (fg-main . "#eee8d5")))
 
-  ;; Load the theme files before enabling a theme (else you get an error).
-  (modus-themes-load-themes)
-  :config
-  ;; Load the theme of your choice:
-  (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
-  :bind ("<f5>" . modus-themes-toggle))
+#+end_src
+
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package modus-themes
+    :ensure                               ; omit this to use the built-in themes
+    :init
+    ;; Add all your customizations prior to loading the themes
+    (setq modus-themes-slanted-constructs t
+          modus-themes-bold-constructs t ; nil
+          modus-themes-region 'no-extend
+          modus-themes-no-mixed-fonts nil  ; default
+          modus-themes-subtle-line-numbers t ; nil (line numbers blend with the
+                                   ; buffer)
+          modus-themes-success-deuteranopia nil ; t to use blue-ish colors instead
+                                          ; of greenish to denote "success",
+                                          ; "done, etc
+          modus-themes-fringes 'subtle ; {nil, 'subtle, 'intense}
+          modus-themes-mode-line '3d   ; nil
+          modus-themes-syntax 'faint ; nil, try  'faint to get same colors but more
+                                          ; desaturated (less vibrant, more muted colors)
+          modus-themes-hl-line 'underline-neutral ; nil is the default
+          modus-themes-prompts 'subtle-gray ; ni is the default
+          modus-themes-completions 'moderate ; {nil, 'moderate, 'opinionated}
+          modus-themes-region 'no-extend ; {nil, 'bg-only-no-extend}
+          modus-themes-diffs nil ; {'desaturated}
+          modus-themes-org-blocks nil ; {'gray-background 'tinted-background}
+          modus-themes-org-habit nil
+          modus-themes-scale-headings t ; nil 
+          )
+
+    ;; Load the theme files before enabling a theme (else you get an error).
+    (modus-themes-load-themes)
+    ;; My costumization
+    (setq modus-themes-operandi-color-overrides
+          '((bg-main . "#eee8d5")))
+
+    (defvar my-modus-themes-operandi-extra-colors-overrides
+      '((bg-main . "#eee8d5"))
+      "My bespoke colors for `modus-vivendi'.")
+
+    (setq modus-themes-vivendi-color-overrides
+          '((bg-main . "#002b36")             ; #100b17
+            (bg-dim . " #93a1a1")             ; #161129
+            (bg-alt . "#073642")              ; #181732
+            (bg-hl-line . "#93a1a1")          ; #191628
+            (bg-active . "#282e46")
+            (bg-inactive . "#1a1e39") 
+            (bg-region . "#393a53")
+            (bg-header . "#202037")
+            (bg-tab-bar . "#262b41")
+            (bg-tab-active . "#120f18")
+            (bg-tab-inactive . "#3a3a5a")
+            (fg-unfocused . "#9a9aab")
+            (fg-main . "#93a1a1")))       ;;  #e9e2cb #eee8d5
+
+    (defvar my-modus-themes-vivendi-extra-color-overrides
+      '((bg-main . "#002b36")             ; #100b17
+        (bg-dim . " #93a1a1")             ; #161129
+        (bg-alt . "#073642")              ; #181732
+        (bg-hl-line . "#93a1a1")          ; #191628
+        (bg-active . "#282e46")
+        (bg-inactive . "#1a1e39") 
+        (bg-region . "#393a53")
+        (bg-header . "#202037")
+        (bg-tab-bar . "#262b41")
+        (bg-tab-active . "#120f18")
+        (bg-tab-inactive . "#3a3a5a")
+        (fg-unfocused . "#9a9aab")
+        (fg-main . "#93a1a1"))
+      "My bespoke colors for `modus-operandi'.")
+
+    (defun my-modus-themes-saturate (percent)
+      "Saturate current Modus theme palette overrides by PERCENT.
+  Preserve the color values stored in
+  `my-modus-themes-operandi-extra-color-overrides',
+  `my-modus-themes-vivendi-extra-color-overrides'."
+      (interactive
+       (list (read-number "Saturation by percent: ")))
+      (let* ((theme (modus-themes--current-theme))
+             (palette (pcase theme
+                        ('modus-operandi modus-themes-operandi-colors)
+                        ('modus-vivendi modus-themes-vivendi-colors)
+                        (_ (error "No Modus theme is active"))))
+             (overrides (pcase theme
+                          ('modus-operandi 'modus-themes-operandi-color-overrides)
+                          ('modus-vivendi 'modus-themes-vivendi-color-overrides)
+                          (_ (error "No Modus theme is active"))))
+             (extra-overrides (pcase theme
+                                ('modus-operandi my-modus-themes-operandi-extra-color-overrides)
+                                ('modus-vivendi my-modus-themes-vivendi-extra-color-overrides)
+                                (_ (error "No Modus theme is active")))))
+        (let (name cons colors)
+          (dolist (cons palette)
+            (setq name (color-saturate-name (cdr cons) percent))
+            (setq name (format "%s" name))
+            (setq cons `(,(car cons) . ,name))
+            (push cons colors))
+          (set overrides (append extra-overrides colors)))
+        (pcase theme
+          ('modus-operandi (modus-themes-load-operandi))
+          ('modus-vivendi (modus-themes-load-vivendi))))))
+
+  ;; To disable the effect
+
+  (defun my-modus-themes-revert-overrides ()
+    "Reset palette overrides and reload active Modus theme."
+    (interactive)
+    (setq modus-themes-operandi-color-overrides nil
+          modus-themes-vivendi-color-overrides nil)
+    (pcase (modus-themes--current-theme)
+      ('modus-operandi (modus-themes-load-operandi))
+      ('modus-vivendi (modus-themes-load-vivendi))))
 
 #+end_src
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24699 17929 964290 808000) :init (24699 17929 964228 374000) :config (24699 17929 964220 572000) :config-secs (0 2 928481 212000) :init-secs (0 2 928541 941000) :use-package-secs (0 2 928706 561000)))
+: my-modus-themes-revert-overrides
+
+  :config
+  ;; Load the theme of your choice:
+  ;; (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
+  :bind ("<f5>" . modus-themes-toggle)
+
+**  Circadian package: Same as my switching of themes based on time
+
+Other dark themes I like:
+- solarized-zenburn
+- doom-nord
+- doom-solarized-dark
+
+Prot in https://protesilaos.com/modus-themes/ claims that the =solar= package is built-in but it is not in my built!! 
+
+#+begin_src emacs-lisp :tangle no
+
+  (use-package solar       ; built-in
+    :config
+    (setq calendar-latitude 40.4
+          calendar-longitude -3.7))
+
+#+end_src
+
+    (dgm/shrink-modeline)
+
+Fuengirola:
+- latitude   36.6
+- longitude: -4.6
+
+Madrid: 
+- latitude:  40.4
+- longitude: -3.7
+
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package circadian
+    :ensure
+    :init (minions-mode 1)
+    :config
+    (setq calendar-latitude 40.4)
+    (setq calendar-longitude -3.7)
+    (setq circadian-themes '((:sunrise . solarized-light)
+                             (:sunset  . labburn)))
+    (circadian-setup))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24735 58834 174753 924000) :init (24735 58834 174745 696000) :config (24735 58834 174581 43000) :config-secs (0 0 2075 576000) :init-secs (0 0 2425 447000) :use-package-secs (0 0 2484 959000)))
 
 ** Transparently open compressed files
+
 #+begin_src emacs-lisp :tangle yes
+
 (auto-compression-mode t)
+
 #+end_src
 
 ** COMMENT Enable syntax highlighting 
+
 #+begin_src emacs-lisp :tangle yes
 ;;(global-font-lock-mode t)
 #+end_src
@@ -559,6 +757,7 @@ Other dark themes I like:
 If launching Emacs as in windowing system, show the menu. If launching in a tty/terminal window, don't display the menu.
 
 Note by dgm on 16 sept 2018: I'm trying to use =exwm= so I am not going to use menu-bar-mode.
+
 #+source: starter-kit-no-menu-in-tty
 #+begin_src emacs-lisp :tangle no
 ;;  (if window-system
@@ -570,6 +769,7 @@ Note by dgm on 16 sept 2018: I'm trying to use =exwm= so I am not going to use m
 #+RESULTS: starter-kit-no-menu-in-tty
 
 ** Save place last visited in buffer
+
 The `saveplace` library saves the location of the point when you kill a buffer and returns to it next time you visit the associated file
 
 #+srcname: starter-kit-saveplace
@@ -595,6 +795,7 @@ The `saveplace` library saves the location of the point when you kill a buffer a
 : t
 
 ** ido mode and flx-ido
+
 Ido-mode is like magic pixie dust!
 
 #+srcname: starter-kit-loves-ido-mode
@@ -650,6 +851,7 @@ With helm-mode active, to use Emacs default completion instead of either Helm or
 ;;        ido-mode t)
 ;;  (use-package flx-ido
 ;;    :ensure t) 
+
 (use-package ido-vertical-mode
     :init (ido-vertical-mode 1)
     (setq ido-vertical-define-keys 'C-n-and-C-p-only)
@@ -668,6 +870,7 @@ With helm-mode active, to use Emacs default completion instead of either Helm or
 #+RESULTS:
 
 ** Other, tabs, imenu and a coding hook
+
 #+begin_src emacs-lisp :tangle yes 
   (set-default 'indent-tabs-mode nil)
   (set-default 'indicate-empty-lines t)
@@ -694,6 +897,7 @@ With helm-mode active, to use Emacs default completion instead of either Helm or
 #+end_src
 
 *** functions for prettier source code
+
 #+begin_src emacs-lisp :tangle yes
 (defun starter-kit-pretty-lambdas ()
   (font-lock-add-keywords
@@ -731,7 +935,6 @@ With helm-mode active, to use Emacs default completion instead of either Helm or
 
 #+end_src
 
-
 ** Default to unified diffs
 From documentation: A string or list of strings specifying switches to be passed to =diff=.
 =-u, -U NUM, --unified[=NUM]= is an option for: "output NUM (default 3) lines of unified context" (man pages for =diff=).
@@ -741,6 +944,30 @@ From documentation: A string or list of strings specifying switches to be passed
 (setq diff-switches "-u")
 
 #+end_src
+
+
+** Set light and dark themes
+
+#+begin_src emacs-lisp :tangle yes
+  (defun set-light-theme ()
+    "Set the light theme with some customization if needed."
+    (interactive)
+    (load-theme 'solarized-light t)  ;; {modus-operandi, doneburn by Manuel Uberti, anti-zenburn (greyish, nice even for night work) }
+    (dgm/shrink-modeline))
+
+  (defun set-dark-theme ()
+    "Set the dark theme with some customization if needed."
+    (interactive)
+    (load-theme 'labburn t)    ;; comparándole con zenburn, con labburn veo mejor los colores vibrantes en un high dpi monitor; also `modus-vivendi'
+    (dgm/shrink-modeline))
+  ;; solarized-dark originally
+
+  ;;(let ((current-hour (string-to-number (format-time-string "%H"))))
+  ;;    (if (or (< current-hour 10) (> current-hour 19)) (set-dark-theme) (set-light-theme)))
+#+end_src
+
+#+RESULTS:
+: set-dark-theme
 
 
 * Provide

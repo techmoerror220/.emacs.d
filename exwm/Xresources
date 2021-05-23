@@ -1,1 +1,1 @@
-Xft.dpi: 270        # Set this to your desirde DPI; Larger number means bigger text and UI (with 163, 200, 210, 220, 230, 250 also looked alright; 282 recommended but images are tiny)
+Xft.dpi: 270        # Set this to your desired DPI; Larger number means bigger text and UI (with 163, 200, 210, 220, 230, 250 also looked alright; 282 recommended but images are tiny)
