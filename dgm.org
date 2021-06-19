@@ -2860,7 +2860,7 @@ Automatically indent when press RET
 
 #+begin_src emacs-lisp :tangle yes
   (use-package zygospore
-    :bind (("C-x 1" . zygospore-toggle-delete-other-windows)
+    :bind (("C-x 1" .   zygospore-toggle-delete-other-windows)
            ("RET"   .   newline-and-indent)))
 #+end_src
 
@@ -4322,6 +4322,7 @@ The following I've taken away.
 
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
   (use-package cheatsheet
     :defer t
     :config
@@ -4455,6 +4456,9 @@ The following I've taken away.
                     :key "C-c C-s"
                     :description "diary-show-all-entries")
     (cheatsheet-add :group 'Dired
+                    :key "H-n"
+                    :description "dired-create-empty-file")
+    (cheatsheet-add :group 'Dired
                     :key "% &"
                     :description "dired-flag-garbage-file. Useful for marking for delation TeX auxiliary files.")
     (cheatsheet-add :group 'Dired
@@ -4580,7 +4584,7 @@ The following I've taken away.
     (cheatsheet-add :group 'Editing
                     :key "C-x ="
                     :description "what-cursor-position. Print info on cursor position. Also describe the character after point, give its character code
-        in octal, decimal and hex. With prefix C-u, all info is shown in separate window")
+          in octal, decimal and hex. With prefix C-u, all info is shown in separate window")
     (cheatsheet-add :group 'Editing
                     :key "C-x C-+ OR C-x C-- OR C-x C-0"
                     :description "text-scale-adjust. Adjust the height of the default face. + increases, - descreases, 0 resets")
@@ -5350,7 +5354,7 @@ The following I've taken away.
                     :key "C-c C-s c"
                     :description "markdown-insert-code. Insert markup to make a region or word an inline code fragment. Can also use the ` snippet")
     (cheatsheet-add :group 'Markdown
-                    :key "M-_"
+                    :key "C->"
                     :description "my_pipe_operator by KHealy. Insert R/ESS %>% operator")
     (cheatsheet-add :group 'Markdown
                     :key "C-c i"
@@ -6021,9 +6025,9 @@ The following I've taken away.
     (cheatsheet-add :group 'Rectangle-editing
                     :key "C-x SPC"
                     :description "rectangle-mark-mode. Toggle the region as rectangular.")
-  (cheatsheet-add :group 'Rectangle-editing
-                  :key "C-t"
-                  :description "Insert string rectangle. Can insert whatever from the register")
+    (cheatsheet-add :group 'Rectangle-editing
+                    :key "C-t"
+                    :description "Insert string rectangle. Can insert whatever from the register")
     (cheatsheet-add :group 'Rectangle-editing
                     :key "C-x r k"
                     :description "kill-rectangle")
@@ -6209,10 +6213,11 @@ The following I've taken away.
                     :description "synosaurus-lookup") 
     :bind ("s-[" . cheatsheet-show)
     )
+
  #+END_SRC
 
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24693 39033 506793 743000) :init (24693 39033 506733 749000) :init-secs (0 0 30 960000) :use-package-secs (0 0 211 488000)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24780 23640 163192 496000) :init (24780 23640 163140 54000) :init-secs (0 0 3526 135000) :use-package-secs (0 0 3712 48000) :config (24780 23640 163130 84000) :config-secs (0 0 3507 28000)))
 
 
 * Security: bad-signature issue
@@ -8276,6 +8281,47 @@ Objetive: To edit blocks of code in, pro example, markdown
 
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24742 11369 910690 860000) :init (24742 11369 910686 722000) :config (24742 11369 910621 401000) :config-secs (0 0 2 711000) :init-secs (0 0 4764 632000) :use-package-secs (0 1 984921 112000)))
+
+* Windows keys with my Hyper key
+My hyper key works with the "C-M-s" combo
+
+Bindings copied from Prot.
+
+(global-set-key (kbd "C-M-s-b") 'backward-word) ; H is for hyper
+
+
+#+begin_src emacs-lisp :tangle yes
+
+  (let ((map global-map))
+    (define-key map (kbd "C-M-s-o") #'other-window)
+    (define-key map (kbd "C-M-s-<") #'split-window-below)     ; < is 2
+    (define-key map (kbd "C-M-s->") #'split-window-right)     ; > is 3 
+    (define-key map (kbd "C-M-s-\"") #'delete-window)         ; " is 0
+    (define-key map (kbd "M-s-<RET>") #'zygospore-toggle-delete-other-windows) ; RET is 1. Originally it was delete-other-windows
+    (define-key map (kbd "C-x -") #'balance-windows)      ; underscore
+    (define-key map (kbd "C-x +") #'balance-windows-area)
+    (define-key map (kbd "C-M-s-q") #'window-toggle-side-windows))
+
+#+end_src
+
+#+RESULTS:
+: window-toggle-side-windows
+
+
+#+RESULTS:
+: window-toggle-side-windows
+
+* Resize Minibuffer
+The default value of =grow-only= means let mini-windows grow only; they return to their normal size when the minibuffer is closed, or the echo area becomes empty.
+
+#+begin_src emacs-lisp :tangle no
+
+(setq resize-mini-windows  t)
+
+#+end_src
+
+#+RESULTS:
+: t
 
 
 * Provide

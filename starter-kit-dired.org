@@ -318,10 +318,25 @@ p. 341. Syntax for customizing this from: https://oremacs.com/2015/01/21/dired-s
 
 ** Editing the dired buffer like text
 
-p. 352
+p. 352.
+
+From Prot:
++ Writable Dired (wdired) :: This is the standard editable state of a
+  dired buffer.  You can access it with =C-x C-q=.  Write changes to files
+  or directories, as if it were a regular buffer, then confirm them with
+  =C-c C-c=.  This practically means that you can rename files and change
+  permissions (when the detailed list is available).  Note that while
+  renaming a file, any forward slash is treated like a directory and *is
+  created directly* upon successful exit.  Combine this utility with
+  keyboard macros, rectangle edits, or =query-replace= and you have one
+  supremely powerful tool at your disposal.
+
 
 #+begin_src emacs-lisp :tangle yes
+
 (setq wdired-allow-to-change-permissions t)
+(setq wdired-create-parent-directories t)
+
 #+end_src
 
 #+RESULTS:
@@ -349,6 +364,84 @@ From: https://emacs.stackexchange.com/questions/60661/how-to-duplicate-a-file-in
 
 #+RESULTS:
 : dired-duplicate-this-file
+
+* Prot tweaks
+
++ Dired subtree :: This third-party package offers tree-style
+  navigation, meaning that the subdirectories of the current Dired
+  buffer can be expanded and contracted in place.  It is possible to
+  perform the same kind of folding on their subdirectories, and so on.
+
+  This is, in my opinion, a far more intuitive interaction than the
+  default way of inserting subdirectories in the current buffer below
+  their parent (type =i= over the target dir).  There still are uses for
+  that technique (and quite powerful at that), but tree-style navigation
+  is easier for day-to-day tasks, especially when all you want is a
+  quick peek at a directory's contents.
+
+#+begin_src emacs-lisp :tangle yes
+
+  (add-hook 'dired-mode-hook #'hl-line-mode)
+
+  ;; The following variables were introduced in Emacs 27.1
+  (setq dired-create-destination-dirs 'ask)
+  (setq dired-vc-rename-file t)
+
+  (let ((map dired-mode-map))
+    (define-key map (kbd "C-M-s-n") #'dired-create-empty-file))
+
+  (use-package dired-subtree
+    :config
+    (setq dired-subtree-use-backgrounds nil)
+    (let ((map dired-mode-map))
+      (define-key map (kbd "<tab>") #'dired-subtree-toggle)))
+
+  ;; DGM: don't know what these are doing
+  ;; (define-key map (kbd "<C-tab>") #'dired-subtree-cycle)
+  ;; (define-key map (kbd "<backtab>") #'dired-subtree-remove)
+
+  (require 'image-dired)
+  (setq image-dired-external-viewer "xdg-open")
+  (setq image-dired-thumb-size 80)
+  (setq image-dired-thumb-margin 2)
+  (setq image-dired-thumb-relief 0)
+  (setq image-dired-thumbs-per-row 4)
+  (define-key image-dired-thumbnail-mode-map
+    (kbd "<return>") #'image-dired-thumbnail-display-external)
+
+#+end_src
+
+#+RESULTS:
+: image-dired-thumbnail-display-external
+
+** Management of Trashed items
+
+=trashed= applies the principles of =dired= to the management of the user's
+filesystem trash.  Use =C-h m= to see the docs and keybindings for its
+major mode.
+
+Basically, its interaction model is as follows:
+
+- =m= to mark for some deferred action, such as =D= to delete, =R= to restore.
+- =t= to toggle the status of all items as marked.  Use this without marks
+  to =m= (mark) all items, then call a deferred action to operate on them.
+- =d= to mark for permanent deletion.
+- =r= to mark for restoration.
+- =x= to execute these special marks.
+
+#+begin_src emacs-lisp :tangle yes
+
+  (use-package trashed
+    :config
+    (setq trashed-action-confirmer 'y-or-n-p)
+    (setq trashed-use-header-line t)
+    (setq trashed-sort-key '("Date deleted" . t))
+    (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
+
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24764 43371 110107 279000) :init (24764 43371 110101 253000) :config (24764 43371 109968 933000) :config-secs (0 0 319 936000) :init-secs (0 0 782 952000) :use-package-secs (0 0 875 979000)))
 
 * Provide
 

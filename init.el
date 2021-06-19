@@ -546,14 +546,15 @@ ARCHIVE is the string name of the package archive.")
       "xbacklight" nil "xbacklight -dec 5")
      (display-backlight-brightness)))
 
-  (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; possibly the culprit of not seeint the minibuffer prompt??
+  ;; (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+  ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
   ;; Redshift off
   (exwm-input-set-key (kbd "s-\)")
                       (lambda () (interactive) (start-process-shell-command "redshift" nil "redshift" "-x")))
 
-  ;; Redshift on
+  ;; Redshift no
   ;; -PO 3500 -m randr
   (exwm-input-set-key (kbd "s-\(")
                       (lambda () (interactive) (start-process-shell-command "redshift" nil "redshift" "-O 3500 -P")))

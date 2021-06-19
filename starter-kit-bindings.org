@@ -636,9 +636,11 @@ First mark the word, then add more cursors. To get out of multiple-cursors-mode,
 ** Minimal mode
    A nice clutter-free appearance with a reduced-size modeline, no
    scroll bars, and no fringe indicators. Useful in conjunction with running Emacs full-screen.
+
 #+source: minimal-mode
 #+begin_src emacs-lisp
-(set-fringe-mode '(5 . 5))
+;; possible culprit of minibuffer hiding the prompt?
+;; (set-fringe-mode '(5 . 5))
 (require 'minimal)
 #+end_src
 
